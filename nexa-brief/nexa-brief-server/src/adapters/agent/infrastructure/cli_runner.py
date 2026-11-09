@@ -233,10 +233,8 @@ class ClaudeCodeRunner(AgentRunnerPort):
             last = _stream_json_result(log_path)
             usage, model = claude_usage(log_path)
         else:
-            usage, model = {}, ""
-            out_path = log_path.with_suffix(".last.txt")
             cmd = [
-                self._binary, "-p", "--output-format", "text",
+                self._binary, "-p", "--output-format", "stream-json", "--verbose",
                 "--allowedTools", *CLAUDE_READ_TOOLS, "--disallowedTools", "Bash", "Write", "Edit", *CLAUDE_SECRET_DENY,
             ]
             code, timed_out, secs = await run_cli(
@@ -245,11 +243,9 @@ class ClaudeCodeRunner(AgentRunnerPort):
                 log_path=log_path,
                 timeout_seconds=timeout_seconds,
                 stdin_text=prompt,
-                stdout_path=out_path,
             )
-            last = _tail(out_path, 20000)
-            with log_path.open("a", encoding="utf-8") as log:
-                log.write(last + "\n")
+            last = _stream_json_result(log_path)
+            usage, model = claude_usage(log_path)
         return AgentRunResult(exit_code=code, last_message=last.strip(), duration_seconds=secs, timed_out=timed_out,
                               usage=usage, model=model)
 

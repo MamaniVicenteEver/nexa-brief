@@ -10,7 +10,7 @@ export function usePromoteSandboxItem() {
   const t = useTranslations("sandbox");
 
   return useMutation({
-    mutationFn: ({ folder, id }: { folder: string; id: string }) => promoteSandboxItem(folder, id),
+    mutationFn: ({ folder, id, category, sharedCategories }: { folder: string; id: string; category: string; sharedCategories: string[] }) => promoteSandboxItem(folder, id, category, sharedCategories),
     onSuccess: async (result) => {
       toast.success(t("promoteSuccess", { path: result.toPath }));
       await Promise.all([

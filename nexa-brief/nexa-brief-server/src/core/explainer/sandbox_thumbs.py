@@ -6,10 +6,12 @@ import asyncio
 import os
 import subprocess
 import threading
+import time
 from pathlib import Path
 from urllib.parse import quote
 
-from playwright.async_api import async_playwright
+from PIL import Image, ImageStat
+from playwright.async_api import TimeoutError as PlaywrightTimeoutError, async_playwright
 
 from src.config.settings import settings
 from src.config.profile_layout import layout_for_settings
@@ -23,6 +25,16 @@ def _thumb_cache_dir() -> Path:
     layout = layout_for_settings(settings)
     return (layout.cache_dir if layout.schema_version >= 2 else settings.data_dir) / "sandbox-thumbs"
 _GENERATION_LOCK = threading.Lock()
+
+
+def _has_visible_content(path: Path) -> bool:
+    """Reject blank or practically uniform captures, including cached failures."""
+    try:
+        with Image.open(path) as image:
+            rgb = image.convert("RGB")
+            return max(channel[1] for channel in rgb.getextrema()) > 5 and max(ImageStat.Stat(rgb).stddev) >= 2
+    except (OSError, ValueError):
+        return False
 
 
 def _valid_segment(value: str) -> bool:
@@ -44,10 +56,36 @@ async def _capture_page(page_url: str, output_path: Path) -> None:
             launch_options["executable_path"] = settings.playwright_chromium_executable_path
         browser = await playwright.chromium.launch(**launch_options)
         try:
-            page = await browser.new_page(viewport={"width": 1280, "height": 720})
+            page = await browser.new_page(viewport={"width": 640, "height": 360})
             await page.goto(page_url, wait_until="domcontentloaded", timeout=8_000)
-            await page.wait_for_timeout(2_000)
-            await page.screenshot(path=str(output_path), type="jpeg", quality=85, timeout=3_000)
+            # Engines expose their timeline once initialized. Seek to a useful
+            # frame when available; other prototypes can render without it.
+            try:
+                await page.wait_for_function(
+                    "(window.__promo && Number.isFinite(window.__promo.total) && window.__promo.total > 0 && typeof window.__promo.seek === 'function') || (window.__fuerza && window.__fuerza.scenes?.length && typeof window.__fuerza.seek === 'function')",
+                    timeout=20_000,
+                )
+                await asyncio.wait_for(page.evaluate("""async () => {
+                    const p = window.__promo;
+                    if (p && Number.isFinite(p.total) && p.total > 0 && typeof p.seek === 'function') {
+                        if (p.pause) p.pause();
+                        await p.seek(p.total / 2);
+                    } else if (window.__fuerza?.scenes?.length) {
+                        const scenes = window.__fuerza.scenes;
+                        const scene = scenes[Math.floor(scenes.length / 2)];
+                        await window.__fuerza.seek(scene.t0 + Math.min(.5, (scene.t1 - scene.t0) / 2));
+                    }
+                }"""), timeout=25)
+            except (PlaywrightTimeoutError, asyncio.TimeoutError):
+                pass
+            deadline = time.monotonic() + 4
+            while True:
+                await page.screenshot(path=str(output_path), type="jpeg", quality=85, timeout=30_000)
+                if _has_visible_content(output_path):
+                    break
+                if time.monotonic() >= deadline:
+                    raise RuntimeError("La captura está completamente negra; el contenido no terminó de cargar")
+                await page.wait_for_timeout(750)
         finally:
             await browser.close()
 
@@ -58,7 +96,7 @@ def _capture_thumbnail(page_url: str, output_path: Path) -> None:
 
 
 def _needs_regeneration(index_path: Path, manifest_path: Path, thumbnail_path: Path) -> bool:
-    if not thumbnail_path.is_file():
+    if not thumbnail_path.is_file() or not _has_visible_content(thumbnail_path):
         return True
     thumbnail_mtime = thumbnail_path.stat().st_mtime_ns
     return any(
@@ -88,23 +126,36 @@ def ensure_thumbnail(
 
     output_dir = (cache_dir or _thumb_cache_dir()) / folder
     output_path = output_dir / f"{item_id}.jpg"
+    failure_path = output_dir / f".{item_id}.failed"
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    with _GENERATION_LOCK:
+    if not _needs_regeneration(index_path, manifest_path, output_path):
+        return output_path
+    if not _GENERATION_LOCK.acquire(blocking=False):
+        raise RuntimeError("Ya hay una miniatura de sandbox en preparación")
+    try:
         if not _needs_regeneration(index_path, manifest_path, output_path):
             return output_path
+
+        # A broken project should not start a browser on every page visit.
+        if failure_path.is_file() and time.time() - failure_path.stat().st_mtime < 300:
+            raise RuntimeError("La captura falló recientemente; se volverá a intentar más tarde")
 
         temporary_path = output_dir / f".{item_id}.pending.jpg"
         temporary_path.unlink(missing_ok=True)
         try:
             (capture or _capture_thumbnail)(page_url, temporary_path)
-            if not temporary_path.is_file() or temporary_path.stat().st_size == 0:
-                raise RuntimeError("Chromium no generó una miniatura")
+            if not _has_visible_content(temporary_path):
+                raise RuntimeError("Chromium no generó una miniatura visible")
             os.replace(temporary_path, output_path)
+            failure_path.unlink(missing_ok=True)
         except Exception:
             temporary_path.unlink(missing_ok=True)
+            failure_path.touch()
             raise
 
+    finally:
+        _GENERATION_LOCK.release()
     return output_path
 
 

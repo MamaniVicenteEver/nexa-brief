@@ -1,0 +1,114 @@
+{
+ "version": 1,
+ "estilos": [
+  {
+   "id": "clasico",
+   "nombre": "Clásico",
+   "idea": "Valores históricos; los componentes aún conservan sus literales.",
+   "formatos": [
+    "movil",
+    "escritorio"
+   ]
+  },
+  {
+   "id": "v4-atlas",
+   "nombre": "V4 · Atlas",
+   "idea": "Lo mejor de V2 (rótulos de buques con guía, bandera y marca roja, orden en ranuras fijas) con una sola familia tipográfica (Archivo), cinco tamaños de letra para todo, tintas cálidas y rótulos propios para unidades, flechas y lugares. Cuadros, velos y cuadrícula vienen desactivados y se activan desde la página.",
+   "formatos": [
+    "movil",
+    "escritorio"
+   ]
+  },
+  {
+   "id": "v2-mando",
+   "nombre": "V2 · Mando",
+   "idea": "Sala de operaciones: letra condensada y datos en monoespaciada, retícula geográfica, un rojo sobrio como único acento y los textos directamente sobre el mapa, sin columnas ni barras laterales.",
+   "formatos": [
+    "movil",
+    "escritorio"
+   ]
+  },
+  {
+   "id": "v3-cine",
+   "nombre": "V3 · Cine",
+   "idea": "Pantalla grande: serifa de cine muy grande y muy poco texto, blanco puro sobre velos negros degradados y un hielo mínimo como único acento. En 16:9, bandas de cine arriba y abajo, sin columnas.",
+   "formatos": [
+    "movil",
+    "escritorio"
+   ]
+  }
+ ],
+ "default": "v4-atlas",
+ "opciones": [
+  {
+   "id": "cuadros",
+   "etiqueta": "Cuadros (fichas y documentos)",
+   "tipo": "deslizador",
+   "param": "cuadros",
+   "min": 0,
+   "max": 100,
+   "paso": 5,
+   "defecto": 15,
+   "unidad": "%"
+  },
+  {
+   "id": "velos",
+   "etiqueta": "Velos (viñeta del mapa)",
+   "tipo": "deslizador",
+   "param": "velos",
+   "min": 0,
+   "max": 100,
+   "paso": 5,
+   "defecto": 0,
+   "unidad": "%"
+  },
+  {
+   "id": "mapa",
+   "etiqueta": "Mapa oscurecido",
+   "tipo": "deslizador",
+   "param": "mapa",
+   "min": 0,
+   "max": 100,
+   "paso": 5,
+   "defecto": 0,
+   "unidad": "%"
+  },
+  {
+   "id": "subtitulo",
+   "etiqueta": "Subtítulo",
+   "tipo": "opciones",
+   "param": "subtitulo",
+   "valores": [
+    "izq",
+    "centro",
+    "der"
+   ],
+   "defecto": "izq"
+  },
+  {
+   "id": "subancho",
+   "etiqueta": "Ancho del subtítulo",
+   "tipo": "deslizador",
+   "param": "subAncho",
+   "min": 25,
+   "max": 90,
+   "paso": 5,
+   "defecto": 60,
+   "unidad": "%"
+  },
+  {
+   "id": "subpalabras",
+   "etiqueta": "Palabras por grupo",
+   "tipo": "opciones",
+   "param": "subPalabras",
+   "valores": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "defecto": 3
+  }
+ ]
+}

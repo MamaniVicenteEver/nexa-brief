@@ -156,11 +156,15 @@ class ShowcaseService:
                 return item
         raise ShowcaseNotFound("Entrada no encontrada")
 
-    def promote(self, design_id: str) -> Design:
+    def promote(self, design_id: str, category_path: str | None = None, shared_categories: list[str] | None = None) -> Design:
         design = self.get_design(design_id)
         if design.state == "prueba" and not design.promotable:
             raise ShowcaseConflict(design.promote_blocker or "Este diseño no se puede promover")
-        result = self._design(self.repository.promote(design_id))
+        if category_path is None:
+            promoted = self.repository.promote(design_id)
+        else:
+            promoted = self.repository.promote(design_id, category_path, shared_categories or [])
+        result = self._design(promoted)
         if result.id != design_id or result.state != "produccion":
             raise ShowcaseConflict("La promoción no conservó la identidad del diseño")
         return result

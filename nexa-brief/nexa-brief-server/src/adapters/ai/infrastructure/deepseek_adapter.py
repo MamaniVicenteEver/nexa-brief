@@ -48,6 +48,7 @@ class DeepSeekAdapter(AIPort):
 
     async def complete_json_with_usage(self, system_prompt: str, user_prompt: str, *, structured: bool = False) -> tuple[dict, dict]:
         """Devuelve el JSON y el consumo informado por la API para el redactor."""
+        attempts = []
         for attempt in range(1, self._max_retries + 1):
             started = time.monotonic()
             try:
@@ -79,13 +80,18 @@ class DeepSeekAdapter(AIPort):
                     error = AIValidationError(f"DeepSeek JSON parse error: {exc}")
                     error.usage = measured
                     raise error from exc
-                return result, measured
-            except AIValidationError:
+                return result, {**measured, "attempts": [*attempts, {**measured, "status": "ok"}]}
+            except AIValidationError as exc:
+                exc.usage_attempts = [*attempts, {**getattr(exc, "usage", {}), "status": "failed", "error_type": type(exc).__name__}]
                 raise
             except Exception as exc:
                 logger.warning("deepseek_retry", attempt=attempt, error=str(exc))
+                attempts.append({"provider": "deepseek", "model": self._model, "status": "failed",
+                                 "error_type": type(exc).__name__, "seconds": round(time.monotonic() - started, 2)})
                 if attempt == self._max_retries:
-                    raise AIGenerationError(f"DeepSeek failed after {attempt} attempts: {exc}") from exc
+                    error = AIGenerationError(f"DeepSeek failed after {attempt} attempts: {exc}")
+                    error.usage_attempts = attempts
+                    raise error from exc
                 await asyncio.sleep(settings.ai_retry_delay_seconds * attempt)
         raise AIGenerationError("DeepSeek: unreachable")
 

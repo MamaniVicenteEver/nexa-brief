@@ -14,10 +14,16 @@ def is_public_showcase_engine_key(parts: tuple[str, ...]) -> bool:
     # alias is served exclusively from the active profile by resolve_content_key.
     if parts[:4] == ("sandbox", "nodehistory", "atlas-en-movimiento", "assets"):
         return len(parts) >= 5 and not is_private_content_key("/".join(parts))
+    if parts[:3] == ("nodeatlas", "atlas-en-movimiento", "assets"):
+        return len(parts) >= 4 and not is_private_content_key("/".join(parts))
     if any(p.startswith(".") or p in {"work", "test", "tests", "assets", "logs"} for p in parts):
         return False
     if any(p.lower() in {"accounts.json", "users.json", "access.json"} or p.lower().startswith("client_secret") for p in parts):
         return False
+    if len(parts) >= 2 and parts[0] == "nodeatlas" and parts[1] in {"_atlas", "_mapas"}:
+        return len(parts) >= 3
+    if parts[:2] == ("nodeatlas", "atlas-en-movimiento"):
+        return len(parts) >= 4 and (parts[2] == "engine" or parts[2:4] == ("preview", "tactico"))
     cara = ("sandbox", "nodeaction", "cara-a-cara")
     atlas = ("sandbox", "nodehistory", "atlas-en-movimiento")
     if parts[:3] == cara:
@@ -83,12 +89,28 @@ def resolve_content_key(key: str) -> Path:
         raise ValueError("Invalid content key")
     layout = layout_for_settings(settings)
     atlas_assets = ("bundled", "sandbox", "nodehistory", "atlas-en-movimiento", "assets")
+    new_assets = ("bundled", "nodeatlas", "atlas-en-movimiento", "assets")
+    old_engine = ("bundled", "sandbox", "nodehistory", "atlas-en-movimiento")
+    if layout.schema_version >= 3 and parts[:4] == new_assets:
+        if is_private_content_key(key):
+            raise ValueError("Private content key")
+        parts = (*atlas_assets, *parts[4:])
+    elif layout.schema_version >= 3 and parts[:4] == old_engine and len(parts) > 4 and parts[4] in {"engine", "preview"}:
+        parts = ("bundled", "nodeatlas", "atlas-en-movimiento", *parts[4:])
     if layout.schema_version >= 3 and parts[:5] == atlas_assets:
         # Do not resolve this alias through bundled templates, even when the
         # selected profile does not contain the file.
         if is_private_content_key(key):
             raise ValueError("Private content key")
-        root, tail = layout.sandbox_dir, parts[2:]
+        promoted = layout.productions_dir / "nodeatlas" / "atlas-en-movimiento"
+        if promoted.is_dir() and not promoted.is_symlink():
+            root, tail = layout.productions_dir, ("nodeatlas", "atlas-en-movimiento", *parts[4:])
+        else:
+            root, tail = layout.sandbox_dir, parts[2:]
+    elif (layout.schema_version >= 3 and parts[:3] == ("sandbox", "nodehistory", "atlas-en-movimiento")
+          and not (layout.sandbox_dir / "nodehistory" / "atlas-en-movimiento").exists()
+          and (layout.productions_dir / "nodeatlas" / "atlas-en-movimiento").is_dir()):
+        root, tail = layout.productions_dir, ("nodeatlas", "atlas-en-movimiento", *parts[3:])
     else:
         root, tail = None, None
     roots = {"productions": layout.productions_dir, "sandbox": layout.sandbox_dir,

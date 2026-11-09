@@ -289,6 +289,8 @@ class JsonDataStore:
             path = data_directory() / "content" / f".{name}.lock"
         elif name == "showcase":
             path = data_directory() / "showcase" / ".coordination.lock"
+        elif name == "sandbox-preparations":
+            path = data_directory() / "prototypes" / ".preparation-coordination.lock"
         else:
             raise KeyError(f"Unknown coordination lock: {name}")
         return AsyncFileLock(lock_path(path, path))

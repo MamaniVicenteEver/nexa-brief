@@ -12,13 +12,13 @@ from src.core.showcase.service import ShowcaseService
 TEMPLATES = Path(__file__).resolve().parents[2] / "src/templates"
 
 
-def test_navigation_preserves_all_19_render_contracts_and_native_categories():
+def test_navigation_preserves_all_20_render_contracts_and_native_categories():
     from src.adapters.showcase.catalog_navigation import catalog_navigation
     from src.core.showcase.models import Catalog
 
     catalogs = {}
     definitions = sorted((TEMPLATES / "_tools/design-definitions").glob("*/catalog.json"))
-    assert len(definitions) == 19
+    assert len(definitions) == 20
     for path in definitions:
         original_bytes = path.read_bytes()
         raw = json.loads(original_bytes)
@@ -32,7 +32,7 @@ def test_navigation_preserves_all_19_render_contracts_and_native_categories():
         assert json.dumps(raw, sort_keys=True) == before
         assert path.read_bytes() == original_bytes
         catalogs[path.parent.name] = public
-    assert sum(len(c["entries"]) for c in catalogs.values()) == 938
+    assert sum(len(c["entries"]) for c in catalogs.values()) == 961
     atlas = catalogs["atlas-en-movimiento"]
     assert len([e for e in atlas["entries"] if e["section"] == "sprites"]) == 269
     assert len([e for e in atlas["entries"] if e["section"] == "components"]) == 91
@@ -83,6 +83,27 @@ class Store:
         yield
 
 
+def test_shared_map_design_groups_two_episodes_without_copying_engine(tmp_path):
+    root = tmp_path / 'profile'
+    for ident in ('fronteras-demo', 'bolivia-mar'):
+        episode = root / 'sandbox/nodehistory' / ident
+        episode.mkdir(parents=True)
+        (episode / 'index.html').write_text('<!doctype html>')
+        (episode / 'info.json').write_text(json.dumps({'title': ident, 'engine': 'nodehistory/_mapas'}))
+    adapter = SharedDefinitionsShowcaseAdapter(root, TEMPLATES, data_store=Store())
+    service = ShowcaseService(adapter)
+    design = service.get_design('mapas-satelitales')
+    assert {episode.id for episode in design.episodes} == {'fronteras-demo', 'bolivia-mar'}
+    catalog = service.catalog(design.id)
+    assert len(catalog.entries) == 23
+    assert {'map.layer.arrow', 'map.layer.icon', 'map.layer.photo', 'proto.media-window'} <= {e.id for e in catalog.entries}
+    assert all(e.params or e.example for e in catalog.entries)
+    assert 'only=map.layer.arrow' in service.preview(design.id, 'map.layer.arrow', '16x9')
+    for project in adapter.projects._items():
+        assert project['design_id'] == design.id and project['managed'] is False
+    assert not (root / 'sandbox/nodehistory/_mapas').exists()
+
+
 def test_shared_contracts_and_per_profile_promotion(tmp_path):
     first_store, second_store = Store(), Store()
     first = ShowcaseService(SharedDefinitionsShowcaseAdapter(tmp_path / "first", TEMPLATES, data_store=first_store))
@@ -107,10 +128,10 @@ def test_shared_contracts_and_per_profile_promotion(tmp_path):
     assert not (tmp_path / "first/designs").exists() and not (tmp_path / "first/sandbox/designs").exists()
 
 
-def test_revision_mismatch_is_explicit_and_shared_catalog_has_19_designs(tmp_path):
+def test_revision_mismatch_is_explicit_and_shared_catalog_has_20_designs(tmp_path):
     store = Store()
     adapter = SharedDefinitionsShowcaseAdapter(tmp_path, TEMPLATES, data_store=store)
-    assert len(adapter.list_designs()) == 19
+    assert len(adapter.list_designs()) == 20
     design = adapter.get_design("vida-en-escena")
     store.records.rows.append(
         {"id": design["id"], "state": "produccion", "definition_ref": design["id"], "revision": "old"}
@@ -163,7 +184,7 @@ async def test_schema3_http_uses_shared_previews_and_profile_local_state(tmp_pat
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as client:
         listing = await client.get("/api/v1/showcase/designs")
         assert listing.status_code == 200
-        assert len(listing.json()["designs"]) == 19
+        assert len(listing.json()["designs"]) == 20
         atlas = await client.get("/api/v1/showcase/designs/atlas-en-movimiento/catalog")
         assert atlas.status_code == 200
         assert atlas.json()["groups"][0]["label"] == "Textos"
@@ -292,9 +313,9 @@ def test_reconcile_imports_legacy_state_idempotently_without_moving_files(tmp_pa
         assert result.returncode == 0, result.stderr
         return json.loads(result.stdout)
 
-    assert len(run()["changes"]) == 19
+    assert len(run()["changes"]) == 20
     assert not (root / "data/json/designs.json").exists()
-    assert len(run("--apply")["changes"]) == 19
+    assert len(run("--apply")["changes"]) == 20
     assert run()["changes"] == []
     section = json.loads((root / "data/json/designs.json").read_text())
     rows = section["collections"]["showcase_designs"]
@@ -303,7 +324,7 @@ def test_reconcile_imports_legacy_state_idempotently_without_moving_files(tmp_pa
     assert not (root / "designs").exists() and not (root / "sandbox/designs").exists()
 
 
-def test_new_v3_profile_reconciles_all_19_shared_designs(tmp_path):
+def test_new_v3_profile_reconciles_all_20_shared_designs(tmp_path):
     import json
     import os
     import subprocess
@@ -344,9 +365,9 @@ def test_new_v3_profile_reconciles_all_19_shared_designs(tmp_path):
         timeout=30,
     )
     assert reconcile.returncode == 0, reconcile.stderr
-    assert len(json.loads(reconcile.stdout)["changes"]) == 19
+    assert len(json.loads(reconcile.stdout)["changes"]) == 20
     rows = json.loads((root / "data/json/designs.json").read_text())["collections"]["showcase_designs"]
-    assert len(rows) == 19 and len({row["id"] for row in rows}) == 19
+    assert len(rows) == 20 and len({row["id"] for row in rows}) == 20
     assert not (root / "designs").exists() and not (root / "sandbox/designs").exists()
 
 
@@ -359,7 +380,7 @@ def test_pure_legacy_state_conversion_preserves_status_and_rejects_unknown():
     before = {key: dict(value) for key, value in definitions.items()}
     rows = [{"id": "vida-en-escena", "state": "produccion"}]
     migrated = convert_legacy_designs(rows, definitions)
-    assert len(migrated) == 19
+    assert len(migrated) == 20
     assert next(item for item in migrated if item["id"] == "vida-en-escena")["state"] == "produccion"
     assert definitions == before and rows == [{"id": "vida-en-escena", "state": "produccion"}]
     with pytest.raises(ShowcaseInvalid, match="sin definición"):
@@ -373,7 +394,7 @@ def test_shared_contracts_do_not_embed_profile_episode_records():
 
     base = TEMPLATES / "_tools/design-definitions"
     contracts = sorted(base.glob("*/design.json"))
-    assert len(contracts) == 19
+    assert len(contracts) == 20
     for path in contracts:
         design = json.loads(path.read_text())
         catalog = json.loads((path.parent / "catalog.json").read_text())
@@ -381,3 +402,23 @@ def test_shared_contracts_do_not_embed_profile_episode_records():
         encoded = json.dumps([design, catalog])
         assert '"production_id"' not in encoded and '"video_id"' not in encoded
         assert "/productions/" not in encoded and "/work/" not in encoded
+
+
+def test_map_design_promotion_stores_categories_once_per_profile(tmp_path):
+    from src.core.showcase.ports import ShowcaseInvalid
+    store = Store()
+    service = ShowcaseService(SharedDefinitionsShowcaseAdapter(tmp_path, TEMPLATES, data_store=store))
+    assert service.get_design('mapas-satelitales').promotable
+    with pytest.raises(ShowcaseInvalid):
+        service.promote('mapas-satelitales', 'node_history', ['node_history'])
+    assert not store.records.rows
+    result = service.promote('mapas-satelitales', 'node_history', ['node_atlas', 'node_politics'])
+    assert result.state == 'produccion'
+    assert result.category_path == 'node_history'
+    assert result.shared_categories == ['node_atlas', 'node_politics']
+    assert len(store.records.rows) == 1
+    result = service.promote('mapas-satelitales', 'node_atlas', ['node_politics'])
+    assert result.state == 'produccion'
+    assert result.category_path == 'node_atlas'
+    assert result.shared_categories == ['node_politics']
+    assert len(store.records.rows) == 1

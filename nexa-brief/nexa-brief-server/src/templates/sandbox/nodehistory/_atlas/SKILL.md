@@ -18,7 +18,7 @@ node "$A" example atlas.arrow
 node "$A" new mi-video --title "Mi título" --duration 420
 ```
 
-`new` crea `src/templates/nodehistory/mi-video/` con referencias relativas al único motor compartido. **No copies `_atlas/` ni desarrolles HTML para cada video.** No registres un episodio en `templates.json` (es un video de datos, no una nueva plantilla de NodeMotion).
+`new` es una herramienta heredada que crea `src/templates/nodehistory/mi-video/`: no la uses para crear episodios de perfiles v2/v3. Usa el flujo de producción compatible con el perfil activo. **No copies `_atlas/` ni desarrolles HTML para cada video.** No registres un episodio en `templates.json` (es un video de datos, no una nueva plantilla de NodeMotion).
 
 Lee [PRODUCIR.md](PRODUCIR.md) para ejecutar el trabajo. Para elegir piezas lee [components.json](components.json), preferentemente filtrado por `catalog` y `example`. Los campos `target`, `params` y `demo` explican dónde insertar y qué entradas pasar. El `demo` es JSON listo para adaptar; sus cifras ilustrativas no son evidencia.
 

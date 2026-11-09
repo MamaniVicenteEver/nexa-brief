@@ -129,7 +129,7 @@ Checklist: `../EXPLAINER.md` §7, más: respeto en temas de muertes revisado en 
 
 Entrada única: `_atlas/SKILL.md`; catálogo `_atlas/components.json`; procedimiento `_atlas/PRODUCIR.md`.
 El showcase de `atlas-cinematico` usa el mismo catálogo y `_atlas/production.json`.
-Un episodio nuevo se crea con `node src/templates/sandbox/nodehistory/_atlas/produce.mjs new <id> --title "Título" --duration <segundos>` desde nexa-brief-server; sale en `src/templates/nodehistory/<id>`, enlazado al motor compartido.
+El `produce.mjs new` histórico crea dentro de `src/templates/nodehistory/` y no está adaptado al perfil v2/v3: no lo uses para crear episodios del perfil. Usá el flujo de producción compatible con el perfil activo y el motor compartido.
 No confundir con el diseño atlas 2D ni con Atlas en Movimiento (táctico).
 Las flechas, fotos, rótulos, animaciones y cámara se instancian con JSON; los porcentajes documentales usan `scene.data` con fuente, período y alcance.
 El planificador resuelve variantes igual que Proto y acepta orientación. Verificar recursos de cada recorrido y revisar ambas composiciones antes de certificarlo.

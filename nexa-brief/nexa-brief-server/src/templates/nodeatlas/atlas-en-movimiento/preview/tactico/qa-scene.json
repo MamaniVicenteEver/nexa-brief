@@ -1,0 +1,140 @@
+{
+  "duration": 8,
+  "items": [
+    {
+      "t": 0,
+      "dur": 6,
+      "out": 5.5,
+      "screen": [
+        0.69,
+        0.19
+      ],
+      "type": "label.unit",
+      "text": "USS Samuel B. Roberts"
+    },
+    {
+      "id": "army-advance",
+      "type": "army.advance",
+      "at": [
+        48.45,
+        31.2
+      ],
+      "flag": "IQ",
+      "t": 0,
+      "dur": 8,
+      "fade": 0.6,
+      "count": 24,
+      "columns": 6,
+      "radius": 25,
+      "spacing": 59,
+      "wave": 5,
+      "label": "EJÉRCITO",
+      "date": "",
+      "path": {
+        "via": [
+          [
+            48.3,
+            30.98
+          ],
+          [
+            48.48,
+            31.18
+          ],
+          [
+            48.6,
+            31.38
+          ]
+        ],
+        "t": 0.5,
+        "dur": 7,
+        "curve": "smooth",
+        "ease": "inOut"
+      }
+    },
+    {
+      "id": "demo-portrait-card",
+      "type": "portrait.card",
+      "src": "assets/media/P01.png",
+      "name": "Ruhollah Jomeini",
+      "role": "Líder supremo de Irán",
+      "date": "6 may 1981",
+      "credit": "Ali Kaveh · PD-Iran · Commons",
+      "t": 0,
+      "dur": 8,
+      "out": 7
+    },
+    {
+      "via": [
+        [
+          50.5,
+          28.8
+        ],
+        [
+          53,
+          27
+        ],
+        [
+          56.4,
+          26.4
+        ],
+        [
+          58.5,
+          24.8
+        ]
+      ],
+      "t": 0,
+      "dur": 6,
+      "out": 5.5,
+      "type": "arrow.route",
+      "color": "accent"
+    },
+    {
+      "id": "demo-site-port",
+      "type": "site.port",
+      "at": [
+        50.33,
+        29.25
+      ],
+      "label": "Kharg · terminal",
+      "t": 0,
+      "dur": 8,
+      "out": 7,
+      "states": [
+        {
+          "at": 3,
+          "state": "hit"
+        },
+        {
+          "at": 3.4,
+          "state": "burning"
+        },
+        {
+          "at": 6,
+          "state": "ruined"
+        }
+      ]
+    },
+    {
+      "id": "fx-impact",
+      "type": "fx.impact",
+      "at": [
+        54,
+        27
+      ],
+      "t": 2.6,
+      "dur": 1.6,
+      "size": 75,
+      "particles": 52,
+      "variant": "ground",
+      "seed": 73
+    },
+    {
+      "id": "demo-transcript",
+      "type": "caption.transcript",
+      "t": 0,
+      "dur": 14,
+      "fade": 0,
+      "lyricsUrl": "assets/lyrics.json"
+    }
+  ]
+}

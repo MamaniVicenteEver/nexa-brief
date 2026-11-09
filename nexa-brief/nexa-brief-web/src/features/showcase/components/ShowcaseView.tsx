@@ -2,13 +2,23 @@
 
 import { FlaskConical, Layers3, Monitor, Search, Smartphone } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useCategories } from "@/features/categories/hooks/useCategories";
 import { SamplesSection } from "@/features/samples/components/SamplesSection";
 import { resolveApiUrl } from "@/infrastructure/api/http-client";
 import { Button } from "@/shared/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/shared/components/ui/dialog";
 import { Input } from "@/shared/components/ui/input";
 import { safeShowcaseUrl } from "../api/standard-showcase-repository";
 import { useStandardShowcase } from "../hooks/useStandardShowcase";
 import { catalogFilters, entryType, entryTypeLabels } from "../lib/catalog-filters";
+import { ShowcaseStyleContext, type ShowcaseStyles } from "../lib/showcase-style";
 import { CatalogFilterButtons, filterChip as chip } from "./CatalogFilterButtons";
 import { LegacyShowcaseView } from "./LegacyShowcaseView";
 import { StandardShowcaseCatalog } from "./StandardShowcaseCatalog";
@@ -23,7 +33,14 @@ export function ShowcaseView() {
   const [type, setType] = useState("");
   const [expandedTags, setExpandedTags] = useState(false);
   const [format, setFormat] = useState<"9x16" | "16x9">("16x9");
+  const [estilo, setEstilo] = useState("");
+  const [styles, setStyles] = useState<ShowcaseStyles>({ default: null, styles: [] });
   const [promotionMessage, setPromotionMessage] = useState("");
+  const [promotionOpen, setPromotionOpen] = useState(false);
+  const [promotionCategory, setPromotionCategory] = useState("");
+  const [promotionShared, setPromotionShared] = useState<string[]>([]);
+  const categoryQuery = useCategories();
+  const promotionCategories = (categoryQuery.data ?? []).filter((node) => node.engine === "explainer_kit" && node.status !== "empty");
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const target = params.get("design");
@@ -36,7 +53,26 @@ export function ShowcaseView() {
   const designs = base.designs.data?.designs ?? [];
   const filtered = designs.filter((design) => design.state === section);
   const design = filtered.find((value) => value.id === chosen) ?? filtered[0];
+  const activePromotionCategory = promotionCategory || promotionCategories.find((node) => node.id.replaceAll("_", "") === design?.category)?.path || promotionCategories[0]?.path || "";
   const { catalog, promote } = useStandardShowcase(design?.id ?? "");
+  const designId = design?.id ?? "";
+  useEffect(() => {
+    // Estilos visuales que la API ofrece para este diseño (si no ofrece ninguno, no se muestra el selector).
+    setEstilo("");
+    setStyles({ default: null, styles: [] });
+    if (!designId) return;
+    const controller = new AbortController();
+    fetch(resolveApiUrl(`/api/v1/showcase/designs/${encodeURIComponent(designId)}/styles`), {
+      signal: controller.signal,
+      credentials: "same-origin",
+    })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((value: ShowcaseStyles | null) => {
+        if (value && Array.isArray(value.styles)) setStyles(value);
+      })
+      .catch(() => undefined);
+    return () => controller.abort();
+  }, [designId]);
   const all = catalog.data?.entries ?? [];
   const types = Object.entries(entryTypeLabels)
     .map(([id, label]) => ({
@@ -155,6 +191,8 @@ export function ShowcaseView() {
                     setExpandedTags(false);
                     setSearch("");
                     setPromotionMessage("");
+                    setPromotionCategory("");
+                    setPromotionShared([]);
                     promote.reset();
                   }}
                   className="min-w-0 rounded-xl border border-nb-line bg-background px-3 py-2.5 text-left text-nb-ink transition-colors hover:bg-nb-bg-2 aria-pressed:border-nb-ink aria-pressed:bg-nb-ink aria-pressed:text-white focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -194,6 +232,12 @@ export function ShowcaseView() {
                   {design.state === "produccion" ? "Producción" : "Sandbox"} · {design.id} ·{" "}
                   {all.length} entradas disponibles
                 </p>
+                {design.category_path && (
+                  <p className="mt-1 text-xs text-nb-ink-soft">
+                    Principal: {promotionCategories.find((node) => node.path === design.category_path)?.displayName ?? design.category_path}
+                    {(design.shared_categories ?? []).length > 0 && ` · Compartido: ${(design.shared_categories ?? []).map((path) => promotionCategories.find((node) => node.path === path)?.displayName ?? path).join(", ")}`}
+                  </p>
+                )}
                 {design.episodes?.length > 0 && (
                   <details className="mt-2 text-xs text-nb-ink-soft">
                     <summary className="cursor-pointer">
@@ -229,21 +273,67 @@ export function ShowcaseView() {
                     variant="outline"
                     size="sm"
                     disabled={!design.promotable || promote.isPending}
-                    onClick={() =>
-                      promote.mutate(design.id, {
-                        onSuccess: () => {
-                          setChosen(design.id);
-                          setSection("produccion");
-                          setPromotionMessage(`Diseño ${design.name} pasado a producción.`);
-                        },
-                      })
-                    }
+                    onClick={() => setPromotionOpen(true)}
                   >
                     {promote.isPending ? "Promoviendo…" : "Pasar a producción"}
                   </Button>
                   {!design.promotable && design.promote_blocker && (
                     <p className="max-w-sm text-xs text-nb-ink-soft">{design.promote_blocker}</p>
                   )}
+                  <Dialog open={promotionOpen} onOpenChange={setPromotionOpen}>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>¿Pasar {design.name} a producción?</DialogTitle>
+                        <DialogDescription>
+                          El diseño quedará disponible en Producción. Sus videos no se moverán
+                          automáticamente.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-3">
+                        <label htmlFor="showcase-promotion-category" className="block text-sm font-semibold">Categoría principal</label>
+                        <select id="showcase-promotion-category" className="w-full rounded-lg border border-nb-line bg-nb-surface p-2 text-sm" value={activePromotionCategory} onChange={(event) => {
+                          const value = event.target.value;
+                          setPromotionCategory(value);
+                          setPromotionShared((current) => current.filter((path) => path !== value));
+                        }}>
+                          {promotionCategories.map((node) => <option key={node.path} value={node.path}>{node.displayName}</option>)}
+                        </select>
+                        <fieldset><legend className="text-sm font-semibold">Compartir con otras categorías</legend>
+                          <p className="my-2 text-xs text-nb-mute">Se conserva una sola definición del diseño.</p>
+                          <div className="grid max-h-40 grid-cols-2 gap-2 overflow-auto">{promotionCategories.filter((node) => node.path !== activePromotionCategory).map((node) => <label key={node.path} className="flex items-center gap-2 text-sm">
+                            <input type="checkbox" checked={promotionShared.includes(node.path)} onChange={(event) => setPromotionShared((current) => event.target.checked ? [...current, node.path] : current.filter((path) => path !== node.path))} />{node.displayName}
+                          </label>)}</div>
+                        </fieldset>
+                      </div>
+                      {promote.isError && (
+                        <p role="alert">No se pudo promover: {promote.error.message}</p>
+                      )}
+                      <DialogFooter>
+                        <Button
+                          variant="outline"
+                          disabled={promote.isPending}
+                          onClick={() => setPromotionOpen(false)}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button
+                          disabled={promote.isPending || !activePromotionCategory || categoryQuery.isError}
+                          onClick={() =>
+                            promote.mutate({ id: design.id, category: activePromotionCategory, sharedCategories: promotionShared }, {
+                              onSuccess: () => {
+                                setPromotionOpen(false);
+                                setChosen(design.id);
+                                setSection("produccion");
+                                setPromotionMessage(`Diseño ${design.name} pasado a producción.`);
+                              },
+                            })
+                          }
+                        >
+                          Confirmar
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               )}
             </section>
@@ -252,7 +342,9 @@ export function ShowcaseView() {
                 {promotionMessage}
               </p>
             )}
-            {promote.isError && <p role="alert">No se pudo promover: {promote.error.message}</p>}
+            {!promotionOpen && promote.isError && (
+              <p role="alert">No se pudo promover: {promote.error.message}</p>
+            )}
             <section
               aria-label="Filtros de componentes"
               className="space-y-4 rounded-2xl border border-nb-line bg-nb-surface p-4 sm:p-5"
@@ -306,7 +398,34 @@ export function ShowcaseView() {
                     setTag("");
                     setExpandedTags(false);
                   }}
-                />
+                >
+                  {styles.styles.length > 0 && (
+                    <span
+                      role="group"
+                      aria-label="Estilo"
+                      className="ml-auto flex flex-wrap items-center gap-1.5"
+                    >
+                      <span
+                        aria-hidden
+                        className="mr-1 text-[11px] font-medium uppercase text-nb-mute"
+                      >
+                        Estilo
+                      </span>
+                      {styles.styles.map((style) => (
+                        <button
+                          key={style.id}
+                          type="button"
+                          title={style.idea}
+                          className={chip}
+                          aria-pressed={(estilo || styles.default) === style.id}
+                          onClick={() => setEstilo(style.id)}
+                        >
+                          {style.name}
+                        </button>
+                      ))}
+                    </span>
+                  )}
+                </CatalogFilterButtons>
               )}
               {tags.length > 0 && (
                 <CatalogFilterButtons
@@ -355,12 +474,14 @@ export function ShowcaseView() {
                 preparando su plantilla en Sandbox.
               </p>
             ) : (
-              <StandardShowcaseCatalog
-                key={`${design.id}:${format}`}
-                design={design}
-                entries={entries}
-                format={format}
-              />
+              <ShowcaseStyleContext.Provider value={estilo}>
+                <StandardShowcaseCatalog
+                  key={`${design.id}:${format}:${estilo}`}
+                  design={design}
+                  entries={entries}
+                  format={format}
+                />
+              </ShowcaseStyleContext.Provider>
             )}
           </>
         )

@@ -161,3 +161,65 @@ def test_promote_moves_video_and_loader_resolves_from_destination(tmp_path: Path
     assert not item_dir.exists()
     assert plan.destination.is_dir()
     assert (plan.destination / loader_url).resolve() == loader.resolve()
+
+
+def test_maps_promotion_preserves_assets_and_shares_one_video(tmp_path):
+    templates = tmp_path / "templates"
+    item = make_item(templates, manifest=False)
+    (item / "info.json").write_text(json.dumps({"engine": "nodehistory/_mapas", "status": "lista para revisar", "title": "Bolivia"}))
+    (item / "index.html").write_text('<script src="../../../_tools/explainer-kit/vendor/geo/d3-geo.min.js"></script><script src="../../_proto/proto.js"></script><script src="../_mapas/mapas.js"></script>')
+    (item / "assets").mkdir()
+    (item / "assets" / "scene.json").write_text('{"scenes": []}')
+    plan = promote(item, templates_dir=templates, category="node_history", shared_categories=["node_atlas", "node_politics"])
+    data = json.loads((plan.destination / "manifest.json").read_text())
+    html = (plan.destination / "index.html").read_text()
+    assert data["category"] == "node_history"
+    assert data["shared_categories"] == ["node_atlas", "node_politics"]
+    assert data["status"] == "en progreso"
+    assert (plan.destination / "assets" / "scene.json").is_file()
+    assert '/api/v1/explainer/files/sandbox/_proto/proto.js' in html
+    assert '/api/v1/explainer/files/sandbox/nodehistory/_mapas/mapas.js' in html
+    assert '/api/v1/explainer/files/_tools/explainer-kit/vendor/geo/d3-geo.min.js' in html
+    assert not item.exists()
+    assert not (templates / "nodeatlas" / "demo").exists()
+
+
+def test_category_is_validated_before_move(tmp_path):
+    templates = tmp_path / "templates"
+    item = make_item(templates)
+    with pytest.raises(PromoteError):
+        promote(item, templates_dir=templates, category="node_history", shared_categories=["not-a-category"])
+    assert item.is_dir()
+    with pytest.raises(PromoteError):
+        promote(item, templates_dir=templates, category="node_history/no-such-child")
+    assert item.is_dir()
+
+
+def test_failed_write_rolls_back_video_and_original_html(tmp_path, monkeypatch):
+    templates = tmp_path / 'templates'
+    item = make_item(templates)
+    before = (item / 'index.html').read_text()
+    original_write = Path.write_text
+    failed = False
+    def fail_once(path, *args, **kwargs):
+        nonlocal failed
+        if path.name == 'index.html' and path.parent.name == 'demo' and path.parent.parent.name == 'nodehistory' and not failed:
+            failed = True
+            raise OSError('simulated failure')
+        return original_write(path, *args, **kwargs)
+    monkeypatch.setattr(Path, 'write_text', fail_once)
+    with pytest.raises(OSError, match='simulated'):
+        promote(item, templates_dir=templates)
+    assert item.is_dir()
+    assert (item / 'index.html').read_text() == before
+    assert not (templates / 'nodehistory/demo').exists()
+
+
+def test_rejects_symlinked_project_files(tmp_path):
+    templates = tmp_path / 'templates'
+    item = make_item(templates)
+    (item / 'index.html').unlink()
+    (item / 'index.html').symlink_to(tmp_path / 'outside')
+    with pytest.raises(PromoteError, match='enlaces simbólicos'):
+        plan_promotion(item, templates_dir=templates)
+    assert item.exists()

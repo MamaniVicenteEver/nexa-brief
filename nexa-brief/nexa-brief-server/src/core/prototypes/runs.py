@@ -493,9 +493,17 @@ class PrototypeRunService:
 
         template_dir = self.sandbox_dir / rec["category"] / rec["template_id"]
         usage_recorded = False
-        if ((layout_for_settings(settings).schema_version < 3 or state == PrototypeRunState.done.value)
-                and (template_dir / "info.json").is_file()):
-            usage_recorded = await self._record_template_usage(rec, template_dir, tokens)
+        if (template_dir / "info.json").is_file():
+            usage_recorded = await self._record_template_usage(
+                rec, template_dir, {**tokens, "_state": state, "_usage_known": bool(usage)}
+            )
+        elif layout_for_settings(settings).schema_version >= 2:
+            try:
+                from src.core.explainer.usage_traces import record_prototype_run
+                await record_prototype_run(rec, {**tokens, "_usage_known": bool(usage)}, state)
+                usage_recorded = True
+            except Exception as exc:
+                logger.warning("prototype_usage_record_failed", run_id=rec["run_id"], error=str(exc))
         if rec["mode"] == "smoke":
             self._cleanup_smoke(rec, template_dir)
         await self._update(
@@ -520,7 +528,13 @@ class PrototypeRunService:
             "--out", str(tokens["output_tokens"]),
             "--cached", str(tokens["cached_input_tokens"]),
             "--reasoning", str(tokens["reasoning_tokens"]),
+            "--note", f"run {rec['run_id']} · {tokens.get('_state', 'done')}",
+            "--event-id", f"prototype:{rec['run_id']}",
         ]
+        if tokens.get("_state", "done") != PrototypeRunState.done.value:
+            args.append("--failed")
+        if not tokens.get("_usage_known", True):
+            args.append("--usage-unknown")
         try:
             proc = await asyncio.create_subprocess_exec(
                 *args,

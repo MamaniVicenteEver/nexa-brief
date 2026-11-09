@@ -65,6 +65,12 @@ interface MediaPlayerModalProps {
   /** Texto accesible del botón ☰ (lo traduce quien pasa el sidebar). */
   sidebarToggleLabel?: string;
   defaultSidebarOpen?: boolean;
+  /** Estilos visuales elegibles (la plantilla los lee del parámetro ?estilo=). Sin opciones no hay selector. */
+  styleOptions?: { id: string; name: string; idea?: string }[];
+  /** Estilo que usa la plantilla cuando no se elige ninguno. */
+  defaultStyle?: string | null;
+  /** Opciones de la plantilla (cuadros, velos, mapa, subtítulo…) que se envían como parámetros de la URL. */
+  extraParams?: Record<string, string | number>;
   /** Arte temporal en el escenario (p. ej. la vista grande de una miniatura). */
   stagePreview?: ReactNode;
   onCloseStagePreview?: () => void;
@@ -87,6 +93,23 @@ interface StageProps {
   onMutedChange?: (muted: boolean) => void;
   /** El contenido ya arrancó (para quitar la portada de carga). */
   onStarted?: () => void;
+}
+
+/** Añade ?estilo=<id> (antes del #fragmento) para que la plantilla pinte con ese estilo. */
+function withStyle(url: string, style: string) {
+  const [base, hash = ""] = url.split("#");
+  const clean = base.replace(/([?&])estilo=[^&]*&?/, "$1").replace(/[?&]$/, "");
+  return `${clean}${clean.includes("?") ? "&" : "?"}estilo=${encodeURIComponent(style)}${hash ? `#${hash}` : ""}`;
+}
+
+/** Añade parámetros a la URL del iframe (antes del #fragmento), reemplazando los que ya existan. */
+function withParams(url: string, params?: Record<string, string | number>) {
+  if (!params || Object.keys(params).length === 0) return url;
+  const [base, hash = ""] = url.split("#");
+  const [path, query = ""] = base.split("?");
+  const search = new URLSearchParams(query);
+  for (const [key, value] of Object.entries(params)) search.set(key, String(value));
+  return `${path}?${search.toString()}${hash ? `#${hash}` : ""}`;
 }
 
 function formatTime(seconds: number) {
@@ -280,6 +303,9 @@ export function MediaPlayerModal({
   defaultSidebarOpen = true,
   stagePreview,
   onCloseStagePreview,
+  styleOptions,
+  defaultStyle,
+  extraParams,
 }: MediaPlayerModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -307,6 +333,9 @@ export function MediaPlayerModal({
           defaultSidebarOpen={defaultSidebarOpen}
           stagePreview={stagePreview}
           onCloseStagePreview={onCloseStagePreview}
+          styleOptions={styleOptions}
+          defaultStyle={defaultStyle}
+          extraParams={extraParams}
         />
       </DialogContent>
     </Dialog>
@@ -324,6 +353,9 @@ function PlayerBody({
   defaultSidebarOpen,
   stagePreview,
   onCloseStagePreview,
+  styleOptions,
+  defaultStyle,
+  extraParams,
 }: {
   title: string;
   source: MediaSource | null;
@@ -335,6 +367,9 @@ function PlayerBody({
   defaultSidebarOpen: boolean;
   stagePreview?: ReactNode;
   onCloseStagePreview?: () => void;
+  styleOptions?: { id: string; name: string; idea?: string }[];
+  defaultStyle?: string | null;
+  extraParams?: Record<string, string | number>;
 }) {
   const t = useTranslations("mediaPlayer");
   const stageRef = useRef<StageHandle>(null);
@@ -343,6 +378,7 @@ function PlayerBody({
 
   const hasMobile = source?.kind === "iframe" || Boolean(source?.mobileUrl);
   const hasDesktop = source?.kind === "iframe" || Boolean(source?.desktopUrl);
+  const [chosenStyle, setChosenStyle] = useState("");
   const [viewport, setViewport] = useState<MediaViewport>(
     defaultViewport === "mobile"
       ? hasMobile
@@ -517,6 +553,20 @@ function PlayerBody({
         <div className="flex min-w-0 items-center gap-2">
           {viewportButton("mobile", t("viewMobile"), hasMobile)}
           {viewportButton("desktop", t("viewDesktop"), hasDesktop)}
+          {styleOptions && styleOptions.length > 0 && source?.kind === "iframe" && (
+            <select
+              aria-label="Estilo visual"
+              value={chosenStyle || defaultStyle || ""}
+              onChange={(event) => setChosenStyle(event.target.value)}
+              className="ml-1 rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/85 outline-none hover:bg-white/20"
+            >
+              {styleOptions.map((style) => (
+                <option key={style.id} value={style.id} title={style.idea} className="text-black">
+                  Estilo · {style.name}
+                </option>
+              ))}
+            </select>
+          )}
           <span className="ml-2 hidden min-w-0 truncate text-[13px] font-semibold text-white/85 md:inline">
             {title}
           </span>
@@ -598,14 +648,33 @@ function PlayerBody({
             <div
               ref={stageBoxRef}
               className={cn(
-                "relative mx-auto max-w-full overflow-hidden rounded-[18px] bg-black transition-[width,height] duration-200",
-                viewport === "mobile" ? "max-h-[74vh] w-[min(390px,88vw)]" : "max-h-[74vh] w-full",
+                "relative mx-auto w-full max-w-full max-h-[74vh] overflow-hidden rounded-[18px] transition-colors duration-500 motion-reduce:transition-none",
+                viewport === "mobile" ? "bg-[#4b515c]" : "bg-black",
               )}
-              style={{ aspectRatio: viewport === "mobile" ? "9 / 16" : "16 / 9" }}
+              style={{ aspectRatio: "16 / 9", containerType: "size" }}
             >
+              <div
+                data-phone-frame={viewport === "mobile" ? "true" : undefined}
+                className={cn(
+                  "absolute top-1/2 left-1/2 box-border -translate-x-1/2 -translate-y-1/2 bg-black transition-[width,height,padding,border-radius,box-shadow] duration-500 ease-in-out motion-reduce:transition-none",
+                  viewport === "mobile" && "rounded-[24px] p-[6px] shadow-[0_5px_22px_rgba(0,0,0,0.48),0_0_0_1px_#808691]",
+                )}
+                style={{
+                  width: viewport === "mobile" ? "min(calc(100% - 12px), calc(56.25cqh + 1.875px))" : "100%",
+                  height: viewport === "mobile" ? "calc(100% - 6px)" : "100%",
+                }}
+              >
+                <div className={cn("relative size-full overflow-hidden bg-black", viewport === "mobile" && "rounded-[18px]")}>
               {source.kind === "iframe" ? (
                 <>
-                  <IframeStage ref={stageRef} url={source.url} title={title} {...stageProps} />
+                  <IframeStage
+                    // La plantilla decide su cámara y su diseño al cargar según la proporción: al cambiar de formato se recarga.
+                    key={viewport}
+                    ref={stageRef}
+                    url={withParams(source.url, chosenStyle ? { estilo: chosenStyle, ...extraParams } : extraParams)}
+                    title={title}
+                    {...stageProps}
+                  />
                   {!started && (
                     <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black">
                       {source.poster && (
@@ -634,6 +703,8 @@ function PlayerBody({
                   />
                 )
               )}
+                </div>
+              </div>
               {hasStagePreview && (
                 <div className="absolute inset-0 z-20 flex items-center justify-center bg-black p-3">
                   {stagePreview}

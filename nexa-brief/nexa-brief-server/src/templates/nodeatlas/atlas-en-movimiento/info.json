@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "title": "Atlas en Movimiento · La guerra de los petroleros (DEMO)",
+  "summary": "Plantilla de mapas tácticos animados (territorios, unidades navales y de tierra, frentes con control territorial, retratos, documentos y cámara) con estilos intercambiables (V4 Atlas por defecto, V2 Mando, V3 Cine). Video de demostración «La guerra de los petroleros» (1980–1988), 4 min 22 s. Se ve en index.html con ?estilo= y ?formato=.",
+  "engine": "nodeatlas/_atlas + engine/tactico (incluido en la carpeta)",
+  "based_on": "bolivia-mar",
+  "is_new_design": false,
+  "status": "demo · lista para revisar",
+  "created_at": "2026-11-03",
+  "libraries": [],
+  "inputs": [],
+  "reference": "referencias/nodeaction/maps-video",
+  "catalog": {
+    "components": "engine/tactico/components.json",
+    "sprites": "engine/tactico/sprites/sprites.json",
+    "spritesDir": "engine/tactico/sprites/",
+    "sheet": "engine/tactico/sprites/hoja.png",
+    "gallery": "work/tactico/demo.html",
+    "thumbs": "work/tactico/thumbs/thumbs.json",
+    "tabs": [
+      {
+        "id": "textos",
+        "label": "Textos",
+        "families": [
+          "caption",
+          "label",
+          "text",
+          "badge",
+          "icon",
+          "intro",
+          "outro",
+          "header",
+          "statement",
+          "year",
+          "legend"
+        ]
+      },
+      {
+        "id": "imagenes-documentos",
+        "label": "Imágenes y documentos",
+        "families": [
+          "portrait",
+          "editorial",
+          "inventory",
+          "photo",
+          "media",
+          "image",
+          "document"
+        ],
+        "components": [
+          "callout.photo"
+        ]
+      },
+      {
+        "id": "unidades",
+        "label": "Unidades",
+        "families": [
+          "naval",
+          "air",
+          "ground",
+          "army",
+          "unit"
+        ]
+      },
+      {
+        "id": "mapa-rutas",
+        "label": "Mapa y rutas",
+        "families": [
+          "territory",
+          "flag",
+          "route",
+          "arrow",
+          "front",
+          "range"
+        ]
+      },
+      {
+        "id": "efectos",
+        "label": "Efectos",
+        "families": [
+          "fx",
+          "strike",
+          "trail"
+        ]
+      },
+      {
+        "id": "sitios-economia",
+        "label": "Sitios y economía",
+        "families": [
+          "site",
+          "money"
+        ]
+      }
+    ],
+    "animations": "engine/tactico/animations/index.json"
+  },
+  "estilos": "engine/tactico/estilos/index.json",
+  "demo": true,
+  "tags": [
+    "demo",
+    "atlas",
+    "nodeatlas"
+  ],
+  "notes": [
+    "Demo: el contenido sirve para probar la plantilla; para un video nuevo escribe una escena con engine/tactico/AGENTE.md.",
+    "Motor compartido en templates/nodeatlas/_atlas y templates/nodeatlas/_mapas; proto en templates/_proto.",
+    "Original de trabajo en sandbox/nodehistory/atlas-en-movimiento (se conserva)."
+  ]
+}

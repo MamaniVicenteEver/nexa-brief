@@ -1408,6 +1408,7 @@
     }
   },
   "sandbox": {
+    "thumbnailUnavailable": "Cover unavailable",
     "title": "Sandbox",
     "tabTitle": "Sandbox",
     "tabBadge": "WORKSHOP",
@@ -1512,8 +1513,17 @@
     "videoPoster": "Video cover for {title}",
     "updatedAt": "Updated {date}",
     "promote": "Move to production",
+    "preparationScope": "Creates a draft and shows components; promotion requires validation.",
+    "prepareWithAgent": "Prepare with AI",
+    "preparationState": { "queued": "Queued for preparation", "running": "Preparing with AI" },
+    "preparationReview": "Review proposal and outstanding items",
+    "preparationFailed": "Could not prepare the project.",
+    "promoteMainCategory": "Primary category",
+    "promoteSharedCategories": "Share with other categories",
+    "promoteSharedHelp": "The video is stored once and also appears in the selected categories.",
+    "promoteMapReview": "The project keeps its assets and remains pending review. The previous render is not considered current.",
     "promoteConfirmTitle": "Move this video to production?",
-    "promoteConfirmDescription": "It will be moved to {folderLabel} and appear in Preparation. Continue?",
+    "promoteConfirmDescription": "It will move to the primary category and also appear in the shared categories.",
     "promoteCancel": "Cancel",
     "promoteConfirm": "Move to production",
     "promoteLoading": "Moving…",
@@ -1540,6 +1550,8 @@
       "usage": "Usage by model",
       "total": "Total: {count} tokens",
       "noUsage": "No usage data recorded.",
+      "unreconciledEstimate": "Additional historical estimate: {count} tokens. It may overlap with recorded usage and is not added to the total.",
+      "partialUsage": "Recorded usage; some history may be missing.",
       "comparison": "Compared with the baseline",
       "baseline": "Baseline",
       "noBaseline": "There is no baseline for this engine yet.",
@@ -1550,7 +1562,8 @@
         "freshInput": "Fresh input",
         "cached": "Cached",
         "output": "Output",
-        "reasoning": "Reasoning"
+        "reasoning": "Reasoning",
+        "undivided": "Total without breakdown"
       },
       "verdict": {
         "efficient": "Efficient",
@@ -2149,11 +2162,37 @@
       "listen": "Listen to voice",
       "listening": "Synthesizing…"
     },
+    "designUsage": {
+      "heading": "Usage by design",
+      "choose": "Select a design",
+      "loading": "Loading usage…",
+      "error": "Could not load design usage.",
+      "videos": "Production videos",
+      "sandbox": "Sandbox projects",
+      "none": "No recorded usage.",
+      "contents": "{count} items",
+      "total": "Recorded total: {count} tokens",
+      "missing": "Without recorded usage: {count}.",
+      "estimates": "Historical estimates not added: {count}.",
+      "estimateItem": "Historical estimate · {name}: ≈{count} tokens",
+      "partial": "Totals may be incomplete. Shared briefs are counted once."
+    },
     "studio": {
       "toggleSidebar": "Show or hide the panel",
       "tab": {
         "texts": "Titles & metadata",
-        "record": "Record & publish"
+        "record": "Record & publish",
+        "usage": "Usage"
+      },
+      "usage": {
+        "loading": "Loading usage…",
+        "error": "Could not load usage.",
+        "unknown": "No usage data recorded.",
+        "total": "Recorded total: {count} tokens",
+        "estimatedTotal": "Historical estimate: ≈{count} tokens",
+        "partial": "The history may be incomplete.",
+        "undivided": "Without breakdown: {count} tokens",
+        "unmeasured": "Calls without reported usage: {count}."
       },
       "textsHint": "These are the texts used when publishing on each network.",
       "recordHeading": "Record",

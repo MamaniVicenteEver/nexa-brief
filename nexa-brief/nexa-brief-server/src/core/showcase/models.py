@@ -19,6 +19,8 @@ class Design(BaseModel):
     id: str
     name: str
     category: str
+    category_path: str | None = None
+    shared_categories: list[str] = Field(default_factory=list)
     state: Literal["prueba", "produccion"]
     family: str
     engine_id: str

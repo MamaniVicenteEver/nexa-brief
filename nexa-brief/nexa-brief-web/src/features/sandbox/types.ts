@@ -87,6 +87,7 @@ export interface SandboxModelUsage {
   freshInputTokens: number;
   outputTokens: number;
   reasoningTokens: number;
+  undividedTokens?: number;
   totalTokens: number;
 }
 
@@ -96,6 +97,7 @@ export interface SandboxInfo {
   totalTokens: number;
   cachedTokens: number;
   estimated: boolean;
+  unreconciledEstimateTokens?: number | null;
   baseline: { id: string; totalTokens: number } | null;
   ratioVsBaseline: number | null;
   forecastNext: { min: number; max: number; basis: string } | null;

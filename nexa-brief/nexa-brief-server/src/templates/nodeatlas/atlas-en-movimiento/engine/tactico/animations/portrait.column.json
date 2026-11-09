@@ -1,0 +1,106 @@
+{
+  "name": "portrait.column",
+  "family": "portrait",
+  "estilo": {
+    "usa": [
+      "estilos.ficha.foto",
+      "estilos.ficha.separacion",
+      "estilos.ficha.anchoTexto",
+      "estilos.ficha.nombre",
+      "estilos.ficha.cargo",
+      "estilos.ficha.pie",
+      "estilos.ficha.credito",
+      "formatos.movil.ranuras.fichaIzq",
+      "formatos.movil.ranuras.fichaDer",
+      "formatos.movil.ranuras.subtitulo",
+      "formatos.escritorio.ranuras.fichaIzq",
+      "formatos.escritorio.ranuras.fichaDer",
+      "formatos.escritorio.ranuras.subtitulo",
+      "paneles",
+      "estilos.titular.principal",
+      "formatos.movil.ranuras.titular",
+      "formatos.escritorio.ranuras.titular"
+    ]
+  },
+  "description": "Ficha de persona con foto sobre los datos. Úsala para presentar una persona con cargo, fecha y crédito.",
+  "duration": 7.35,
+  "loop": true,
+  "layer": 80,
+  "states": [
+    "normal"
+  ],
+  "params": {
+    "src": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Ruta del medio local relativa a la plantilla."
+    },
+    "name": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Nombre visible de la persona o elemento."
+    },
+    "role": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Cargo o función documentada de la persona."
+    },
+    "date": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Fecha documentada visible."
+    },
+    "credit": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Atribución visible del medio."
+    },
+    "side": {
+      "type": "enum",
+      "values": [
+        "izq",
+        "der"
+      ],
+      "default": "izq",
+      "range": [
+        "izq",
+        "der"
+      ],
+      "description": "Valor de side para la composición de portrait.column."
+    },
+    "focus": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Punto focal normalizado [x,y] del recorte de imagen."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-portrait-column",
+    "t": 0,
+    "type": "portrait.column",
+    "src": "assets/media/P01.png",
+    "name": "Ruhollah Jomeini",
+    "role": "Líder supremo de Irán",
+    "date": "6 may 1981",
+    "credit": "Ali Kaveh · PD-Iran · Commons",
+    "dur": 8,
+    "out": 7
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/portrait.column.png",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "assets/media/P01.png",
+    "identidad-opus/assets/fonts/Archivo.ttf"
+  ]
+}

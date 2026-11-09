@@ -10,6 +10,11 @@ function PostView() {
   return <p>Estado de imágenes: {usePreparationView()}</p>;
 }
 
+vi.mock("../../showcase/hooks/useStandardShowcase", () => ({
+  useStandardShowcase: () => ({ designs: { data: { designs: [
+    { id: "mapas-satelitales", name: "Mapas satelitales", state: "produccion", category_path: "node_history", shared_categories: ["node_economy"] },
+  ] } } }),
+}));
 vi.mock("../../sandbox/hooks/useSandbox", () => ({
   useSandbox: () => ({
     data: [
@@ -193,4 +198,10 @@ it("muestra la demo de Sandbox en su categoría sin promoverla ni mezclarla con 
   ).toBeTruthy();
   fireEvent.click(preparation.getByRole("button", { name: "Renderizados (1)" }));
   expect(preparation.queryByText("Demo Economía · Sandbox")).toBeNull();
+});
+
+
+it("muestra el diseño compartido en la categoría sin duplicarlo", () => {
+  render(<NextIntlClientProvider locale="es" messages={messages}><ExplainerCategoryWindow category={{ ...category, id: "node_economy", path: "node_economy" }} /></NextIntlClientProvider>);
+  expect(screen.getByRole("link", { name: "Mapas satelitales" }).getAttribute("href")).toBe("/showcase?section=produccion&design=mapas-satelitales");
 });

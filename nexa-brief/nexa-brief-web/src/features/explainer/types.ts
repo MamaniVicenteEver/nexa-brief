@@ -281,6 +281,7 @@ export interface CategoryDesigns {
 /** Textos y ángulo de un video. Se envía tal cual (snake_case) al backend. */
 export interface ExplainerBrief {
   video_id: string;
+  usage_trace_id?: string | null;
   narrative_id?: string | null;
   title_level?: TitleLevel | null;
   working_title: string;

@@ -1,5 +1,11 @@
 # AGENTS.md — Reglas para crear o modificar plantillas de video
 
+> **Perfiles v2/v3:** el árbol de producción y sandbox mostrado más abajo es
+> histórico para episodios. Prototipos, referencias y producciones del perfil
+> se guardan en `$NEXA_PROFILE_DIR/sandbox/` y `$NEXA_PROFILE_DIR/productions/`.
+> Los motores y definiciones compartidos permanecen en el repositorio. Verifica
+> el perfil activo antes de escribir; no copies proyectos privados al repositorio.
+
 > Este archivo es para cualquier agente de IA (Codex, Claude, Cursor, Copilot, Gemini…)
 > o persona que vaya a **crear una plantilla nueva** o **modificar una existente** dentro de
 > `src/templates/`. Leelo entero antes de tocar nada. Aplica a todo lo que hay debajo

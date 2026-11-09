@@ -1,10 +1,15 @@
 #!/usr/bin/env bash
 # Non-secret dataset selection, separate from execution mode.
+export NEXA_PROJECT_ROOT="${NEXA_PROJECT_ROOT:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)}"
+if [[ -z "${NEXA_PROFILE_DIR:-}" && -z "${NEXA_DATA_PROFILE:-}" && -z "${NEXA_DATA_HOME:-}" ]]; then
+  _nexa_default_profile="$(python3 "$NEXA_PROJECT_ROOT/scripts/profile-default.py" "$NEXA_PROJECT_ROOT/.env")" || return 1 2>/dev/null || exit 1
+  if [[ -n "$_nexa_default_profile" ]]; then export NEXA_PROFILE_DIR="$_nexa_default_profile"; fi
+  unset _nexa_default_profile
+fi
 export NEXA_DATA_HOME="${NEXA_DATA_HOME:-${XDG_DATA_HOME:-$HOME/.local/share}/nexa-brief}"
 export NEXA_DATA_PROFILE="${NEXA_DATA_PROFILE:-profesional}"
 export NEXA_PROFILE_DIR="${NEXA_PROFILE_DIR:-$NEXA_DATA_HOME/profiles/$NEXA_DATA_PROFILE}"
 
-export NEXA_PROJECT_ROOT="${NEXA_PROJECT_ROOT:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)}"
 _nexa_set_profile_paths() {
   local profile_id name kind selected_path validated_web_data
   if [[ -f "$NEXA_PROFILE_DIR/profile.json" ]]; then

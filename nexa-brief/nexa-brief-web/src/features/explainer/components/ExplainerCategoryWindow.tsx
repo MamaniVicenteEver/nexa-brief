@@ -1,6 +1,8 @@
 "use client";
 
 import { Images, Video } from "lucide-react";
+import Link from "next/link";
+import { useStandardShowcase } from "@/features/showcase/hooks/useStandardShowcase";
 import { useTranslations } from "next-intl";
 import { type ReactNode, useState } from "react";
 import type { CategoryNode } from "@/features/categories";
@@ -20,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { useExplainerVideos } from "../hooks/useExplainer";
 import { CreateExplainerVideoModal } from "./CreateExplainerVideoModal";
+import { DesignUsagePanel } from "./DesignUsagePanel";
 import { ExplainerPrepSection } from "./ExplainerPrepSection";
 import { ProductionsList } from "./ProductionsList";
 
@@ -42,12 +45,18 @@ export function ExplainerCategoryWindow({
   const [contentType, setContentType] = useState("videos");
   const [view, setView] = useState<PreparationView>("preparation");
   const videos = useExplainerVideos(category.path);
+  const showcase = useStandardShowcase("");
+  const categoryDesigns = (showcase.designs.data?.designs ?? []).filter((design) =>
+    design.state === "produccion" && [design.category_path, ...(design.shared_categories ?? [])].some((path) =>
+      path === category.path || path?.startsWith(`${category.path}/`),
+    ),
+  );
   const images = useImagePosts(category.id);
   const selected = contentType === "videos" ? videos : images;
   const videoItems = videos.data ?? [];
   const imageItems = images.data ?? [];
   const sandbox = useSandbox();
-  const sandboxDemos = sandboxDesignDemos(sandbox.data ?? [], category.id, videoItems);
+  const sandboxDemos = sandboxDesignDemos(sandbox.data ?? [], category.id, videoItems, categoryDesigns);
   const counts =
     contentType === "videos"
       ? {
@@ -121,11 +130,16 @@ export function ExplainerCategoryWindow({
               {t("window.create")}
             </button>
           </div>
+          {categoryDesigns.length > 0 && <div className="flex flex-wrap items-center gap-2 text-xs text-nb-mute">
+            <span>Diseños:</span>
+            {categoryDesigns.map((design) => <Link key={design.id} href={`/showcase?section=produccion&design=${encodeURIComponent(design.id)}`} className="rounded-full border border-nb-line px-3 py-1.5 text-nb-ink hover:border-nb-ink">{design.name}</Link>)}
+          </div>}
           <PreparationViewContext.Provider value={view}>
             <TabsContent value="videos" forceMount hidden={contentType !== "videos"}>
               <ExplainerPrepSection
                 categoryPath={category.path}
                 sandboxDemos={sandboxDemos}
+                productionDesignIds={categoryDesigns.map((design) => design.id)}
                 embedded
               />
               <ProductionsList categoryPath={category.path} />
@@ -138,6 +152,7 @@ export function ExplainerCategoryWindow({
           </PreparationViewContext.Provider>
         </Tabs>
       </section>
+      <DesignUsagePanel key={category.path} categoryPath={category.path} />
       {samples}
 
       <CreateExplainerVideoModal

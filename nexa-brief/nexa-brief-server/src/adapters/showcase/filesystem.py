@@ -487,7 +487,9 @@ class FilesystemShowcaseAdapter:
             _write(_safe(src, "design.json"), j["manifest_before"])
         journal.unlink()
 
-    def promote(self, design_id):
+    def promote(self, design_id, category_path=None, shared_categories=None):
+        if category_path is not None:
+            raise ShowcaseConflict("La selección de categorías requiere el perfil actualizado")
         ident = _id(design_id)
         with self._lock():
             rows = self._rows()

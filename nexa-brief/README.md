@@ -155,16 +155,31 @@ Verificar build, inicio, salud y una llamada real (`GET /api/v1/niches`):
 make docker-verify
 ```
 
-Mantenimiento (nunca borra volúmenes):
+Para actualizar el Docker de web y API después de cambiar código, ejecutá siempre
+desde la raíz del proyecto, una vez comprobado que no haya trabajos activos:
 
 ```bash
-./scripts/docker-refresh.sh --build     # solo actualizar imágenes
+./scripts/docker-refresh.sh --restart
+```
+
+El script conserva la imagen usada anteriormente como `previous`, construye las
+imágenes `latest`, recrea web y API y espera a que ambos estén saludables. Solo
+entonces retira imágenes antiguas sin uso de este proyecto; conserva `previous`
+para recuperación y no borra volúmenes ni datos del perfil. Las capas de Docker
+pueden compartirse y no necesariamente se recupera todo su tamaño aparente.
+
+Otras opciones:
+
+```bash
+./scripts/docker-refresh.sh --build     # solo construir; no recrea servicios
 ./scripts/docker-refresh.sh --restart   # reconstruir y recrear web + API
 ./scripts/docker-refresh.sh --fresh     # reconstrucción completa sin caché
 ```
 
-Los volúmenes `nexa-brief-data`, `nexa-brief-output`, `nexa-brief-accounts` y `nexa-brief-web-data` guardan
-biblioteca, renders, credenciales cifradas y usuarios. **Esto los borra:** `docker compose down -v`.
+El Compose actual monta carpetas del perfil del host para datos, renders,
+conexiones y usuarios. Recrear imágenes o contenedores no debe borrar esas
+carpetas. Evitá `docker compose down -v`: elimina los volúmenes nombrados que
+puedan existir en instalaciones anteriores.
 
 ## Acceder desde otra máquina (LAN / Tailscale)
 

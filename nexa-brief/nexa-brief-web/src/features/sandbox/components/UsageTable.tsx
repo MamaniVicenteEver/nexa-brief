@@ -23,6 +23,7 @@ export function UsageTable({
     cached: string;
     output: string;
     reasoning: string;
+    undivided: string;
     empty: string;
   };
 }) {
@@ -50,10 +51,13 @@ export function UsageTable({
               </th>
             </tr>
             {[
+              ...((row.undividedTokens && !row.inputTokens && !row.cachedInputTokens && !row.outputTokens && !row.reasoningTokens) ? [] : [
               [labels.input, row.freshInputTokens],
               [labels.cached, row.cachedInputTokens],
               [labels.output, row.outputTokens],
               [labels.reasoning, row.reasoningTokens],
+              ]),
+              ...(row.undividedTokens ? [[labels.undivided, row.undividedTokens]] : []),
             ].map(([label, value]) => (
               <tr key={label}>
                 <th scope="row" className="px-2 py-1.5 font-medium text-nb-mute">

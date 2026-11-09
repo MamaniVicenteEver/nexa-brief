@@ -128,18 +128,25 @@ def run(video_dir: pathlib.Path, role: str, prompt_file: str, out: str = "", con
                 "Entrega el borrador como texto Markdown. Trabaja solo con el pedido y el contexto provistos; "
                 "no inventes hechos ni escribas archivos."
             )
-            result = asyncio.run(codex_runner().run(
-                prompt,
-                cwd=video_dir,
-                log_path=cli_log,
-                timeout_seconds=1800,
-                scope=AgentScope(
-                    writable_dir=".",
-                    os_sandbox_dir=".",
-                    model=model,
-                    reasoning_effort=spec.get("reasoning_effort"),
-                ),
-            ))
+            def _go(runner, mdl, effort, log_path):
+                return asyncio.run(runner.run(
+                    prompt,
+                    cwd=video_dir,
+                    log_path=log_path,
+                    timeout_seconds=1800,
+                    scope=AgentScope(writable_dir=".", os_sandbox_dir=".", model=mdl, reasoning_effort=effort),
+                ))
+
+            result = _go(codex_runner(), model, spec.get("reasoning_effort"), cli_log)
+            fb = spec.get("fallback")
+            if (not result.ok or not result.last_message.strip()) and isinstance(fb, dict) and fb.get("provider") in ("claude", "codex"):
+                # Respaldo (ej. Codex sin cuota -> Claude Haiku 5.5): se registra, nunca es silencioso.
+                from src.adapters.agent.factory import get_agent
+                print(f"  {provider} falló (código {result.exit_code}); respaldo {fb["provider"]}/{fb.get("model", "")}", flush=True)
+                provider, model = fb["provider"], fb.get("model", "")
+                result = _go(get_agent(provider), model or None, fb.get("reasoning_effort"),
+                             cli_log.with_name(cli_log.stem + ".fallback.jsonl"))
+                note_fb = f" (respaldo {provider}/{model})"
             data["usage"] = result.usage or {}
             secs = result.duration_seconds
             text = result.last_message.strip()

@@ -1,9 +1,11 @@
 "use client";
 
-import { Clapperboard, ExternalLink, Loader2, Type } from "lucide-react";
+import { BarChart3, Clapperboard, ExternalLink, Loader2, Type } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
+import { httpClient } from "@/infrastructure/api/http-client";
 import { AccountFormatChoice } from "@/shared/components/publish/AccountFormatChoice";
 import { BrandAccountPicker } from "@/shared/components/publish/BrandAccountPicker";
 import {
@@ -24,10 +26,11 @@ import { PublishPackagePanel } from "./PublishPackagePanel";
 import { PublishTextsControl } from "./PublishTextsControl";
 import { ThumbnailPicker } from "./ThumbnailPicker";
 
-type Tab = "texts" | "record";
+type Tab = "texts" | "record" | "usage";
 const TABS: { id: Tab; Icon: typeof Type }[] = [
   { id: "texts", Icon: Type },
   { id: "record", Icon: Clapperboard },
+  { id: "usage", Icon: BarChart3 },
 ];
 
 const FIELD = "w-full rounded-xl border border-nb-line bg-transparent px-3 py-2 text-[13px]";
@@ -35,6 +38,43 @@ const FIELD = "w-full rounded-xl border border-nb-line bg-transparent px-3 py-2 
 // La grabación normal inicia en 16:9; en publicación, cada cuenta elige UNO de los formatos
 // marcados en «Grabar».
 const RECORD_FORMATS: RecordFormat[] = ["16x9", "9x16"];
+
+type UsageResponse = {
+  usage_status: "unknown" | "partial";
+  total_tokens: number;
+  estimated?: boolean;
+  unreconciled_estimate_tokens?: number | null;
+  unmeasured_calls: number;
+  totals_by_model: Array<{ provider: string; model: string; total_tokens: number; undivided_tokens: number }>;
+};
+
+export function UsageTab({ videoId }: { videoId: string }) {
+  const t = useTranslations("explainer.studio.usage");
+  const query = useQuery({
+    queryKey: ["video-usage", videoId],
+    queryFn: ({ signal }) => httpClient<UsageResponse>(`/api/v1/content/usage/video/${encodeURIComponent(videoId)}`, { signal }),
+    staleTime: 30_000,
+    retry: false,
+  });
+  if (query.isLoading) return <p className="text-xs text-nb-mute">{t("loading")}</p>;
+  if (query.isError || !query.data) return <p className="text-xs text-nb-mute">{t("error")}</p>;
+  if (query.data.usage_status === "unknown") return <p className="text-xs text-nb-mute">{t("unknown")}</p>;
+  return (
+    <section className="space-y-2 text-xs text-nb-ink-soft">
+      <h3 className="font-bold text-nb-ink">{t(query.data.estimated ? "estimatedTotal" : "total", { count: query.data.total_tokens.toLocaleString() })}</h3>
+      <p>{t("partial")}</p>
+      {query.data.unreconciled_estimate_tokens != null && <p>{t("estimatedTotal", { count: query.data.unreconciled_estimate_tokens.toLocaleString() })}</p>}
+      {query.data.totals_by_model.map((row) => (
+        <div key={`${row.provider}:${row.model}`} className="rounded-lg border border-nb-line p-2">
+          <p className="font-semibold text-nb-ink">{row.model || row.provider} · {row.provider}</p>
+          <p>{t(query.data.estimated ? "estimatedTotal" : "total", { count: row.total_tokens.toLocaleString() })}</p>
+          {row.undivided_tokens > 0 && <p>{t("undivided", { count: row.undivided_tokens.toLocaleString() })}</p>}
+        </div>
+      ))}
+      {query.data.unmeasured_calls > 0 && <p>{t("unmeasured", { count: query.data.unmeasured_calls })}</p>}
+    </section>
+  );
+}
 
 function CopyBlock({
   label,
@@ -416,8 +456,10 @@ export function ExplainerStudioSidebar({
             thumbnailPreview={thumbnailPreview}
             onThumbnailPreview={onThumbnailPreview}
           />
-        ) : (
+        ) : tab === "record" ? (
           <RecordTab key={video.videoId} video={video} />
+        ) : (
+          <UsageTab key={video.videoId} videoId={video.videoId} />
         )}
       </div>
     </div>

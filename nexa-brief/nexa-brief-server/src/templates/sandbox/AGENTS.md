@@ -1,5 +1,15 @@
 # AGENTS.md — Casa de pruebas (sandbox)
 
+> **Ubicación vigente (v2/v3):** esta carpeta del repositorio contiene motores,
+> herramientas y documentación histórica; los proyectos y referencias activos
+> viven en `$NEXA_PROFILE_DIR/sandbox/`. Resuelve el perfil efectivo antes de
+> escribir y lee sus instrucciones. El mapa y ejemplos de rutas del resto de este
+> documento describen el layout heredado, no el destino de proyectos nuevos.
+> No copies un proyecto de perfil al repositorio ni lo agregues a Git.
+> Los motores reutilizables compartidos sí pueden vivir bajo
+> `src/templates/sandbox/<categoría>/_<motor>/`; una modificación del motor no
+> implica copiar el episodio, sus medios o sus evidencias al repositorio.
+
 **Guía rápida para cualquier agente nuevo:** leé primero [`SANDBOX.md`](SANDBOX.md). Después,
 abrí solo el `AGENTS.md` de la carpeta en la que vas a trabajar.
 
@@ -62,7 +72,7 @@ pasa por el pipeline de plantillas. **Tech, History, Politics y Economy usan el 
 
 ## Reglas de la casa (todas las carpetas)
 
-1. **Solo escribís dentro de `sandbox/<tema>/`.** Para tocar producción, se promueve (no se edita a mano).
+1. **Solo escribís el proyecto en `$NEXA_PROFILE_DIR/sandbox/<tema>/`** en v2/v3. Para tocar producción, se promueve mediante el servicio.
 2. **No se publica nada** ni se usa `data/canales/` desde acá.
 3. **No duplicar motores**: los videos de prueba del explainer usan `_tools/explainer-kit` (el mismo
    de producción). Si el motor necesita un cambio, es un cambio de producción: avisar al usuario.
@@ -72,8 +82,7 @@ pasa por el pipeline de plantillas. **Tech, History, Politics y Economy usan el 
 
 ## Cómo se promueve
 
-- **Explainer** (tech/history/politics/economy): `kit.py promote <video-id>` mueve
-  `sandbox/<tema>/<id>/` a `src/templates/<tema>/<id>/` y corrige la ruta al motor. Desde ese momento
-  aparece en `/plantillas` (tarjeta + modal) listo para grabar y publicar.
+- **Explainer** (tech/history/politics/economy): usa el servicio de promoción del perfil.
+  La ruta antigua `src/templates/<tema>/<id>/` corresponde al layout heredado.
 - **NodeMotion**: se sigue `nodemotion/AGENTS.md` (registro en `templates.json` + `niches.json`,
   reloj HyperFrames, validación y tests).

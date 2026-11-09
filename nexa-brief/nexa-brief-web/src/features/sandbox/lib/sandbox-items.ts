@@ -15,3 +15,15 @@ export function countSandboxItems(folders: SandboxFolder[]): number {
     0,
   );
 }
+
+/** La muestra asociada a un diseño ya registrado se presenta en su categoría de producción. */
+export function hideProductionDesignDemos(
+  folders: SandboxFolder[],
+  designs: Array<{ id: string; state: string }>,
+): SandboxFolder[] {
+  const productionIds = new Set(designs.filter((design) => design.state === "produccion").map((design) => design.id));
+  return folders.map((folder) => folder.role === "references" ? folder : {
+    ...folder,
+    items: folder.items.filter((item) => !productionIds.has(item.id)),
+  });
+}

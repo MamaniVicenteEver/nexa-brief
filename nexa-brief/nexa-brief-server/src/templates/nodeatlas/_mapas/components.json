@@ -1,0 +1,1615 @@
+{
+  "comps": [
+    {
+      "name": "map.layer.fill",
+      "summary": "Rellena país/región; region admite Natural Earth, alias o scene.regions.",
+      "tags": [
+        "mapa",
+        "capa",
+        "fill"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fade": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Entrada s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Salida s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "region": {
+          "type": "string",
+          "default": null,
+          "doc": "Región.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#e3122a",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hatch": {
+          "type": "bool|string",
+          "default": false,
+          "doc": "Rayado true o color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "border": {
+          "type": "string|bool",
+          "default": null,
+          "doc": "Color o false.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 1,
+          "doc": "Intensidad.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flicker": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Instante destello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/layers.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar",
+        "sandbox/nodehistory/fronteras-demo"
+      ]
+    },
+    {
+      "name": "map.layer.line",
+      "summary": "Frontera/ruta/río, con pts o from/to.",
+      "tags": [
+        "mapa",
+        "capa",
+        "line"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fade": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Entrada s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Salida s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pts": {
+          "type": "array",
+          "default": null,
+          "doc": "Lugares.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Origen.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Destino.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#ffe14a",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "w": {
+          "type": "number",
+          "default": 3.2,
+          "doc": "Grosor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "draw": {
+          "type": "number",
+          "default": 1.2,
+          "doc": "Duración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "closed": {
+          "type": "bool",
+          "default": false,
+          "doc": "Cierra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "smooth": {
+          "type": "bool",
+          "default": true,
+          "doc": "Suaviza.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bow": {
+          "type": "number",
+          "default": 0,
+          "doc": "Arco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dash": {
+          "type": "bool",
+          "default": false,
+          "doc": "Discontinua.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": false,
+          "doc": "Flecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "head": {
+          "type": "number",
+          "default": 26,
+          "doc": "Tamaño punta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/layers.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar",
+        "sandbox/nodehistory/fronteras-demo"
+      ]
+    },
+    {
+      "name": "map.layer.arrow",
+      "summary": "Flecha; reutiliza line y bow default 0.18.",
+      "tags": [
+        "mapa",
+        "capa",
+        "arrow"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fade": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Entrada s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Salida s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pts": {
+          "type": "array",
+          "default": null,
+          "doc": "Lugares.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "from": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Origen.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Destino.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#ffe14a",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "w": {
+          "type": "number",
+          "default": 3.2,
+          "doc": "Grosor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "draw": {
+          "type": "number",
+          "default": 1.2,
+          "doc": "Duración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bow": {
+          "type": "number",
+          "default": 0.18,
+          "doc": "Arco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "smooth": {
+          "type": "bool",
+          "default": true,
+          "doc": "Suaviza.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dash": {
+          "type": "bool",
+          "default": false,
+          "doc": "Discontinua.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "head": {
+          "type": "number",
+          "default": 26,
+          "doc": "Punta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/layers.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar"
+      ]
+    },
+    {
+      "name": "map.layer.label",
+      "summary": "Rótulo estilo tag, big o sea.",
+      "tags": [
+        "mapa",
+        "capa",
+        "label"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fade": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Entrada s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Salida s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Lugar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 30,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "style": {
+          "type": "enum",
+          "default": "tag",
+          "doc": "Estilo.",
+          "required": false,
+          "options": [
+            "tag",
+            "big",
+            "sea"
+          ],
+          "min": null,
+          "max": null
+        },
+        "rot": {
+          "type": "number",
+          "default": 0,
+          "doc": "Rotación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "doc": "Offset X.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "doc": "Offset Y.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "mapScale": {
+          "type": "number",
+          "default": null,
+          "doc": "Escala cámara.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/layers.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar",
+        "sandbox/nodehistory/fronteras-demo"
+      ]
+    },
+    {
+      "name": "map.layer.pin",
+      "summary": "Punto ciudad/puerto con etiqueta.",
+      "tags": [
+        "mapa",
+        "capa",
+        "pin"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fade": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Entrada s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Salida s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Lugar.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Etiqueta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "side": {
+          "type": "enum",
+          "default": "right",
+          "doc": "Lado.",
+          "required": false,
+          "options": [
+            "right",
+            "left",
+            "top",
+            "bottom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 24,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#ffffff",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "glow": {
+          "type": "string",
+          "default": "#5fd0ff",
+          "doc": "Halo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "mapScale": {
+          "type": "number",
+          "default": null,
+          "doc": "Escala.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/layers.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar"
+      ]
+    },
+    {
+      "name": "map.layer.icon",
+      "summary": "Icono battle, anchor, mine o star.",
+      "tags": [
+        "mapa",
+        "capa",
+        "icon"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fade": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Entrada s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Salida s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Lugar.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "icon": {
+          "type": "enum",
+          "default": null,
+          "doc": "Tipo.",
+          "required": true,
+          "options": [
+            "battle",
+            "anchor",
+            "mine",
+            "star"
+          ],
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Etiqueta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": null,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/layers.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar"
+      ]
+    },
+    {
+      "name": "map.layer.flag",
+      "summary": "Bandera id de flags.js; badge o pole.",
+      "tags": [
+        "mapa",
+        "capa",
+        "flag"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fade": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Entrada s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Salida s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flag": {
+          "type": "string",
+          "default": null,
+          "doc": "ID flags.js.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Lugar.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "style": {
+          "type": "enum",
+          "default": "badge",
+          "doc": "Presentación.",
+          "required": false,
+          "options": [
+            "badge",
+            "pole"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": null,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/layers.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar",
+        "sandbox/nodehistory/fronteras-demo"
+      ]
+    },
+    {
+      "name": "map.layer.photo",
+      "summary": "Retrato circular.",
+      "tags": [
+        "mapa",
+        "capa",
+        "photo"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fade": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Entrada s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Salida s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "string",
+          "default": null,
+          "doc": "Imagen local.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Lugar.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": null,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": null,
+          "doc": "Nombre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gray": {
+          "type": "bool",
+          "default": false,
+          "doc": "Escala grises.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/layers.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/fronteras-demo"
+      ]
+    },
+    {
+      "name": "map.layer.year",
+      "summary": "Año en pastilla.",
+      "tags": [
+        "mapa",
+        "capa",
+        "year"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fade": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Entrada s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Salida s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Posición vertical.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": null,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/layers.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar",
+        "sandbox/nodehistory/fronteras-demo"
+      ]
+    },
+    {
+      "name": "map.layer.big",
+      "summary": "Cifra grande.",
+      "tags": [
+        "mapa",
+        "capa",
+        "big"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fade": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Entrada s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Salida s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": null,
+          "doc": "Tamaño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/layers.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar",
+        "sandbox/nodehistory/fronteras-demo"
+      ]
+    },
+    {
+      "name": "map.layer.dot",
+      "summary": "Punto brillante pulsante.",
+      "tags": [
+        "mapa",
+        "capa",
+        "dot"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fade": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Entrada s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Salida s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Lugar.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#7dff6a",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "r": {
+          "type": "number",
+          "default": 9,
+          "doc": "Radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/layers.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/fronteras-demo"
+      ]
+    },
+    {
+      "name": "map.layer.crowd",
+      "summary": "Tropas como nube de puntos.",
+      "tags": [
+        "mapa",
+        "capa",
+        "crowd"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Aparición segundo/ancla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fade": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Entrada s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Salida s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Lugar.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "n": {
+          "type": "number",
+          "default": 40,
+          "doc": "Cantidad.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "radius": {
+          "type": "number",
+          "default": null,
+          "doc": "Radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "spread": {
+          "type": "number",
+          "default": 1.2,
+          "doc": "Tiempo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#ffd84a",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/layers.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/fronteras-demo"
+      ]
+    },
+    {
+      "name": "map.camera.key",
+      "summary": "Vuelo: focus+pad/minSpan o centro c+span; pan, zoom y ajustes por orientación.",
+      "tags": [
+        "cámara",
+        "transición"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Segundo/ancla.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Lugares/regiones.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pad": {
+          "type": "number",
+          "default": 0.18,
+          "doc": "Margen.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "minSpan": {
+          "type": "number",
+          "default": 1.2,
+          "doc": "Span mínimo grados.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "c": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Centro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "span": {
+          "type": "number",
+          "default": null,
+          "doc": "Grados visibles.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": null,
+          "doc": "Factor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "offset": {
+          "type": "array",
+          "default": [
+            0,
+            0
+          ],
+          "doc": "[dx,dy].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": null,
+          "doc": "Auto 1.2-4.2 s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ease": {
+          "type": "enum",
+          "default": "inOut",
+          "doc": "Curva.",
+          "required": false,
+          "options": [
+            "inOut",
+            "out",
+            "smooth"
+          ],
+          "min": null,
+          "max": null
+        },
+        "drift": {
+          "type": "number",
+          "default": 0.012,
+          "doc": "Zoom lento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pan": {
+          "type": "array",
+          "default": [
+            0,
+            0
+          ],
+          "doc": "Paneo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "portrait": {
+          "type": "object",
+          "default": null,
+          "doc": "Override vertical.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "landscape": {
+          "type": "object",
+          "default": null,
+          "doc": "Override horizontal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/camera.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar",
+        "sandbox/nodehistory/fronteras-demo"
+      ]
+    },
+    {
+      "name": "map.region",
+      "summary": "scene.regions acepta polígono, unión o país recortado.",
+      "tags": [
+        "geografía",
+        "mapa"
+      ],
+      "layer": "main",
+      "params": {
+        "poly": {
+          "type": "array",
+          "default": null,
+          "doc": "Vértices lugares/[lon,lat].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "within": {
+          "type": "string|array",
+          "default": null,
+          "doc": "País(es) de recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "union": {
+          "type": "array",
+          "default": null,
+          "doc": "Regiones.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "of": {
+          "type": "string",
+          "default": null,
+          "doc": "País base.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cut": {
+          "type": "array",
+          "default": null,
+          "doc": "Polígono recortador.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/geo.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar"
+      ]
+    },
+    {
+      "name": "map.place",
+      "summary": "Lugar con nombre de places.json/scene.places o [longitud, latitud].",
+      "tags": [
+        "geografía",
+        "mapa"
+      ],
+      "layer": "main",
+      "params": {
+        "place": {
+          "type": "string|array",
+          "default": null,
+          "doc": "Nombre en places.json/scene.places o coordenadas [lon,lat].",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/geo.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar",
+        "sandbox/nodehistory/fronteras-demo"
+      ]
+    },
+    {
+      "name": "map.satellite",
+      "summary": "Imagen satelital con bounds [lonO,lonE,latS,latN]; mundo base está activo salvo satDefault=false.",
+      "tags": [
+        "imagen",
+        "mapa"
+      ],
+      "layer": "main",
+      "params": {
+        "src": {
+          "type": "string",
+          "default": null,
+          "doc": "Ruta local.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bounds": {
+          "type": "array",
+          "default": null,
+          "doc": "Límites geográficos.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodehistory/_mapas/mapas.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar"
+      ]
+    }
+  ]
+}

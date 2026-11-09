@@ -1,6 +1,6 @@
 # Producción de Atlas Cinemático
 
-Atlas separa el motor compartido de cada episodio. El catálogo `components.json` es la entrada para elegir componentes sin revisar el código. La galería del showcase usa ese mismo catálogo. La aplicación conserva la demo de referencia; un episodio se crea en `src/templates/nodehistory/<id>/`.
+Atlas separa el motor compartido de cada episodio. El catálogo `components.json` es la entrada para elegir componentes sin revisar el código. La galería del showcase usa ese mismo catálogo. En perfiles v2/v3, los episodios pertenecen a `$NEXA_PROFILE_DIR/productions/<categoría>/<id>/`. La herramienta `produce.mjs new` y las rutas `src/templates/nodehistory/<id>/` de esta guía son heredadas y no deben utilizarse para crear episodios del perfil.
 
 Todos los comandos de esta guía parten de `nexa-brief-server/`. Node ejecuta el asistente; Python usa `.venv/bin/python` si existe. Puedes fijar otro entorno con `ATLAS_PYTHON=/ruta/al/python`. No cambies modelos ni motores para ahorrar pasos de validación.
 

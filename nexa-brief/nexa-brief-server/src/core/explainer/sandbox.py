@@ -213,7 +213,7 @@ def load_item(
     )
     promote_blocker = PROMOTE_BLOCKER_BY_KIND[kind]
     promotable = False
-    if kind == "explainer_kit":
+    if kind in {"explainer_kit", "mapas"}:
         selected = get_sandbox_dir().resolve()
         template_override = None if layout_for_settings(settings).schema_version >= 2 and item_dir.resolve().is_relative_to(selected) else item_dir.parents[2]
         promote_blocker = promotion.promotion_blocker(item_dir, templates_dir=template_override)

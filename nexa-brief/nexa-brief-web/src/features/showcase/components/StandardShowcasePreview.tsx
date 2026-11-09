@@ -4,6 +4,7 @@ import { Play, RotateCcw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { resolveApiUrl } from "@/infrastructure/api/http-client";
 import { type ShowcaseEntry, safeShowcaseUrl } from "../api/standard-showcase-repository";
+import { useShowcaseStyle } from "../lib/showcase-style";
 
 /** Both the kit and standalone engines report readiness; only kit accepts playback commands. */
 export function StandardShowcasePreview({
@@ -17,6 +18,7 @@ export function StandardShowcasePreview({
   suspended?: boolean;
   modal?: boolean;
 }) {
+  const estilo = useShowcaseStyle();
   const host = useRef<HTMLDivElement>(null);
   const frame = useRef<HTMLIFrameElement>(null);
   const ended = useRef(false);
@@ -28,6 +30,11 @@ export function StandardShowcasePreview({
   const path = safeShowcaseUrl(entry.preview_url);
   const url = path ? new URL(path, "https://showcase.invalid") : null;
   url?.searchParams.set("format", format);
+  if (estilo) url?.searchParams.set("estilo", estilo);
+  if (url?.pathname.includes("/preview/tactico/")) {
+    url.searchParams.set("formato", format === "9x16" ? "movil" : "escritorio");
+    if (estilo) url.searchParams.set("estilo", estilo);
+  }
   const src = url ? resolveApiUrl(`${url.pathname}${url.search}${url.hash}`) : "";
   const mounted = visible && !suspended;
 

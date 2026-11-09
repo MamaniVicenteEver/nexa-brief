@@ -137,11 +137,11 @@ export function SandboxInfoSidebar({
                 <h3 className="text-[11px] font-bold uppercase tracking-wide text-nb-mute">
                   {t("usage")}
                 </h3>
-                <span className="text-right text-[10px] font-bold tabular-nums text-nb-ink">
+                {(data?.totalsByModel.length ?? 0) > 0 && <span className="text-right text-[10px] font-bold tabular-nums text-nb-ink">
                   {t("total", {
                     count: formatTokens(data?.totalTokens ?? 0, locale, Boolean(data?.estimated)),
                   })}
-                </span>
+                </span>}
               </div>
               <UsageTable
                 rows={data?.totalsByModel ?? []}
@@ -154,9 +154,18 @@ export function SandboxInfoSidebar({
                   cached: t("columns.cached"),
                   output: t("columns.output"),
                   reasoning: t("columns.reasoning"),
+                  undivided: t("columns.undivided"),
                   empty: t("noUsage"),
                 }}
               />
+              {(data?.totalsByModel.length ?? 0) > 0 && (
+                <p className="text-[10px] text-nb-mute">{t("partialUsage")}</p>
+              )}
+              {data?.unreconciledEstimateTokens != null && (
+                <p className="text-[10px] text-nb-mute">{t("unreconciledEstimate", {
+                  count: formatTokens(data.unreconciledEstimateTokens, locale, true),
+                })}</p>
+              )}
             </section>
 
             <BaselineComparison

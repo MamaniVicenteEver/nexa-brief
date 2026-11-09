@@ -38,6 +38,9 @@ class SandboxProjectsAdapter:
         if not isinstance(info, dict) or not isinstance(manifest, dict):
             return None
         candidates = [project_id, info.get("design"), manifest.get("design")]
+        # Several sandbox episodes may share one versioned engine and catalog.
+        if info.get("engine") == "nodehistory/_mapas":
+            candidates.append("mapas-satelitales")
         if isinstance(info.get("engine"), str) and info["engine"].startswith("explainer-kit:"):
             candidates.append(info["engine"].split(":", 1)[1])
         existing = next((v for v in candidates if isinstance(v, str) and v in shared), None)

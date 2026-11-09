@@ -9,7 +9,10 @@ import re
 from pathlib import Path
 from typing import Any
 
-from src.templates._tools.sandbox.costs import calculate_costs
+from src.config.profile_layout import layout_for_settings
+from src.config.settings import settings
+from src.core.explainer.usage_traces import events_for_content
+from src.templates._tools.sandbox.costs import _template_cost, calculate_costs
 
 
 def _empty_result(info: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -23,6 +26,8 @@ def _empty_result(info: dict[str, Any] | None = None) -> dict[str, Any]:
         "total_tokens": 0,
         "cached_tokens": 0,
         "estimated": bool(backfill.get("estimated")) if isinstance(backfill, dict) else False,
+        "unreconciled_estimate_tokens": None,
+        "usage_status": "unknown",
         "baseline": None,
         "ratio_vs_baseline": None,
         "forecast_next": None,
@@ -41,9 +46,25 @@ def _read_info(item_dir: Path) -> dict[str, Any] | None:
 def _safe_costs(sandbox_root: Path, folder: str, item_id: str, info: dict[str, Any]) -> dict[str, Any]:
     """Reutiliza el cálculo compartido y conserva la forma ante datos históricos incompletos."""
     try:
-        return calculate_costs(sandbox_root, folder, item_id)
+        item = sandbox_root / folder / item_id
+        return calculate_costs(sandbox_root, folder, item_id, extra_events=_extra_events(item))
     except (OSError, TypeError, ValueError, KeyError, AttributeError):
+        logging.getLogger(__name__).exception("No se pudo calcular el uso de %s/%s", folder, item_id)
         return _empty_result(info)
+
+
+def _extra_events(item_dir: Path) -> list[dict]:
+    layout = layout_for_settings(settings)
+    if layout.schema_version < 2:
+        return []
+    try:
+        item = item_dir.resolve()
+        if not item.is_relative_to(layout.sandbox_dir.resolve()):
+            return []
+        key = item.relative_to(layout.root.resolve()).as_posix()
+        return events_for_content(key)
+    except (OSError, ValueError):
+        return []
 
 
 def get_sandbox_info(
@@ -74,8 +95,13 @@ def get_item_costs(sandbox_root: Path, item_dir: Path) -> tuple[bool, int | None
     info = _read_info(item_dir)
     if info is None:
         return False, None, False
-    result = _safe_costs(sandbox_root, item_dir.parent.name, item_dir.name, info)
-    return True, int(result.get("total_tokens") or 0), bool(_declared_components(info, item_dir / "info.json"))
+    try:
+        result = _template_cost(item_dir, info, extra_events=_extra_events(item_dir))
+    except (OSError, TypeError, ValueError, KeyError, AttributeError):
+        logging.getLogger(__name__).exception("No se pudo calcular el uso de %s", item_dir.name)
+        result = _empty_result(info)
+    total = int(result["total_tokens"]) if result.get("usage_status") != "unknown" else None
+    return True, total, bool(_declared_components(info, item_dir / "info.json"))
 
 
 logger = logging.getLogger(__name__)

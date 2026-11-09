@@ -5,9 +5,10 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { NewIdeaDialog } from "@/features/prototypes";
 import { cn } from "@/lib/utils";
+import { useStandardShowcase } from "@/features/showcase/hooks/useStandardShowcase";
 import { SANDBOX_QUERY_KEY, useSandbox } from "../hooks/useSandbox";
 import { useSandboxShowcase } from "../hooks/useSandboxShowcase";
-import { countSandboxItems, selectSandboxItems } from "../lib/sandbox-items";
+import { countSandboxItems, hideProductionDesignDemos, selectSandboxItems } from "../lib/sandbox-items";
 import { SandboxItemCard } from "./SandboxItemCard";
 
 const REFERENCE_CATEGORIES = [
@@ -61,7 +62,9 @@ function FolderFilter({
 export function SandboxWindow() {
   const t = useTranslations("sandbox");
   const queryClient = useQueryClient();
-  const { data: folders = [], isLoading, isError } = useSandbox();
+  const { data: allFolders = [], isLoading, isError } = useSandbox();
+  const showcase = useStandardShowcase("");
+  const folders = hideProductionDesignDemos(allFolders, showcase.designs.data?.designs ?? []);
   const visibility = useSandboxShowcase();
   const showcaseStates = new Map(
     (visibility.data ?? []).map((state) => [`${state.folder}/${state.project_id}`, state]),

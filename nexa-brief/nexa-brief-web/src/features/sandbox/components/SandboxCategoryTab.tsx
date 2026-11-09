@@ -2,8 +2,9 @@
 
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import { useStandardShowcase } from "@/features/showcase/hooks/useStandardShowcase";
 import { useSandbox } from "../hooks/useSandbox";
-import { countSandboxItems } from "../lib/sandbox-items";
+import { countSandboxItems, hideProductionDesignDemos } from "../lib/sandbox-items";
 
 export function SandboxCategoryTab({
   selected,
@@ -13,7 +14,9 @@ export function SandboxCategoryTab({
   onSelect: () => void;
 }) {
   const t = useTranslations("sandbox");
-  const { data: folders = [] } = useSandbox();
+  const { data: allFolders = [] } = useSandbox();
+  const showcase = useStandardShowcase("");
+  const folders = hideProductionDesignDemos(allFolders, showcase.designs.data?.designs ?? []);
   const projectFolders = folders.filter((folder) => folder.role !== "references");
   const projectCount = countSandboxItems(projectFolders);
 

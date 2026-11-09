@@ -35,6 +35,7 @@ COLLECTIONS: dict[str, tuple[str, str | None]] = {
     "explainer_productions": ("explainer/productions.json", "production_id"),
     # Fábrica: ejecuciones del agente líder para prototipos del sandbox
     "prototype_runs": ("prototypes/runs.json", "run_id"),
+    "sandbox_preparations": ("prototypes/preparations.json", "run_id"),
     # Plan de contenido semanal (planificador con IA en Programación)
     "content_plan": ("schedule/content_plan.json", "item_id"),
     # canales/ ya tiene datos reales (cuentas conectadas): se conserva su ruta.

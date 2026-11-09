@@ -63,6 +63,7 @@ class GeminiFlashAdapter(AIPort):
 
     async def complete_json_with_usage(self, system_prompt: str, user_prompt: str, *, response_json_schema: dict | None = None) -> tuple[dict, dict]:
         """Devuelve el uso que reporta Gemini junto con el JSON."""
+        attempts = []
         for attempt in range(1, settings.ai_max_retries + 1):
             started = time.monotonic()
             try:
@@ -76,9 +77,8 @@ class GeminiFlashAdapter(AIPort):
                         response_json_schema=response_json_schema,
                     ),
                 )
-                result = _extract_json(response.text)
                 usage = response.usage_metadata
-                return result, {
+                measured = {
                     "provider": "gemini", "model": response.model_version or self._model,
                     "input_tokens": getattr(usage, "prompt_token_count", None),
                     "cached_input_tokens": getattr(usage, "cached_content_token_count", None),
@@ -87,12 +87,23 @@ class GeminiFlashAdapter(AIPort):
                     "reasoning_tokens": getattr(usage, "thoughts_token_count", None),
                     "seconds": round(time.monotonic() - started, 2),
                 }
-            except AIValidationError:
+                try:
+                    result = _extract_json(response.text)
+                except AIValidationError as exc:
+                    exc.usage = measured
+                    raise
+                return result, {**measured, "attempts": [*attempts, {**measured, "status": "ok"}]}
+            except AIValidationError as exc:
+                exc.usage_attempts = [*attempts, {**getattr(exc, "usage", {}), "status": "failed", "error_type": type(exc).__name__}]
                 raise
             except Exception as exc:
                 logger.warning("gemini_retry", attempt=attempt, error=str(exc))
+                attempts.append({"provider": "gemini", "model": self._model, "status": "failed",
+                                 "error_type": type(exc).__name__, "seconds": round(time.monotonic() - started, 2)})
                 if attempt == settings.ai_max_retries:
-                    raise AIGenerationError(f"Gemini failed after {attempt} attempts: {exc}") from exc
+                    error = AIGenerationError(f"Gemini failed after {attempt} attempts: {exc}")
+                    error.usage_attempts = attempts
+                    raise error from exc
                 await asyncio.sleep(settings.ai_retry_delay_seconds * attempt)
         raise AIGenerationError("Gemini: unreachable")
 

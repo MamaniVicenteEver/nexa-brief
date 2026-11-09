@@ -17,10 +17,12 @@ import { SandboxDesignDemoCard } from "./SandboxDesignDemoCard";
 export function ExplainerPrepSection({
   categoryPath,
   sandboxDemos = [],
+  productionDesignIds = [],
   embedded = false,
 }: {
   categoryPath?: string;
   sandboxDemos?: SandboxItem[];
+  productionDesignIds?: string[];
   embedded?: boolean;
 } = {}) {
   const t = useTranslations("templates");
@@ -105,7 +107,7 @@ export function ExplainerPrepSection({
               <ExplainerVideoCard key={video.videoId} video={video} />
             ))}
             {visibleSandboxDemos.map((item) => (
-              <SandboxDesignDemoCard key={`${item.folder}/${item.id}`} item={item} />
+              <SandboxDesignDemoCard key={`${item.folder}/${item.id}`} item={item} productionDesign={productionDesignIds.includes(item.id)} />
             ))}
           </div>
         </>

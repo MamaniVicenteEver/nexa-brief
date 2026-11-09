@@ -8,7 +8,7 @@ COLLECTION_SECTIONS = {
     "music_assets": "resources", "sound_assets": "resources", "video_assets": "resources",
     "template_configs": "resources", "showcase_designs": "designs",
     "sandbox_showcase": "designs",
-    "jobs": "jobs", "history_events": "jobs", "prototype_runs": "jobs",
+    "jobs": "jobs", "history_events": "jobs", "prototype_runs": "jobs", "sandbox_preparations": "jobs",
     "execution_logs": "logs", "publication_index": "publicaciones",
     "channel_publications": "publicaciones", "published_videos": "publicaciones",
     "notifications": "notifications", "schedule_slots": "schedule", "queue_entries": "schedule",

@@ -5,6 +5,12 @@ import { httpClient } from "@/infrastructure/api/http-client";
 import { safeShowcaseUrl } from "../api/standard-showcase-repository";
 import { ShowcaseView } from "../components/ShowcaseView";
 
+vi.mock("@/features/categories/hooks/useCategories", () => ({
+  useCategories: () => ({ data: [
+    { id: "node_history", path: "node_history", displayName: "NodeHistory", engine: "explainer_kit", status: "active" },
+    { id: "node_atlas", path: "node_atlas", displayName: "NodeAtlas", engine: "explainer_kit", status: "active" },
+  ] }),
+}));
 vi.mock("@/features/samples/components/SamplesSection", () => ({
   SamplesSection: () => <div>Muestras disponibles</div>,
 }));
@@ -297,7 +303,11 @@ describe("Showcase estándar", () => {
     });
     await sandbox();
     fireEvent.click(await screen.findByRole("button", { name: "Pasar a producción" }));
+    expect(published).toBe(false);
+    fireEvent.click(screen.getByRole("checkbox", { name: "NodeAtlas" }));
+    fireEvent.click(screen.getByRole("button", { name: "Confirmar" }));
     expect(await screen.findByText("Diseño Uno pasado a producción.")).toBeDefined();
+    expect(httpClient).toHaveBeenCalledWith("/api/v1/showcase/designs/one/promote", expect.objectContaining({body: {category: "node_history", shared_categories: ["node_atlas"]}}));
     expect(screen.getByRole("button", { name: /Uno/ }).getAttribute("aria-pressed")).toBe("true");
     expect(screen.getByRole("button", { name: /^Producción/ }).getAttribute("aria-pressed")).toBe(
       "true",
@@ -329,6 +339,7 @@ describe("Showcase estándar", () => {
     });
     await sandbox();
     fireEvent.click(await screen.findByRole("button", { name: "Pasar a producción" }));
+    fireEvent.click(screen.getByRole("button", { name: "Confirmar" }));
     expect((await screen.findByRole("alert")).textContent).toContain("Revisión fallida");
   });
   it("permite reintentar un catálogo con error", async () => {

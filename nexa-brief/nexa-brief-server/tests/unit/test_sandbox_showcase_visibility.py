@@ -50,7 +50,7 @@ def test_opt_in_persists_only_json_and_keeps_existing_designs(service):
     directory = project(root, catalog=True)
     before = {p.name: p.read_bytes() for p in directory.iterdir() if p.is_file()}
     existing = svc.list_designs().model_dump()
-    assert len(existing['designs']) == 19
+    assert len(existing['designs']) == 20
     assert {'atlas-cinematico', 'cara-a-cara', 'vida-en-escena'} <= {
         d['id'] for d in existing['designs'] if d['state'] == 'prueba'}
     state = svc.sandbox_visibility()[0]
@@ -60,7 +60,7 @@ def test_opt_in_persists_only_json_and_keeps_existing_designs(service):
     assert enabled.visible
     assert svc.get_design(enabled.design_id).state == 'prueba'
     assert not svc.get_design(enabled.design_id).promotable
-    assert svc.list_designs().model_dump()['designs'][:19] == existing['designs']
+    assert svc.list_designs().model_dump()['designs'][:20] == existing['designs']
     assert {p.name: p.read_bytes() for p in directory.iterdir() if p.is_file()} == before
     assert (root / 'data/json/designs.json').is_file()
     assert not (root / 'designs').exists() and not (root / 'sandbox/designs').exists()
@@ -112,7 +112,7 @@ def test_profiles_and_paths_are_isolated(service, tmp_path, monkeypatch):
         change.setattr(settings, 'data_dir', other / 'data')
         second = ShowcaseService(SharedDefinitionsShowcaseAdapter(other, TEMPLATES, data_store=JsonDataStore()))
         assert not second.sandbox_visibility()[0].visible
-        assert len(second.list_designs().designs) == 19
+        assert len(second.list_designs().designs) == 20
         with pytest.raises(ShowcaseNotFound):
             second.get_design(enabled.design_id)
     link = root / 'sandbox/nodeaction/foreign'

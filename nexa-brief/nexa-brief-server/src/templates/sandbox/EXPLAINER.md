@@ -1,5 +1,10 @@
 # EXPLAINER.md · base común de la casa de pruebas (NodeTech · NodeHistory · NodePolitics · NodeEconomy)
 
+> En perfiles v2/v3, las rutas de proyectos y referencias de esta guía son
+> relativas a `$NEXA_PROFILE_DIR/sandbox/` o `$NEXA_PROFILE_DIR/productions/`;
+> los ejemplos que apuntan a episodios en `src/templates/` describen el layout
+> heredado. Confirma el perfil efectivo antes de crear o modificar contenido.
+
 > Para agentes de IA y personas que van a **probar videos explicativos narrados nuevos** o
 > **diseños nuevos** (plantillas visuales) para las 4 categorías explainer. Las 4 usan el MISMO
 > motor (`_tools/explainer-kit/`): todo lo de este archivo vale para cualquiera de ellas.

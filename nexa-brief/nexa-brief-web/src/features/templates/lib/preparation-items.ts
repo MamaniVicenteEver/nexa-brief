@@ -3,7 +3,7 @@ import type { ImagePost } from "@/features/image-posts/types";
 
 export function isPreparedVideo(video: ExplainerVideo): boolean {
   return (
-    video.ready &&
+    (video.ready || (video.design === "mapas-satelitales" && video.status === "en progreso")) &&
     video.rendered.length === 0 &&
     !(video.lastJob && ACTIVE_JOB_STATES.includes(video.lastJob.state))
   );

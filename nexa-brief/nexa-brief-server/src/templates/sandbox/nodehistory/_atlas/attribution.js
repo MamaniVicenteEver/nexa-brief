@@ -21,7 +21,7 @@ export function screenAttribution(look, zoom=0) {
 }
 export function paintBackground(g,w,h,look) {
   g.save(); g.fillStyle=look.background; g.fillRect(0,0,w,h);
-  if(isGlobeProjection(look.projection)) {
+  if(look.stars!==false&&isGlobeProjection(look.projection)) {
     let seed=123456789; const rand=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
     for(let i=0;i<250;i++){const x=rand()*w,y=rand()*h,r=.3+rand()*.8;g.fillStyle=`rgba(220,230,255,${.12+rand()*.35})`;g.fillRect(x,y,r,r);}
   }

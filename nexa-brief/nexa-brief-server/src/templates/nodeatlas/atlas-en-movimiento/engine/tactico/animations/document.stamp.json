@@ -1,0 +1,104 @@
+{
+  "name": "document.stamp",
+  "family": "document",
+  "estilo": {
+    "usa": [
+      "estilos.documento",
+      "estilos.ficha.separacion",
+      "estilos.ficha.credito",
+      "formatos.movil.ranuras.fichaIzq",
+      "formatos.movil.ranuras.fichaDer",
+      "formatos.movil.ranuras.subtitulo",
+      "formatos.escritorio.ranuras.fichaIzq",
+      "formatos.escritorio.ranuras.fichaDer",
+      "formatos.escritorio.ranuras.subtitulo",
+      "paneles",
+      "sombras",
+      "estilos.titular.principal",
+      "formatos.movil.ranuras.titular",
+      "formatos.escritorio.ranuras.titular",
+      "estilos.ficha.nombre",
+      "estilos.ficha.cargo"
+    ]
+  },
+  "description": "Documento con sombra suave, fuente y crédito. Úsala como recurso visual en una escena.",
+  "duration": 7.35,
+  "loop": true,
+  "layer": 80,
+  "states": [
+    "normal"
+  ],
+  "params": {
+    "src": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Ruta del medio local relativa a la plantilla."
+    },
+    "caption": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Pie documental de la imagen."
+    },
+    "source": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Fuente documental de la cifra o contenido."
+    },
+    "credit": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Atribución visible del medio."
+    },
+    "side": {
+      "type": "enum",
+      "values": [
+        "izq",
+        "der"
+      ],
+      "default": "izq",
+      "range": [
+        "izq",
+        "der"
+      ],
+      "description": "Valor de side para la composición de document.stamp."
+    },
+    "width": {
+      "type": "number",
+      "default": null,
+      "range": null,
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "height": {
+      "type": "number",
+      "default": null,
+      "range": null,
+      "description": "Alto del elemento en píxeles de diseño."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-document-stamp",
+    "t": 0,
+    "type": "document.stamp",
+    "src": "assets/media/A01.png",
+    "caption": "USS Stark · daños tras el ataque",
+    "source": "U.S. Navy",
+    "credit": "DN-ST-89-01562 · dominio público",
+    "dur": 8,
+    "out": 7
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/document.stamp.png",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "assets/media/A01.png",
+    "identidad-opus/assets/fonts/Archivo.ttf"
+  ]
+}

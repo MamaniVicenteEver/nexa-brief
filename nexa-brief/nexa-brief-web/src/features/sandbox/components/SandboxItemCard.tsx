@@ -2,6 +2,7 @@
 
 import { Film, Play } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { useState } from "react";
 import { ReferenceChatActions } from "@/features/prototypes";
 import { resolveApiUrl } from "@/infrastructure/api/http-client";
 import type { SandboxShowcaseState } from "../api/showcase-visibility";
@@ -28,6 +29,7 @@ export function SandboxItemCard({
   const thumbnailUrl = item.thumbnailUrl ? resolveApiUrl(item.thumbnailUrl) : null;
   const hasMediaCover = Boolean(thumbnailUrl || firstVideo);
   const relativeDate = formatRelativeDate(item.updatedAt, locale);
+  const [failedThumbnail, setFailedThumbnail] = useState<string | null>(null);
 
   return (
     <article className="flex flex-col overflow-hidden rounded-[10px] border border-black/5 bg-nb-surface shadow-[0_8px_20px_-16px_rgba(40,30,10,0.16),0_2px_8px_-5px_rgba(40,30,10,0.05),inset_0_1px_0_rgba(255,255,255,0.45)]">
@@ -46,14 +48,20 @@ export function SandboxItemCard({
           className="group flex cursor-pointer flex-col text-left disabled:cursor-default"
         >
           <div className="relative aspect-[1.65] w-full overflow-hidden bg-black">
-            {thumbnailUrl ? (
+            {thumbnailUrl && failedThumbnail !== thumbnailUrl ? (
               // biome-ignore lint/performance/noImgElement: sandbox poster served by the backend
               <img
                 src={thumbnailUrl}
                 alt={item.title}
                 loading="lazy"
+                onError={() => setFailedThumbnail(thumbnailUrl)}
                 className="size-full object-cover"
               />
+            ) : thumbnailUrl ? (
+              <div className="flex size-full flex-col items-center justify-center gap-2 bg-nb-bg-2 text-nb-mute">
+                <Film className="size-8" />
+                <span className="text-xs">{t("thumbnailUnavailable")}</span>
+              </div>
             ) : firstVideo ? (
               <video
                 src={`${resolveApiUrl(sandboxFileUrl(item.path, firstVideo))}#t=1`}

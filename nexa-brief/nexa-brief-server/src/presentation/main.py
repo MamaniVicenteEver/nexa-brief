@@ -58,6 +58,7 @@ async def lifespan(app: FastAPI):
 
     # Marcar runs que quedaron sin proceso al reiniciar y reactivar la cola persistida.
     await prototypes.get_prototype_run_service().recover_interrupted()
+    await sandbox.get_preparation_service().recover()
 
     # Reparar el índice derivado y dejar publicaciones interrumpidas en
     # conciliación; una entrega ambigua nunca se reenvía automáticamente.

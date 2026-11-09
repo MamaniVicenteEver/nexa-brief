@@ -35,6 +35,23 @@ Qué modelo hace cada rol: `src/skills/models/roles.json` (el backend lo lee con
   herramientas del kit) lo reinicia y corta producciones, previsualizaciones y grabaciones en curso.
   Revisá que no haya nada corriendo antes de tocar código.
 
+## Miniaturas de componentes en Showcase
+
+Cuando crees o cambies componentes que se muestran en Showcase, comprueba sus
+miniaturas y usa `scripts/generate_showcase_posters.py` para prepararlas; no abras
+una animación por tarjeta ni actives una cola automática en el servidor. Desde la
+raíz de `nexa-brief-server`, con la API y el perfil correctos activos:
+
+```bash
+.venv/bin/python scripts/generate_showcase_posters.py --design <id-del-diseño>
+```
+
+Sin `--design` procesa los motores `_atlas` y `_mapas`; `--all` permite otros
+diseños. Genera WebP 16:9 en la caché del perfil, toma el fotograma central y,
+si está vacío, prueba otros instantes. Es secuencial y reanudable: revisa el
+resumen de errores y verifica visualmente ejemplos. Opciones y uso en
+`scripts/README.md`. La reproducción animada sigue bajo demanda.
+
 ## Resultados temporales de validación
 
 - Guardá capturas y comparaciones temporales en `work/results/` del proyecto (ignorado por Git) o en `/tmp/`. No uses `git add -f` para incluirlas.
@@ -42,6 +59,16 @@ Qué modelo hace cada rol: `src/skills/models/roles.json` (el backend lo lee con
 - Si un resultado debe conservarse como documentación, guardá un resumen breve fuera de `work/results/` y solo las imágenes necesarias, elegidas explícitamente.
 
 ## Perfiles de almacenamiento y sandbox
+
+La raíz seleccionada es `NEXA_PROFILE_DIR`; consulta el valor efectivo del proceso
+y el `profile.json` antes de escribir. En v2/v3 un proyecto de prueba va en
+`$NEXA_PROFILE_DIR/sandbox/<categoría>/<id>` y una producción en
+`$NEXA_PROFILE_DIR/productions/<categoría>/<id>`. La raíz `.env` configura la
+selección por defecto; cambiarla requiere reiniciar coordinadamente los servicios
+cuando no haya trabajos activos. No uses una ruta fija de otro perfil ni crees
+proyectos privados bajo `src/templates/sandbox/`. Conserva y reconcilia copias
+divergentes antes de mover, borrar o retirar archivos del índice de Git.
+
 
 En perfiles de esquema v2/v3, los prototipos y referencias se guardan en `sandbox/`
 del perfil activo y se promueven a su `productions/`; `data/` queda reservado
@@ -52,6 +79,10 @@ perteneciendo al código compartido del repositorio. Al ejecutar directamente
 exportá `NEXA_SANDBOX_DIR` con la ruta absoluta al `sandbox/` de ese perfil.
 
 ## Diseños reutilizables y Showcase
+
+Para el diseño compartido Mapas Satelitales y sus ejemplos aislados, consulta
+`docs/mapas-showcase.md`: los proyectos del perfil usan un solo motor y no se
+promueven hasta resolver su integración de producción.
 
 Los diseños usan un ID estable y el contrato de `/api/v1/showcase/designs` en
 prueba y producción. Consulta solo la ficha asignada y

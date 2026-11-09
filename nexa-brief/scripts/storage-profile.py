@@ -9,6 +9,7 @@ import re
 import shutil
 import sys
 import tempfile
+import subprocess
 from pathlib import Path
 
 PROJECT = Path(__file__).resolve().parent.parent
@@ -38,7 +39,9 @@ Este perfil es independiente. Consulta estas instrucciones y las de la carpeta
 asignada; no recorras todo el proyecto ni otros perfiles para crear un contenido.
 Los registros se consultan y modifican mediante los servicios CRUD del servidor;
 `data/json/` contiene un JSON por sección. No lo edites desde una tarea creativa.
-Trabaja en `productions/<categoría>/<contenido_id>/` o el sandbox asignado.
+Trabaja en `productions/<categoría>/<contenido_id>/` o
+`sandbox/<categoría>/<contenido_id>/` de este perfil. Comprueba que corresponda
+al `NEXA_PROFILE_DIR` efectivo; no copies proyectos al sandbox del repositorio.
 Los resultados finales van en `renders/videos/<categoría>/<video_id>/<render_id>/`
 y `renders/images/<categoría>/<post_id>/<render_id>/`. Los recursos subidos
 independientemente van en `resources/<tipo>/<asset_id>/` y se reutilizan por ID.
@@ -87,8 +90,11 @@ SANDBOX_GUIDE = """# Sandbox del perfil
 
 Esta carpeta contiene únicamente prototipos de este perfil. Usa la categoría correspondiente
 para cada prototipo y consulta las instrucciones del proyecto antes de crear uno.
+Confirma la ruta del perfil activo; `src/templates/sandbox/` es para motores y guías
+compartidos e históricos, no para guardar una copia del proyecto o agregarla a Git.
 Guarda recursos propios en `assets/` y pruebas temporales en `work/results/test/`.
-No modifiques los motores del repositorio ni copies datos de otro perfil.
+Los motores reutilizables compartidos pueden vivir en el sandbox del repositorio;
+modifícalos solo si el trabajo pide cambios al motor. No copies datos de otro perfil.
 Para promover una prueba a producción, usa el servicio de promoción; no dupliques el video.
 """
 
@@ -229,6 +235,7 @@ def main() -> None:
     parser.add_argument("--home", type=Path, default=Path(os.environ.get("NEXA_DATA_HOME", str(Path.home() / ".local/share/nexa-brief"))))
     parser.add_argument("--tiktok-port", type=int, default=8100)
     parser.add_argument("--schema-version", type=int, choices=(1, 2, 3), default=3)
+    parser.add_argument("--env-file", type=Path, default=PROJECT / ".env", help=argparse.SUPPRESS)
     args = parser.parse_args()
     if not re.fullmatch(r"[a-z][a-z0-9_-]{0,47}", args.profile) or not 1024 <= args.tiktok_port <= 65535:
         raise SystemExit("Invalid profile or service port")
@@ -242,6 +249,15 @@ def main() -> None:
         raise SystemExit("Profile does not exist; initialize it explicitly")
     load_profile(root)
     if args.action == "activate":
+        selected = subprocess.run(
+            [sys.executable, str(PROJECT / "scripts/profile-default.py"), str(args.env_file)],
+            text=True, capture_output=True, check=False,
+        )
+        if selected.returncode:
+            raise SystemExit("No se pudo validar NEXA_PROFILE_DIR en el entorno del proyecto")
+        configured = selected.stdout.strip()
+        if configured and Path(configured).resolve() != root:
+            raise SystemExit("El perfil solicitado no coincide con NEXA_PROFILE_DIR; actualiza .env antes de activarlo")
         selector = Path(os.environ.get("XDG_CONFIG_HOME", str(Path.home() / ".config"))) / "nexa-brief/storage-profile.json"
         selector.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         selector.write_text(json.dumps({"profile_dir": str(root)}) + "\n", encoding="utf-8")

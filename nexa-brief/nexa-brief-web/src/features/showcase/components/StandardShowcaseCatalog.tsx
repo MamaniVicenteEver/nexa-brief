@@ -7,8 +7,9 @@ import { entryType } from "../lib/catalog-filters";
 import { copyText } from "../lib/clipboard";
 import { ComponentCardView } from "./ComponentCard";
 import { ShowcaseDialog, ShowcaseModalToolbar } from "./ShowcaseDialog";
-import { StandardShowcasePreview } from "./StandardShowcasePreview";
 import { ShowcasePoster } from "./ShowcasePoster";
+import { ShowcaseViewport } from "./ShowcaseViewport";
+import { StandardShowcasePreview } from "./StandardShowcasePreview";
 
 const kinds: Record<ShowcaseEntry["kind"], string> = {
   component: "Componente",
@@ -41,7 +42,7 @@ export function StandardShowcaseCatalog({
           {entries.map((entry) => (
             <ComponentCardView
               key={entry.id}
-              name={entry.label}
+              name={entry.name}
               summary={entry.summary}
               tags={[
                 entryType(entry) === "sprite" ? "Sprite" : kinds[entry.kind],
@@ -54,7 +55,13 @@ export function StandardShowcaseCatalog({
                 setActiveId(entry.id);
               }}
               preview={
-                <ShowcasePoster design={design} entry={entry} format={format} suspended={!!active} />
+                <ShowcasePoster
+                  key={`${design.id}:${design.revision}:${entry.id}:${format}`}
+                  design={design}
+                  entry={entry}
+                  format={format}
+                  suspended={!!active}
+                />
               }
             />
           ))}
@@ -66,26 +73,21 @@ export function StandardShowcaseCatalog({
       )}
       <ShowcaseDialog
         open={!!active}
-        title={active?.label ?? "Componente"}
+        title={active?.name ?? "Componente"}
         onClose={() => setActiveId(null)}
       >
         {active && (
           <>
             <ShowcaseModalToolbar
-              title={active.label}
+              title={active.name}
               format={modalFormat}
               onFormat={(value) => setModalFormat(value as "9x16" | "16x9")}
             />
             <div className="flex min-w-0 flex-col gap-2 md:flex-row">
-              <div className="flex min-w-0 flex-1 justify-center rounded-[18px] bg-white">
-                <div className={modalFormat === "9x16" ? "w-[min(390px,88vw,41.625vh)]" : "w-full"}>
-                  <StandardShowcasePreview
-                    key={modalFormat}
-                    entry={active}
-                    format={modalFormat}
-                    modal
-                  />
-                </div>
+              <div className="min-w-0 flex-1">
+                <ShowcaseViewport format={modalFormat}>
+                  <StandardShowcasePreview key={modalFormat} entry={active} format={modalFormat} modal />
+                </ShowcaseViewport>
               </div>
               <aside
                 aria-label="Información del componente"
@@ -95,7 +97,8 @@ export function StandardShowcaseCatalog({
                   <p className="text-xs text-nb-ink-soft">
                     {design.name} · {entryType(active) === "sprite" ? "Sprite" : kinds[active.kind]}
                   </p>
-                  <h2 className="mt-1 break-words text-sm font-semibold">{active.label}</h2>
+                  <h2 className="mt-1 break-words font-mono text-sm font-semibold">{active.name}</h2>
+                  {active.label !== active.name && <p className="mt-1 text-xs text-nb-ink-soft">{active.label}</p>}
                   <p className="mt-2 text-sm text-nb-ink-soft">{active.summary}</p>
                 </div>
                 <button

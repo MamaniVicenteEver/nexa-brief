@@ -67,8 +67,13 @@ def availability(templates: Path, sandbox: Path, design_id: str, entries: list[d
             elif urlsplit(url).path != 'studio.html':
                 item['preview_url'] = None
         elif design_id == 'atlas-en-movimiento' and name in ATLAS_MEDIA:
-            if not all(_owned_file(sandbox, 'nodehistory', 'atlas-en-movimiento', *path.split('/'))
-                       for path in ATLAS_MEDIA[name]):
+            production = sandbox.parent / 'productions' / 'nodeatlas' / 'atlas-en-movimiento'
+            if production.is_dir() and not production.is_symlink():
+                available = all(_owned_file(production, *path.split('/')) for path in ATLAS_MEDIA[name])
+            else:
+                available = all(_owned_file(sandbox, 'nodehistory', 'atlas-en-movimiento', *path.split('/'))
+                                for path in ATLAS_MEDIA[name])
+            if not available:
                 item['preview_url'] = None
         elif design_id == 'cara-a-cara':
             declaration = source.get(name)

@@ -15,10 +15,15 @@ parámetro: el puerto `AIPort` es el mismo.
 
 from __future__ import annotations
 
+import inspect
 import json
+import logging
 import re
+import time
 import unicodedata
+import uuid
 from pathlib import Path
+from typing import Awaitable, Callable
 
 from pydantic import BaseModel, Field, ValidationError, field_validator, model_validator
 
@@ -78,6 +83,9 @@ class TikTokCopy(BaseModel):
 
 class ExplainerBrief(BaseModel):
     video_id: str
+    # Identifica el consumo asociado a esta generación. Se conserva al pasar
+    # el brief a una producción, pero nunca se incluye en publish.json.
+    usage_trace_id: str | None = None
     # Los completa el servidor (no el modelo): la narrativa y el nivel de título con que se escribió.
     narrative_id: str | None = None
     title_level: str | None = None
@@ -173,6 +181,121 @@ Devuelve SOLO este JSON:
   "media_suggestions": ["5 a 8 búsquedas en inglés de fotos de archivo con licencia libre"]
 }"""
 
+_logger = logging.getLogger(__name__)
+_TOKEN_FIELDS = ("input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens", "total_tokens")
+UsageHook = Callable[[dict], Awaitable[None]]
+
+
+async def _emit_usage(hook: UsageHook | None, event: dict) -> None:
+    """La traza es secundaria: un fallo de telemetría no debe repetir ni cancelar IA."""
+    if hook is None:
+        return
+    try:
+        result = hook(event)
+        if inspect.isawaitable(result):
+            await result
+    except Exception:
+        _logger.exception("explainer_usage_hook_failed", extra={"trace_id": event.get("trace_id")})
+
+
+def _usage_event(
+    usage: dict | None,
+    *,
+    ai: AIPort,
+    trace_id: str,
+    operation: str,
+    attempt: int,
+    started: float,
+    status: str,
+    error: BaseException | str | None = None,
+    video_id: str | None = None,
+) -> dict:
+    measured = usage if isinstance(usage, dict) else {}
+    event = {
+        "trace_id": trace_id,
+        "operation": operation,
+        "attempt": attempt,
+        "provider": measured.get("provider") or getattr(ai, "name", type(ai).__name__),
+        "model": measured.get("model") or getattr(ai, "_model", None),
+        **{key: measured.get(key) for key in _TOKEN_FIELDS},
+        "turns": measured.get("turns"),
+        "cost_usd": measured.get("cost_usd"),
+        "seconds": measured.get("seconds", round(time.monotonic() - started, 3)),
+        "usage_known": any(measured.get(key) is not None for key in _TOKEN_FIELDS),
+        "status": status,
+    }
+    if video_id is not None:
+        event["video_id"] = video_id
+    if error is not None:
+        event["error_type"] = error if isinstance(error, str) else type(error).__name__
+    return event
+
+
+def _attempt_usages(usage: dict | None, error: BaseException | None = None) -> list[dict]:
+    """Algunos adapters exponen reintentos internos de parseo; no los agregamos."""
+    from_error = getattr(error, "usage_attempts", None)
+    if isinstance(from_error, list) and from_error and all(isinstance(item, dict) for item in from_error):
+        return from_error
+    measured = usage if isinstance(usage, dict) else {}
+    attempts = measured.get("attempts")
+    if isinstance(attempts, list) and attempts and all(isinstance(item, dict) for item in attempts):
+        return attempts
+    return [measured]
+
+
+async def _call_json(
+    ai: AIPort,
+    system_prompt: str,
+    user_prompt: str,
+    *,
+    trace_id: str,
+    operation: str,
+    on_usage: UsageHook | None,
+    attempt_state: list[int],
+    video_id: str | None = None,
+) -> ExplainerBrief:
+    """Llama a un adapter medido si lo ofrece y comunica cada intento sin inventar tokens."""
+    started = time.monotonic()
+    measured_call = getattr(ai, "complete_json_with_usage", None)
+    usage: dict | None = None
+    try:
+        if callable(measured_call):
+            result = await measured_call(system_prompt, user_prompt)
+            raw, usage = result
+        else:
+            raw = await ai.complete_json(system_prompt, user_prompt)
+        brief = ExplainerBrief.model_validate(raw)
+    except Exception as exc:
+        usage = getattr(exc, "usage", usage)
+        attempts = _attempt_usages(usage, exc)
+        last = len(attempts) - 1
+        for offset, item in enumerate(attempts):
+            status = item.get("status", "failed")
+            if isinstance(exc, ValidationError) and offset == last:
+                status = "failed"
+            item_error = item.get("error_type")
+            error = exc if isinstance(exc, ValidationError) and offset == last else (item_error or exc)
+            await _emit_usage(on_usage, _usage_event(
+                item, ai=ai, trace_id=trace_id, operation=operation,
+                attempt=attempt_state[0], started=started, status=status,
+                error=error if status == "failed" else None,
+                video_id=video_id,
+            ))
+            attempt_state[0] += 1
+        raise
+
+    attempts = _attempt_usages(usage)
+    for item in attempts:
+        status = item.get("status", "ok")
+        await _emit_usage(on_usage, _usage_event(
+            item, ai=ai, trace_id=trace_id, operation=operation,
+            attempt=attempt_state[0], started=started, status=status,
+            error=item.get("error_type") if status == "failed" else None,
+            video_id=video_id,
+        ))
+        attempt_state[0] += 1
+    return brief
+
 
 def _context(category_path: str, design: KitDesign | None) -> dict:
     node = get_category(category_path)
@@ -190,16 +313,30 @@ def _context(category_path: str, design: KitDesign | None) -> dict:
     return ctx
 
 
-async def _ask(ai: AIPort, user_payload: dict) -> ExplainerBrief:
+async def _ask(
+    ai: AIPort,
+    user_payload: dict,
+    *,
+    trace_id: str,
+    operation: str,
+    on_usage: UsageHook | None = None,
+    video_id: str | None = None,
+) -> ExplainerBrief:
     user = json.dumps(user_payload, ensure_ascii=False, indent=1)
-    raw = await ai.complete_json(SYSTEM_PROMPT, user)
+    attempt_state = [1]
+
+    async def request(prompt: str) -> ExplainerBrief:
+        return await _call_json(
+            ai, SYSTEM_PROMPT, prompt, trace_id=trace_id, operation=operation,
+            on_usage=on_usage, attempt_state=attempt_state, video_id=video_id,
+        )
+
     try:
-        return ExplainerBrief.model_validate(raw)
+        return await request(user)
     except ValidationError as first:
         retry = user + "\n\nTu respuesta anterior no cumplía el esquema: " + str(first)[:600] + "\nCorrígela."
-        raw = await ai.complete_json(SYSTEM_PROMPT, retry)
         try:
-            return ExplainerBrief.model_validate(raw)
+            return await request(retry)
         except ValidationError as exc:
             raise AIValidationError(f"el brief no cumple el esquema: {exc}") from exc
 
@@ -215,6 +352,7 @@ async def generate_brief(
     minutes: float | None = None,
     narrative_id: str | None = None,
     title_level: str | None = None,
+    on_usage: UsageHook | None = None,
 ) -> ExplainerBrief:
     if not topic.strip():
         raise ValueError("el tema es obligatorio")
@@ -235,14 +373,23 @@ async def generate_brief(
     }
     if (ctx := narrative.brief_context(story, category_id, level)) is not None:
         payload["narrativa"] = ctx
-    brief = await _ask(ai, payload)
+    trace_id = uuid.uuid4().hex
+    brief = await _ask(ai, payload, trace_id=trace_id, operation="brief", on_usage=on_usage)
     brief.video_id = slugify(brief.video_id or topic)
+    brief.usage_trace_id = trace_id
     brief.narrative_id = story.id if story else None
     brief.title_level = level
     return brief
 
 
-async def generate_publish_texts(ai: AIPort, video_dir: Path, *, category_path: str, design: KitDesign | None) -> ExplainerBrief:
+async def generate_publish_texts(
+    ai: AIPort,
+    video_dir: Path,
+    *,
+    category_path: str,
+    design: KitDesign | None,
+    on_usage: UsageHook | None = None,
+) -> ExplainerBrief:
     """Textos para un video ya producido: parte del guion real (script.json)."""
     script_path = video_dir / "assets" / "script.json"
     if script_path.exists():
@@ -272,8 +419,13 @@ async def generate_publish_texts(ai: AIPort, video_dir: Path, *, category_path: 
     category_id = category_path.split("/", 1)[0]
     if (ctx := narrative.brief_context(story, category_id, recorded.title_level)) is not None:
         payload["narrativa"] = ctx
-    brief = await _ask(ai, payload)
+    trace_id = uuid.uuid4().hex
+    brief = await _ask(
+        ai, payload, trace_id=trace_id, operation="publish_texts", on_usage=on_usage,
+        video_id=video_dir.name,
+    )
     brief.video_id = video_dir.name
+    brief.usage_trace_id = trace_id
     brief.narrative_id = story.id if story else recorded.narrative_id
     brief.title_level = recorded.title_level
     return brief

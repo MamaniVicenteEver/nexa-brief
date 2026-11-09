@@ -464,7 +464,9 @@ interface DesignsDto {
 function mapDesign(d: DesignDto): ExplainerDesign {
   return {
     designId: d.design_id,
-    name: d.name,
+    // Atlas and Imperio share a channel brand; give the Atlas design its
+    // established library name so the two choices remain distinguishable.
+    name: d.design_id === "atlas" ? "Atlas · Neón Geopolítica" : d.name,
     tagline: d.tagline,
     topics: d.topics,
     voice: d.voice,

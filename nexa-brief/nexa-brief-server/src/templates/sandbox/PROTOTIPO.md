@@ -7,7 +7,14 @@ un video con una plantilla que ya existe (para eso: `_tools/explainer-kit/AGENTS
 ## 0. Dónde y con qué
 
 - Servidor: `ssh alfred-server`, repo `~/Projects/Git-Projects/nexa-brief/nexa-brief`.
-  Todas las rutas de este archivo son relativas a `nexa-brief-server/src/templates/`.
+  En v2/v3 el proyecto, sus referencias y evidencia están en `$NEXA_PROFILE_DIR/sandbox/`;
+  motores y herramientas compartidas están en `nexa-brief-server/src/templates/`.
+  Verifica el perfil efectivo antes de escribir y exporta `NEXA_SANDBOX_DIR="$NEXA_PROFILE_DIR/sandbox"`
+  para las herramientas de sandbox. No crees copias de proyectos en el repositorio.
+  Las rutas `sandbox/...` de este documento se refieren al sandbox del perfil.
+  Algunas herramientas antiguas todavía suponen el layout anterior; no las ejecutes
+  sin confirmar su destino. En particular `compare.py` todavía sirve el árbol del
+  repositorio y no está adaptado al sandbox de perfil.
 - Herramientas: `_tools/sandbox/` (correlas con `nexa-brief-server/.venv/bin/python`).
 - Tu entrada es el **brief de la idea**: `sandbox/referencias/<cat>/<idea>/BRIEF.md` (o la URL
   `/api/v1/agent/prototipo/<cat>/<idea>`): notas del usuario, archivos de referencia, categoría y

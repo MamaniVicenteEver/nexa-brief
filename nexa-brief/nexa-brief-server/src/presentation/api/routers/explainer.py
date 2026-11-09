@@ -44,6 +44,7 @@ from src.config.content_paths import content_key, resolve_content_key, preview_d
 from src.config.profile_layout import layout_for_settings
 from src.core.categories import explainer_folders, get_category, list_categories, production_folders
 from src.core.explainer.briefs import ExplainerBrief, generate_brief, generate_publish_texts, write_publish_json
+from src.core.explainer.usage_traces import record_trace
 from src.core.explainer import lengths, narrative, thumbnails
 from src.core.explainer.publishing import review as review_package
 from src.core.explainer.publishing.store import is_package, read_publish
@@ -434,9 +435,18 @@ async def create_publish_texts(video_id: str, body: PublishTextsRequest) -> Publ
             "con `python -m src.core.explainer.publishing build <video_id>`",
         )
     ai = _text_ai(body.provider)
+    layout = layout_for_settings(settings)
+    try:
+        usage_content_key = video_dir.resolve().relative_to(layout.root.resolve()).as_posix()
+    except ValueError:
+        usage_content_key = None
+
+    async def trace_publish(event: dict) -> None:
+        await record_trace(event, content_key=usage_content_key, design_id=video.design)
+
     try:
         brief = await generate_publish_texts(
-            ai, video_dir, category_path=video.category_path, design=load_design(video.design)
+            ai, video_dir, category_path=video.category_path, design=load_design(video.design), on_usage=trace_publish
         )
     except NexaBriefError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
@@ -539,6 +549,10 @@ async def create_brief(body: BriefRequest) -> dict:
         raise HTTPException(status_code=404, detail=f"categoría desconocida: {body.category_path}")
     design = load_design(body.design) if body.design else None
     ai = _text_ai(body.provider)
+
+    async def trace_brief(event: dict) -> None:
+        await record_trace(event, design_id=body.design)
+
     try:
         brief = await generate_brief(
             ai,
@@ -550,6 +564,7 @@ async def create_brief(body: BriefRequest) -> dict:
             minutes=body.minutes,
             narrative_id=body.narrative_id,
             title_level=body.title_level,
+            on_usage=trace_brief,
         )
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc

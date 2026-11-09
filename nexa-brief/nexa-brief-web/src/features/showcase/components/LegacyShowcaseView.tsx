@@ -30,7 +30,7 @@ export function LegacyShowcaseView() {
       </label>
       <ShowcaseGrid
         items={items}
-        format="9x16"
+        format="16x9"
         state={error ? "error" : loading ? "loading" : items.length ? "ready" : "empty"}
         error={error instanceof Error ? error.message : undefined}
         onRetry={data.retryActive}

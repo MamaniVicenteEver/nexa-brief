@@ -1,5 +1,10 @@
 # Sandbox: guía rápida
 
+> En perfiles v2/v3, `sandbox/<categoría>/<id>` significa
+> `$NEXA_PROFILE_DIR/sandbox/<categoría>/<id>`. Antes de usar las herramientas
+> heredadas exporta `NEXA_SANDBOX_DIR="$NEXA_PROFILE_DIR/sandbox"`; las rutas de
+> herramientas y motores siguen en el repositorio. Verifica el perfil activo.
+
 > ¿Plantilla NUEVA desde una referencia? Empezá por [PROTOTIPO.md](PROTOTIPO.md).
 
 El sandbox es el taller para probar videos y plantillas sin tocar producción. El usuario revisa lo que tenga `index.html` o un MP4 en [la web](https://nexa-brief.everdev.space/plantillas?cat=sandbox) o en `http://192.168.20.23:3000/plantillas?cat=sandbox`.

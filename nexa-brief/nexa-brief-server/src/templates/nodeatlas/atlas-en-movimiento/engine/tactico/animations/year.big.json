@@ -1,0 +1,48 @@
+{
+  "name": "year.big",
+  "family": "year",
+  "estilo": {
+    "usa": [
+      "estilos.anio.barra",
+      "estilos.anio.texto",
+      "ranuras.anio"
+    ]
+  },
+  "description": "Año grande con subrayado de acento, en la ranura «anio» (o centrado si se da screen). Úsala como recurso visual en una escena.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 90,
+  "states": [],
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "1982",
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "screen": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-year-big",
+    "t": 0,
+    "type": "year.big",
+    "text": "1982",
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "assets/scene.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/year.big.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

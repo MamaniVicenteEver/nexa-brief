@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from pathlib import Path
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 from src.adapters.showcase.filesystem import FilesystemShowcaseAdapter, _id, _read, _safe
 from src.core.showcase.ports import ShowcaseConflict, ShowcaseInvalid
@@ -105,12 +105,41 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
             raise ShowcaseConflict("La revisión del diseño cambió; reconcilia el registro del perfil")
         design = dict(design)
         design["state"] = state["state"] if state else design["state"]
+        if state and isinstance(state.get("display_name"), str) and state["display_name"].strip():
+            design["name"] = state["display_name"].strip()
+        if state and state.get("category_path"):
+            from src.core.categories import get_category
+            owner = get_category(state["category_path"])
+            if owner and owner.folder:
+                design["category"] = owner.folder
+        design["category_path"] = state.get("category_path") if state else None
+        design["shared_categories"] = state.get("shared_categories", []) if state else []
         source = design.get("definition_source")
         if relations is None:
             from src.adapters.showcase.episode_relations import builtin_episode_relations
 
             relations = builtin_episode_relations(self, {ident})
         design["episodes"] = relations.get(ident, [])
+        if ident == "mapas-satelitales":
+            # Both videos reference the same engine, not duplicate designs.
+            project_adapter = self.projects
+            category = self.sandbox / 'nodehistory'
+            children = sorted(category.iterdir()) if category.is_dir() and not category.is_symlink() else []
+            shared = {ident}
+            for child in children:
+                item = project_adapter._item('nodehistory', child.name, shared)
+                if item is None:
+                    continue
+                if item['info'].get('engine') != 'nodehistory/_mapas':
+                    continue
+                preview = '/api/v1/explainer/files/sandbox/' + '/'.join(
+                    quote(part, safe='') for part in (item['folder'], item['project_id'], 'index.html')
+                )
+                if (child / 'index.html').is_symlink() or not (child / 'index.html').is_file():
+                    preview = None
+                title = item['info'].get('title') or item['project_id']
+                design['episodes'].append({'id': item['project_id'], 'title': title,
+                                           'design_id': ident, 'preview_url': preview})
         if source == "builtin":
             design["builtin"] = True
         elif source == "vida":
@@ -127,6 +156,12 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
         if ident == "cara-a-cara" and entries and not entries[0].get("preview_url"):
             design["preview_url"] = None
         blocker = None if available else "Vista previa no disponible"
+        if ident == "mapas-satelitales":
+            required = [self.templates / "sandbox/nodehistory/_mapas" / name
+                        for name in ("mapas.js", "geo.js", "camera.js", "flags.js", "layers.js")]
+            required.append(self.templates / "sandbox/_proto/proto.js")
+            if not all(path.is_file() and not path.is_symlink() for path in required):
+                blocker = "Faltan archivos del motor compartido de mapas"
         if ident == "atlas-cinematico":
             from src.adapters.showcase.legacy_catalogs import atlas_cache_ready
 
@@ -206,6 +241,8 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
                 shared_paths[design_id] = "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/"
         prefix = shared_paths.get(design_id)
         path = parsed.path
+        if design_id == "atlas-en-movimiento" and prefix and path.startswith(prefix):
+            path = path.replace(prefix, "/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/", 1)
         if prefix and path.startswith(prefix):
             path = path.replace("/api/v1/explainer/files/sandbox/", "/api/v1/explainer/files/bundled/sandbox/", 1)
         params = [
@@ -218,8 +255,18 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
         # Shared contracts do not give access to arbitrary repository files.
         return None
 
-    def promote(self, design_id):
+    def promote(self, design_id, category_path=None, shared_categories=None):
         ident = _id(design_id)
+        if category_path is not None:
+            from src.core.categories import get_category
+            categories = [category_path, *(shared_categories or [])]
+            if (len(categories) != len(set(categories)) or any(
+                not isinstance(path, str) or not get_category(path) or
+                not get_category(path.split("/", 1)[0]) or
+                get_category(path.split("/", 1)[0]).engine != "explainer_kit" or
+                not get_category(path.split("/", 1)[0]).folder for path in categories
+            )):
+                raise ShowcaseInvalid("Categorías de diseño inválidas")
 
         async def change():
             async with self.store.coordination("showcase"):
@@ -227,13 +274,23 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
                 if current is None:
                     raise ShowcaseInvalid("Diseño no encontrado")
                 if current["state"] == "produccion":
+                    if category_path is not None:
+                        row = dict(self._states().get(ident) or {
+                            "id": ident, "state": "produccion", "definition_ref": ident,
+                            "revision": current["revision"],
+                        })
+                        row["category_path"] = category_path
+                        row["shared_categories"] = shared_categories or []
+                        await self.store.collection("showcase_designs").upsert(row, match=["id"])
+                        return self.get_design(ident)
                     return current
                 if not current.get("promotable"):
                     raise ShowcaseConflict(current.get("promote_blocker") or "Diseño bloqueado")
-                await self.store.collection("showcase_designs").upsert(
-                    {"id": ident, "state": "produccion", "definition_ref": ident, "revision": current["revision"]},
-                    match=["id"],
-                )
+                row = {"id": ident, "state": "produccion", "definition_ref": ident, "revision": current["revision"]}
+                if category_path is not None:
+                    row["category_path"] = category_path
+                    row["shared_categories"] = shared_categories or []
+                await self.store.collection("showcase_designs").upsert(row, match=["id"])
                 return self.get_design(ident)
 
         return asyncio.run(change())

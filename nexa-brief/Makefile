@@ -54,11 +54,18 @@ DEV_PUBLIC_APP_URL ?= $(PUBLIC_APP_URL)
 dev: export PUBLIC_APP_URL := $(DEV_PUBLIC_APP_URL)
 dev: export AUTH_URL := $(DEV_PUBLIC_APP_URL)
 export NEXA_PROJECT_ROOT := $(CURDIR)
+profile-quote = '$(subst ','"'"',$(1))'
+_nexa_profile_selector_explicit := $(filter-out undefined default,$(origin NEXA_PROFILE_DIR) $(origin NEXA_DATA_PROFILE) $(origin NEXA_DATA_HOME))
 export NEXA_DATA_HOME ?= $(HOME)/.local/share/nexa-brief
 export NEXA_DATA_PROFILE ?= profesional
+ifeq ($(_nexa_profile_selector_explicit),)
+_nexa_dotenv_profile := $(shell python3 scripts/profile-default.py $(call profile-quote,$(CURDIR)/.env) || printf '__NEXA_PROFILE_ERROR__')
+$(if $(findstring __NEXA_PROFILE_ERROR__,$(_nexa_dotenv_profile)),$(error No se pudo resolver el perfil de almacenamiento))
+export NEXA_PROFILE_DIR ?= $(if $(_nexa_dotenv_profile),$(_nexa_dotenv_profile),$(NEXA_DATA_HOME)/profiles/$(NEXA_DATA_PROFILE))
+else
 export NEXA_PROFILE_DIR ?= $(NEXA_DATA_HOME)/profiles/$(NEXA_DATA_PROFILE)
+endif
 # Fail closed: $(shell) otherwise drops a failed resolver's exit code and exports an empty path.
-profile-quote = '$(subst ','"'"',$(1))'
 profile-path-result = $(shell python3 scripts/profile-path.py $(call profile-quote,$(NEXA_PROFILE_DIR)) $(1) || printf '__NEXA_PROFILE_ERROR__')
 profile-path = $(if $(findstring __NEXA_PROFILE_ERROR__,$(1)),$(error No se pudo resolver el perfil de almacenamiento),$(1))
 validated-profile-web-data := $(call profile-path,$(call profile-path-result,web_data))

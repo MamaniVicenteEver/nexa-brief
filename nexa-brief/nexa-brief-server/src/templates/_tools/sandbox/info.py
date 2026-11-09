@@ -106,6 +106,9 @@ def add_usage(
     cached_input_tokens: int = 0,
     reasoning_tokens: int = 0,
     note: str = "",
+    ok: bool = True,
+    usage_known: bool = True,
+    event_id: str | None = None,
 ) -> tuple[dict, dict]:
     """Agrega una sesión usando el formato y el resumen oficiales del explainer-kit."""
     if not (item_dir / "info.json").is_file():
@@ -127,7 +130,12 @@ def add_usage(
         step="sandbox",
         **values,
         note=note,
+        ok=ok,
+        usage_known=usage_known,
+        event_id=event_id,
     )
+    if entry.get("record_error"):
+        raise OSError("No se pudo guardar el registro de uso")
     return entry, usage.summarize(item_dir)
 
 
@@ -281,6 +289,9 @@ def build_parser() -> argparse.ArgumentParser:
     usage.add_argument("--cached", dest="cached_input_tokens", type=_nonnegative, default=0)
     usage.add_argument("--reasoning", dest="reasoning_tokens", type=_nonnegative, default=0)
     usage.add_argument("--note", default="")
+    usage.add_argument("--failed", action="store_true")
+    usage.add_argument("--usage-unknown", action="store_true")
+    usage.add_argument("--event-id")
 
     from_log = subparsers.add_parser("from-codex-log", help="registrar el total final de un log codex exec")
     from_log.add_argument("item")
@@ -314,6 +325,9 @@ def _run_add_usage(args: argparse.Namespace) -> int:
         cached_input_tokens=args.cached_input_tokens,
         reasoning_tokens=args.reasoning_tokens,
         note=args.note,
+        ok=not args.failed,
+        usage_known=not args.usage_unknown,
+        event_id=args.event_id,
     )
     totals = summary["totals"]
     print(
@@ -370,10 +384,11 @@ def _show_costs(item: str) -> int:
         else:
             print(f"Comparación: {ratio:.1%} ({result['verdict']})")
         forecast = result["forecast_next"]
-        print(
-            f"Próxima plantilla: {forecast['min']:,.0f}–{forecast['max']:,.0f} "
-            f"tokens · {forecast['basis']}"
-        )
+        if forecast:
+            print(
+                f"Próxima plantilla: {forecast['min']:,.0f}–{forecast['max']:,.0f} "
+                f"tokens · {forecast['basis']}"
+            )
     else:
         print(f"Sin línea base para engine {result['info'].get('engine')}.")
     return 0

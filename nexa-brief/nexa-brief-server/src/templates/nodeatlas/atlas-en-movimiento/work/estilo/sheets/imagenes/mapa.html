@@ -1,0 +1,9 @@
+<!doctype html><meta charset="utf-8"><style>html,body{margin:0;background:#000}canvas{width:100vw;height:100vh;object-fit:contain}</style><canvas></canvas><script type="module">
+import {makeEstilo} from '../../../../engine/tactico/util.js';
+import {Tactico,loadComponents} from '../../../../engine/tactico/core.js';
+const q=new URLSearchParams(location.search),fmt=q.get('formato')||'movil',type=q.get('type')||'portrait.pair',W=fmt==='movil'?1080:1920,H=fmt==='movil'?1920:1080;
+const c=document.querySelector('canvas');c.width=W;c.height=H;const g=c.getContext('2d');
+const bg=new Image();bg.src=`../../../../identidad-opus/work/shots/${fmt==='movil'?'v4-6.5.png':'h-v4-6.5.png'}`;await bg.decode();g.drawImage(bg,0,0,W,H);
+const face=new FontFace('Archivo',`url('../../../../identidad-opus/assets/fonts/Archivo.ttf')`,{weight:'100 900',stretch:'62% 125%'});document.fonts.add(await face.load());
+const estilo=makeEstilo(await (await fetch('../../../../engine/tactico/estilos/v4-atlas.json')).json(),fmt);await loadComponents();const def=Tactico.get(type),item=structuredClone(def.demo),internal=await def.prepare(item,{estilo,formato:fmt,scene:{defs:{palette:{}}},palette:{},env:{}});def.draw(g,{item,internal}, {project:()=>({x:W/2,y:H/2})},{W,H,estilo,formato:fmt,U:1});window.ready=true;
+</script>

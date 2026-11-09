@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "doc": "Qué modelo hace cada trabajo. Lo leen el backend (src/adapters/models/hub.py) y el kit (tools/delegate.py). Cambiar un proveedor acá cambia a quién se le pide; delegatable habilita kit.py delegate. Guía: src/templates/_tools/explainer-kit/guides/orquestacion.md",
+  "doc": "Qué modelo hace cada trabajo. Lo leen el backend (src/adapters/models/hub.py) y el kit (tools/delegate.py). Cambiar un proveedor acá cambia a quién se le pide; delegatable habilita kit.py delegate. Guía: src/templates/_tools/explainer-kit/guides/orquestacion.md Respaldo: si Codex no tiene cuota o falla, el rol pasa a claude-haiku-5-5 (campo fallback); el agente lo anota en el reporte.",
   "providers": {
     "codex": {
       "kind": "agent_cli",
@@ -41,23 +41,48 @@
   "roles": {
     "producer": {
       "provider": "codex",
-      "does": "Orquesta el video: sigue explainer-kit/AGENTS.md pasos 2 a 9, decide qué delegar y revisa todo lo delegado."
+      "does": "Orquesta el video: sigue explainer-kit/AGENTS.md pasos 2 a 9, decide qué delegar y revisa todo lo delegado.",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
+      }
     },
     "research": {
       "provider": "codex",
-      "does": "Investiga en la web con fuentes y fecha (PLAN §1–3)."
+      "does": "Investiga en la web con fuentes y fecha (PLAN §1–3).",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
+      }
     },
     "script": {
       "provider": "codex",
-      "does": "Escribe el guion para voz (assets/script.json)."
+      "does": "Escribe el guion para voz (assets/script.json).",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
+      }
     },
     "storyboard": {
       "provider": "codex",
-      "does": "Dirige: qué se dibuja en cada frase (assets/storyboard.json)."
+      "does": "Dirige: qué se dibuja en cada frase (assets/storyboard.json).",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
+      }
     },
     "visual_review": {
       "provider": "codex",
-      "does": "Mira las hojas PNG (kit.py sheet / components) y corrige."
+      "does": "Mira las hojas PNG (kit.py sheet / components) y corrige.",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
+      }
     },
     "component_draft": {
       "provider": "deepseek",
@@ -90,7 +115,12 @@
       "delegatable": true,
       "prompt": "prompts/delegate-text.md",
       "output": "md",
-      "does": "Borradores reutilizables de textos basados en una instrucción y contexto del video; entrega Markdown para que el productor revise y edite."
+      "does": "Borradores reutilizables de textos basados en una instrucción y contexto del video; entrega Markdown para que el productor revise y edite.",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
+      }
     },
     "dialogue_draft": {
       "provider": "codex",
@@ -99,7 +129,12 @@
       "delegatable": true,
       "prompt": "prompts/delegate-dialogue.md",
       "output": "md",
-      "does": "Borradores de diálogos y voces de personajes basados en instrucciones y contexto; entrega Markdown para que el productor revise y edite."
+      "does": "Borradores de diálogos y voces de personajes basados en instrucciones y contexto; entrega Markdown para que el productor revise y edite.",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
+      }
     },
     "voice": {
       "provider": "gemini_tts",
@@ -132,7 +167,12 @@
       "provider": "codex",
       "model": "gpt-6-luna",
       "reasoning_effort": "xhigh",
-      "does": "Ejecuta tareas acotadas del prototipo y entrega resultados."
+      "does": "Ejecuta tareas acotadas del prototipo y entrega resultados.",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
+      }
     },
     "image_copy": {
       "provider": "codex",

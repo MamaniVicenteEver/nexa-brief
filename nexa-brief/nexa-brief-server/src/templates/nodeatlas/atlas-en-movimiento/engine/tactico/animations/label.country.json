@@ -1,0 +1,62 @@
+{
+  "name": "label.country",
+  "family": "label",
+  "estilo": {
+    "usa": [
+      "estilos.pais"
+    ]
+  },
+  "description": "Nombre de país en versales espaciadas, sin neón ni brillo; sobre un lugar o en screen. Úsala para identificar lugares y objetos.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 70,
+  "states": [],
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "IRAK",
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "color": {
+      "type": "string",
+      "default": "text",
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "at": {
+      "type": "place",
+      "default": null,
+      "range": null,
+      "description": "Posición: coordenadas [longitud, latitud], lugar o id de otro item."
+    },
+    "screen": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-label-country",
+    "t": 0,
+    "type": "label.country",
+    "text": "IRAK",
+    "screen": [
+      0.5,
+      0.45
+    ],
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "assets/scene.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/label.country.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

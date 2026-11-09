@@ -1,6 +1,7 @@
 import { Pause, Play, RotateCcw, Square } from "lucide-react";
 import type { RefObject } from "react";
 import type { PlayerStatus } from "../hooks/useStagePlayer";
+import { ShowcaseViewport } from "./ShowcaseViewport";
 import type { FormatId } from "../types";
 import { IconAction } from "./IconAction";
 
@@ -100,11 +101,7 @@ export function StagePlayer({
 }: PlayerProps) {
   return (
     <>
-      <div
-        data-preview-frame
-        className={`relative mx-auto max-w-full overflow-hidden rounded-[18px] ${poster ? "bg-white" : "bg-black"} transition-[width,height] duration-200 ${format === "9x16" ? "max-h-[74vh] w-[min(390px,88vw,41.625vh)]" : "w-[min(100%,131.5556vh)]"}`}
-        style={{ aspectRatio: format === "9x16" ? "9 / 16" : "16 / 9" }}
-      >
+      <ShowcaseViewport format={format}>
         <iframe
           key={frameKey}
           ref={frameRef}
@@ -129,7 +126,7 @@ export function StagePlayer({
             Cargando vista previa…
           </p>
         )}
-      </div>
+      </ShowcaseViewport>
       <div className="space-y-2 px-2 pb-1">
         <div className="flex items-center gap-2 text-[10px] font-semibold text-white/65">
           <span className="w-10 text-right tabular-nums">{formatTime(time)}</span>

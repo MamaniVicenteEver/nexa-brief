@@ -10,10 +10,14 @@ permanecen en los servicios y adapters. Ejecutar desde la raíz del servidor.
 | `youtube_oauth_setup.py` | Configuración OAuth web heredada. |
 | `tiktok_setup.py` | Preparación de TikTok; revisar su ayuda antes de usar. |
 | `test_publisher_tokens.py` | Diagnóstico interactivo que puede publicar realmente; no forma parte de las pruebas aisladas. |
+| `generate_showcase_posters.py` | Crear manualmente miniaturas WebP 16:9 de los mapas, una por vez. |
+| `index_usage_history.py` | Inspeccionar e indexar referencias históricas de consumo del perfil activo. |
 | `scrape_backgrounds_v3.py` | Descarga de imágenes y música para recursos. |
 | `scrape_backgrounds.py` | Descargador de fondos heredado. |
 | `scrape_anime.py` | Descarga de recursos de anime y arte. |
 | `nexa_brief_ds_scraper.py` | Preparación de datasets. |
+
+`python scripts/index_usage_history.py` muestra referencias pendientes; con `--apply` las añade al índice del perfil activo sin mover ni cambiar los archivos originales. La operación es repetible. Para el detalle y sus límites, consulta [`docs/trazas-consumo.md`](../docs/trazas-consumo.md).
 
 ## Migración vigente: layout v3
 
@@ -75,3 +79,22 @@ JSON, el traslado seguro de conexiones/credenciales, los orígenes ausentes,
 los resultados excluidos, el espacio y los permisos. Estos pasos y la activación
 son deliberadamente manuales; la preparación no equivale a una migración
 completa ni garantiza que archivos arbitrarios estén libres de secretos.
+
+## Miniaturas del Showcase
+
+Con la API local iniciada y el perfil correcto activo, ejecuta desde la raíz del servidor:
+
+```sh
+.venv/bin/python scripts/generate_showcase_posters.py
+```
+
+Por defecto recorre los diseños de los motores `_atlas` y `_mapas`. Crea imágenes
+WebP a 640×360 en la caché del perfil y captura a la mitad de la duración del
+ejemplo. Si ese fotograma está vacío, prueba el instante de mayor visibilidad
+del motor y otros instantes; deja constancia en el registro. Abre un solo navegador
+y una sola página a la vez. Se puede interrumpir y volver a ejecutar: conserva los
+resultados ya preparados. Opciones: `--design ID` (repetible), `--all`, `--limit N`,
+`--force` y `--port`. Muestra errores por entrada y termina con código distinto de
+cero si alguna falla. El Showcase sirve las imágenes preparadas, sin iniciar capturas
+al entrar; la reproducción animada continúa bajo demanda. Para otros motores se usan
+las miniaturas JPEG antiguas si no existe WebP.

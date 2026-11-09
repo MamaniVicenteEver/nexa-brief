@@ -182,6 +182,7 @@ class SandboxModelUsageResponse(BaseModel):
     fresh_input_tokens: int
     output_tokens: int
     reasoning_tokens: int
+    undivided_tokens: int = 0
     total_tokens: int
 
 
@@ -204,6 +205,8 @@ class SandboxInfoResponse(BaseModel):
     total_tokens: int = 0
     cached_tokens: int = 0
     estimated: bool = False
+    unreconciled_estimate_tokens: int | None = None
+    usage_status: Literal["partial", "unknown"] = "unknown"
     baseline: SandboxBaselineResponse | None = None
     ratio_vs_baseline: float | None = None
     forecast_next: SandboxForecastResponse | None = None

@@ -50,6 +50,14 @@ def _title_rules(narrative: NarrativeStrategy, category_id: str, title_level: st
     }
 
 
+def script_level_rules(narrative: NarrativeStrategy, title_level: str | None) -> list[str]:
+    """Reglas del diálogo específicas del nivel, independientes de títulos y miniaturas."""
+    level = narrative.title_level(title_level)
+    if narrative.title is None or level is None:
+        return []
+    return narrative.title.levels[level].script_rules
+
+
 def brief_context(narrative: NarrativeStrategy | None, category_id: str, title_level: str | None) -> dict | None:
     """Bloque `narrativa` del pedido al estratega; None = prompt de siempre."""
     if narrative is None or narrative.id == DOCUMENTAL_ID:
@@ -74,6 +82,8 @@ def brief_context(narrative: NarrativeStrategy | None, category_id: str, title_l
     }
     if (titles := _title_rules(narrative, category_id, title_level)) is not None:
         ctx["titulos"] = titles
+    if rules := script_level_rules(narrative, title_level):
+        ctx["reglas_prioritarias_del_guion"] = rules
     if narrative.thumbnail:
         ctx["miniatura"] = narrative.thumbnail.model_dump()
     if narrative.question:
@@ -165,4 +175,6 @@ def production_lines(narrative: NarrativeStrategy | None, category_id: str, titl
         )
         if thumb.require_bullet:
             lines.append("Amarillista: la opción C es obligatoria. El 20 % de alerta rojo/amarillo va en un bullet con dato real dicho en el guion (referencia: «250 PUESTOS»); el check bloquea su ausencia.")
+    if rules := script_level_rules(narrative, title_level):
+        lines.append("REGLAS PRIORITARIAS DEL DIÁLOGO PARA ESTE NIVEL: " + " ".join(rules))
     return lines

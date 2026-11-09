@@ -1,15 +1,17 @@
 """Cálculos compartidos de consumo para las fichas del sandbox.
 
-Normalizamos la entrada como entrada nueva (sin caché). Codex, OpenAI y DeepSeek
+Normalizamos la entrada como entrada nueva (sin caché). Codex, OpenAI, Gemini y DeepSeek
 reportan cached_input_tokens dentro de input_tokens; para esos proveedores se
 resta la caché. Claude informa la caché de lectura aparte, así que input_tokens
-ya es entrada nueva. La caché siempre se muestra aparte y no suma al total.
+ya es entrada nueva. El total incluye la caché una vez. El razonamiento ya está
+incluido en la salida de Codex/OpenAI y DeepSeek; Gemini lo informa por separado.
 """
 
 from __future__ import annotations
 
 import importlib.util
 import json
+from collections import Counter
 from pathlib import Path
 
 TOKEN_FIELDS = (
@@ -17,8 +19,9 @@ TOKEN_FIELDS = (
     "cached_input_tokens",
     "output_tokens",
     "reasoning_tokens",
+    "undivided_tokens",
 )
-CACHE_INCLUDED_IN_INPUT = {"codex", "openai", "deepseek"}
+CACHE_INCLUDED_IN_INPUT = {"codex", "openai", "deepseek", "gemini", "gemini_tts"}
 
 
 def _number(value: object) -> int:
@@ -36,6 +39,10 @@ def _bucket() -> dict[str, int]:
 
 def _add(bucket: dict[str, int], row: dict) -> None:
     """Suma los tokens de una llamada o backfill."""
+    if "total combinado informado por codex exec" in str(row.get("note") or "").lower():
+        row = {**row, "undivided_tokens": row.get("input_tokens"), "input_tokens": 0}
+    elif row.get("total_tokens") is not None and row.get("input_tokens") is None and row.get("output_tokens") is None:
+        row = {**row, "undivided_tokens": row["total_tokens"]}
     for field in TOKEN_FIELDS:
         bucket[field] += _number(row.get(field))
 
@@ -82,7 +89,7 @@ def _from_ledger(path: Path) -> dict[tuple[str, str], dict[str, int]]:
 
 
 def _model_totals(item_dir: Path) -> dict[tuple[str, str], dict[str, int]]:
-    """Carga usage.json y usa el ledger si el resumen aún no tiene modelos."""
+    """Lee ambos formatos; un evento repetido en las dos copias cuenta una sola vez."""
     # Resolve through the kit: v1 stays alongside the prototype, v2 uses its
     # selected profile log directory. No profile data or credentials are read.
     tool = Path(__file__).resolve().parent.parent / "explainer-kit" / "tools" / "usage.py"
@@ -93,10 +100,52 @@ def _model_totals(item_dir: Path) -> dict[tuple[str, str], dict[str, int]]:
         summary_path, ledger = module.summary_path(item_dir), module.ledger_path(item_dir)
     except (OSError, ValueError, ImportError):
         return {}
-    summary = _from_usage_json(summary_path)
-    if summary:
-        return summary
-    return _from_ledger(ledger)
+    legacy_ledger = item_dir / "work" / "usage.jsonl"
+    legacy_summary = item_dir / "usage.json"
+    paths = list(dict.fromkeys((ledger, legacy_ledger)))
+    counters: list[Counter[str]] = []
+    for path in paths:
+        if path == legacy_ledger and not path.resolve().is_relative_to(item_dir.resolve()):
+            continue
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except OSError:
+            continue
+        rows = []
+        for line in lines:
+            try:
+                row = json.loads(line)
+            except ValueError:
+                continue
+            if isinstance(row, dict):
+                rows.append(json.dumps(row, sort_keys=True, ensure_ascii=False))
+        if rows:
+            counters.append(Counter(rows))
+    if counters:
+        # Multiset union retains repeated events inside one ledger, but avoids
+        # counting the same historical ledger again after a migration.
+        combined = counters[0]
+        for counter in counters[1:]:
+            combined |= counter
+        result: dict[tuple[str, str], dict[str, int]] = {}
+        for serialized, count in combined.items():
+            row = json.loads(serialized)
+            if (row.get("usage_known") is False or row.get("provider") == "kit"
+                    or ("usage_known" not in row and not any(_number(row.get(field)) for field in TOKEN_FIELDS))):
+                continue
+            key = (str(row.get("provider") or "?"), str(row.get("model") or ""))
+            bucket = result.setdefault(key, _bucket())
+            for _ in range(count):
+                _add(bucket, row)
+        return result
+    # Summaries are alternatives, not independent events; never add them.
+    for path in dict.fromkeys((summary_path, legacy_summary)):
+        if path == legacy_summary and not path.resolve().is_relative_to(item_dir.resolve()):
+            continue
+        summary = _from_usage_json(path)
+        if summary:
+            return summary
+    return {}
 
 
 def fresh_input(provider: str, row: dict) -> int:
@@ -108,20 +157,34 @@ def fresh_input(provider: str, row: dict) -> int:
 
 
 def _total_tokens(provider: str, row: dict[str, int]) -> int:
-    """Suma entrada nueva, salida y razonamiento; la caché queda aparte."""
-    return fresh_input(provider, row) + row["output_tokens"] + row["reasoning_tokens"]
+    """Total de tokens procesados sin sumar dos veces caché o razonamiento."""
+    input_total = (row["input_tokens"] if provider.strip().lower() in CACHE_INCLUDED_IN_INPUT
+                   else row["input_tokens"] + row["cached_input_tokens"])
+    reasoning = row["reasoning_tokens"] if provider.strip().lower() in {"gemini", "gemini_tts"} else 0
+    return input_total + row["output_tokens"] + reasoning + row.get("undivided_tokens", 0)
 
 
-def _template_cost(item_dir: Path, info: dict) -> dict:
-    """Une el ledger normal con el backfill histórico opcional."""
+def _template_cost(item_dir: Path, info: dict, *, extra_events: list[dict] | None = None) -> dict:
+    """Mantiene separados los registros y estimaciones de origen incierto."""
     by_model = _model_totals(item_dir)
+    for event in extra_events or []:
+        if event.get("usage_known") is not True:
+            continue
+        key = (str(event.get("provider") or "?"), str(event.get("model") or ""))
+        _add(by_model.setdefault(key, _bucket()), event)
     backfill = info.get("usage_backfill") or {}
     rows = backfill.get("by_model", []) if isinstance(backfill, dict) else []
+    estimated_models: dict[tuple[str, str], dict[str, int]] = {}
     for row in rows:
         if not isinstance(row, dict):
             continue
         key = (str(row.get("provider") or "?"), str(row.get("model") or ""))
-        _add(by_model.setdefault(key, _bucket()), row)
+        _add(estimated_models.setdefault(key, _bucket()), row)
+    # Old backfills estimate whole sessions, not identifiable calls. They may
+    # overlap the ledger, so expose them separately instead of adding them.
+    separate_estimate = bool(by_model and estimated_models)
+    if not by_model:
+        by_model = estimated_models
 
     rows = []
     totals = _bucket()
@@ -145,7 +208,14 @@ def _template_cost(item_dir: Path, info: dict) -> dict:
         "fresh_input_tokens": fresh_input_total,
         "total_tokens": total_tokens,
         "cached_tokens": totals["cached_input_tokens"],
-        "estimated": bool(backfill.get("estimated")),
+        "estimated": bool(estimated_models and not separate_estimate),
+        "unreconciled_estimate_tokens": (
+            sum(_total_tokens(provider, bucket) for (provider, _), bucket in estimated_models.items())
+            if separate_estimate else None
+        ),
+        # Not all generation routes currently emit usage, so recorded totals
+        # must not be advertised as a complete accounting of a project.
+        "usage_status": "partial" if rows else "unknown",
     }
 
 
@@ -158,7 +228,7 @@ def _created_key(info: dict, item_dir: Path) -> tuple[str, str, str]:
     )
 
 
-def calculate_costs(sandbox_root: Path, folder: str, item_id: str) -> dict:
+def calculate_costs(sandbox_root: Path, folder: str, item_id: str, *, extra_events: list[dict] | None = None) -> dict:
     """Devuelve consumo, comparación con la base y pronóstico de la próxima plantilla."""
     item_dir = sandbox_root / folder / item_id
     info_path = item_dir / "info.json"
@@ -166,7 +236,7 @@ def calculate_costs(sandbox_root: Path, folder: str, item_id: str) -> dict:
         raise FileNotFoundError(f"No existe {info_path}")
 
     info = json.loads(info_path.read_text(encoding="utf-8"))
-    current = _template_cost(item_dir, info)
+    current = _template_cost(item_dir, info, extra_events=extra_events)
     candidates = []
     for path in sandbox_root.glob("*/*/info.json"):
         if any(part.startswith((".", "_")) for part in path.relative_to(sandbox_root).parts[:2]):
@@ -184,7 +254,14 @@ def calculate_costs(sandbox_root: Path, folder: str, item_id: str) -> dict:
 
     baseline_path = None
     baseline_info = None
-    if candidates:
+    based_on = info.get("based_on")
+    if isinstance(based_on, str) and based_on.strip():
+        requested = based_on.strip().strip("/")
+        matching = [(path, candidate) for path, candidate in candidates
+                    if requested in (path.name, f"{path.parent.name}/{path.name}")]
+        if len(matching) == 1:
+            baseline_path, baseline_info = matching[0]
+    elif candidates:
         baseline_path, baseline_info = min(
             candidates,
             key=lambda candidate: _created_key(candidate[1], candidate[0]),
@@ -193,15 +270,18 @@ def calculate_costs(sandbox_root: Path, folder: str, item_id: str) -> dict:
     ratio = None
     forecast = None
     if baseline_path is not None and baseline_info is not None:
-        baseline_cost = _template_cost(baseline_path, baseline_info)["total_tokens"]
-        baseline = {"id": baseline_path.name, "total_tokens": baseline_cost}
-        if baseline_path.resolve() != item_dir.resolve() and baseline_cost:
-            ratio = current["total_tokens"] / baseline_cost
-        forecast = {
-            "min": baseline_cost * 0.25,
-            "max": baseline_cost * 0.5,
-            "basis": f"engine {info.get('engine')}: base {baseline_cost} tokens",
-        }
+        baseline_usage = _template_cost(baseline_path, baseline_info)
+        baseline_cost = baseline_usage["total_tokens"]
+        if baseline_usage["usage_status"] != "unknown":
+            baseline = {"id": baseline_path.name, "total_tokens": baseline_cost}
+            if baseline_path.resolve() != item_dir.resolve() and baseline_cost and current["usage_status"] != "unknown":
+                ratio = current["total_tokens"] / baseline_cost
+            if baseline_cost:
+                forecast = {
+                    "min": baseline_cost * 0.25,
+                    "max": baseline_cost * 0.5,
+                    "basis": f"engine {info.get('engine')}: base {baseline_cost} tokens",
+                }
 
     verdict = None
     if ratio is not None:

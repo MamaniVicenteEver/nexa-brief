@@ -14,6 +14,8 @@ from src.core.showcase.service import ShowcaseService
 from src.presentation.api.file_streaming import serve_file_with_range
 from src.presentation.api.schemas.showcase_schema import Catalog, Design, DesignList, Entry
 from src.presentation.api.security import require_internal
+from src.config.settings import settings
+import json as _json
 
 router = APIRouter(prefix="/showcase/designs", tags=["showcase"])
 T = TypeVar("T")
@@ -62,38 +64,117 @@ def get_design(design_id: str, service: ShowcaseService = Depends(get_showcase_s
     return _call(service.get_design, design_id)
 
 
+# Estilos visuales elegibles por diseño (el motor los define en un catálogo JSON dentro del repositorio).
+_STYLE_SOURCES = {"atlas-en-movimiento": "nodeatlas/atlas-en-movimiento/engine/tactico/estilos/index.json"}
+
+
+def _style_source(design_id: str, folder: str | None) -> str | None:
+    """Catálogo de estilos de un diseño: mapa fijo o declaración `estilos` en el info.json de su plantilla sandbox."""
+    if design_id in _STYLE_SOURCES:
+        return _STYLE_SOURCES[design_id]
+    if not (design_id.replace("-", "").replace("_", "").isalnum() and (folder is None or folder.replace("-", "").replace("_", "").isalnum())):
+        return None
+    sandbox = settings.templates_dir / "sandbox"
+    folders = [folder] if folder else [p.name for p in sandbox.iterdir() if p.is_dir()]
+    for name in folders:
+        info = sandbox / name / design_id / "info.json"
+        if info.is_file():
+            try:
+                declared = _json.loads(info.read_text(encoding="utf-8")).get("estilos")
+            except (OSError, ValueError):
+                return None
+            if isinstance(declared, str) and ".." not in declared and not declared.startswith("/"):
+                return f"sandbox/{name}/{design_id}/{declared}"
+    return None
+
+
+@router.get("/{design_id}/styles")
+def get_styles(design_id: str, folder: str | None = None):
+    relative = _style_source(design_id, folder)
+    if not relative:
+        return {"default": None, "styles": []}
+    path = (settings.templates_dir / relative).resolve()
+    if not path.is_file() or not path.is_relative_to(settings.templates_dir.resolve()):
+        return {"default": None, "styles": []}
+    try:
+        data = _json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {"default": None, "styles": []}
+    styles = [{"id": s["id"], "name": s.get("nombre") or s["id"], "idea": s.get("idea") or "", "formats": s.get("formatos") or []}
+              for s in data.get("estilos", []) if isinstance(s, dict) and isinstance(s.get("id"), str)]
+    return {"default": data.get("default") or (styles[0]["id"] if styles else None), "styles": styles}
+
+
+_AGENT_DOCS = {"agente": "AGENTE.md", "guion": "GUION.md", "menu-visual": "MENU-VISUAL.md", "skill": "SKILL.md"}
+
+
+@router.get("/{design_id}/agent")
+def agent_guide(design_id: str, doc: str = "agente"):
+    """Guía pública para agentes de un diseño (Markdown): proceso, guion y menú de componentes.
+
+    Un agente que reciba el link del Showcase de un diseño lee aquí cómo producir videos con él.
+    `doc`: agente (proceso y roles), guion (cómo se genera el diálogo), menu-visual, skill.
+    """
+    import re
+    from fastapi.responses import PlainTextResponse
+    name = _AGENT_DOCS.get(doc)
+    if not name or not re.fullmatch(r"[a-z0-9][a-z0-9-]*", design_id):
+        raise HTTPException(status_code=404, detail="guía no disponible")
+    for folder in ("nodeatlas", "nodehistory", "nodepolitics", "nodeeconomy", "nodetech"):
+        path = settings.templates_dir / folder / design_id / name
+        if path.is_file():
+            return PlainTextResponse(path.read_text(encoding="utf-8"), media_type="text/markdown")
+    raise HTTPException(status_code=404, detail="este diseño no publica guía para agentes")
+
+
 @router.get("/{design_id}/catalog", response_model=Catalog)
 def get_catalog(design_id: str, service: ShowcaseService = Depends(get_showcase_service)):
     return _call(service.catalog, design_id)
 
 
+def _styled_target(service: ShowcaseService, design_id: str, entry: str | None, format: str, style: str | None) -> str:
+    from src.adapters.showcase import posters
+    if style:
+        resolver = globals().get("get_styles")
+        declared = resolver(design_id).get("styles", []) if resolver else []
+        if style not in {item.get("id") for item in declared}:
+            raise HTTPException(status_code=422, detail="Estilo inválido")
+    try:
+        return posters.with_style(_call(service.preview, design_id, entry, format), style)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail="Estilo inválido") from exc
+
+
 @router.get("/{design_id}/preview")
 def preview(design_id: str, entry: str | None = Query(default=None), format: str = Query(default="9x16"),
-            service: ShowcaseService = Depends(get_showcase_service)):
-    target = _call(service.preview, design_id, entry, format)
+            estilo: str | None = None, service: ShowcaseService = Depends(get_showcase_service)):
+    target = _styled_target(service, design_id, entry, format, estilo)
     return RedirectResponse(target, status_code=307, headers={"Cache-Control": "no-store"})
 
 
 @router.get("/{design_id}/poster")
 async def poster(design_id: str, request: Request, entry: str, format: str = "16x9",
+                 estilo: str | None = None, retry: bool = False,
                  service: ShowcaseService = Depends(get_showcase_service)):
-    """Create one disposable poster per profile/design revision without blocking the UI."""
+    """Serve precomputed posters; browsing never starts a renderer."""
     from src.adapters.showcase import posters
     from src.config.profile_layout import layout_for_settings
     from src.config.settings import settings
 
     design = _call(service.get_design, design_id)
-    target = _call(service.preview, design_id, entry, format)
-    path = posters.poster_path(layout_for_settings(settings).cache_dir, design_id,
-                               design.revision, entry, format, target)
-    state = posters.status(path)
-    if state == "ready":
-        return FileResponse(path, media_type="image/jpeg", headers={"Cache-Control": "private, no-cache"})
-    if state == "failed":
-        return Response(status_code=503, headers={"Cache-Control": "no-store"})
-    port = request.scope.get("server", ("127.0.0.1", 8000))[1]
-    posters.enqueue(path, target, format, int(port or 8000), settings.playwright_chromium_executable_path)
-    return Response(status_code=202, headers={"Cache-Control": "no-store", "Retry-After": "2"})
+    if format != "16x9":
+        raise HTTPException(status_code=422, detail="Solo se almacenan miniaturas 16:9")
+    target = _styled_target(service, design_id, entry, format, estilo)
+    layout = layout_for_settings(settings)
+    import asyncio
+    source = await asyncio.to_thread(posters.source_revision, settings.templates_dir, layout.sandbox_dir, design.engine_id, target)
+    path = posters.poster_path(layout.cache_dir, design_id, design.revision + source, entry, format, target)
+    if path.is_file():
+        return FileResponse(path, media_type="image/webp", headers={"Cache-Control": "private, no-cache"})
+    legacy = posters.poster_path(layout.cache_dir, design_id, design.revision + source, entry, format, target, legacy=True)
+    if design.engine_id not in {"nodehistory/_atlas", "nodehistory/_mapas"} and legacy.is_file():
+        return FileResponse(legacy, media_type="image/jpeg", headers={"Cache-Control": "private, no-cache"})
+    return Response(status_code=404, headers={"Cache-Control": "no-store"})
 
 
 @router.get("/{design_id}/catalog/{entry_id}", response_model=Entry)
@@ -111,6 +192,13 @@ def file(design_id: str, path: str, request: Request, service: ShowcaseService =
                                  if_range=request.headers.get("if-range"), cache_control="private, no-cache")
 
 
+class DesignPromotionRequest(BaseModel):
+    category: str
+    shared_categories: list[str] = []
+
+
 @router.post("/{design_id}/promote", response_model=Design, dependencies=[Depends(require_internal)])
-def promote(design_id: str, service: ShowcaseService = Depends(get_showcase_service)):
-    return _call(service.promote, design_id)
+def promote(design_id: str, body: DesignPromotionRequest | None = None, service: ShowcaseService = Depends(get_showcase_service)):
+    if body is None:
+        return _call(service.promote, design_id)
+    return _call(service.promote, design_id, body.category, body.shared_categories)

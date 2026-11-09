@@ -54,6 +54,7 @@ class TitleLevel(_Strict):
     description: str
     rules: list[str] = Field(default_factory=list)
     examples: dict[str, list[str]] = Field(default_factory=dict)    # por categoría
+    script_rules: list[str] = Field(default_factory=list)  # reglas del diálogo para este nivel
 
 
 class TitleRules(_Strict):

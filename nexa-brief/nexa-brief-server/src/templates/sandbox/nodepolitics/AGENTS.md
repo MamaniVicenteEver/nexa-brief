@@ -116,3 +116,5 @@ NODETECH (ver `../EXPLAINER.md` §4). Pedile al usuario el nombre y el handle re
 `kit.py poster <id>`. Checklist: `../EXPLAINER.md` §7 + §2 de este archivo (neutralidad revisada).
 
 > Al terminar una prueba, sumá acá (§7) lo que funcionó y lo que no.
+
+- Resumen geopolítico: `noticiero.outrov1` reutiliza el `lower-title` de `noticiero.apertura`, con línea lateral y escalas móvil/escritorio; al modificarlo actualizar su demo en `components.json`, el cierre en `assets/scene.json` y la miniatura de Showcase.

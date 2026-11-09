@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -19,7 +20,18 @@ from pathlib import Path, PurePosixPath
 
 TOOL_DIR = Path(__file__).resolve().parent
 TEMPLATES_ROOT = TOOL_DIR.parents[1]
-SANDBOX_ROOT = TEMPLATES_ROOT / "sandbox"
+SERVER_ROOT = TOOL_DIR.parents[3]
+sys.path.insert(0, str(SERVER_ROOT))
+from src.config.settings import settings
+from src.config.profile_layout import layout_for_settings
+
+layout = layout_for_settings(settings)
+override = os.environ.get("NEXA_SANDBOX_DIR")
+if override and not Path(override).is_absolute():
+    raise ValueError("NEXA_SANDBOX_DIR debe ser absoluta")
+if override and layout.schema_version >= 2 and Path(override).resolve() != layout.sandbox_dir.resolve():
+    raise ValueError("NEXA_SANDBOX_DIR no corresponde al perfil activo")
+SANDBOX_ROOT = Path(override) if override else (layout.sandbox_dir if layout.schema_version >= 2 else TEMPLATES_ROOT / "sandbox")
 INFO_SCRIPT = TOOL_DIR / "info.py"
 _SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
@@ -136,6 +148,7 @@ def create_prototype(
             check=False,
             text=True,
             capture_output=True,
+            env={**os.environ, "NEXA_SANDBOX_DIR": str(sandbox_root.resolve())},
         )
         if result.returncode:
             raise RuntimeError(result.stderr.strip() or result.stdout.strip() or "info.py init falló")

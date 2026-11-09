@@ -20,7 +20,7 @@ class ExecutionLog:
 
 async def register_execution_log(
     key: str | Path, *, kind: str, production_id: str | None = None,
-    video_id: str | None = None,
+    video_id: str | None = None, content_key: str | None = None,
 ) -> ExecutionLog:
     """Registra una clave relativa al perfil sin abrir ni guardar el contenido."""
     root = layout_for_settings(settings).root.resolve()
@@ -34,6 +34,7 @@ async def register_execution_log(
     await collection("execution_logs").insert({
         "log_id": log_id, "key": key.as_posix(), "kind": kind,
         "production_id": production_id, "video_id": video_id,
+        "content_key": content_key,
         "created_at": datetime.now(timezone.utc).isoformat(),
     })
     return ExecutionLog(log_id=log_id, path=path)

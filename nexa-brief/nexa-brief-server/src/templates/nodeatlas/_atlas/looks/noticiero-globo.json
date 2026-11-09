@@ -1,0 +1,204 @@
+{
+  "sky": {
+    "sky-color": "#020510",
+    "horizon-color": "#2a6bd6",
+    "fog-color": "#0a1a3a",
+    "fog-ground-blend": 0.6,
+    "horizon-fog-blend": 0.7,
+    "sky-horizon-blend": 0.8,
+    "atmosphere-blend": [
+      "interpolate",
+      [
+        "linear"
+      ],
+      [
+        "zoom"
+      ],
+      0,
+      1,
+      5,
+      1,
+      7,
+      0
+    ]
+  },
+  "terrain": {
+    "exaggeration": 0.8
+  },
+  "projection": "globe",
+  "background": "#02040a",
+  "sat": {
+    "visible": true,
+    "opacity": 1,
+    "saturation": -0.1,
+    "contrast": 0.2,
+    "brightness": -0.02,
+    "hue": 0,
+    "detail": null,
+    "viirs": false,
+    "brightnessMax": 0.86
+  },
+  "shade": {
+    "visible": true,
+    "opacity": 0.3
+  },
+  "base": {
+    "visible": false,
+    "opacity": 1,
+    "flavor": "light"
+  },
+  "borders": {
+    "visible": false,
+    "opacity": 0.8,
+    "levels": [
+      {
+        "color": "#f6f3de",
+        "width": 1.1,
+        "minzoom": 0,
+        "maxzoom": 24
+      },
+      {
+        "color": "#eae8d7",
+        "width": 0.75,
+        "minzoom": 4.8,
+        "maxzoom": 24,
+        "opacity": 0.5
+      },
+      {
+        "color": "#e5e5d8",
+        "width": 0.5,
+        "minzoom": 7,
+        "maxzoom": 24
+      }
+    ]
+  },
+  "labels": {
+    "visible": false,
+    "opacity": 0.95,
+    "levels": [
+      {
+        "color": "#fafcff",
+        "size": 20.0,
+        "minzoom": 2,
+        "maxzoom": 5.5
+      },
+      {
+        "color": "#fafcff",
+        "size": 16.25,
+        "minzoom": 4.8,
+        "maxzoom": 9
+      },
+      {
+        "color": "#fafcff",
+        "size": 13.75,
+        "minzoom": 6.2,
+        "maxzoom": 24
+      },
+      {
+        "color": "#fafcff",
+        "size": 15.0,
+        "minzoom": 5.5,
+        "maxzoom": 24
+      }
+    ]
+  },
+  "highlight": {
+    "styles": {
+      "blue": {
+        "fill": "#1d6bff",
+        "opacity": 0.12,
+        "line": "#5fb2ff",
+        "width": 2.2,
+        "glow": 0.55,
+        "glowWidth": 7,
+        "glowBlur": 4
+      },
+      "white": {
+        "fill": "#ffffff",
+        "opacity": 0.05,
+        "line": "#ffffff",
+        "width": 2.2,
+        "glow": 0.55,
+        "glowWidth": 7,
+        "glowBlur": 4
+      },
+      "red": {
+        "fill": "#e0243f",
+        "opacity": 0.22,
+        "line": "#ff5a78",
+        "width": 2.2,
+        "glow": 0.55,
+        "glowWidth": 7,
+        "glowBlur": 4
+      },
+      "yellow": {
+        "fill": "#d9b81a",
+        "opacity": 0.45,
+        "line": "#ffd84a",
+        "width": 2.2,
+        "glow": 0.55,
+        "glowWidth": 7,
+        "glowBlur": 4
+      },
+      "orange": {
+        "fill": "#ff8a1a",
+        "opacity": 0.15,
+        "line": "#ffb04a",
+        "width": 2.2,
+        "glow": 0.55,
+        "glowWidth": 7,
+        "glowBlur": 4
+      },
+      "green": {
+        "fill": "#36d41a",
+        "opacity": 0.12,
+        "line": "#6dff8a",
+        "width": 2.2,
+        "glow": 0.55,
+        "glowWidth": 7,
+        "glowBlur": 4
+      },
+      "hatch-red": {
+        "fill": "#e0243f",
+        "opacity": 0.0,
+        "line": "#ff3b5c",
+        "width": 2.2,
+        "glow": 0.4,
+        "glowWidth": 4,
+        "glowBlur": 4,
+        "hatch": "#ff5a78",
+        "hatchOpacity": 0.85
+      },
+      "hatch-orange": {
+        "fill": "#ff8a1a",
+        "opacity": 0.0,
+        "line": "#ffa23a",
+        "width": 2.2,
+        "glow": 0.4,
+        "glowWidth": 4,
+        "glowBlur": 4,
+        "hatch": "#ff9b2e",
+        "hatchOpacity": 0.85
+      },
+      "olive": {
+        "fill": "#9aa33a",
+        "opacity": 0.55,
+        "line": "#f3f3cf",
+        "width": 2.2,
+        "glow": 0.55,
+        "glowWidth": 7,
+        "glowBlur": 4
+      },
+      "pink": {
+        "fill": "#c4306f",
+        "opacity": 0.55,
+        "line": "#ffe4ef",
+        "width": 2.2,
+        "glow": 0.55,
+        "glowWidth": 7,
+        "glowBlur": 4
+      }
+    }
+  },
+  "stars": false
+}

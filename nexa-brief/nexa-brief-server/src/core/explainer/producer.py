@@ -479,6 +479,10 @@ def _isolated_agent_prompt(record: dict, *, phase: str, resume: bool, qc: str) -
             tones = story.voice.allowed_tones.get(act.id, [])
             lines.append(f"Acto {act.id}: {act.function} {'; '.join(act.rules)}. "
                          + (f"Tonos permitidos: {', '.join(tones)}." if tones else ''))
+    if record.get('narrative_id'):
+        from src.core.explainer.narrative.prompts import script_level_rules
+        if rules := script_level_rules(story, record.get('title_level')):
+            lines.append("REGLAS PRIORITARIAS DEL DIÁLOGO PARA ESTE NIVEL: " + " ".join(rules))
     if resume:
         lines.append('Retoma los archivos existentes y conserva lo ya válido.')
     if phase == 'guion':
@@ -756,6 +760,13 @@ class ExplainerProducer:
                 "updated_at": _now(),
             }
             await self._col().insert(record)
+            if brief and brief.usage_trace_id:
+                from src.core.explainer.usage_traces import link_brief
+                try:
+                    await link_brief(brief.usage_trace_id, production_id,
+                                     f"productions/{folder}/{video_id}", design)
+                except Exception as exc:
+                    logger.warning("explainer_usage_link_failed", production_id=production_id, error=str(exc))
             if layout.schema_version >= 2:
                 from src.core.content_registry import upsert_video
                 await upsert_video(video_id, production_id, details={

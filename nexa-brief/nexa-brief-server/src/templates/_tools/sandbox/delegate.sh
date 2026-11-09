@@ -85,8 +85,8 @@ finish() {
   printf 'EXIT %s\n' "$FINAL_STATUS" >> "$LOG"
   local usage_status=0
   python3 "$INFO_SCRIPT" from-codex-log "$ITEM" "$LOG" >> "$LOG" 2>&1 || usage_status=$?
-  if [[ "$FINAL_STATUS" -eq 0 && "$usage_status" -ne 0 ]]; then
-    FINAL_STATUS="$usage_status"
+  if [[ "$usage_status" -ne 0 ]]; then
+    printf 'Aviso: no se pudo registrar el uso (código %s).\n' "$usage_status" >> "$LOG"
   fi
 }
 on_exit() {

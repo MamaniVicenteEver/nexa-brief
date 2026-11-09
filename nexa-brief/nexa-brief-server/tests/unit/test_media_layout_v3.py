@@ -110,12 +110,12 @@ def test_bundled_showcase_engines_only(v3, tmp_path, monkeypatch):
     layout, _ = v3
     templates = tmp_path / "templates"
     monkeypatch.setattr(settings, "templates_dir", templates)
-    public = templates / "sandbox/nodehistory/atlas-en-movimiento/engine/tactico/core.js"
+    public = templates / "nodeatlas/atlas-en-movimiento/engine/tactico/core.js"
     public.parent.mkdir(parents=True)
     public.write_text("export {}")
     key = "bundled/sandbox/nodehistory/atlas-en-movimiento/engine/tactico/core.js"
     assert resolve_content_key(key) == public
-    assert content_key(public) == key
+    assert content_key(public) == "bundled/nodeatlas/atlas-en-movimiento/engine/tactico/core.js"
     # Legacy gallery asset URLs resolve only to the active profile, never the
     # repository's historical episode, including when that profile has no file.
     asset = "sandbox/nodehistory/atlas-en-movimiento/assets/scene.json"
@@ -134,6 +134,22 @@ def test_bundled_showcase_engines_only(v3, tmp_path, monkeypatch):
     link.symlink_to(target)
     with pytest.raises(ValueError):
         resolve_content_key("bundled/sandbox/nodehistory/atlas-en-movimiento/engine/tactico/outside.js")
+
+
+def test_promoted_atlas_showcase_assets_use_the_active_production(v3, tmp_path, monkeypatch):
+    layout, _ = v3
+    monkeypatch.setattr(settings, "templates_dir", tmp_path / "templates")
+    asset = layout.productions_dir / "nodeatlas/atlas-en-movimiento/assets/media/A04.png"
+    asset.parent.mkdir(parents=True)
+    asset.write_bytes(b"active profile")
+    for key in (
+        "bundled/nodeatlas/atlas-en-movimiento/assets/media/A04.png",
+        "bundled/sandbox/nodehistory/atlas-en-movimiento/assets/media/A04.png",
+        "sandbox/nodehistory/atlas-en-movimiento/assets/media/A04.png",
+    ):
+        assert resolve_content_key(key) == asset
+    with pytest.raises(ValueError):
+        resolve_content_key("bundled/nodeatlas/atlas-en-movimiento/assets/../secret")
 
 
 @pytest.mark.asyncio

@@ -4,6 +4,8 @@ export type ShowcaseDesign = {
   id: string;
   name: string;
   category: string;
+  category_path?: string | null;
+  shared_categories?: string[];
   state: "prueba" | "produccion";
   family: string;
   engine_id: string;
@@ -70,9 +72,12 @@ export const standardShowcaseRepository = {
     httpClient<ShowcaseCatalog>(`/api/v1/showcase/designs/${encodeURIComponent(id)}/catalog`, {
       signal,
     }),
-  promote: (id: string) =>
-    httpClient<ShowcaseDesign>(`/api/v1/showcase/designs/${encodeURIComponent(id)}/promote`, {
+  promote: (request: string | { id: string; category: string; sharedCategories: string[] }) => {
+    const id = typeof request === "string" ? request : request.id;
+    return httpClient<ShowcaseDesign>(`/api/v1/showcase/designs/${encodeURIComponent(id)}/promote`, {
       method: "POST",
+      body: typeof request === "string" ? undefined : { category: request.category, shared_categories: request.sharedCategories },
       timeoutMs: 120000,
-    }),
+    });
+  },
 };

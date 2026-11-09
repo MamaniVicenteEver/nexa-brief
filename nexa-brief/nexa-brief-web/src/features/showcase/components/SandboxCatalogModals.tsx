@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronDown, Maximize2, Menu } from "lucide-react";
+import { ShowcaseViewport } from "./ShowcaseViewport";
 import { useEffect, useRef, useState } from "react";
 import type { PlayerStatus } from "../hooks/useStagePlayer";
 import { copyText } from "../lib/clipboard";
@@ -176,40 +177,33 @@ function LibraryPlayer({
       aria-label={item.preview?.static ? "Vista del componente" : "Reproductor del componente"}
       className="flex min-w-0 flex-1 flex-col gap-2 bg-black"
     >
-      <div className="flex items-center justify-center overflow-hidden rounded-[18px]">
-        <div
-          data-preview-frame
-          style={{
-            width: format === "9x16" ? "min(100%, 390px, 41.625vh)" : "min(100%, 131.5556vh)",
-          }}
-        >
-          {item.preview?.static ? (
-            <SandboxImagePreview
-              key={`${item.name}-${format}`}
-              title={item.name}
-              aspect={format === "9x16" ? "9 / 16" : "16 / 9"}
-              bg={background}
-              poster={componentPosterUrl(path, catalog, item, background, thumbs)}
-            />
-          ) : (
-            <SandboxAnimationPreview
-              ref={animationRef}
-              key={`${item.name}-${format}`}
-              autoPlay={catalogBasePath(path, catalog) !== "sandbox/nodehistory/_atlas"}
-              hideControl
-              onStatusChange={onStatusChange}
-              title={item.name}
-              frameTitle={`Vista ampliada de ${item.name}`}
-              eager
-              waitForReady={!!catalog.animations || catalog.previewReady}
-              aspect={format === "9x16" ? "9 / 16" : "16 / 9"}
-              bg={background}
-              src={galleryUrl(path, catalog, item.name, format, background)}
-              poster={componentPosterUrl(path, catalog, item, background, thumbs)}
-            />
-          )}
-        </div>
-      </div>
+      <ShowcaseViewport format={format}>
+        {item.preview?.static ? (
+          <SandboxImagePreview
+            key={`${item.name}-${format}`}
+            title={item.name}
+            aspect={format === "9x16" ? "9 / 16" : "16 / 9"}
+            bg={background}
+            poster={componentPosterUrl(path, catalog, item, background, thumbs)}
+          />
+        ) : (
+          <SandboxAnimationPreview
+            ref={animationRef}
+            key={`${item.name}-${format}`}
+            autoPlay={catalogBasePath(path, catalog) !== "sandbox/nodehistory/_atlas"}
+            hideControl
+            onStatusChange={onStatusChange}
+            title={item.name}
+            frameTitle={`Vista ampliada de ${item.name}`}
+            eager
+            waitForReady={!!catalog.animations || catalog.previewReady}
+            aspect={format === "9x16" ? "9 / 16" : "16 / 9"}
+            bg={background}
+            src={galleryUrl(path, catalog, item.name, format, background)}
+            poster={componentPosterUrl(path, catalog, item, background, thumbs)}
+          />
+        )}
+      </ShowcaseViewport>
     </section>
   );
 }

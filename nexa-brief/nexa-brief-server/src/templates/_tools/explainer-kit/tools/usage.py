@@ -15,16 +15,20 @@ El backend escribe el mismo formato (src/core/explainer/usage.py): este archivo 
 from __future__ import annotations
 
 import datetime
+import fcntl
 import hashlib
 import json
+import logging
 import pathlib
 import re
+import uuid
 
 LEDGER = "work/usage.jsonl"
 SUMMARY = "usage.json"
 TOKEN_FIELDS = ("input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens")
 BILLING = {"codex": "suscripción", "claude": "suscripción", "deepseek": "api", "gemini": "api",
            "gemini_tts": "api", "whisper": "local", "kit": "local"}
+logger = logging.getLogger(__name__)
 
 
 def _profile_paths(video_dir):
@@ -93,12 +97,15 @@ async def register_reference(video_dir):
         previous = collection("execution_logs").first({"key": key})
         if previous:
             return previous["log_id"]
-        ref = await register_execution_log(key, kind="usage", video_id=pathlib.Path(video_dir).name)
+        video = pathlib.Path(video_dir).resolve()
+        content_key = video.relative_to(layout.root.resolve()).as_posix()
+        ref = await register_execution_log(key, kind="usage", video_id=video.name, content_key=content_key)
         return ref.log_id
 
 
 def record(video_dir, *, provider: str, model: str = "", role: str = "", step: str = "",
            iteration: int | None = None, seconds: float = 0.0, ok: bool = True, note: str = "",
+           usage_known: bool | None = None, event_id: str | None = None,
            **tokens) -> dict:
     """Agrega una línea al registro del video. Nunca rompe a quien llama (el registro es secundario)."""
     entry = {
@@ -108,14 +115,30 @@ def record(video_dir, *, provider: str, model: str = "", role: str = "", step: s
         **{k: int(tokens.get(k) or 0) for k in TOKEN_FIELDS},
         "seconds": round(float(seconds or 0), 2), "ok": bool(ok),
         "billing": BILLING.get(provider, ""), "note": note[:300],
+        "usage_known": (any(tokens.get(key) is not None for key in TOKEN_FIELDS)
+                        if usage_known is None else usage_known),
+        "event_id": event_id or uuid.uuid4().hex,
+        "schema_version": 1,
     }
     try:
         path = ledger_path(video_dir)
         path.parent.mkdir(parents=True, exist_ok=True)
-        with path.open("a", encoding="utf-8") as fh:
+        with path.open("a+", encoding="utf-8") as fh:
+            fcntl.flock(fh, fcntl.LOCK_EX)
+            if event_id:
+                fh.seek(0)
+                for line in fh:
+                    try:
+                        existing = json.loads(line)
+                    except ValueError:
+                        continue
+                    if isinstance(existing, dict) and existing.get("event_id") == event_id:
+                        return existing
+            fh.seek(0, 2)
             fh.write(json.dumps(entry, ensure_ascii=False) + "\n")
     except (OSError, ValueError):
-        pass
+        logger.exception("No se pudo guardar el registro de uso")
+        entry["record_error"] = True
     return entry
 
 

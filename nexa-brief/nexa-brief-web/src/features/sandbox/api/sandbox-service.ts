@@ -51,11 +51,13 @@ interface SandboxInfoDto {
     fresh_input_tokens: number;
     output_tokens: number;
     reasoning_tokens: number;
+    undivided_tokens: number;
     total_tokens: number;
   }>;
   total_tokens: number;
   cached_tokens: number;
   estimated: boolean;
+  unreconciled_estimate_tokens: number | null;
   baseline: { id: string; total_tokens: number } | null;
   ratio_vs_baseline: number | null;
   forecast_next: { min: number; max: number; basis: string } | null;
@@ -138,6 +140,7 @@ function mapSandboxInfo(dto: SandboxInfoDto): SandboxInfo {
     freshInputTokens: row.fresh_input_tokens,
     outputTokens: row.output_tokens,
     reasoningTokens: row.reasoning_tokens,
+    undividedTokens: row.undivided_tokens,
     totalTokens: row.total_tokens,
   }));
   return {
@@ -146,6 +149,7 @@ function mapSandboxInfo(dto: SandboxInfoDto): SandboxInfo {
     totalTokens: dto.total_tokens,
     cachedTokens: dto.cached_tokens,
     estimated: dto.estimated,
+    unreconciledEstimateTokens: dto.unreconciled_estimate_tokens,
     baseline: dto.baseline ? { id: dto.baseline.id, totalTokens: dto.baseline.total_tokens } : null,
     ratioVsBaseline: dto.ratio_vs_baseline,
     forecastNext: dto.forecast_next,
@@ -168,10 +172,12 @@ export async function fetchSandboxInfo(
 export async function promoteSandboxItem(
   folder: string,
   id: string,
+  category: string,
+  sharedCategories: string[],
 ): Promise<PromoteSandboxItemResult> {
   const dto = await httpClient<PromoteSandboxItemDto>(
     `/api/v1/explainer/sandbox/${encodeURIComponent(folder)}/${encodeURIComponent(id)}/promote`,
-    { method: "POST" },
+    { method: "POST", body: { category, shared_categories: sharedCategories } },
   );
   return mapPromoteSandboxItem(dto);
 }

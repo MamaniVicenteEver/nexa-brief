@@ -7,6 +7,7 @@ from pathlib import Path
 import structlog
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import FileResponse
+from pydantic import BaseModel, Field
 
 from src.core.explainer.catalog import load_video
 from src.core.explainer.producer import ACTIVE_STATES
@@ -25,6 +26,60 @@ from src.presentation.api.schemas.explainer_schema import (
 )
 
 router = APIRouter(tags=["explainer"])
+_preparation_service = None
+
+
+def get_preparation_service():
+    global _preparation_service
+    if _preparation_service is None:
+        from src.core.prototypes.preparation import PreparationService
+        _preparation_service = PreparationService()
+    return _preparation_service
+
+
+def _public_preparation(record):
+    if record is None:
+        return None
+    return {k: v for k, v in record.items() if k not in {"log_path"}}
+
+
+class PrepareSandboxRequest(BaseModel):
+    agent: str = "codex"
+
+
+@router.get("/explainer/sandbox/preparations", dependencies=[Depends(require_internal)])
+async def list_sandbox_preparations():
+    service = get_preparation_service()
+    service.start()
+    latest = {}
+    for row in sorted(service._rows().list(), key=lambda value: value.get("created_at", "")):
+        latest[(row.get("folder"), row.get("project_id"))] = _public_preparation(row)
+    return list(latest.values())
+
+
+@router.get("/explainer/sandbox/{folder}/{video_id}/preparation", dependencies=[Depends(require_internal)])
+async def sandbox_preparation(folder: str, video_id: str):
+    try:
+        service = get_preparation_service()
+        row = service.latest(folder, video_id)
+        service.start()
+        return _public_preparation(row)
+    except (ValueError, FileNotFoundError) as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@router.post("/explainer/sandbox/{folder}/{video_id}/preparation", dependencies=[Depends(require_internal)])
+async def start_sandbox_preparation(folder: str, video_id: str, body: PrepareSandboxRequest):
+    if video_id in _busy_video_ids():
+        raise HTTPException(status_code=409, detail=BUSY_MESSAGE)
+    try:
+        row = await get_preparation_service().submit(folder, video_id, body.agent)
+        return _public_preparation(row)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
 logger = structlog.get_logger(__name__)
 BUSY_MESSAGE = sandbox_catalog.BUSY_MESSAGE
 
@@ -43,7 +98,10 @@ def _busy_video_ids() -> set[str]:
         for job in get_recorder().list_jobs(active=True)
         if job.state in recording_states
     }
-    return production_ids | recording_ids
+    from src.core.data import collection
+    preparation_ids = {row.get("project_id") for row in collection("sandbox_preparations").list()
+                       if row.get("state") in {"queued", "running"} and row.get("project_id")}
+    return production_ids | recording_ids | preparation_ids
 
 
 @router.get("/explainer/sandbox", response_model=list[SandboxFolderResponse])
@@ -127,7 +185,7 @@ async def get_sandbox_thumbnail(folder: str, video_id: str) -> FileResponse:
                 video_id,
                 page_url,
             ),
-            timeout=20,
+            timeout=100,
         )
     except (Exception, asyncio.TimeoutError) as exc:
         logger.warning("sandbox_thumbnail_failed", folder=folder, video_id=video_id, error=str(exc))
@@ -175,12 +233,17 @@ async def get_reference_thumbnail(subcategory: str, video_id: str) -> FileRespon
     )
 
 
+class SandboxPromotionRequest(BaseModel):
+    category: str | None = None
+    shared_categories: list[str] = Field(default_factory=list, max_length=50)
+
+
 @router.post(
     "/explainer/sandbox/{folder}/{video_id}/promote",
     response_model=SandboxPromotionResponse,
     dependencies=[Depends(require_internal)],
 )
-async def promote_sandbox_video(folder: str, video_id: str) -> SandboxPromotionResponse:
+async def promote_sandbox_video(folder: str, video_id: str, request: SandboxPromotionRequest | None = None) -> SandboxPromotionResponse:
     """Mueve a producción un video válido del explainer-kit."""
     if not _valid_sandbox_segment(folder) or not _valid_sandbox_segment(video_id):
         raise HTTPException(status_code=404, detail=f"No existe sandbox/{folder}/{video_id}")
@@ -192,7 +255,9 @@ async def promote_sandbox_video(folder: str, video_id: str) -> SandboxPromotionR
         from src.config.profile_layout import layout_for_settings
         from src.config.settings import settings
         override = None if layout_for_settings(settings).schema_version >= 2 else sandbox_catalog.get_sandbox_dir().parent
-        plan = promotion.promote(source, templates_dir=override)
+        plan = promotion.promote(source, templates_dir=override,
+                                 category=request.category if request else None,
+                                 shared_categories=request.shared_categories if request else None)
     except promotion.PromoteError as exc:
         status_code = 404 if exc.code == "not_found" else 409
         raise HTTPException(status_code=status_code, detail=exc.message) from exc

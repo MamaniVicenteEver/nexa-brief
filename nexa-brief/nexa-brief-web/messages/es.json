@@ -1408,6 +1408,7 @@
     }
   },
   "sandbox": {
+    "thumbnailUnavailable": "Portada no disponible",
     "title": "Sandbox",
     "tabTitle": "Sandbox",
     "tabBadge": "TALLER",
@@ -1512,8 +1513,17 @@
     "videoPoster": "Portada de video de {title}",
     "updatedAt": "Actualizado {date}",
     "promote": "Pasar a producción",
+    "preparationScope": "Genera un borrador y muestra componentes; la promoción requiere validación.",
+    "prepareWithAgent": "Preparar con IA",
+    "preparationState": { "queued": "En cola de preparación", "running": "Preparando con IA" },
+    "preparationReview": "Revisar propuesta y pendientes",
+    "preparationFailed": "No se pudo preparar el proyecto.",
+    "promoteMainCategory": "Categoría principal",
+    "promoteSharedCategories": "Compartir con otras categorías",
+    "promoteSharedHelp": "El video se guarda una sola vez y también aparece en las categorías seleccionadas.",
+    "promoteMapReview": "El proyecto conservará sus recursos y quedará pendiente de revisión. El render anterior no se considera actualizado.",
     "promoteConfirmTitle": "¿Pasar este video a producción?",
-    "promoteConfirmDescription": "Se moverá a {folderLabel} y aparecerá en Preparación. ¿Continuar?",
+    "promoteConfirmDescription": "Se moverá a la categoría principal y se mostrará también en las compartidas.",
     "promoteCancel": "Cancelar",
     "promoteConfirm": "Pasar a producción",
     "promoteLoading": "Moviendo…",
@@ -1540,6 +1550,8 @@
       "usage": "Uso por modelo",
       "total": "Total: {count} tokens",
       "noUsage": "Sin datos de uso registrados.",
+      "unreconciledEstimate": "Estimación histórica adicional: {count} tokens. Puede coincidir con lo registrado; no se suma al total.",
+      "partialUsage": "Uso registrado; puede faltar parte del historial.",
       "comparison": "Comparación con la base",
       "baseline": "Base",
       "noBaseline": "Todavía no hay una línea base para este motor.",
@@ -1550,7 +1562,8 @@
         "freshInput": "Entrada nueva",
         "cached": "Caché",
         "output": "Salida",
-        "reasoning": "Razonamiento"
+        "reasoning": "Razonamiento",
+        "undivided": "Total sin desglose"
       },
       "verdict": {
         "efficient": "Eficiente",
@@ -2149,11 +2162,37 @@
       "listen": "Escuchar voz",
       "listening": "Sintetizando…"
     },
+    "designUsage": {
+      "heading": "Uso por diseño",
+      "choose": "Selecciona un diseño",
+      "loading": "Cargando uso…",
+      "error": "No se pudo consultar el uso del diseño.",
+      "videos": "Videos de producción",
+      "sandbox": "Proyectos Sandbox",
+      "none": "Sin consumo registrado.",
+      "contents": "{count} contenidos",
+      "total": "Total registrado: {count} tokens",
+      "missing": "Sin consumo registrado: {count}.",
+      "estimates": "Estimaciones históricas no sumadas: {count}.",
+      "estimateItem": "Estimación histórica · {name}: ≈{count} tokens",
+      "partial": "Los totales pueden estar incompletos. Los briefs compartidos cuentan una sola vez."
+    },
     "studio": {
       "toggleSidebar": "Mostrar u ocultar el panel",
       "tab": {
         "texts": "Títulos y metadatos",
-        "record": "Grabar y publicar"
+        "record": "Grabar y publicar",
+        "usage": "Uso"
+      },
+      "usage": {
+        "loading": "Cargando uso…",
+        "error": "No se pudo consultar el uso.",
+        "unknown": "Sin datos de uso registrados.",
+        "total": "Total registrado: {count} tokens",
+        "estimatedTotal": "Estimación histórica: ≈{count} tokens",
+        "partial": "El historial puede estar incompleto.",
+        "undivided": "Sin desglose: {count} tokens",
+        "unmeasured": "Llamadas sin consumo informado: {count}."
       },
       "textsHint": "Son los textos que se usan al publicar en cada red.",
       "recordHeading": "Grabar",
