@@ -27,6 +27,17 @@
   catálogo de diseños. Los episodios, sus medios, pruebas y evidencias permanecen en
   el sandbox del perfil; no se traslada un proyecto completo al repositorio junto al motor.
 
+## Demos principales de diseños compartidos
+
+Por decisión explícita del usuario, una demo principal de diseño validada puede
+pasar completa desde el Sandbox del perfil al repositorio en
+`nexa-brief-server/src/templates/<categoría>/<id>/`. Esta es la excepción a la
+regla de proyectos privados: solo demos declaradas `is_new_design`, revisadas y
+registradas por el servicio «Pasar a producción». El motor se mantiene compartido.
+Los videos posteriores permanecen en `productions/<categoría>/<id>/` del perfil.
+Una categoría es dueña del diseño; las otras lo usan mediante referencias sin
+copiar carpetas. Sigue `nexa-brief-server/docs/pasar-a-produccion-disenos.md`.
+
 ## Respaldos y uso del disco
 
 - Los respaldos completos, históricos y de migración van exclusivamente al HDD

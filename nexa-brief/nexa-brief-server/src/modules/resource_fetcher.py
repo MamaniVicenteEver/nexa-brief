@@ -18,6 +18,7 @@ el sistema usa, buscado o provisto, queda disponible para reutilizar después.
 from __future__ import annotations
 
 import asyncio
+import math
 import random
 import shutil
 import time
@@ -155,7 +156,9 @@ async def run(job: Job, niche_cfg: NicheConfig, analysis_ai: AIPort) -> Job:
 
     analyzed_input = job.artifacts.analyzed_input
     if job.input.duration_config is not None:
-        resolved_seconds = await _resolve_duration_seconds(job, music_result.path, logs_dir)
+        resolved_seconds = await _resolve_duration_seconds(
+            job, music_result.path, logs_dir, locked_to_music=niche_cfg.video.duration_locked_to_music,
+        )
         analyzed_input = analyzed_input.model_copy(update={"duration_seconds": resolved_seconds})
         # Reescribir el log de Stage 1 para que quede consistente con la duración
         # que realmente se va a grabar (evita un 01_input_completado.json que
@@ -248,12 +251,19 @@ async def _get_audio_duration_seconds(path: Path) -> float:
     return float(stdout.decode().strip())
 
 
-async def _resolve_duration_seconds(job: Job, music_path: Path, logs_dir: Path) -> int:
+async def _resolve_duration_seconds(job: Job, music_path: Path, logs_dir: Path, *, locked_to_music: bool = False) -> int:
     dc = job.input.duration_config
     detected_song_seconds: float | None = None
     was_clamped = False
 
-    if dc.mode == DurationMode.MANUAL:
+    if locked_to_music:
+        detected_song_seconds = await _get_audio_duration_seconds(music_path)
+        if not math.isfinite(detected_song_seconds) or detected_song_seconds <= 0:
+            raise MusicFetchError("La canción no tiene una duración válida")
+        # Lyric videos follow the actual track, including its outro silence.
+        # Rounding up preserves the last audio samples instead of cutting them.
+        resolved = math.ceil(detected_song_seconds)
+    elif dc.mode == DurationMode.MANUAL:
         resolved = dc.manual_seconds or job.input.duration_seconds
     else:  # AUTO
         detected_song_seconds = await _get_audio_duration_seconds(music_path)
@@ -277,7 +287,8 @@ async def _resolve_duration_seconds(job: Job, music_path: Path, logs_dir: Path) 
         "manual_seconds": dc.manual_seconds if dc.mode == DurationMode.MANUAL else None,
         "resolved_duration_seconds": resolved,
         "was_clamped": was_clamped,
-        "allowed_range": [settings.video_min_duration_seconds, settings.video_max_duration_seconds],
+        "locked_to_music": locked_to_music,
+        "allowed_range": None if locked_to_music else [settings.video_min_duration_seconds, settings.video_max_duration_seconds],
     }
     (logs_dir / "05c_duracion_resuelta.json").write_bytes(
         orjson.dumps(duration_log, option=orjson.OPT_INDENT_2)

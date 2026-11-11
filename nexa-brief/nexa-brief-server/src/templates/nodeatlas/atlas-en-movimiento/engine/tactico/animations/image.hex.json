@@ -1,0 +1,130 @@
+{
+  "name": "image.hex",
+  "family": "image",
+  "estilo": {
+    "usa": [
+      "ucr2.imagen"
+    ]
+  },
+  "description": "Fotografía hexagonal con título, descripción y guía al mapa. Úsala como recurso visual en una escena.",
+  "duration": 12.35,
+  "loop": true,
+  "layer": 80,
+  "states": [],
+  "params": {
+    "src": {
+      "type": "string",
+      "default": "",
+      "doc": "Ruta local de la fotografía.",
+      "range": null,
+      "description": "Ruta local de la fotografía."
+    },
+    "at": {
+      "type": "place",
+      "doc": "Lugar [lon,lat] de la guía.",
+      "default": null,
+      "range": null,
+      "description": "Lugar [lon,lat] de la guía."
+    },
+    "credit": {
+      "type": "string",
+      "default": "",
+      "doc": "Crédito visible y obligatorio.",
+      "range": null,
+      "description": "Crédito visible y obligatorio."
+    },
+    "side": {
+      "type": "enum",
+      "values": [
+        "izq",
+        "der",
+        "auto"
+      ],
+      "default": "auto",
+      "doc": "Lado del panel con respecto al punto.",
+      "range": [
+        "izq",
+        "der",
+        "auto"
+      ],
+      "description": "Lado del panel con respecto al punto."
+    },
+    "reveal": {
+      "type": "number",
+      "default": 0.8,
+      "min": 0.05,
+      "max": 30,
+      "doc": "Segundos de revelado; después permanece estable.",
+      "range": {
+        "min": 0.05,
+        "max": 30
+      },
+      "description": "Segundos de revelado; después permanece estable."
+    },
+    "title": {
+      "type": "string",
+      "default": "",
+      "doc": "Título visible.",
+      "range": null,
+      "description": "Título visible."
+    },
+    "description": {
+      "type": "string",
+      "default": "",
+      "doc": "Descripción breve visible.",
+      "range": null,
+      "description": "Descripción breve visible."
+    },
+    "size": {
+      "type": "number",
+      "default": 260,
+      "min": 80,
+      "max": 800,
+      "doc": "Tamaño en píxeles de diseño.",
+      "range": {
+        "min": 80,
+        "max": 800
+      },
+      "description": "Tamaño en píxeles de diseño."
+    },
+    "focus": {
+      "type": "array",
+      "default": [
+        0.5,
+        0.38
+      ],
+      "doc": "Punto focal normalizado [x,y].",
+      "range": null,
+      "description": "Punto focal normalizado [x,y]."
+    }
+  },
+  "sfx": [
+    "ui-tick"
+  ],
+  "example": {
+    "id": "demo-image-hex",
+    "t": 0,
+    "type": "image.hex",
+    "src": "assets/media/P01.png",
+    "at": [
+      51,
+      28
+    ],
+    "title": "Ruhollah Jomeini",
+    "description": "Líder supremo de Irán",
+    "label": "ARCHIVO",
+    "credit": "Ali Kaveh · PD-Iran · Commons",
+    "dur": 12,
+    "reveal": 0.8
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/image.hex.png",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "assets/media/P01.png",
+    "identidad-opus/assets/fonts/Archivo.ttf"
+  ]
+}

@@ -1,7 +1,7 @@
 import { isGlobeProjection } from './projection.js';
 /** Créditos de los medios referidos por la escena, sin repetir archivos. */
 export function photoAttributions(scene, credits = {}) {
-  const files = [...new Set((scene.layers || []).map(l => typeof l.src === 'string' ? l.src.split('/').pop() : null).filter(Boolean))];
+  const files = [...new Set([...(scene.layers || []),...(scene.hud || [])].map(l => typeof l.src === 'string' ? l.src.split('/').pop() : null).filter(Boolean))];
   return files.map(name => credits[name]).filter(Boolean).map(c => `${c.title} — ${c.author}, ${c.license} (${c.source_url}; ${c.license_url})`);
 }
 

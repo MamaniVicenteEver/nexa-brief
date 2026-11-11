@@ -61,6 +61,80 @@
       "insert": "Agregar este objeto a scene.layers; repetirlo para cada ubicación, imagen o ruta."
     },
     {
+      "name": "atlas.flagFill",
+      "summary": "Revelar una bandera local recortada por el país completo, con islas y huecos; sigue el relieve, pitch y globo.",
+      "target": "layers",
+      "family": "territorios",
+      "layer": 10,
+      "params": {
+        "region": {
+          "type": "string",
+          "default": "US",
+          "required": true,
+          "doc": "ISO2, ISO3 o clave de scene.regions / región preparada; usa la geometría existente."
+        },
+        "src": {
+          "type": "string",
+          "default": "media/flag-us.svg",
+          "required": true,
+          "doc": "Imagen real local de bandera relativa a assets/. SVG, PNG, JPEG, WebP o AVIF; no generar banderas con IA."
+        },
+        "fit": {
+          "type": "string",
+          "default": "global",
+          "doc": "global: una bandera sobre toda la extensión del país. landmass: bandera completa por Polygon conectado, incluidos sus huecos, dentro de los mismos canvas; útil para países con ultramar."
+        },
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo o ancla de voz que inicia la entrada por opacidad."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.8,
+          "min": 0,
+          "doc": "Duración de la entrada en segundos; 0 muestra la bandera de inmediato."
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida; sin out permanece visible. Desaparece en out + fadeOut."
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.4,
+          "min": 0,
+          "doc": "Segundos del desvanecido de salida; 0 produce un corte."
+        },
+        "opacity": {
+          "type": "number",
+          "default": 1,
+          "min": 0,
+          "max": 1,
+          "doc": "Opacidad máxima del relleno."
+        },
+        "opacityKeys": {
+          "type": "array",
+          "default": [],
+          "doc": "Claves {t,value} con t absoluto o ancla, estrictamente creciente y value 0–1. Interpolación lineal; sostiene extremos. Multiplica opacity y la envolvente de entrada/salida; no cambia out."
+        }
+      },
+      "demo": {
+        "type": "flag-fill",
+        "region": "US",
+        "src": "media/flag-us.svg",
+        "t": 0.5,
+        "dur": 0.8,
+        "out": 6,
+        "fadeOut": 0.5,
+        "opacity": 0.95
+      },
+      "used_by": [
+        "atlas-cinematico"
+      ],
+      "insert": "Agregar a scene.layers. Copiar la bandera real a assets/media/. fit global abarca toda la geometría; fit landmass ajusta la bandera por masa conectada sin crear canvas por isla. Preparar las regiones antes del render. Ver FLAG_FILL.md."
+    },
+    {
       "name": "atlas.ring",
       "summary": "Anillo geográfico con pulso.",
       "target": "layers",
@@ -331,6 +405,11 @@
           "type": "boolean",
           "default": true,
           "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        },
+        "screen": {
+          "type": "array",
+          "default": null,
+          "doc": "Opcional [x,y] normalizado0–1: centro de foto en pole/hex o ficha completa en panel. at conserva el punto geográfico del conector. Ficha en escala de pantalla, con foto/texto/padding dentro del viewport; sin screen conserva colocación geográfica."
         }
       },
       "demo": {
@@ -455,6 +534,11 @@
           "type": "boolean",
           "default": true,
           "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        },
+        "screen": {
+          "type": "array",
+          "default": null,
+          "doc": "Opcional [x,y] normalizado0–1: centro de foto en pole/hex o ficha completa en panel. at conserva el punto geográfico del conector. Ficha en escala de pantalla, con foto/texto/padding dentro del viewport; sin screen conserva colocación geográfica."
         }
       },
       "demo": {
@@ -570,6 +654,11 @@
           "type": "boolean",
           "default": true,
           "doc": "Convertir textos a mayúsculas; false conserva su escritura."
+        },
+        "screen": {
+          "type": "array",
+          "default": null,
+          "doc": "Opcional [x,y] normalizado0–1: centro de foto en pole/hex o ficha completa en panel. at conserva el punto geográfico del conector. Ficha en escala de pantalla, con foto/texto/padding dentro del viewport; sin screen conserva colocación geográfica."
         }
       },
       "demo": {
@@ -3438,6 +3527,122 @@
       "used_by": [
         "atlas-showcase"
       ]
+    },
+    {
+      "name": "atlas.persistentPortrait",
+      "summary": "Retrato fijo en pantalla mientras la cámara recorre el país y sus regiones; reutiliza el HUD del motor.",
+      "target": "hud",
+      "family": "imagenes",
+      "layer": 30,
+      "params": {
+        "src": {
+          "type": "string",
+          "default": null,
+          "doc": "Foto documental local relativa a assets/. Sin src dibuja una silueta de ejemplo."
+        },
+        "name": {
+          "type": "string",
+          "default": "RETRATO DE EJEMPLO",
+          "doc": "Nombre que acompaña al retrato."
+        },
+        "role": {
+          "type": "string",
+          "default": "FOTO DOCUMENTAL LOCAL",
+          "doc": "Cargo o pie del retrato."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.15,
+          "min": 0,
+          "max": 1,
+          "doc": "Posición horizontal como fracción del cuadro; queda fija al mover el mapa."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.72,
+          "min": 0,
+          "max": 1,
+          "doc": "Posición vertical como fracción del cuadro."
+        },
+        "size": {
+          "type": "number",
+          "default": 110,
+          "min": 1,
+          "doc": "Radio del retrato en píxeles de diseño."
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de enfoque del recorte [x,y], cada coordenada en 0–1."
+        },
+        "t": {
+          "type": "time",
+          "default": 0,
+          "doc": "Segundo o ancla de voz de entrada."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "min": 0.001,
+          "doc": "Duración de la entrada del HUD."
+        },
+        "out": {
+          "type": "time",
+          "default": null,
+          "doc": "Inicio de salida; sin out persiste hasta el final."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "min": 0,
+          "doc": "Duración de la salida del HUD en segundos."
+        },
+        "nameSize": {
+          "type": "number",
+          "default": 17,
+          "min": 0.001,
+          "doc": "Tamaño del nombre en píxeles de diseño. La placa crece para contenerlo."
+        },
+        "roleSize": {
+          "type": "number",
+          "default": 11,
+          "min": 0.001,
+          "doc": "Tamaño del cargo en píxeles de diseño; la placa adapta alto, separación y ancho."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de foto, textos y placa en formato vertical."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de foto, textos y placa en formato horizontal."
+        }
+      },
+      "demo": {
+        "type": "portrait",
+        "name": "RETRATO DE EJEMPLO",
+        "role": "FOTO DOCUMENTAL LOCAL",
+        "x": 0.15,
+        "y": 0.72,
+        "size": 110,
+        "focus": [
+          0.5,
+          0.5
+        ],
+        "t": 0,
+        "dur": 0.5,
+        "out": 6,
+        "exit": 0.35
+      },
+      "used_by": [
+        "atlas-cinematico"
+      ],
+      "insert": "Agregar a scene.hud; omitir at para mantener el retrato fijo en pantalla. Usa src relativo a assets/. Ver HUD.md."
     }
   ]
 }

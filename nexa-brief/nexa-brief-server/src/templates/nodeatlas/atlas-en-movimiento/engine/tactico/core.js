@@ -298,7 +298,7 @@ export async function create(c, input) {
   const ctx = {...c, T, land, sprites: spriteStore, loadSprites: () => spriteStore.load(), palette: input.defs?.palette || c.look?.palette || {}};
   const check = validateScene(input, {T, land, context: ctx, place: ref => c.geo?.place(ref)});
   if (check.errors.length) { const error = new Error(`Tactico: ${check.errors.length} errores\n${check.errors.map(e => `${e.path}: ${e.message}`).join('\n')}`); error.diagnostics = check; throw error; }
-  const scene = check.scene, loc = locator(scene, ref => c.geo?.place(ref));
+  const scene = check.scene, loc = locator(scene, ref => c.geo?.place(ref)), formatoFijo=input.formato!=null;
   scene.estilo ??= 'v4-atlas'; scene.formato ??= 'movil';
   const catalog = await readJSON(new URL('./estilos/index.json', import.meta.url));
   if (!catalog.estilos.some(s => s.id === scene.estilo)) throw new Error(`Estilo desconocido: ${scene.estilo}`);
@@ -320,7 +320,7 @@ export async function create(c, input) {
     const def = Tactico.get(raw.type), item = withDefaults(raw);
     if (item.path) item.path = loc.path(item);
     const start = item.t ?? 0, fade = item.fade ?? .35, dur = item.dur ?? Infinity;
-    const out = item.out ?? (Number.isFinite(dur) ? start + dur : Math.max(start, (scene.duration ?? scene.end ?? Infinity) - fade));
+    const out = item.out ?? (item.persist ? Math.max(start, (scene.duration ?? scene.end ?? Infinity) - fade) : Number.isFinite(dur) ? start + dur : Math.max(start, (scene.duration ?? scene.end ?? Infinity) - fade));
     const record = {item: frozen(item), def, index, start, fade, dur, out, end: out + fade,
       changes: (item.states || []).map(s => ({...s, dur: s.dur ?? .35})).sort((a, b) => a.at - b.at),
       prefix: `${index}:${item.id}:${item.type}`, internal: null};
@@ -342,7 +342,7 @@ export async function create(c, input) {
         const projected = s.pos ? view.project(s.pos.lon, s.pos.lat) : null;
         const env = {W: view.W ?? c.st.W, H: view.H ?? c.st.H, U: c.st.U, zoom: view.zoom, k: projected?.k ?? 1, rng: (seed = record.item.id) => rng(seed),
           sprite: spriteStore.sprite, drawSprite: spriteStore.drawSprite, flag: code => c.flag?.(code) || c.flags?.get?.(code) || null,
-          ...(() => { const f = scene.formatoFijo ? scene.formato : ((view.W ?? c.st.W) > (view.H ?? c.st.H) ? 'escritorio' : 'movil'); return {estilo: estilos[f], formato: f}; })(), font: name => scene.defs?.fonts?.[name] || c.font?.(name) || name || 'sans-serif', palette, debug: !!scene.debug, ...info};
+          ...(() => { const f = formatoFijo || scene.formatoFijo ? scene.formato : ((view.W ?? c.st.W) > (view.H ?? c.st.H) ? 'escritorio' : 'movil'); return {estilo: estilos[f], formato: f}; })(), font: name => scene.defs?.fonts?.[name] || c.font?.(name) || name || 'sans-serif', palette, debug: !!scene.debug, ...info};
         // Los textos tienen paleta propia; no cambia los colores de unidades y mapa.
         if (TEXT_STYLE_TYPES.has(record.item.type)) env.palette = {...palette, ...TEXT_STYLE, ...scene.defs?.textPalette};
         g.save(); g.globalAlpha *= s.alpha;

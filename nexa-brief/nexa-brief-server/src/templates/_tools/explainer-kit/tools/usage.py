@@ -106,6 +106,9 @@ async def register_reference(video_dir):
 def record(video_dir, *, provider: str, model: str = "", role: str = "", step: str = "",
            iteration: int | None = None, seconds: float = 0.0, ok: bool = True, note: str = "",
            usage_known: bool | None = None, event_id: str | None = None,
+           cost_usd: float | None = None, cost_basis: str | None = None,
+           provider_result_id: str | None = None, provider_usage: dict | None = None,
+           cache_creation_input_tokens: int | None = None, uncached_input_tokens: int | None = None,
            **tokens) -> dict:
     """Agrega una línea al registro del video. Nunca rompe a quien llama (el registro es secundario)."""
     entry = {
@@ -118,7 +121,12 @@ def record(video_dir, *, provider: str, model: str = "", role: str = "", step: s
         "usage_known": (any(tokens.get(key) is not None for key in TOKEN_FIELDS)
                         if usage_known is None else usage_known),
         "event_id": event_id or uuid.uuid4().hex,
-        "schema_version": 1,
+        "schema_version": 2,
+        "cost_usd": cost_usd, "cost_basis": cost_basis,
+        "provider_result_id": provider_result_id,
+        "cache_creation_input_tokens": cache_creation_input_tokens,
+        "uncached_input_tokens": uncached_input_tokens,
+        "provider_usage": provider_usage,
     }
     try:
         path = ledger_path(video_dir)
@@ -155,7 +163,8 @@ def entries(video_dir) -> list[dict]:
             out.append(json.loads(line))
         except ValueError:
             continue
-    return out
+    from src.core.explainer.usage_overlay import apply_overlay
+    return apply_overlay(path, out)
 
 
 def next_iteration(video_dir, role: str, step: str) -> int:
@@ -164,7 +173,9 @@ def next_iteration(video_dir, role: str, step: str) -> int:
 
 
 def _bucket() -> dict:
-    return {"calls": 0, "failed": 0, "seconds": 0.0, **{k: 0 for k in TOKEN_FIELDS}}
+    return {"calls": 0, "failed": 0, "seconds": 0.0, **{k: 0 for k in TOKEN_FIELDS},
+            "reported_cost_usd": None, "known_cost_calls": 0, "unknown_cost_calls": 0,
+            "cost_basis": None, "cost_bases": []}
 
 
 def _add(bucket: dict, e: dict) -> None:
@@ -173,6 +184,20 @@ def _add(bucket: dict, e: dict) -> None:
     bucket["seconds"] = round(bucket["seconds"] + float(e.get("seconds") or 0), 2)
     for k in TOKEN_FIELDS:
         bucket[k] += int(e.get(k) or 0)
+    for key in ("cache_creation_input_tokens", "uncached_input_tokens"):
+        if e.get(key) is not None:
+            bucket[key] = bucket.get(key, 0) + int(e[key])
+    import math
+    cost = e.get("cost_usd")
+    if isinstance(cost, (int, float)) and not isinstance(cost, bool) and math.isfinite(cost) and cost >= 0:
+        bucket["reported_cost_usd"] = round((bucket["reported_cost_usd"] or 0) + cost, 10)
+        bucket["known_cost_calls"] += 1
+        if e.get("cost_basis") and e["cost_basis"] not in bucket["cost_bases"]:
+            bucket["cost_bases"].append(e["cost_basis"])
+        bases = bucket["cost_bases"]
+        bucket["cost_basis"] = bases[0] if len(bases) == 1 else "mixed" if bases else None
+    else:
+        bucket["unknown_cost_calls"] += 1
 
 
 def summarize(video_dir) -> dict:
@@ -192,7 +217,8 @@ def summarize(video_dir) -> dict:
         "video": pathlib.Path(video_dir).name,
         "updated_at": datetime.datetime.now(datetime.timezone.utc).isoformat(timespec="seconds"),
         "note": ("Tokens tal como los informa cada proveedor. Codex y Claude corren con la suscripción "
-                 "(CLI local, sin costo por token); DeepSeek y Gemini se pagan por token (api)."),
+                 "(CLI local). Los costos informados por CLI son estimaciones de lista, no facturas; "
+                 "los costos API no informados permanecen desconocidos."),
         "totals": total,
         "api_tokens": {p: {k: b[k] for k in TOKEN_FIELDS} for p, b in paid.items()},
         "by_provider": by_provider,
@@ -200,7 +226,8 @@ def summarize(video_dir) -> dict:
         "by_role": by_role,
         "iterations": dict(sorted(iterations.items())),
         "timeline": [{k: e.get(k) for k in ("ts", "provider", "model", "role", "step", "iteration", "ok", "seconds",
-                                             "input_tokens", "output_tokens", "note")} for e in rows],
+                                             "input_tokens", "cached_input_tokens", "cache_creation_input_tokens", "output_tokens",
+                                             "reasoning_tokens", "cost_usd", "cost_basis", "provider_result_id", "usage_known", "note")} for e in rows],
     }
     target = summary_path(video_dir)
     target.parent.mkdir(parents=True, exist_ok=True)

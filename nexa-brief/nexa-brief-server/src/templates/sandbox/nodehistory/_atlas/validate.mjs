@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import {fileURLToPath} from 'node:url';
+import {createGeo} from './geo.js';
+import {flagFillRegion, flagTexturePlan, flagOpacityKeys} from './flag-fill.js';
 
 export const ATLAS = path.dirname(fileURLToPath(import.meta.url));
 export const TEMPLATES = path.resolve(ATLAS, '../../..');
@@ -44,6 +46,7 @@ export function checkEpisode(root, {ready=false, selection=''}={}) {
   const duration = T(scene.duration ?? scene.end, NaN);
   fail(finite(duration)&&duration>0,'scene.duration/end debe ser positivo y resolverse con la voz');
   fail(scene.format === 'atlas-v1','scene.format debe ser atlas-v1');
+  if(scene.worldCopies!==undefined)fail(typeof scene.worldCopies==='boolean','scene.worldCopies debe ser booleano');
   const defs=catalog().components || [];
   const knownLooks = new Set(defs.filter(c=>c.target==='looks').map(c=>c.demo?.look).filter(Boolean));
   fail(knownLooks.has(scene.look || 'satelite-realista'),`Look desconocido: ${scene.look}`);
@@ -93,9 +96,26 @@ export function checkEpisode(root, {ready=false, selection=''}={}) {
     }
   }
   const mediaPaths=[];
+  let flagGeo;
+  const flagRegion = (layer,index) => {
+    if (!flagGeo) {
+      const collections=[readJSON(path.join(ATLAS,'data/geo/admin0.geojson'))];
+      const resolvedPath=path.join(root,'assets/geo.resolved.json'),resolved=fs.existsSync(resolvedPath)?readJSON(resolvedPath):{};
+      flagGeo={collections,resolved,region:createGeo(scene,resolved,collections).region};
+    }
+    let found=flagFillRegion(layer,index,flagGeo);
+    for(const name of ['admin1','admin2-US'].slice(flagGeo.collections.length-1)) {
+      if(found?.geometry)break;
+      flagGeo.collections.push(readJSON(path.join(ATLAS,'data/geo',name+'.geojson')));
+      flagGeo.region=createGeo(scene,flagGeo.resolved,flagGeo.collections).region;
+      found=flagFillRegion(layer,index,flagGeo);
+    }
+    return found;
+  };
   (scene.layers||[]).forEach((l,i)=> {
     fail(knownTypes.has(l.type),`layers[${i}]: tipo desconocido ${l.type}; consultar components.json`);
     if(l.at!==undefined) place(l.at,`layers[${i}].at`);
+    if(l.screen!=null)fail(['pole-photo','hex-photo','panel'].includes(l.type)&&Array.isArray(l.screen)&&l.screen.length===2&&l.screen.every(n=>finite(n)&&n>=0&&n<=1),`layers[${i}].screen: par [x,y] de 0–1 para pole-photo, hex-photo o panel`);
     if(['arc','arrow'].includes(l.type)) {if(l.from!==null)place(l.from,`layers[${i}].from`);place(l.to,`layers[${i}].to`);}
     if(finite(l.value)&&!l.dataRef) {
       const cited=(http(l.source)||sourceIds.has(l.source))&&year(l.year)&&scope(l.scope);
@@ -107,7 +127,33 @@ export function checkEpisode(root, {ready=false, selection=''}={}) {
       fail(object(l[k])&&['fade','rise','scale','slide-left','slide-right'].includes(l[k].style)&&finite(l[k].dur)&&l[k].dur>0,`layers[${i}].${k}: style/dur inválido`);
     }
     if(l.focus) fail(Array.isArray(l.focus)&&l.focus.length===2&&l.focus.every(n=>finite(n)&&n>=0&&n<=1),`layers[${i}].focus fuera de 0–1`);
-    if(l.src) mediaPaths.push(path.resolve(root,'assets',l.src));
+    if(l.type==='flag-fill') {
+      fail(typeof l.region==='string'&&!!l.region.trim(),`layers[${i}].region: indicar ISO o región declarada`);
+      fail(l.fit===undefined||['global','landmass'].includes(l.fit),`layers[${i}].fit: usar global o landmass`);
+      try { flagOpacityKeys(l,T); } catch(error) { errors.push(`layers[${i}].${error.message}`); }
+      const assetRoot=path.resolve(root,'assets'),media=typeof l.src==='string'?path.resolve(assetRoot,l.src):'';
+      fail(typeof l.src==='string'&&!!l.src.trim()&&!/^(?:[a-z][\w+.-]*:|\/|\\)/i.test(l.src)&&!/[?#\\]/.test(l.src)&&media.startsWith(assetRoot+path.sep),`layers[${i}].src: imagen local relativa a assets/`);
+      fail(['.svg','.png','.jpg','.jpeg','.webp','.avif'].includes(path.extname(media).toLowerCase()),`layers[${i}].src: se necesita una imagen de bandera`);
+      for(const [key,defaultValue] of [['dur',.8],['fadeOut',.4]])fail(finite(l[key]??defaultValue)&&(l[key]??defaultValue)>=0,`layers[${i}].${key}: número no negativo`);
+      fail(finite(l.opacity??1)&&(l.opacity??1)>=0&&(l.opacity??1)<=1,`layers[${i}].opacity fuera de 0–1`);
+      fail(l.out==null||T(l.out,NaN)>=T(l.t,0),`layers[${i}].out debe ser posterior a t`);
+      try {
+        const found=flagRegion(l,i);fail(!!found?.geometry,`layers[${i}].region desconocida: ${l.region}`);
+        if(found?.geometry)fail(!flagTexturePlan(found.geometry).clamped,`layers[${i}].region excede el límite de Mercator ±85.05113°`);
+      }catch(error){errors.push(`layers[${i}].region: ${error.message}`);}
+    }
+    if(typeof l.src==='string'&&l.src) mediaPaths.push(path.resolve(root,'assets',l.src));
+  });
+  (scene.hud||[]).forEach((item,i)=> {
+    if(item.type==='portrait') {
+      if(item.src) {
+        fail(typeof item.src==='string',`hud[${i}].src debe ser una ruta de imagen local`);
+        if(typeof item.src==='string')mediaPaths.push(path.resolve(root,'assets',item.src));
+      }
+      for(const key of ['x','y'])if(item[key]!==undefined)fail(finite(item[key])&&item[key]>=0&&item[key]<=1,`hud[${i}].${key} fuera de 0–1`);
+      for(const key of ['size','nameSize','roleSize'])if(item[key]!==undefined)fail(finite(item[key])&&item[key]>0,`hud[${i}].${key} debe ser positivo`);
+      if(item.focus!==undefined)fail(Array.isArray(item.focus)&&item.focus.length===2&&item.focus.every(n=>finite(n)&&n>=0&&n<=1),`hud[${i}].focus fuera de 0–1`);
+    }
   });
   mediaPaths.forEach(p=>fail(fs.existsSync(p),`Falta imagen local: ${p}`));
   for(const [label,value] of [['audio',config.audio?.src],['transcripción',config.lyricsUrl]]) {

@@ -3,9 +3,11 @@
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { useDraftThumbnailEditor } from "../../hooks/useDraftThumbnailEditor";
 import type { TemplateStudioController } from "../../hooks/useTemplateStudio";
 import { DraftProgress } from "../DraftProgress";
 import { RequirementsForm } from "../RequirementsForm";
+import { DraftThumbnailPicker } from "../record/DraftThumbnailPicker";
 import { DetailsEditor } from "./DetailsEditor";
 import { PrototypeActions } from "./PrototypeActions";
 import { PrototypeStatus } from "./PrototypeStatus";
@@ -14,6 +16,7 @@ import { PrototypeStatus } from "./PrototypeStatus";
 export function PrototypeEditor({ studio }: { studio: TemplateStudioController }) {
   const t = useTranslations("studio.sandbox");
   const { editor } = studio;
+  const thumbnailEditor = useDraftThumbnailEditor(editor.draft);
   const req = studio.requirements.data;
   const [showDetails, setShowDetails] = useState(false);
   const details = editor.draft?.details ?? null;
@@ -47,7 +50,7 @@ export function PrototypeEditor({ studio }: { studio: TemplateStudioController }
       <div className="min-h-0 flex-1 overflow-y-auto p-3">
         {showDetails && details && editor.draft ? (
           <DetailsEditor
-            key={editor.draft.updatedAt}
+            key={`${editor.draft.draftId}:${JSON.stringify(details)}`}
             details={details}
             saving={editor.saveDetails.isPending}
             onSave={(next) => editor.saveDetails.mutate(next)}
@@ -55,6 +58,7 @@ export function PrototypeEditor({ studio }: { studio: TemplateStudioController }
           />
         ) : (
           <RequirementsForm
+            compactSong
             templateId={studio.template.id}
             requirements={req}
             value={editor.value}
@@ -63,6 +67,15 @@ export function PrototypeEditor({ studio }: { studio: TemplateStudioController }
         )}
       </div>
 
+      {editor.draft?.details && (
+        <div className="shrink-0 border-t border-nb-line p-3">
+          <DraftThumbnailPicker
+            draft={editor.draft}
+            disabled={editor.dirty}
+            editor={thumbnailEditor}
+          />
+        </div>
+      )}
       <div className="flex shrink-0 flex-col gap-2 border-t border-nb-line p-3">
         {editor.draft && <DraftProgress draft={editor.draft} dirty={editor.dirty} />}
         {editor.error && (

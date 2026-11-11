@@ -177,6 +177,9 @@ def _read_cached(path: Path, parse):
 
 
 def load_strategy(piece: Piece, strategy_id: str) -> _Strategy:
+    import re
+    if not isinstance(strategy_id, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,127}', strategy_id):
+        raise StrategyError('Identificador de estrategia inválido')
     path = explainer_skills_dir() / "strategies" / piece / f"{strategy_id}.json"
     model = STRATEGY_MODELS[piece]
 
@@ -253,3 +256,68 @@ def active_strategies(category_id: str, overrides: dict[str, str] | None = None)
         raise StrategyError(f"active.json no define estrategia para {missing} en '{category_id}'")
     loaded = {piece: load_strategy(piece, selection[piece]) for piece in PIECES}
     return ActiveStrategies(category=load_category(category_id), **loaded)  # type: ignore[arg-type]
+
+
+@dataclass(frozen=True)
+class ResolvedStrategies:
+    rules: ActiveStrategies
+    origins: dict[str, str]
+    fingerprint: str
+
+    def snapshot(self):
+        from dataclasses import fields
+        return {'rules': {f.name: getattr(self.rules, f.name).model_dump(mode='json') for f in fields(self.rules)},
+                'origins': self.origins, 'fingerprint': self.fingerprint, 'ids': self.rules.ids()}
+
+
+def resolved_from_snapshot(data: dict) -> ResolvedStrategies:
+    rules = data['rules']
+    active = ActiveStrategies(category=CategoryProfile.model_validate(rules['category']),
+        **{piece: STRATEGY_MODELS[piece].model_validate(rules[piece]) for piece in PIECES})
+    return ResolvedStrategies(active, data['origins'], data['fingerprint'])
+
+
+def resolve_for_video(video) -> ResolvedStrategies:
+    """Design overrides > target category > defaults, shared by all callers."""
+    import hashlib
+    from src.core.categories import get_category, strategy_for
+    category_id = video.category_path.split('/', 1)[0]
+    active = _read_cached(explainer_skills_dir() / 'active.json', _parse_active)
+    design = {}
+    definition = settings.templates_dir / '_tools/design-definitions' / video.design / 'design.json'
+    kit = settings.templates_dir / '_tools/explainer-kit/designs' / video.design / 'design.json'
+    file = definition if definition.is_file() else kit
+    if file.is_file():
+        design = json.loads(file.read_text())
+    overrides = design.get('editorial_strategies', {})
+    if not isinstance(overrides, dict) or set(overrides) - set(PIECES):
+        raise StrategyError('Estrategias editoriales del diseño inválidas')
+    chosen, origins = {}, {}
+    for piece in PIECES:
+        for origin, entries in (('design', overrides), ('category', active.get(category_id, {})),
+                                ('default', active.get('_default', {}))):
+            if piece in entries:
+                chosen[piece], origins[piece] = entries[piece], origin
+                break
+        if piece not in chosen:
+            raise StrategyError(f'Falta estrategia para {piece}')
+    profile_path = explainer_skills_dir() / 'categories' / f'{category_id}.json'
+    if profile_path.is_file():
+        category = load_category(category_id)
+    else:
+        node, editorial = get_category(video.category_path), strategy_for(video.category_path)
+        category = CategoryProfile(id=category_id, channel=node.display_name if node else category_id,
+            emotion=editorial.tone, anchors=[], preferred_title_strategies=[], avoid=[], required_hashtags={})
+    rules = ActiveStrategies(category=category, **{p: load_strategy(p, chosen[p]) for p in PIECES})
+    data = {p: getattr(rules, p).model_dump(mode='json') for p in PIECES}
+    data['category'] = category.model_dump(mode='json')
+    digest = hashlib.sha256(json.dumps(data, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+    return ResolvedStrategies(rules, origins, digest)
+
+
+def strategies_for_review(video):
+    """Review against the exact frozen rules used to prepare existing content."""
+    file = video.path / 'work/editorial/effective-strategies.json'
+    if file.is_file():
+        return resolved_from_snapshot(json.loads(file.read_text())).rules
+    return resolve_for_video(video).rules

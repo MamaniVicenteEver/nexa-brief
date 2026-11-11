@@ -18,6 +18,7 @@ export interface RequirementsFormProps {
   /** Una sola sección (las pestañas del Estudio). Sin esto se muestran todas
    * apiladas, como en Crear video. */
   section?: RequirementsSection;
+  compactSong?: boolean;
 }
 
 /** Formulario controlado armado desde GET /templates/{id}/requirements:
@@ -29,6 +30,7 @@ export function RequirementsForm({
   value,
   onChange,
   section,
+  compactSong = false,
 }: RequirementsFormProps) {
   const t = useTranslations("studio.media");
   const show = (s: RequirementsSection) => section === undefined || section === s;
@@ -41,6 +43,7 @@ export function RequirementsForm({
     <div className="flex flex-col gap-5">
       {show("song") && hasSong && (
         <SongField
+          compact={compactSong}
           audio={requirements.audio}
           value={value.musicAssetId}
           onChange={(musicAssetId) => onChange({ ...value, musicAssetId })}

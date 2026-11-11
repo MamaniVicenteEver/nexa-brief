@@ -41,6 +41,7 @@ from src.core import notification_tracker
 from src.core.notification import Notification
 from src.core.schedule import queue_repository
 from src.core.explainer import thumbnails
+from src.core.explainer.episode_runtime import validate_atlas_episode_entry
 from src.core.explainer.render_cache import render_current, render_signature, stamp_render
 from src.core.explainer.publishing.store import read_publish
 from src.core.explainer.catalog import KIT_DIR, ExplainerVideo
@@ -74,6 +75,8 @@ def _refresh_v3_manifest(video: ExplainerVideo, format_paths: dict[str, Path]) -
     if not path.is_file():
         return
     manifest = json.loads(path.read_text(encoding="utf-8"))
+    from src.core.explainer.producer import _script_hash
+    manifest.update(render_revision_stale=False, rendered_script_sha256=_script_hash(video.path))
     formats = manifest.get("video_formats", [])
     if not isinstance(formats, list):
         raise ValueError("Manifest video_formats inválido")
@@ -296,8 +299,13 @@ class ExplainerRecorder:
     ) -> RecordJob:
         # un canal (account_selector) o varios (account_selectors), sin repetir
         selectors = list(dict.fromkeys([*(account_selectors or []), *([account_selector] if account_selector else [])]))
+        from src.core.task_ownership import task_is_owned
+        if task_is_owned('editorial-preparation', video.video_id):
+            raise ValueError('Espera a que termine la preparación editorial')
         if not video.ready:
             raise ValueError(f"{video.video_id} no está listo (estado: {video.status})")
+        if video.design == "atlas-en-movimiento":
+            validate_atlas_episode_entry(video.path)
         if duration not in DURATIONS:
             raise ValueError(f"duración inválida: {duration} (usa {', '.join(DURATIONS)})")
         if privacy not in ("private", "unlisted", "public"):
@@ -544,6 +552,8 @@ class ExplainerRecorder:
             selected_formats = job.account_formats.get(selector) or (PLATFORM_FORMAT[platform],)
             for fmt in selected_formats:
                 extra = {"thumbnail_path": thumbnail} if platform == "youtube" and thumbnail else {}
+                if platform == "youtube" and video.youtube_category_id is not None:
+                    extra["youtube_category_id"] = video.youtube_category_id
                 if platform == "youtube" and pinned_comment:
                     extra["comment_text"] = pinned_comment
                 queue_entry = await queue_repository.start_direct(
@@ -664,6 +674,7 @@ class ExplainerRecorder:
         summary = {
             "job_id": job_id,
             "video_id": video.video_id,
+            "youtube_category_id": video.youtube_category_id,
             "pinned_comment": _clean(read_publish(video.path).get("pinned_comment") or ""),
             "platform_copies": {
                 platform: {"title": title, "description": description, "tags": tags}
@@ -684,7 +695,13 @@ class ExplainerRecorder:
             file_paths["reels"] = str(format_paths["9x16"] if format_paths is not None else out_dir / f"{video.video_id}-9x16.mp4")
         if thumbnail:
             file_paths["thumbnail"] = str(thumbnail)   # la sube publish_entry al publicar en YouTube
+        manifest_path = video.path / "manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8")) if manifest_path.is_file() else {}
+        publication_fields = ({"publication_hold": True,
+                               "publication_hold_reason": str(manifest.get("publication_hold_reason") or "manual_hold")[:120]}
+                              if manifest.get("publication_hold") is True else {})
         await collection("jobs").insert({
+            **publication_fields,
             "job_id": job_id,
             "category": video.category_path,
             "title": video.youtube_title or video.title,

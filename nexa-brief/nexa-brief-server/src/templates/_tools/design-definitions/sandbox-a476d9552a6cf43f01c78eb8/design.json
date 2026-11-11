@@ -1,0 +1,38 @@
+{
+  "id": "sandbox-a476d9552a6cf43f01c78eb8",
+  "name": "Resumen geopolítico · Atlas noticiero",
+  "category": "nodeatlas",
+  "state": "produccion",
+  "family": "native",
+  "engine_id": "nodehistory/_atlas",
+  "description": "Demo de diseño de un noticiero sobre globo y mapas animados. El guion, las cifras y los hechos heredados de una referencia no han sido verificados; requieren investigación antes de su uso como noticias.",
+  "revision": "d27af2d92cb0741b2bdc01adeff49daf02c4cc1fa3b9bb0a74be25b6f7ce1fab",
+  "preview_url": "/api/v1/explainer/files/bundled/nodeatlas/resumen-geopolitico-demo/index.html",
+  "promotable": true,
+  "promote_blocker": null,
+  "episodes": [],
+  "visual_styles": {
+    "index": "sandbox/nodehistory/_atlas/noticiero/estilos/index.json",
+    "unavailable_components": {
+      "original": [
+        "noticiero.alert",
+        "noticiero.headline",
+        "noticiero.key-figure",
+        "noticiero.date-card",
+        "noticiero.message"
+      ]
+    }
+  },
+  "category_path": "node_atlas",
+  "shared_categories": [
+    "node_politics"
+  ],
+  "schema_version": 1,
+  "definition_source": "production-template",
+  "production_template": {
+    "folder": "nodeatlas/resumen-geopolitico-demo",
+    "demo": true,
+    "origin_folder": "nodepolitics",
+    "project_id": "resumen-geopolitico-demo"
+  }
+}

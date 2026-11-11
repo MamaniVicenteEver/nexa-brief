@@ -28,6 +28,8 @@ class PreparationItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
     category_path: str
     design: str
+    estilo: str | None = Field(default=None, min_length=1, max_length=80)
+    character_id: str | None = Field(default=None, pattern=r"^[a-z][a-z0-9-]{0,47}$")
     topic: str = Field(min_length=3, max_length=2000)
     description: str = ""
     agent: str | None = None
@@ -74,7 +76,13 @@ async def submit_batch(producer, items: list[PreparationItem], *, parallel: int 
         from src.core.explainer.producer import _default_agent
         if not producer._agent_getter(item.agent or _default_agent()).available():
             raise ValueError("el agente solicitado no está instalado")
-    fingerprint = hashlib.sha256(json.dumps({"items": [i.model_dump() for i in items],
+    # Omit the new optional field when absent: old request IDs retain their fingerprint.
+    payloads = [i.model_dump() for i in items]
+    for payload in payloads:
+        for optional in ("estilo", "character_id"):
+            if payload.get(optional) is None:
+                payload.pop(optional, None)
+    fingerprint = hashlib.sha256(json.dumps({"items": payloads,
         "parallel": parallel, "at": at, "zone": zone}, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
     async with named_lock("batch-admission"):
         batches = collection("explainer_batches")
@@ -104,6 +112,7 @@ async def submit_batch(producer, items: list[PreparationItem], *, parallel: int 
                 await collection("content_plan").insert({
                     "item_id": plan_id, "date": local.date().isoformat(), "time": local.strftime("%H:%M"),
                     "category_path": item.category_path, "design": item.design, "topic": item.topic,
+                    "estilo": row.get("estilo"),
                     "angle": "", "description": f"{label} · Solo preparación · {zone} · lote {batch_id}. {item.description}",
                     "production_id": row["production_id"], "batch_id": batch_id,
                     "generation_at": when.isoformat(), "timezone": zone, "auto_record": False,
@@ -188,6 +197,14 @@ async def validate_batch(producer, batch_id: str) -> dict:
                 raise ValueError("esta operación solo valida preparación sin grabación")
             video = producer._root(row) / row["video_id"]
             errors = _validate_script(video, row.get("narrative_id"), row.get("target_minutes"))
+            if row.get("native_engine"):
+                from src.core.explainer.native_production import validate_prepared
+                if errors:
+                    raise ValueError("preparación incompleta: " + "; ".join(errors))
+                validate_prepared(row, video)
+                await producer._update(row["production_id"], state="incomplete", phase="review",
+                                       error="Revisión visual de escena nativa pendiente en ambos formatos.")
+                continue
             if errors or _storyboard_empty(video):
                 raise ValueError("preparación incompleta: " + "; ".join(errors or ["storyboard vacío"]))
             marker = _read_phase(video)

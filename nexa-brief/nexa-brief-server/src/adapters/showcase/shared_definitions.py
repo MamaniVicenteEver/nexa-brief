@@ -74,6 +74,9 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
             or not isinstance(catalog.get("entries"), list)
         ):
             raise ShowcaseInvalid("Contrato de diseño compartido inválido")
+        if ident == 'atlas-en-movimiento':
+            from src.adapters.showcase.atlas_catalog import atlas_engine_catalog
+            catalog = atlas_engine_catalog(self.templates, catalog)
         return design, catalog
 
     def _states(self):
@@ -120,6 +123,10 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
 
             relations = builtin_episode_relations(self, {ident})
         design["episodes"] = relations.get(ident, [])
+        if design.get('production_template'):
+            marker = design['production_template']
+            design['episodes'] = [dict(id=marker['project_id'], title=design['name'], design_id=ident,
+                preview_url=design.get('preview_url')), *design['episodes']]
         if ident == "mapas-satelitales":
             # Both videos reference the same engine, not duplicate designs.
             project_adapter = self.projects
@@ -169,6 +176,9 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
                 blocker = "Faltan recursos reales de mapa para la vista previa"
         design["promotable"] = design["state"] == "prueba" and blocker is None
         design["promote_blocker"] = blocker
+        if design.get('production_template'):
+            design['promotable'] = False
+            design['promote_blocker'] = None
         return design
 
     def list_designs(self):
@@ -238,7 +248,7 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
             from src.adapters.showcase.preview_availability import is_cara_guide
 
             if is_cara_guide(self.templates, selected["name"]):
-                shared_paths[design_id] = "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/"
+                shared_paths[design_id] = "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/"
         prefix = shared_paths.get(design_id)
         path = parsed.path
         if design_id == "atlas-en-movimiento" and prefix and path.startswith(prefix):
@@ -257,6 +267,23 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
 
     def promote(self, design_id, category_path=None, shared_categories=None):
         ident = _id(design_id)
+        if self._definition(ident) is None:
+            item = next((item for item in self.projects._enabled() if item['design_id'] == ident), None)
+            if item:
+                from src.adapters.showcase.production import FilesystemDesignProduction
+                workflow = FilesystemDesignProduction(self)
+                draft = workflow.inspect(item['folder'], item['project_id'])['draft']
+                from src.core.design_production import ProductionConflict, ProductionError
+                try:
+                    asyncio.run(workflow.move(item['folder'], item['project_id'], {
+                        'category': category_path or draft['category'],
+                        'shared_categories': shared_categories if shared_categories is not None else draft['shared_categories'],
+                    }))
+                except ProductionConflict as exc:
+                    raise ShowcaseConflict(str(exc)) from exc
+                except ProductionError as exc:
+                    raise ShowcaseInvalid(str(exc)) from exc
+                return self.get_design(ident)
         if category_path is not None:
             from src.core.categories import get_category
             categories = [category_path, *(shared_categories or [])]

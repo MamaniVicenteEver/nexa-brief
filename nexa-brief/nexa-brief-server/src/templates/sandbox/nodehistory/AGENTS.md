@@ -134,6 +134,23 @@ No confundir con el diseño atlas 2D ni con Atlas en Movimiento (táctico).
 Las flechas, fotos, rótulos, animaciones y cámara se instancian con JSON; los porcentajes documentales usan `scene.data` con fuente, período y alcance.
 El planificador resuelve variantes igual que Proto y acepta orientación. Verificar recursos de cada recorrido y revisar ambas composiciones antes de certificarlo.
 
+El contrato propio de Atlas Cinemático está en `_atlas/orchestration.json`.
+Para guion prefiere la factoría aislada `codex / gpt-6.1-terra / high`; solo si Codex
+no está disponible usa `claude / claude-haiku-5-5 / medium`. No cambies los roles
+globales, no retires aislamiento y no vuelvas a llamar IA para un guion válido
+existente. Un fallo de ejecución/autenticación no habilita fallback ni CLI libre.
+Registra lo solicitado, lo seleccionado, el modelo real informado y el motivo del
+fallback; no supongas que el adaptador confirma el esfuerzo real.
+
+Ese contrato fija el aspecto original: Mercator y satélite realista oblicuo, vista
+nacional completa, pitch60° (58–68°) y bearing4°. Estados/regiones en rojo y sin zoom.
+Bandera persistente por capítulo con opacidad94%→12%→4% en presentación→país→regiones;
+foto del retrato130% y texto120% respecto al layout previo aprobado, manteniendo
+legibilidad en ambos formatos. Las flechas país→siguiente país muestran itinerario,
+no comercio. Planifica piezas por `intent/component/timeAnchor/location/media/ref/layout/reason`;
+usa fotos documentales con crédito y `polePhoto`, `hexPhoto` o `panel` solo cuando
+lo pida la explicación. No llenar el video con todas las piezas decorativas.
+
 - 2026-11-04 · Atlas en Movimiento: cuatro estudios de texto en `atlas-en-movimiento/diseno-textos-versiones.html` y `diseno-textos-v1.html` a `v4.html`; documentación en `work/texto/versiones/LEEME.md`. Fuentes locales Inter, Manrope, Space Grotesk y DM Sans; 34 tratamientos por dirección. El estudio lee catálogo y palabras reales sin inicializar ni modificar el motor. Probar la composición completa, además de la paleta: los estilos no se integran al video cambiando solo defs.palette.
 
 - 2026-11-04 · Showcase de Atlas: Cinemático abre la biblioteca completa de `components.json` (36 entradas), con fotogramas en `_atlas/showcase/thumbs/`. `previewReady` espera al primer cuadro preparado, no al `load` del iframe. El icono de esquina inicia/detiene; las miniaturas tácticas blancas prevalecen sobre el póster oscuro histórico. Ver `_atlas/showcase/README.md` y su prueba de cobertura al añadir componentes.
@@ -147,3 +164,7 @@ Por pedido explícito del usuario (2026-11-04), no dibujar la leyenda «Imagery:
 La transcripción de la plantilla queda con fuente original, relleno #ffffff, contorno #000000 y sin caja. `scene.captions.size = 45` conserva el tamaño base; `reductionPercent = 35.6` aplica el 30 % anterior y otro 8 % relativo (45 × 0.70 × 0.92 = 28.98). Se pueden usar 35, 40 u otros porcentajes. `enabled` es booleano true/false. `yOffsetLandscape = 10` añade 10 U (10 px en 1920×1080) solo en horizontal. La posición vertical no cambia. El generador de la escena, los defaults tácticos y las dos entradas de reproducción usan esos parámetros; no volver a valores crema ni perder la reducción al regenerar.
 
 La tarjeta `editorial.press` de USS Stark sigue EN REVISIÓN. El video conserva su aspecto anterior. `transcripcion-previsualizacion.html#editorial` prueba `appearance` con documento blanco/negro suave, texto claro con contorno negro sin caja, sin bordes ni placa de color en la foto y fecha blanca sobre negro. No aplicar automáticamente esas opciones al episodio hasta que el usuario elija la variante. Las fotos, textos y créditos documentales no se sustituyen.
+
+- 2026-11-09 · Estilos reutilizables de Mapas: `dynamic` (principal) y `documentary`. Entrada rápida
+  `_mapas/QUICK.md`; API `/showcase/designs/mapas-satelitales/styles`, `/production-guide` y contratos
+  por pieza con `estilo`. La definición compartida conserva estilos al promover; no duplicar motores.

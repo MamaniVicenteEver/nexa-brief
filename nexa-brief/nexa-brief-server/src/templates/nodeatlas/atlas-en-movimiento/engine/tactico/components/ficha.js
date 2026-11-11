@@ -1,12 +1,14 @@
 import {Tactico} from '../core.js';
+import {episodeMediaURL} from '../episode-data.js';
 
-const root=new URL('../../../',import.meta.url), cache=new Map();
+const cache=new Map();
 export const localMedia=s=>typeof s==='string'&&!!s&&!/^(?:[a-z]+:|\/\/|\/)/i.test(s)&&!s.split('/').includes('..');
-export async function loadMedia(src){
+export async function loadMedia(src,ctx){
  if(!src)return null;
  if(!localMedia(src))throw Error('El medio debe ser una ruta local relativa a la plantilla');
- if(!cache.has(src))cache.set(src,(async()=>{const image=new Image();image.src=new URL(src,root).href;await image.decode();return image;})());
- return cache.get(src);
+ const url=episodeMediaURL(src,ctx).href;
+ if(!cache.has(url))cache.set(url,(async()=>{const image=new Image();image.src=url;await image.decode();return image;})());
+ return cache.get(url);
 }
 export function media(g,img,x,y,w,h,filter,mask,focus=[.5,.38]){
  if(!img)return;g.save();g.beginPath();
@@ -45,7 +47,7 @@ for(const type of ['portrait.card','portrait.column','portrait.pair'])Tactico.co
  layer:80,animated:false,summary:type==='portrait.pair'?'Dos fichas enfrentadas, cada una en su ranura.':type==='portrait.column'?'Ficha de persona con foto sobre los datos.':'Ficha horizontal de persona con foto y datos.',
  params:{...params,...(type==='portrait.pair'?{left:{type:'object',default:person},right:{type:'object',default:{...person,src:'assets/media/P03-soft.png',name:'Ronald Reagan',role:'Presidente de EE. UU.',credit:'Michael Evans · Casa Blanca · PD'}}}:{})},
  validate(item){const people=type==='portrait.pair'?[item.left,item.right]:[item];return people.flatMap(p=>!p?['Falta una ficha']:['src','name','role','date','credit'].filter(k=>!p[k]||k==='src'&&!localMedia(p[k])).map(k=>`${k} es obligatorio y src debe ser local`));},
- async prepare(item){return {images:await Promise.all((type==='portrait.pair'?[item.left,item.right]:[item]).map(p=>loadMedia(p?.src)))};},
+ async prepare(item,ctx){return {images:await Promise.all((type==='portrait.pair'?[item.left,item.right]:[item]).map(p=>loadMedia(p?.src,ctx)))};},
  draw(g,s,v,env){if(type==='portrait.pair'){drawFicha(g,env,s.item.left,s.internal.images[0],'izq',false,true);drawFicha(g,env,s.item.right,s.internal.images[1],'der',false,true);}else drawFicha(g,env,s.item,s.internal.images[0],s.item.side??'izq',type==='portrait.column');},
  demo:{id:'demo-'+type.replace('.','-'),type,...(type==='portrait.pair'?{left:person,right:{...person,src:'assets/media/P03-soft.png',name:'Ronald Reagan',role:'Presidente de EE. UU.',credit:'Michael Evans · Casa Blanca · PD'}}:person),t:0,dur:8,out:7}
 });

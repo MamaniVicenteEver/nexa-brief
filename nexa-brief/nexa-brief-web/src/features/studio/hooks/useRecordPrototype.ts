@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Niche } from "@/features/create-video/types";
 import type { Template } from "@/features/templates/types";
 import { useJobsTrayStore } from "@/shared/store/jobs-tray-store";
@@ -31,6 +31,7 @@ export function useRecordPrototype(
   niche: Niche | undefined,
   prototypes: Draft[],
   original: Draft | null,
+  open = true,
 ) {
   const queryClient = useQueryClient();
   const addJobs = useJobsTrayStore((s) => s.addJobs);
@@ -53,7 +54,17 @@ export function useRecordPrototype(
   // Remotion graba solo 16:9.
   const canVertical = engine !== "remotion";
   const [vertical, setVertical] = useState(false);
-  const formats: RecordFormat[] = vertical && canVertical ? ["16x9", "9x16"] : ["16x9"];
+  const [desktop, setDesktop] = useState(true);
+  useEffect(() => {
+    if (!open) {
+      setVertical(false);
+      setDesktop(true);
+    }
+  }, [open]);
+  const formats: RecordFormat[] = [
+    ...(desktop ? ["16x9" as const] : []),
+    ...(vertical && canVertical ? ["9x16" as const] : []),
+  ];
   const [accounts, setAccounts] = useState<string[]>([]);
   const [accountFormats, setAccountFormats] = useState<Record<string, RecordFormat>>({});
 
@@ -87,13 +98,15 @@ export function useRecordPrototype(
     isOriginal: choice === ORIGINAL,
     selected,
     /** El elegido está listo para grabar (preparado o reintentable). */
-    ready: selected !== null && isRecordable(selected),
+    ready: selected !== null && isRecordable(selected) && formats.length > 0,
     select: setSelectedId,
     engines,
     engine,
     setEngine,
     canVertical,
     formats,
+    desktop,
+    setDesktop,
     vertical: vertical && canVertical,
     setVertical,
     accounts,

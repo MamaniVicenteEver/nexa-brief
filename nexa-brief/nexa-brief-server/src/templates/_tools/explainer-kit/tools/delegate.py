@@ -64,9 +64,9 @@ def ask_deepseek(model: str, system: str, user: str) -> tuple[dict, float]:
 
 def codex_runner():
     """Construye el runner compartido, que fuerza login ChatGPT y quita claves API."""
-    from src.adapters.agent.infrastructure.cli_runner import CodexRunner
+    from src.adapters.agent.factory import get_agent
 
-    return CodexRunner()
+    return get_agent("codex")
 
 
 def write_output(path: pathlib.Path, text: str) -> None:
@@ -125,7 +125,7 @@ def run(video_dir: pathlib.Path, role: str, prompt_file: str, out: str = "", con
                 f"Rol de borrador: {role}.\n"
                 f"Instrucciones del rol:\n{system.strip()}\n\n"
                 f"Pedido y contexto:\n{request}\n\n"
-                "Entrega el borrador como texto Markdown. Trabaja solo con el pedido y el contexto provistos; "
+                f"Entrega el borrador como {'un objeto JSON válido' if spec.get('output') == 'json' else 'texto Markdown'}. Trabaja solo con el pedido y el contexto provistos; "
                 "no inventes hechos ni escribas archivos."
             )
             def _go(runner, mdl, effort, log_path):
@@ -137,12 +137,18 @@ def run(video_dir: pathlib.Path, role: str, prompt_file: str, out: str = "", con
                     scope=AgentScope(writable_dir=".", os_sandbox_dir=".", model=mdl, reasoning_effort=effort),
                 ))
 
-            result = _go(codex_runner(), model, spec.get("reasoning_effort"), cli_log)
+            from src.adapters.models.editorial_policy import codex_fallback_allowed
+            from src.core.ports.agent_port import AgentIsolationUnavailableError, AgentRunResult
+            try:
+                result = _go(codex_runner(), model, spec.get("reasoning_effort"), cli_log)
+            except (AgentIsolationUnavailableError, FileNotFoundError) as exc:
+                result = AgentRunResult(exit_code=127, last_message="codex_unavailable", duration_seconds=0)
             fb = spec.get("fallback")
-            if (not result.ok or not result.last_message.strip()) and isinstance(fb, dict) and fb.get("provider") in ("claude", "codex"):
+            eligible = codex_fallback_allowed(result=result)
+            if (not result.ok or not result.last_message.strip()) and eligible and isinstance(fb, dict) and fb.get("provider") in ("claude", "codex"):
                 # Respaldo (ej. Codex sin cuota -> Claude Haiku 5.5): se registra, nunca es silencioso.
                 from src.adapters.agent.factory import get_agent
-                print(f"  {provider} falló (código {result.exit_code}); respaldo {fb["provider"]}/{fb.get("model", "")}", flush=True)
+                print(f"  {provider} falló (código {result.exit_code}); respaldo {fb['provider']}/{fb.get('model', '')}", flush=True)
                 provider, model = fb["provider"], fb.get("model", "")
                 result = _go(get_agent(provider), model or None, fb.get("reasoning_effort"),
                              cli_log.with_name(cli_log.stem + ".fallback.jsonl"))

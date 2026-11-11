@@ -115,14 +115,19 @@ async def update(job: Job) -> None:
     # Archivo por relación de aspecto, como los explainer (`recorder._register_for_scheduling`):
     # "Publicar ahora" y la cola eligen el formato por cuenta con estas claves.
     aspect_paths: dict[str, str] = dict(record.get("format_paths") or {})
+    if job.input.formats == ["9x16"] and artifacts.reels_video_path is not None and artifacts.youtube_video_path is None:
+        # Un reintento vertical no debe conservar rutas horizontales de un intento anterior.
+        file_paths.pop("youtube", None)
+        aspect_paths.pop("16x9", None)
     if artifacts.youtube_video_path is not None:
         aspect_paths["16x9"] = str(artifacts.youtube_video_path)
     if artifacts.reels_video_path is not None and artifacts.reels_video_path != artifacts.youtube_video_path:
         aspect_paths["9x16"] = str(artifacts.reels_video_path)
 
     duration_seconds = record.get("duration_seconds")
-    if duration_seconds is None and artifacts.youtube_video_path is not None:
-        duration_seconds = await _get_video_duration_seconds(artifacts.youtube_video_path)
+    duration_path = artifacts.youtube_video_path or artifacts.reels_video_path
+    if duration_seconds is None and duration_path is not None:
+        duration_seconds = await _get_video_duration_seconds(duration_path)
 
     patch: dict[str, Any] = {}
     # Tiempo real de generación (desde que se aceptó el job hasta que quedó

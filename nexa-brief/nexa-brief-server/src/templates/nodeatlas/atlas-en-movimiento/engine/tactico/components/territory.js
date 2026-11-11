@@ -12,7 +12,7 @@ const countryNames=new Set((await readJSON(atlasGeoURL)).features.flatMap(f=>Obj
 let flagCodes;
 async function flagsReady() {
   // El catálogo original es un script clásico; se importa sin modificarlo.
-  if(typeof window!=='undefined'&&!globalThis.Mapas?.flags) await import('../../../../_mapas/flags.js');
+  if(typeof window!=='undefined'&&!globalThis.Mapas?.flags) await import('/api/v1/explainer/files/bundled/nodeatlas/_mapas/flags.js');
   const flags=globalThis.Mapas?.flags;
   // KW falta en el catálogo compartido. Extensión local, dibujada por su mismo renderer.
   // Diseño: kuwait-embassy.or.jp/E_outline_06.html. No se modifica el archivo de origen.
@@ -135,6 +135,20 @@ Tactico.component('territory.flag',{
     if(mode==='marker'||mode==='both'){const p=i.at?position(s,v,e):n.anchor?v.project(...n.anchor):null;if(p)drawFlagMarker(g,s,v,e,p);}
   },demo:{...regionDemo,type:'territory.flag',flag:'IR',flagMode:'both'}
 });
+Tactico.component('territory.wash',{
+  layer:10,summary:'Bandera de país completo con barrido y asentamiento translúcido; conserva islas y huecos.',
+  params:{region:{type:'string',doc:'Nombre o código del país completo.'},flag:{type:'string',doc:'Código de la bandera.'},reveal:{type:'number',default:1,min:.05,max:30,doc:'Duración del barrido en segundos.'},settle:{type:'number',default:.28,min:0,max:1,doc:'Opacidad final sobre el mapa.'},from:{type:'enum',values:['izq','der','arriba','abajo','centro'],default:'izq',doc:'Origen del barrido.'},border:{type:'boolean',default:true,doc:'Dibuja el contorno del país.'}},states:[],
+  animated:s=>s.lt<(s.item.reveal??1)+.4,
+  validate:(i,c)=>[...regionErrors(i,c),...flagErrors({...i,flagMode:'fill'}),...(i.reveal!=null&&(!(i.reveal>0)||i.reveal>30)?['reveal requiere .05..30']:[]),...(i.settle!=null&&(!Number.isFinite(i.settle)||i.settle<0||i.settle>1)?['settle requiere 0..1']:[]),...(i.from&&!['izq','der','arriba','abajo','centro'].includes(i.from)?['from inválido']:[])],
+  async prepare(i,c){await flagsReady();return prepareRegion(i,c);},
+  draw(g,s,v,e){const geo=screenGeometry(s.internal,v),bitmap=flagBitmap(s.item.flag);if(!geo||!bitmap)return;
+    const i=s.item,tk=e.estilo.ucr2.territorio,[x,y,x2,y2]=geo.bounds,w=x2-x,h=y2-y,u=Math.max(0,Math.min(1,s.lt/(i.reveal??1))),from=i.from??'izq';
+    g.save();g.clip(geo.path,'evenodd');g.beginPath();
+    if(from==='der')g.rect(x2-w*u,y,w*u,h);else if(from==='arriba')g.rect(x,y,w,h*u);else if(from==='abajo')g.rect(x,y2-h*u,w,h*u);else if(from==='centro')g.rect(x+w*(1-u)/2,y+h*(1-u)/2,w*u,h*u);else g.rect(x,y,w*u,h);
+    g.clip();g.globalAlpha*=u<1?Math.min(1,(i.settle??.28)+tk.entrada*(1-u)):(i.settle??.28);g.drawImage(bitmap,x,y,w,h);g.restore();
+    if(i.border!==false){g.save();g.strokeStyle=e.estilo.col(tk.borde);g.lineWidth=tk.grosor*Math.min(e.W,e.H)/1080;g.stroke(geo.path);g.restore();}
+  },sfx:i=>[{sfx:'whoosh',at:i.t??0,dur:Math.min(i.reveal??1,2),gain_db:-27}],demo:{id:'demo-territory-wash',type:'territory.wash',region:'IQ',flag:'IQ',t:0,dur:12,reveal:1.5,settle:.28}
+});
 Tactico.component('flag.marker',{
   layer:70,summary:'Bandera independiente en mástil, sombra y onda calculada desde el tiempo; admite ancla móvil.',params:{flag:{type:'string',default:'US'},flagWidth:{type:'number',default:78},poleHeight:{type:'number',default:98},wave:{type:'boolean',default:true}},states:[],validate:i=>flagErrors({...i,flagMode:'marker'}),async prepare(){await flagsReady();return {};},draw:drawFlagMarker,demo:{type:'flag.marker',at:[53,27],flag:'US',t:0,dur:6,out:5.5}
 });
@@ -190,4 +204,48 @@ Tactico.component('territory.control',{
     g.restore();
   },
   demo:{type:'territory.control',region:'IR',via:[[45.58,34.52],[46.17,33.12],[48.12,32.35],[48.45,31.43],[48.18,30.44]],states:[{at:3,state:'retreat',via:[[45.4,34.5],[45.85,33.3],[47.1,32.5],[47.45,31.35],[47.95,30.55]],dur:1.5}],t:0,dur:6,out:5.5}
+});
+
+// ── territory.zone: zona de control con polígonos propios [lon,lat], fechados, que se queda marcada en todo el video.
+// El relleno es una tinta translúcida (estilo ucr2.territorio.zona, rojo al 50 %): deja ver el mapa debajo.
+// Entre dos estados la parte que desaparece se desvanece y la que aparece se enciende; lo común no parpadea.
+// Los anillos de UN MISMO estado no deben solaparse (el recorte "fuera de" usa evenodd).
+const ZONE_CLIP_DEFAULT=[{region:'UA'},{region:'RU',box:[32,44,37.3,46.2]}];
+function zonePolygonErrors(polys,label){
+  if(!Array.isArray(polys)||!polys.length)return [`${label} necesita una lista de anillos [[lon,lat],…]`];
+  return polys.flatMap((r,k)=>Array.isArray(r)&&r.length>=3&&r.every(p=>Array.isArray(p)&&Number.isFinite(p[0])&&Number.isFinite(p[1])&&Math.abs(p[0])<=180&&Math.abs(p[1])<=90)?[]:[`${label}[${k}] necesita 3 o más puntos [lon,lat]`]);
+}
+function zonePath(v,rings){const p=new Path2D();for(const r of rings){r.forEach(([lon,lat],k)=>{const q=v.project(lon,lat);k?p.lineTo(q.x,q.y):p.moveTo(q.x,q.y);});p.closePath();}return p;}
+Tactico.component('territory.zone',{
+  layer:11,summary:'Zona de control con polígonos propios [lon,lat] y estados fechados: la parte que se pierde se desvanece y la ganada se enciende. Rojo translúcido al 50 % que se mantiene todo el video. Úsala para mostrar qué controla un bando (ocupación, avance, retirada).',
+  params:{polygons:{type:'array',doc:'Anillos [[lon,lat],…] del estado inicial. Pueden pasar por el mar o por otro país: se recortan con `clip`. Sin solapes entre anillos.'},clip:{type:'array',default:ZONE_CLIP_DEFAULT,doc:'Países donde se pinta: [{region,box?:[lonMin,latMin,lonMax,latMax]}]. Por defecto Ucrania y la península de Crimea.'},color:{type:'string',default:null,doc:'Tinta con alfa, p. ej. "#E23B2E@.5". Por defecto el token ucr2.territorio.zona.'},border:{type:'boolean',default:true,doc:'Dibuja el contorno de la zona.'},label:{type:'string',default:null,doc:'Texto de la leyenda (esquina inferior derecha), p. ej. "CONTROL RUSO · APROXIMADO".'},tinta:{type:'enum',values:['rusia','ucrania'],default:'rusia',doc:'Paleta: rusia = rojo 50 %, ucrania = amarillo 50 %.'},slot:{type:'number',default:0,min:0,max:6,doc:'Posición de la leyenda: 0 abajo; 1, 2… se apilan hacia arriba. Una leyenda por zona visible.'},icon:{type:'enum',values:['cuadro','check'],default:'cuadro',doc:'Icono de la leyenda: cuadro plano del color de la zona (por defecto) o check.'},legendAncho:{type:'number',default:340,min:120,max:600,doc:'Ancho de la columna de leyendas: todas arrancan en el mismo x, una encima de otra.'},colorBorde:{type:'string',default:null,doc:'Tinta del contorno; por defecto el token de la paleta.'}},states:['ocupado','recuperado'],
+  validate:(i,c)=>[...zonePolygonErrors(i.polygons,'polygons'),...(i.states||[]).flatMap((k,n)=>k.polygons?zonePolygonErrors(k.polygons,`states[${n}].polygons`):[]),...(i.clip||ZONE_CLIP_DEFAULT).flatMap(k=>regionErrors({region:k.region},c))],
+  prepare(i,c){const clips=(i.clip||ZONE_CLIP_DEFAULT).map(k=>({box:k.box,n:prepareRegion({region:k.region},c)}));
+    const sets=[{at:-Infinity,polys:i.polygons,u:1},...dated(i,c).filter(k=>k.polygons).map(k=>({at:k.at,polys:k.polygons,dur:k.dur??2,k}))];return {clips,sets};},
+  draw(g,s,v,e){const n=s.internal,i=s.item,tk=e.estilo.ucr2.territorio,uk=i.tinta==='ucrania',fill=e.estilo.col(i.color??(uk?tk.zonaUcrania:tk.zona)),line=e.estilo.col(i.colorBorde??(uk?tk.zonaUcraniaBorde:tk.zonaBorde)??i.color??tk.zona);
+    let idx=0;for(let k=1;k<n.sets.length;k++)if(s.t>=n.sets[k].at)idx=k;
+    const to=n.sets[idx],from=n.sets[Math.max(0,idx-1)],u=idx>0?transitionAt(s.t,to.k):1,B=zonePath(v,to.polys),A=u<1?zonePath(v,from.polys):null;
+    const big=new Path2D();const pad=4000;big.rect(-pad,-pad,e.W+2*pad,e.H+2*pad);
+    const outside=p=>{const q=new Path2D();q.addPath(big);q.addPath(p);return q;};
+    const draw=()=>{
+      if(!A){g.fillStyle=fill;g.fill(B);}
+      else{
+        g.save();g.clip(A);g.save();g.clip(B);g.fillStyle=fill;g.fill(B);g.restore();                      // común: sólido
+        g.save();g.clip(outside(B),'evenodd');g.globalAlpha*=1-u;g.fillStyle=fill;g.fill(A);g.restore();   // se pierde
+        g.restore();
+        g.save();g.clip(B);g.save();g.clip(outside(A),'evenodd');g.globalAlpha*=u;g.fillStyle=fill;g.fill(B);g.restore();g.restore(); // se gana
+      }
+      if(i.border!==false){g.lineJoin='round';g.lineWidth=1.6*e.U;g.strokeStyle=line;
+        if(A){g.save();g.globalAlpha*=1-u;g.stroke(A);g.restore();g.save();g.globalAlpha*=u;g.stroke(B);g.restore();}else g.stroke(B);}
+    };
+    for(const c of n.clips){const geo=screenGeometry(c.n,v);if(!geo)continue;g.save();
+      if(c.box){const a=v.project(c.box[0],c.box[1]),b=v.project(c.box[2],c.box[3]),r=new Path2D();r.rect(Math.min(a.x,b.x),Math.min(a.y,b.y),Math.abs(b.x-a.x),Math.abs(b.y-a.y));g.clip(r);}
+      g.clip(geo.path,'evenodd');draw();g.restore();}
+    if(i.label){const fs=Math.round(15*e.U),box=fs*1.2,gap=10*e.U;g.save();g.font=`700 ${fs}px AtlasDisplay, sans-serif`;g.textBaseline='middle';
+      const w=g.measureText(i.label).width,x=e.W-26*e.U-Math.max(box+gap+w,(i.legendAncho??340)*e.U),y=e.H-34*e.U-(i.slot??0)*fs*2.1;
+      if(i.icon==='check'){g.fillStyle=line;g.fillRect(x,y-box/2,box,box);g.strokeStyle=e.estilo.col(tk.zonaCheck??'#1A1A1A');g.lineWidth=2.4*e.U;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(x+box*.2,y+box*.02);g.lineTo(x+box*.42,y+box*.26);g.lineTo(x+box*.8,y-box*.26);g.stroke();}
+      else{g.fillStyle=fill;g.fillRect(x,y-box/2,box,box);}
+      g.fillStyle=e.estilo.col(tk.zonaTexto??'#FFFFFF');g.fillText(i.label,x+box+gap,y);g.restore();}
+  },
+  demo:{id:'demo-territory-zone',type:'territory.zone',t:0,dur:8,out:7.5,polygons:[[[32,44],[37.2,44],[37.2,46],[32,46]]],states:[{at:3,state:'recuperado',dur:1.5,polygons:[[[34,44],[37.2,44],[37.2,46],[34,46]]]}],label:'CONTROL · APROXIMADO',note:'Zona esquemática sin valor histórico.'}
 });

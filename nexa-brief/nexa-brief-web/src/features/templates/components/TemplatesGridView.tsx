@@ -9,10 +9,11 @@ import { PublicationsSection } from "@/features/image-posts";
 import { SamplesSection } from "@/features/samples/components/SamplesSection";
 import { SandboxWindow } from "@/features/sandbox";
 import { useTemplates } from "../hooks/useTemplates";
+import { AllDesignsWindow } from "./AllDesignsWindow";
 import { CategoryWindowTabs, SANDBOX_CATEGORY_ID } from "./CategoryWindowTabs";
 import { groupMotionTemplates, MotionCategoryWindow } from "./MotionCategoryWindow";
 
-const DEFAULT_CATEGORY = "node_tech";
+const DEFAULT_CATEGORY = "all";
 const CONTAINER_CLASS = "relative z-5 mx-auto w-full max-w-[1440px] px-4 pt-22 sm:px-6 pb-16";
 
 /** /plantillas: una "ventana" por categoría principal; solo se muestra una a la vez.
@@ -25,13 +26,17 @@ function CategoryWindows() {
   const [lastCategory, setLastCategory] = useState(DEFAULT_CATEGORY);
 
   const isKnown = (id: string | null): id is string =>
-    id === SANDBOX_CATEGORY_ID || (id !== null && categories.some((c) => c.id === id));
+    id === "all" ||
+    id === SANDBOX_CATEGORY_ID ||
+    (id !== null && categories.some((category) => category.id === id));
 
   // Si se llega con ?cat= (link compartido), se recuerda aunque luego cambie la ruta.
   useEffect(() => {
     if (
       catParam &&
-      (catParam === SANDBOX_CATEGORY_ID || categories.some((category) => category.id === catParam))
+      (catParam === "all" ||
+        catParam === SANDBOX_CATEGORY_ID ||
+        categories.some((category) => category.id === catParam))
     ) {
       setLastCategory(catParam);
     }
@@ -69,6 +74,9 @@ function CategoryWindows() {
         templateCount={motionCount}
         onSelect={select}
       />
+      {selectedId === "all" && (
+        <AllDesignsWindow />
+      )}
       {selectedId === SANDBOX_CATEGORY_ID && <SandboxWindow />}
       {selected?.engine === "pipeline" && (
         <MotionCategoryWindow

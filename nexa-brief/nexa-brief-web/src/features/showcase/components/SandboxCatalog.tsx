@@ -494,7 +494,7 @@ function Library({
   const [family, setFamily] = useState("");
   const [framePosition, setFramePosition] = useState<PreviewFramePosition | null>(null);
   const canSelectFrame =
-    path === "sandbox/nodeaction/cara-a-cara" ||
+    path === "bundled/nodeactualidad/cara-a-cara" ||
     catalog.base === "sandbox/nodeaction/_vida" ||
     catalog.base === "sandbox/nodehistory/_atlas" ||
     path === "sandbox/nodehistory/atlas-en-movimiento";

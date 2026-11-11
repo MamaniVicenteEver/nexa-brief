@@ -240,7 +240,8 @@ def test_failed_stage_keeps_last_good_snapshot(fake_stages: list[str], monkeypat
 
     draft = asyncio.run(scenario())
     assert draft.status == "failed"
-    assert draft.recoverable is True
+    assert draft.recoverable is False
+    assert not drafts.can_render(draft, drafts.load_job(draft.draft_id))
     assert "gemini caído" in draft.errors[-1]
     assert drafts.load_job(draft.draft_id).stage == JobStage.DESIGN_COMPLETE
 

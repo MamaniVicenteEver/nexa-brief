@@ -288,10 +288,18 @@ class PlaywrightFFmpegAdapter(RecorderPort):
         youtube_path = produced.get("youtube")
         reels_path = produced.get("reels")
         if youtube_path is None:
-            raise RecordingError(
-                "No se produjo ningún formato 16:9 — el nicho debe definir un VideoFormat "
-                "con aspect_ratio='16:9' (youtube)."
-            )
+            if reels_path is None:
+                raise RecordingError("No se produjo ningún formato de video")
+            # El puerto requiere un archivo principal; video_recorder registra
+            # este archivo únicamente como vertical cuando no se solicitó 16:9.
+            youtube_path = reels_path
+        elif formats and not any(fmt.aspect_ratio == "16:9" for fmt in formats):
+            # El recorte usa un máster horizontal temporal, que no es una salida elegida.
+            if reels_path is None:
+                raise RecordingError("No se produjo el formato vertical")
+            if youtube_path != reels_path:
+                youtube_path.unlink(missing_ok=True)
+            youtube_path = reels_path
 
         # ── TikTok: clip 61s con fades, derivado del 9:16 disponible (o del 16:9) ──
         # Se salta por completo si el nicho no lo necesita (generate_tiktok_clip=False)

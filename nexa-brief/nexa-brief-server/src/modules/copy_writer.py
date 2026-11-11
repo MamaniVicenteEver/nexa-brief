@@ -45,6 +45,49 @@ class CopyResult:
     user_prompt: str
     raw_responses: list[dict[str, Any]] = field(default_factory=list)
     unresolved_errors: list[str] = field(default_factory=list)
+    thumbnail_options: dict[str, str] = field(default_factory=dict)
+
+
+def _thumbnail_prompt(profile: str | None) -> str:
+    if profile == "commercial":
+        guidance = (
+            "A y B son dos frases promocionales distintas, muy cortas (máximo 60 caracteres), "
+            "basadas solo en los textos o beneficios que aparecen en el video. No inventes ofertas, "
+            "fechas, cifras ni características. No repitas el mismo texto con otras palabras."
+        )
+    else:
+        guidance = (
+            "A usa de 1 a 5 palabras: el nombre limpio de la canción o una frase potente. B propone una frase distinta, "
+            "breve (máximo 60 caracteres) y fiel a la letra o al tema. No inventes hechos."
+        )
+    return (
+        "\n\nTEXTOS PARA LAS DOS OPCIONES DE MINIATURA\n"
+        f"{guidance}\n"
+        "Añade al objeto JSON raíz la clave \"thumbnail_options\" con esta forma exacta: "
+        "{\"A\": \"texto breve\", \"B\": \"otro texto distinto\"}. "
+        "Completa ambos textos en el idioma obligatorio. No incluyas artista, marca, LETRA, LYRIC VIDEO, emojis, hashtags ni comillas. "
+        "B puede ser más larga que A, pero debe proceder de la letra o del contenido disponible."
+    )
+
+
+def _parse_thumbnail_options(raw: dict[str, Any]) -> tuple[dict[str, str], list[str]]:
+    section = raw.get("thumbnail_options")
+    if not isinstance(section, dict):
+        return {}, ["falta la sección 'thumbnail_options' con A y B"]
+    options: dict[str, str] = {}
+    errors: list[str] = []
+    for option in ("A", "B"):
+        value = section.get(option)
+        text = " ".join(value.split()) if isinstance(value, str) else ""
+        if not text:
+            errors.append(f"thumbnail_options.{option} está vacío o falta")
+        elif len(text) > 60:
+            errors.append(f"thumbnail_options.{option} tiene {len(text)} caracteres (máximo 60)")
+        else:
+            options[option] = text
+    if len(options) == 2 and options["A"].casefold() == options["B"].casefold():
+        errors.append("thumbnail_options.A y B deben tener textos distintos")
+    return options, errors
 
 
 # ── facts ───────────────────────────────────────────────────────────────────
@@ -162,22 +205,34 @@ async def write_copy(
     seed: str,
     strategies: dict[str, CopyStrategy] | None = None,
     profile: str | None = None,
+    include_thumbnail_options: bool = False,
 ) -> CopyResult:
     strategies = strategies or active_strategies(profile=profile)
     system, user = build_copy_prompt(strategies, facts, language, profile)
+    if include_thumbnail_options:
+        user += _thumbnail_prompt(profile)
 
     raw = await ai.complete_json(system, user)
     raws = [raw]
     pieces, errors = parse_pieces(raw, strategies)
+    thumbnail_options: dict[str, str] = {}
+    if include_thumbnail_options:
+        thumbnail_options, thumbnail_errors = _parse_thumbnail_options(raw)
+        errors.extend(thumbnail_errors)
     if errors:
         logger.info("copy_writer_retry", errors=errors)
         raw = await ai.complete_json(system, user + build_retry_note(errors))
         raws.append(raw)
         retry_pieces, retry_errors = parse_pieces(raw, strategies)
+        retry_thumbnail_options: dict[str, str] = {}
+        if include_thumbnail_options:
+            retry_thumbnail_options, retry_thumbnail_errors = _parse_thumbnail_options(raw)
+            retry_errors.extend(retry_thumbnail_errors)
         if len(retry_errors) <= len(errors):
             pieces, errors = retry_pieces, retry_errors
+            thumbnail_options = retry_thumbnail_options
 
     copies = {platform: render_copy(strategy, pieces, language, seed) for platform, strategy in strategies.items()}
     if errors:
         logger.warning("copy_writer_unresolved_errors", errors=errors)
-    return CopyResult(copies, pieces, system, user, raws, errors)
+    return CopyResult(copies, pieces, system, user, raws, errors, thumbnail_options)

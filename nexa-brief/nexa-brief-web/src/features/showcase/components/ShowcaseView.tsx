@@ -18,7 +18,7 @@ import { Input } from "@/shared/components/ui/input";
 import { safeShowcaseUrl } from "../api/standard-showcase-repository";
 import { useStandardShowcase } from "../hooks/useStandardShowcase";
 import { catalogFilters, entryType, entryTypeLabels } from "../lib/catalog-filters";
-import { ShowcaseStyleContext, type ShowcaseStyles } from "../lib/showcase-style";
+import { ShowcaseStyleContext, ShowcaseStyleControlsContext, type ShowcaseStyles } from "../lib/showcase-style";
 import { CatalogFilterButtons, filterChip as chip } from "./CatalogFilterButtons";
 import { LegacyShowcaseView } from "./LegacyShowcaseView";
 import { StandardShowcaseCatalog } from "./StandardShowcaseCatalog";
@@ -40,7 +40,7 @@ export function ShowcaseView() {
   const [promotionCategory, setPromotionCategory] = useState("");
   const [promotionShared, setPromotionShared] = useState<string[]>([]);
   const categoryQuery = useCategories();
-  const promotionCategories = (categoryQuery.data ?? []).filter((node) => node.engine === "explainer_kit" && node.status !== "empty");
+  const promotionCategories = (categoryQuery.data ?? []).filter((node) => node.engine === "explainer_kit");
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const target = params.get("design");
@@ -54,7 +54,7 @@ export function ShowcaseView() {
   const filtered = designs.filter((design) => design.state === section);
   const design = filtered.find((value) => value.id === chosen) ?? filtered[0];
   const activePromotionCategory = promotionCategory || promotionCategories.find((node) => node.id.replaceAll("_", "") === design?.category)?.path || promotionCategories[0]?.path || "";
-  const { catalog, promote } = useStandardShowcase(design?.id ?? "");
+  const { catalog, promote } = useStandardShowcase(design?.id ?? "", estilo, format);
   const designId = design?.id ?? "";
   useEffect(() => {
     // Estilos visuales que la API ofrece para este diseño (si no ofrece ninguno, no se muestra el selector).
@@ -68,7 +68,7 @@ export function ShowcaseView() {
     })
       .then((response) => (response.ok ? response.json() : null))
       .then((value: ShowcaseStyles | null) => {
-        if (value && Array.isArray(value.styles)) setStyles(value);
+        if (value && Array.isArray(value.styles)) { setStyles(value); setEstilo(value.default ?? ""); }
       })
       .catch(() => undefined);
     return () => controller.abort();
@@ -199,7 +199,7 @@ export function ShowcaseView() {
                 >
                   <span className="block truncate text-xs font-semibold">{item.name}</span>
                   <span className="mt-1 block truncate text-[11px] opacity-65">
-                    {item.id} · {item.category.replace(/^node_?/, "Node ")}
+                    {item.family === "sandbox" ? item.episodes?.[0]?.id ?? item.name : item.id} · {item.category.replace(/^node_?/, "Node ")}
                   </span>
                 </button>
               ))}
@@ -229,7 +229,7 @@ export function ShowcaseView() {
                   <span className="font-normal text-nb-ink-soft">· {design.description}</span>
                 </h2>
                 <p className="mt-1 text-xs text-nb-ink-soft">
-                  {design.state === "produccion" ? "Producción" : "Sandbox"} · {design.id} ·{" "}
+                  {design.state === "produccion" ? "Producción" : "Sandbox"} · {design.family === "sandbox" ? design.episodes?.[0]?.id ?? design.name : design.id} · {design.category.replace(/^node_?/, "Node ")} ·{" "}
                   {all.length} entradas disponibles
                 </p>
                 {design.category_path && (
@@ -275,7 +275,7 @@ export function ShowcaseView() {
                     disabled={!design.promotable || promote.isPending}
                     onClick={() => setPromotionOpen(true)}
                   >
-                    {promote.isPending ? "Promoviendo…" : "Pasar a producción"}
+                    {promote.isPending ? "Pasando a producción…" : "Pasar a producción"}
                   </Button>
                   {!design.promotable && design.promote_blocker && (
                     <p className="max-w-sm text-xs text-nb-ink-soft">{design.promote_blocker}</p>
@@ -306,7 +306,7 @@ export function ShowcaseView() {
                         </fieldset>
                       </div>
                       {promote.isError && (
-                        <p role="alert">No se pudo promover: {promote.error.message}</p>
+                        <p role="alert">No se pudo pasar a producción: {promote.error.message}</p>
                       )}
                       <DialogFooter>
                         <Button
@@ -343,7 +343,7 @@ export function ShowcaseView() {
               </p>
             )}
             {!promotionOpen && promote.isError && (
-              <p role="alert">No se pudo promover: {promote.error.message}</p>
+              <p role="alert">No se pudo pasar a producción: {promote.error.message}</p>
             )}
             <section
               aria-label="Filtros de componentes"
@@ -475,12 +475,14 @@ export function ShowcaseView() {
               </p>
             ) : (
               <ShowcaseStyleContext.Provider value={estilo}>
+              <ShowcaseStyleControlsContext.Provider value={{ styles: styles.styles, value: estilo, onChange: setEstilo }}>
                 <StandardShowcaseCatalog
-                  key={`${design.id}:${format}:${estilo}`}
+                  key={`${design.id}:${format}`}
                   design={design}
                   entries={entries}
                   format={format}
                 />
+              </ShowcaseStyleControlsContext.Provider>
               </ShowcaseStyleContext.Provider>
             )}
           </>

@@ -137,6 +137,7 @@ VIDEO_DIR = None   # carpeta del video (assets/script.json → ../): ahí va el 
 def generate_group(script, grp, f, voice, model):
     """una parte con un modelo, rotando claves. 3.1 no tiene `interactions`: va por prompt de director."""
     started = time.time()
+    tts.LAST_USAGE.clear()  # A failure before HTTP must never reuse the previous part's usage.
     try:
         result = _generate_group(script, grp, f, voice, model)
     except Exception as exc:
@@ -148,11 +149,14 @@ def generate_group(script, grp, f, voice, model):
 def _record_voice(model, started, ok, note):
     if VIDEO_DIR is None: return
     import usage
-    u = tts.LAST_USAGE if ok else {}
+    u = dict(tts.LAST_USAGE)  # Failed audio responses can still report billable usage.
     usage.record(VIDEO_DIR, provider="gemini_tts", model=model, role="voice", step=pathlib.Path(model).name,
                  seconds=time.time() - started, ok=ok, note=note,
                  input_tokens=u.get("promptTokenCount"), output_tokens=u.get("candidatesTokenCount"),
-                 reasoning_tokens=u.get("thoughtsTokenCount"))
+                 reasoning_tokens=u.get("thoughtsTokenCount"),
+                 cached_input_tokens=u.get("cachedContentTokenCount"),
+                 provider_usage=u.get("provider_usage"),
+                 provider_result_id=(u.get("provider_usage") or {}).get("interaction_id"))
 
 def _generate_group(script, grp, f, voice, model):
     def call(key):

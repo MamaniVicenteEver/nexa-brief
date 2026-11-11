@@ -6,7 +6,7 @@
       "trazos.ruta"
     ]
   },
-  "description": "Billetes simbólicos por una ruta geográfica; fase y rumbo puros de t, sin afirmar un valor comercial. Úsala para explicar recursos, pagos y cambios económicos.",
+  "description": "Ejemplo general de money.flow: 7 billetes con $ por una ruta configurable, sin línea de ruta visible. Úsalo para transferencias o ayuda económica entre lugares; adapta la ruta y la cantidad. Los billetes son simbólicos y no representan un importe. Úsala para explicar recursos, pagos y cambios económicos.",
   "duration": 7.35,
   "loop": true,
   "layer": 30,
@@ -69,6 +69,13 @@
         "max": 4
       },
       "description": "Multiplicador del tamaño visual."
+    },
+    "currencySymbol": {
+      "type": "string",
+      "default": "$",
+      "doc": "Símbolo del billete; una cadena vacía conserva el dibujo simbólico sin moneda.",
+      "range": null,
+      "description": "Símbolo del billete; una cadena vacía conserva el dibujo simbólico sin moneda."
     },
     "routeVisible": {
       "type": "boolean",
@@ -133,6 +140,7 @@
     ],
     "count": 7,
     "period": 5,
+    "currencySymbol": "$",
     "dur": 8,
     "out": 7,
     "note": "Flujo simbólico · rutas esquemáticas"

@@ -68,6 +68,7 @@ class SandboxItem:
     subcategory: str | None = None
     has_components: bool = False
     demo: bool = False
+    production_design: bool = False
 
 
 @dataclass

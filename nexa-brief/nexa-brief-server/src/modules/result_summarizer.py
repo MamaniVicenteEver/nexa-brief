@@ -46,9 +46,12 @@ def _to_summary(result: CopyResult, language: str) -> VideoSummary:
     )
 
 
-def _write_prepared(job: Job) -> Job:
+def _write_prepared(job: Job, niche_cfg: NicheConfig) -> Job:
     """Textos preparados en el Sandbox (src/core/draft_details.py): se usan tal cual, sin IA."""
     summary = job.artifacts.summary
+    category = summary.youtube_category_id or niche_cfg.publishing.youtube_category_id
+    summary = summary.model_copy(update={"youtube_category_id": category})
+    job = job.model_copy(update={"artifacts": job.artifacts.model_copy(update={"summary": summary})})
     logs_dir = (job.artifacts.log_dir or job.artifacts.output_dir / "logs")
     logs_dir.mkdir(parents=True, exist_ok=True)
     final_summary = {
@@ -66,7 +69,7 @@ async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
     t_start = time.monotonic()
     logger.info("result_summarizer_start", job_id=job.job_id)
     if job.artifacts.summary is not None and job.artifacts.summary.platform_copies:
-        return _write_prepared(job)
+        return _write_prepared(job, niche_cfg)
 
     language = await resolve_content_language(job)
     profile = copy_profile(niche_cfg)
@@ -75,7 +78,9 @@ async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
         result = await write_copy(ai, build_facts(job, niche_cfg), language_code, seed=job.job_id, profile=profile)
     except (StrategyError, CopyRenderError) as exc:
         raise AIValidationError(f"Copy generation failed: {exc}") from exc
-    summary = _to_summary(result, language_code)
+    summary = _to_summary(result, language_code).model_copy(
+        update={"youtube_category_id": niche_cfg.publishing.youtube_category_id}
+    )
 
     logs_dir = (job.artifacts.log_dir or job.artifacts.output_dir / "logs")
     logs_dir.mkdir(parents=True, exist_ok=True)

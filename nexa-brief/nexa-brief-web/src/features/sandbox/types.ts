@@ -32,6 +32,7 @@ export interface SandboxItem {
   notesFile: string | null;
   updatedAt: string | null;
   promotable: boolean;
+  productionDesign?: boolean;
   promoteBlocker: string | null;
 }
 

@@ -7,6 +7,25 @@
 
 ## 0. ¿Es este el camino?
 
+### Diseños nativos con estilos
+
+Si el diseño es `mapas-satelitales` o `atlas-en-movimiento`, usa esta ruta antes de los pasos del kit:
+consulta `GET /api/v1/showcase/designs/<id>/styles`, elige `estilo` y consulta `/production-guide?estilo=<id>`.
+Mapas ofrece `documentary` y `dynamic`; Atlas conserva sus cuatro estilos. Envía `estilo` con el pedido
+de producción o lote. El host crea el episodio en el perfil activo y un contexto privado breve:
+`work/agent-context/QUICK.md`, `index.json` y `entries/<id>.json`. Lee solo las piezas elegidas con sus
+fuentes, posiciones y tamaños. Trabaja con escena JSON; no uses los comandos ni beats del kit de abajo.
+Atlas reutiliza su generador universal y Mapas su motor compartido. El host hace voz/transcripción y
+conserva los pasos terminados al retomar. Revisión visual en ambos formatos antes de grabar.
+Contrato y ejemplos: `docs/estilos-produccion.md`. Para varios videos usa `../batch/SKILL.md`.
+
+En Atlas en Movimiento es obligatorio un único motor principal. El orquestador configura componentes con
+JSON; queda prohibido crear o copiar `engine/`, `components/`, un renderizador o `build_scene.py` dentro
+de una producción. Si falta un componente, se implementa en el motor compartido del diseño y se registra
+en Showcase; no se resuelve con código privado del episodio. El host valida la entrada y la ausencia de
+motores locales al terminar el agente y antes de aceptar la escena. Los episodios existentes se migran
+con comparación visual en 9:16 y 16:9 y preservando sus datos.
+
 | pedido | dónde | costo |
 |---|---|---|
 | Video con un diseño existente | **acá** → carpeta de producción `src/templates/<categoría>/<id>/` | bajo |

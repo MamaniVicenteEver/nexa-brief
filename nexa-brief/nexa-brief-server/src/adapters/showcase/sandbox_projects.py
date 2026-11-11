@@ -142,13 +142,22 @@ class SandboxProjectsAdapter:
         title = info.get('title') if isinstance(info.get('title'), str) and info['title'] else item['project_id']
         engine = info.get('engine') if isinstance(info.get('engine'), str) and info['engine'] else 'sandbox'
         description = info.get('summary') if isinstance(info.get('summary'), str) else ''
-        return dict(id=item['design_id'], name=title,
+        result = dict(id=item['design_id'], name=title,
                     category=item['folder'], state='prueba', family='sandbox',
                     engine_id=engine, description=description,
                     revision=catalog['revision'], preview_url=preview, promotable=False,
                     promote_blocker='Este proyecto continúa en Sandbox; su registro no lo promueve a producción.',
                     episodes=[dict(id=item['project_id'], title=title,
                                    design_id=item['design_id'], preview_url=preview)])
+        if isinstance(info.get('visual_styles'), dict):
+            result['visual_styles'] = info['visual_styles']
+        if info.get('is_new_design') is True:
+            from src.adapters.showcase.production import FilesystemDesignProduction
+            workflow = FilesystemDesignProduction(self.owner)
+            status = workflow.inspect(item['folder'], item['project_id'])
+            result['promotable'] = status['can_pass']
+            result['promote_blocker'] = None if status['can_pass'] else 'Prepara y valida el diseño para pasar a producción'
+        return result
 
     def list_designs(self):
         return [self._design(item) for item in self._enabled()]

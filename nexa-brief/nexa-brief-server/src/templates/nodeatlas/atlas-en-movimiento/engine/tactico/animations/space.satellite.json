@@ -1,0 +1,142 @@
+{
+  "name": "space.satellite",
+  "family": "space",
+  "estilo": {
+    "usa": [
+      "ucr2.aire"
+    ]
+  },
+  "description": "Satélite vectorial en órbita con haz, pulsos y constelación. Úsala como recurso visual en una escena.",
+  "duration": 12.35,
+  "loop": true,
+  "layer": 50,
+  "states": [],
+  "params": {
+    "label": {
+      "type": "string",
+      "default": "",
+      "doc": "Rótulo visible.",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "flag": {
+      "type": "string",
+      "default": "",
+      "doc": "Bandera u origen indicado en el rótulo.",
+      "range": null,
+      "description": "Bandera u origen indicado en el rótulo."
+    },
+    "via": {
+      "type": "array",
+      "doc": "Órbita como lista de [lon,lat].",
+      "default": null,
+      "range": null,
+      "description": "Órbita como lista de [lon,lat]."
+    },
+    "target": {
+      "type": "place",
+      "default": null,
+      "doc": "Lugar objetivo del haz.",
+      "range": null,
+      "description": "Lugar objetivo del haz."
+    },
+    "altitude": {
+      "type": "number",
+      "default": 2,
+      "min": 0,
+      "max": 20,
+      "doc": "Separación visual de la sombra.",
+      "range": {
+        "min": 0,
+        "max": 20
+      },
+      "description": "Separación visual de la sombra."
+    },
+    "beam": {
+      "type": "enum",
+      "values": [
+        "scan",
+        "link",
+        "none"
+      ],
+      "default": "scan",
+      "doc": "Modo de haz.",
+      "range": [
+        "scan",
+        "link",
+        "none"
+      ],
+      "description": "Modo de haz."
+    },
+    "pulses": {
+      "type": "boolean",
+      "default": true,
+      "doc": "Pulsos de radar o enlace.",
+      "range": null,
+      "description": "Pulsos de radar o enlace."
+    },
+    "count": {
+      "type": "number",
+      "default": 1,
+      "min": 1,
+      "max": 8,
+      "doc": "Satélites de la constelación.",
+      "range": {
+        "min": 1,
+        "max": 8
+      },
+      "description": "Satélites de la constelación."
+    },
+    "spread": {
+      "type": "number",
+      "default": 40,
+      "min": 0,
+      "max": 300,
+      "doc": "Separación en píxeles de diseño.",
+      "range": {
+        "min": 0,
+        "max": 300
+      },
+      "description": "Separación en píxeles de diseño."
+    }
+  },
+  "sfx": [
+    "sat-link"
+  ],
+  "example": {
+    "id": "demo-space-satellite",
+    "t": 0,
+    "type": "space.satellite",
+    "via": [
+      [
+        49.8,
+        28.5
+      ],
+      [
+        51,
+        28.2
+      ],
+      [
+        52.2,
+        27.8
+      ]
+    ],
+    "target": [
+      51,
+      27.2
+    ],
+    "beam": "scan",
+    "count": 2,
+    "spread": 60,
+    "label": "ENLACE SATELITAL",
+    "flag": "UA",
+    "dur": 12
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/space.satellite.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

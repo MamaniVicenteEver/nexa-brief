@@ -42,7 +42,8 @@ def review(video: ExplainerVideo) -> PackageReview | None:
     package = load_package(video.path)
     if package is None:
         return None
-    strategies = active_strategies(package.category)
+    from src.core.explainer.publishing.strategies import strategies_for_review
+    strategies = strategies_for_review(video)
     return PackageReview(package, strategies, check_package(package, strategies, video.path, video.duration_seconds))
 
 
@@ -65,7 +66,8 @@ def build(video: ExplainerVideo) -> BuildResult:
     package = load_package(video.path)
     if package is None:
         raise ValueError(f"{video.video_id}: publish.json no es un paquete v{SCHEMA_VERSION}; no hay nada que construir")
-    strategies = active_strategies(package.category)
+    from src.core.explainer.publishing.strategies import strategies_for_review
+    strategies = strategies_for_review(video)
     save_package(video.path, package, strategies)
     opening = OpeningResult(changed=False) if package.preserve_opening else apply_opening(video.path, package)
     # manifest.json copia título y textos de publicación (kit.py manifest); la

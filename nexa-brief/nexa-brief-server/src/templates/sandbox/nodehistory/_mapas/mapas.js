@@ -32,6 +32,8 @@
       },
     },
     async setup(c) {
+      const { applyStyle } = await import(BASE + "estilo.mjs");
+      await applyStyle(c, BASE);
       const { scene, T, loadImg } = c;
       const placesBase = await fetch(BASE + "places.json").then(r => r.ok ? r.json() : {}).catch(() => ({}));
       c.geo = Mapas.geo.create(scene, placesBase);
@@ -73,7 +75,7 @@
         g.drawImage(im, a[0], a[1], b[0] - a[0], b[1] - a[1]);
       }
       g.fillStyle = `rgba(4,10,20,${scene.dim ?? 0.3})`; g.fillRect(0, 0, W, H);
-      const ctx = { g, st, P, cam, geo: c.geo, img: c.img };
+      const ctx = { g, st, P, cam, geo: c.geo, img: c.img, style: c.style };
       // al empezar el cierre de canal se retira todo lo que no tiene `out` (el cierre queda limpio)
       const outOf = Ly => Math.min(Ly._out, c.outroAt ?? Infinity);
       const vis = Ly => t >= Ly._t && t < outOf(Ly) + (Ly.fadeOut ?? 0.35);
@@ -84,7 +86,7 @@
         g.save(); fn(ctx, Ly, t, alpha(Ly)); g.restore();
       }
       const vg = g.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.hypot(W, H) * 0.62);
-      vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(0,0,0,.55)"); g.fillStyle = vg; g.fillRect(0, 0, W, H);
+      vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, `rgba(0,0,0,${c.style?.map.vignette ?? 0.55})`); g.fillStyle = vg; g.fillRect(0, 0, W, H);
     },
   }).catch(e => console.error(e));
 

@@ -1,7 +1,7 @@
 {
   "design_id": "cara-a-cara",
   "schema_version": 1,
-  "revision": "bb173b2c8f2fd8969ce53ae863860d4b6c160b6626e6ad188c14fd69d11ddb00",
+  "revision": "f1cc36ae42bfbbdef0182c1ec1f1c1cc52e2b1b24ebc6b198f2a0861c63cd0b9",
   "entries": [
     {
       "id": "comparacion.dos-tarjetas",
@@ -85,7 +85,7 @@
           "timeline": []
         }
       },
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=comparacion.dos-tarjetas&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=comparacion.dos-tarjetas&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "comparacion.dos-tarjetas"
@@ -120,7 +120,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=comparacion.tarjeta-destacada&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=comparacion.tarjeta-destacada&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "comparacion.tarjeta-destacada"
@@ -141,7 +141,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=comparacion.titular&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=comparacion.titular&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "comparacion.titular"
@@ -167,7 +167,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=comparacion.subtitulos&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=comparacion.subtitulos&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "comparacion.subtitulos"
@@ -208,7 +208,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=comparacion.foto&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=comparacion.foto&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "comparacion.foto"
@@ -254,7 +254,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=comparacion.video&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=comparacion.video&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "comparacion.video"
@@ -274,7 +274,7 @@
         "titulo": "Crear un personaje para Cara a Cara",
         "objetivo": "Crear un personaje original compatible con Cara a Cara, con identidad editorial, personalidad, propuesta de voz, recursos visuales y poses reutilizables; no reescribir el motor.",
         "alcance": {
-          "plantilla": "sandbox/nodeaction/cara-a-cara",
+          "plantilla": "nodeactualidad/cara-a-cara",
           "raiz_rutas": "Todas las rutas siguientes son relativas a src/templates/ salvo que se indique otro origen.",
           "modo": "Este documento es una guía de trabajo, no un archivo que el motor cargue automáticamente. Sustituir los marcadores <id> y <descripcion> por los valores reales.",
           "necesita": [
@@ -285,11 +285,11 @@
           "si_falta_informacion": "Una petición como crear un personaje es suficiente: inventar una identidad original coherente, sin afirmar aprobación humana. Preguntar solo cuando exista una decisión imprescindible que no pueda inferirse. Si no hay proveedor o recurso necesario, informar el bloqueo y no simular resultados."
         },
         "referencias": {
-          "estilo_y_poses": "sandbox/nodeaction/cara-a-cara/assets/avatar/sheet-original.png",
-          "prompt_original": "sandbox/nodeaction/cara-a-cara/assets/avatar/generation-prompt.txt",
-          "ejemplo_recortes": "sandbox/nodeaction/cara-a-cara/assets/avatar/poses-index.json",
+          "estilo_y_poses": "nodeactualidad/cara-a-cara/assets/avatar/sheet-original.png",
+          "prompt_original": "nodeactualidad/cara-a-cara/assets/avatar/generation-prompt.txt",
+          "ejemplo_recortes": "nodeactualidad/cara-a-cara/assets/avatar/poses-index.json",
           "perfil_que_lee_el_motor": "sandbox/nodeaction/_pizarra/profiles/leo.json",
-          "escena_de_ejemplo": "sandbox/nodeaction/cara-a-cara/assets/scene.json",
+          "escena_de_ejemplo": "nodeactualidad/cara-a-cara/assets/scene.json",
           "nota": "La cuadrícula 4×4 de referencia contiene dos personajes, ocho poses por personaje. Sus coordenadas pertenecen exclusivamente a esa imagen: nunca copiarlas para una imagen nueva."
         },
         "principios_visuales": [
@@ -340,11 +340,11 @@
           "nota_lotes": "Un personaje inicial necesita ocho poses: se pueden generar en dos láminas 2×2 y registrar cada pose con su archivo y recorte. No producir una solicitud de imagen por pose. Véase crear-expresiones.json."
         },
         "contrato_de_integracion": {
-          "archivo_del_personaje": "sandbox/nodeaction/cara-a-cara/assets/avatar/characters/<id>/sheet.png",
+          "archivo_del_personaje": "nodeactualidad/cara-a-cara/assets/avatar/characters/<id>/sheet.png",
           "registro": "Agregar el personaje al perfil compartido solo después de validar identidad, láminas y recortes. El comando de registro y sincronización de tarjetas se documenta en assets/avatar/crear-expresiones.json; no reemplazar entradas existentes.",
-          "ruta_src": "La propiedad src se resuelve relativa a la URL de _pizarra/profiles/leo.json, no relativa a scene.json. Para la ubicación propuesta usar ../../cara-a-cara/assets/avatar/characters/<id>/sheet.png; verificar que la URL resuelta carga desde la aplicación.",
+          "ruta_src": "La propiedad src se resuelve relativa a la URL de _pizarra/profiles/leo.json, no relativa a scene.json. Para la ubicación propuesta usar ../../../../nodeactualidad/cara-a-cara/assets/avatar/characters/<id>/sheet.png; verificar que la URL resuelta carga desde la aplicación.",
           "forma_registro": {
-            "src": "../../cara-a-cara/assets/avatar/characters/<id>/sheet.png",
+            "src": "../../../../nodeactualidad/cara-a-cara/assets/avatar/characters/<id>/sheet.png",
             "poses": {
               "talk": "<recorte medido>",
               "point-left": "<recorte medido>",
@@ -391,7 +391,7 @@
           "Si un criterio falla, no afirmar que el personaje está integrado; corregir y volver a verificar o describir el bloqueo."
         ],
         "entrada_unica": {
-          "directorio": "sandbox/nodeaction/cara-a-cara/",
+          "directorio": "nodeactualidad/cara-a-cara/",
           "leer_primero": [
             "assets/avatar/crear-personaje.json",
             "assets/avatar/crear-expresiones.json"
@@ -533,7 +533,7 @@
         "titulo": "Crear un personaje para Cara a Cara",
         "objetivo": "Crear un personaje original compatible con Cara a Cara, con identidad editorial, personalidad, propuesta de voz, recursos visuales y poses reutilizables; no reescribir el motor.",
         "alcance": {
-          "plantilla": "sandbox/nodeaction/cara-a-cara",
+          "plantilla": "nodeactualidad/cara-a-cara",
           "raiz_rutas": "Todas las rutas siguientes son relativas a src/templates/ salvo que se indique otro origen.",
           "modo": "Este documento es una guía de trabajo, no un archivo que el motor cargue automáticamente. Sustituir los marcadores <id> y <descripcion> por los valores reales.",
           "necesita": [
@@ -544,11 +544,11 @@
           "si_falta_informacion": "Una petición como crear un personaje es suficiente: inventar una identidad original coherente, sin afirmar aprobación humana. Preguntar solo cuando exista una decisión imprescindible que no pueda inferirse. Si no hay proveedor o recurso necesario, informar el bloqueo y no simular resultados."
         },
         "referencias": {
-          "estilo_y_poses": "sandbox/nodeaction/cara-a-cara/assets/avatar/sheet-original.png",
-          "prompt_original": "sandbox/nodeaction/cara-a-cara/assets/avatar/generation-prompt.txt",
-          "ejemplo_recortes": "sandbox/nodeaction/cara-a-cara/assets/avatar/poses-index.json",
+          "estilo_y_poses": "nodeactualidad/cara-a-cara/assets/avatar/sheet-original.png",
+          "prompt_original": "nodeactualidad/cara-a-cara/assets/avatar/generation-prompt.txt",
+          "ejemplo_recortes": "nodeactualidad/cara-a-cara/assets/avatar/poses-index.json",
           "perfil_que_lee_el_motor": "sandbox/nodeaction/_pizarra/profiles/leo.json",
-          "escena_de_ejemplo": "sandbox/nodeaction/cara-a-cara/assets/scene.json",
+          "escena_de_ejemplo": "nodeactualidad/cara-a-cara/assets/scene.json",
           "nota": "La cuadrícula 4×4 de referencia contiene dos personajes, ocho poses por personaje. Sus coordenadas pertenecen exclusivamente a esa imagen: nunca copiarlas para una imagen nueva."
         },
         "principios_visuales": [
@@ -599,11 +599,11 @@
           "nota_lotes": "Un personaje inicial necesita ocho poses: se pueden generar en dos láminas 2×2 y registrar cada pose con su archivo y recorte. No producir una solicitud de imagen por pose. Véase crear-expresiones.json."
         },
         "contrato_de_integracion": {
-          "archivo_del_personaje": "sandbox/nodeaction/cara-a-cara/assets/avatar/characters/<id>/sheet.png",
+          "archivo_del_personaje": "nodeactualidad/cara-a-cara/assets/avatar/characters/<id>/sheet.png",
           "registro": "Agregar el personaje al perfil compartido solo después de validar identidad, láminas y recortes. El comando de registro y sincronización de tarjetas se documenta en assets/avatar/crear-expresiones.json; no reemplazar entradas existentes.",
-          "ruta_src": "La propiedad src se resuelve relativa a la URL de _pizarra/profiles/leo.json, no relativa a scene.json. Para la ubicación propuesta usar ../../cara-a-cara/assets/avatar/characters/<id>/sheet.png; verificar que la URL resuelta carga desde la aplicación.",
+          "ruta_src": "La propiedad src se resuelve relativa a la URL de _pizarra/profiles/leo.json, no relativa a scene.json. Para la ubicación propuesta usar ../../../../nodeactualidad/cara-a-cara/assets/avatar/characters/<id>/sheet.png; verificar que la URL resuelta carga desde la aplicación.",
           "forma_registro": {
-            "src": "../../cara-a-cara/assets/avatar/characters/<id>/sheet.png",
+            "src": "../../../../nodeactualidad/cara-a-cara/assets/avatar/characters/<id>/sheet.png",
             "poses": {
               "talk": "<recorte medido>",
               "point-left": "<recorte medido>",
@@ -650,7 +650,7 @@
           "Si un criterio falla, no afirmar que el personaje está integrado; corregir y volver a verificar o describir el bloqueo."
         ],
         "entrada_unica": {
-          "directorio": "sandbox/nodeaction/cara-a-cara/",
+          "directorio": "nodeactualidad/cara-a-cara/",
           "leer_primero": [
             "assets/avatar/crear-personaje.json",
             "assets/avatar/crear-expresiones.json"
@@ -798,7 +798,7 @@
         "tipo": "instrucciones-para-ia",
         "titulo": "Crear expresiones adicionales para un personaje",
         "objetivo": "Crear poses adicionales por lotes, conservar la identidad y agregarlas al Showcase y al motor para usarlas desde JSON.",
-        "entrada": "Esta guía se lee junto a assets/avatar/crear-personaje.json y la identidad del personaje en assets/avatar/identities/<id>.json o assets/avatar/characters/<id>/identity.json. Todas las rutas son relativas a sandbox/nodeaction/cara-a-cara/.",
+        "entrada": "Esta guía se lee junto a assets/avatar/crear-personaje.json y la identidad del personaje en assets/avatar/identities/<id>.json o assets/avatar/characters/<id>/identity.json. Todas las rutas son relativas a nodeactualidad/cara-a-cara/.",
         "formato": {
           "predeterminado": {
             "filas": 2,
@@ -823,7 +823,7 @@
         "modelo_de_pose": {
           "poses": {
             "nombre-expresion": {
-              "src": "../../cara-a-cara/assets/avatar/characters/<id>/expresiones/<lamina>.png",
+              "src": "../../../../nodeactualidad/cara-a-cara/assets/avatar/characters/<id>/expresiones/<lamina>.png",
               "crop": [
                 "x_normalizado",
                 "y_normalizado",
@@ -867,7 +867,7 @@
         "tipo": "instrucciones-para-ia",
         "titulo": "Crear expresiones adicionales para un personaje",
         "objetivo": "Crear poses adicionales por lotes, conservar la identidad y agregarlas al Showcase y al motor para usarlas desde JSON.",
-        "entrada": "Esta guía se lee junto a assets/avatar/crear-personaje.json y la identidad del personaje en assets/avatar/identities/<id>.json o assets/avatar/characters/<id>/identity.json. Todas las rutas son relativas a sandbox/nodeaction/cara-a-cara/.",
+        "entrada": "Esta guía se lee junto a assets/avatar/crear-personaje.json y la identidad del personaje en assets/avatar/identities/<id>.json o assets/avatar/characters/<id>/identity.json. Todas las rutas son relativas a nodeactualidad/cara-a-cara/.",
         "formato": {
           "predeterminado": {
             "filas": 2,
@@ -892,7 +892,7 @@
         "modelo_de_pose": {
           "poses": {
             "nombre-expresion": {
-              "src": "../../cara-a-cara/assets/avatar/characters/<id>/expresiones/<lamina>.png",
+              "src": "../../../../nodeactualidad/cara-a-cara/assets/avatar/characters/<id>/expresiones/<lamina>.png",
               "crop": [
                 "x_normalizado",
                 "y_normalizado",
@@ -955,9 +955,9 @@
         "archivos_existentes": {
           "referencia": "assets/avatar/sheet-original.png",
           "guia_personaje": "assets/avatar/crear-personaje.json",
-          "perfil_compartido": "../_pizarra/profiles/leo.json",
+          "perfil_compartido": "../../sandbox/nodeaction/_pizarra/profiles/leo.json",
           "escena": "assets/scene.json",
-          "origen_rutas": "Rutas relativas a sandbox/nodeaction/cara-a-cara/."
+          "origen_rutas": "Rutas relativas a nodeactualidad/cara-a-cara/."
         },
         "principios": [
           "Conservar rostro, cabello, tono de piel, identidad, proporciones y estilo del personaje de referencia; variar únicamente la vestimenta solicitada y mantenerla idéntica en todas las poses.",
@@ -1005,9 +1005,9 @@
         "archivos_existentes": {
           "referencia": "assets/avatar/sheet-original.png",
           "guia_personaje": "assets/avatar/crear-personaje.json",
-          "perfil_compartido": "../_pizarra/profiles/leo.json",
+          "perfil_compartido": "../../sandbox/nodeaction/_pizarra/profiles/leo.json",
           "escena": "assets/scene.json",
-          "origen_rutas": "Rutas relativas a sandbox/nodeaction/cara-a-cara/."
+          "origen_rutas": "Rutas relativas a nodeactualidad/cara-a-cara/."
         },
         "principios": [
           "Conservar rostro, cabello, tono de piel, identidad, proporciones y estilo del personaje de referencia; variar únicamente la vestimenta solicitada y mantenerla idéntica en todas las poses.",
@@ -1062,7 +1062,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=leo.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "leo.talk"
@@ -1093,7 +1093,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=leo.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "leo.point-left"
@@ -1124,7 +1124,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=leo.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "leo.point-right"
@@ -1155,7 +1155,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=leo.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "leo.think"
@@ -1186,7 +1186,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=leo.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "leo.explain"
@@ -1217,7 +1217,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=leo.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "leo.surprise"
@@ -1248,7 +1248,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=leo.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "leo.celebrate"
@@ -1279,7 +1279,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=leo.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=leo.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "leo.question"
@@ -1310,7 +1310,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=lia.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "lia.talk"
@@ -1341,7 +1341,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=lia.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "lia.point-left"
@@ -1372,7 +1372,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=lia.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "lia.point-right"
@@ -1403,7 +1403,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=lia.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "lia.think"
@@ -1434,7 +1434,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=lia.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "lia.explain"
@@ -1465,7 +1465,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=lia.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "lia.surprise"
@@ -1496,7 +1496,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=lia.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "lia.celebrate"
@@ -1527,7 +1527,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=lia.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=lia.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "lia.question"
@@ -1558,7 +1558,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nara.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nara.talk"
@@ -1589,7 +1589,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nara.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nara.point-left"
@@ -1620,7 +1620,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nara.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nara.point-right"
@@ -1651,7 +1651,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nara.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nara.think"
@@ -1682,7 +1682,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nara.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nara.explain"
@@ -1713,7 +1713,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nara.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nara.surprise"
@@ -1744,7 +1744,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nara.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nara.celebrate"
@@ -1775,7 +1775,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nara.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nara.question"
@@ -1806,7 +1806,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.esceptica&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nara.esceptica&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nara.esceptica"
@@ -1837,7 +1837,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.descubrimiento&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nara.descubrimiento&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nara.descubrimiento"
@@ -1868,7 +1868,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.preocupada&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nara.preocupada&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nara.preocupada"
@@ -1899,7 +1899,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nara.pulgar-arriba&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nara.pulgar-arriba&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nara.pulgar-arriba"
@@ -1930,7 +1930,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nora-vega.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nora-vega.talk"
@@ -1961,7 +1961,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nora-vega.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nora-vega.point-left"
@@ -1992,7 +1992,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nora-vega.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nora-vega.point-right"
@@ -2023,7 +2023,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nora-vega.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nora-vega.think"
@@ -2054,7 +2054,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nora-vega.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nora-vega.explain"
@@ -2085,7 +2085,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nora-vega.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nora-vega.surprise"
@@ -2116,7 +2116,7 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nora-vega.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nora-vega.celebrate"
@@ -2147,10 +2147,258 @@
         }
       },
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase.html?only=nora-vega.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=nora-vega.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
       "preview_kind": "iframe",
       "data": {
         "native_name": "nora-vega.question"
+      }
+    },
+    {
+      "id": "alma.talk",
+      "name": "alma.talk",
+      "label": "alma.talk",
+      "kind": "component",
+      "summary": "Alma: pose talk.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "alma",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "talk",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=alma.talk&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "alma.talk"
+      }
+    },
+    {
+      "id": "alma.point-left",
+      "name": "alma.point-left",
+      "label": "alma.point-left",
+      "kind": "component",
+      "summary": "Alma: pose point-left.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "alma",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "point-left",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=alma.point-left&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "alma.point-left"
+      }
+    },
+    {
+      "id": "alma.point-right",
+      "name": "alma.point-right",
+      "label": "alma.point-right",
+      "kind": "component",
+      "summary": "Alma: pose point-right.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "alma",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "point-right",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=alma.point-right&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "alma.point-right"
+      }
+    },
+    {
+      "id": "alma.think",
+      "name": "alma.think",
+      "label": "alma.think",
+      "kind": "component",
+      "summary": "Alma: pose think.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "alma",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "think",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=alma.think&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "alma.think"
+      }
+    },
+    {
+      "id": "alma.explain",
+      "name": "alma.explain",
+      "label": "alma.explain",
+      "kind": "component",
+      "summary": "Alma: pose explain.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "alma",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "explain",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=alma.explain&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "alma.explain"
+      }
+    },
+    {
+      "id": "alma.surprise",
+      "name": "alma.surprise",
+      "label": "alma.surprise",
+      "kind": "component",
+      "summary": "Alma: pose surprise.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "alma",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "surprise",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=alma.surprise&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "alma.surprise"
+      }
+    },
+    {
+      "id": "alma.celebrate",
+      "name": "alma.celebrate",
+      "label": "alma.celebrate",
+      "kind": "component",
+      "summary": "Alma: pose celebrate.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "alma",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "celebrate",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=alma.celebrate&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "alma.celebrate"
+      }
+    },
+    {
+      "id": "alma.question",
+      "name": "alma.question",
+      "label": "alma.question",
+      "kind": "component",
+      "summary": "Alma: pose question.",
+      "tags": [],
+      "params": {
+        "character": {
+          "type": "string",
+          "default": "alma",
+          "doc": "Identificador del personaje."
+        },
+        "pose": {
+          "type": "string",
+          "default": "question",
+          "doc": "Pose en shots o avatar.timeline."
+        },
+        "at": {
+          "type": "number|string",
+          "default": 0,
+          "doc": "Segundo o ancla de voz."
+        }
+      },
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase.html?only=alma.question&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+      "preview_kind": "iframe",
+      "data": {
+        "native_name": "alma.question"
       }
     },
     {
@@ -2162,7 +2410,7 @@
       "tags": [],
       "params": {},
       "example": {
-        "version": 1,
+        "version": 2,
         "estado": "propuesta_editorial",
         "plantilla": "cara-a-cara",
         "idioma": "español latinoamericano",
@@ -2172,8 +2420,8 @@
         ],
         "id": "leo",
         "nombre": "Leo",
-        "tema": "Comparaciones de tecnología, historia y decisiones cotidianas",
-        "objetivo": "Presentar dos opciones o perspectivas con hechos claros para que la audiencia forme su propia opinión.",
+        "tema": "Tecnología e historia; comparativas",
+        "objetivo": "Comparar tecnologías y acontecimientos históricos con hechos verificables, contexto y diferencias útiles.",
         "publico": "Personas curiosas que prefieren explicaciones breves y comprensibles.",
         "personalidad": [
           "curioso",
@@ -2181,23 +2429,61 @@
           "claro",
           "equilibrado"
         ],
-        "estilo": "Conversación amistosa, preguntas directas y explicaciones con matices; evita solemnidad y conclusiones engañosas.",
+        "estilo": "Entrada directa con un hecho o una pregunta específica. Explica diferencias con ejemplos concretos y matices; no presenta su nombre ni el canal.",
         "voz": {
-          "estado": "perfil_existente_aprobado",
+          "estado": "timbre_seleccionado_usuario",
           "proveedor": "Gemini TTS",
           "nombre": "Puck",
           "modelo": "gemini-3.8-flash-tts",
           "ritmo": 0.9,
-          "archivo_perfil": "../../_pizarra/profiles/leo.json",
+          "archivo_perfil": "src/templates/sandbox/nodeaction/_pizarra/profiles/leo.json",
           "direccion": "Usar la dirección vocal aprobada del perfil de Leo, sin sustituirla.",
-          "muestra": "assets/song.mp3",
-          "subtitulos": "assets/avatar/identities/leo-muestra.vtt"
-        }
+          "muestra": "assets/avatar/identities/voice-selected-puck-20261109.mp3",
+          "subtitulos": "assets/avatar/identities/voice-selected-puck-20261109.vtt",
+          "aprobada": true,
+          "alcance_aprobacion": "Timbre vocal elegido por el usuario; la muestra es una audición anterior, no el guion de producción.",
+          "texto": "Hola, soy Leo. Me gusta poner las ideas cara a cara y hacer preguntas que parecen simples. ¿Qué cambia de verdad entre dos tecnologías? ¿Por qué una decisión marcó la historia? Vamos a mirar las diferencias, entender el contexto y comparar los hechos, para que tú saques tus propias conclusiones.",
+          "nota_muestra": "Audición de timbre seleccionada. Incluye presentación y tema anterior; las producciones nuevas entran directamente al tema."
+        },
+        "editorial": {
+          "audience_stage": "discovery",
+          "spoken_self_introduction": false,
+          "opening": "fact_or_specific_topic_question",
+          "forbidden_phrases": [
+            "hola, soy",
+            "bienvenidos",
+            "en este canal",
+            "mi compromiso es",
+            "te cuento lo que pasa en el mundo"
+          ],
+          "closing_options": [
+            "Síguenos para más.",
+            "Gracias por acompañarnos."
+          ],
+          "max_closing_words": 6
+        },
+        "piloto_seleccionado": true,
+        "historial_voz": [
+          {
+            "version": 1,
+            "voz": {
+              "estado": "perfil_existente_aprobado",
+              "proveedor": "Gemini TTS",
+              "nombre": "Puck",
+              "modelo": "gemini-3.8-flash-tts",
+              "ritmo": 0.9,
+              "archivo_perfil": "src/templates/sandbox/nodeaction/_pizarra/profiles/leo.json",
+              "direccion": "Usar la dirección vocal aprobada del perfil de Leo, sin sustituirla.",
+              "muestra": "assets/song.mp3",
+              "subtitulos": "assets/avatar/identities/leo-muestra.vtt"
+            }
+          }
+        ]
       },
       "preview_url": null,
       "preview_kind": "json",
       "data": {
-        "version": 1,
+        "version": 2,
         "estado": "propuesta_editorial",
         "plantilla": "cara-a-cara",
         "idioma": "español latinoamericano",
@@ -2207,8 +2493,8 @@
         ],
         "id": "leo",
         "nombre": "Leo",
-        "tema": "Comparaciones de tecnología, historia y decisiones cotidianas",
-        "objetivo": "Presentar dos opciones o perspectivas con hechos claros para que la audiencia forme su propia opinión.",
+        "tema": "Tecnología e historia; comparativas",
+        "objetivo": "Comparar tecnologías y acontecimientos históricos con hechos verificables, contexto y diferencias útiles.",
         "publico": "Personas curiosas que prefieren explicaciones breves y comprensibles.",
         "personalidad": [
           "curioso",
@@ -2216,18 +2502,56 @@
           "claro",
           "equilibrado"
         ],
-        "estilo": "Conversación amistosa, preguntas directas y explicaciones con matices; evita solemnidad y conclusiones engañosas.",
+        "estilo": "Entrada directa con un hecho o una pregunta específica. Explica diferencias con ejemplos concretos y matices; no presenta su nombre ni el canal.",
         "voz": {
-          "estado": "perfil_existente_aprobado",
+          "estado": "timbre_seleccionado_usuario",
           "proveedor": "Gemini TTS",
           "nombre": "Puck",
           "modelo": "gemini-3.8-flash-tts",
           "ritmo": 0.9,
-          "archivo_perfil": "../../_pizarra/profiles/leo.json",
+          "archivo_perfil": "src/templates/sandbox/nodeaction/_pizarra/profiles/leo.json",
           "direccion": "Usar la dirección vocal aprobada del perfil de Leo, sin sustituirla.",
-          "muestra": "assets/song.mp3",
-          "subtitulos": "assets/avatar/identities/leo-muestra.vtt"
-        }
+          "muestra": "assets/avatar/identities/voice-selected-puck-20261109.mp3",
+          "subtitulos": "assets/avatar/identities/voice-selected-puck-20261109.vtt",
+          "aprobada": true,
+          "alcance_aprobacion": "Timbre vocal elegido por el usuario; la muestra es una audición anterior, no el guion de producción.",
+          "texto": "Hola, soy Leo. Me gusta poner las ideas cara a cara y hacer preguntas que parecen simples. ¿Qué cambia de verdad entre dos tecnologías? ¿Por qué una decisión marcó la historia? Vamos a mirar las diferencias, entender el contexto y comparar los hechos, para que tú saques tus propias conclusiones.",
+          "nota_muestra": "Audición de timbre seleccionada. Incluye presentación y tema anterior; las producciones nuevas entran directamente al tema."
+        },
+        "editorial": {
+          "audience_stage": "discovery",
+          "spoken_self_introduction": false,
+          "opening": "fact_or_specific_topic_question",
+          "forbidden_phrases": [
+            "hola, soy",
+            "bienvenidos",
+            "en este canal",
+            "mi compromiso es",
+            "te cuento lo que pasa en el mundo"
+          ],
+          "closing_options": [
+            "Síguenos para más.",
+            "Gracias por acompañarnos."
+          ],
+          "max_closing_words": 6
+        },
+        "piloto_seleccionado": true,
+        "historial_voz": [
+          {
+            "version": 1,
+            "voz": {
+              "estado": "perfil_existente_aprobado",
+              "proveedor": "Gemini TTS",
+              "nombre": "Puck",
+              "modelo": "gemini-3.8-flash-tts",
+              "ritmo": 0.9,
+              "archivo_perfil": "src/templates/sandbox/nodeaction/_pizarra/profiles/leo.json",
+              "direccion": "Usar la dirección vocal aprobada del perfil de Leo, sin sustituirla.",
+              "muestra": "assets/song.mp3",
+              "subtitulos": "assets/avatar/identities/leo-muestra.vtt"
+            }
+          }
+        ]
       }
     },
     {
@@ -2318,64 +2642,136 @@
       "tags": [],
       "params": {},
       "example": {
-        "version": 1,
+        "version": 2,
         "estado": "propuesta_editorial",
         "plantilla": "cara-a-cara",
         "idioma": "español latinoamericano",
         "id": "nara",
         "nombre": "Nara",
-        "tema": "Ciencia cotidiana y decisiones ambientales",
-        "objetivo": "Comparar soluciones y explicar sus consecuencias con datos y matices, para que la audiencia decida informada.",
+        "tema": "Espacio, astronomía y datos interesantes del universo",
+        "objetivo": "Explicar fenómenos y descubrimientos del espacio con datos verificables, analogías claras y asombro moderado; distinguir observaciones de hipótesis.",
         "publico": "Personas curiosas sin conocimientos técnicos previos.",
         "personalidad": [
+          "cálida",
           "curiosa",
           "serena",
-          "ingeniosa",
           "rigurosa",
-          "respetuosa"
+          "cercana"
         ],
-        "estilo": "Conversación cálida y visual; plantea preguntas concretas, distingue evidencia de incertidumbre y evita culpabilizar o prometer soluciones perfectas.",
+        "estilo": "Entrada directa con un dato interesante del espacio o una pregunta específica. Explica escalas y fenómenos sin exageración; distingue datos confirmados, estimaciones e incertidumbres. No presenta su nombre ni el canal.",
         "apariencia": "Mujer adulta de piel morena, cabello oscuro rizado recogido alto, aros pequeños, sobrecamisa verde azulado, camiseta amarillo claro, pantalón azul marino y zapatillas blancas.",
         "voz": {
-          "estado": "muestra_generada_sin_aprobacion",
+          "estado": "timbre_seleccionado_usuario",
           "proveedor": "Gemini TTS",
-          "nombre": "Kore",
+          "nombre": "Sulafat",
           "modelo": "gemini-3.8-flash-tts",
-          "direccion": "Español latinoamericano, cálido y claro, curiosidad serena, energía moderada, pausas naturales; sin imitar a personas reales.",
-          "muestra": "assets/avatar/characters/nara/voice-sample.mp3",
-          "subtitulos": "assets/avatar/characters/nara/voice-sample.vtt"
-        }
+          "direccion": "Español latinoamericano natural, cálido y claro, curiosidad serena, pausas breves; sin imitar a personas reales.",
+          "muestra": "assets/avatar/characters/nara/voice-selected-sulafat-20261109.mp3",
+          "subtitulos": "assets/avatar/characters/nara/voice-selected-sulafat-20261109.vtt",
+          "aprobada": true,
+          "alcance_aprobacion": "Timbre vocal elegido por el usuario; la muestra es una audición anterior, no el guion de producción.",
+          "texto": "Hola, soy Nara. La ciencia también está en las decisiones de todos los días: cómo nos movemos, qué consumimos y cómo cuidamos nuestro entorno. Aquí vamos a mirar los datos sin perder de vista sus límites. Con preguntas concretas, ejemplos cercanos y sin prometer soluciones perfectas, podemos entender mejor nuestras opciones.",
+          "nota_muestra": "Audición de timbre seleccionada. Incluye presentación y tema anterior; las producciones nuevas entran directamente al tema."
+        },
+        "editorial": {
+          "audience_stage": "discovery",
+          "spoken_self_introduction": false,
+          "opening": "fact_or_specific_topic_question",
+          "forbidden_phrases": [
+            "hola, soy",
+            "bienvenidos",
+            "en este canal",
+            "mi compromiso es",
+            "te cuento lo que pasa en el mundo"
+          ],
+          "closing_options": [
+            "Síguenos para más.",
+            "Gracias por acompañarnos."
+          ],
+          "max_closing_words": 6
+        },
+        "piloto_seleccionado": true,
+        "historial_voz": [
+          {
+            "version": 1,
+            "voz": {
+              "estado": "muestra_generada_sin_aprobacion",
+              "proveedor": "Gemini TTS",
+              "nombre": "Kore",
+              "modelo": "gemini-3.8-flash-tts",
+              "direccion": "Español latinoamericano, cálido y claro, curiosidad serena, energía moderada, pausas naturales; sin imitar a personas reales.",
+              "muestra": "assets/avatar/characters/nara/voice-sample.mp3",
+              "subtitulos": "assets/avatar/characters/nara/voice-sample.vtt"
+            }
+          }
+        ]
       },
       "preview_url": null,
       "preview_kind": "json",
       "data": {
-        "version": 1,
+        "version": 2,
         "estado": "propuesta_editorial",
         "plantilla": "cara-a-cara",
         "idioma": "español latinoamericano",
         "id": "nara",
         "nombre": "Nara",
-        "tema": "Ciencia cotidiana y decisiones ambientales",
-        "objetivo": "Comparar soluciones y explicar sus consecuencias con datos y matices, para que la audiencia decida informada.",
+        "tema": "Espacio, astronomía y datos interesantes del universo",
+        "objetivo": "Explicar fenómenos y descubrimientos del espacio con datos verificables, analogías claras y asombro moderado; distinguir observaciones de hipótesis.",
         "publico": "Personas curiosas sin conocimientos técnicos previos.",
         "personalidad": [
+          "cálida",
           "curiosa",
           "serena",
-          "ingeniosa",
           "rigurosa",
-          "respetuosa"
+          "cercana"
         ],
-        "estilo": "Conversación cálida y visual; plantea preguntas concretas, distingue evidencia de incertidumbre y evita culpabilizar o prometer soluciones perfectas.",
+        "estilo": "Entrada directa con un dato interesante del espacio o una pregunta específica. Explica escalas y fenómenos sin exageración; distingue datos confirmados, estimaciones e incertidumbres. No presenta su nombre ni el canal.",
         "apariencia": "Mujer adulta de piel morena, cabello oscuro rizado recogido alto, aros pequeños, sobrecamisa verde azulado, camiseta amarillo claro, pantalón azul marino y zapatillas blancas.",
         "voz": {
-          "estado": "muestra_generada_sin_aprobacion",
+          "estado": "timbre_seleccionado_usuario",
           "proveedor": "Gemini TTS",
-          "nombre": "Kore",
+          "nombre": "Sulafat",
           "modelo": "gemini-3.8-flash-tts",
-          "direccion": "Español latinoamericano, cálido y claro, curiosidad serena, energía moderada, pausas naturales; sin imitar a personas reales.",
-          "muestra": "assets/avatar/characters/nara/voice-sample.mp3",
-          "subtitulos": "assets/avatar/characters/nara/voice-sample.vtt"
-        }
+          "direccion": "Español latinoamericano natural, cálido y claro, curiosidad serena, pausas breves; sin imitar a personas reales.",
+          "muestra": "assets/avatar/characters/nara/voice-selected-sulafat-20261109.mp3",
+          "subtitulos": "assets/avatar/characters/nara/voice-selected-sulafat-20261109.vtt",
+          "aprobada": true,
+          "alcance_aprobacion": "Timbre vocal elegido por el usuario; la muestra es una audición anterior, no el guion de producción.",
+          "texto": "Hola, soy Nara. La ciencia también está en las decisiones de todos los días: cómo nos movemos, qué consumimos y cómo cuidamos nuestro entorno. Aquí vamos a mirar los datos sin perder de vista sus límites. Con preguntas concretas, ejemplos cercanos y sin prometer soluciones perfectas, podemos entender mejor nuestras opciones.",
+          "nota_muestra": "Audición de timbre seleccionada. Incluye presentación y tema anterior; las producciones nuevas entran directamente al tema."
+        },
+        "editorial": {
+          "audience_stage": "discovery",
+          "spoken_self_introduction": false,
+          "opening": "fact_or_specific_topic_question",
+          "forbidden_phrases": [
+            "hola, soy",
+            "bienvenidos",
+            "en este canal",
+            "mi compromiso es",
+            "te cuento lo que pasa en el mundo"
+          ],
+          "closing_options": [
+            "Síguenos para más.",
+            "Gracias por acompañarnos."
+          ],
+          "max_closing_words": 6
+        },
+        "piloto_seleccionado": true,
+        "historial_voz": [
+          {
+            "version": 1,
+            "voz": {
+              "estado": "muestra_generada_sin_aprobacion",
+              "proveedor": "Gemini TTS",
+              "nombre": "Kore",
+              "modelo": "gemini-3.8-flash-tts",
+              "direccion": "Español latinoamericano, cálido y claro, curiosidad serena, energía moderada, pausas naturales; sin imitar a personas reales.",
+              "muestra": "assets/avatar/characters/nara/voice-sample.mp3",
+              "subtitulos": "assets/avatar/characters/nara/voice-sample.vtt"
+            }
+          }
+        ]
       }
     },
     {
@@ -2473,6 +2869,153 @@
             "Los recortes se midieron sobre las láminas nuevas; no se copiaron coordenadas de Leo ni Lía."
           ]
         }
+      }
+    },
+    {
+      "id": "personajes.identidad-alma",
+      "name": "personajes.identidad-alma",
+      "label": "personajes.identidad-alma",
+      "kind": "character",
+      "summary": "Identidad editorial y voz de Alma.",
+      "tags": [],
+      "params": {},
+      "example": {
+        "version": 1,
+        "estado": "piloto_editorial",
+        "plantilla": "cara-a-cara",
+        "idioma": "español latinoamericano",
+        "id": "alma",
+        "nombre": "Alma",
+        "tema": "Actualidad internacional y geopolítica",
+        "objetivo": "Explicar qué ocurre, por qué importa y qué está confirmado, con fuentes y contexto breve.",
+        "publico": "Personas que quieren comprender la actualidad mundial en videos verticales breves.",
+        "personalidad": [
+          "serena",
+          "precisa",
+          "cercana",
+          "curiosa",
+          "rigurosa"
+        ],
+        "estilo": "Comienza directamente con el hecho principal. Frases claras, contexto concreto y atribución de afirmaciones; distingue hechos, declaraciones e incertidumbre. Sin saludo, nombre ni discurso del canal.",
+        "apariencia": "Presentadora adulta latina de piel morena cálida, cabello oscuro ondulado a los hombros, chaqueta coral, camiseta marfil, pantalón azul marino y zapatillas blancas; ilustración 2D con contorno oscuro expresivo.",
+        "editorial": {
+          "audience_stage": "discovery",
+          "branding_mode": "implicit",
+          "spoken_self_introduction": false,
+          "opening": "fact_or_specific_topic_question",
+          "forbidden_phrases": [
+            "hola, soy",
+            "bienvenidos",
+            "en este canal",
+            "mi compromiso es",
+            "te cuento lo que pasa en el mundo"
+          ],
+          "closing_options": [
+            "Síguenos para más.",
+            "Gracias por acompañarnos."
+          ],
+          "max_closing_words": 6,
+          "brand_story_policy": "Reservar presentaciones personales para episodios de comunidad expresamente solicitados.",
+          "sensitive_topics": "Sin humor ante víctimas ni celebración automática en noticias sensibles.",
+          "sources_required": true
+        },
+        "voz": {
+          "estado": "timbre_elegido_por_usuario",
+          "proveedor": "Gemini TTS",
+          "nombre": "Sulafat",
+          "modelo": "gemini-3.8-flash-tts",
+          "direccion": "Voz femenina adulta, español latinoamericano neutro, cálida, clara y serena; conversación precisa, ritmo moderado y pausas naturales. No imitar personas reales. Sin introducciones añadidas.",
+          "muestra": "assets/avatar/characters/alma/voice-selected-sulafat-20261109.mp3",
+          "subtitulos": "assets/avatar/characters/alma/voice-selected-sulafat-20261109.vtt",
+          "muestra_tipo": "Audición de timbre con presentación; no es el guion de producción.",
+          "muestra_directa": "assets/avatar/characters/alma/voice-direct-20261109.mp3",
+          "nota": "El usuario eligió la voz Sulafat. La ilustración y los episodios son pruebas; no implican publicación ni aprobación de todo guion.",
+          "aprobada": true,
+          "texto": "Hola, soy Alma. Te cuento lo que pasa en el mundo con calma y contexto. Primero, los hechos confirmados. Después, por qué importan y qué falta por saber. Mi compromiso es ayudarte a entender las noticias, con claridad, sin exageraciones y con fuentes que puedas consultar.",
+          "nota_muestra": "Audición de timbre seleccionada. Incluye presentación; las producciones nuevas entran directamente al tema."
+        },
+        "visual": {
+          "laminas": [
+            "poses-01.png",
+            "poses-02.png"
+          ],
+          "procedencia": "Generadas con herramienta integrada image_gen el 9 de noviembre de 2026; segunda hoja usa primera como referencia de identidad.",
+          "revisado": "Dos hojas completas inspeccionadas; recortes medidos sobre cada PNG real, sin ampliar ni copiar coordenadas.",
+          "modelo": null,
+          "tokens": null,
+          "cost_usd": null
+        },
+        "piloto_seleccionado": true
+      },
+      "preview_url": null,
+      "preview_kind": "json",
+      "data": {
+        "version": 1,
+        "estado": "piloto_editorial",
+        "plantilla": "cara-a-cara",
+        "idioma": "español latinoamericano",
+        "id": "alma",
+        "nombre": "Alma",
+        "tema": "Actualidad internacional y geopolítica",
+        "objetivo": "Explicar qué ocurre, por qué importa y qué está confirmado, con fuentes y contexto breve.",
+        "publico": "Personas que quieren comprender la actualidad mundial en videos verticales breves.",
+        "personalidad": [
+          "serena",
+          "precisa",
+          "cercana",
+          "curiosa",
+          "rigurosa"
+        ],
+        "estilo": "Comienza directamente con el hecho principal. Frases claras, contexto concreto y atribución de afirmaciones; distingue hechos, declaraciones e incertidumbre. Sin saludo, nombre ni discurso del canal.",
+        "apariencia": "Presentadora adulta latina de piel morena cálida, cabello oscuro ondulado a los hombros, chaqueta coral, camiseta marfil, pantalón azul marino y zapatillas blancas; ilustración 2D con contorno oscuro expresivo.",
+        "editorial": {
+          "audience_stage": "discovery",
+          "branding_mode": "implicit",
+          "spoken_self_introduction": false,
+          "opening": "fact_or_specific_topic_question",
+          "forbidden_phrases": [
+            "hola, soy",
+            "bienvenidos",
+            "en este canal",
+            "mi compromiso es",
+            "te cuento lo que pasa en el mundo"
+          ],
+          "closing_options": [
+            "Síguenos para más.",
+            "Gracias por acompañarnos."
+          ],
+          "max_closing_words": 6,
+          "brand_story_policy": "Reservar presentaciones personales para episodios de comunidad expresamente solicitados.",
+          "sensitive_topics": "Sin humor ante víctimas ni celebración automática en noticias sensibles.",
+          "sources_required": true
+        },
+        "voz": {
+          "estado": "timbre_elegido_por_usuario",
+          "proveedor": "Gemini TTS",
+          "nombre": "Sulafat",
+          "modelo": "gemini-3.8-flash-tts",
+          "direccion": "Voz femenina adulta, español latinoamericano neutro, cálida, clara y serena; conversación precisa, ritmo moderado y pausas naturales. No imitar personas reales. Sin introducciones añadidas.",
+          "muestra": "assets/avatar/characters/alma/voice-selected-sulafat-20261109.mp3",
+          "subtitulos": "assets/avatar/characters/alma/voice-selected-sulafat-20261109.vtt",
+          "muestra_tipo": "Audición de timbre con presentación; no es el guion de producción.",
+          "muestra_directa": "assets/avatar/characters/alma/voice-direct-20261109.mp3",
+          "nota": "El usuario eligió la voz Sulafat. La ilustración y los episodios son pruebas; no implican publicación ni aprobación de todo guion.",
+          "aprobada": true,
+          "texto": "Hola, soy Alma. Te cuento lo que pasa en el mundo con calma y contexto. Primero, los hechos confirmados. Después, por qué importan y qué falta por saber. Mi compromiso es ayudarte a entender las noticias, con claridad, sin exageraciones y con fuentes que puedas consultar.",
+          "nota_muestra": "Audición de timbre seleccionada. Incluye presentación; las producciones nuevas entran directamente al tema."
+        },
+        "visual": {
+          "laminas": [
+            "poses-01.png",
+            "poses-02.png"
+          ],
+          "procedencia": "Generadas con herramienta integrada image_gen el 9 de noviembre de 2026; segunda hoja usa primera como referencia de identidad.",
+          "revisado": "Dos hojas completas inspeccionadas; recortes medidos sobre cada PNG real, sin ampliar ni copiar coordenadas.",
+          "modelo": null,
+          "tokens": null,
+          "cost_usd": null
+        },
+        "piloto_seleccionado": true
       }
     },
     {
@@ -2788,7 +3331,7 @@
       "tags": [],
       "params": {},
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase/thumbs/leo.talk.jpg",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase/thumbs/leo.talk.jpg",
       "preview_kind": "image",
       "data": {
         "name": "Leo"
@@ -2803,7 +3346,7 @@
       "tags": [],
       "params": {},
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase/thumbs/lia.talk.jpg",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase/thumbs/lia.talk.jpg",
       "preview_kind": "image",
       "data": {
         "name": "Lía"
@@ -2818,7 +3361,7 @@
       "tags": [],
       "params": {},
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase/thumbs/nara.talk.jpg",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase/thumbs/nara.talk.jpg",
       "preview_kind": "image",
       "data": {
         "name": "Nara"
@@ -2833,10 +3376,25 @@
       "tags": [],
       "params": {},
       "example": {},
-      "preview_url": "/api/v1/explainer/files/sandbox/nodeaction/cara-a-cara/showcase/thumbs/nora-vega.talk.jpg",
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase/thumbs/nora-vega.talk.jpg",
       "preview_kind": "image",
       "data": {
         "name": "Nora Vega"
+      }
+    },
+    {
+      "id": "sprite-112850868fd082f1e47c9920",
+      "name": "Alma",
+      "label": "Alma",
+      "kind": "character",
+      "summary": "",
+      "tags": [],
+      "params": {},
+      "example": {},
+      "preview_url": "/api/v1/explainer/files/bundled/nodeactualidad/cara-a-cara/showcase/thumbs/alma.talk.jpg",
+      "preview_kind": "image",
+      "data": {
+        "name": "Alma"
       }
     }
   ]

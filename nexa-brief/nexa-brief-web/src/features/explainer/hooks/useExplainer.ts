@@ -111,7 +111,7 @@ export function useExplainerRecordings() {
 export function useCaptureThumbnails() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (videoId: string) => captureThumbnails(videoId),
+    mutationFn: (videoId: string) => captureThumbnails(videoId, true),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: VIDEOS_KEY }),
   });
 }

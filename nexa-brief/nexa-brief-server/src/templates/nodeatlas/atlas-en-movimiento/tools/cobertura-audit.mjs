@@ -25,15 +25,16 @@ if (types.length < minTypes) errs.push(`solo ${types.length} tipos de componente
 for (const need of ['movimiento', 'mapa_marca'].concat(ligero ? [] : ['imagen_documento']))
   if (!(fam[need] || []).length) errs.push(`ninguna pieza de la familia "${need}"`);
 
-const media = (fam.imagen_documento || []).length, needMedia = ligero ? 0 : Math.floor(total / 45);
+const media = (fam.imagen_documento || []).filter(i => ((i.out ?? i.t + i.dur) - i.t) <= 60).length, needMedia = ligero ? 0 : Math.floor(total / 45);
 if (media < needMedia) errs.push(`imágenes/documentos: ${media} (mínimo ${needMedia} = 1 cada 45 s)`);
 
 // ningún tramo de 20 s sin imagen o movimiento
-const active = items.filter(i => famOf(i.type) === 'imagen_documento' || famOf(i.type) === 'movimiento').map(i => [i.t, i.out ?? i.t + i.dur]);
+// Las piezas que duran > 60 s (retratos de presidentes, banderas de fondo) son ambiente: no cuentan como actividad.
+const active = items.filter(i => (famOf(i.type) === 'imagen_documento' || famOf(i.type) === 'movimiento') && ((i.out ?? i.t + i.dur) - i.t) <= 60).map(i => [i.t, i.out ?? i.t + i.dur]);
 const gaps = []; let cur = 0;
 for (const [a, b] of active.sort((x, y) => x[0] - y[0])) { if (a - cur > 20) gaps.push([cur, a]); cur = Math.max(cur, b); }
 if (total - cur > 20) gaps.push([cur, total]);
-for (const [a, b] of gaps) errs.push(`tramo sin imagen ni movimiento: ${a.toFixed(0)}–${b.toFixed(0)} s (${(b - a).toFixed(0)} s)`);
+for (const [a, b] of gaps) errs.push(`tramo sin imagen ni movimiento: ${a.toFixed(0)}–${b.toFixed(0)} s (${(b - a).toFixed(0)} s)${script ? ' · segmentos ' + (script.segments||[]).filter(s=>s.plan).map(s=>s.id).join(',').slice(0,0) : ''}`);
 
 // el plan del guion debe estar cumplido
 if (script) {

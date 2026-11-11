@@ -16,12 +16,12 @@ from src.core.showcase.ports import ShowcaseInvalid
 _SOURCES = {
     "atlas-en-movimiento": "nodeatlas/atlas-en-movimiento/engine/tactico/components.json",
     "atlas-cinematico": "sandbox/nodehistory/_atlas/components.json",
-    "cara-a-cara": "sandbox/nodeaction/cara-a-cara/showcase/components.json",
+    "cara-a-cara": "nodeactualidad/cara-a-cara/showcase/components.json",
     "vida-en-escena": "sandbox/nodeaction/_vida/showcase/components.json",
 }
 _DECLARATIONS = {
     "atlas-en-movimiento": "nodeatlas/atlas-en-movimiento/info.json",
-    "cara-a-cara": "sandbox/nodeaction/cara-a-cara/info.json",
+    "cara-a-cara": "nodeactualidad/cara-a-cara/info.json",
 }
 
 

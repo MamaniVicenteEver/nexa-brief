@@ -1,14 +1,16 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, expect, it, vi } from "vitest";
 import type { CategoryNode } from "@/features/categories";
 import messages from "../../../../messages/es.json";
 import { CategoryWindowTabs } from "../components/CategoryWindowTabs";
 
-vi.mock("@/features/explainer", () => ({
+const videoData = vi.hoisted(() => ({ rows: [] as { categoryPath: string; categoryPaths?: string[] }[] }));
+vi.mock("@/features/explainer/hooks/useExplainer", () => ({
   useCategoryDesigns: () => ({ data: { designs: [] } }),
-  useExplainerVideos: () => ({ data: [] }),
+  useExplainerVideos: () => ({ data: videoData.rows }),
 }));
 vi.mock("../../sandbox/hooks/useSandbox", () => ({ useSandbox: () => ({ data: [] }) }));
 
@@ -27,14 +29,14 @@ const categories: CategoryNode[] = ["NodeTech", "NodeHistory"].map((name) => ({
 function Harness() {
   const [selected, setSelected] = useState("nodetech");
   return (
-    <NextIntlClientProvider locale="es" messages={messages}>
+    <QueryClientProvider client={new QueryClient()}><NextIntlClientProvider locale="es" messages={messages}>
       <CategoryWindowTabs
         categories={categories}
         selectedId={selected}
         templateCount={0}
         onSelect={setSelected}
       />
-    </NextIntlClientProvider>
+    </NextIntlClientProvider></QueryClientProvider>
   );
 }
 afterEach(cleanup);
@@ -50,11 +52,20 @@ it("navega por las categorías y Sandbox con flechas, Inicio y Fin sin perder el
   fireEvent.keyDown(history, { key: "End" });
   expect(sandbox.getAttribute("aria-selected")).toBe("true");
   expect(document.activeElement).toBe(sandbox);
+  const all = tabs.getAllByRole("tab")[0];
   fireEvent.keyDown(sandbox, { key: "ArrowRight" });
-  expect(tech.getAttribute("aria-selected")).toBe("true");
-  fireEvent.keyDown(tech, { key: "ArrowLeft" });
+  expect(all.getAttribute("aria-selected")).toBe("true");
+  fireEvent.keyDown(all, { key: "ArrowLeft" });
   expect(sandbox.getAttribute("aria-selected")).toBe("true");
   fireEvent.keyDown(sandbox, { key: "Home" });
-  expect(tech.getAttribute("tabindex")).toBe("0");
+  expect(all.getAttribute("tabindex")).toBe("0");
   expect(history.getAttribute("tabindex")).toBe("-1");
+});
+
+
+it("cuenta videos compartidos en cada categoría sin confundirlos con diseños", () => {
+  videoData.rows = [{ categoryPath: "nodetech", categoryPaths: ["nodetech", "nodehistory"] }, { categoryPath: "nodetech" }];
+  render(<Harness />);
+  expect(screen.getByRole("tab", { name: /^NodeTech/ }).textContent).toContain("0 diseños · 2 videos");
+  expect(screen.getByRole("tab", { name: /^NodeHistory/ }).textContent).toContain("0 diseños · 1 video");
 });

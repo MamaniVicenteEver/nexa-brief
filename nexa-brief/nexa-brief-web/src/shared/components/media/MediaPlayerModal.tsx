@@ -379,6 +379,7 @@ function PlayerBody({
   const hasMobile = source?.kind === "iframe" || Boolean(source?.mobileUrl);
   const hasDesktop = source?.kind === "iframe" || Boolean(source?.desktopUrl);
   const [chosenStyle, setChosenStyle] = useState("");
+  useEffect(() => setChosenStyle(""), [source?.kind === "iframe" ? source.url : "", defaultStyle]);
   const [viewport, setViewport] = useState<MediaViewport>(
     defaultViewport === "mobile"
       ? hasMobile
@@ -515,7 +516,7 @@ function PlayerBody({
   };
 
   const stageProps: StageProps = {
-    playing,
+    playing: playing && !hasStagePreview,
     volume: effectiveVolume,
     muted,
     onTime: handleTime,
@@ -671,7 +672,7 @@ function PlayerBody({
                     // La plantilla decide su cámara y su diseño al cargar según la proporción: al cambiar de formato se recarga.
                     key={viewport}
                     ref={stageRef}
-                    url={withParams(source.url, chosenStyle ? { estilo: chosenStyle, ...extraParams } : extraParams)}
+                    url={withParams(source.url, (chosenStyle || defaultStyle) && styleOptions?.length ? { estilo: chosenStyle || defaultStyle || "", ...extraParams } : extraParams)}
                     title={title}
                     {...stageProps}
                   />

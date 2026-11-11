@@ -1,5 +1,10 @@
 import { spanToZoom } from './camera.js';
 
+/** Copia longitudinal más próxima a la cámara, sin cambiar latitud ni cámara. */
+export function nearestLongitude(lon, reference) {
+  return reference + ((lon - reference + 180) % 360 + 360) % 360 - 180;
+}
+
 /** Normaliza la proyección del look al objeto aceptado por MapLibre. */
 export function normalizeProjection(value = 'mercator', {width} = {}) {
   let type = value && !Array.isArray(value) && typeof value === 'object' ? value.type : value;

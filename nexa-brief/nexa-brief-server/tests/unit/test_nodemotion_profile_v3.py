@@ -13,6 +13,13 @@ from src.core.ports.recorder_port import RecordingResult
 from src.modules import video_recorder, thumbnail_maker
 
 
+@pytest.fixture(autouse=True)
+def _audio_probe(monkeypatch):
+    # These layout tests use synthetic bytes; audio probing is covered separately.
+    async def probe(_): return 2.0
+    monkeypatch.setattr(pipeline.resource_fetcher, "_get_audio_duration_seconds", probe)
+
+
 @pytest.mark.asyncio
 async def test_resume_pipeline_v3_keeps_media_logs_and_renders_separate(tmp_path, monkeypatch):
     monkeypatch.setattr(settings, "storage_profile_dir", tmp_path)
@@ -42,7 +49,7 @@ async def test_resume_pipeline_v3_keeps_media_logs_and_renders_separate(tmp_path
     from src.modules import packager
     monkeypatch.setattr(packager.asset_library, "get_music_entry", lambda _: SimpleNamespace(track_name="T", artist="A", genre="", provider="test"))
     monkeypatch.setattr(packager.asset_library, "resolve_music_path", lambda _: external)
-    analysis = AnalyzedInput(genre="test", mood_tags=[], image_query="", description="", duration_seconds=2, category_name=niche.id)
+    analysis = AnalyzedInput(genre="test", mood_tags=[], image_query="", description="", duration_seconds=60, category_name=niche.id)
     summary = to_summary(DraftDetails(copies={"youtube": PlatformDetails(title="T", description="D")}))
     job = job.model_copy(update={"artifacts": job.artifacts.model_copy(update={
         "output_dir": prod, "html_path": prod / "index.html", "music_path": prod / "song.mp3",
@@ -51,6 +58,7 @@ async def test_resume_pipeline_v3_keeps_media_logs_and_renders_separate(tmp_path
     class FakeRecorder:
         async def record(self, *, html_path, audio_path, output_dir, niche_cfg, **kwargs):
             assert html_path.parent == prod and audio_path.parent == prod
+            assert kwargs["duration_seconds"] == 2
             assert output_dir == tmp_path / ".system/runtime/recordings/job123/pipeline"
             for fmt in niche_cfg.video.formats:
                 (output_dir / fmt.output_filename).write_bytes(b"master")

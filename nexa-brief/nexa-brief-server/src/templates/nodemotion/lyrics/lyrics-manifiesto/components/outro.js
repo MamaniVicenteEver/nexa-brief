@@ -38,16 +38,16 @@
     const nodes = [title, rule, sub, subscribe, support, url];
     function resize() {
       const portrait = innerHeight > innerWidth;
-      title.style.fontSize = portrait ? "calc(min(15vh,21vw) + 4px)" : "calc(15vh + 4px)";
+      title.style.fontSize = portrait ? "calc(min(15vh,17vw) + 4px)" : "calc(15vh + 4px)";
       sub.style.fontSize = portrait ? "calc(min(2.8vh,4vw) + 4px)" : "calc(2.8vh + 4px)";
       support.style.fontSize = "calc(1.4vh + 2px)";
     }
     resize(); doc.defaultView && doc.defaultView.addEventListener("resize", resize);
-    let shown = false, maxOpacity = 0;
+    let shown = false;
     function update(time, duration, ended) {
       const s = stateAt(time, duration, config, ended), firstShow = s.active && !shown;
-      if (s.active) { shown = true; maxOpacity = Math.max(maxOpacity, s.opacity); }
-      root.style.opacity = maxOpacity.toFixed(3);
+      shown = s.active;
+      root.style.opacity = s.opacity.toFixed(3);
       root.style.pointerEvents = shown ? "auto" : "none";
       root.classList.toggle("show", shown);
       doc.body.classList.toggle("outroActive", shown);
@@ -62,7 +62,7 @@
         support.style.transform = `translateY(${(1-supportP)*12}px)`; support.style.opacity = .86*supportP;
         url.style.opacity = .68*urlP;
       }
-      return {...s, active: shown, opacity: maxOpacity};
+      return s;
     }
     return {root, title, sub, subscribe, support, url, update, destroy() { doc.defaultView && doc.defaultView.removeEventListener("resize", resize); }};
   }

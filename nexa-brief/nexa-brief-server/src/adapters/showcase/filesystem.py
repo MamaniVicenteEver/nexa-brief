@@ -119,6 +119,14 @@ def _read_guard(fn):
 
 
 class FilesystemShowcaseAdapter:
+    def get_styles(self, design_id, folder=None, episode=None):
+        from src.adapters.showcase.styles import list_styles
+        return list_styles(self, design_id, folder, episode)
+
+    def get_style(self, design_id, estilo, format="16x9"):
+        from src.adapters.showcase.styles import get_style
+        return get_style(self, design_id, estilo, format)
+
     def __init__(
         self,
         profile_root: Path,

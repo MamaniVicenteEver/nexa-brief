@@ -87,13 +87,13 @@ connections-up: ## Inicia el servicio TikTok compartido, independiente del desar
 dev: connections-up
 dev: ## API (:8000) y web (:3000); TikTok compartido sigue activo al detener desarrollo
 	@trap 'trap - INT TERM EXIT; kill 0' INT TERM EXIT; \
-	(cd $(SERVER) && uv run uvicorn src.presentation.main:app --reload --reload-dir src --host 0.0.0.0 --port 8000) & \
+	(cd $(SERVER) && uv run uvicorn src.presentation.main:app --reload --reload-dir src --reload-exclude '$(CURDIR)/$(SERVER)/src/templates' --host 0.0.0.0 --port 8000) & \
 	(cd $(WEB) && pnpm dev --hostname 0.0.0.0 --port 3000) & \
 	wait
 
 api: connections-up
 api: ## Solo la API
-	cd $(SERVER) && uv run uvicorn src.presentation.main:app --reload --reload-dir src --host 0.0.0.0 --port 8000
+	cd $(SERVER) && uv run uvicorn src.presentation.main:app --reload --reload-dir src --reload-exclude '$(CURDIR)/$(SERVER)/src/templates' --host 0.0.0.0 --port 8000
 
 web: ## Solo la web
 	cd $(WEB) && pnpm dev --hostname 0.0.0.0 --port 3000

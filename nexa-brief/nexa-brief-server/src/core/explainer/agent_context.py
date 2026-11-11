@@ -70,10 +70,14 @@ def ensure_private_workspace(root: Path) -> None:
             os.close(fd)
 
 
-def prepare_design_context(video_dir: Path, design: str, *, kit_dir: Path = KIT_DIR) -> Path:
+def prepare_design_context(video_dir: Path, design: str, *, kit_dir: Path = KIT_DIR, estilo: str | None = None) -> Path:
     """Copy only the selected public QUICK and per-entry catalog contracts."""
     if not _ID.fullmatch(design):
         raise ValueError('Diseño inválido')
+    from src.core.explainer.native_production import NATIVE_DESIGNS, prepare_context
+    if design in NATIVE_DESIGNS and kit_dir == KIT_DIR:
+        prepare_context(video_dir, design, estilo or NATIVE_DESIGNS[design]["default"])
+        return _safe(video_dir, "work", "agent-context")
     design_root = _safe(kit_dir, 'designs', design)
     info = json.loads(_safe(design_root, 'design.json').read_text(encoding='utf-8'))
     family = info.get('family')

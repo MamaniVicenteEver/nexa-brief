@@ -187,10 +187,15 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
         video_path_str = file_paths.get("tiktok") or file_paths.get("reels")
     elif entry.platform == "instagram":
         video_path_str = file_paths.get("reels") or file_paths.get("tiktok") or file_paths.get("youtube")
+    elif entry.platform == "youtube":
+        # Un paquete exclusivamente vertical también puede subirse a YouTube.
+        video_path_str = file_paths.get("youtube") or file_paths.get("reels")
     else:
         video_path_str = file_paths.get("youtube")
     copy = copy_for_platform(summary, entry.platform)
     extra_kwargs = {"language": copy.language} if entry.platform == "youtube" and copy.language else {}
+    if entry.platform == "youtube" and summary.get("youtube_category_id") is not None:
+        extra_kwargs["youtube_category_id"] = summary["youtube_category_id"]
     if entry.platform == "tiktok":
         # Retrying/recovering this queue entry must consult the original
         # service job, including when the HTTP response was lost after a click.
@@ -337,6 +342,8 @@ def _pick_oldest_ready_job(slot: ScheduleSlot) -> str | None:
     records, _total = job_tracker.list_jobs(stage=JobStage.PACKAGED.value, limit=10_000, offset=0)
     candidates = sorted(records, key=lambda r: r.get("created_at", ""))
     for record in candidates:
+        if record.get("publication_hold") is True:
+            continue
         if not category_matches(record.get("category") or "", slot.niche_filter):
             continue
         job_id = record.get("job_id")

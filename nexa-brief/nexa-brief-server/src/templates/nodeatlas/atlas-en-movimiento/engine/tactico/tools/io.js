@@ -9,4 +9,6 @@ export async function readJSON(url) {
   if (!response.ok) throw new Error(`${response.status}: ${url}`);
   return response.json();
 }
-export const atlasGeoURL = new URL('../../../../_atlas/data/geo/admin0.geojson', import.meta.url);
+export const atlasGeoURL = typeof window !== 'undefined'
+  ? new URL('/api/v1/explainer/files/bundled/nodeatlas/_atlas/data/geo/admin0.geojson', location.origin)
+  : new URL('../../../../_atlas/data/geo/admin0.geojson', import.meta.url);

@@ -1,4 +1,5 @@
 import {Tactico} from '../core.js';
+import {attritionParams,attritionErrors,attrition,fadeLoss,labelCount} from './attrition.js';
 import {createSprites} from '../sprites.js';
 import {pathAt, pathDuration, mercator, unmercator, rng, ease} from '../util.js';
 import {clamp, smooth, RAD, time, place, prepareMotion, poseAt, screenPose, stateWeights, ink, text, unitLabel, polygon, motionErrors} from './units.js';
@@ -109,7 +110,7 @@ export function shotEnvelope(events, t) {
   return {recoil, flash};
 }
 export function validateGround(item, ctx = {}) {
-  const errors = motionErrors(item, ctx, {variants: GROUND_TYPES[item.type] && Object.keys(GROUND_TYPES[item.type]), states: [...GROUND_STATES, 'fire']});
+  const errors = [...motionErrors(item, ctx, {variants: GROUND_TYPES[item.type] && Object.keys(GROUND_TYPES[item.type]), states: [...GROUND_STATES, 'fire']}),...attritionErrors(item)];
   for (const [key, lo, hi] of [['length', 40, 360], ['scale', .2, 4], ['particles', 0, 48], ['count', 1, 40], ['spacing', 30, 300], ['turretHeading', -180, 180], ['flightDur', .1, 30]]) {
     if (item[key] != null && (!Number.isFinite(item[key]) || item[key] < lo || item[key] > hi)) errors.push(`${key}: requiere ${lo}..${hi}`);
   }
@@ -156,7 +157,7 @@ export async function prepareGround(item, ctx = {}) {
   const internal = {motion, events, effects, launches};
   if (item.type === 'ground.convoy') {
     const list = item.vehicles || ['tank:main', 'apc', 'truck:cargo', 'truck:fuel', 'ambulance:cross'];
-    internal.members = Array.from({length: item.count ?? list.length}, (_, i) => ({...item, ...groundMember(list[i % list.length]),
+    internal.members = Array.from({length: (item.count??list.length)+(item.reinforce||[]).reduce((n,e)=>n+e.count,0)}, (_, i) => ({...item, ...groundMember(list[i % list.length]),
       id: `${item.id}:${i}`, label: '', scale: (item.scale ?? 1) * (typeof list[i % list.length] === 'object' ? list[i % list.length].scale ?? 1 : 1)}));
     internal.children = [];
     for (const member of internal.members) internal.children.push(await prepareGround({...member, path: null}, ctx));
@@ -434,15 +435,22 @@ export function drawGroundFlag(g, flag, x, y, size, t, env) {
   g.drawImage(record.image, x - 8 * size / 80, y - 124 * size / 80, 104 * size / 80, 128 * size / 80);
 }
 function drawGround(g, s, view, env) {
+  const original=s.item,group=['ground.tank','ground.apc','ground.artillery','ground.convoy'].includes(original.type),base=original.count??(original.type==='ground.convoy'?6:1),alive=group?attrition(original,s.lt,base):1;
   if (s.item.type === 'ground.convoy') {
-    const members = groundMemberPoses(s, view, env);
+    const members = groundMemberPoses(s, view, env).slice(0,alive);
     for (const m of [...members].reverse()) drawGroundVehicle(g, {...s, item: m.item, stateWeights: s.stateWeights,
       internal: {...s.internal.children[m.index], motion: s.internal.motion}}, view, env, {...m.pose, distance: m.distance});
     if (members.length && s.item.flag) {
       const p = members[0].pose, U = (env.U || 1) * (s.item.scale ?? 1);
       drawGroundFlag(g, s.item.flag, p.x + 27 * U, p.y - 18 * U, 35 * U, s.t, env);
     }
-    if (s.item.label && members.length) unitLabel(g, s.item.label, members[0].pose.x, members[0].pose.y, env, {item: s.item, reach: 70 * (env.U || 1), classic: [members[0].pose.x, members[0].pose.y - 100 * (env.U || 1), 22 * (env.U || 1)]});
+    if (s.item.label && members.length) unitLabel(g, labelCount(s.item.label,alive), members[0].pose.x, members[0].pose.y, env, {item: s.item, reach: 70 * (env.U || 1), classic: [members[0].pose.x, members[0].pose.y - 100 * (env.U || 1), 22 * (env.U || 1)]});
+    if(members.length)fadeLoss(g,original,s.lt,members.at(-1).pose.x,members.at(-1).pose.y,35*(env.U||1),env.estilo.col('acento'));
+  } else if(group){
+    const q=groundScreenPose(s.internal.motion.path?groundPoseAtDistance(s.internal.motion,original,groundDistance(s.internal.motion,s.t)):{lon:s.internal.motion.at[0],lat:s.internal.motion.at[1],heading:Number(original.heading)||0},view),U=Math.min(env.W,env.H)/1080,spacing=(original.spacing??110)*U;
+    for(let n=alive-1;n>=0;n--){const row=Math.floor(n/5),col=n%5,rowSize=Math.min(5,alive-row*5),x=q.x+(col-(rowSize-1)/2)*spacing*.75,y=q.y+row*spacing*.85;let enter=1;if(n>=base){let added=base,at=0;for(const event of original.reinforce||[]){added+=event.count;if(n<added){at=event.at;break;}}enter=clamp((s.lt-at)/.5);}g.save();g.globalAlpha*=enter;drawGroundVehicle(g,{...s,item:{...original,label:'',tracks:original.tracks&&n===0,dust:original.dust&&n===0}},view,env,{...q,x:x+(1-enter)*spacing*3,y});g.restore();}
+    if(original.label&&alive)unitLabel(g,labelCount(original.label,alive),q.x,q.y,env,{item:original,reach:70*U,classic:[q.x,q.y-100*U,22*U]});
+    fadeLoss(g,original,s.lt,q.x,q.y,35*U,env.estilo.col('acento'));
   } else drawGroundVehicle(g, s, view, env);
   for (const launch of s.internal.launches || []) if (s.t >= launch.item.t && s.t < launch.item.t + launch.item.dur) {
     g.save();launch.def.draw(stableGroundContext(g), {...s, item: launch.item, internal: launch.internal, lt: s.t - launch.item.t}, view, env);g.restore();
@@ -456,12 +464,13 @@ for (const type of [...Object.keys(GROUND_TYPES), 'ground.convoy']) {
       'ground.jeep': 'Vehículo ligero abierto con rueda de repuesto y sombra.', 'ground.artillery': 'Obús remolcado o autopropulsado con fogonazo y retroceso programados.',
       'ground.launcher': 'Lanzador sobre camión; cada fire prepara un strike.missile hacia to.', 'ground.ambulance': 'Ambulancia con cruz o media luna, balizas alternas y rumbo de ruta.',
       'ground.convoy': 'Columna mixta que recorre una curva por distancia con separación y bandera líder.'})[type],
-    params: {...groundParams, ...(variants.length > 1 ? {variant: {type: 'enum', values: variants, default: variants[0]}} : {}),
+    params: {...groundParams, ...(['ground.tank','ground.apc','ground.artillery','ground.convoy'].includes(type)?{...attritionParams,...(type!=='ground.convoy'?{count:{type:'number',default:1,min:1,max:40,doc:'Cantidad de vehículos.'}}:{})}:{}), ...(variants.length > 1 ? {variant: {type: 'enum', values: variants, default: variants[0]}} : {}),
       ...(armed ? {fire: {type: 'array', default: []}, turretHeading: {type: 'number', default: 0, min: -180, max: 180, step: 1}} : {}),
       ...(type === 'ground.launcher' ? {to: {default: null}, flightDur: {type: 'number', default: 1.8, min: .1, max: 30, step: .1}} : {}),
       ...(type === 'ground.convoy' ? {count: {type: 'number', default: 6, min: 1, max: 40, step: 1}, spacing: {type: 'number', default: 110, min: 30, max: 300, step: 2},
         vehicles: {type: 'array', default: ['tank:main', 'apc', 'truck:cargo', 'truck:fuel', 'jeep', 'ambulance:cross']}, length: {type: 'number', default: 110, min: 40, max: 360, step: 2}} : {})},
     states: [...GROUND_STATES, ...(armed ? ['fire'] : [])], validate: validateGround, prepare: prepareGround, draw: drawGround,
+    ...(type==='ground.tank'||type==='ground.convoy'?{sfx:i=>[{sfx:'tank-rumble',at:i.t??0,dur:Math.min(i.dur??8,7),gain_db:-26}]}:{}),
     demo: {id: type.replace('.', '-'), type, at: [48.4, 31.1], t: 0, dur: 8, fade: .6, flag: 'IQ', ...(variants.length ? {variant: variants[0]} : {}),
       path: {via: [[48.3, 31.0], [48.42, 31.13], [48.65, 31.22]], t: .6, dur: 6.5, curve: 'smooth', ease: 'inOut'},
       ...(armed ? {fire: [2.2, 4.4]} : {}), ...(type === 'ground.launcher' ? {to: [49.02, 31.55]} : {}),

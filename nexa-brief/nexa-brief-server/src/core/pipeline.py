@@ -13,6 +13,7 @@ from src.config.niche_config import NicheConfig, get_niche_config
 from src.config.settings import settings
 from src.core.categories import output_dir_for_niche
 from src.core.job import DurationConfig, DurationMode, Job, JobStage, VisualDesign
+from src.core.video_usage import for_video
 from src.core.progress import (
     ProgressTracker,
     bind_tracker,
@@ -53,6 +54,12 @@ _STAGE_RESULT: dict[str, JobStage] = {
 }
 
 Stage = tuple[str, Callable[[Job], Awaitable[Job]]]
+
+
+def _publication_ai(job: Job):
+    if job.artifacts.summary is not None and job.artifacts.summary.platform_copies:
+        return None
+    return for_video(get_copy_ai(), job, "publication_copy")
 
 
 def _remaining_stages(stages: list[Stage], current: JobStage) -> list[Stage]:
@@ -179,6 +186,18 @@ async def run(
                 "duration_config": DurationConfig(mode=DurationMode.AUTO, repeat_count=1)
             })
         })
+        if resume and job.artifacts.music_path is not None and job.artifacts.analyzed_input is not None:
+            # Refresh older previews that used the generic 60–300 s clamp.
+            # The saved track already includes its outro; do not pad it again.
+            logs_dir = job.artifacts.log_dir or job.artifacts.output_dir / "logs"
+            seconds = await resource_fetcher._resolve_duration_seconds(
+                job, job.artifacts.music_path, logs_dir, locked_to_music=True,
+            )
+            analyzed = job.artifacts.analyzed_input.model_copy(update={"duration_seconds": seconds})
+            job = job.model_copy(update={"artifacts": job.artifacts.model_copy(update={"analyzed_input": analyzed})})
+            (logs_dir / "01_input_completado.json").write_text(analyzed.model_dump_json(indent=2), encoding="utf-8")
+            if on_stage is not None:
+                await on_stage(job)
 
     # ── Resolver adaptadores AI una sola vez por job ──────────────────────────
     analysis_ai = get_analysis_ai()
@@ -207,15 +226,15 @@ async def run(
             # la canción real ya resuelta por resource_fetcher.
             analysis_stage = ("lyrics_transcriber", lambda j: lyrics_transcriber.run(j, niche_cfg))
         else:
-            analysis_stage = ("visual_designer", lambda j: visual_designer.run(j, analysis_ai, niche_cfg))
+            analysis_stage = ("visual_designer", lambda j: visual_designer.run(j, for_video(analysis_ai, j, "visual_design"), niche_cfg))
         stages = [
-            ("input_analyzer",    lambda j: input_analyzer.run(j, get_copy_ai(), niche_cfg)),   # solo texto: DeepSeek
-            ("resource_fetcher",  lambda j: resource_fetcher.run(j, niche_cfg, analysis_ai)),
+            ("input_analyzer",    lambda j: input_analyzer.run(j, for_video(get_copy_ai(), j, "input_analyzer"), niche_cfg)),
+            ("resource_fetcher",  lambda j: resource_fetcher.run(j, niche_cfg, for_video(analysis_ai, j, "media_validation"))),
             analysis_stage,
             ("prompt_architect",  lambda j: prompt_architect.run(j, niche_cfg)),
-            ("html_generator",    lambda j: html_generator.run(j, codegen_ai, niche_cfg)),
+            ("html_generator",    lambda j: html_generator.run(j, for_video(codegen_ai, j, "composition"), niche_cfg)),
             ("video_recorder",    lambda j: video_recorder.run(j, niche_cfg)),
-            ("result_summarizer", lambda j: result_summarizer.run(j, get_copy_ai(), niche_cfg)),
+            ("result_summarizer", lambda j: result_summarizer.run(j, _publication_ai(j), niche_cfg)),
             ("packager",          lambda j: packager.run(j, niche_cfg)),
         ]
         logger.info(
@@ -248,17 +267,17 @@ async def run(
             logger.info("pipeline_skip_visual_design", job_id=job.job_id, niche=niche_cfg.id)
         else:
             visual_designer_stage = (
-                "visual_designer", lambda j: visual_designer.run(j, analysis_ai, niche_cfg)
+                "visual_designer", lambda j: visual_designer.run(j, for_video(analysis_ai, j, "visual_design"), niche_cfg)
             )
 
         stages = [
-            ("input_analyzer",    lambda j: input_analyzer.run(j, get_copy_ai(), niche_cfg)),   # solo texto: DeepSeek
+            ("input_analyzer",    lambda j: input_analyzer.run(j, for_video(get_copy_ai(), j, "input_analyzer"), niche_cfg)),
             visual_designer_stage,
-            ("resource_fetcher",  lambda j: resource_fetcher.run(j, niche_cfg, analysis_ai)),
+            ("resource_fetcher",  lambda j: resource_fetcher.run(j, niche_cfg, for_video(analysis_ai, j, "media_validation"))),
             ("prompt_architect",  lambda j: prompt_architect.run(j, niche_cfg)),
-            ("html_generator",    lambda j: html_generator.run(j, codegen_ai, niche_cfg)),
+            ("html_generator",    lambda j: html_generator.run(j, for_video(codegen_ai, j, "composition"), niche_cfg)),
             ("video_recorder",    lambda j: video_recorder.run(j, niche_cfg)),
-            ("result_summarizer", lambda j: result_summarizer.run(j, get_copy_ai(), niche_cfg)),
+            ("result_summarizer", lambda j: result_summarizer.run(j, _publication_ai(j), niche_cfg)),
             ("packager",          lambda j: packager.run(j, niche_cfg)),
         ]
 

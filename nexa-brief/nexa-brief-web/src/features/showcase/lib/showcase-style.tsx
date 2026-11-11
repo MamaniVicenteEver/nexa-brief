@@ -7,4 +7,10 @@ export const ShowcaseStyleContext = createContext<string>("");
 export const useShowcaseStyle = () => useContext(ShowcaseStyleContext);
 
 export type ShowcaseStyle = { id: string; name: string; idea: string; formats: string[] };
-export type ShowcaseStyles = { default: string | null; styles: ShowcaseStyle[] };
+export type ShowcaseStyles = { default: string | null; styles: ShowcaseStyle[]; revision?: string; design_id?: string };
+
+export const ShowcaseStyleControlsContext = createContext<{
+  styles: ShowcaseStyle[];
+  value: string;
+  onChange(value: string): void;
+}>({ styles: [], value: "", onChange: () => undefined });

@@ -79,6 +79,17 @@
       }
     },
     {
+      "name": "air.swarm",
+      "family": "air",
+      "description": "Hasta ochenta drones en oleadas; interceptación y destellos deterministas. Úsala para mostrar vuelos, maniobras y operaciones aéreas.",
+      "file": "air.swarm.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/air.swarm.jpg",
+        "autoplay": true
+      }
+    },
+    {
       "name": "army.advance",
       "family": "army",
       "description": "Ola de fichas con relieve, bandera, filas escalonadas, flecha progresiva y frente luminoso. Úsala para representar formaciones de tropas.",
@@ -552,6 +563,39 @@
       }
     },
     {
+      "name": "image.hex",
+      "family": "image",
+      "description": "Fotografía hexagonal con título, descripción y guía al mapa. Úsala como recurso visual en una escena.",
+      "file": "image.hex.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/image.hex.png",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "image.panel",
+      "family": "image",
+      "description": "Panel documental rectangular con fotografía y guía. Úsala como recurso visual en una escena.",
+      "file": "image.panel.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/image.panel.png",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "image.pole",
+      "family": "image",
+      "description": "Fotografía circular sobre poste con rótulo. Úsala como recurso visual en una escena.",
+      "file": "image.pole.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/image.pole.png",
+        "autoplay": true
+      }
+    },
+    {
       "name": "image.strip",
       "family": "image",
       "description": "Tira de dos o tres imágenes con pie y créditos. Úsala como recurso visual en una escena.",
@@ -708,7 +752,7 @@
     {
       "name": "money.flow",
       "family": "money",
-      "description": "Billetes simbólicos por una ruta geográfica; fase y rumbo puros de t, sin afirmar un valor comercial. Úsala para explicar recursos, pagos y cambios económicos.",
+      "description": "Ejemplo general de money.flow: 7 billetes con $ por una ruta configurable, sin línea de ruta visible. Úsalo para transferencias o ayuda económica entre lugares; adapta la ruta y la cantidad. Los billetes son simbólicos y no representan un importe. Úsala para explicar recursos, pagos y cambios económicos.",
       "file": "money.flow.json",
       "preview": {
         "bg": "dark",
@@ -719,7 +763,7 @@
     {
       "name": "money.stack",
       "family": "money",
-      "description": "Fajos simbólicos que se deslizan y apilan; sin moneda ni cifra económica implícita. Úsala para explicar recursos, pagos y cambios económicos.",
+      "description": "Fajos de billetes con $ que se deslizan y apilan. Úsalo para mostrar reservas o acumulación de dinero en un lugar; para transferencias entre lugares usa money.flow. La cantidad de fajos es simbólica y no representa un importe. Úsala para explicar recursos, pagos y cambios económicos.",
       "file": "money.stack.json",
       "preview": {
         "bg": "dark",
@@ -779,6 +823,50 @@
       "preview": {
         "bg": "dark",
         "poster": "work/tactico/thumbs/naval.warship.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "oil.barrel",
+      "family": "oil",
+      "description": "Barril de petróleo con gota naranja, vertical; úsalo para representar reservas, carga o cantidad simbólica de crudo.",
+      "file": "oil.barrel.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/oil.barrel.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "oil.derrick",
+      "family": "oil",
+      "description": "Torre terrestre con perforación animada; úsala para ubicar un pozo o una operación de perforación en tierra.",
+      "file": "oil.derrick.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/oil.derrick.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "oil.platform",
+      "family": "oil",
+      "description": "Plataforma petrolera marina con grúa animada; úsala para representar extracción o perforación en el mar.",
+      "file": "oil.platform.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/oil.platform.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "oil.pumpjack",
+      "family": "oil",
+      "description": "Bomba extractora terrestre con balancín animado; úsala para mostrar extracción de petróleo en un pozo.",
+      "file": "oil.pumpjack.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/oil.pumpjack.jpg",
         "autoplay": true
       }
     },
@@ -948,6 +1036,17 @@
       }
     },
     {
+      "name": "space.satellite",
+      "family": "space",
+      "description": "Satélite vectorial en órbita con haz, pulsos y constelación. Úsala como recurso visual en una escena.",
+      "file": "space.satellite.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/space.satellite.jpg",
+        "autoplay": true
+      }
+    },
+    {
       "name": "statement.jump",
       "family": "statement",
       "description": "Salto temporal («Siete años antes») en versales espaciadas, en la ranura «salto». Úsala como recurso visual en una escena.",
@@ -1087,6 +1186,28 @@
       "preview": {
         "bg": "dark",
         "poster": "work/tactico/thumbs/territory.state.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "territory.wash",
+      "family": "territory",
+      "description": "Bandera de país completo con barrido y asentamiento translúcido; conserva islas y huecos. Úsala para explicar control territorial y cambios de frontera.",
+      "file": "territory.wash.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/territory.wash.jpg",
+        "autoplay": true
+      }
+    },
+    {
+      "name": "territory.zone",
+      "family": "territory",
+      "description": "Zona de control con polígonos propios [lon,lat] y estados fechados: la parte que se pierde se desvanece y la ganada se enciende. Rojo translúcido al 50 % que se mantiene todo el video. Úsala para mostrar qué controla un bando (ocupación, avance, retirada). Úsala para explicar control territorial y cambios de frontera.",
+      "file": "territory.zone.json",
+      "preview": {
+        "bg": "dark",
+        "poster": "work/tactico/thumbs/territory.zone.jpg",
         "autoplay": true
       }
     },

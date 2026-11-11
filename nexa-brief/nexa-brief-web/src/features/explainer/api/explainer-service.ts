@@ -112,12 +112,13 @@ interface PublishPackageReviewDto {
   title_max_chars: number | null;
 }
 
-interface ExplainerVideoDto {
+export interface ExplainerVideoDto {
   video_id: string;
   design: string;
   category_id: string;
   category_name: string;
   category_path: string;
+  category_paths?: string[];
   title: string;
   topic?: string;
   status: string;
@@ -125,15 +126,24 @@ interface ExplainerVideoDto {
   publish_ready: boolean;
   rendered: string[];
   duration_seconds: number | null;
+  preview_mode?: "desktop" | "mobile";
   youtube_title: string;
   youtube_description?: string;
   youtube_tags?: string[];
+  instagram_title?: string;
+  instagram_description?: string;
+  script_text?: string;
+  script_review_required?: boolean;
   facebook_title?: string;
   facebook_description?: string;
   tiktok_caption?: string;
   tiktok_hashtags?: string[];
   design_name?: string;
   demo?: boolean;
+  demo_summary?: string;
+  review_requirements?: string[];
+  estimated_tokens?: number | null;
+  updated_at?: string | null;
   narrative_id?: string | null;
   narrative_label?: string | null;
   quality_issues?: string[];
@@ -255,13 +265,14 @@ function mapJob(dto: ExplainerJobDto): ExplainerJob {
   };
 }
 
-function mapVideo(dto: ExplainerVideoDto): ExplainerVideo {
+export function mapVideo(dto: ExplainerVideoDto): ExplainerVideo {
   return {
     videoId: dto.video_id,
     design: dto.design,
     categoryId: dto.category_id,
     categoryName: dto.category_name,
     categoryPath: dto.category_path,
+    categoryPaths: dto.category_paths ?? [dto.category_path],
     title: dto.title,
     topic: dto.topic ?? "",
     status: dto.status,
@@ -269,15 +280,24 @@ function mapVideo(dto: ExplainerVideoDto): ExplainerVideo {
     publishReady: dto.publish_ready,
     rendered: dto.rendered,
     durationSeconds: dto.duration_seconds,
+    previewMode: dto.preview_mode === "mobile" ? "mobile" : "desktop",
     youtubeTitle: dto.youtube_title,
     youtubeDescription: dto.youtube_description ?? "",
     youtubeTags: dto.youtube_tags ?? [],
+    instagramTitle: dto.instagram_title ?? "",
+    instagramDescription: dto.instagram_description ?? "",
+    scriptText: dto.script_text ?? "",
+    scriptReviewRequired: dto.script_review_required ?? false,
     facebookTitle: dto.facebook_title ?? "",
     facebookDescription: dto.facebook_description ?? "",
     tiktokCaption: dto.tiktok_caption ?? "",
     tiktokHashtags: dto.tiktok_hashtags ?? [],
     designName: dto.design_name ?? dto.design,
     demo: dto.demo ?? false,
+    demoSummary: dto.demo_summary ?? "",
+    reviewRequirements: dto.review_requirements ?? [],
+    estimatedTokens: dto.estimated_tokens ?? null,
+    updatedAt: dto.updated_at ?? null,
     narrativeId: dto.narrative_id ?? null,
     narrativeLabel: dto.narrative_label ?? null,
     qualityIssues: dto.quality_issues ?? [],
@@ -576,12 +596,17 @@ function mapProduction(dto: ProductionDto): Production {
 
 /** Multipart: `payload` (JSON) + `files` (imágenes/videos opcionales). */
 export async function createProduction(input: CreateProductionInput): Promise<Production> {
+  if (input.design === "cara-a-cara" && !input.characterId) {
+    throw new Error("Selecciona un personaje para Cara a Cara.");
+  }
   const form = new FormData();
   form.append(
     "payload",
     JSON.stringify({
       category_path: input.categoryPath,
       design: input.design,
+      character_id: input.design === "cara-a-cara" ? input.characterId : undefined,
+      estilo: input.estilo ?? null,
       topic: input.topic,
       description: input.description ?? "",
       agent: input.agent ?? null,

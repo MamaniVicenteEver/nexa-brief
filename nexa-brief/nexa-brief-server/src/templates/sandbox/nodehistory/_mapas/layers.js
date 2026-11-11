@@ -65,10 +65,10 @@
     g.save(); for (const cut of R.clips) g.clip(clipPoly(c, cut, cut.map(c.P))); g.stroke(pathRegion(c, R)); g.restore();
     for (const cut of R.clips) { g.save(); g.clip(pathRegion(c, R)); g.stroke(clipPoly(c, cut, cut.map(c.P))); g.restore(); }
   }
-  function hatch(c, col, t, a, angle = 1) {
+  function hatch(c, col, t, a, angle = 1, options = {}) {
     const { g, st } = c, U = st.U;
-    g.save(); g.globalAlpha *= a; g.strokeStyle = col; g.lineWidth = 7 * U;
-    const step = 22 * U, off = (t * 18 * U) % step, H = st.H, W = st.W;
+    g.save(); g.globalAlpha *= a; g.strokeStyle = col; g.lineWidth = (options.hatchWidth ?? 7) * U;
+    const step = (options.hatchGap ?? 22) * U, off = (t * 18 * U) % step, H = st.H, W = st.W;
     g.beginPath(); for (let x = -H + off; x < W + H; x += step) { g.moveTo(x, 0); g.lineTo(x + H * 0.8 * angle, H); } g.stroke(); g.restore();
   }
 
@@ -86,7 +86,7 @@
     g.globalCompositeOperation = "screen"; g.fillStyle = rgba(col, 0.5 * Math.min(1.6, flash)); g.fillRect(0, 0, st.W, st.H);
     g.globalCompositeOperation = "overlay"; g.fillStyle = rgba(col, 0.35); g.fillRect(0, 0, st.W, st.H);
     g.globalCompositeOperation = "source-over";
-    if (Ly.hatch) hatch(c, Ly.hatch === true ? "#ffffff" : Ly.hatch, t, 0.55);
+    if (Ly.hatch) hatch(c, Ly.hatch === true ? "#ffffff" : Ly.hatch, t, 0.55, 1, Ly);
     if (Ly.border !== false) { // resplandor interior del borde
       g.strokeStyle = light; g.lineWidth = 4 * U; g.shadowColor = light; g.shadowBlur = 26 * U; g.globalAlpha = a * 0.85 * flick;
       strokeRegion(c, R); strokeRegion(c, R);
@@ -94,7 +94,7 @@
     g.restore();
     if (Ly.border === false) return;
     g.save(); g.globalAlpha = a * flick; g.strokeStyle = light; g.lineJoin = "round";
-    g.shadowColor = col; g.shadowBlur = 18 * U; g.lineWidth = 3.2 * U; strokeRegion(c, R);
+    g.shadowColor = col; g.shadowBlur = (Ly.glow ?? 18) * U; g.lineWidth = (Ly.borderWidth ?? 3.2) * U; strokeRegion(c, R);
     g.shadowBlur = 0; g.strokeStyle = mixW(col, 0.85); g.lineWidth = 1.3 * U; strokeRegion(c, R);
     g.restore();
   };
@@ -140,7 +140,7 @@
     g.save(); g.globalAlpha = a; g.lineCap = "round"; g.lineJoin = "round";
     if (Ly.dash) g.setLineDash([w * 3, w * 2.4]);
     g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1])));
-    g.strokeStyle = col; g.shadowColor = col; g.shadowBlur = 20 * U; g.lineWidth = w * 1.6; g.stroke();
+    g.strokeStyle = col; g.shadowColor = col; g.shadowBlur = (Ly.glow ?? 20) * U; g.lineWidth = w * 1.6; g.stroke();
     g.shadowBlur = 0; g.strokeStyle = mixW(col, 0.75); g.lineWidth = w * 0.55; g.stroke();
     g.setLineDash([]);
     if (Ly.arrow && k > 0.04) {
@@ -154,30 +154,39 @@
   L.arrow = (c, Ly, t, a) => L.line(c, { ...Ly, arrow: true, bow: Ly.bow ?? 0.18 }, t, a);
 
   /* ---------- rótulos ---------- */
-  function tag(c, text, x, y, size, rot, a, style, col) {
-    const g = c.g;
+  function tag(c, text, x, y, size, rot, a, style, col, options = {}) {
+    const g = c.g, visual = { ...(c.style?.text || {}), ...options };
+    const font = visual.font || FONT, weight = visual.weight || 800;
+    const maxWidth = visual.maxWidth ? c.st.W * visual.maxWidth : c.style ? c.st.W : 1e9;
+    if (c.style) {
+      g.save(); g.font = `${weight} ${size}px ${font}`;
+      const half = Math.min(maxWidth, Math.max(...String(text).split("\n").map(line => g.measureText(line).width + size))) / 2;
+      const margin = c.style.safeMargin * c.st.U;
+      x = Math.max(margin + half, Math.min(c.st.W - margin - half, x));
+      y = Math.max(margin + size, Math.min(c.st.H - margin - size, y)); g.restore();
+    }
     g.save(); g.translate(x, y); g.rotate(((rot || 0) * Math.PI) / 180); g.globalAlpha = a;
     g.textAlign = "center"; g.textBaseline = "middle";
     if (style === "big") { // nombre grande blanco en cursiva pesada
-      g.font = `italic 900 ${size}px ${FONT}`;
+      g.font = `${visual.italic === false ? "" : "italic "}${c.style ? weight : 900} ${size}px ${font}`;
       g.shadowColor = "rgba(0,0,0,.7)"; g.shadowBlur = size * 0.25; g.shadowOffsetY = size * 0.06;
       g.lineWidth = size * 0.08; g.strokeStyle = "rgba(0,0,0,.55)";
-      String(text).split("\n").forEach((ln, i, A) => { const yy = (i - (A.length - 1) / 2) * size; g.strokeText(ln, 0, yy); g.fillStyle = col || "#fff"; g.fillText(ln, 0, yy); });
+      String(text).split("\n").forEach((ln, i, A) => { const yy = (i - (A.length - 1) / 2) * size; g.strokeText(ln, 0, yy, maxWidth); g.fillStyle = col || "#fff"; g.fillText(ln, 0, yy, maxWidth); });
     } else if (style === "sea") { // océanos: cursiva azul con brillo
-      g.font = `italic 800 ${size}px ${FONT}`; g.shadowColor = "#3aa0ff"; g.shadowBlur = size * 0.7; g.fillStyle = col || "#8fd0ff";
+      g.font = `italic ${weight} ${size}px ${font}`; g.shadowColor = "#3aa0ff"; g.shadowBlur = size * 0.7; g.fillStyle = col || "#8fd0ff";
       String(text).split("\n").forEach((ln, i, A) => g.fillText(ln, 0, (i - (A.length - 1) / 2) * size * 1.05));
     } else { // rótulo negro con letra blanca (el de la referencia)
-      g.font = `800 ${size}px ${FONT}`;
-      const w = g.measureText(text).width + size * 0.7, h = size * 1.45;
-      g.shadowColor = "rgba(0,0,0,.5)"; g.shadowBlur = size * 0.5; g.fillStyle = "rgba(8,8,10,.92)"; g.fillRect(-w / 2, -h / 2, w, h);
-      g.shadowBlur = 0; g.fillStyle = col || "#fff"; g.fillText(text, 0, size * 0.04);
+      g.font = `${weight} ${size}px ${font}`;
+      const w = Math.min(g.measureText(text).width + size * 0.7, maxWidth), h = size * 1.45;
+      g.shadowColor = "rgba(0,0,0,.5)"; g.shadowBlur = size * 0.5; g.fillStyle = visual.background || "rgba(8,8,10,.92)"; g.fillRect(-w / 2, -h / 2, w, h);
+      g.shadowBlur = 0; g.fillStyle = col || "#fff"; g.fillText(text, 0, size * 0.04, maxWidth);
     }
     g.restore();
   }
   const pop = (Ly, t) => lerp(0.3, 1, back((t - Ly._t) / 0.45));
   const zscale = (c, Ly) => (Ly.mapScale ? clamp(Ly.mapScale / c.cam.span, 0.4, 3.2) : 1);
   const xy = (c, Ly) => (Ly.at != null ? c.P(c.geo.place(Ly.at)) : [c.st.W / 2, c.st.H / 2]);
-  L.label = (c, Ly, t, a) => { const [x, y] = xy(c, Ly); tag(c, Ly.text, x + (Ly.dx || 0) * c.st.U, y + (Ly.dy || 0) * c.st.U, (Ly.size || 30) * c.st.U * zscale(c, Ly) * pop(Ly, t), Ly.rot, a, Ly.style, Ly.color); };
+  L.label = (c, Ly, t, a) => { const [x, y] = xy(c, Ly); tag(c, Ly.text, x + (Ly.dx || 0) * c.st.U, y + (Ly.dy || 0) * c.st.U, (Ly.size || 30) * c.st.U * zscale(c, Ly) * pop(Ly, t), Ly.rot, a, Ly.style, Ly.color, Ly); };
 
   /* ---------- puntos, multitudes, alfileres, íconos ---------- */
   L.dot = (c, Ly, t, a) => {
@@ -194,9 +203,9 @@
     g.beginPath(); g.arc(x, y, 7 * U * s, 0, Math.PI * 2); g.fill(); g.lineWidth = 2.5 * U; g.strokeStyle = "#000"; g.shadowBlur = 0; g.stroke(); g.restore();
     if (Ly.text !== "") {
       const side = Ly.side || "right", size = (Ly.size || 24) * U * zscale(c, Ly), off = 14 * U + size * 0.2;
-      c.g.save(); c.g.font = `800 ${size}px ${FONT}`; const w = c.g.measureText(Ly.text || Ly.at).width + size * 0.7; c.g.restore();
+      c.g.save(); c.g.font = `${Ly.weight || c.style?.text.weight || 800} ${size}px ${Ly.font || c.style?.text.font || FONT}`; const w = c.g.measureText(Ly.text || Ly.at).width + size * 0.7; c.g.restore();
       const dx = side === "left" ? -(off + w / 2) : side === "right" ? off + w / 2 : 0, dy = side === "top" ? -size * 1.4 : side === "bottom" ? size * 1.4 : 0;
-      tag(c, Ly.text || String(Ly.at).toUpperCase(), x + dx, y + dy, size * s, 0, a, "tag");
+      tag(c, Ly.text || String(Ly.at).toUpperCase(), x + dx, y + dy, size * s, 0, a, "tag", undefined, Ly);
     }
   };
   L.crowd = (c, Ly, t, a) => {
@@ -232,7 +241,7 @@
     g.shadowBlur = 0; g.strokeStyle = col; g.lineWidth = 3 * U; g.stroke();
     g.fillStyle = col; g.strokeStyle = col; (ICONS[Ly.icon] || ICONS.star)(g, s * 0.8);
     g.restore();
-    if (Ly.text) tag(c, Ly.text, x, y + s * 0.95, 20 * U, 0, a);
+    if (Ly.text) tag(c, Ly.text, x, y + s * 0.95, (Ly.labelSize || 20) * U, 0, a, undefined, undefined, Ly);
   };
 
   /* ---------- banderas, fotos, año, cifra ---------- */
@@ -255,11 +264,11 @@
       const sc = Math.max((2 * r) / im.width, (2 * r) / im.height), f = Ly.focus || [0.5, 0.4];
       g.drawImage(im, x - im.width * sc * f[0], y - im.height * sc * f[1], im.width * sc, im.height * sc); g.restore(); }
     g.restore();
-    if (Ly.name) tag(c, Ly.name, x, y + r * 1.3, 20 * U, 0, a);
+    if (Ly.name) tag(c, Ly.name, x, y + r * 1.3, (Ly.labelSize || 20) * U, 0, a, undefined, undefined, Ly);
   };
   L.year = (c, Ly, t, a) => { // pastilla del año (abajo, como "1903")
     const { g, st } = c, U = st.U, s = pop(Ly, t), size = (Ly.size || 58) * U * s, y = st.H * (Ly.y ?? (st.H > st.W ? 0.7 : 0.72));
-    g.save(); g.globalAlpha = a; g.font = `900 ${size}px ${FONT}`; g.textAlign = "center"; g.textBaseline = "middle";
+    g.save(); g.globalAlpha = a; g.font = `${c.style?.text.weight || 900} ${size}px ${c.style?.text.font || FONT}`; g.textAlign = "center"; g.textBaseline = "middle";
     g.shadowColor = Ly.color || "#ff1f3d"; g.shadowBlur = size * 0.5; g.lineWidth = size * 0.14; g.strokeStyle = Ly.color || "#c4001d";
     g.strokeText(Ly.text, st.W / 2, y); g.shadowBlur = 0; g.fillStyle = "#fff"; g.fillText(Ly.text, st.W / 2, y); g.restore();
   };
@@ -267,9 +276,9 @@
     const { g, st } = c, U = st.U;
     g.save(); g.globalAlpha = a * 0.55; g.fillStyle = "#000"; g.fillRect(0, 0, st.W, st.H); g.restore();
     const size = (Ly.size || 230) * U * pop(Ly, t);
-    tag(c, Ly.text, st.W / 2, st.H * 0.44, size, 0, a, "big", Ly.color);
+    tag(c, Ly.text, st.W / 2, st.H * (Ly.y ?? 0.44), size, 0, a, "big", Ly.color, Ly);
     const nl = String(Ly.text).split("\n").length;                   // título de varios renglones: baja el subtítulo
-    if (Ly.sub) tag(c, Ly.sub, st.W / 2, st.H * 0.44 + size * (nl / 2 + 0.3), 30 * U, 0, a);
+    if (Ly.sub) tag(c, Ly.sub, st.W / 2, st.H * (Ly.y ?? 0.44) + size * (nl / 2 + 0.3), (Ly.subSize || 30) * U, 0, a, undefined, undefined, Ly);
   };
 
   window.Mapas = window.Mapas || {};

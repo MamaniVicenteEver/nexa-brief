@@ -39,7 +39,7 @@ export function SandboxDesignDemoCard({ item, productionDesign = false }: { item
           )}
           <div className="absolute top-2 left-2 flex gap-1">
             <span className="rounded-full bg-amber-400/90 px-2 py-0.5 text-[9.5px] font-bold text-black uppercase">
-              {productionDesign ? t("prep.demo") : "DEMO · SANDBOX"}
+              {t("prep.demo")}
             </span>
           </div>
         </div>

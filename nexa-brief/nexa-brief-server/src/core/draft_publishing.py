@@ -26,7 +26,7 @@ def format_for(selector: str, options: RenderOptions) -> RecordFormat:
     if platform == "youtube":
         return "16x9"
     chosen = options.account_formats.get(selector) or DEFAULT_FORMAT.get(platform, "16x9")
-    return chosen if chosen in recorded else "16x9"
+    return chosen if chosen in recorded else recorded[0]
 
 
 async def publish_rendered(job_id: str, options: RenderOptions) -> None:

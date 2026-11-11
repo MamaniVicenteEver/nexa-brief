@@ -9,6 +9,12 @@ Para crear videos con **Atlas Cinemático / nodehistory-atlas**, empieza por
 `produce.mjs catalog` y `example`; trabaja en una carpeta de episodio de producción.
 Es distinto del diseño `atlas` 2D del explainer-kit. No leas ni copies el motor para montar un video.
 
+## Atlas noticiero (resumen de noticias sobre globo 3D)
+
+Para un video de **resumen de noticias / actualidad** (semanal o del día) con el estilo del demo `resumen-geopolitico-demo`, lee SOLO
+`src/templates/sandbox/nodehistory/_atlas/noticiero/AGENTE.md`: voz, estilo del diálogo, estilo visual `original` y piezas están fijos; el video es solo datos.
+Herramientas: `noticiero/tools/{nuevo,medios,voz,check}.py`. No leas ni copies el motor.
+
 ## Si te piden un VIDEO explicativo (NodeTech, NodeHistory, NodeEconomy…)
 
 **Con un diseño que ya existe (el caso normal): `src/skills/explainer/produce/SKILL.md` y nada más.**
@@ -31,9 +37,11 @@ Qué modelo hace cada rol: `src/skills/models/roles.json` (el backend lo lee con
 - Sin `git commit` ni `push` salvo que el humano lo pida.
 - Nunca leas ni imprimas `.env`, `accounts.json`, `client_secret*.json`, `users.json` ni tokens.
 - No publiques en redes ni grabes videos salvo pedido explícito ("solo preparación" = sin render).
-- El servidor corre `uvicorn --reload` sobre `src/`: editar cualquier `.py` bajo `src/` (también las
-  herramientas del kit) lo reinicia y corta producciones, previsualizaciones y grabaciones en curso.
-  Revisá que no haya nada corriendo antes de tocar código.
+- El servidor usa `uvicorn --reload` con `watchfiles` sobre `src/`, excluyendo `src/templates/`.
+  Editar herramientas y motores de producción no debe reiniciar la API ni cortar transcripciones.
+  Los cambios Python del backend fuera de esa carpeta sí lo reinician: revisá que no haya
+  producciones, previsualizaciones, transcripciones ni grabaciones antes de editarlos. Si cambia una
+  herramienta Python importada y cacheada por la API, reiniciá coordinadamente cuando termine el trabajo.
 
 ## Miniaturas de componentes en Showcase
 
@@ -45,6 +53,10 @@ raíz de `nexa-brief-server`, con la API y el perfil correctos activos:
 ```bash
 .venv/bin/python scripts/generate_showcase_posters.py --design <id-del-diseño>
 ```
+
+Si el diseño declara estilos, prepara también cada estilo afectado con
+`--estilo <id>` o todos con `--all-styles`. Las capturas sin estilo explícito no
+sustituyen las capturas de estilos como Original o Dynamic News.
 
 Sin `--design` procesa los motores `_atlas` y `_mapas`; `--all` permite otros
 diseños. Genera WebP 16:9 en la caché del perfil, toma el fotograma central y,
@@ -78,7 +90,26 @@ perteneciendo al código compartido del repositorio. Al ejecutar directamente
 `src/templates/_tools/sandbox/info.py` o `delegate.sh` para un perfil v2/v3,
 exportá `NEXA_SANDBOX_DIR` con la ruta absoluta al `sandbox/` de ese perfil.
 
+## Estilos y producción nativa por JSON
+
+Para Mapas Satelitales (Documentary/Dynamic) y Atlas en Movimiento, consulta `docs/estilos-produccion.md`.
+Descubre estilos con `/api/v1/showcase/designs/<id>/styles` y lee la guía corta `/production-guide?estilo=<id>`.
+Consulta solo los contratos de las piezas elegidas con `?estilo=<id>&format=9x16`; no leer motores para
+cada video. El creador acepta `estilo` y prepara el contexto privado del estilo elegido.
+Mapas: `src/templates/sandbox/nodehistory/_mapas/QUICK.md`. Atlas conserva su generador y catálogo.
+
 ## Diseños reutilizables y Showcase
+
+### Atlas en Movimiento: motor principal único (obligatorio)
+
+El orquestador entrega JSON y medios; no crea, copia ni bifurca motores dentro de episodios.
+La implementación única está en `src/templates/nodeatlas/atlas-en-movimiento/engine/` y la consumen
+Showcase y los videos mediante la URL `bundled/nodeatlas/atlas-en-movimiento/engine/plano/plano.js`.
+Cada componente nuevo se implementa en ese motor principal, declara parámetros/validación/demo y se
+registra en Showcase. Variar tema, país o recorrido requiere datos, no otro componente ni otro generador.
+El productor valida esta regla después del agente y antes de aceptar una escena; `tools/build_scene.py`
+y `tools/check_episode.py` también la comprueban. Guía completa: `nodeatlas/atlas-en-movimiento/AGENTE.md`.
+Una migración conserva los datos y se compara visualmente en ambos formatos antes de cambiar la entrada.
 
 Para el diseño compartido Mapas Satelitales y sus ejemplos aislados, consulta
 `docs/mapas-showcase.md`: los proyectos del perfil usan un solo motor y no se
@@ -107,3 +138,17 @@ de datos; no copies motores ni crees `sandbox/designs/`. Contrato y flujo:
 En v2/v3 usa exclusivamente la factoría de agentes y sus ejecutores aislados
 verificados. Las rutas legacy directas conservan sus guardas; no las elimines
 para activar un perfil. Consulta `docs/agent-isolation-design.md`.
+
+## Preferencia editorial de modelos
+
+Guiones, diálogos, títulos y descripciones: Codex con `gpt-6.1-terra` y esfuerzo `high` por defecto; Luna (`gpt-6-luna`, máximo soportado por el adaptador CLI) es la alternativa Codex. Claude queda al final por indisponibilidad o cuota de Codex; un texto deficiente se corrige y no justifica cambiar de proveedor. Aplicar `src/skills/models/roles.json`, conservar aislamiento y registrar el modelo realmente usado. No generar voz ni render cuando el pedido sea solo revisar diálogos.
+
+## Pasar demos principales a producción
+
+El flujo de la interfaz y API está en `docs/pasar-a-produccion-disenos.md`.
+Una demo principal explícitamente validada se incorpora completa al repositorio
+bajo `src/templates/<categoría>/<id>/`, conservando el ID de Showcase y el motor
+compartido. Es una excepción autorizada para muestras públicas de diseño; los
+episodios privados y los videos posteriores quedan en el perfil. No moverla
+manualmente ni saltar la validación. Usa «Pasar a producción» en los textos de
+producto; `promote` se mantiene únicamente por compatibilidad de API.

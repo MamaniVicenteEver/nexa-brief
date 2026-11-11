@@ -114,6 +114,7 @@ export interface ExplainerVideo {
   categoryId: string;
   categoryName: string;
   categoryPath: string;
+  categoryPaths?: string[];
   title: string;
   topic: string;
   status: string;
@@ -121,9 +122,14 @@ export interface ExplainerVideo {
   publishReady: boolean;
   rendered: string[];
   durationSeconds: number | null;
+  previewMode?: "desktop" | "mobile";
   youtubeTitle: string;
   youtubeDescription: string;
   youtubeTags: string[];
+  instagramTitle?: string;
+  instagramDescription?: string;
+  scriptText?: string;
+  scriptReviewRequired?: boolean;
   facebookTitle: string;
   facebookDescription: string;
   tiktokCaption: string;
@@ -132,6 +138,10 @@ export interface ExplainerVideo {
   designName: string;
   /** Demo de un diseño (mismo guion que otro video): ojo al publicar. */
   demo: boolean;
+  demoSummary?: string;
+  reviewRequirements?: string[];
+  estimatedTokens?: number | null;
+  updatedAt?: string | null;
   /** Narrativa guardada en la configuración del video. */
   narrativeId: string | null;
   narrativeLabel: string | null;
@@ -356,6 +366,9 @@ export interface Production {
 export interface CreateProductionInput {
   categoryPath: string;
   design: string;
+  /** Identidad registrada, obligatoria para Cara a Cara. */
+  characterId?: string;
+  estilo?: string;
   topic: string;
   description?: string;
   agent?: AgentName;

@@ -177,6 +177,15 @@ def _design_demo(design: KitDesign) -> ExplainerVideo | None:
 
 def _design_response(design: KitDesign) -> DesignResponse:
     demo = _design_demo(design)
+    native_preview = None
+    if design.design_id in {"mapas-satelitales", "atlas-en-movimiento"} and demo is None:
+        from src.presentation.api.routers.showcase import get_showcase_service
+        from src.core.showcase.ports import ShowcaseInvalid, ShowcaseNotFound, ShowcaseConflict
+        try:
+            shared = get_showcase_service().get_design(design.design_id)
+            native_preview = next((episode.preview_url for episode in shared.episodes if episode.preview_url), shared.preview_url)
+        except (ShowcaseInvalid, ShowcaseNotFound, ShowcaseConflict):
+            pass
     return DesignResponse(
         design_id=design.design_id,
         name=design.name,
@@ -184,7 +193,7 @@ def _design_response(design: KitDesign) -> DesignResponse:
         topics=design.topics,
         voice=design.voice,
         category_path=design.category_path,
-        preview_url=_video_preview_url(demo) if demo else None,
+        preview_url=_video_preview_url(demo) if demo else native_preview,
         poster_url=_poster_url(demo) if demo else None,
         video_url=_render_video_url(demo, "16x9") if demo else None,
         video_portrait_url=_render_video_url(demo, "9x16") if demo else None,
@@ -295,15 +304,24 @@ def _video_response(video: ExplainerVideo) -> ExplainerVideoResponse:
         publish_ready=video.publish_ready,
         rendered=video.rendered,
         duration_seconds=video.duration_seconds,
+        preview_mode=video.preview_mode,
         youtube_title=video.youtube_title,
         youtube_description=video.youtube_description,
         youtube_tags=video.youtube_tags,
+        instagram_title=video.instagram_title,
+        instagram_description=video.instagram_description,
+        script_text=video.script_text,
+        script_review_required=video.script_review_required,
         facebook_title=video.facebook_title,
         facebook_description=video.facebook_description,
         tiktok_caption=video.tiktok_caption,
         tiktok_hashtags=video.tiktok_hashtags,
         design_name=(design.name if (design := load_design(video.design)) else video.design),
         demo=video.demo,
+        demo_summary=video.demo_summary,
+        review_requirements=video.review_requirements,
+        estimated_tokens=video.estimated_tokens,
+        updated_at=video.updated_at,
         narrative_id=video.narrative_id,
         narrative_label=video.narrative_label,
         quality_issues=video.quality_issues,
@@ -320,7 +338,8 @@ def _in_category(path: str, category: str | None) -> bool:
 
 
 def _text_ai(provider: str | None):
-    name = provider or settings.explainer_text_provider
+    available = {row["name"]: row["available"] for row in agents_status()}
+    name = provider or ("codex" if available.get("codex") else "claude")
     if name not in TEXT_PROVIDERS:
         raise HTTPException(status_code=400, detail=f"proveedor desconocido: {name}")
     try:
@@ -493,8 +512,8 @@ async def explainer_options(category: str | None = None) -> ExplainerOptionsResp
     return ExplainerOptionsResponse(
         agents=agents,
         text_providers=text,
-        default_agent=settings.explainer_agent,
-        default_text_provider=settings.explainer_text_provider,
+        default_agent="codex" if available.get("codex") else "claude",
+        default_text_provider="codex" if available.get("codex") else "claude",
         lengths=LengthOptionsResponse(
             presets=[LengthPresetResponse(minutes=p.minutes, id=p.id, label=p.label) for p in lengths.presets()],
             default_minutes=lengths.default_minutes(),
@@ -602,6 +621,8 @@ async def create_production(
             rec = await producer.submit(
                 category_path=req.category_path,
                 design=req.design,
+                estilo=req.estilo,
+                character_id=req.character_id,
                 topic=req.topic,
                 description=req.description,
                 agent=req.agent,

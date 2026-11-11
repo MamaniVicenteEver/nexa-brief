@@ -108,6 +108,39 @@
       "range": null,
       "description": "Semilla para que las partículas y variaciones sean reproducibles."
     },
+    "losses": {
+      "type": "array",
+      "default": [],
+      "doc": "Bajas [{at: segundos relativos, count: entero positivo}]; retira las últimas unidades.",
+      "range": null,
+      "description": "Bajas [{at: segundos relativos, count: entero positivo}]; retira las últimas unidades."
+    },
+    "reinforce": {
+      "type": "array",
+      "default": [],
+      "doc": "Refuerzos [{at: segundos relativos, count: entero positivo}]; entran por el borde.",
+      "range": null,
+      "description": "Refuerzos [{at: segundos relativos, count: entero positivo}]; entran por el borde."
+    },
+    "persist": {
+      "type": "boolean",
+      "default": false,
+      "doc": "Conserva las unidades estacionadas hasta out o fin de escena.",
+      "range": null,
+      "description": "Conserva las unidades estacionadas hasta out o fin de escena."
+    },
+    "count": {
+      "type": "number",
+      "default": 1,
+      "min": 1,
+      "max": 40,
+      "doc": "Cantidad de vehículos.",
+      "range": {
+        "min": 1,
+        "max": 40
+      },
+      "description": "Cantidad de vehículos."
+    },
     "variant": {
       "type": "enum",
       "values": [

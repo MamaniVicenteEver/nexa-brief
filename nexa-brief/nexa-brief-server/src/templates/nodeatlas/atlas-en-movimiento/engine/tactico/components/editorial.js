@@ -1,4 +1,5 @@
 import {Tactico} from '../core.js';
+import {episodeMediaURL} from '../episode-data.js';
 import {drawFicha,slotBox,line} from './ficha.js';
 import {drawDocument} from './documento.js';
 
@@ -20,10 +21,10 @@ let fontReady;
 function font(){return fontReady??=(async()=>{if(typeof FontFace==='undefined')return;const face=new FontFace('AtlasEditorial',`url(${new URL('assets/fonts/AtlasEditorial.ttf',baseURL).href})`);document.fonts.add(await face.load());})();}
 const mk=(w,h)=>typeof OffscreenCanvas==='function'?new OffscreenCanvas(w,h):Object.assign(document.createElement('canvas'),{width:w,height:h});
 function local(src){return typeof src==='string'&&!!src&&!/^(?:[a-z]+:|\/\/|\/)/i.test(src)&&!src.split('/').includes('..');}
-async function image(src){
+async function image(src,ctx){
  if(!src)return null;
  if(!local(src))throw Error('El medio debe ser una ruta local relativa a la plantilla');
- const url=new URL(src,baseURL).href;
+ const url=episodeMediaURL(src,ctx).href;
  if(!imageCache.has(url))imageCache.set(url,(async()=>{const img=new Image();img.src=url;await img.decode();return img;})());
  return imageCache.get(url);
 }
@@ -161,7 +162,7 @@ for(const type of ['portrait.badge','portrait.cutout','editorial.press','callout
  layer:80,summary:{'portrait.badge':'Retrato circular u octogonal con cargo y fecha documentada.','portrait.cutout':'Retrato con máscara suave sobre una forma, borde y sombra.','editorial.press':'Retrato y documento inclinado; solo docText del episodio y atribución explícita.','callout.photo':'Foto/documento con pie y crédito visibles, haz hasta un punto del mapa.'}[type],
  params:{...common,appearance:appearanceParam,...(type==='callout.photo'?{caption:{type:'string',default:''},beam:{type:'boolean',default:true}}:portraits),...(type==='portrait.badge'?{shape:{type:'enum',values:['circle','octagon'],default:'octagon'}}:{}),...(type==='portrait.cutout'?{mask:{type:'array',default:[]}}:{}),...(type==='editorial.press'?{docText:{type:'string',default:''},docSrc:{type:'string',default:''},docCredit:{type:'string',default:''},tilt:{type:'number',default:-7}}:{})},
  validate:item=>validate(item,{portrait:type.startsWith('portrait'),press:type==='editorial.press'}),
- async prepare(item,ctx){await font();const p=colors(ctx),src=await image(item.src),doc=await image(item.docSrc);
+ async prepare(item,ctx){await font();const p=colors(ctx),src=await image(item.src,ctx),doc=await image(item.docSrc,ctx);
   if(ctx.estilo?.id && ctx.estilo.id!=='clasico')return {src,doc};
   const bitmap=cached(item,p,()=>type==='portrait.badge'?badge(item,src,p):type==='portrait.cutout'?cutout(item,src,p):type==='editorial.press'?press(item,src,doc,p):photo(item,src,p));return {bitmap,palette:p};
  },

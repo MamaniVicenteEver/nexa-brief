@@ -3,6 +3,7 @@ import {rng} from '../util.js';
 import {clamp, smooth, RAD, ink, text, polygon, stateWeights, motionErrors} from './units.js';
 import {groundArt, drawArt, groundParams, prepareGroundMotion, groundDistance, groundScreenPose, groundPoseAtDistance,
   drawGroundFlag, prepareGround, drawGroundVehicle} from './ground.js';
+import {attritionParams,attritionErrors,attrition,fadeLoss,labelCount} from './attrition.js';
 
 export const ARMY_STATES = ['normal', 'engaged', 'routed', 'destroyed'];
 const names = ['army.advance', 'army.retreat', 'army.hold', 'army.encircle', 'army.clash', 'army.banner', 'army.supply'];
@@ -21,9 +22,10 @@ export const armyParams = {
   dust: {type: 'boolean', default: true}, arrow: {type: 'boolean', default: true},
   banner: {type: 'boolean', default: true}, label: {type: 'string', default: 'EJÉRCITO'},
   date: {type: 'string', default: ''}, seed: {default: 23},
+  ...attritionParams,
 };
 export function validateArmy(item, ctx) {
-  const errors = motionErrors(item, ctx, {states: ARMY_STATES});
+  const errors = [...motionErrors(item, ctx, {states: ARMY_STATES}),...attritionErrors(item)];
   for (const [key, lo, hi] of [['count', 8, 40], ['columns', 2, 10], ['spacing', 44, 100], ['radius', 16, 42],
     ['scale', .35, 2.5], ['wave', 0, 16], ['speed', .1, 5], ['closeDur', .2, 30], ['supplyCount', 2, 12], ['fall', 0, .8]]) {
     if (item[key] != null && (!Number.isFinite(item[key]) || item[key] < lo || item[key] > hi)) errors.push(`${key}: requiere ${lo}..${hi}`);
@@ -214,7 +216,9 @@ function drawSupply(g, s, view, env) {
   g.restore();
 }
 export function drawArmy(g, s, view, env) {
-  const item = s.item, p = armyPose(s, view), c = ink(env), scale = (env.U || 1) * (item.scale ?? 1), states = stateWeights(s, ARMY_STATES);
+  const original=s.item,base=original.n??original.count??24,total=base+(original.reinforce||[]).reduce((n,x)=>n+x.count,0),alive=attrition(original,s.lt,base);
+  const item={...original,n:total,label:labelCount(original.label,alive)},p = armyPose(s, view), c = ink(env), scale = (env.U || 1) * (item.scale ?? 1), states = stateWeights(s, ARMY_STATES);
+  s={...s,item};
   if (item.type === 'army.supply' || item.type === 'army.banner') {
     g.save();g.globalAlpha *= 1 - states.destroyed * .8;
     if (item.type === 'army.supply') drawSupply(g, s, view, env);else banner(g, s, env, p.x, p.y, scale * 1.6);
@@ -232,8 +236,10 @@ export function drawArmy(g, s, view, env) {
     for (const sign of [-1, 1]) {g.beginPath();g.ellipse(sign * (1 - close) * 40, 0, (item.spacing ?? 59) * 1.65, (item.spacing ?? 59) * 1.5, 0, sign < 0 ? Math.PI / 2 : -Math.PI / 2, sign < 0 ? Math.PI * 1.5 : Math.PI / 2);g.strokeStyle = c.gold;g.lineWidth = 2;g.stroke();}g.restore();
   }
   for (const o of offsets) {
+    if(o.i>=alive)continue;
     const entry = .82 + .18 * smooth(((s.lt ?? s.t) - o.row * .025) / .45);
     let x = o.x * scale, y = o.y * scale, alpha = 1 - states.destroyed * .78, tilt = o.tilt, r = radius * scale * entry;
+    if(o.i>=base){let added=base,at=0;for(const event of original.reinforce||[]){added+=event.count;if(o.i<added){at=event.at;break;}}const q=smooth((s.lt-at)/.6);x+=(1-q)*width*scale;y+=(1-q)*rear*scale;alpha*=q;}
     if (item.type === 'army.hold') r *= 1 + .027 * Math.sin(s.t * (item.speed ?? 1.6) * 2 + o.col * .3);
     if (item.type === 'army.clash' && o.i % 5 === 0) {
       const cycle = (s.lt ?? s.t) - 2 - o.i % 4 * .27, phase = ((cycle % 4) + 4) % 4;
@@ -248,6 +254,7 @@ export function drawArmy(g, s, view, env) {
     }
   }
   if (item.type === 'army.clash') clashFlashes(g, s, env, scale);
+  fadeLoss(g,original,s.lt,0,front*scale,radius*scale,c.gold);
   if (item.banner !== false) {
     // Counter-rotate the heading so the army name stays legible.
     const y = front * scale - 67 * scale;g.save();g.translate(0, y);g.rotate(-p.angle);banner(g, s, env, 0, 0, scale);g.restore();

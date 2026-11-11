@@ -1,11 +1,11 @@
 "use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useId, useRef, useState } from "react";
-import type { CategoryNode } from "@/features/categories";
-import { useCategoryDesigns, useExplainerVideos } from "@/features/explainer";
+import { CreateCategoryDialog, type CategoryNode } from "@/features/categories";
 import { SandboxCategoryTab } from "@/features/sandbox";
+import { useExplainerVideos } from "@/features/explainer/hooks/useExplainer";
 import { cn } from "@/lib/utils";
 
 export const SANDBOX_CATEGORY_ID = "sandbox";
@@ -15,24 +15,6 @@ const STATUS_TONE: Record<CategoryNode["status"], string> = {
   planned: "bg-nb-accent-gold/40 text-[#7a5a10]",
   empty: "bg-nb-bg-2 text-nb-mute",
 };
-
-function inCategory(path: string, category: string) {
-  return path === category || path.startsWith(`${category}/`);
-}
-
-/** Contadores de una categoría explainer: diseños + videos listos. */
-function ExplainerCounts({ path }: { path: string }) {
-  const t = useTranslations("templates");
-  const { data: designs } = useCategoryDesigns(path);
-  const { data: videos = [] } = useExplainerVideos();
-  const ready = videos.filter((v) => v.ready && inCategory(v.categoryPath, path)).length;
-  return (
-    <span>
-      {t("windows.designsCount", { count: designs?.designs.length ?? 0 })} ·{" "}
-      {t("windows.readyCount", { count: ready })}
-    </span>
-  );
-}
 
 function CategoryTab({
   category,
@@ -46,6 +28,10 @@ function CategoryTab({
   onSelect: () => void;
 }) {
   const t = useTranslations("templates");
+  const { data: videos } = useExplainerVideos();
+  const count = videos?.filter((video) => (video.categoryPaths ?? [video.categoryPath]).some(
+    (path) => path === category.path || path.startsWith(`${category.path}/`),
+  )).length;
   return (
     <button
       type="button"
@@ -83,7 +69,7 @@ function CategoryTab({
         {category.engine === "pipeline" ? (
           <span>{t("windows.templatesCount", { count: templateCount })}</span>
         ) : (
-          <ExplainerCounts path={category.path} />
+          <span>{t("windows.designsCount", { count: category.designs.length })}{count !== undefined && <> · {t("windows.videosCount", { count })}</>}</span>
         )}
       </div>
     </button>
@@ -106,6 +92,7 @@ export function CategoryWindowTabs({
   const rail = useRef<HTMLDivElement>(null);
   const railId = useId();
   const [scrollable, setScrollable] = useState({ previous: false, next: false });
+  const [createOpen, setCreateOpen] = useState(false);
   useEffect(() => {
     const element = rail.current;
     if (!element || categories.length === 0) return;
@@ -146,40 +133,77 @@ export function CategoryWindowTabs({
       <div
         ref={rail}
         id={railId}
-        role="tablist"
-        aria-label={t("windows.label")}
-        aria-orientation="horizontal"
         className="flex min-w-0 flex-1 snap-x snap-proximity gap-2 overflow-x-auto overscroll-x-contain py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        onKeyDown={(event) => {
-          const steps: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, Home: 0, End: -1 };
-          if (!(event.key in steps)) return;
-          const tabs = [...event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
-          const index = tabs.indexOf(event.target as HTMLButtonElement);
-          if (index < 0) return;
-          event.preventDefault();
-          const next =
-            event.key === "Home"
-              ? 0
-              : event.key === "End"
-                ? tabs.length - 1
-                : (index + steps[event.key] + tabs.length) % tabs.length;
-          tabs[next]?.focus();
-          tabs[next]?.click();
-        }}
       >
-        {categories.map((category) => (
-          <CategoryTab
-            key={category.id}
-            category={category}
-            selected={category.id === selectedId}
-            templateCount={templateCount}
-            onSelect={() => onSelect(category.id)}
+        <div
+          role="tablist"
+          aria-label={t("windows.label")}
+          aria-orientation="horizontal"
+          className="flex shrink-0 snap-x snap-proximity gap-2"
+          onKeyDown={(event) => {
+            const steps: Record<string, number> = { ArrowLeft: -1, ArrowRight: 1, Home: 0, End: -1 };
+            if (!(event.key in steps)) return;
+            const tabs = [...event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+            const index = tabs.indexOf(event.target as HTMLButtonElement);
+            if (index < 0) return;
+            event.preventDefault();
+            const next =
+              event.key === "Home"
+                ? 0
+                : event.key === "End"
+                  ? tabs.length - 1
+                  : (index + steps[event.key] + tabs.length) % tabs.length;
+            tabs[next]?.focus();
+            tabs[next]?.click();
+          }}
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected={selectedId === "all"}
+            data-category-id="all"
+            tabIndex={selectedId === "all" ? 0 : -1}
+            onClick={() => onSelect("all")}
+            className={cn(
+              "flex w-max min-w-[196px] max-w-[260px] shrink-0 snap-start flex-col justify-center gap-1 rounded-xl border px-3 py-2.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2",
+              selectedId === "all"
+                ? "border-nb-ink bg-nb-ink text-[#fafaf7]"
+                : "border-nb-line bg-nb-surface text-nb-ink hover:border-nb-ink",
+            )}
+          >
+            <span className="truncate text-[14px] font-extrabold tracking-[-0.01em]">
+              {t("windows.allDesigns")}
+            </span>
+          </button>
+          {categories.map((category) => (
+            <CategoryTab
+              key={category.id}
+              category={category}
+              selected={category.id === selectedId}
+              templateCount={templateCount}
+              onSelect={() => onSelect(category.id)}
+            />
+          ))}
+          <SandboxCategoryTab
+            selected={selectedId === SANDBOX_CATEGORY_ID}
+            onSelect={() => onSelect(SANDBOX_CATEGORY_ID)}
           />
-        ))}
-        <SandboxCategoryTab
-          selected={selectedId === SANDBOX_CATEGORY_ID}
-          onSelect={() => onSelect(SANDBOX_CATEGORY_ID)}
-        />
+        </div>
+        <button
+          type="button"
+          aria-label={t("windows.addCategory")}
+          aria-haspopup="dialog"
+          onClick={() => setCreateOpen(true)}
+          className={cn(
+            "flex min-h-[60px] w-max min-w-[196px] shrink-0 snap-start items-center justify-center gap-2",
+            "rounded-xl border border-dashed border-nb-line bg-nb-surface px-4",
+            "text-sm font-bold text-nb-ink transition-colors hover:border-nb-ink",
+            "focus-visible:outline-2 focus-visible:outline-offset-2",
+          )}
+        >
+          <Plus aria-hidden className="size-4" />
+          {t("windows.addCategory")}
+        </button>
       </div>
       <button
         type="button"
@@ -193,6 +217,11 @@ export function CategoryWindowTabs({
       >
         <ChevronRight aria-hidden className="size-4" />
       </button>
+      <CreateCategoryDialog
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onCreated={(category) => onSelect(category.id)}
+      />
     </div>
   );
 }

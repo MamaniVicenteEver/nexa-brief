@@ -1,5 +1,14 @@
 # Atlas · formato de `assets/scene.json`
 
+`worldCopies:true` es una opción de escena para planos Mercator que necesitan
+continuidad a través de ±180° (por ejemplo, un vuelo por el Pacífico). Por defecto
+es `false`: los demás estilos conservan su configuración. Activa las copias de
+mapa de MapLibre y proyecta fotos, rutas y anclas en la copia longitudinal más
+cercana a la cámara. No cambia las keys ni la ruta de cámara. El globo y los
+tramos parcialmente esféricos conservan su proyección y oclusión anteriores;
+una expresión globo/Mercator usa el ajuste solo cuando su transición real llega
+a Mercator completo. Usar un booleano, no la cadena `"true"`.
+
 La página carga Proto y después `_atlas/atlas.js`. La escena es independiente de la página. Tiempo en segundos o anclas de voz `@palabra`, `@frase#2`, `@palabra:end`, `@palabra+0.4`, resueltas por Proto. `duration` es la duración total; `end` también es aceptado por Proto. Coordenadas `[longitud, latitud]` en grados.
 
 ```json

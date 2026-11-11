@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "design": "atlas-noticiero",
+  "engine": "nodehistory/_atlas",
+  "entry": "noticiero/AGENTE.md",
+  "default_style": "original",
+  "visual_profile": {
+    "locked": true,
+    "style": "original",
+    "look": "noticiero-globo",
+    "attribution": false,
+    "captions": {"font": "Poppins", "size": 27, "color": "#ffffff", "maxWords": 4},
+    "cierre_default": 1
+  },
+  "voice_profile": "voz.json",
+  "voice": {
+    "provider": "gemini_tts",
+    "model": "gemini-3.8-flash-tts",
+    "voice": "Charon",
+    "tone": "aceleración",
+    "intensity": 0.5,
+    "measured": {"wpm": 183, "wer_aprox": 0.147, "source": "resumen-geopolitico-demo/assets/song.qc.json"},
+    "acceptable_wpm": [150, 200]
+  },
+  "script_agent": {
+    "preferred": {"provider": "codex", "model": "gpt-6.1-terra", "reasoning_effort": "high"},
+    "fallback": {"provider": "claude", "model": "claude-haiku-5-5", "reasoning_effort": "medium"},
+    "fallback_policy": "provider_unavailable_only",
+    "execution": "run-model.sh (codex exec, sandbox con escritura solo en el episodio)",
+    "reuse_valid_script": true,
+    "retry_failed_run_with_another_provider": false,
+    "tasks": {
+      "investigacion_guion_plan": "briefs/BRIEF-noticiero-investigacion-guion.md",
+      "publicacion": "briefs/BRIEF-noticiero-publicacion.md"
+    }
+  },
+  "publication": {
+    "category": "node_politics",
+    "title_strategy": "amarillista v1 (nivel medio)",
+    "when": "en cuanto exista lyrics.json, en paralelo a escena y revisión",
+    "gate": "publishing check <id> con 0 errores"
+  },
+  "rules": [
+    "El estilo es original salvo pedido explícito del usuario para ese video.",
+    "La voz y el estilo del diálogo son los del demo: no se cambian por video.",
+    "Un video nuevo es solo datos (script.json, scene.json, media); el motor no se edita.",
+    "Cada cifra, nombre, cargo y fecha sale del ledger con fuentes; nada del demo se reutiliza como hecho.",
+    "Cada segmento lleva al menos una pieza no textual; check.py debe dar 0 errores.",
+    "Cero copias del motor ni código por video: solo parámetros JSON sobre piezas del catálogo (tools/sin-copias.py debe dar 0 errores).",
+    "Sin MP4, sin publicar, sin commit salvo pedido. Estado final: en preparación."
+  ]
+}

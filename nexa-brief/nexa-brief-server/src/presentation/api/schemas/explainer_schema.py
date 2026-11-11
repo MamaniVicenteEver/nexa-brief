@@ -90,15 +90,24 @@ class ExplainerVideoResponse(BaseModel):
     publish_ready: bool
     rendered: list[str] = Field(default_factory=list)
     duration_seconds: float | None = None
+    preview_mode: Literal["desktop", "mobile"] = "desktop"
     youtube_title: str = ""
     youtube_description: str = ""
     youtube_tags: list[str] = Field(default_factory=list)
+    instagram_title: str = ""
+    instagram_description: str = ""
+    script_text: str = ""
+    script_review_required: bool = False
     facebook_title: str = ""
     facebook_description: str = ""
     tiktok_caption: str = ""
     tiktok_hashtags: list[str] = Field(default_factory=list)
     design_name: str = ""
     demo: bool = False
+    demo_summary: str = ""
+    review_requirements: list[str] = Field(default_factory=list)
+    estimated_tokens: int | None = None
+    updated_at: str | None = None
     narrative_id: str | None = None
     narrative_label: str | None = None
     quality_issues: list[str] = Field(default_factory=list)
@@ -133,6 +142,7 @@ class SandboxItemResponse(BaseModel):
     has_info: bool = False
     has_components: bool = False
     demo: bool = False
+    production_design: bool = False
     total_tokens: int | None = None
     thumbnail_url: str | None = None
     player: Literal["protocol", "video", "none"] = "none"
@@ -355,6 +365,8 @@ class ProductionRequest(BaseModel):
 
     category_path: str
     design: str
+    estilo: str | None = Field(None, max_length=80)
+    character_id: str | None = Field(None, pattern=r"^[a-z][a-z0-9-]{0,47}$")
     topic: str = Field(..., min_length=3, max_length=300)
     description: str = Field("", max_length=2000)
     agent: str | None = None
@@ -367,10 +379,14 @@ class ProductionRequest(BaseModel):
 
 
 class ProductionResponse(BaseModel):
+    character_id: str | None = None
+    usage_totals: dict | None = None
     production_id: str
     video_id: str
     category_path: str
     design: str
+    estilo: str | None = None
+    style_revision: str | None = None
     topic: str
     description: str = ""
     agent: str

@@ -113,7 +113,23 @@ class ShowcaseService:
             raise ShowcaseInvalid("Identidad de diseño incoherente")
         return design
 
-    def catalog(self, design_id: str) -> Catalog:
+    def styles(self, design_id: str, folder: str | None = None, episode: str | None = None) -> dict:
+        _id(design_id)
+        method = getattr(self.repository, "get_styles", None)
+        if method is None:
+            self.get_design(design_id)
+            return {"design_id": design_id, "default": None, "styles": [], "options": []}
+        return method(design_id, folder, episode)
+
+    def style(self, design_id: str, estilo: str, format: str = "16x9") -> dict:
+        _id(design_id)
+        _id(estilo)
+        method = getattr(self.repository, "get_style", None)
+        if method is None:
+            raise ShowcaseInvalid("Este diseño no declara estilos")
+        return method(design_id, estilo, format)
+
+    def catalog(self, design_id: str, estilo: str | None = None, format: str = "16x9") -> Catalog:
         design = self.get_design(design_id)
         raw = self.repository.get_catalog(design_id)
         if raw is None:
@@ -133,6 +149,16 @@ class ShowcaseService:
             if item.preview_url:
                 _safe_destination(item.preview_url, design_id)
                 item.preview_url = _preview_url(design_id, item.id)
+        if estilo:
+            from src.core.showcase.style_contract import styled_entry
+            from urllib.parse import quote
+            style = self.style(design_id, estilo, format)
+            unavailable = set(style.get("unavailable_components", []))
+            catalog.entries = [styled_entry(item, style) for item in catalog.entries if item.name not in unavailable]
+            for item in catalog.entries:
+                if item.preview_url:
+                    item.preview_url += "&estilo=" + quote(estilo, safe="")
+            catalog.estilo, catalog.estilo_revision = estilo, style["revision"]
         return catalog
 
     def preview(self, design_id: str, entry_id: str | None, format: str) -> str:
@@ -148,10 +174,10 @@ class ShowcaseService:
             raise ShowcaseNotFound("Vista previa no disponible")
         return _safe_destination(target, design_id)
 
-    def entry(self, design_id: str, entry_id: str) -> Entry:
+    def entry(self, design_id: str, entry_id: str, estilo: str | None = None, format: str = "16x9") -> Entry:
         """Read one component contract without sending the complete catalog to an agent."""
         _id(entry_id, entry=True)
-        for item in self.catalog(design_id).entries:
+        for item in self.catalog(design_id, estilo, format).entries:
             if item.id == entry_id:
                 return item
         raise ShowcaseNotFound("Entrada no encontrada")

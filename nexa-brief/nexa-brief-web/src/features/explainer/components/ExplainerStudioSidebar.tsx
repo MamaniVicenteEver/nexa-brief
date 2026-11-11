@@ -1,17 +1,19 @@
 "use client";
 
-import { BarChart3, Clapperboard, ExternalLink, Loader2, Type } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
+import { BarChart3, Clapperboard, ExternalLink, Loader2, Type } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo, useState } from "react";
-import { cn } from "@/lib/utils";
+import { formatRelativeDate } from "@/features/sandbox/lib/relative-date";
 import { httpClient } from "@/infrastructure/api/http-client";
+import { cn } from "@/lib/utils";
 import { AccountFormatChoice } from "@/shared/components/publish/AccountFormatChoice";
 import { BrandAccountPicker } from "@/shared/components/publish/BrandAccountPicker";
 import {
   allowedFormatsFor,
   formatFor,
   groupAccountsByBrand,
+  youtubeFormatHint,
 } from "@/shared/components/publish/brand-groups";
 import { usePublishAccounts, useRecordExplainerVideo } from "../hooks/useExplainer";
 import {
@@ -23,8 +25,9 @@ import {
   type ThumbnailPreview,
 } from "../types";
 import { PublishPackagePanel } from "./PublishPackagePanel";
-import { PublishTextsControl } from "./PublishTextsControl";
+import { CompletePreparation } from "./CompletePreparation";
 import { ThumbnailPicker } from "./ThumbnailPicker";
+import { type UsageModelDetails, VideoUsageModelDetails } from "./VideoUsageModelDetails";
 
 type Tab = "texts" | "record" | "usage";
 const TABS: { id: Tab; Icon: typeof Type }[] = [
@@ -35,8 +38,7 @@ const TABS: { id: Tab; Icon: typeof Type }[] = [
 
 const FIELD = "w-full rounded-xl border border-nb-line bg-transparent px-3 py-2 text-[13px]";
 
-// La grabación normal inicia en 16:9; en publicación, cada cuenta elige UNO de los formatos
-// marcados en «Grabar».
+// Cada cuenta elige UNO de los formatos marcados en «Grabar».
 const RECORD_FORMATS: RecordFormat[] = ["16x9", "9x16"];
 
 type UsageResponse = {
@@ -45,33 +47,59 @@ type UsageResponse = {
   estimated?: boolean;
   unreconciled_estimate_tokens?: number | null;
   unmeasured_calls: number;
-  totals_by_model: Array<{ provider: string; model: string; total_tokens: number; undivided_tokens: number }>;
+  totals_by_model: Array<UsageModelDetails & { total_tokens: number; undivided_tokens: number }>;
 };
 
 export function UsageTab({ videoId }: { videoId: string }) {
+  const locale = useLocale();
   const t = useTranslations("explainer.studio.usage");
   const query = useQuery({
     queryKey: ["video-usage", videoId],
-    queryFn: ({ signal }) => httpClient<UsageResponse>(`/api/v1/content/usage/video/${encodeURIComponent(videoId)}`, { signal }),
+    queryFn: ({ signal }) =>
+      httpClient<UsageResponse>(`/api/v1/content/usage/video/${encodeURIComponent(videoId)}`, {
+        signal,
+      }),
     staleTime: 30_000,
     retry: false,
   });
   if (query.isLoading) return <p className="text-xs text-nb-mute">{t("loading")}</p>;
   if (query.isError || !query.data) return <p className="text-xs text-nb-mute">{t("error")}</p>;
-  if (query.data.usage_status === "unknown") return <p className="text-xs text-nb-mute">{t("unknown")}</p>;
+  if (query.data.usage_status === "unknown")
+    return <p className="text-xs text-nb-mute">{t("unknown")}</p>;
   return (
     <section className="space-y-2 text-xs text-nb-ink-soft">
-      <h3 className="font-bold text-nb-ink">{t(query.data.estimated ? "estimatedTotal" : "total", { count: query.data.total_tokens.toLocaleString() })}</h3>
+      <h3 className="font-bold text-nb-ink">
+        {t(query.data.estimated ? "estimatedTotal" : "total", {
+          count: query.data.total_tokens.toLocaleString(),
+        })}
+      </h3>
       <p>{t("partial")}</p>
-      {query.data.unreconciled_estimate_tokens != null && <p>{t("estimatedTotal", { count: query.data.unreconciled_estimate_tokens.toLocaleString() })}</p>}
+      {query.data.unreconciled_estimate_tokens != null && (
+        <p>
+          {t("estimatedTotal", { count: query.data.unreconciled_estimate_tokens.toLocaleString() })}
+        </p>
+      )}
       {query.data.totals_by_model.map((row) => (
         <div key={`${row.provider}:${row.model}`} className="rounded-lg border border-nb-line p-2">
-          <p className="font-semibold text-nb-ink">{row.model || row.provider} · {row.provider}</p>
-          <p>{t(query.data.estimated ? "estimatedTotal" : "total", { count: row.total_tokens.toLocaleString() })}</p>
-          {row.undivided_tokens > 0 && <p>{t("undivided", { count: row.undivided_tokens.toLocaleString() })}</p>}
+          <p className="font-semibold text-nb-ink">
+            {row.model || row.provider} · {row.provider}
+          </p>
+          {row.usage_known !== false && (
+            <p>
+              {t(query.data.estimated ? "estimatedTotal" : "total", {
+                count: row.total_tokens.toLocaleString(),
+              })}
+            </p>
+          )}
+          {row.undivided_tokens > 0 && (
+            <p>{t("undivided", { count: row.undivided_tokens.toLocaleString() })}</p>
+          )}
+          <VideoUsageModelDetails row={row} locale={locale} />
         </div>
       ))}
-      {query.data.unmeasured_calls > 0 && <p>{t("unmeasured", { count: query.data.unmeasured_calls })}</p>}
+      {query.data.unmeasured_calls > 0 && (
+        <p>{t("unmeasured", { count: query.data.unmeasured_calls })}</p>
+      )}
     </section>
   );
 }
@@ -121,9 +149,12 @@ function TextsTab({
   onThumbnailPreview: (preview: ThumbnailPreview) => void;
 }) {
   const t = useTranslations("explainer.studio");
+  const templatesText = useTranslations("templates");
+  const locale = useLocale();
   return (
     <div className="flex flex-col gap-2.5">
-      {!video.publishReady && <PublishTextsControl videoId={video.videoId} />}
+      <CompletePreparation videoId={video.videoId} />
+      <ThumbnailPicker video={video} />
       {video.publishPackage && (
         <PublishPackagePanel
           review={video.publishPackage}
@@ -133,11 +164,68 @@ function TextsTab({
           onPreview={onThumbnailPreview}
         />
       )}
+      {video.demo && (video.demoSummary || (video.reviewRequirements?.length ?? 0) > 0) && (
+        <section className="rounded-xl border border-nb-line p-3">
+          <div className="flex items-center justify-between gap-2 text-[10px] text-nb-mute">
+            {video.updatedAt && (
+              <span>
+                {templatesText("prep.updatedAt", {
+                  date: formatRelativeDate(video.updatedAt, locale),
+                })}
+              </span>
+            )}
+            {video.estimatedTokens != null && (
+              <span>
+                {templatesText("prep.estimatedTokens", {
+                  count: new Intl.NumberFormat(locale, {
+                    notation: "compact",
+                    maximumFractionDigits: 1,
+                  }).format(video.estimatedTokens),
+                })}
+              </span>
+            )}
+          </div>
+          <details className="mt-2">
+            <summary className="cursor-pointer text-[11px] font-semibold text-nb-ink">
+              {templatesText("prep.designNotes")}
+            </summary>
+            {video.demoSummary && (
+              <p className="mt-2 text-[11px] leading-relaxed text-nb-ink-soft">
+                {video.demoSummary}
+              </p>
+            )}
+            {(video.reviewRequirements?.length ?? 0) > 0 && (
+              <ul className="mt-2 list-disc space-y-1 pl-4 text-[10.5px] leading-relaxed text-nb-ink-soft">
+                {video.reviewRequirements?.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            )}
+          </details>
+        </section>
+      )}
+      {video.qualityIssues.length > 0 && (
+        <section className="rounded-xl border border-amber-300 bg-amber-50/60 p-3">
+          <h3 className="text-[11px] font-bold text-amber-900">
+            {templatesText("prep.qualityIssues")}
+          </h3>
+          <ul className="mt-1 list-disc space-y-1 pl-4 text-[11px] leading-relaxed text-amber-900">
+            {[...new Set(video.qualityIssues)].map((issue) => (
+              <li key={issue}>{issue}</li>
+            ))}
+          </ul>
+        </section>
+      )}
       <CopyBlock
         label="YouTube"
         title={video.youtubeTitle}
         body={video.youtubeDescription}
         tags={video.youtubeTags}
+      />
+      <CopyBlock
+        label="Instagram"
+        title={video.instagramTitle ?? ""}
+        body={video.instagramDescription}
       />
       <CopyBlock label="Facebook" title={video.facebookTitle} body={video.facebookDescription} />
       <CopyBlock label="TikTok" title={video.tiktokCaption} tags={video.tiktokHashtags} />
@@ -177,7 +265,12 @@ function JobStatus({ job }: { job: ExplainerJob }) {
             className="inline-flex items-center gap-1 text-nb-ink underline underline-offset-2"
           >
             {r.accountSelector}
-            {r.thumbnail && r.thumbnail.status !== "not_requested" && <span> · {ty(r.thumbnail.status === "applied" ? "appliedShort" : "failedShort")}</span>}
+            {r.thumbnail && r.thumbnail.status !== "not_requested" && (
+              <span>
+                {" "}
+                · {ty(r.thumbnail.status === "applied" ? "appliedShort" : "failedShort")}
+              </span>
+            )}
             {r.format
               ? " · " + t(r.format === "16x9" ? "prep.format.16x9" : "prep.format.9x16")
               : ""}{" "}
@@ -207,7 +300,9 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
   const [channels, setChannels] = useState<string[]>([]);
   // Un solo formato por cuenta (elegir 9:16 desmarca 16:9 y al revés).
   const [accountFormats, setAccountFormats] = useState<Record<string, RecordFormat>>({});
-  const [formats, setFormats] = useState<RecordFormat[]>(["16x9"]);
+  const [formats, setFormats] = useState<RecordFormat[]>([
+    video.previewMode === "mobile" ? "9x16" : "16x9",
+  ]);
   // Publicar es para el público: por defecto, público (se puede cambiar).
   const [privacy, setPrivacy] = useState<ExplainerJob["privacy"]>("public");
   const [restored, setRestored] = useState(false);
@@ -258,9 +353,10 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
     setFormats((prev) =>
       prev.includes(format) ? prev.filter((f) => f !== format) : [...prev, format],
     );
+  const preferredFormat: RecordFormat | undefined = video.previewMode === "mobile" ? "9x16" : undefined;
   const selectedFormatFor = (selector: string): RecordFormat | null => {
     const account = accounts.find((a) => a.selector === selector);
-    return account ? formatFor(account, formats, accountFormats) : null;
+    return account ? formatFor(account, formats, accountFormats, preferredFormat) : null;
   };
   const groups = useMemo(() => groupAccountsByBrand(accounts, t("otherChannels")), [accounts, t]);
   const formatLabels = { "16x9": tp("prep.format.16x9"), "9x16": tp("prep.format.9x16") };
@@ -279,7 +375,6 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
     <div className="flex flex-col gap-4">
       {job && <JobStatus job={job} />}
 
-      <ThumbnailPicker video={video} />
 
       <section className="flex flex-col gap-2">
         <h3 className="text-[13px] font-bold text-nb-ink">{t("recordHeading")}</h3>
@@ -340,19 +435,30 @@ function RecordTab({ video }: { video: ExplainerVideo }) {
           groups={groups}
           selected={channels}
           onChange={setChannels}
-          renderSelected={(account) => (
-            <AccountFormatChoice
-              name={`format-${account.selector}`}
-              title={t("channelFormats")}
-              allowed={allowedFormatsFor(account.platform, formats)}
-              value={formatFor(account, formats, accountFormats)}
-              labels={formatLabels}
-              emptyLabel={t("noFormatForAccount")}
-              onChange={(format) =>
-                setAccountFormats((prev) => ({ ...prev, [account.selector]: format }))
-              }
-            />
-          )}
+          renderSelected={(account) => {
+            const selected = formatFor(account, formats, accountFormats, preferredFormat);
+            const youtubeHint = account.platform === "youtube"
+              ? youtubeFormatHint(selected, video.durationSeconds)
+              : null;
+            return <>
+              <AccountFormatChoice
+                name={`format-${account.selector}`}
+                title={t("channelFormats")}
+                allowed={allowedFormatsFor(account.platform, formats)}
+                value={selected}
+                labels={formatLabels}
+                emptyLabel={t("noFormatForAccount")}
+                onChange={(format) =>
+                  setAccountFormats((prev) => ({ ...prev, [account.selector]: format }))
+                }
+              />
+              {youtubeHint && (
+                <p className="mt-1 text-[11px] leading-relaxed text-nb-mute">
+                  {t(youtubeHint)}
+                </p>
+              )}
+            </>;
+          }}
         />
         <p className="text-[11px] text-nb-mute">{t("perFormatHint")}</p>
         <label className="flex flex-col gap-1">

@@ -80,13 +80,35 @@ def with_key_rotation(model, call):
 
 LAST_USAGE: dict = {}   # usageMetadata de la última respuesta (narrate.py lo anota en el registro del video)
 
+
+def extract_usage_metadata(data: dict) -> dict:
+    """Retain usage from both Gemini response schemas, never audio/content/keys."""
+    if isinstance(data.get("usageMetadata"), dict):
+        raw = data["usageMetadata"]
+        normalized = dict(raw)
+        source = "generateContent.usageMetadata"
+    elif isinstance(data.get("usage"), dict):
+        raw = data["usage"]
+        fields = {"total_input_tokens": "promptTokenCount", "total_output_tokens": "candidatesTokenCount",
+                  "total_thought_tokens": "thoughtsTokenCount", "total_cached_tokens": "cachedContentTokenCount",
+                  "total_tokens": "totalTokenCount"}
+        normalized = {target: raw[key] for key, target in fields.items()
+                      if isinstance(raw.get(key), int) and not isinstance(raw[key], bool) and raw[key] >= 0}
+        source = "interactions.usage"
+    else:
+        return {}
+    normalized["provider_usage"] = {"source": source, "usage": dict(raw),
+                                    "interaction_id": data.get("id") if isinstance(data.get("id"), str) else None}
+    return normalized
+
 def _post(url: str, body: dict, headers: dict, timeout=300) -> dict:
     req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) nexa-explainer-kit/1.0", **headers}, method="POST")
     for attempt in range(4):
+        LAST_USAGE.clear()
         try:
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 data = json.loads(r.read())
-                LAST_USAGE.clear(); LAST_USAGE.update(data.get("usageMetadata") or {})
+                LAST_USAGE.clear(); LAST_USAGE.update(extract_usage_metadata(data))
                 return data
         except urllib.error.HTTPError as e:
             msg = e.read().decode(errors="replace")[:400]

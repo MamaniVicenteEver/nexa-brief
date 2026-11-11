@@ -167,6 +167,8 @@ async def run(job: Job, facade: PublisherFacade) -> Job:
         extra_kwargs: dict = {}
         if platform == "youtube" and copy.language:
             extra_kwargs["language"] = copy.language
+        if platform == "youtube" and summary.youtube_category_id is not None:
+            extra_kwargs["youtube_category_id"] = summary.youtube_category_id
         privacy = "public"
 
         if job.input.publishing and job.input.publishing.enabled:

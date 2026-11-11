@@ -94,6 +94,20 @@ def render_timeout_seconds(duration_seconds: float | None) -> int:
     return max(base, int(duration_seconds * settings.hyperframes_timeout_seconds_per_video_second))
 
 
+def _local_workers() -> int:
+    # Reserve CPU capacity for the API. More workers do not force a fixed CPU
+    # percentage; capture and encoding have different bottlenecks.
+    budget = max(1, int((os.cpu_count() or 1) * 0.8))
+    try:
+        available = next(int(line.split()[1]) for line in Path("/proc/meminfo").read_text().splitlines()
+                         if line.startswith("MemAvailable:"))
+        # Keep 1 GiB available beyond an allowance of 512 MiB per worker.
+        budget = min(budget, max(1, (available - 1024 * 1024) // (512 * 1024)))
+    except (OSError, ValueError, StopIteration):
+        pass
+    return max(1, min(settings.hyperframes_workers, budget))
+
+
 def _resolve_composition_dir(niche_cfg: "NicheConfig") -> Path | None:
     """`None` si el niche todavía no tiene una composición HyperFrames portada."""
     rel = _COMPOSITION_BY_TEMPLATE_ID.get(niche_cfg.template.template_id)
@@ -506,6 +520,9 @@ class HyperframesAdapter(RecorderPort):
         duration_seconds: float | None = None,
     ) -> None:
         """Corre el CLI sobre site_dir y deja el mp4 en dest_path (borra site_dir al terminar)."""
+        # Puppeteer searches ancestor package.json files when imported. Keep
+        # configuration local to this temporary render, independent of HOME.
+        (site_dir / ".puppeteerrc.json").write_text("{}", encoding="utf-8")
         variables_path = site_dir / "_hyperframes_variables.json"
         output_key = None
         if render_target == "aws":
@@ -528,22 +545,31 @@ class HyperframesAdapter(RecorderPort):
                 "--json",
             ]
         else:
+            workers = _local_workers()
             cmd = [
                 str(bin_path),
                 "render",
                 ".",
                 f"--output={dest_path}",
-                f"--workers={settings.hyperframes_workers}",
+                f"--workers={workers}",
                 f"--quality={settings.hyperframes_quality}",
                 f"--variables-file={variables_path}",
             ]
             if resolution:
                 cmd.append(f"--resolution={resolution}")
+            cmd.append("--low-memory-mode" if workers == 1 else "--no-low-memory-mode")
+            if (os.cpu_count() or 1) <= 4:
+                # The integrated-GPU host's automatic browser probe can fail
+                # before capture. Use the CLI's supported software/safe path.
+                cmd.append("--no-browser-gpu")
 
         # Con varias pasadas, el progreso del paso se reparte entre ellas.
         done, total = progress_span
 
         def parse_progress(line: str) -> float | None:
+            plain = re.sub(r"\x1b\[[0-9;]*m", "", line)
+            if re.search(r"✗\s+Render failed", plain):
+                raise RecordingError(f"HyperFrames render failed: {plain[-500:]}")
             fraction = parse_percent(line)
             return None if fraction is None else (done + fraction) / total
 

@@ -35,7 +35,11 @@ def record_agent_run(video_dir: Path, agent: str, result: AgentRunResult, *, rol
         note += " · se cortó por tiempo"
     entry = _tool().record(
         video_dir, provider=agent, model=result.model, role=role, step=step, seconds=result.duration_seconds,
-        ok=result.ok, note=note, usage_known=bool(usage),
+        ok=result.ok, note=note, usage_known=usage.get("usage_known", bool(usage)),
+        cost_usd=usage.get("cost_usd"), cost_basis=usage.get("cost_basis"),
+        provider_result_id=usage.get("provider_result_id"), provider_usage=usage.get("provider_usage"),
+        cache_creation_input_tokens=usage.get("cache_creation_input_tokens"),
+        uncached_input_tokens=usage.get("uncached_input_tokens"),
         input_tokens=usage.get("input_tokens"), cached_input_tokens=usage.get("cached_input_tokens"),
         output_tokens=usage.get("output_tokens"), reasoning_tokens=usage.get("reasoning_tokens"),
     )

@@ -96,6 +96,7 @@ class ExplainerBrief(BaseModel):
     outline: list[str] = Field(default_factory=list)
     youtube: YouTubeCopy
     facebook: FacebookCopy
+    instagram: FacebookCopy | None = None
     tiktok: TikTokCopy
     thumbnail_text: str = ""
     media_suggestions: list[str] = Field(default_factory=list)
@@ -110,6 +111,9 @@ class ExplainerBrief(BaseModel):
         self.youtube.description = "\n".join(clean(line) for line in self.youtube.description.split("\n"))
         self.facebook.title = clean(self.facebook.title)
         self.facebook.description = "\n".join(clean(line) for line in self.facebook.description.split("\n"))
+        if self.instagram is not None:
+            self.instagram.title = clean(self.instagram.title)
+            self.instagram.description = "\n".join(clean(line) for line in self.instagram.description.split("\n"))
         self.tiktok.caption = clean(self.tiktok.caption)
         self.tiktok.hashtags = [h for h in (clean(h) for h in self.tiktok.hashtags) if h.strip("#")]
         return self
@@ -121,6 +125,8 @@ class ExplainerBrief(BaseModel):
             "youtube_title_alternatives": self.youtube.title_alternatives,
             "youtube_description": self.youtube.description,
             "youtube_tags": self.youtube.tags,
+            "instagram_title": (self.instagram or self.facebook).title,
+            "instagram_description": (self.instagram or self.facebook).description,
             "facebook_title": self.facebook.title,
             "facebook_description": self.facebook.description,
             "tiktok_caption": self.tiktok.caption,
@@ -172,11 +178,12 @@ Devuelve SOLO este JSON:
   "youtube": {
     "title": "título principal",
     "title_alternatives": ["2 alternativas con otra fórmula"],
-    "description": "3 a 5 párrafos: 2 primeras líneas con gancho y palabras clave; contexto; qué aprenderás; cierre con pregunta para comentar. Sin enlaces inventados.",
+    "description": "Una o dos frases breves, máximo 400 caracteres. Gancho y contexto concreto; sin enlaces como sustituto ni relleno.",
     "tags": ["8 a 15 tags de búsqueda"]
   },
-  "facebook": {"title": "variante pensada para compartir", "description": "2 o 3 frases que inviten a comentar"},
-  "tiktok": {"caption": "1 o 2 frases con gancho (máx 150 caracteres)", "hashtags": ["#4", "#a", "#6"]},
+  "instagram": {"title": "título breve", "description": "Una o dos frases breves, máximo 280 caracteres."},
+  "facebook": {"title": "variante pensada para compartir", "description": "Una o dos frases breves, máximo 280 caracteres."},
+  "tiktok": {"caption": "Solo un título corto con gancho, máximo 100 caracteres", "hashtags": []},
   "thumbnail_text": "3 o 4 palabras que complementen el título, no que lo repitan",
   "media_suggestions": ["5 a 8 búsquedas en inglés de fotos de archivo con licencia libre"]
 }"""

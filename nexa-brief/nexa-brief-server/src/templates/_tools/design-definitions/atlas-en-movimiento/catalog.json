@@ -4984,7 +4984,7 @@
    "name": "money.flow",
    "label": "money.flow",
    "kind": "component",
-   "summary": "Billetes simbólicos por una ruta geográfica; fase y rumbo puros de t, sin afirmar un valor comercial.",
+   "summary": "Ejemplo general de money.flow: 7 billetes con $ por una ruta configurable, sin línea de ruta visible. Úsalo para transferencias o ayuda económica entre lugares; adapta la ruta y la cantidad. Los billetes son simbólicos y no representan un importe.",
    "tags": [],
    "params": {
     "via": {
@@ -5025,6 +5025,11 @@
      "default": 1,
      "min": 0.2,
      "max": 4
+    },
+    "currencySymbol": {
+     "type": "string",
+     "default": "$",
+     "doc": "Símbolo del billete; una cadena vacía conserva el dibujo simbólico sin moneda."
     },
     "routeVisible": {
      "type": "boolean",
@@ -5076,6 +5081,7 @@
     ],
     "count": 7,
     "period": 5,
+    "currencySymbol": "$",
     "t": 0,
     "dur": 8,
     "out": 7,
@@ -5092,7 +5098,7 @@
    "name": "money.stack",
    "label": "money.stack",
    "kind": "component",
-   "summary": "Fajos simbólicos que se deslizan y apilan; sin moneda ni cifra económica implícita.",
+   "summary": "Fajos de billetes con $ que se deslizan y apilan. Úsalo para mostrar reservas o acumulación de dinero en un lugar; para transferencias entre lugares usa money.flow. La cantidad de fajos es simbólica y no representa un importe.",
    "tags": [],
    "params": {
     "count": {
@@ -5106,6 +5112,11 @@
      "default": 1,
      "min": 0.2,
      "max": 4
+    },
+    "currencySymbol": {
+     "type": "string",
+     "default": "$",
+     "doc": "Símbolo del billete; una cadena vacía conserva el dibujo simbólico sin moneda."
     },
     "buildDur": {
      "type": "number",
@@ -5122,6 +5133,7 @@
      28
     ],
     "count": 12,
+    "currencySymbol": "$",
     "t": 0,
     "dur": 8,
     "out": 7
@@ -14991,6 +15003,354 @@
    "preview_kind": "iframe",
    "data": {
     "native_name": "territory.control"
+   }
+  },
+  {
+   "id": "space.satellite",
+   "name": "space.satellite",
+   "label": "Satélite animado",
+   "kind": "component",
+   "summary": "Satélite vectorial en órbita con haz, pulsos y constelación.",
+   "tags": [
+    "satélite",
+    "satelite",
+    "espacio"
+   ],
+   "params": {
+    "label": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo visible."
+    },
+    "flag": {
+     "type": "string",
+     "default": "",
+     "doc": "Bandera u origen indicado en el rótulo."
+    },
+    "via": {
+     "type": "array",
+     "doc": "Órbita como lista de [lon,lat]."
+    },
+    "target": {
+     "type": "place",
+     "default": null,
+     "doc": "Lugar objetivo del haz."
+    },
+    "altitude": {
+     "type": "number",
+     "default": 2,
+     "min": 0,
+     "max": 20,
+     "doc": "Separación visual de la sombra."
+    },
+    "beam": {
+     "type": "enum",
+     "values": [
+      "scan",
+      "link",
+      "none"
+     ],
+     "default": "scan",
+     "doc": "Modo de haz."
+    },
+    "pulses": {
+     "type": "boolean",
+     "default": true,
+     "doc": "Pulsos de radar o enlace."
+    },
+    "count": {
+     "type": "number",
+     "default": 1,
+     "min": 1,
+     "max": 8,
+     "doc": "Satélites de la constelación."
+    },
+    "spread": {
+     "type": "number",
+     "default": 40,
+     "min": 0,
+     "max": 300,
+     "doc": "Separación en píxeles de diseño."
+    }
+   },
+   "example": {
+    "id": "demo-space-satellite",
+    "type": "space.satellite",
+    "via": [
+     [
+      49.8,
+      28.5
+     ],
+     [
+      51,
+      28.2
+     ],
+     [
+      52.2,
+      27.8
+     ]
+    ],
+    "target": [
+     51,
+     27.2
+    ],
+    "beam": "scan",
+    "count": 2,
+    "spread": 60,
+    "label": "ENLACE SATELITAL",
+    "flag": "UA",
+    "t": 0,
+    "dur": 12
+   },
+   "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/atlas-en-movimiento/preview/tactico/demo.html?only=space.satellite&bg=dark&autoplay=1&loop=1&bare=1&aspect=9x16",
+   "preview_kind": "iframe",
+   "data": {
+    "native_name": "space.satellite"
+   }
+  },
+  {
+   "id": "territory.zone",
+   "name": "territory.zone",
+   "label": "Zona de control territorial",
+   "kind": "component",
+   "summary": "Zona de control con polígonos propios [lon,lat] y estados fechados: la parte que se pierde se desvanece y la ganada se enciende. Rojo translúcido al 50 % que se mantiene todo el video. Úsala para mostrar qué controla un bando (ocupación, avance, retirada).",
+   "tags": [
+    "territorio",
+    "zona",
+    "control"
+   ],
+   "params": {
+    "polygons": {
+     "type": "array",
+     "doc": "Anillos [[lon,lat],…] del estado inicial. Pueden pasar por el mar o por otro país: se recortan con `clip`. Sin solapes entre anillos."
+    },
+    "clip": {
+     "type": "array",
+     "default": [
+      {
+       "region": "UA"
+      },
+      {
+       "region": "RU",
+       "box": [
+        32,
+        44,
+        37.3,
+        46.2
+       ]
+      }
+     ],
+     "doc": "Países donde se pinta: [{region,box?:[lonMin,latMin,lonMax,latMax]}]. Por defecto Ucrania y la península de Crimea."
+    },
+    "color": {
+     "type": "string",
+     "default": null,
+     "doc": "Tinta con alfa, p. ej. \"#E23B2E@.5\". Por defecto el token ucr2.territorio.zona."
+    },
+    "border": {
+     "type": "boolean",
+     "default": true,
+     "doc": "Dibuja el contorno de la zona."
+    },
+    "label": {
+     "type": "string",
+     "default": null,
+     "doc": "Texto de la leyenda (esquina inferior derecha), p. ej. \"CONTROL RUSO · APROXIMADO\"."
+    },
+    "tinta": {
+     "type": "enum",
+     "values": [
+      "rusia",
+      "ucrania"
+     ],
+     "default": "rusia",
+     "doc": "Paleta: rusia = rojo 50 %, ucrania = amarillo 50 %."
+    },
+    "slot": {
+     "type": "number",
+     "default": 0,
+     "min": 0,
+     "max": 6,
+     "doc": "Posición de la leyenda: 0 abajo; 1, 2… se apilan hacia arriba. Una leyenda por zona visible."
+    },
+    "icon": {
+     "type": "enum",
+     "values": [
+      "cuadro",
+      "check"
+     ],
+     "default": "cuadro",
+     "doc": "Icono de la leyenda: cuadro de color o check."
+    },
+    "colorBorde": {
+     "type": "string",
+     "default": null,
+     "doc": "Tinta del contorno; por defecto el token de la paleta."
+    }
+   },
+   "example": {
+    "id": "demo-territory-zone",
+    "type": "territory.zone",
+    "t": 0,
+    "dur": 8,
+    "out": 7.5,
+    "polygons": [
+     [
+      [
+       32,
+       44
+      ],
+      [
+       37.2,
+       44
+      ],
+      [
+       37.2,
+       46
+      ],
+      [
+       32,
+       46
+      ]
+     ]
+    ],
+    "states": [
+     {
+      "at": 3,
+      "state": "recuperado",
+      "dur": 1.5,
+      "polygons": [
+       [
+        [
+         34,
+         44
+        ],
+        [
+         37.2,
+         44
+        ],
+        [
+         37.2,
+         46
+        ],
+        [
+         34,
+         46
+        ]
+       ]
+      ]
+     }
+    ],
+    "label": "CONTROL · APROXIMADO",
+    "note": "Zona esquemática sin valor histórico."
+   },
+   "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/atlas-en-movimiento/preview/tactico/demo.html?only=territory.zone&bg=dark&autoplay=1&loop=1&bare=1&aspect=9x16",
+   "preview_kind": "iframe",
+   "data": {
+    "native_name": "territory.zone"
+   }
+  },
+  {
+   "id": "money.flow.ucrania",
+   "name": "money.flow",
+   "label": "money.flow · Ruta de Ucrania",
+   "kind": "component",
+   "summary": "Ejemplo de money.flow usado en Ucrania: 10 billetes con $ por la ruta Europa → Ucrania, con línea visible. Úsalo como referencia para mostrar ayuda económica hacia un destino. Es el mismo componente con otros parámetros; no cuantifica un importe.",
+   "tags": [
+    "dinero",
+    "flujo",
+    "ucrania"
+   ],
+   "params": {
+    "via": {
+     "type": "array",
+     "default": [
+      [
+       50.33,
+       29.25
+      ],
+      [
+       52,
+       27.5
+      ],
+      [
+       56.4,
+       26.5
+      ],
+      [
+       58,
+       24
+      ]
+     ]
+    },
+    "count": {
+     "type": "number",
+     "default": 7,
+     "min": 1,
+     "max": 40
+    },
+    "period": {
+     "type": "number",
+     "default": 5,
+     "min": 0.2,
+     "max": 60
+    },
+    "scale": {
+     "type": "number",
+     "default": 1,
+     "min": 0.2,
+     "max": 4
+    },
+    "routeVisible": {
+     "type": "boolean",
+     "default": false
+    },
+    "width": {
+     "type": "number",
+     "default": null,
+     "min": 1,
+     "max": 40
+    },
+    "color": {
+     "type": "string",
+     "default": null
+    },
+    "dash": {
+     "type": "array",
+     "default": null
+    }
+   },
+   "example": {
+    "id": "demo-money-flow-ucrania",
+    "type": "money.flow",
+    "via": [
+     [
+      20,
+      52
+     ],
+     [
+      24,
+      50
+     ],
+     [
+      30.5,
+      50.4
+     ]
+    ],
+    "count": 10,
+    "period": 5,
+    "routeVisible": true,
+    "t": 0,
+    "dur": 16,
+    "out": 16,
+    "fade": 0.3,
+    "currencySymbol": "$"
+   },
+   "preview_url": "/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/preview/tactico/demo.html?only=money.flow&p=%7B%22id%22%3A%22demo-money-flow-ucrania%22%2C%22via%22%3A%5B%5B20%2C52%5D%2C%5B24%2C50%5D%2C%5B30.5%2C50.4%5D%5D%2C%22count%22%3A10%2C%22period%22%3A5%2C%22routeVisible%22%3Atrue%2C%22t%22%3A0%2C%22dur%22%3A16%2C%22out%22%3A16%2C%22fade%22%3A0.3%2C%22currencySymbol%22%3A%22%24%22%7D&bg=dark&autoplay=1&loop=1&bare=1&aspect=9x16",
+   "preview_kind": "iframe",
+   "data": {
+    "native_name": "money.flow",
+    "example_variant": "ucrania"
    }
   }
  ]

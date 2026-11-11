@@ -1,6 +1,7 @@
 """Endpoints para consultar y promover videos del sandbox explainer."""
 
 import asyncio
+import json
 from dataclasses import asdict
 from pathlib import Path
 
@@ -26,6 +27,10 @@ from src.presentation.api.schemas.explainer_schema import (
 )
 
 router = APIRouter(tags=["explainer"])
+from src.presentation.api.routers.design_production import router as design_production_router
+router.include_router(design_production_router)
+from src.presentation.api.routers.editorial_preparation import router as editorial_router
+router.include_router(editorial_router)
 _preparation_service = None
 
 
@@ -73,8 +78,8 @@ async def start_sandbox_preparation(folder: str, video_id: str, body: PrepareSan
     if video_id in _busy_video_ids():
         raise HTTPException(status_code=409, detail=BUSY_MESSAGE)
     try:
-        row = await get_preparation_service().submit(folder, video_id, body.agent)
-        return _public_preparation(row)
+        from src.presentation.api.routers.design_production import service
+        return await service().validate(folder, video_id)
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ValueError as exc:
@@ -101,17 +106,33 @@ def _busy_video_ids() -> set[str]:
     from src.core.data import collection
     preparation_ids = {row.get("project_id") for row in collection("sandbox_preparations").list()
                        if row.get("state") in {"queued", "running"} and row.get("project_id")}
-    return production_ids | recording_ids | preparation_ids
+    from src.core.task_ownership import task_is_owned
+    editorial_ids = {row['video_id'] for row in collection('editorial_preparations').list() if row.get('state') in {'queued','running'} and task_is_owned('editorial-preparation', row['video_id'])}
+    return production_ids | recording_ids | preparation_ids | editorial_ids
 
 
 @router.get("/explainer/sandbox", response_model=list[SandboxFolderResponse])
 async def get_explainer_sandbox() -> list[SandboxFolderResponse]:
     """Lista las carpetas y elementos visibles del sandbox."""
     busy_ids = _busy_video_ids()
-    return [
+    result = [
         SandboxFolderResponse.model_validate(asdict(folder))
         for folder in sandbox_catalog.list_sandbox(busy_ids=busy_ids)
     ]
+    from src.adapters.showcase.production import FilesystemDesignProduction
+    workflow = FilesystemDesignProduction()
+    for folder in result:
+        for item in folder.items:
+            try:
+                directory = sandbox_catalog.get_sandbox_dir() / item.folder / item.id
+                info = json.loads((directory / 'info.json').read_text())
+                item.production_design = info.get('is_new_design') is True
+                status = workflow.inspect(item.folder, item.id)
+                item.promotable = status['can_pass'] and item.id not in busy_ids
+                item.promote_blocker = None if item.promotable else status.get('error') or 'Prepara y valida el diseño para pasar a producción'
+            except (OSError, ValueError):
+                continue
+    return result
 
 
 @router.get("/explainer/sandbox/components", response_model=list[SandboxComponentsResponse])
@@ -250,36 +271,15 @@ async def promote_sandbox_video(folder: str, video_id: str, request: SandboxProm
     if video_id in _busy_video_ids():
         raise HTTPException(status_code=409, detail=BUSY_MESSAGE)
 
-    source = sandbox_catalog.get_sandbox_dir() / folder / video_id
+    from src.presentation.api.routers.design_production import service, fail
+    from src.core.design_production import ProductionError, ProductionSelection
     try:
-        from src.config.profile_layout import layout_for_settings
-        from src.config.settings import settings
-        override = None if layout_for_settings(settings).schema_version >= 2 else sandbox_catalog.get_sandbox_dir().parent
-        plan = promotion.promote(source, templates_dir=override,
-                                 category=request.category if request else None,
-                                 shared_categories=request.shared_categories if request else None)
-    except promotion.PromoteError as exc:
-        status_code = 404 if exc.code == "not_found" else 409
-        raise HTTPException(status_code=status_code, detail=exc.message) from exc
-
-    video = load_video(plan.destination)
-    if video is None:
-        raise HTTPException(status_code=404, detail=f"No existe {plan.destination}")
-    from_path = Path("sandbox") / folder / video_id
-    from src.config.profile_layout import layout_for_settings
-    from src.config.settings import settings
-    to_path = Path("productions") / plan.destination.parent.name / video_id if layout_for_settings(settings).schema_version >= 2 else Path(plan.destination.parent.name) / video_id
-    logger.info(
-        "explainer_sandbox_promoted",
-        video_id=video_id,
-        folder=folder,
-        from_path=from_path.as_posix(),
-        to_path=to_path.as_posix(),
-        category_path=video.category_path,
-    )
-    return SandboxPromotionResponse(
-        video_id=video_id,
-        from_path=from_path.as_posix(),
-        to_path=to_path.as_posix(),
-        category_path=video.category_path,
-    )
+        workflow = service()
+        draft = workflow.get(folder, video_id)['draft']
+        selection = ProductionSelection(category=(request.category if request and request.category else draft['category']),
+            shared_categories=(request.shared_categories if request and request.shared_categories is not None else draft['shared_categories']))
+        result = await workflow.pass_to_production(folder, video_id, selection)
+        return SandboxPromotionResponse(video_id=video_id, from_path=f'sandbox/{folder}/{video_id}',
+            to_path=result['destination'], category_path=selection.category)
+    except (FileNotFoundError, ProductionError) as exc:
+        fail(exc)

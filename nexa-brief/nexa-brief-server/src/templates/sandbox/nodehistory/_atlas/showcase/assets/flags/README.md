@@ -1,0 +1,3 @@
+`us.svg` es una construcción vectorial local de la bandera de Estados Unidos de cincuenta estrellas, creada para el Showcase. No contiene imágenes generadas con IA ni medios de un episodio privado.
+
+Proporciones y disposición: [Executive Order 10834, National Archives](https://www.archives.gov/federal-register/codification/executive-order/10834.html) y [tabla de proporciones, U.S. House of Representatives](https://uscode.house.gov/view.xhtml?req=%28title%3A4+section%3A1+edition%3Aprelim). Relación 1:1.9; trece franjas; cantón 0.76 × 7/13; nueve filas de estrellas alternando seis y cinco; diámetro de estrella 0.0616 y espaciado prescrito 0.063 / 0.054. Los colores sRGB convencionales son una representación de pantalla, no una certificación de color textil.

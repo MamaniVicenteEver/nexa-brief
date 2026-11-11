@@ -9,12 +9,13 @@ import {ATLAS,TEMPLATES,SERVER,readJSON,episodePath,catalog,checkEpisode,resolve
 const HELP=`Atlas Cinemático · ejecutar desde nexa-brief-server
   node src/templates/sandbox/nodehistory/_atlas/produce.mjs catalog [búsqueda]
   ... example atlas.arrow                         JSON insertable + entradas
+  ... profile                                     voces y reglas de guion reutilizables
   ... new <id> --title "Título" [--duration 24]    crea nodehistory/<id>
   ... add <id> atlas.arrow [--input '{"to":[2,49]}']
   ... add <id> atlas.animation --index 0 --out 20 [--input '{"style":"rise"}']
   ... add <id> atlas.outrov2 [--at 412]
   ... check <id> [--ready] [--selection 'c=atlas.outrov2']
-  ... voice <id> [--dry] [--voice Charon] [--parts 2] [--force]
+  ... voice <id> [--dry] [--voice Orus|Sulafat] [--parts 2] [--force]
   ... transcribe <id> [--force]                    Whisper real por palabra
   ... prepare <id> [--fetch] [--verify] [--size 1920x1080]
   ... render <id> <salida.mp4> [--to 20] [--size 1920x1080] [--fps 30]
@@ -41,6 +42,11 @@ function run(script,args=[],{module=false}={}) {
 function requireFile(p) {if(!fs.existsSync(p))throw Error(`No existe: ${p}`);}
 function outputCheck(result) {console.log(JSON.stringify(result,null,2));if(!result.ok)throw Error('Corregir los errores antes de continuar');}
 function dimensions(v='1920x1080') {if(!/^\d+x\d+$/.test(v))throw Error('size debe ser ancho x alto, por ejemplo 1080x1920');const [w,h]=v.split('x').map(Number);if(w<1||h<1)throw Error('size debe ser positivo');return [w,h];}
+// GeoData devuelve índices de layers: conservar huecos, nunca compactar la lista.
+export function geographicPreparation(scene) {
+  return {layers:(scene.layers||[]).map(l=>['highlight','flag-fill'].includes(l.type)&&!scene.regions?.[l.region]
+    ? {region:l.region,...(l.detail?{detail:l.detail}:{})} : {})};
+}
 export function newEpisode(id,flags={}) {
   if(!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(id||''))throw Error('ID: minúsculas, números y guiones');
   const root=path.join(TEMPLATES,'nodehistory',id);if(fs.existsSync(root))throw Error('La carpeta ya existe; no se sobrescribe');
@@ -52,7 +58,8 @@ export function newEpisode(id,flags={}) {
   fs.writeFileSync(path.join(root,'index.html'),`<!doctype html>\n<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${safe(title)}</title><link rel="stylesheet" href="${relative(path.join(ATLAS,'assets/fonts/fonts.css'))}"><link rel="stylesheet" href="${relative(path.join(ATLAS,'vendor/maplibre-gl.css'))}"><style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#stage,#stage>canvas{position:fixed;inset:0;display:block}</style></head><body><audio id="audio" preload="auto"></audio><div id="stage"></div><script src="${relative(path.resolve(ATLAS,'../../_proto/proto.js'))}"></script><script type="module" src="${relative(path.join(ATLAS,'atlas.js'))}"></script></body></html>\n`);
   write(path.join(root,'assets/config.json'),{activeId:'default',configs:[{id:'default',sceneUrl:'assets/scene.json'}]});
   write(path.join(root,'assets/scene.json'),{format:'atlas-v1',duration,lang:'es',look:'satelite-realista',places:{Origen:[4.35,50.85],Destino:[-77.04,38.9]},camera:[{t:0,center:[-25,35],span:150,pitch:0},{t:4,focus:'Origen',span:70,pitch:35,dur:3},{t:duration*.5,focus:'Destino',span:100,pitch:25,dur:Math.min(3,duration*.15)}],layers:[{type:'title',text:title,sub:'EJEMPLO · REEMPLAZAR CONTENIDO',t:0,out:4,size:55},{type:'arrow',from:'Origen',to:'Destino',t:6,out:duration-1,dur:2,head:'arrow',style:'cyan',label:'RUTA ILUSTRATIVA'}]});
-  write(path.join(root,'assets/script.json'),{title,language:'es',voice:'Charon',segments:[{id:'s01',tone:'explicativo',intensity:.5,text:'REEMPLAZAR con un guion investigado y revisado. Este archivo es una estructura de trabajo; no generar la voz de este marcador.'}]});
+  const vocal=readJSON(path.join(ATLAS,'voice.json')).voice;
+  write(path.join(root,'assets/script.json'),{title,language:'es',voice:vocal.voice,voice_direction:vocal.base,segments:[{id:'s01',tone:'explicativo',intensity:.5,text:'REEMPLAZAR con un guion investigado y revisado. Este archivo es una estructura de trabajo; no generar la voz de este marcador.'}]});
   write(path.join(root,'research.json'),{topic:title,asOf:null,sources:[],facts:[],notes:['Guardar fuentes primarias, periodo, unidad y denominador antes del guion.']});
   write(path.join(root,'assets/media/credits.json'),{});
   write(path.join(root,'info.json'),{version:1,title,summary:'Episodio Atlas Cinemático en preparación',engine:'nodehistory/_atlas',design:'atlas-cinematico',catalog:relative(path.join(ATLAS,'components.json')),status:'en preparación',created_at:new Date().toISOString().slice(0,10)});
@@ -94,7 +101,7 @@ export function addComponent(root,name,input={},flags={}) {
     for(const k of ['camera','layers','looks'])if(Array.isArray(demo[k]))scene[k]=[...(scene[k]||[]),...shifted(demo[k])];
     if(demo.look)(scene.looks||=[]).push({t:at,look:demo.look,dur:0,...(demo.lookOverrides?{overrides:demo.lookOverrides}:{})});
     console.warn(`Cierre insertado en ${at}–${at+length}s; revisar conflictos con cámara y capas previas en ese tramo.`);
-  } else if(['layers','camera','looks'].includes(target)) (scene[target]||=[]).push(demo);
+  } else if(['layers','camera','looks','hud'].includes(target)) (scene[target]||=[]).push(demo);
   else if(target.startsWith('scene.'))scene[target.slice(6)]=demo;
   else throw Error(`Target no soportado: ${target}`);
   for(const k of ['camera','looks']) if(Array.isArray(scene[k])&&scene[k].every(x=>typeof x.t==='number'))scene[k].sort((a,b)=>a.t-b.t);
@@ -103,6 +110,7 @@ export function addComponent(root,name,input={},flags={}) {
 export function main(args=process.argv.slice(2)) {
   const {pos,flags}=parse(args),[cmd,id,name]=pos;
   if(!cmd||['help','--help','-h'].includes(cmd))return console.log(HELP);
+  if(cmd==='profile') {const vocal=readJSON(path.join(ATLAS,'voice.json'));return console.log(JSON.stringify({voice:vocal,narrative:readJSON(path.join(ATLAS,vocal.narrative_profile)),orchestration:readJSON(path.join(ATLAS,'orchestration.json'))},null,2));}
   if(cmd==='catalog') {const data=catalog();const q=(id||'').toLowerCase();return console.log(JSON.stringify({version:data.version,components:data.components.filter(c=>!q||`${c.name} ${c.summary} ${c.group} ${c.family}`.toLowerCase().includes(q)).map(({name,target,summary})=>({name,target,summary}))},null,2));}
   if(cmd==='example') {const c=catalog().components.find(c=>c.name===id);if(!c)throw Error('Componente desconocido');return console.log(JSON.stringify(c,null,2));}
   if(cmd==='new')return console.log(newEpisode(id,flags));
@@ -114,7 +122,7 @@ export function main(args=process.argv.slice(2)) {
     const p=path.join(root,'assets/script.json');requireFile(p);const script=readJSON(p);
     if(!script.segments?.length||script.segments.some(s=>!s.id||!s.tone||!s.text)||/REEMPLAZAR|PENDIENTE|TODO/.test(JSON.stringify(script)))throw Error('Completar el guion investigado antes de generar voz');
     const out=path.join(root,'assets/song');if(!flags.force&&!flags.dry&&fs.existsSync(out+'.mp3'))throw Error('Ya existe song.mp3; --force permite reemplazarlo');
-    const extra=['--design',path.join(ATLAS,'voice.json'),'--voice',flags.voice||script.voice||'Charon'];
+    const extra=['--design',path.join(ATLAS,'voice.json'),'--voice',flags.voice||script.voice||readJSON(path.join(ATLAS,'voice.json')).voice.voice];
     for(const k of ['parts','model','only-part'])if(flags[k]!==undefined)extra.push('--'+k,String(flags[k]));
     if(flags.dry)extra.push('--dry');
     run('src/templates/_tools/explainer-kit/tools/narrate.py',[p,out,...extra]);
@@ -133,8 +141,7 @@ export function main(args=process.argv.slice(2)) {
     // GeoData sólo recibe regiones administrativas. focus de fotos es un recorte 0–1.
     const {scene}=resolveScene(root,flags.selection||'');
     const scratch=path.join(path.dirname(scenePath),`.atlas-geoprep-${process.pid}.json`);
-    const layers=(scene.layers||[]).map(l=>l.type==='highlight'&&!scene.regions?.[l.region]?{region:l.region,detail:l.detail}:{});
-    try {write(scratch,{layers});run('src.templates._tools.atlas.geo_cli',['geo','scene',scratch],{module:true});}
+    try {write(scratch,geographicPreparation(scene));run('src.templates._tools.atlas.geo_cli',['geo','scene',scratch],{module:true});}
     finally {fs.rmSync(scratch,{force:true});}
     run('src/templates/_tools/atlas/atlas.py',['plan',scenePath,'--width',String(w),'--height',String(h),...(flags.selection?['--selection',flags.selection]:[]),...(flags.fetch?['--fetch']:[])]);
     if(flags.verify) {

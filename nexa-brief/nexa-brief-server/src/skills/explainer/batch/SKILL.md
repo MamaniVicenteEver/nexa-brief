@@ -7,7 +7,14 @@ description: Prepara o agenda varios videos de Nexa Brief desde un chat, con cat
 
 Ejecuta en alfred-server, desde el directorio nexa-brief-server. Lee las instrucciones AGENTS.md del servidor. Para crear contenido con diseños existentes, el productor aplica ../produce/SKILL.md. Este flujo administra pedidos; no escribe guiones directamente ni crea otra cola por fuera del backend.
 
-Convierte la petición en una lista JSON. Cada elemento admite category_path, design, topic, description, agent, minutes, narrative_id y title_level. Descubre las categorías/diseños existentes con los módulos core; no inventes IDs. El tema, estilo y categoría pueden variar entre elementos. Nunca pases auto_record ni datos de publicación: este flujo es solo preparación.
+Convierte la petición en una lista JSON. Cada elemento admite category_path, design, estilo, topic, description, agent, minutes, narrative_id y title_level. Descubre las categorías/diseños existentes con los módulos core; no inventes IDs. El tema, estilo y categoría pueden variar entre elementos. Nunca pases auto_record ni datos de publicación: este flujo es solo preparación.
+
+Para `mapas-satelitales` y `atlas-en-movimiento`, descubre los estilos con
+`GET /api/v1/showcase/designs/<id>/styles` y consulta `/production-guide?estilo=<id>` una sola vez.
+Ejemplo de elemento: `{"category_path":"node_history","design":"mapas-satelitales","estilo":"documentary","topic":"Un tema concreto","minutes":5}`.
+El productor entrega solo los contratos de las piezas del estilo elegido. `validate` comprueba los
+archivos nativos sin volver a llamar al agente o a la voz; conserva el estado de revisión visual.
+Divide pedidos grandes en lotes de hasta 100 y usa un request-id estable por lote.
 
 Ejemplo:
 ```json

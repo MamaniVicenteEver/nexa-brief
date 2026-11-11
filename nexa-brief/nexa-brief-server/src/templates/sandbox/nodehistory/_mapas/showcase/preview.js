@@ -1,6 +1,7 @@
 /* Isolated examples use the actual shared map renderer, never a production scene. */
 (() => {
-  const name = new URLSearchParams(location.search).get('only') || 'map.layer.arrow';
+  const query = new URLSearchParams(location.search);
+  const name = query.get('only') || 'map.layer.arrow';
   const mapRoot = '/api/v1/explainer/files/sandbox/nodehistory/_mapas/';
   const cases = {
     'map.layer.fill': {type:'fill', region:'Bolivia', color:'#e3122a'},
@@ -20,13 +21,18 @@
     'map.place': {type:'pin', at:'La Paz', text:'LUGAR', size:48},
     'map.satellite': {type:'label', at:'Bolivia', text:'MAPA SATELITAL', size:70},
     'map.transition.fade-in': {type:'label', at:'Bolivia', text:'ENTRADA', size:84, style:'big', fade:2},
-    'map.transition.fade-out': {type:'label', at:'Bolivia', text:'SALIDA', size:84, style:'big', out:2, fadeOut:2},
+    'map.transition.fade-out': {type:'label', at:'Bolivia', text:'SALIDA', size:84, style:'big', out:5, fadeOut:2},
   };
   const original = Proto.run;
   Proto.run = engine => {
     const isIntro = name === 'proto.intro';
     const isOutro = name === 'proto.outro';
-    const scene = {end:8, camera:[{t:0,c:[-67,-20],span:32}], layers:cases[name] ? [{t:0,...cases[name]}] : []};
+    let params = {};
+    if (query.has('p')) { try { params = JSON.parse(query.get('p')); } catch { throw Error('Parámetros JSON inválidos'); } }
+    const styled = !!query.get('estilo');
+    const example = {...(cases[name] || {}), ...params};
+    if (styled) for (const key of ['size','style','w','head','r','radius','dotR']) if (!(key in params)) delete example[key];
+    const scene = {captions:{enabled:false},estilo:query.get('estilo') || undefined,end:8, camera:[{t:0,c:[-67,-20],span:32}], layers:cases[name] ? [{t:0,...example}] : []};
     if (name === 'map.camera.key') scene.camera.push({t:2,c:[-66,-16],span:12,dur:3});
     if (isIntro) scene.intro = {style:'v1',text:'UNA HISTORIA EN EL MAPA',dur:4};
     if (isOutro) scene.outro = {channel:'NODEHISTORY',handle:'@nodehistory',dur:6};

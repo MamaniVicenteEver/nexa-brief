@@ -1,7 +1,7 @@
 import {Tactico} from '../core.js';
+import {episodeMediaURL} from '../episode-data.js';
 import {readJSON} from '../tools/io.js';
 
-const root = new URL('../../../', import.meta.url);
 const clamp = x => Math.max(0, Math.min(1, x));
 const back = k => { k = clamp(k); return 1 + 2.7 * Math.pow(k - 1, 3) + 1.7 * Math.pow(k - 1, 2); };
 let fontReady;
@@ -105,7 +105,7 @@ const transcript = {
   async prepare(i,c){
     await font();
     const useContext = c.words?.length && (!i.lyricsUrl || i.lyricsUrl === 'assets/lyrics.json');
-    const data = useContext ? null : await readJSON(new URL(i.lyricsUrl || 'assets/lyrics.json', root));
+    const data = useContext ? null : await readJSON(episodeMediaURL(i.lyricsUrl || 'assets/lyrics.json', c));
     const words = (useContext ? c.words : (data.segments || []).flatMap(s => s.words || [])).filter(w => w && isFinite(w.start));
     const palabras = i.palabras ?? (c.estilo?.id === 'clasico' ? i.maxWords : c.estilo?.estilos.transcripcion.palabras);
     return {caps:buildTranscript(words, c.scene.end ?? c.scene.duration ?? Infinity, {...i,palabras})};

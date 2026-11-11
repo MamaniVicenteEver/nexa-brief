@@ -19,9 +19,13 @@ try {
       scene.camera=[{t:0,focus:[-58,-6],span:100,pitch:45,bearing:0}];
       demo.from=[-75,10];demo.to=[-52,-4];
     }
-    if(demo.src)demo.src=new URL('../../atlas-cinematico/assets/'+demo.src,location.href).href;
+    if(demo.type==='flag-fill') {
+      demo.src=new URL('./assets/flags/us.svg',import.meta.url).href;
+      scene.camera=[{t:0,focus:[-105,43],span:115,pitch:30,bearing:0}];
+    } else if(demo.src)demo.src=new URL('../../atlas-cinematico/assets/'+demo.src,location.href).href;
     scene.layers.push(demo);
-  } else if(component.target==='camera') {if(component.name==='atlas.cameraFly')scene.camera[0].focus=[3.5,48];scene.camera.push(demo);}
+  } else if(component.target==='hud')scene.hud=[demo];
+  else if(component.target==='camera') {if(component.name==='atlas.cameraFly')scene.camera[0].focus=[3.5,48];scene.camera.push(demo);}
   else if(component.target==='looks')scene.looks=[demo];
   else if(component.target==='scene')Object.assign(scene,demo);
   else if(component.target==='scene.dataEntry') {const {id,...data}=demo;scene.data={[id]:data};scene.layers=[{type:'metric',dataRef:id,sub:'Mismo dato para flechas y tarjetas',t:0}];}

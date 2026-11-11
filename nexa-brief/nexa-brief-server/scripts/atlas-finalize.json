@@ -1,0 +1,65 @@
+{
+  "purpose": "Marcar lista para revisar tras evidencias reales, sin aprobar producción, render, promoción ni publicación.",
+  "commands": [
+    ".venv/bin/python scripts/atlas_finalize.py --self-test",
+    ".venv/bin/python scripts/atlas_factory.py audit --episode ID",
+    ".venv/bin/python scripts/atlas_finalize.py --episode ID --demo --poster"
+  ],
+  "gates": [
+    "Dos preview-WxH.json oficiales del episodio:1920x1080 y1080x1920, ok, cache_only_browser, full_timeline_grid, step<=.25 y todos los pasos; hashes actuales de escena/lyrics/MP3/geo.resolved/config/wrapper y renderer_hashes de PUBLIC_HASHES, estables durante cada barrido.",
+    "Cero ausencias, errores, respuestas fallidas, bloqueos o procesos propios del navegador pendientes.",
+    "Atlas check --ready, aprobación editorial con hash actual y aprobación visual del supervisor para ambos formatos con capturas hash-vinculadas.",
+    "16medios reales con créditos por basename, fuente/autor/licencia y SHA256 coincidentes; sin copias de motores en el episodio.",
+    "audio-signal.json existente y recuento independiente de muestras PCM16 del WAV: clipping0; la escucha subjetiva permanece pendiente.",
+    "showcase-evidence.json bundle existente: atlas-showcase-final-report.json con catalog.entries/thumbs>=38, tests.passed>=64/failed0 y postersarray HTTP200image para atlas.flagFill y atlas.persistentPortrait.",
+    "Auditoría final.json y usage-report.json previos, coherentes y actuales; no se sobrescriben.",
+    "Cambios compartidos requieren shared-changes-review.json acknowledged=true y changes por archivo con before/after/reason; no se autocertifica todo el motor."
+  ],
+  "supervisor-approved.json": {
+    "approved_for_review": true,
+    "source_hashes": {
+      "assets/scene.json": "sha256",
+      "assets/lyrics.json": "sha256",
+      "assets/song.mp3": "sha256",
+      "assets/geo.resolved.json": "sha256",
+      "assets/config.json": "sha256",
+      "index.html": "sha256"
+    },
+    "formats": {
+      "1920x1080": {
+        "inspected": true,
+        "frames": [
+          {
+            "file": "work/results/test/captura-horizontal.jpg",
+            "sha256": "sha256"
+          }
+        ]
+      },
+      "1080x1920": {
+        "inspected": true,
+        "frames": [
+          {
+            "file": "work/results/test/captura-vertical.jpg",
+            "sha256": "sha256"
+          }
+        ]
+      }
+    }
+  },
+  "outputs": [
+    "work/results/test/readiness.json",
+    "PLAN.md",
+    "COSTE.md",
+    "CREDITS.md",
+    "voice-profile.json",
+    "recipefactoryworkflow.json",
+    "info.json status lista para revisar"
+  ],
+  "optional": {
+    "--demo": "Escribe manifest.json title/design/engine explícitos, status en preparación, demo=true, production_ready=false. El estado no listo bloquea la promoción normal; no se invoca promote.",
+    "--poster": "PIL se importa solo para derivar render/poster.jpg de una captura horizontal aprobada y hash-vinculada; no crea medios ni renderiza video."
+  },
+  "costs": "Consumo medido del ledger auditado, desconocidos conservados. Investigación, editorial, supervisión y escucha por episodio se declaran no medidos; ingeniería reutilizable separada. Precio de lista no equivale a cargo real ni se afirma coste mínimo global. COSTE.md explicita entrada fresca+salida, caché y total procesado medido, sin sumar dos veces razonamiento. La receta conserva el modo GPU que pasó cada formato.",
+  "limits": "No cambia factory/compiler ni src. No modelos/TTS/SSH/red/API mutación. El WAV sin clipping no demuestra pronunciación íntegra ni picos del MP3 decodificado. Notas de escucha se calculan contra RAW preservado sin sustituir palabras ni tiempos. No certifica integración NATIVE_DESIGNS ni toda la fábrica.",
+  "renderer_scope": "PUBLIC_HASHES de atlas_factory, incluidos atlas.js y proto.js; se compara la versión actual al verificar previews y al terminar. No equivale a certificar el motor completo."
+}

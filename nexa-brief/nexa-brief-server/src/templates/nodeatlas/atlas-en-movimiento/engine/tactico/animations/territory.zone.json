@@ -1,0 +1,190 @@
+{
+  "name": "territory.zone",
+  "family": "territory",
+  "estilo": {
+    "usa": [
+      "ucr2.territorio"
+    ]
+  },
+  "description": "Zona de control con polígonos propios [lon,lat] y estados fechados: la parte que se pierde se desvanece y la ganada se enciende. Rojo translúcido al 50 % que se mantiene todo el video. Úsala para mostrar qué controla un bando (ocupación, avance, retirada). Úsala para explicar control territorial y cambios de frontera.",
+  "duration": 7.85,
+  "loop": true,
+  "layer": 11,
+  "states": [
+    "ocupado",
+    "recuperado"
+  ],
+  "params": {
+    "polygons": {
+      "type": "array",
+      "doc": "Anillos [[lon,lat],…] del estado inicial. Pueden pasar por el mar o por otro país: se recortan con `clip`. Sin solapes entre anillos.",
+      "default": null,
+      "range": null,
+      "description": "Anillos [[lon,lat],…] del estado inicial. Pueden pasar por el mar o por otro país: se recortan con `clip`. Sin solapes entre anillos."
+    },
+    "clip": {
+      "type": "array",
+      "default": [
+        {
+          "region": "UA"
+        },
+        {
+          "region": "RU",
+          "box": [
+            32,
+            44,
+            37.3,
+            46.2
+          ]
+        }
+      ],
+      "doc": "Países donde se pinta: [{region,box?:[lonMin,latMin,lonMax,latMax]}]. Por defecto Ucrania y la península de Crimea.",
+      "range": null,
+      "description": "Países donde se pinta: [{region,box?:[lonMin,latMin,lonMax,latMax]}]. Por defecto Ucrania y la península de Crimea."
+    },
+    "color": {
+      "type": "string",
+      "default": null,
+      "doc": "Tinta con alfa, p. ej. \"#E23B2E@.5\". Por defecto el token ucr2.territorio.zona.",
+      "range": null,
+      "description": "Tinta con alfa, p. ej. \"#E23B2E@.5\". Por defecto el token ucr2.territorio.zona."
+    },
+    "border": {
+      "type": "boolean",
+      "default": true,
+      "doc": "Dibuja el contorno de la zona.",
+      "range": null,
+      "description": "Dibuja el contorno de la zona."
+    },
+    "label": {
+      "type": "string",
+      "default": null,
+      "doc": "Texto de la leyenda (esquina inferior derecha), p. ej. \"CONTROL RUSO · APROXIMADO\".",
+      "range": null,
+      "description": "Texto de la leyenda (esquina inferior derecha), p. ej. \"CONTROL RUSO · APROXIMADO\"."
+    },
+    "tinta": {
+      "type": "enum",
+      "values": [
+        "rusia",
+        "ucrania"
+      ],
+      "default": "rusia",
+      "doc": "Paleta: rusia = rojo 50 %, ucrania = amarillo 50 %.",
+      "range": [
+        "rusia",
+        "ucrania"
+      ],
+      "description": "Paleta: rusia = rojo 50 %, ucrania = amarillo 50 %."
+    },
+    "slot": {
+      "type": "number",
+      "default": 0,
+      "min": 0,
+      "max": 6,
+      "doc": "Posición de la leyenda: 0 abajo; 1, 2… se apilan hacia arriba. Una leyenda por zona visible.",
+      "range": {
+        "min": 0,
+        "max": 6
+      },
+      "description": "Posición de la leyenda: 0 abajo; 1, 2… se apilan hacia arriba. Una leyenda por zona visible."
+    },
+    "icon": {
+      "type": "enum",
+      "values": [
+        "cuadro",
+        "check"
+      ],
+      "default": "cuadro",
+      "doc": "Icono de la leyenda: cuadro plano del color de la zona (por defecto) o check.",
+      "range": [
+        "cuadro",
+        "check"
+      ],
+      "description": "Icono de la leyenda: cuadro plano del color de la zona (por defecto) o check."
+    },
+    "legendAncho": {
+      "type": "number",
+      "default": 340,
+      "min": 120,
+      "max": 600,
+      "doc": "Ancho de la columna de leyendas: todas arrancan en el mismo x, una encima de otra.",
+      "range": {
+        "min": 120,
+        "max": 600
+      },
+      "description": "Ancho de la columna de leyendas: todas arrancan en el mismo x, una encima de otra."
+    },
+    "colorBorde": {
+      "type": "string",
+      "default": null,
+      "doc": "Tinta del contorno; por defecto el token de la paleta.",
+      "range": null,
+      "description": "Tinta del contorno; por defecto el token de la paleta."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-territory-zone",
+    "t": 0,
+    "type": "territory.zone",
+    "dur": 8,
+    "out": 7.5,
+    "polygons": [
+      [
+        [
+          32,
+          44
+        ],
+        [
+          37.2,
+          44
+        ],
+        [
+          37.2,
+          46
+        ],
+        [
+          32,
+          46
+        ]
+      ]
+    ],
+    "states": [
+      {
+        "at": 3,
+        "state": "recuperado",
+        "dur": 1.5,
+        "polygons": [
+          [
+            [
+              34,
+              44
+            ],
+            [
+              37.2,
+              44
+            ],
+            [
+              37.2,
+              46
+            ],
+            [
+              34,
+              46
+            ]
+          ]
+        ]
+      }
+    ],
+    "label": "CONTROL · APROXIMADO",
+    "note": "Zona esquemática sin valor histórico."
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/territory.zone.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

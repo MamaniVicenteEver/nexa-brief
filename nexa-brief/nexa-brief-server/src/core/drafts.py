@@ -34,7 +34,7 @@ import uuid
 from collections.abc import Awaitable, Callable
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 import structlog
 from pydantic import BaseModel, Field
@@ -42,6 +42,7 @@ from pydantic import BaseModel, Field
 from src.core import pipeline
 from src.core.data import collection, documents
 from src.core.draft_details import DraftDetails, to_summary
+from src.core.draft_thumbnails import ThumbnailSet
 from src.core.job import Job, JobPublishingConfig, JobStage, SongInfo
 from src.core.job_queue import get_job_queue
 from src.core.realtime.event_bus import get_event_bus
@@ -75,8 +76,8 @@ class DraftInputs(BaseModel):
 class RenderOptions(BaseModel):
     """Opciones de grabado: se aplican al Job recién al grabar, no en el preview."""
 
-    recorder_engine: str | None = None
-    render_target: str | None = None
+    recorder_engine: Literal["playwright", "hyperframes", "remotion"] | None = None
+    render_target: Literal["local", "aws"] | None = None
     publish_accounts: list[str] = Field(default_factory=list)  # "platform:alias"
     # Formatos a grabar (None = los del nicho). 16:9 va siempre: es el archivo principal del grabador.
     formats: list[RecordFormat] | None = None
@@ -106,6 +107,8 @@ class Draft(BaseModel):
     auto_render: RenderOptions | None = None
     # Textos de publicación preparados antes de grabar (None = se generan al grabar, como antes).
     details: DraftDetails | None = None
+    thumbnails: ThumbnailSet | None = None
+    thumbnail_error: str | None = None
     created_at: str
     updated_at: str
 
@@ -144,14 +147,22 @@ def _save_job(draft_id: str, job: Job) -> None:
 def can_render(draft: Draft, job: Job | None) -> bool:
     """Se graba desde un preview listo o desde un fallo con Job sano guardado.
     `rendered` no se regraba: el video ya está en Biblioteca con ese job_id."""
-    if job is None or job.stage == JobStage.FAILED or draft.status in _IN_FLIGHT:
+    if not _has_preview_stage(job) or draft.status in _IN_FLIGHT:
         return False
     return draft.status in ("preview_ready", "prepared") or (draft.status == "failed" and draft.recoverable)
 
 
 def can_prepare(draft: Draft, job: Job | None) -> bool:
     """Preparar (o volver a preparar) los textos: con el preview listo y sin nada corriendo."""
-    return job is not None and draft.status in ("preview_ready", "prepared")
+    return _has_preview_stage(job) and (draft.status in ("preview_ready", "prepared") or
+                                      (draft.status == "failed" and draft.recoverable))
+
+
+def _has_preview_stage(job: Job | None) -> bool:
+    return job is not None and job.stage in {
+        JobStage.HTML_GENERATED, JobStage.VIDEO_RECORDED,
+        JobStage.SUMMARY_GENERATED, JobStage.PACKAGED,
+    }
 
 
 # ── Registro ──────────────────────────────────────────────────────────────────
@@ -221,7 +232,7 @@ async def _recover_if_orphaned(draft: Draft) -> Draft:
     recovered = await _patch(draft.draft_id, {
         "status": "failed",
         "errors": [*draft.errors, f"Se interrumpió mientras estaba en '{draft.status}' (reinicio del servidor)."],
-        "recoverable": job is not None and job.stage != JobStage.FAILED,
+        "recoverable": _has_preview_stage(job),
     })
     return recovered or draft
 
@@ -233,27 +244,82 @@ def _hide_missing_preview(draft: Draft) -> Draft:
     allá) o si se borró output/: la web abría "Mi versión" y el modal quedaba con
     un 404 en vez de la plantilla. El registro no se toca.
     """
-    if not draft.preview_url:
+    if not draft.preview_url and draft.status != "failed":
         return draft
     job = load_job(draft.draft_id)
+    if draft.status == "failed" and draft.recoverable and not _has_preview_stage(job):
+        draft = draft.model_copy(update={"recoverable": False})
     output_dir = job.artifacts.output_dir if job is not None else None
     if output_dir is not None and not Path(output_dir).is_dir():
         return draft.model_copy(update={"preview_url": None})
     return draft
 
 
+def _fallback_thumbnail_details(job: Job) -> DraftDetails:
+    """Datos de título para drafts antiguos que aún no tenían `details`."""
+    from src.core.draft_details import song_of
+
+    song, artist = song_of(job)
+    return DraftDetails(song_name=song, artist=artist)
+
+
+def thumbnail_manifest(
+    draft: Draft,
+    job: Job | None,
+    *,
+    generated_texts: dict[str, str] | None = None,
+) -> ThumbnailSet | None:
+    """Hidrata A/B como JSON solamente. No abre navegador ni captura imágenes."""
+    if job is None:
+        return draft.thumbnails
+    from src.core import draft_thumbnails
+
+    details = draft.details or _fallback_thumbnail_details(job)
+    existing = draft.thumbnails
+    options: dict[str, Any] = {}
+    if existing is not None:
+        options = existing.model_dump(mode="json").get("options") or {}
+    for option, text in (generated_texts or {}).items():
+        if option in ("A", "B") and text.strip():
+            previous = options.get(option) if isinstance(options.get(option), dict) else {}
+            options[option] = {**previous, "text": text.strip()[:200]}
+    raw = draft_thumbnails.preview_manifest(job, details, options=options or None)
+    if not isinstance(raw, dict):
+        raw = raw.model_dump(mode="json")
+    raw = dict(raw)
+    # Un draft legacy sin selección empieza por A; la elección previa se conserva.
+    raw["selected"] = existing.selected if existing is not None else "A"
+    return ThumbnailSet.model_validate(raw)
+
+
+def _clear_selected_thumbnail(draft_id: str) -> None:
+    """El archivo anterior no representa la opción editada que se grabará ahora."""
+    job = load_job(draft_id)
+    if job is not None and job.artifacts.thumbnail_path is not None:
+        _save_job(draft_id, job.model_copy(update={
+            "artifacts": job.artifacts.model_copy(update={"thumbnail_path": None}),
+        }))
+
+
 async def get(draft_id: str) -> Draft | None:
     record = _drafts().get(draft_id)
     if record is None:
         return None
-    return _hide_missing_preview(await _recover_if_orphaned(Draft.model_validate(record)))
+    draft = _hide_missing_preview(await _recover_if_orphaned(Draft.model_validate(record)))
+    manifest = thumbnail_manifest(draft, load_job(draft_id))
+    return draft.model_copy(update={"thumbnails": manifest}) if manifest is not None else draft
 
 
 async def list_drafts(template_id: str | None = None) -> list[Draft]:
     """Drafts más recientes primero; `template_id` filtra por plantilla."""
     records = _drafts().list({"template_id": template_id} if template_id is not None else None)
     records.sort(key=lambda r: r.get("created_at", ""), reverse=True)
-    return [_hide_missing_preview(await _recover_if_orphaned(Draft.model_validate(r))) for r in records]
+    items = []
+    for record in records:
+        draft = _hide_missing_preview(await _recover_if_orphaned(Draft.model_validate(record)))
+        manifest = thumbnail_manifest(draft, load_job(draft.draft_id))
+        items.append(draft.model_copy(update={"thumbnails": manifest}) if manifest is not None else draft)
+    return items
 
 
 async def delete(draft_id: str) -> Draft | None:
@@ -283,13 +349,32 @@ def _sync_intro(draft_id: str, details: DraftDetails | None) -> None:
         draft_details.apply_to_intro(job.artifacts.content_dir, details)
 
 
-async def save_details(draft_id: str, details: DraftDetails, *, edited: bool = True) -> Draft | None:
-    """Detalles editados a mano (`edited`) o heredados de un original anterior: quedan `prepared`."""
-    _sync_intro(draft_id, details)
-    return await _patch(draft_id, {
-        "details": details.model_copy(update={"edited": edited or details.edited}).model_dump(mode="json"),
-        "status": "prepared",
-    })
+async def save_details(draft_id: str, details: DraftDetails, *, edited: bool = True, capture_thumbnails: bool = False) -> Draft | None:
+    """Guarda los detalles y asegura el manifest JSON, sin capturar miniaturas."""
+    draft = await get(draft_id)
+    if draft is None:
+        return None
+    _running.add(draft_id)
+    await _patch(draft_id, {"status": "preparing"})
+    try:
+        _sync_intro(draft_id, details)
+        job = load_job(draft_id)
+        thumbnails = thumbnail_manifest(
+            draft.model_copy(update={"details": details}), job,
+            generated_texts=getattr(details, "_thumbnail_texts", None),
+        )
+        selected = getattr(details, "_thumbnail_selected", None)
+        if thumbnails is not None and selected in ("A", "B"):
+            thumbnails = thumbnails.model_copy(update={"selected": selected})
+        _clear_selected_thumbnail(draft_id)
+        error = None
+        return await _patch(draft_id, {
+            "details": details.model_copy(update={"edited": edited or details.edited}).model_dump(mode="json"),
+            "thumbnails": thumbnails.model_dump(mode="json") if thumbnails else None,
+            "thumbnail_error": error, "status": "prepared",
+        })
+    finally:
+        _running.discard(draft_id)
 
 
 async def start_prepare(draft_id: str, song_notes: str | None = None) -> Draft | None:
@@ -312,7 +397,26 @@ async def run_prepare(draft: Draft, job: Job) -> None:
     try:
         details = await draft_details.generate(job, draft.niche_id, seed=draft.draft_id, notes=draft.song_notes)
         _sync_intro(draft.draft_id, details)
-        await _patch(draft.draft_id, {"status": "prepared", "details": details.model_dump(mode="json"), "errors": []})
+        thumbnails = thumbnail_manifest(
+            draft.model_copy(update={"details": details}), job,
+            generated_texts=getattr(details, "_thumbnail_texts", None),
+        )
+        thumbnail_error = None
+        if job.artifacts.output_dir is not None:
+            logs_dir = job.artifacts.log_dir or job.artifacts.output_dir / "logs"
+            logs_dir.mkdir(parents=True, exist_ok=True)
+            (logs_dir / "08_prepared_details.json").write_text(details.model_dump_json(indent=2), encoding="utf-8")
+            from src.config.profile_layout import layout_for_settings
+            from src.config.settings import settings
+            if layout_for_settings(settings).schema_version >= 2:
+                from src.core.content_registry import update_video_details
+                await update_video_details(job.job_id, {"summary": to_summary(details).model_dump(mode="json")})
+                await pipeline._index_job_logs(job)
+        await _patch(draft.draft_id, {
+            "status": "prepared", "details": details.model_dump(mode="json"), "errors": [],
+            "thumbnails": thumbnails.model_dump(mode="json") if thumbnails else None,
+            "thumbnail_error": thumbnail_error,
+        })
     except Exception as exc:
         logger.exception("draft_prepare_failed", draft_id=draft.draft_id)
         await _patch(draft.draft_id, {
@@ -321,6 +425,62 @@ async def run_prepare(draft: Draft, job: Job) -> None:
         })
     finally:
         _running.discard(draft.draft_id)
+
+
+async def run_thumbnails(draft: Draft, job: Job) -> None:
+    """Compatibilidad del antiguo endpoint: actualiza solo el manifest JSON."""
+    try:
+        _sync_intro(draft.draft_id, draft.details)
+        thumbnails = thumbnail_manifest(draft, job)
+        await _patch(draft.draft_id, {
+            "status": "prepared", "thumbnails": thumbnails.model_dump(mode="json") if thumbnails else None,
+            "thumbnail_error": None,
+        })
+    finally:
+        _running.discard(draft.draft_id)
+
+
+async def select_thumbnail(draft: Draft, option: str) -> Draft:
+    manifest = thumbnail_manifest(draft, load_job(draft.draft_id))
+    if manifest is None or option not in manifest.options:
+        raise ValueError("Prepará las dos opciones antes de elegir una")
+    if not manifest.options[option].text.strip():
+        raise ValueError("La opción elegida no tiene texto")
+    thumbnails = manifest.model_copy(update={"selected": option})
+    _clear_selected_thumbnail(draft.draft_id)
+    return await _patch(draft.draft_id, {"thumbnails": thumbnails.model_dump(mode="json")})
+
+
+async def update_thumbnail_option(
+    draft: Draft, option: str, *, text: str, design: dict[str, Any],
+) -> Draft:
+    """Edita una opción del manifest; cambiar texto/diseño no abre Chromium."""
+    if option not in ("A", "B"):
+        raise ValueError("La opción debe ser A o B")
+    job = load_job(draft.draft_id)
+    if job is None:
+        raise ValueError("El prototipo no tiene un Job disponible")
+    manifest = thumbnail_manifest(draft, job)
+    if manifest is None:
+        raise ValueError("El prototipo no tiene un preview disponible")
+    if option not in manifest.options:
+        raise ValueError("La opción no está disponible")
+    options = manifest.model_dump(mode="json").get("options", {})
+    options[option] = {"text": text.strip(), "design": design}
+    from src.core import draft_thumbnails
+    raw = draft_thumbnails.preview_manifest(
+        job, draft.details or _fallback_thumbnail_details(job), options=options,
+    )
+    if not isinstance(raw, dict):
+        raw = raw.model_dump(mode="json")
+    raw = dict(raw)
+    raw["selected"] = manifest.selected
+    updated_manifest = ThumbnailSet.model_validate(raw)
+    _clear_selected_thumbnail(draft.draft_id)
+    updated = await _patch(draft.draft_id, {"thumbnails": updated_manifest.model_dump(mode="json")})
+    if updated is None:
+        raise ValueError("El prototipo ya no existe")
+    return updated
 
 
 # ── Ejecución ─────────────────────────────────────────────────────────────────
@@ -366,7 +526,7 @@ async def _fail(draft_id: str, job: Job) -> None:
         "status": "failed",
         "stage": job.stage.value,
         "errors": job.errors,
-        "recoverable": saved is not None and saved.stage != JobStage.FAILED,
+        "recoverable": _has_preview_stage(saved),
     })
 
 
@@ -381,7 +541,7 @@ def apply_render_options(job: Job, options: RenderOptions, details: DraftDetails
         "recorder_engine_override": options.recorder_engine,
         "render_target": options.render_target,
         "publishing": JobPublishingConfig(enabled=False, accounts=[]),
-        "formats": options.formats,
+        "formats": options.formats or ["16x9"],
     })})
     if details is not None and details.copies:
         artifacts = job.artifacts.model_copy(update={"summary": to_summary(details)})
@@ -400,6 +560,50 @@ async def start_render(draft_id: str, job: Job) -> Draft | None:
     if draft is None:
         _running.discard(draft_id)
     return draft
+
+
+async def _capture_selected_thumbnail(draft_id: str, job: Job) -> Job:
+    """Capture the persisted A/B choice only after the job owns the render queue slot."""
+    draft = await get(draft_id)
+    if draft is None:
+        raise ValueError("El prototipo dejó de existir antes de grabar")
+    # One-step/legacy render jobs can reach this path without prepared details
+    # or a thumbnail manifest. Keep that flow working when no preview artifact
+    # exists; real prepared drafts with a chosen option must capture or fail.
+    if draft.details is None and (job.artifacts.html_path is None or not job.artifacts.html_path.is_file()):
+        stored = _drafts().get(draft_id) or {}
+        stored_thumbnails = stored.get("thumbnails") or {}
+        if not (stored_thumbnails.get("options") if isinstance(stored_thumbnails, dict) else None):
+            return job
+    manifest = thumbnail_manifest(draft, job)
+    if manifest is None:
+        if draft.details is None:
+            return job  # Legacy auto_render drafts keep their pre-thumbnail behavior.
+        raise ValueError("No se pudo preparar el manifest de miniaturas")
+    selected = manifest.selected or "A"
+    option = manifest.options.get(selected)
+    if option is None or not option.text.strip():
+        raise ValueError(f"No se pudo obtener el texto de la opción {selected}")
+
+    details = draft.details or _fallback_thumbnail_details(job)
+    selected_details = details.model_copy(update={"song_name": option.text})
+    from src.core import draft_details, draft_thumbnails
+    # La intro del video adopta el texto elegido al grabar; el Draft.details y sus
+    # metadatos de publicación siguen conteniendo el nombre de canción original.
+    draft_details.apply_to_intro(job.artifacts.content_dir, selected_details)
+    try:
+        image = await draft_thumbnails.capture_selected(
+            draft_id, job, details, selected, options=manifest.model_dump(mode="json").get("options"),
+        )
+    except Exception as exc:
+        raise ValueError(f"Falló la captura de la opción {selected}: {exc}") from exc
+    if image is None or not Path(image).is_file():
+        raise ValueError(f"La captura de la opción {selected} no produjo una miniatura")
+    job = job.model_copy(update={"artifacts": job.artifacts.model_copy(update={"thumbnail_path": Path(image)})})
+    _save_job(draft_id, job)
+    # Persiste la hidratación de drafts antiguos junto a la elección utilizada.
+    await _patch(draft_id, {"thumbnails": manifest.model_dump(mode="json")})
+    return job
 
 
 async def run_render(
@@ -422,6 +626,7 @@ async def run_render(
 
     try:
         async with get_job_queue().slot(job.job_id):
+            job = await _capture_selected_thumbnail(draft_id, job)
             result = await pipeline.run(job, on_stage=_on_stage, resume=True)
         if result.stage in (JobStage.PACKAGED, JobStage.PUBLISHED):
             await _patch(draft_id, {**_stage_patch(result), "status": "rendered"})

@@ -159,6 +159,8 @@ async def _role_json(role, spec, system, prompt, *, schema, usage_out):
     if isinstance(fallback, str):
         fallback = {"provider": fallback}
     attempts, fallback_reason = [], None
+    from src.adapters.models.editorial_policy import codex_fallback_allowed
+    fallback_eligible = False
     started = time.monotonic()
     for index, current in enumerate([spec] + ([fallback] if fallback else [])):
         provider = current["provider"]
@@ -190,6 +192,7 @@ async def _role_json(role, spec, system, prompt, *, schema, usage_out):
                     record.update(response.usage)
                     record["model"] = response.model or model
                     if not response.ok:
+                        fallback_eligible = codex_fallback_allowed(result=response)
                         raise RuntimeError("agent_timeout" if response.timed_out else f"agent_exit_{response.exit_code}")
                     try:
                         value = _validate_json(json.loads(response.last_message), schema)
@@ -218,6 +221,7 @@ async def _role_json(role, spec, system, prompt, *, schema, usage_out):
                         raise
                 record["status"] = "ok"
             except Exception as exc:
+                fallback_eligible = fallback_eligible or codex_fallback_allowed(error=exc)
                 record.update(getattr(exc, "usage", {}))
                 failure = failure or ("invalid_json: " + type(exc).__name__ if isinstance(exc, AIValidationError)
                     else "timeout" if isinstance(exc, asyncio.TimeoutError)
@@ -243,6 +247,8 @@ async def _role_json(role, spec, system, prompt, *, schema, usage_out):
                 if index == 0:
                     fallback_reason = failure
                 break
+        if index == 0 and spec.get("fallback_policy") == "codex_unavailable_or_quota" and not fallback_eligible:
+            break
     raise RuntimeError(f"model hub: {role} agotó proveedores; ver {folder}/usage.json")
 
 

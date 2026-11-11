@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "doc": "Qué modelo hace cada trabajo. Lo leen el backend (src/adapters/models/hub.py) y el kit (tools/delegate.py). Cambiar un proveedor acá cambia a quién se le pide; delegatable habilita kit.py delegate. Guía: src/templates/_tools/explainer-kit/guides/orquestacion.md Respaldo: si Codex no tiene cuota o falla, el rol pasa a claude-haiku-5-5 (campo fallback); el agente lo anota en el reporte.",
+  "doc": "Política editorial solicitada por el usuario: Terra 6.1 high por defecto; Luna con máximo razonamiento como alternativa Codex. Claude último recurso solo si Codex no está disponible o agotó cuota. Se registran modelo y esfuerzo solicitados y el uso real; no se desactiva aislamiento. Qué modelo hace cada trabajo. Lo leen el backend (src/adapters/models/hub.py) y el kit (tools/delegate.py). Cambiar un proveedor acá cambia a quién se le pide; delegatable habilita kit.py delegate.",
   "providers": {
     "codex": {
       "kind": "agent_cli",
@@ -46,7 +46,10 @@
         "provider": "claude",
         "model": "claude-haiku-5-5",
         "reasoning_effort": "medium"
-      }
+      },
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "high",
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "research": {
       "provider": "codex",
@@ -55,16 +58,22 @@
         "provider": "claude",
         "model": "claude-haiku-5-5",
         "reasoning_effort": "medium"
-      }
+      },
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "high",
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "script": {
       "provider": "codex",
-      "does": "Escribe el guion para voz (assets/script.json).",
+      "does": "Escribe el diálogo/guion para voz (assets/script.json) con plan visual por segmento. Lo hace Terra 6.1 en alto; si Codex no está disponible, respaldo claude-haiku-5-5.",
       "fallback": {
         "provider": "claude",
         "model": "claude-haiku-5-5",
         "reasoning_effort": "medium"
-      }
+      },
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "high",
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "storyboard": {
       "provider": "codex",
@@ -73,7 +82,10 @@
         "provider": "claude",
         "model": "claude-haiku-5-5",
         "reasoning_effort": "medium"
-      }
+      },
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "high",
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "visual_review": {
       "provider": "codex",
@@ -82,7 +94,10 @@
         "provider": "claude",
         "model": "claude-haiku-5-5",
         "reasoning_effort": "medium"
-      }
+      },
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "high",
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "component_draft": {
       "provider": "deepseek",
@@ -93,12 +108,19 @@
       "does": "Primer borrador de un componente propio del tema. El productor lo valida con kit.py components y lo mira."
     },
     "copy_draft": {
-      "provider": "deepseek",
-      "model": "flash",
+      "provider": "codex",
+      "model": "gpt-6.1-terra",
       "delegatable": true,
       "prompt": "prompts/delegate-copy.md",
       "output": "json",
-      "does": "Borradores de títulos, miniaturas y comentario fijado según las estrategias activas; el productor elige y ajusta."
+      "does": "Borradores de títulos, miniaturas y comentario fijado según las estrategias activas; el productor elige y ajusta.",
+      "reasoning_effort": "high",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
+      },
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "fact_check": {
       "provider": "deepseek",
@@ -111,7 +133,7 @@
     "text_draft": {
       "provider": "codex",
       "model": "gpt-6.1-terra",
-      "reasoning_effort": "medium",
+      "reasoning_effort": "high",
       "delegatable": true,
       "prompt": "prompts/delegate-text.md",
       "output": "md",
@@ -120,12 +142,13 @@
         "provider": "claude",
         "model": "claude-haiku-5-5",
         "reasoning_effort": "medium"
-      }
+      },
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "dialogue_draft": {
       "provider": "codex",
       "model": "gpt-6.1-terra",
-      "reasoning_effort": "medium",
+      "reasoning_effort": "high",
       "delegatable": true,
       "prompt": "prompts/delegate-dialogue.md",
       "output": "md",
@@ -134,7 +157,8 @@
         "provider": "claude",
         "model": "claude-haiku-5-5",
         "reasoning_effort": "medium"
-      }
+      },
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "voice": {
       "provider": "gemini_tts",
@@ -149,30 +173,40 @@
       "does": "Plan semanal de temas por categoría (backend, PLANNER_PROVIDER)."
     },
     "copy": {
-      "provider": "deepseek",
-      "does": "Textos de publicación de NodeMotion (backend, COPY_AI_PROVIDER)."
-    },
-    "prototype_lead": {
-      "provider": "claude",
-      "model": "claude-opus-5-5",
+      "provider": "codex",
+      "does": "Textos de publicación de NodeMotion (backend, COPY_AI_PROVIDER).",
+      "model": "gpt-6.1-terra",
       "reasoning_effort": "high",
       "fallback": {
-        "provider": "codex",
-        "model": "gpt-6-sol",
-        "reasoning_effort": "high"
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
       },
-      "does": "Diseña y revisa prototipos reutilizables del sandbox."
+      "fallback_policy": "codex_unavailable_or_quota"
+    },
+    "prototype_lead": {
+      "provider": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "high",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
+      },
+      "does": "Diseña y revisa prototipos reutilizables del sandbox.",
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "prototype_worker": {
       "provider": "codex",
       "model": "gpt-6-luna",
-      "reasoning_effort": "xhigh",
+      "reasoning_effort": "max",
       "does": "Ejecuta tareas acotadas del prototipo y entrega resultados.",
       "fallback": {
         "provider": "claude",
         "model": "claude-haiku-5-5",
         "reasoning_effort": "medium"
-      }
+      },
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "image_copy": {
       "provider": "codex",
@@ -182,11 +216,12 @@
       "timeout_seconds": 180,
       "invalid_json_retries": 1,
       "fallback": {
-        "provider": "deepseek",
-        "timeout_seconds": 100,
-        "invalid_json_retries": 1
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
       },
-      "does": "Redacta los cuatro niveles y repara solo campos rechazados de imágenes."
+      "does": "Redacta los cuatro niveles y repara solo campos rechazados de imágenes.",
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "image_fact_check": {
       "provider": "codex",
@@ -196,11 +231,12 @@
       "timeout_seconds": 180,
       "invalid_json_retries": 1,
       "fallback": {
-        "provider": "deepseek",
-        "timeout_seconds": 100,
-        "invalid_json_retries": 1
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
       },
-      "does": "Coteja fidelidad de los campos visibles y visuales con los hechos del PLAN."
+      "does": "Coteja fidelidad de los campos visibles y visuales con los hechos del PLAN.",
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "image_photo_judge": {
       "provider": "codex",
@@ -210,20 +246,42 @@
       "timeout_seconds": 180,
       "invalid_json_retries": 1,
       "fallback": {
-        "provider": "deepseek",
-        "timeout_seconds": 100,
-        "invalid_json_retries": 1
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
       },
-      "does": "Juzga relevancia de fotografías por título, descripción y rol."
+      "does": "Juzga relevancia de fotografías por título, descripción y rol.",
+      "fallback_policy": "codex_unavailable_or_quota"
     },
     "sound_curator": {
       "provider": "codex",
       "model": "gpt-6.1-terra",
-      "reasoning_effort": "medium",
+      "reasoning_effort": "high",
       "structured_agent": true,
       "timeout_seconds": 120,
       "invalid_json_retries": 1,
-      "does": "Cataloga sonidos externos nuevos: título, descripción, usos sugeridos y etiquetas; sin herramientas, mediciones ni aprobación editorial."
+      "does": "Cataloga sonidos externos nuevos: título, descripción, usos sugeridos y etiquetas; sin herramientas, mediciones ni aprobación editorial.",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
+      },
+      "fallback_policy": "codex_unavailable_or_quota"
     }
+  },
+  "editorial_policy": {
+    "default": {
+      "provider": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "high"
+    },
+    "alternative": {
+      "provider": "codex",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "max",
+      "note": "Máximo solicitado por el usuario: max; no reducir a xhigh."
+    },
+    "fallback": "Claude solo ante falta de disponibilidad/cuota de Codex. Un fallo de calidad o JSON no autoriza cambiar a Claude.",
+    "scope": "Guiones, diálogos, títulos y descripciones; no cambia Gemini TTS ni Whisper."
   }
 }

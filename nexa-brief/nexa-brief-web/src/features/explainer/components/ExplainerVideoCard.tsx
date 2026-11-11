@@ -3,8 +3,18 @@
 import { ArrowLeft, Play } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { useVisualStyles } from "@/features/showcase/hooks/useVisualStyles";
+import { isReviewDemo } from "@/features/templates/lib/preparation-items";
 import { cn } from "@/lib/utils";
 import { MediaPlayerModal } from "@/shared/components/media/MediaPlayerModal";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/shared/components/ui/dialog";
 import type { ExplainerVideo, ThumbnailPreview } from "../types";
 import { ExplainerStudioSidebar } from "./ExplainerStudioSidebar";
 import { ThumbnailArtwork } from "./ThumbnailArtwork";
@@ -36,23 +46,33 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
   const narrativeLabel = video.narrativeLabel;
   const [open, setOpen] = useState(false);
   const [thumbnailPreview, setThumbnailPreview] = useState<ThumbnailPreview | null>(null);
+  const visualStyles = useVisualStyles(
+    video.design,
+    open && !video.scriptReviewRequired,
+    undefined,
+    video.videoId,
+  );
   const recorded = video.rendered.length > 0;
-  const badge = !video.ready
-    ? t("prep.statusPreparing")
-    : recorded
-      ? t("prep.statusRendered")
-      : t("prep.statusReady");
+  const badge = video.scriptReviewRequired
+    ? tx("studio.scriptReview")
+    : isReviewDemo(video)
+      ? t("prep.statusReadyForReview")
+      : !video.ready
+        ? t("prep.statusPreparing")
+        : recorded
+          ? t("prep.statusRendered")
+          : t("prep.statusReady");
 
   const trigger = (
     <button
       type="button"
       aria-label={`${t("card.openPreview")}: ${video.title}`}
       className={cn(
-        "group flex cursor-pointer flex-col overflow-hidden rounded-[10px] border border-black/5 bg-nb-surface text-left transition-transform hover:-translate-y-0.5",
+        "group flex h-full min-w-0 w-full cursor-pointer flex-col overflow-hidden rounded-[10px] border border-black/5 bg-nb-surface text-left transition-transform hover:-translate-y-0.5",
         "shadow-[0_8px_20px_-16px_rgba(40,30,10,0.16),0_2px_8px_-5px_rgba(40,30,10,0.05),inset_0_1px_0_rgba(255,255,255,0.45)]",
       )}
     >
-      <div className="relative aspect-[1.65] w-full overflow-hidden bg-black">
+      <div className="relative aspect-[1.65] w-full shrink-0 overflow-hidden bg-black">
         {/* La portada (imagen liviana). El video se reproduce con sonido en el modal:
             cargar el motor en vivo en cada tarjeta es pesado y el navegador puede
             bloquear su autoplay dentro de un iframe de otro origen. */}
@@ -89,7 +109,10 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
             </span>
           )}
           {video.qualityIssues.length > 0 && (
-            <span className="rounded-full bg-amber-400/90 px-2 py-0.5 text-[9.5px] font-bold text-black uppercase">
+            <span
+              title={video.qualityIssues.join("\n")}
+              className="rounded-full bg-amber-400/90 px-2 py-0.5 text-[9.5px] font-bold text-black uppercase"
+            >
               {t("prep.qualityIssues")}
             </span>
           )}
@@ -109,14 +132,9 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
           <h4 className="truncate text-[12px] font-bold tracking-[-0.015em] text-nb-ink">
             {video.youtubeTitle || video.title}
           </h4>
-          {video.qualityIssues.length > 0 && (
-            <ul className="mt-1 list-inside list-disc text-xs text-amber-800">
-              {[...new Set(video.qualityIssues)].map((issue) => <li key={issue}>{issue}</li>)}
-            </ul>
-          )}
         </div>
         <div className="flex shrink-0 gap-1">
-          {video.publishReady && (
+          {video.publishReady && !video.scriptReviewRequired && (
             <span className="rounded-full bg-nb-bg-2 px-1.5 py-0.5 text-[9px] font-semibold text-nb-ink-soft">
               {t("prep.tagPublishable")}
             </span>
@@ -125,6 +143,30 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
       </div>
     </button>
   );
+
+  if (video.scriptReviewRequired) {
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+        <DialogContent className="flex max-h-[90dvh] w-[96vw] max-w-[96vw] flex-col overflow-hidden p-5 sm:max-w-6xl">
+          <DialogHeader className="shrink-0 pr-8">
+            <DialogTitle>{video.title}</DialogTitle>
+            <DialogDescription>{tx("studio.scriptReviewHint")}</DialogDescription>
+          </DialogHeader>
+          <div className="grid min-h-0 flex-1 gap-5 overflow-y-auto md:grid-cols-[minmax(0,1fr)_360px]">
+            <article className="rounded-xl bg-nb-surface p-5 text-[15px] leading-7 whitespace-pre-line text-nb-ink md:overflow-y-auto">
+              {video.scriptText}
+            </article>
+            <ExplainerStudioSidebar
+              video={video}
+              thumbnailPreview={null}
+              onThumbnailPreview={setThumbnailPreview}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   // El mismo reproductor que NodeMotion (play/pausa, barra de tiempo, ±5 s, volumen,
   // pantalla completa, móvil/desktop). Los controles los implementa el motor del kit
@@ -160,8 +202,10 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
           </button>
         ) : undefined
       }
+      styleOptions={thumbnailPreview ? undefined : visualStyles.data?.styles}
+      defaultStyle={visualStyles.data?.default}
       defaultVolume={PLAYER_VOLUME}
-      defaultViewport="desktop"
+      defaultViewport={video.previewMode ?? "desktop"}
       sidebar={
         <ExplainerStudioSidebar
           video={video}

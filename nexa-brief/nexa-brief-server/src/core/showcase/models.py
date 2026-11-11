@@ -48,6 +48,7 @@ class Entry(BaseModel):
     preview_url: str | None = None
     preview_kind: Literal["iframe", "image", "json"]
     data: Any | None = None
+    appearance: dict[str, Any] | None = None
 
 
 class CatalogGroup(BaseModel):
@@ -64,6 +65,8 @@ class Catalog(BaseModel):
     revision: str
     entries: list[Entry]
     groups: list[CatalogGroup] = Field(default_factory=list)
+    estilo: str | None = None
+    estilo_revision: str | None = None
 
 
 class DesignList(BaseModel):

@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import {
   useCaptureThumbnails,
   useChooseThumbnail,
-  usePrepareThumbnails,
 } from "../hooks/useExplainer";
 import type { ExplainerVideo, ThumbnailOptionId } from "../types";
 
@@ -19,12 +18,11 @@ export function ThumbnailPicker({ video }: { video: ExplainerVideo }) {
   const t = useTranslations("explainer.studio.thumbnail");
   const capture = useCaptureThumbnails();
   const choose = useChooseThumbnail();
-  const preparation = usePrepareThumbnails(video);
   const { chosen, options } = video.thumbnails;
   if (options.length === 0) return null;
-  const busy = capture.isPending || choose.isPending || preparation.isFetching;
+  const busy = capture.isPending || choose.isPending;
   const missing = options.some((o) => !o.url);
-  const error = capture.error ?? choose.error ?? (missing ? preparation.error : null);
+  const error = capture.error ?? choose.error;
   const pick = (option: ThumbnailOptionId) => {
     if (option !== chosen) choose.mutate({ videoId: video.videoId, option });
   };
@@ -33,22 +31,22 @@ export function ThumbnailPicker({ video }: { video: ExplainerVideo }) {
     <section className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-2">
         <h3 className="text-[13px] font-bold text-nb-ink">{t("heading")}</h3>
-        <button
+        {missing && <button
           type="button"
           disabled={busy}
           onClick={() => capture.mutate(video.videoId)}
           className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-nb-ink-soft disabled:opacity-50"
         >
-          {capture.isPending || preparation.isFetching ? (
+          {capture.isPending ? (
             <Loader2 className="size-3.5 animate-spin" />
           ) : (
             <RefreshCw className="size-3.5" />
           )}
-          {preparation.isFetching ? t("preparing") : missing ? t("capture") : t("recapture")}
-        </button>
+          {capture.isPending ? t("preparing") : t("capture")}
+        </button>}
       </div>
       <p className="text-[11.5px] text-nb-mute">
-        {t(video.publishPackage?.package?.preserveOpening ? "nativeHint" : "hint")}
+        {t(video.publishPackage?.package?.preserveOpening || video.design?.startsWith("sandbox-") ? "nativeHint" : "hint")}
       </p>
       <div className="grid grid-cols-2 gap-2">
         {options.map((o) => (

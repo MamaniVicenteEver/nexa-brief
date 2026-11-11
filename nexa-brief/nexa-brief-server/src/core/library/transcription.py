@@ -11,9 +11,8 @@ Ambos pasan por `ensure_lyrics()`, que garantiza tres cosas:
 2. Un lock por asset: si el pipeline pide la letra de una canción que se está
    transcribiendo en segundo plano, espera ese resultado en vez de lanzar un
    segundo Whisper sobre el mismo archivo.
-3. Un semáforo de 1 para todo el proceso: Whisper es CPU/RAM-bound (varios
-   minutos por canción, ver settings.whisper_*); dos en paralelo no terminan
-   antes, solo se pisan.
+3. Una cola de trabajo pesado compartida con grabación: Whisper y el
+   render local nunca compiten por CPU/RAM al mismo tiempo.
 
 Hexagonal: core no importa adapters, así que el transcriptor llega inyectado
 como factory (`get_lyrics_transcriber` de adapters/lyrics/factory.py) desde el
@@ -36,6 +35,7 @@ import structlog
 from src.config.exceptions import AssetNotFoundError
 from src.core.library import asset_library
 from src.core.ports.lyrics_port import LyricsTranscriptionPort
+from src.core.heavy_work import heavy_work_slot
 
 logger = structlog.get_logger(__name__)
 
@@ -44,11 +44,10 @@ TranscriberFactory = Callable[[], LyricsTranscriptionPort]
 
 @dataclass
 class _LoopState:
-    """Primitivas asyncio de un event loop. Se guardan por loop porque Lock y
-    Semaphore quedan atados al loop donde se usaron primero: los tests (y
+    """Primitivas asyncio de un event loop. Se guardan por loop porque los locks
+    quedan atados al loop donde se usaron primero: los tests (y
     TestClient) crean un loop nuevo por caso y reusarlas tiraría RuntimeError."""
 
-    semaphore: asyncio.Semaphore = field(default_factory=lambda: asyncio.Semaphore(1))
     asset_locks: dict[str, asyncio.Lock] = field(default_factory=dict)
     # Referencias fuertes a las tareas en segundo plano: asyncio solo guarda
     # referencias débiles y una tarea sin dueño puede ser recolectada a mitad.
@@ -114,7 +113,7 @@ async def ensure_lyrics(
             if cached is not None:
                 return cached, True
 
-        async with _state().semaphore:
+        async with heavy_work_slot("transcription", asset_id):
             await _set_status(asset_id, "running")
             logger.info("lyrics_transcription_start", asset_id=asset_id, language=language, force=force)
             try:

@@ -3,15 +3,17 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import io
 import json
 import logging
 import time
-from urllib.parse import parse_qsl, urlencode, urlunsplit
+from urllib.parse import parse_qsl, parse_qs, urlencode, urlunsplit
 import os
 import tempfile
 from pathlib import Path
 from urllib.parse import urlsplit
 
+from PIL import Image
 from playwright.async_api import async_playwright
 
 _running: dict[str, asyncio.Task] = {}
@@ -21,10 +23,112 @@ _source_cache: dict[tuple[str, str], tuple[float, str]] = {}
 _gate = asyncio.Semaphore(1)
 
 
-def poster_path(cache: Path, design: str, revision: str, entry: str, aspect: str, target: str, *, legacy: bool = False) -> Path:
-    version, extension = ("poster-v2", ".jpg") if legacy else ("poster-v3-middle", ".webp")
-    key = json.dumps([version, design, revision, entry, aspect, target], ensure_ascii=False)
-    return cache / "showcase-posters" / (hashlib.sha256(key.encode()).hexdigest() + extension)
+def _safe_segment(value: str) -> str:
+    text = "".join(char if char.isalnum() or char in ".-_" else "-" for char in str(value)).strip(".-")
+    if not text or text in {".", ".."}:
+        return hashlib.sha256(str(value).encode()).hexdigest()[:16]
+    return text[:120]
+
+
+def poster_path(
+    cache: Path,
+    design: str,
+    revision: str,
+    entry: str,
+    aspect: str,
+    target: str,
+    *,
+    engine: str | None = None,
+    legacy: bool = False,
+    original: bool = False,
+    hashed: bool = False,
+) -> Path:
+    """Return the permanent, readable location for a component poster."""
+    if original or legacy or hashed:
+        version = "poster-v1" if original else "poster-v2" if legacy else "poster-v3-middle"
+        extension = ".jpg" if original or legacy else ".webp"
+        key = json.dumps([version, design, revision, entry, aspect, target], ensure_ascii=False)
+        return cache / "showcase-posters" / (hashlib.sha256(key.encode()).hexdigest() + extension)
+
+    engine_name = _safe_segment((engine or design).rsplit("/", 1)[-1].lstrip("_"))
+    design_name = _safe_segment(design)
+    component_id = str(entry)
+    if component_id.startswith(f"{engine_name}."):
+        component_id = component_id[len(engine_name) + 1:]
+    component_name = _safe_segment(component_id)
+    style = parse_qs(urlsplit(target).query).get("estilo", [""])[0]
+    variant = _safe_segment(style) if style else "default"
+    # Keep parameter variants human-readable; this is not a revision identifier.
+    params = parse_qs(urlsplit(target).query).get("p", [""])[0]
+    if params:
+        variant = f"{variant}-p-{_safe_segment(params)[:48]}"
+    return (
+        cache
+        / "showcase-posters"
+        / design_name
+        / _safe_segment(aspect)
+        / variant
+        / f"{engine_name}.{design_name}.{component_name}.webp"
+    )
+
+
+def legacy_style_poster_path(
+    cache: Path, design: str, revision: str, entry: str, aspect: str, target: str,
+    *, engine: str | None = None,
+) -> Path | None:
+    """Find the former style-revision directory for the exact same style."""
+    query = parse_qs(urlsplit(target).query)
+    style = query.get("estilo", [""])[0]
+    style_revision = query.get("styleRevision", [""])[0]
+    if not style or not style_revision:
+        return None
+    stable = poster_path(cache, design, revision, entry, aspect, target, engine=engine)
+    variant = f"{_safe_segment(style)}-{_safe_segment(style_revision)[:16]}"
+    params = query.get("p", [""])[0]
+    if params:
+        variant = f"{variant}-p-{_safe_segment(params)[:48]}"
+    return stable.parent.parent / variant / stable.name
+
+
+def revision_scoped_poster_path(
+    cache: Path,
+    design: str,
+    revision: str,
+    entry: str,
+    aspect: str,
+    target: str,
+    *,
+    engine: str | None = None,
+) -> Path:
+    """Locate the previous readable layout so the generator can recover it."""
+    engine_name = _safe_segment((engine or design).rsplit("/", 1)[-1].lstrip("_"))
+    component_name = _safe_segment(entry)
+    if not component_name.startswith(f"{engine_name}."):
+        component_name = f"{engine_name}.{component_name}"
+    style = parse_qs(urlsplit(target).query).get("estilo", [""])[0]
+    variant = _safe_segment(style) if style else "default"
+    style_revision = parse_qs(urlsplit(target).query).get("styleRevision", [""])[0]
+    if style_revision:
+        variant += "-" + _safe_segment(style_revision)[:16]
+    params = parse_qs(urlsplit(target).query).get("p", [""])[0]
+    if params:
+        variant = f"{variant}-p{hashlib.sha256(params.encode()).hexdigest()[:12]}"
+    return (
+        cache
+        / "showcase-posters"
+        / _safe_segment(design)
+        / _safe_segment(revision)
+        / _safe_segment(aspect)
+        / variant
+        / f"{component_name}.webp"
+    )
+
+
+def poster_signature(design_revision: str, source: str, target: str) -> str:
+    """Track style changes without placing revision codes in poster paths."""
+    signature = f"{design_revision}:{source}"
+    style_revision = parse_qs(urlsplit(target).query).get("styleRevision", [""])[0]
+    return f"{signature}:style:{style_revision}" if style_revision else signature
 
 
 def with_style(target: str, style: str | None) -> str:
@@ -48,12 +152,24 @@ def source_revision(templates: Path, sandbox: Path, engine: str, target: str) ->
     engine_path = templates / ("_tools/explainer-kit" if engine == "explainer-kit" else f"sandbox/{engine}")
     if engine_path.resolve().is_relative_to(templates.resolve()):
         roots.append(engine_path)
-    prefix = "/api/v1/explainer/files/sandbox/"
     target_path = urlsplit(target).path
-    if target_path.startswith(prefix):
+    if target_path.startswith('/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/'):
+        # La galería importa el motor central fuera de preview/tactico/.
+        roots.append(templates / 'nodeatlas/atlas-en-movimiento/engine')
+    shared_kit_prefix = "/api/v1/explainer/files/_tools/explainer-kit/"
+    if engine != "explainer-kit" and target_path.startswith(shared_kit_prefix):
+        shared_kit = templates / "_tools/explainer-kit"
+        if shared_kit.resolve().is_relative_to(templates.resolve()):
+            roots.append(shared_kit)
+    for prefix, bases in (
+        ("/api/v1/explainer/files/sandbox/", (sandbox, templates / "sandbox")),
+        ("/api/v1/explainer/files/bundled/", (templates,)),
+    ):
+        if not target_path.startswith(prefix):
+            continue
         from urllib.parse import unquote
         relative = Path(unquote(target_path[len(prefix):]))
-        for base in (sandbox, templates / "sandbox"):
+        for base in bases:
             root = (base / relative).parent
             if root.resolve().is_relative_to(base.resolve()):
                 roots.append(root)
@@ -140,12 +256,12 @@ async def _capture_locked(path: Path, target: str, width: int, height: int, port
             await page.locator("iframe").evaluate("(frame, url) => frame.src = url", f"http://127.0.0.1:{port}{target}")
             await page.wait_for_function("window.previewReady === true", timeout=120000)
             await page.wait_for_timeout(500)
-            image = await page.screenshot(type="jpeg", quality=75, timeout=90000)
+            image = Image.open(io.BytesIO(await page.screenshot(type="png", timeout=90000))).convert("RGB")
             path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
             fd, name = tempfile.mkstemp(prefix=".poster-", dir=path.parent)
             try:
                 with os.fdopen(fd, "wb") as stream:
-                    stream.write(image)
+                    image.save(stream, format="WEBP", quality=78, method=4)
                 os.replace(name, path)
             finally:
                 Path(name).unlink(missing_ok=True)
@@ -189,7 +305,8 @@ async def warm_all(service_factory, settings, styles_for_design=None):
                     try:
                         target = with_style(await asyncio.to_thread(service.preview, design.id, entry.id, "16x9"), style)
                         source = await asyncio.to_thread(source_revision, settings.templates_dir, layout.sandbox_dir, design.engine_id, target)
-                        path = poster_path(layout.cache_dir, design.id, design.revision + source, entry.id, "16x9", target)
+                        path = poster_path(layout.cache_dir, design.id, design.revision + source, entry.id, "16x9", target,
+                                           engine=design.engine_id)
                         if not path.is_file():
                             while len(_running) >= 24:
                                 await asyncio.sleep(5)

@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "design": "atlas-cinematico",
+  "engine": "nodehistory/_atlas",
+  "script_agent": {
+    "preferred": {"provider": "codex", "model": "gpt-6.1-terra", "reasoning_effort": "high"},
+    "fallback": {"provider": "claude", "model": "claude-haiku-5-5", "reasoning_effort": "medium"},
+    "fallback_policy": "provider_unavailable_only",
+    "execution": "isolated_factory_with_episode_AgentScope",
+    "reuse_valid_script": true,
+    "retry_failed_run_with_another_provider": false
+  },
+  "visual_profile": {
+    "locked": true,
+    "design": "atlas-cinematico",
+    "camera": {
+      "view": "oblique_tilted_satellite",
+      "framing": "countrywide",
+      "projection": "mercator",
+      "look": "satelite-realista",
+      "pitch": 60,
+      "pitch_range": [58, 68],
+      "bearing": 4,
+      "zoom_into_regions": false
+    },
+    "flag": {
+      "component": "atlas.flagFill",
+      "persistent_within_country": true,
+      "opacity": {"intro": 0.94, "country": 0.12, "insight": 0.12, "region": 0.04},
+      "intro_scope": "country_chapter_opening",
+      "fit": "landmass",
+      "real_local_media_required": true
+    },
+    "region_highlight": {"color": "#e53935", "keep_countrywide_framing": true},
+    "portrait": {
+      "component": "atlas.persistentPortrait",
+      "photo_scale": 1.3,
+      "text_scale": 1.2,
+      "scale_reference": "approved_episode_portrait_layout_before_this_revision",
+      "screen_fixed": true,
+      "documentary_local_photo_required": true,
+      "safe_layout_required_in_both_formats": true
+    }
+  },
+  "transition": {
+    "component": "atlas.arrow",
+    "kind": "route_itinerary",
+    "from": "current_country",
+    "to": "next_country",
+    "visible_during_country_handoff": true,
+    "path": "great-circle",
+    "long_route_path": "curve",
+    "implies_trade": false,
+    "width_encodes_economic_magnitude": false,
+    "economic_value_or_dataRef": false,
+    "label_purpose": "Siguiente país del recorrido"
+  },
+  "component_planning": {
+    "output": "work/component-plan.json",
+    "required_fields": ["intent", "component", "timeAnchor", "location", "media", "ref", "layout", "reason"],
+    "field_contract": {
+      "intent": "Propósito narrativo concreto; no un nombre decorativo.",
+      "component": "ID existente de components.json, seleccionado por intent.",
+      "timeAnchor": {"segment_id": "ID de script.segments", "edge": "start|end", "quote": "Palabras reales de lyrics, o null para el borde alineado"},
+      "location": {"country": "ISO2 del dataset, o null para HUD", "region": "ID exacto del dataset, o null", "coordinates": "[longitud,latitud] verificadas, o null"},
+      "media": "Ruta documental local relativa a assets/ con crédito, o null cuando el componente no usa medios.",
+      "ref": {"fact_ids": "IDs de research.facts; lista vacía solo para navegación puramente editorial", "source_ids": "IDs de research.sources", "data_ref": "ID de scene.data, o null"},
+      "layout": {"target": "layers|hud", "formats": ["16:9", "9:16"], "avoid": ["captions", "portrait", "GDP", "mandate"], "placement": "Posición y ajuste legible, sin colisiones, para ambos formatos"},
+      "reason": "Por qué esta pieza explica este fragmento mejor que una alternativa más simple."
+    },
+    "photo_components": [
+      {"component": "atlas.polePhoto", "intent": "Ubicar un lugar o hito documental con una foto y un rótulo breve"},
+      {"component": "atlas.hexPhoto", "intent": "Destacar un detalle documental que necesita imagen y descripción breve"},
+      {"component": "atlas.panel", "intent": "Explicar un hecho documentado que requiere foto, texto y vínculo geográfico"}
+    ],
+    "rules": [
+      "Planificar tras el guion aprobado; resolver tiempos únicamente con la transcripción real del MP3 final.",
+      "No inventar tiempos, lugares, fotografías, créditos, fuentes ni relaciones comerciales.",
+      "Elegir componentes por intención; no usar todas las piezas por decoración o para completar una cuota.",
+      "No inventar fotografías para justificar una pieza: usar medios documentales autorizados y sus créditos.",
+      "Una foto opcional no debe ocultar país, región, retrato, PIB, mandato ni subtítulos.",
+      "Durante estados o regiones conservar la vista nacional oblicua y destacar la geometría en rojo; no acercar la cámara.",
+      "La flecha entre países muestra el itinerario narrativo, no comercio, causalidad ni magnitud económica.",
+      "Las cifras mantienen fuente, año, unidad y alcance; las afirmaciones documentales requieren fact_ids.",
+      "El perfil visual está bloqueado; cambiarlo exige una instrucción editorial explícita y nuevas evidencias visuales."
+    ]
+  }
+}

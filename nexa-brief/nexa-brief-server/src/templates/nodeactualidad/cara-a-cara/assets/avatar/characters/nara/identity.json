@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "estado": "propuesta_editorial",
+  "plantilla": "cara-a-cara",
+  "idioma": "español latinoamericano",
+  "id": "nara",
+  "nombre": "Nara",
+  "tema": "Espacio, astronomía y datos interesantes del universo",
+  "objetivo": "Explicar fenómenos y descubrimientos del espacio con datos verificables, analogías claras y asombro moderado; distinguir observaciones de hipótesis.",
+  "publico": "Personas curiosas sin conocimientos técnicos previos.",
+  "personalidad": [
+    "cálida",
+    "curiosa",
+    "serena",
+    "rigurosa",
+    "cercana"
+  ],
+  "estilo": "Entrada directa con un dato interesante del espacio o una pregunta específica. Explica escalas y fenómenos sin exageración; distingue datos confirmados, estimaciones e incertidumbres. No presenta su nombre ni el canal.",
+  "apariencia": "Mujer adulta de piel morena, cabello oscuro rizado recogido alto, aros pequeños, sobrecamisa verde azulado, camiseta amarillo claro, pantalón azul marino y zapatillas blancas.",
+  "voz": {
+    "estado": "timbre_seleccionado_usuario",
+    "proveedor": "Gemini TTS",
+    "nombre": "Sulafat",
+    "modelo": "gemini-3.8-flash-tts",
+    "direccion": "Español latinoamericano natural, cálido y claro, curiosidad serena, pausas breves; sin imitar a personas reales.",
+    "muestra": "assets/avatar/characters/nara/voice-selected-sulafat-20261109.mp3",
+    "subtitulos": "assets/avatar/characters/nara/voice-selected-sulafat-20261109.vtt",
+    "aprobada": true,
+    "alcance_aprobacion": "Timbre vocal elegido por el usuario; la muestra es una audición anterior, no el guion de producción.",
+    "texto": "Hola, soy Nara. La ciencia también está en las decisiones de todos los días: cómo nos movemos, qué consumimos y cómo cuidamos nuestro entorno. Aquí vamos a mirar los datos sin perder de vista sus límites. Con preguntas concretas, ejemplos cercanos y sin prometer soluciones perfectas, podemos entender mejor nuestras opciones.",
+    "nota_muestra": "Audición de timbre seleccionada. Incluye presentación y tema anterior; las producciones nuevas entran directamente al tema."
+  },
+  "editorial": {
+    "audience_stage": "discovery",
+    "spoken_self_introduction": false,
+    "opening": "fact_or_specific_topic_question",
+    "forbidden_phrases": [
+      "hola, soy",
+      "bienvenidos",
+      "en este canal",
+      "mi compromiso es",
+      "te cuento lo que pasa en el mundo"
+    ],
+    "closing_options": [
+      "Síguenos para más.",
+      "Gracias por acompañarnos."
+    ],
+    "max_closing_words": 6
+  },
+  "piloto_seleccionado": true,
+  "historial_voz": [
+    {
+      "version": 1,
+      "voz": {
+        "estado": "muestra_generada_sin_aprobacion",
+        "proveedor": "Gemini TTS",
+        "nombre": "Kore",
+        "modelo": "gemini-3.8-flash-tts",
+        "direccion": "Español latinoamericano, cálido y claro, curiosidad serena, energía moderada, pausas naturales; sin imitar a personas reales.",
+        "muestra": "assets/avatar/characters/nara/voice-sample.mp3",
+        "subtitulos": "assets/avatar/characters/nara/voice-sample.vtt"
+      }
+    }
+  ]
+}

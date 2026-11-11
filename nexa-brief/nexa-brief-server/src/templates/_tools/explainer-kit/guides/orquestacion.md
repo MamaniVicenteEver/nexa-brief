@@ -35,9 +35,9 @@
 
 | rol | quién | cómo se le pide | se paga |
 |---|---|---|---|
-| producer · research · script · storyboard · visual_review | **Codex** (configuración habitual del productor, hoy `gpt-6-luna`, xhigh) | lo lanza el backend (`codex exec --json`) | suscripción ChatGPT (local) |
+| producer · research · script · storyboard · visual_review | **Codex** (`gpt-6.1-terra`, high; alternativa `gpt-6-luna`, max) | lo lanza el backend (`codex exec --json`) | suscripción ChatGPT (local) |
 | component_draft · copy_draft · fact_check | **DeepSeek** (`deepseek-v4-flash`) | `kit.py delegate <id> <rol> --prompt-file …` | API (tokens) |
-| text_draft · dialogue_draft | **Codex** (`gpt-6.1-terra`, medium) | `kit.py delegate <id> <rol> --prompt-file …` | suscripción ChatGPT (local) |
+| text_draft · dialogue_draft | **Codex** (`gpt-6.1-terra`, high) | `kit.py delegate <id> <rol> --prompt-file …` | suscripción ChatGPT (local) |
 | voice | **Gemini TTS** (cadena del diseño, 7 claves) | `kit.py voice <id>` | API (tokens) |
 | transcribe | **Whisper large-v3** | `kit.py transcribe <id>` | local |
 
@@ -119,3 +119,13 @@ anotalo a mano en el reporte si hace falta.
 2. Qué se delegó, a qué modelo, cuántas vueltas y qué se aceptó o se rehízo.
 3. `usage.json`: tokens por proveedor y las iteraciones de cada paso.
 4. Estado: listo para grabar (sin grabar) + lo que el humano tiene que mirar o decidir.
+
+
+## Preferencia editorial del usuario · 2026-11-09
+
+Para títulos, descripciones, guion y diálogos, usar Codex con Terra 6.1/high. Luna/max es la
+alternativa Codex. Claude queda como último recurso por indisponibilidad o cuota; un error de
+contenido o JSON no autoriza cambiar de proveedor. Consultar `src/skills/models/roles.json`.
+Los prompts de texto y diálogo deben sostener interés con frases naturales, preguntas pertinentes,
+respuestas conectadas y hechos verificables; respetar formato, personalidad y límites del episodio.
+No inventar citas de personas reales. La revisión del productor sigue siendo necesaria.

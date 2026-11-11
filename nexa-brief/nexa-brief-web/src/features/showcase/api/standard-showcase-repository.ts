@@ -31,6 +31,7 @@ export type ShowcaseEntry = {
   preview_url: string | null;
   preview_kind: "iframe" | "image" | "json";
   data?: unknown;
+  appearance?: { id: string; revision: string; format: string; [key: string]: unknown } | null;
 };
 export type ShowcaseCatalog = {
   schema_version: number;
@@ -68,8 +69,8 @@ export const standardShowcaseRepository = {
     httpClient<{ schema_version: number; designs: ShowcaseDesign[] }>("/api/v1/showcase/designs", {
       signal,
     }),
-  catalog: (id: string, signal?: AbortSignal) =>
-    httpClient<ShowcaseCatalog>(`/api/v1/showcase/designs/${encodeURIComponent(id)}/catalog`, {
+  catalog: (id: string, signal?: AbortSignal, estilo?: string, format = "16x9") =>
+    httpClient<ShowcaseCatalog>(`/api/v1/showcase/designs/${encodeURIComponent(id)}/catalog${estilo ? `?${new URLSearchParams({ format, estilo })}` : ""}`, {
       signal,
     }),
   promote: (request: string | { id: string; category: string; sharedCategories: string[] }) => {

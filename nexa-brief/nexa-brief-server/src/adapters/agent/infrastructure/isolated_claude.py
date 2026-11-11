@@ -31,6 +31,47 @@ _PRIVATE = re.compile(r'^(?:\.env(?:\..*)?|\.git|\.claude|\.system|\.ssh|\.aws|'
                       r'sessions?|browser_profiles|connections|web-data|data|.*(?:secret|token|credential|password).*|.*\.(?:key|pem|p12|pfx))$', re.I)
 _SHA = re.compile(r'^[a-f0-9]{64}$')
 
+# The pinned CLI's native sandbox creates empty bind-mount targets in cwd.
+# They are not credentials, but keeping them makes the next file-only phase
+# correctly fail _PRIVATE. Never exempt these names from the privacy guard.
+_CLI_EMPTY_ENV = frozenset({'.env', '.env.local', '.env.development',
+    '.env.development.local', '.env.test', '.env.test.local',
+    '.env.production', '.env.production.local'})
+
+
+def _cleanup_cli_placeholders(workspace: Path, before: frozenset[str]) -> None:
+    """Remove only newly created, empty sandbox targets; never read their data.
+
+    The runner owns the workspace exclusively, and its CLI has exited before
+    this executes. A pre-existing path, nonempty file, link or unexpected child
+    remains in place and continues to fail the unchanged privacy guard.
+    """
+    for name in _CLI_EMPTY_ENV - before:
+        path = workspace / name
+        try:
+            info = path.lstat()
+        except FileNotFoundError:
+            continue
+        if (not stat.S_ISREG(info.st_mode) or info.st_size != 0
+                or info.st_uid != os.getuid() or info.st_nlink != 1
+                or info.st_mode & 0o022):
+            raise AgentIsolationUnavailableError('Placeholder privado no vacío o inseguro')
+        path.unlink()
+    if '.claude' not in before:
+        for parts in (('.claude', 'commands'), ('.claude', 'agents'), ('.claude',)):
+            path = workspace.joinpath(*parts)
+            try:
+                info = path.lstat()
+            except FileNotFoundError:
+                continue
+            if (not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid()
+                    or info.st_mode & 0o022 or any(p.is_symlink() for p in (path, path.parent))):
+                raise AgentIsolationUnavailableError('Directorio privado inesperado')
+            try:
+                path.rmdir()  # Only empty, exact paths; never recurse or delete contents.
+            except OSError as exc:
+                raise AgentIsolationUnavailableError('Directorio privado contiene datos; se conserva') from exc
+
 
 def candidate_settings() -> dict:
     return {
@@ -211,6 +252,7 @@ class ClaudeFileRunner(IsolatedAgentRunnerPort):
         if scope and scope.reasoning_effort:
             argv.extend(['--effort', scope.reasoning_effort])
         started = time.monotonic()
+        before = frozenset(path.name for path in workspace.iterdir())
         with tempfile.TemporaryDirectory(prefix='nexa-claude-home-') as home:
             env = _environment(home, config_dir, self.socat_dir)
             flags = os.O_WRONLY | os.O_CREAT | os.O_APPEND | os.O_NOFOLLOW
@@ -251,7 +293,8 @@ class ClaudeFileRunner(IsolatedAgentRunnerPort):
                                     event_failed = True
                                 else:
                                     final = json.dumps(event['structured_output'], ensure_ascii=False)
-                            usage = event.get('usage') if isinstance(event.get('usage'), dict) else {}
+                            from src.adapters.agent.infrastructure.claude_usage_normalization import normalize_claude_result
+                            usage = normalize_claude_result(event)
                             by_model = event.get('modelUsage')
                             if isinstance(by_model, dict) and by_model:
                                 model = next(iter(by_model))
@@ -275,7 +318,16 @@ class ClaudeFileRunner(IsolatedAgentRunnerPort):
                                       duration_seconds=time.monotonic() - started,
                                       timed_out=timed_out, usage=usage, model=model)
             finally:
-                os.close(fd)
+                try:
+                    # Native CLI mount targets and file tools inherit umask.
+                    # Validate owners/link counts and restrict modes before
+                    # removing exact empty targets; no private data is opened.
+                    from src.core.explainer.agent_context import ensure_private_workspace
+                    ensure_private_workspace(workspace)
+                    _cleanup_cli_placeholders(workspace, before)
+                    _safe_workspace(workspace)
+                finally:
+                    os.close(fd)
 
 
 # Previous import name remains available, with the same explicit constructor.

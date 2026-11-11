@@ -1,0 +1,71 @@
+{
+  "version": 2,
+  "estado": "propuesta_editorial",
+  "plantilla": "cara-a-cara",
+  "idioma": "español latinoamericano",
+  "notas": [
+    "La identidad editorial guía el guion; no modifica automáticamente el perfil visual ni genera una voz.",
+    "No cambiar imágenes, guiones ni audio aprobados de videos existentes."
+  ],
+  "id": "leo",
+  "nombre": "Leo",
+  "tema": "Tecnología e historia; comparativas",
+  "objetivo": "Comparar tecnologías y acontecimientos históricos con hechos verificables, contexto y diferencias útiles.",
+  "publico": "Personas curiosas que prefieren explicaciones breves y comprensibles.",
+  "personalidad": [
+    "curioso",
+    "amable",
+    "claro",
+    "equilibrado"
+  ],
+  "estilo": "Entrada directa con un hecho o una pregunta específica. Explica diferencias con ejemplos concretos y matices; no presenta su nombre ni el canal.",
+  "voz": {
+    "estado": "timbre_seleccionado_usuario",
+    "proveedor": "Gemini TTS",
+    "nombre": "Puck",
+    "modelo": "gemini-3.8-flash-tts",
+    "ritmo": 0.9,
+    "archivo_perfil": "src/templates/sandbox/nodeaction/_pizarra/profiles/leo.json",
+    "direccion": "Usar la dirección vocal aprobada del perfil de Leo, sin sustituirla.",
+    "muestra": "assets/avatar/identities/voice-selected-puck-20261109.mp3",
+    "subtitulos": "assets/avatar/identities/voice-selected-puck-20261109.vtt",
+    "aprobada": true,
+    "alcance_aprobacion": "Timbre vocal elegido por el usuario; la muestra es una audición anterior, no el guion de producción.",
+    "texto": "Hola, soy Leo. Me gusta poner las ideas cara a cara y hacer preguntas que parecen simples. ¿Qué cambia de verdad entre dos tecnologías? ¿Por qué una decisión marcó la historia? Vamos a mirar las diferencias, entender el contexto y comparar los hechos, para que tú saques tus propias conclusiones.",
+    "nota_muestra": "Audición de timbre seleccionada. Incluye presentación y tema anterior; las producciones nuevas entran directamente al tema."
+  },
+  "editorial": {
+    "audience_stage": "discovery",
+    "spoken_self_introduction": false,
+    "opening": "fact_or_specific_topic_question",
+    "forbidden_phrases": [
+      "hola, soy",
+      "bienvenidos",
+      "en este canal",
+      "mi compromiso es",
+      "te cuento lo que pasa en el mundo"
+    ],
+    "closing_options": [
+      "Síguenos para más.",
+      "Gracias por acompañarnos."
+    ],
+    "max_closing_words": 6
+  },
+  "piloto_seleccionado": true,
+  "historial_voz": [
+    {
+      "version": 1,
+      "voz": {
+        "estado": "perfil_existente_aprobado",
+        "proveedor": "Gemini TTS",
+        "nombre": "Puck",
+        "modelo": "gemini-3.8-flash-tts",
+        "ritmo": 0.9,
+        "archivo_perfil": "src/templates/sandbox/nodeaction/_pizarra/profiles/leo.json",
+        "direccion": "Usar la dirección vocal aprobada del perfil de Leo, sin sustituirla.",
+        "muestra": "assets/song.mp3",
+        "subtitulos": "assets/avatar/identities/leo-muestra.vtt"
+      }
+    }
+  ]
+}

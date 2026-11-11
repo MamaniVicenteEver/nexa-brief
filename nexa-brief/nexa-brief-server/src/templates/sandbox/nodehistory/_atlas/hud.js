@@ -1,17 +1,20 @@
+import { GEO_NARRATIVE_TYPES, prepareGeoNarrative } from './hud-geo-narrative.js';
 /* hud.js · componentes de noticiero para Atlas (estilo "resumen geopolítico").
  * Se declaran en scene.hud[] (arreglo aparte de scene.layers). Todo sale de t (puro, seek-safe).
  * Tipografía/tamaño/color: scene.hudTheme + campos font/size/color/weight/tracking de cada ítem.
  * Posición: `at` (lugar o [lon,lat]) + dx,dy (px de diseño)  ó  x,y (fracción del cuadro).
  * Tipos: brand · topic · lower-title · hemicycle · counter · portrait · photo-frame · chip · city · note · glow
  * Unidad de diseño u = min(W,H)/1080. */
+import { DATA_TYPES, prepareData } from './hud-data.js';
 const PI = Math.PI;
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 const ease = x => { x = clamp(x); return x * x * (3 - 2 * x); };
 const easeOut = x => 1 - (1 - clamp(x)) ** 3;
-const pop = x => { x = clamp(x); return 1 + 2.2 * (x - 1) ** 3 + 1.2 * (x - 1) ** 2; };
+const pop = x => { x = clamp(x); return Math.max(0, 1 + 2.2 * (x - 1) ** 3 + 1.2 * (x - 1) ** 2); };
 const hash = n => { let x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
 const CHARS = 'ABCDEFGHJKLMNPRSTUVXYZ0123456789<>+/';
-export const HUD_TYPES = new Set(['brand','topic','lower-title','hemicycle','counter','portrait','photo-frame','chip','city','note','glow']);
+export const HUD_TYPES = new Set(['brand','topic','lower-title','hemicycle','counter','portrait','photo-frame','chip','icon-grid','flag-chip','logo-chip','city','note','glow','alert','headline','key-figure','date-card','message', ...DATA_TYPES, ...GEO_NARRATIVE_TYPES]);
+const PORTRAIT_SCALE = { topic: 1.25, note: 1.2, city: 1.2 };
 export const DEFAULT_THEME = {
   fonts: { ui: "'Barlow Condensed', 'Montserrat', sans-serif", title: "'Poppins', 'Montserrat', sans-serif", num: "'Barlow Condensed', 'Montserrat', sans-serif" },
   colors: { blue: '#2f8cff', red: '#ff3b5c', yellow: '#ffd21a', green: '#3ddc84', orange: '#ff8a1a', white: '#ffffff', dim: '#8d96a8', panel: 'rgba(8,14,26,.62)' },
@@ -26,7 +29,7 @@ function octagon(g, x, y, r) { g.beginPath(); for (let i = 0; i < 8; i++) { cons
 function rrect(g, x, y, w, h, r) { r = Math.min(r, w / 2, h / 2); g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
 
 /* iconos en caja [-1,1]; g ya tiene stroke/fill configurados */
-const ICONS = {
+export const ICONS = {
   db: g => { for (const y of [-.55, 0, .55]) { g.beginPath(); g.ellipse(0, y, .7, .25, 0, 0, 2 * PI); g.stroke(); } g.beginPath(); g.moveTo(-.7, -.55); g.lineTo(-.7, .55); g.moveTo(.7, -.55); g.lineTo(.7, .55); g.stroke(); },
   eye: g => { g.beginPath(); g.moveTo(-.9, 0); g.quadraticCurveTo(0, -.85, .9, 0); g.quadraticCurveTo(0, .85, -.9, 0); g.stroke(); g.beginPath(); g.arc(0, 0, .27, 0, 2 * PI); g.fill(); },
   gavel: g => { g.save(); g.rotate(-.6); g.fillRect(-.55, -.7, .9, .4); g.restore(); g.beginPath(); g.moveTo(-.1, -.1); g.lineTo(.7, .7); g.stroke(); g.beginPath(); g.moveTo(-.8, .85); g.lineTo(.1, .85); g.stroke(); },
@@ -48,13 +51,37 @@ const ICONS = {
 export function createHud(scene, env) {
   const theme = merge(DEFAULT_THEME, scene.hudTheme);
   const T = env.T || ((v, d) => typeof v === 'number' ? v : d);
-  const items = (scene.hud || []).map((l, i) => ({ ...l, _i: i }));
-  const images = new Map(), failed = new Set();
+  const items = [...(scene.hud || []), ...(scene.layers || []).filter(l => l.type === 'choropleth')].map((l, i) => ({ ...l, _i: i }));
+  const images = new Map(), failed = new Set(), warned = new Set(), paths = new Map();
+  let library = {};
+  const warn = message => { if (!warned.has(message)) { warned.add(message); console.warn('[noticiero HUD]', message); } };
+  const flagSource = l => l.src || new URL(`assets/flags/${String(l.code || '').toLowerCase()}.svg`, import.meta.url).href;
+  const data = prepareData(items, { T, flagSource });
+  const geoNarrative = prepareGeoNarrative(items, { T, place:env.place, warn });
+  for (const l of items) if (l.type === 'flag-chip') l.src = flagSource(l);
   const source = src => { try { return env.base ? new URL(src, env.base).href : src; } catch { return src; } };
-  const jobs = [...new Set(items.map(l => l.src).filter(Boolean))].map(src => Promise.resolve().then(() => env.loadImg(source(src))).then(im => { if (im) images.set(src, im); else failed.add(src); }, () => failed.add(src)));
+  const absent = src => { failed.add(src); if (items.some(l => l.src === src && ['logo-chip','flag-chip'].includes(l.type))) warn(`Imagen ausente: ${src}`); };
+  const jobs = [...new Set([...items.map(l => l.src).filter(Boolean), ...data.sources])].map(src => Promise.resolve().then(() => env.loadImg(source(src))).then(im => { if (im) images.set(src, im); else absent(src); }, () => absent(src)));
+  for (const l of items) if (l.type === 'logo-chip' && !l.src) warn(`logo-chip sin imagen: ${l.label || '?'}`);
+  const needsLibrary = geoNarrative.needsLibrary || data.needsLibrary || items.some(l => l.type === 'icon-grid' || l.type === 'chip' && l.icon && !Object.hasOwn(ICONS, l.icon) && !l.glyph);
+  if (needsLibrary) jobs.push(fetch(new URL('assets/icons/noticiero-icons.json', import.meta.url)).then(r => { if (!r.ok) throw Error(r.status); return r.json(); }).then(data => {
+    library = data;
+    // Los Path2D se preparan una sola vez, nunca durante un cuadro.
+    for (const [name, icon] of Object.entries(data)) if (!Object.hasOwn(ICONS, name)) paths.set(name, icon.paths.map(d => new Path2D(d)));
+  }).catch(error => warn(`Biblioteca de iconos no disponible: ${error.message}`)));
   const image = src => images.get(src) || (env.img && (env.img(source(src)) || env.img(src))) || null;
   const col = c => theme.colors[c] || c;
   const fontOf = (l, kind = 'ui') => l.font || theme.fonts[kind] || theme.fonts.ui;
+  function drawIcon(g, name = 'star') {
+    if (Object.hasOwn(ICONS, name)) return ICONS[name](g);
+    const ps = paths.get(name);
+    if (!ps) { warn(`Icono desconocido: ${name}; se usa star`); return ICONS.star(g); }
+    g.save();
+    // Lucide usa 24×24: conserva el grosor 0.14 del dibujo histórico.
+    const width = g.lineWidth; g.scale(1 / 12, 1 / 12); g.translate(-12, -12); g.lineWidth = width * 12;
+    for (const path of ps) g.stroke(path);
+    g.restore();
+  }
 
   function timing(l, t) {
     const start = T(l.t, 0), dur = Math.max(.001, l.dur ?? .5), out = l.out == null ? Infinity : T(l.out, Infinity), exit = l.exit ?? .35;
@@ -81,23 +108,31 @@ export function createHud(scene, env) {
         g.save();
         try {
           g.globalAlpha *= tm.alpha; g.lineCap = 'round'; g.lineJoin = 'round'; g.textBaseline = 'middle';
-          const S = n => n * u * (l.scale ?? 1) * (W < H ? (l.scalePortrait ?? 1) : (l.scaleLandscape ?? 1));
+          const portrait = W < H;
+          // Móvil (9:16): el titular, las notas y las ciudades salen más grandes por defecto (editable con scalePortrait)
+          const S = n => n * u * (typeof l.scale === 'number' ? l.scale : 1) * (portrait ? (l.scalePortrait ?? PORTRAIT_SCALE[l.type] ?? 1) : (l.scaleLandscape ?? 1));
           const text = (str, x, y, size, o = {}) => {
-            g.font = `${o.weight || l.weight || 700} ${S(size)}px ${o.font || fontOf(l)}`; g.textAlign = o.align || 'left';
+            g.font = `${o.style ? o.style + ' ' : ''}${o.weight || l.weight || 700} ${S(size)}px ${o.font || fontOf(l)}`; g.textAlign = o.align || 'left';
             g.letterSpacing = `${S(o.tracking ?? 0)}px`; g.fillStyle = o.color || '#fff';
             if (o.shadow !== false) { g.shadowColor = 'rgba(0,0,0,.7)'; g.shadowBlur = S(8); }
             g.fillText(str, x, y); g.shadowBlur = 0; g.letterSpacing = '0px';
           };
-          const measure = (str, size, o = {}) => { g.font = `${o.weight || l.weight || 700} ${S(size)}px ${o.font || fontOf(l)}`; g.letterSpacing = `${S(o.tracking ?? 0)}px`; const w = g.measureText(str).width; g.letterSpacing = '0px'; return w; };
+          const measure = (str, size, o = {}) => { g.font = `${o.style ? o.style + ' ' : ''}${o.weight || l.weight || 700} ${S(size)}px ${o.font || fontOf(l)}`; g.letterSpacing = `${S(o.tracking ?? 0)}px`; const w = g.measureText(str).width; g.letterSpacing = '0px'; return w; };
           const up = s => l.upper === false ? String(s ?? '') : String(s ?? '').toUpperCase();
 
-          if (l.type === 'brand') {
-            const a = { x: W * (l.x ?? .88), y: H * (l.y ?? .135) }, size = l.size ?? 40, str = l.text || 'BRAND';
+          if (GEO_NARRATIVE_TYPES.has(l.type)) {
+            geoNarrative.draw(l, tm, { g, t, view, u, S, text, measure, anchor, rrect, col, theme, image, drawIcon });
+          }
+          else if (DATA_TYPES.has(l.type)) {
+            data.draw(l, tm, { g, t, view, u, S, text, measure, up, anchor, rrect, col, theme, fontOf, image, drawIcon });
+          }
+          else if (l.type === 'brand') {
+            const a = { x: W * (l.x ?? .88), y: H * (l.y ?? (portrait ? .06 : .135)) }, size = l.size ?? 40, str = l.text || 'BRAND';
             g.globalAlpha *= l.opacity ?? .55;
             text(str, a.x, a.y, size, { align: 'right', weight: l.weight || 800, tracking: l.tracking ?? 1, color: l.color || '#fff', font: fontOf(l, 'title') });
           }
           else if (l.type === 'topic') {
-            const slot = l.slot ?? topicSlot++, size = l.size ?? 21, h = S(36), x = W * (l.x ?? .11), y = H * (l.y ?? .155) + slot * (h + S(8));
+            const slot = l.slot ?? topicSlot++, size = l.size ?? 21, h = S(36), x = W * (l.x ?? .11), y = H * (l.y ?? (portrait ? .1 : .155)) + slot * (h + S(8));
             const full = up(l.text), shown = scramble(full, easeOut(tm.el / (l.reveal ?? .7)), t, l._i), tr = l.tracking ?? 2.6;
             const w = measure(full, size, { tracking: tr }) + S(52), slide = (1 - easeOut(tm.el / .35)) * S(-30);
             g.translate(slide, 0);
@@ -173,10 +208,14 @@ export function createHud(scene, env) {
             if (!(im && im.width)) { g.save(); octagon(g, a.x, a.y, r); g.clip(); g.fillStyle = '#1b2434'; g.fillRect(a.x - r, a.y - r, 2 * r, 2 * r); g.fillStyle = '#56627a'; g.beginPath(); g.arc(a.x, a.y - r * .18, r * .34, 0, 2 * PI); g.fill(); g.beginPath(); g.ellipse(a.x, a.y + r * .85, r * .72, r * .6, 0, 0, 2 * PI); g.fill(); g.restore(); }
             octagon(g, a.x, a.y, r + S(5)); g.strokeStyle = c; g.lineWidth = S(3.2); g.stroke();
             if (l.name) {
-              const nameSize = l.nameSize ?? 17, nw = Math.max(measure(up(l.name), nameSize, { tracking: 1.2 }), l.role ? measure(up(l.role), 11, { tracking: 1 }) : 0) + S(26), ny = a.y + r + S(14), nh = S(l.role ? 44 : 30);
+              const nameSize = l.nameSize ?? 17, roleSize = l.roleSize ?? 11;
+              const nameY = Math.max(l.role ? 14 : 15, nameSize / 2 + (l.role ? 5.5 : 6.5));
+              const roleY = nameY + Math.max(17, (nameSize + roleSize) / 2 + 3);
+              const height = l.role ? Math.max(44, roleY + roleSize / 2 + 7.5) : Math.max(30, nameY + nameSize / 2 + 6.5);
+              const nw = Math.max(measure(up(l.name), nameSize, { tracking: 1.2 }), l.role ? measure(up(l.role), roleSize, { tracking: 1 }) : 0) + S(26), ny = a.y + r + S(14), nh = S(height);
               g.fillStyle = 'rgba(6,10,18,.88)'; g.fillRect(a.x - nw / 2, ny, nw, nh); g.fillStyle = c; g.fillRect(a.x - nw / 2, ny + nh - S(2.5), nw, S(2.5));
-              text(up(l.name), a.x, ny + S(l.role ? 14 : 15), nameSize, { align: 'center', weight: 700, tracking: 1.2, shadow: false });
-              if (l.role) text(up(l.role), a.x, ny + S(31), 11, { align: 'center', weight: 600, tracking: 1, color: 'rgba(255,255,255,.7)', shadow: false });
+              text(up(l.name), a.x, ny + S(nameY), nameSize, { align: 'center', weight: 700, tracking: 1.2, shadow: false });
+              if (l.role) text(up(l.role), a.x, ny + S(roleY), roleSize, { align: 'center', weight: 600, tracking: 1, color: 'rgba(255,255,255,.7)', shadow: false });
             }
           }
           else if (l.type === 'photo-frame') {
@@ -197,9 +236,49 @@ export function createHud(scene, env) {
             g.shadowColor = c; g.shadowBlur = S(16); g.beginPath(); g.arc(a.x, a.y, r, 0, 2 * PI); g.fillStyle = 'rgba(6,12,24,.82)'; g.fill(); g.lineWidth = S(3); g.stroke(); g.shadowBlur = 0;
             g.save(); g.translate(a.x, a.y); g.scale(r * .5, r * .5); g.strokeStyle = '#fff'; g.fillStyle = '#fff'; g.lineWidth = 0.14;
             if (l.glyph) { g.restore(); text(l.glyph, a.x, a.y + S(2), (l.size ?? 36) * .95, { align: 'center', weight: 800, font: theme.fonts.num, color: l.glyphColor || '#fff', shadow: false }); }
-            else { (ICONS[l.icon] || ICONS.star)(g); g.restore(); }
+            else { drawIcon(g, l.icon); g.restore(); }
             if (l.badge) { const bx = a.x + r * .72, by = a.y - r * .72; g.beginPath(); g.arc(bx, by, S(9), 0, 2 * PI); g.fillStyle = 'rgba(6,12,24,.95)'; g.fill(); g.strokeStyle = col(l.badge); g.lineWidth = S(2.5); g.stroke(); g.beginPath(); g.arc(bx, by, S(3), 0, 2 * PI); g.fillStyle = col(l.badge); g.fill(); }
             if (l.label) text(up(l.label), a.x, a.y + r + S(18), l.labelSize ?? 13, { align: 'center', weight: 700, tracking: 1.6, color: col(l.labelColor || 'white') });
+          }
+          else if (l.type === 'icon-grid') {
+            const a = anchor(l, view, u); if (!a) continue;
+            const names = l.names || Object.keys(library).filter(n => library[n].categoria === (l.category || 'conflicto'));
+            const cols = Math.max(1, Math.floor(l.cols ?? (portrait ? 4 : 6))), rows = Math.ceil(names.length / cols);
+            if (!rows) continue;
+            const width = Math.min(W * .9, S(l.width ?? 960)), cellW = width / cols, size = S(l.size ?? 32), fs = l.labelSize ?? 20;
+            const lineH = S(fs * 1.15), labels = names.map(name => {
+              const lines = [''];
+              for (const part of String(name).split('-')) {
+                const i = lines.length - 1, next = lines[i] ? lines[i] + '-' + part : part;
+                if (lines[i] && measure(next, fs) > cellW - S(12)) lines.push(part); else lines[i] = next;
+              }
+              return lines;
+            });
+            const cellH = size * 2 + Math.max(...labels.map(ls => ls.length)) * lineH + S(22), height = rows * cellH;
+            g.globalAlpha *= easeOut(tm.el / .45);
+            names.forEach((name, i) => {
+              const x = a.x - width / 2 + (i % cols + .5) * cellW, y = a.y - height / 2 + Math.floor(i / cols) * cellH + size;
+              g.save(); g.translate(x, y); g.scale(size, size); g.lineWidth = .14; g.strokeStyle = col(l.color || 'white'); g.fillStyle = col(l.color || 'white'); drawIcon(g, name); g.restore();
+              labels[i].forEach((line, j) => text(line, x, y + size + S(12) + j * lineH, fs, { align:'center', color:col(l.color || 'white'), weight:l.weight || 600 }));
+            });
+          }
+          else if (l.type === 'flag-chip' || l.type === 'logo-chip') {
+            const a = anchor(l, view, u); if (!a) continue;
+            const logo = l.type === 'logo-chip', w = S(l.size ?? (logo ? 100 : 112)) * pop(tm.p), h = logo || l.shape === 'round' ? w : w * .75;
+            const x = a.x - w / 2, y = a.y - h / 2, c = col(l.color || 'white'), im = image(l.src);
+            const shape = () => { if (l.shape === 'round') { g.beginPath(); g.arc(a.x, a.y, w / 2, 0, 2 * PI); } else rrect(g, x, y, w, h, S(logo ? 12 : 3)); };
+            g.globalAlpha *= easeOut(tm.el / .3);
+            g.save(); shape(); g.clip();
+            if (l.plate !== false) { g.fillStyle = logo ? (typeof l.plate === 'string' ? col(l.plate) : '#fff') : '#0b1424'; g.fillRect(x,y,w,h); }
+            if (im && im.width && im.height) {
+              const fit = Math.min(w / im.width, h / im.height), pad = logo ? .84 : 1;
+              g.drawImage(im, a.x - im.width * fit * pad / 2, a.y - im.height * fit * pad / 2, im.width * fit * pad, im.height * fit * pad);
+            } else {
+              const initials = String(l.label || (logo ? '?' : l.code || '?')).trim().split(/\s+/).slice(0,2).map(s => s[0]).join('').toUpperCase();
+              text(initials, a.x, a.y, (l.size ?? 100) * .3, {align:'center',color:logo && l.plate !== false ? '#12213a' : c,shadow:false});
+            }
+            g.restore(); shape(); g.strokeStyle = c; g.lineWidth = S(1.5); g.stroke();
+            if (l.label) text(up(l.label), a.x, a.y + h / 2 + S(23), l.labelSize ?? 20, {align:'center',color:c,weight:l.weight || 700});
           }
           else if (l.type === 'city') {
             const a = anchor(l, view, u); if (!a) { g.restore(); continue; }

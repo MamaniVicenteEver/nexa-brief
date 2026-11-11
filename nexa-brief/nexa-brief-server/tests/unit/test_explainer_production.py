@@ -501,7 +501,8 @@ async def test_route_design_groups_current_category_first(api_client):
     groups = (await api_client.get("/api/v1/explainer/design-groups", params={"first": "node_tech"})).json()
     assert [g["category_path"] for g in groups][:2] == ["node_tech", "node_history"]
     assert [d["design_id"] for d in groups[0]["designs"]] == ["rough"]
-    assert len(groups[1]["designs"]) == 10 and groups[1]["designs"][0]["poster_url"]
+    assert len(groups[1]["designs"]) == 11 and groups[1]["designs"][0]["poster_url"]
+    assert "mapas-satelitales" in {d["design_id"] for d in groups[1]["designs"]}
     rough = groups[0]["designs"][0]
     assert rough["preview_url"] == "/api/v1/explainer/files/nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/index.html"
     render_dir = TEMPLATES_DIR / "nodetech" / "lo-que-le-contas-a-la-ia-no-es-privado-tus-chats" / "render"

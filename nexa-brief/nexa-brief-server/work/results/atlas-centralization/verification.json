@@ -1,0 +1,360 @@
+{
+  "phase": "after",
+  "before": {
+    "MemAvailable": 6473940,
+    "SwapTotal": 4194300,
+    "SwapFree": 3656460
+  },
+  "cases": [
+    {
+      "episode": "guerra-ucrania-origen",
+      "format": "16x9",
+      "errors": [],
+      "frames": [
+        {
+          "second": 6,
+          "sha256": "a89fc2d7d4c7849dcdf57a4078ef86eeb7bcb0d9c33ce0c8535138ef6297c240",
+          "identical": true
+        },
+        {
+          "second": 165.5,
+          "sha256": "c53121e5d4fc90e96702f8c85da4d7ed7bc5a36540676977756b79f656c124e9",
+          "identical": true
+        },
+        {
+          "second": 495,
+          "sha256": "773d01f613fe83336aedea2f842631502c348eaaa61920ebff9312acfacb80de",
+          "identical": true
+        },
+        {
+          "second": 528,
+          "sha256": "9509ee3e612a25b9d83a6cb5c1974db53ffe012704c985a23564e7603a098371",
+          "identical": true
+        },
+        {
+          "second": 547,
+          "sha256": "7ea0d5ba859d7ea06cc297df60c8d3218963244ad0b4723634138d999ba50b03",
+          "identical": true
+        },
+        {
+          "second": 680,
+          "sha256": "8758482d9d0a6b043a2c7759fbbba742938af22bacc540092d74e9ee63e5bbb2",
+          "identical": true
+        }
+      ],
+      "scripts": [
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/_atlas/camera.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/_atlas/geo.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/_mapas/flags.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/blur.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/paths.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/plano.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/territories.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/tiles.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/view.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/_base.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/air.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/army.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/attrition.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/captions.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/documento.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/economy.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/editorial.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/estilo-textos.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ficha.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/fx.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ground.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/intro.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/labels.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/naval.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/routes.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/sites.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/strike.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/territory.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/text-samples.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ucr2-air.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ucr2-image.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/units.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/core.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/episode-data.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/sprites.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/tools/geometry.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/tools/io.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/util.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/sandbox/_proto/proto.js"
+      ],
+      "missing": [],
+      "duration": 708.81,
+      "memory": {
+        "MemAvailable": 4993924,
+        "SwapTotal": 4194300,
+        "SwapFree": 3656460
+      }
+    },
+    {
+      "episode": "guerra-ucrania-origen",
+      "format": "9x16",
+      "errors": [],
+      "frames": [
+        {
+          "second": 6,
+          "sha256": "d63b9a36b2e0293bbf1b4ea86724a3ea9d6ef5f884bfa0319820e6e271931861",
+          "identical": true
+        },
+        {
+          "second": 165.5,
+          "sha256": "d33457da220d3e26a022eea689fc62a953a9cbb6106e1727ea4383a51b32d651",
+          "identical": true
+        },
+        {
+          "second": 495,
+          "sha256": "aa671704fa09c5327a15f30a525f625613def04427866f3b18403ca20abf5ec5",
+          "identical": true
+        },
+        {
+          "second": 528,
+          "sha256": "58833c19874572793bb4a0245e312be9d4a09e066280ecc6de175cf573bc1c4e",
+          "identical": true
+        },
+        {
+          "second": 547,
+          "sha256": "d8995e015ebcb1f3efdbcb25621ba2924c61901f313b514eb622bc1929173bab",
+          "identical": true
+        },
+        {
+          "second": 680,
+          "sha256": "761d0b7e45826d2a58ae27af7c40131e8f55465cf3315a27ccfd6af278f05b60",
+          "identical": true
+        }
+      ],
+      "scripts": [
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/_atlas/camera.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/_atlas/geo.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/_mapas/flags.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/blur.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/paths.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/plano.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/territories.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/tiles.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/view.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/_base.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/air.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/army.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/attrition.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/captions.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/documento.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/economy.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/editorial.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/estilo-textos.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ficha.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/fx.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ground.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/intro.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/labels.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/naval.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/routes.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/sites.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/strike.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/territory.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/text-samples.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ucr2-air.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ucr2-image.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/units.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/core.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/episode-data.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/sprites.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/tools/geometry.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/tools/io.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/util.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/sandbox/_proto/proto.js"
+      ],
+      "missing": [],
+      "duration": 708.81,
+      "memory": {
+        "MemAvailable": 5035348,
+        "SwapTotal": 4194300,
+        "SwapFree": 3656460
+      }
+    },
+    {
+      "episode": "atlas-en-movimiento",
+      "format": "16x9",
+      "errors": [],
+      "frames": [
+        {
+          "second": 6,
+          "sha256": "5c02bf920bfe9b1f32828cf5f23f0d4ce145972b73f5f5fd343ff75b070a4b9a",
+          "identical": true
+        },
+        {
+          "second": 42,
+          "sha256": "e7955752f0e80d39a42af0372601212c352894c48a928b35627eb99bd1472360",
+          "identical": true
+        },
+        {
+          "second": 100,
+          "sha256": "8dd5fd266800b330ed3081a92b4a6613a46245858c9e1a6f7d47b0d46502eb6f",
+          "identical": true
+        },
+        {
+          "second": 170,
+          "sha256": "31d2a72d52a768304dea133c1749e7d130d8ebbad630d962c578b1c8672c6a79",
+          "identical": true
+        },
+        {
+          "second": 230,
+          "sha256": "2a564b2d1fe2857988177025302270487aae2c3cfe862fcde530fe3ca713d3d5",
+          "identical": true
+        },
+        {
+          "second": 255,
+          "sha256": "5f27ff5332090cb3a035919bc060bab98d63fe20055eb4608d0661783082cf88",
+          "identical": true
+        }
+      ],
+      "scripts": [
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/_atlas/camera.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/_atlas/geo.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/_mapas/flags.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/blur.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/paths.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/plano.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/territories.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/tiles.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/view.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/_base.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/air.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/army.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/attrition.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/captions.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/documento.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/economy.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/editorial.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/estilo-textos.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ficha.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/fx.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ground.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/intro.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/labels.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/naval.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/routes.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/sites.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/strike.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/territory.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/text-samples.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ucr2-air.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ucr2-image.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/units.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/core.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/episode-data.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/sprites.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/tools/geometry.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/tools/io.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/util.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/sandbox/_proto/proto.js"
+      ],
+      "missing": [],
+      "duration": 262.84,
+      "memory": {
+        "MemAvailable": 4948868,
+        "SwapTotal": 4194300,
+        "SwapFree": 3656460
+      }
+    },
+    {
+      "episode": "atlas-en-movimiento",
+      "format": "9x16",
+      "errors": [],
+      "frames": [
+        {
+          "second": 6,
+          "sha256": "18b7f37400fecc36a0e76ce57513056735d2952387a91f89c1da6ef32b1a01af",
+          "identical": true
+        },
+        {
+          "second": 42,
+          "sha256": "1debd6a821924b1b4f057588e2d3f36e96d4dae165f41b0f13345a4ac209f947",
+          "identical": true
+        },
+        {
+          "second": 100,
+          "sha256": "bafd9e843ca71e241a6daa5dd5d447fe49f7dc507801b6b28f9cce098022030f",
+          "identical": true
+        },
+        {
+          "second": 170,
+          "sha256": "0bdb72d6dea36bb0a346e7bcc4bef872ae4e30bbee7893395717287a04b419e6",
+          "identical": true
+        },
+        {
+          "second": 230,
+          "sha256": "85a2922c964bc63b781fc80d57c73127d12ac408d96a6486217897fb5afa33b5",
+          "identical": true
+        },
+        {
+          "second": 255,
+          "sha256": "4619584c28ef2f26b49d3b901624756df30782d223bfca9127ebd4aa34d9baa7",
+          "identical": true
+        }
+      ],
+      "scripts": [
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/_atlas/camera.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/_atlas/geo.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/_mapas/flags.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/blur.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/paths.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/plano.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/territories.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/tiles.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/view.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/_base.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/air.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/army.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/attrition.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/captions.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/documento.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/economy.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/editorial.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/estilo-textos.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ficha.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/fx.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ground.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/intro.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/labels.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/naval.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/routes.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/sites.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/strike.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/territory.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/text-samples.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ucr2-air.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/ucr2-image.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/components/units.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/core.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/episode-data.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/sprites.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/tools/geometry.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/tools/io.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/tactico/util.js",
+        "http://127.0.0.1:8000/api/v1/explainer/files/sandbox/_proto/proto.js"
+      ],
+      "missing": [],
+      "duration": 262.84,
+      "memory": {
+        "MemAvailable": 5024256,
+        "SwapTotal": 4194300,
+        "SwapFree": 3656460
+      }
+    }
+  ],
+  "after": {
+    "MemAvailable": 5962840,
+    "SwapTotal": 4194300,
+    "SwapFree": 3656460
+  },
+  "seconds": 60.4,
+  "python_tests_passed": 54,
+  "javascript_tests_passed": 8,
+  "showcase_captures": 40,
+  "legacy_cleanup": "deferred_by_user"
+}

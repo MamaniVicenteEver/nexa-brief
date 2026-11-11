@@ -7,6 +7,7 @@ Todos los comandos de esta guía parten de `nexa-brief-server/`. Node ejecuta el
 ```bash
 A=src/templates/sandbox/nodehistory/_atlas/produce.mjs
 node "$A" help
+node "$A" profile
 node "$A" catalog flecha
 node "$A" catalog arrow
 node "$A" example atlas.arrow
@@ -67,13 +68,41 @@ La URL `.example` es un marcador y se reemplaza. No uses un porcentaje ilustrati
 
 ## 3. Guion, voz y transcripción reales
 
+Antes de escribir, consulta `node "$A" profile`: devuelve `narrative.json` y
+`voice.json`. Son las instrucciones reutilizables de este diseño. El investigador
+aporta los hechos; el agente en el rol `script` escribe el guion; el productor lo
+revisa; Gemini TTS interpreta el texto aprobado. El rol `text_draft` puede aportar
+un borrador cuando se autorice delegación. Para Atlas Cinemático la selección de
+guion vive en `orchestration.json`: `codex / gpt-6.1-terra / high` y, exclusivamente
+cuando la factoría informe que ese proveedor no está disponible,
+`claude / claude-haiku-5-5 / medium`. Este contrato es propio del diseño; no cambia
+los roles globales ni otros borradores. Usa solo la factoría aislada y `AgentScope`
+del episodio. Un fallo de autenticación o ejecución se informa sin cambiar de
+proveedor ni retirar guardas. `scripts/atlas_factory.py run-script` reutiliza un
+guion válido sin llamadas IA; su auditoría guarda solicitado/seleccionado/real,
+motivo del fallback y hash de esta política. El esfuerzo real no se deduce del
+solicitado si el adaptador no lo informa.
+
+La personalidad es un guía amable, curioso e informado. Plantea una pregunta
+concreta, invita al recorrido, aporta un contraste verificado por capítulo y
+explica su importancia; varía las transiciones y cierra resolviendo la pregunta.
+No impongas la misma fórmula a todos los temas. El guion dirige las intenciones
+del mapa; el storyboard espera a la transcripción real.
+
+Orus es la voz predeterminada y Sulafat la alternativa aprobada por el usuario.
+`voice.choices` documenta ambas; `voice.voice` determina el valor predeterminado.
+Un episodio puede conservar una voz explícita propia. Copia `voice.base` a
+`script.voice_direction` y usa `delivery_note` por segmento: así la personalidad
+queda presente también en las rutas de síntesis que usan dirección global.
+
 Escribe `assets/script.json` con bloques breves. No metas citas bibliográficas o código en el texto que debe pronunciarse:
 
 ```json
 {
   "title": "Título",
   "language": "es",
-  "voice": "Charon",
+  "voice": "Orus",
+  "voice_direction": "Guía informado, amable, curioso y cercano. Español latinoamericano natural, ritmo de 130 palabras por minuto; copiar la dirección completa de voice.json.",
   "segments": [
     {"id": "s01", "tone": "intriga", "intensity": 0.45, "text": "Primera frase del guion comprobado."},
     {"id": "s02", "tone": "explicativo", "intensity": 0.5, "text": "Explicación con cifras y nombres revisados."}
@@ -94,6 +123,47 @@ node "$A" transcribe ejemplo-atlas
 Lee `song.qc.json` (`faltan`, `sobran`, WER aproximado, ppm), escucha el archivo y compara con el guion. El WAV de QC no incluye necesariamente la misma cola/cabecera del MP3 final. **La sincronización se hace transcribiendo el MP3 final**, no usando la duración del WAV o estimaciones. `transcribe` usa `transcribe.py`, palabras reales y la grafía del guion; configura `lyricsUrl`. `--force` reemplaza una transcripción anterior. Comprueba nombres y cifras escuchando sus tramos; la alineación del guion corrige escritura, no demuestra que el TTS pronunció todo.
 
 ## 4. Componer con entradas JSON
+
+El cierre debe instanciar `atlas.outrov1` o `atlas.outrov2` del catálogo. Son recetas
+de cámara, look y título; un título sobre el mapa nacional no las sustituye. El
+look espacial/globo se limita al cierre, conservando el satélite oblicuo durante
+los países. `scene.outro:false` suprime el CTA genérico de Proto y es compatible
+con esas recetas. Revisa entrada, giro y cuadro `duration - 0.05` en ambos formatos:
+la última palabra puede preceder varios segundos al final real del audio.
+
+Lee primero `orchestration.json`. El perfil visual bloqueado conserva el diseño
+`atlas-cinematico` original: Mercator, look `satelite-realista`, cámara oblicua con
+pitch de60° (rango58–68°), bearing de4° y encuadre del país completo. Los estados o regiones
+se destacan en rojo `#e53935` sin acercamientos de cámara. No cambiar el perfil sin
+una instrucción editorial explícita y nuevas evidencias de ambos formatos.
+
+`flag.opacity` se refiere a opacidad:94% durante la presentación de cada país,
+12% durante país/insight y4% durante sus regiones; el relleno persiste dentro del
+capítulo usando la bandera documental local. `portrait.photo_scale=1.3` y
+`text_scale=1.2` se aplican al layout aprobado antes de esta revisión; revisar
+el espacio para foto, nombre, cargo y mandato en 16:9 y 9:16 sin tapar cifras o subtítulos.
+
+Antes de instanciar piezas, guarda `work/component-plan.json`. Cada elemento
+requiere los ocho campos de `component_planning.required_fields`:
+
+- `intent`: qué necesita entender el espectador en ese fragmento.
+- `component`: ID real del catálogo elegido para esa intención.
+- `timeAnchor`: `segment_id`, borde `start|end` y cita de palabras reales o `null`;
+  el compilador resuelve el tiempo con la transcripción del MP3 final.
+- `location`: país, región y coordenadas verificadas, o `null` cuando no correspondan.
+- `media`: archivo documental local con crédito, o `null` si la pieza no usa medios.
+- `ref`: `fact_ids`, `source_ids` y `data_ref` según el contrato; no inventar fuentes.
+- `layout`: destino, posición segura y adaptación a ambos formatos.
+- `reason`: por qué la pieza ayuda a explicar el fragmento.
+
+`atlas.polePhoto` sirve para ubicar un hito; `atlas.hexPhoto`, para un detalle
+documental; `atlas.panel`, para una explicación con foto, texto y vínculo al mapa.
+No usar todas por decoración ni inventar imágenes para justificar una pieza.
+Durante cada relevo, una `atlas.arrow` visible va del país actual al siguiente
+del itinerario. Puede usar `curve` en trayectos largos; la ruta y su grosor no
+afirman comercio, causalidad ni magnitud económica. Mantén `value` y `dataRef`
+ausentes en esas flechas editoriales. Las flechas que documenten datos económicos
+son una intención diferente y requieren sus propias fuentes y magnitudes verificadas.
 
 ```bash
 node "$A" example atlas.arrowDashed

@@ -438,8 +438,8 @@ de un storyboard del explainer-kit (videos de historia con batallas animadas).
 - `showcase.js` dibuja el primer frame sin depender del reloj de pared y `still=1` lo congela. La galería confirma ready después de dibujar; las tarjetas inactivas no montan iframes. Comprobados 125 posters, reproducción/detención en navegador y 48 tests de miniaturas/biblioteca.
 
 ### Cara a Cara en Showcase
-- `cara-a-cara/info.json` declara su biblioteca en `catalog`; `showcase/components.json` documenta las piezas y poses. `showcase.html` usa el motor real por medio de `showcase-preview.html`, con ajustes de escena solamente en memoria para las poses. Las miniaturas son capturas de esas vistas; el perfil de Leo, el audio y la escena aprobados no se modifican.
-- La guía maestra para crear personajes de Cara a Cara vive en `cara-a-cara/assets/avatar/crear-personaje.json`. Tras editarla, `node cara-a-cara/showcase/sync-character-guide.mjs` actualiza la tarjeta copiable del catálogo. Los recortes deben medirse en cada imagen nueva y comprobarse antes de registrar el personaje en el perfil compartido.
+- `../../nodeactualidad/cara-a-cara/info.json` declara su biblioteca en `catalog`; `showcase/components.json` documenta las piezas y poses. `showcase.html` usa el motor real por medio de `showcase-preview.html`, con ajustes de escena solamente en memoria para las poses. Las miniaturas son capturas de esas vistas; el perfil de Leo, el audio y la escena aprobados no se modifican.
+- La guía maestra para crear personajes de Cara a Cara vive en `../../nodeactualidad/cara-a-cara/assets/avatar/crear-personaje.json`. Tras editarla, `node ../../nodeactualidad/cara-a-cara/showcase/sync-character-guide.mjs` actualiza la tarjeta copiable del catálogo. Los recortes deben medirse en cada imagen nueva y comprobarse antes de registrar el personaje en el perfil compartido.
 
 
 ### Lecciones 2026-11-04 — Guía selectiva para agentes Vida
@@ -450,7 +450,7 @@ de un storyboard del explainer-kit (videos de historia con batallas animadas).
 
 
 ### Cara a Cara — personajes y expresiones
-- Entrada para una IA: `cara-a-cara/assets/avatar/crear-personaje.json`; para ampliar un personaje, `crear-expresiones.json`. Incluyen identidad, voz, manifiesto, comandos y validaciones sin leer todo el motor.
+- Entrada para una IA: `../../nodeactualidad/cara-a-cara/assets/avatar/crear-personaje.json`; para ampliar un personaje, `crear-expresiones.json`. Incluyen identidad, voz, manifiesto, comandos y validaciones sin leer todo el motor.
 - Usar láminas 2×2 por defecto; 4×4 solo con al menos 512×512 píxeles originales por celda y calidad visual suficiente. Medir cada recorte; nunca ampliar artificialmente para superar el mínimo.
 - Desde `cara-a-cara/`, validar y registrar con `node showcase/register-character.mjs <id> --check|--apply`. Para ampliar sin sobrescribir: añadir `--extend --manifest <archivo.json>`. `sync-character-assets.mjs` crea miniaturas y tarjetas de poses e identidades; `sync-character-guide.mjs` actualiza las guías. La validación automática es estructural: revisar los recortes y la voz con una persona.
 - Las poses antiguas siguen como arreglo sobre `character.src`; las nuevas pueden usar `{src,crop}` con `src` relativo al perfil `_pizarra/profiles/leo.json`. Las muestras de voz generadas no se consideran aprobadas sin escucha humana.

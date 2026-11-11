@@ -11,6 +11,7 @@ import structlog
 
 from src.adapters.recorder.factory import get_recorder
 from src.core.job import Job, JobStage
+from src.core.heavy_work import heavy_work_slot
 
 if TYPE_CHECKING:
     from src.config.niche_config import NicheConfig
@@ -39,14 +40,15 @@ async def run(job: Job, niche_cfg: "NicheConfig") -> Job:
         record_dir = layout.runtime_dir / "recordings" / job.job_id / "pipeline"
         assert_profile_path(record_dir)
     record_dir.mkdir(parents=True, exist_ok=True)
-    result = await recorder.record(
-        html_path=artifacts.html_path,
-        audio_path=artifacts.music_path,
-        output_dir=record_dir,
-        duration_seconds=artifacts.analyzed_input.duration_seconds,
-        niche_cfg=niche_cfg,
-        render_target=job.input.render_target,
-    )
+    async with heavy_work_slot("recording", job.job_id):
+        result = await recorder.record(
+            html_path=artifacts.html_path,
+            audio_path=artifacts.music_path,
+            output_dir=record_dir,
+            duration_seconds=artifacts.analyzed_input.duration_seconds,
+            niche_cfg=niche_cfg,
+            render_target=job.input.render_target,
+        )
 
     if layout.schema_version >= 3:
         from src.config.media_paths import pipeline_video_key
@@ -120,7 +122,9 @@ async def run(job: Job, niche_cfg: "NicheConfig") -> Job:
 
     new_artifacts = artifacts.model_copy(
         update={
-            "youtube_video_path": result.youtube_path,
+            # El puerto conserva un archivo principal; no etiquetar un máster
+            # vertical como 16:9 en Biblioteca o publicación.
+            "youtube_video_path": result.youtube_path if niche_cfg.get_16x9_format() else None,
             "tiktok_video_path": result.tiktok_path,
             "reels_video_path": result.reels_path,
             "recording_stats": result.stats,

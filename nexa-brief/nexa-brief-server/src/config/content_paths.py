@@ -10,12 +10,20 @@ SANDBOX_SHARED_DIRS = frozenset({"_proto", "_engine", "_mapas", "_pizarra", "_av
 
 def is_public_showcase_engine_key(parts: tuple[str, ...]) -> bool:
     """Explicit shared showcase code only; never fall back to episode data."""
+    from src.core.explainer.production_templates import registered_public_file
+    if registered_public_file(settings.templates_dir, parts):
+        return not is_private_content_key('/'.join(parts))
     # The gallery's modules resolve assets relative to the episode root. This
     # alias is served exclusively from the active profile by resolve_content_key.
     if parts[:4] == ("sandbox", "nodehistory", "atlas-en-movimiento", "assets"):
         return len(parts) >= 5 and not is_private_content_key("/".join(parts))
     if parts[:3] == ("nodeatlas", "atlas-en-movimiento", "assets"):
         return len(parts) >= 4 and not is_private_content_key("/".join(parts))
+    cara = ("nodeactualidad", "cara-a-cara")
+    if parts[:2] == cara:
+        if len(parts) == 3 and parts[2] in {"index.html", "showcase.html", "showcase.js", "showcase-preview.html"}:
+            return True
+        return len(parts) >= 4 and parts[2] in {"assets", "showcase"} and not is_private_content_key("/".join(parts))
     if any(p.startswith(".") or p in {"work", "test", "tests", "assets", "logs"} for p in parts):
         return False
     if any(p.lower() in {"accounts.json", "users.json", "access.json"} or p.lower().startswith("client_secret") for p in parts):
@@ -59,6 +67,9 @@ def preview_directory(video_dir: Path) -> Path:
     layout = layout_for_settings(settings)
     if layout.schema_version >= 2 and video_dir.resolve().is_relative_to(layout.root.resolve()):
         return video_dir / "assets" / "thumbnails"
+    from src.core.explainer.production_templates import shared_demo
+    if shared_demo(settings.templates_dir, video_dir.name) == video_dir:
+        return video_dir / 'assets' / 'thumbnails'
     return video_dir / "render"
 
 
@@ -74,7 +85,14 @@ def content_key(path: Path) -> str:
     for root, prefix in namespaces:
         if resolved.is_relative_to(root.resolve()):
             relative = resolved.relative_to(root.resolve()).as_posix()
-            if layout.schema_version >= 2 and root == settings.templates_dir and not (is_shared_template_key(tuple(relative.split("/"))) or layout.schema_version >= 3 and is_public_showcase_engine_key(tuple(relative.split("/")))):
+            parts = tuple(relative.split("/"))
+            # A registered demo directory is needed to construct its preview
+            # URL. Serving files still uses the stricter allowlist below.
+            registered_demo = False
+            if layout.schema_version >= 3 and root == settings.templates_dir and len(parts) == 2:
+                from src.core.explainer.production_templates import shared_demo
+                registered_demo = shared_demo(settings.templates_dir, parts[1]) == resolved
+            if layout.schema_version >= 2 and root == settings.templates_dir and not (is_shared_template_key(parts) or layout.schema_version >= 3 and is_public_showcase_engine_key(parts) or registered_demo):
                 raise ValueError("Legacy episodes are not shared between profiles")
             if root == settings.templates_dir and relative.startswith("_tools/"):
                 return relative
@@ -88,6 +106,13 @@ def resolve_content_key(key: str) -> Path:
     if not parts or key.startswith("/") or "\\" in key or any(p in {".", ".."} or p.startswith(".") for p in key.split("/")):
         raise ValueError("Invalid content key")
     layout = layout_for_settings(settings)
+    if layout.schema_version >= 3 and parts[0] == 'sandbox' and len(parts) >= 4:
+        from src.core.explainer.production_templates import definitions
+        for design, directory in definitions(settings.templates_dir):
+            marker = design['production_template']
+            if parts[1:3] == (marker.get('origin_folder'), marker.get('project_id')):
+                parts = ('bundled', *marker['folder'].split('/'), *parts[3:])
+                break
     atlas_assets = ("bundled", "sandbox", "nodehistory", "atlas-en-movimiento", "assets")
     new_assets = ("bundled", "nodeatlas", "atlas-en-movimiento", "assets")
     old_engine = ("bundled", "sandbox", "nodehistory", "atlas-en-movimiento")

@@ -2,18 +2,14 @@
 
 import { Clapperboard, FlaskConical, Loader2, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
-import { useChannels } from "@/features/channels/hooks/useChannels";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { AccountFormatChoice } from "@/shared/components/publish/AccountFormatChoice";
 import { BrandAccountPicker } from "@/shared/components/publish/BrandAccountPicker";
-import {
-  allowedFormatsFor,
-  formatFor,
-  groupAccountsByBrand,
-  toAccountOptions,
-} from "@/shared/components/publish/brand-groups";
+import { allowedFormatsFor, formatFor } from "@/shared/components/publish/brand-groups";
 import { isDraftRunning } from "../../hooks/useDraft";
+import { useDraftThumbnailEditor } from "../../hooks/useDraftThumbnailEditor";
+import { usePublishCategoryGroups } from "../../hooks/usePublishCategoryGroups";
 import type { TemplateStudioController } from "../../hooks/useTemplateStudio";
 import type { RecorderEngine } from "../../types";
 import { DraftProgress } from "../DraftProgress";
@@ -30,17 +26,11 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
   const tx = useTranslations("explainer.studio");
   const tp = useTranslations("templates.prep.format");
   const { recorder } = studio;
-  const { data: channels, isLoading } = useChannels();
-  const groups = useMemo(
-    () =>
-      groupAccountsByBrand(
-        toAccountOptions((channels ?? []).filter((c) => c.status === "ok")),
-        tx("otherChannels"),
-      ),
-    [channels, tx],
-  );
+  const { groups, unavailable, isLoading, isError, retry } = usePublishCategoryGroups();
+  const tt = useTranslations("studio.thumbnails");
   const accounts = groups.flatMap((g) => g.accounts);
   const selected = recorder.selected;
+  const thumbnailEditor = useDraftThumbnailEditor(selected);
   // Prototipos preparados (y el elegido aunque ya esté grabándose o grabado, para ver su estado).
   const prototypes =
     selected && !selected.original && !recorder.recordable.includes(selected)
@@ -49,7 +39,8 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
   const original = studio.original;
   const [originalNotes, setOriginalNotes] = useState("");
   const labels = { "16x9": tp("16x9"), "9x16": tp("9x16") };
-  const busy = recorder.render.isPending || isDraftRunning(selected);
+  const recording = recorder.render.isPending || isDraftRunning(selected);
+  const busy = recording || thumbnailEditor.isSaving || thumbnailEditor.isSelecting;
   const missingFormat = recorder.accounts.some((selector) => {
     const account = accounts.find((a) => a.selector === selector);
     return !account || formatFor(account, recorder.formats, recorder.accountFormats) === null;
@@ -64,6 +55,7 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
             prototypes={prototypes}
             choice={recorder.choice}
             onSelect={recorder.select}
+            disabled={thumbnailEditor.isSaving || thumbnailEditor.hasError}
           />
           {prototypes.length === 0 && (
             <button
@@ -104,7 +96,12 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
         )}
 
         {selected?.details && (
-          <IntroSongFields key={selected.updatedAt} draft={selected} details={selected.details} />
+          <IntroSongFields
+            key={selected.draftId}
+            draft={selected}
+            details={selected.details}
+            thumbnailEditor={thumbnailEditor}
+          />
         )}
 
         {selected?.details && <DetailsAccordion details={selected.details} />}
@@ -128,8 +125,18 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
 
         <FieldShell title={t("formats")} hint={t("formatsHint")}>
           <div className="flex gap-2">
-            <label className="flex flex-1 items-center gap-2 rounded-xl border border-nb-ink bg-nb-bg-2 px-3 py-2 text-[12.5px]">
-              <input type="checkbox" checked disabled className="size-4 accent-black" />
+            <label
+              className={cn(
+                "flex flex-1 cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-[12.5px]",
+                recorder.desktop ? "border-nb-ink bg-nb-bg-2" : "border-nb-line",
+              )}
+            >
+              <input
+                type="checkbox"
+                checked={recorder.desktop}
+                onChange={(e) => recorder.setDesktop(e.target.checked)}
+                className="size-4 accent-black"
+              />
               {labels["16x9"]}
             </label>
             <label
@@ -153,11 +160,27 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
 
         <FieldShell title={t("publish")} hint={t("publishHint")}>
           {isLoading && <p className="text-[12px] text-nb-mute">{tr("loadingAccounts")}</p>}
-          {!isLoading && groups.length === 0 && (
+          {isError && (
+            <div role="alert" className="text-[12px] text-nb-accent-coral">
+              {tt("accountsError")}{" "}
+              <button type="button" onClick={retry} className="underline">
+                {tt("retryAccounts")}
+              </button>
+            </div>
+          )}
+          {!isLoading && !isError && groups.length === 0 && (
             <p className="text-[12px] text-nb-mute">{tr("noAccounts")}</p>
           )}
           <BrandAccountPicker
             groups={groups}
+            isDisabled={(account) =>
+              unavailable.has(account.selector) && !recorder.accounts.includes(account.selector)
+            }
+            renderBadge={(account) =>
+              unavailable.has(account.selector) ? (
+                <span className="text-[10px] text-nb-accent-coral">{tt("reauth")}</span>
+              ) : null
+            }
             selected={recorder.accounts}
             onChange={recorder.setAccounts}
             renderSelected={(account) => (
@@ -185,16 +208,28 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
         )}
         <button
           type="button"
-          disabled={!selected || busy || missingFormat || !recorder.ready}
-          onClick={() => selected && recorder.render.mutate(selected)}
+          disabled={
+            !selected || busy || missingFormat || !recorder.ready || thumbnailEditor.hasError
+          }
+          onClick={async () => {
+            if (!selected) return;
+            try {
+              await thumbnailEditor.flush();
+              recorder.render.mutate(selected);
+            } catch {
+              // El editor muestra el error y bloquea Grabar hasta reintentar el guardado.
+            }
+          }}
           className="flex items-center justify-center gap-2 rounded-full bg-nb-accent-coral px-5 py-2.5 text-[13px] font-bold text-white transition-opacity disabled:opacity-50"
         >
           {busy ? <Loader2 className="size-4 animate-spin" /> : <Clapperboard className="size-4" />}
-          {busy
+          {recording
             ? t("recording")
-            : recorder.accounts.length > 0
-              ? t("recordAndPublish", { count: recorder.accounts.length })
-              : t("record")}
+            : thumbnailEditor.isSaving || thumbnailEditor.isSelecting
+              ? tt(thumbnailEditor.isSelecting ? "choosing" : "saving")
+              : recorder.accounts.length > 0
+                ? t("recordAndPublish", { count: recorder.accounts.length })
+                : t("record")}
         </button>
       </div>
     </div>

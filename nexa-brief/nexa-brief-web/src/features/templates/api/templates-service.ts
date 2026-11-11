@@ -10,7 +10,7 @@ import type {
   TemplateRequirements,
 } from "../types";
 
-interface TemplateDto {
+export interface TemplateDto {
   template_id: string;
   niche_id: string;
   category_id?: string;
@@ -32,7 +32,7 @@ interface TemplateDto {
   showcase_url?: string | null;
 }
 
-function mapTemplate(dto: TemplateDto): Template {
+export function mapTemplate(dto: TemplateDto): Template {
   return {
     id: dto.template_id,
     nicheId: dto.niche_id,

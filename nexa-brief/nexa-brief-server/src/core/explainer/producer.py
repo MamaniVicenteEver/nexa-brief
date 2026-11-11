@@ -319,6 +319,9 @@ READING = {
 
 
 def build_agent_prompt(record: dict, video_dir: Path, *, resume: bool = False, phase: str = "guion", qc: str = "") -> str:
+    if record.get("native_engine"):
+        from src.core.explainer.native_production import prompt
+        return prompt(record, phase, qc)
     if layout_for_settings(settings).schema_version >= 3:
         return _isolated_agent_prompt(record, phase=phase, resume=resume, qc=qc)
     vid = record["video_id"]
@@ -665,6 +668,8 @@ class ExplainerProducer:
         batch_parallel: int = 1,
         not_before: str | None = None,
         short_test: bool = False,
+        estilo: str | None = None,
+        character_id: str | None = None,
     ) -> dict:
         async with runtime.named_lock("admission"):
             runtime.validate_parallel(batch_parallel)
@@ -686,6 +691,25 @@ class ExplainerProducer:
             # de History en un video de Tech): el video pertenece a la categoría desde la que se crea.
             if design not in available_design_ids():
                 raise ValueError(f"diseño desconocido: '{design}'")
+            from src.core.explainer.native_production import NATIVE_DESIGNS, selected_style
+            from src.core.explainer.native_production import refresh_native_designs
+            refresh_native_designs()
+            native_engine = design in NATIVE_DESIGNS
+            style_revision = None
+            character_identity = None
+            if design == "cara-a-cara":
+                from src.core.explainer.cara_a_cara_production import identity
+                character_identity = identity(character_id)
+            elif character_id:
+                raise ValueError("character_id solo está soportado por Cara a Cara")
+            if native_engine:
+                selected, _ = selected_style(design, estilo)
+                estilo, style_revision = selected["id"], selected["revision"]
+                if auto_record:
+                    raise ValueError("Las escenas nativas requieren revisión visual antes de grabar")
+            elif estilo:
+                selected, _ = selected_style(design, estilo)
+                style_revision = selected["revision"]
             if not topic.strip():
                 raise ValueError("el tema es obligatorio")
             # La del pedido, o la del brief, o la default de la categoría (None si no carga ninguna).
@@ -696,6 +720,16 @@ class ExplainerProducer:
             if brief is not None:
                 brief.narrative_id, brief.title_level = (story.id if story else None), level
             agent_name = agent or _default_agent()
+            requested_agent = agent_name
+            agent_fallback_reason = None
+            if agent_name == "codex":
+                from src.core.ports.agent_port import AgentIsolationUnavailableError
+                try:
+                    if not self._agent_getter(agent_name).available():
+                        raise AgentIsolationUnavailableError("Codex no disponible")
+                except AgentIsolationUnavailableError:
+                    agent_name = "claude"
+                    agent_fallback_reason = "codex_isolated_executor_unavailable"
             if not self._agent_getter(agent_name).available():
                 raise ValueError(f"el agente local '{agent_name}' no está instalado en esta máquina")
 
@@ -730,9 +764,16 @@ class ExplainerProducer:
                 )
             record = {
                 "production_id": production_id,
+                "requested_agent": requested_agent,
+                "agent_fallback_reason": agent_fallback_reason,
                 "video_id": video_id,
                 "category_path": category_path,
                 "design": design,
+                "estilo": estilo,
+                "style_revision": style_revision,
+                "native_engine": native_engine,
+                "character_id": character_id,
+                "character_identity": character_identity,
                 "folder": folder,
                 "topic": topic.strip(),
                 "description": description.strip(),
@@ -836,6 +877,10 @@ class ExplainerProducer:
 
     async def _run_locked(self, production_id: str, resume: bool) -> None:
         rec = self.get(production_id)
+        if rec.get("native_engine"):
+            from src.core.explainer.native_production import run
+            await run(self, rec, resume)
+            return
         vid = rec["video_id"]
         video_dir = self._root(rec) / vid
         log_path = Path(rec["log_path"])
@@ -1077,6 +1122,13 @@ class ExplainerProducer:
     async def _run_agent(self, rec, video_dir, log_path, scope, timeout, phase, *, resume, qc=""):
         from src.core.explainer.usage import _tool, record_agent_run, summarize
 
+        from dataclasses import replace
+        from src.adapters.models.hub import roles_config
+        spec = roles_config()["roles"]["producer"]
+        chosen = spec if rec["agent"] == spec["provider"] else spec.get("fallback", {})
+        if chosen.get("provider") == rec["agent"]:
+            scope = replace(scope, model=chosen.get("model") or scope.model,
+                            reasoning_effort=chosen.get("reasoning_effort") or scope.reasoning_effort)
         policy = _policy()
         current = self.get(rec["production_id"])
         runs = dict(current.get("agent_runs") or {})
@@ -1115,7 +1167,8 @@ class ExplainerProducer:
         await self._update(rec["production_id"], agent_runs=runs, agent_special_runs=special)
         # Un log por corrida evita contar otra vez los tokens de vueltas anteriores.
         agent_log = log_path.with_name(f"{log_path.stem}.{uuid.uuid4().hex}.agent.log")
-        await self._update(rec["production_id"], agent_log_path=str(agent_log))
+        await self._update(rec["production_id"], agent_log_path=str(agent_log),
+                           requested_model=scope.model, requested_reasoning_effort=scope.reasoning_effort)
         try:
             if layout_for_settings(settings).schema_version >= 3:
                 from src.core.explainer.agent_context import ensure_private_workspace
@@ -1123,7 +1176,7 @@ class ExplainerProducer:
                 ensure_private_workspace(video_dir)
             result = await self._agent_getter(rec["agent"]).run(
                 build_agent_prompt(rec, video_dir, resume=resume, phase=phase, qc=qc),
-                cwd=video_dir if layout_for_settings(settings).schema_version >= 3 else BASE_DIR,
+                cwd=video_dir if rec.get("native_engine") or layout_for_settings(settings).schema_version >= 3 else BASE_DIR,
                 log_path=agent_log, timeout_seconds=timeout, scope=scope,
             )
         finally:
@@ -1194,6 +1247,12 @@ class ExplainerProducer:
             "production_id": rec["production_id"],
         })
         manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+        if rec.get("estilo"):
+            config_path = video_dir / "assets/config.json"
+            config = json.loads(config_path.read_text())
+            config["configs"][0]["estilo"] = rec["estilo"]
+            config_path.write_text(json.dumps(config, ensure_ascii=False, indent=2) + "\n")
 
         if rec.get("short_test"):
             script_path = video_dir / "assets" / "script.json"

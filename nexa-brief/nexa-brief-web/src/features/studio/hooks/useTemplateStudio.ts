@@ -31,6 +31,8 @@ export function useTemplateStudio(template: Template, open: boolean) {
   const [tab, setTab] = useState<StudioTab>("original");
   // Prototipo abierto en el Sandbox: su id, "new" (sin carpeta todavía) o null (la lista).
   const [editing, setEditing] = useState<string | null>(null);
+  const [previewing, setPreviewing] = useState<string | null>(null);
+  const [previewPlaybackRequest, setPreviewPlaybackRequest] = useState(0);
   const editor = usePrototypeEditor({
     template,
     requirements: requirements.data,
@@ -38,11 +40,17 @@ export function useTemplateStudio(template: Template, open: boolean) {
     defaultName: t("defaultName", { n: prototypes.length + 1 }),
     onCreated: setEditing,
   });
-  const recorder = useRecordPrototype(template, niche, prototypes, original.draft);
+  const recorder = useRecordPrototype(template, niche, prototypes, original.draft, open);
 
   // El escenario muestra el prototipo de la pestaña activa, si ya tiene preview.
   const stageDraft =
-    tab === "sandbox" && editing ? editor.draft : tab === "record" ? recorder.selected : null;
+    tab === "sandbox"
+      ? editing
+        ? editor.draft
+        : prototypes.find((draft) => draft.draftId === previewing)
+      : tab === "record"
+        ? recorder.selected
+        : null;
   const draftPreviewUrl = stageDraft?.previewUrl ?? null;
   const [view, setView] = useState<StudioView>("default");
   useEffect(() => {
@@ -64,6 +72,15 @@ export function useTemplateStudio(template: Template, open: boolean) {
       setTab("sandbox");
     },
     closePrototype: () => setEditing(null),
+    previewPlaybackRequest,
+    previewPrototype: (id: string) => {
+      if (!prototypes.some((draft) => draft.draftId === id && draft.previewUrl)) return;
+      setPreviewPlaybackRequest((request) => request + 1);
+      setPreviewing(id);
+      setEditing(null);
+      setTab("sandbox");
+      setView("mine");
+    },
     /** Lleva un prototipo preparado a la pestaña Grabar. */
     recordPrototype: (id: string) => {
       recorder.select(id);

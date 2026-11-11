@@ -14,7 +14,7 @@ from pathlib import Path
 
 from typing import Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PrivateAttr
 
 from src.core.job import Job, PlatformCopyText, VideoSummary
 
@@ -40,6 +40,10 @@ class DraftDetails(BaseModel):
     research: str = ""
     # True cuando la persona los editó: volver a «Preparar» los pisaría.
     edited: bool = False
+    # Textos de miniatura generados en el mismo llamado que las copias. Son un dato
+    # de transporte: drafts los guardan en Draft.thumbnails, separado de metadatos.
+    _thumbnail_texts: dict[str, str] = PrivateAttr(default_factory=dict)
+    _thumbnail_selected: str | None = PrivateAttr(default=None)
 
 
 def _now_iso() -> str:
@@ -80,17 +84,19 @@ async def generate(job: Job, niche_id: str, seed: str, notes: str = "") -> Draft
     from src.config.niche_config import get_niche_config
     from src.modules.content_language import resolve_content_language
     from src.modules.copy_writer import build_facts, copy_language, copy_profile, write_copy
+    from src.core.video_usage import for_video
 
     niche_cfg = get_niche_config(niche_id)
     profile = copy_profile(niche_cfg)
     language_code = copy_language(profile, (await resolve_content_language(job)).code)
     ai = get_copy_ai()
-    found = await research(ai, notes, build_facts(job, niche_cfg, notes)) if notes.strip() else ""
+    found = await research(for_video(ai, job, "song_research"), notes, build_facts(job, niche_cfg, notes)) if notes.strip() else ""
     result = await write_copy(
-        ai, build_facts(job, niche_cfg, notes, found), language_code, seed=seed, profile=profile
+        for_video(ai, job, "publication_copy"), build_facts(job, niche_cfg, notes, found),
+        language_code, seed=seed, profile=profile, include_thumbnail_options=True,
     )
     name, artist = song_of(job, result.pieces.song, result.pieces.artist)
-    return DraftDetails(
+    details = DraftDetails(
         song_name=name,
         artist=artist,
         language=language_code,
@@ -104,6 +110,22 @@ async def generate(job: Job, niche_id: str, seed: str, notes: str = "") -> Draft
         generated_at=_now_iso(),
         research=found,
     )
+    # Las opciones viven en Draft.thumbnails, no en los datos de canción ni en
+    # las copias de publicación. Para una canción, A parte del nombre real; B
+    # usa la variante que escribió la IA en el mismo llamado.
+    generated = result.thumbnail_options
+    titles = [copy.title for copy in result.copies.values() if copy.title.strip()]
+    option_a = generated.get("A", "").strip()
+    option_b = generated.get("B", "").strip()
+    if profile != "commercial":
+        option_a = name or option_a
+    option_a = option_a or next(iter(titles), "Música")
+    if not option_b or option_b.casefold() == option_a.casefold():
+        option_b = next((title for title in titles if title.casefold() != option_a.casefold()), "")
+    if not option_b or option_b.casefold() == option_a.casefold():
+        option_b = "Descubre esta propuesta" if profile == "commercial" else "Siente la historia"
+    details._thumbnail_texts = {"A": option_a[:60], "B": option_b[:60]}
+    return details
 
 
 def to_summary(details: DraftDetails) -> VideoSummary:
@@ -152,4 +174,22 @@ def apply_to_intro(output_dir: Path | None, details: DraftDetails) -> bool:
                 changed = True
     if changed:
         path.write_text(json.dumps(raw, ensure_ascii=False, indent=2), encoding="utf-8")
+    intro_js = Path(output_dir) / "components" / "intro.js"
+    marker = "/* nexa-prepared-song */"
+    if intro_js.is_file():
+        source = intro_js.read_text(encoding="utf-8")
+        if "NexaTemplateIntro" in source and marker not in source:
+            source += "\n" + marker + """
+(() => {
+  const intro = window.NexaTemplateIntro;
+  if (typeof intro?.apply !== "function") return;
+  const apply = intro.apply;
+  intro.apply = function(config, ...args) {
+    const result = apply.call(this, config, ...args);
+    return {...result, title: config?.title || result.title, artist: config?.artist ?? result.artist};
+  };
+})();
+"""
+            intro_js.write_text(source, encoding="utf-8")
+            changed = True
     return changed

@@ -17,7 +17,7 @@ from src.core.showcase.models import Catalog, Design  # noqa: E402
 from src.core.showcase.state_migration import legacy_text_fingerprint  # noqa: E402
 
 LEGACY = {
-    "cara-a-cara": ("nodeaction", "Cara a Cara", "Comparaciones con personajes y escenas."),
+    "cara-a-cara": ("nodeactualidad", "Cara a Cara", "Comparaciones con personajes y escenas."),
     "atlas-cinematico": ("nodehistory", "Atlas Cinemático", "Mapas cinematográficos y visualización geográfica."),
     "atlas-en-movimiento": ("nodehistory", "Atlas en Movimiento", "Mapas tácticos y animación de unidades."),
 }
@@ -30,8 +30,9 @@ def contracts(templates: Path):
             catalog = adapter.get_catalog(ident)
             yield clean(design, catalog, default_state="produccion", source="builtin")
         for ident, (category, name, description) in LEGACY.items():
-            info = _read(templates / "sandbox" / category / ident / "info.json")
-            entries, gallery, _ = _catalog(adapter, templates / "sandbox", f"{category}/{ident}", info, ident)
+            source_root = templates if category == "nodeactualidad" else templates / "sandbox"
+            info = _read(source_root / category / ident / "info.json")
+            entries, gallery, _ = _catalog(adapter, source_root, f"{category}/{ident}", info, ident)
             for entry in entries:
                 if entry["preview_url"] and entry["preview_kind"] != "image":
                     entry["preview_url"] = legacy_entry_preview(entry, gallery, "9x16")

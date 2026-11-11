@@ -187,7 +187,8 @@ class _StubAgent:
         return True
 
     async def run(self, prompt, *, cwd, log_path, timeout_seconds, scope=None):
-        assert scope is None  # el AIPort siempre es solo lectura
+        assert scope is not None and scope.read_only and scope.commands == ()
+        self.last_scope = scope
         self.prompts.append(prompt)
         return AgentRunResult(exit_code=self.exit_code, last_message=self.replies.pop(0), duration_seconds=0.1)
 
@@ -211,3 +212,16 @@ async def test_runner_strips_nested_session_env(fake_cli, tmp_path: Path, monkey
     monkeypatch.setenv("CLAUDECODE", "1")
     await ClaudeCodeRunner(str(binary)).run("x", cwd=tmp_path, log_path=tmp_path / "e.log", timeout_seconds=20)
     assert _args(args_file)["claudecode"] is None
+
+
+async def test_local_text_adapter_passes_explicit_terra_high_and_read_only(tmp_path: Path):
+    class CodexTextStub(_StubAgent):
+        @property
+        def name(self):
+            return "codex"
+    agent = CodexTextStub(['{"ok": 1}'])
+    adapter = LocalAgentAIAdapter(agent, cwd=tmp_path)
+    assert await adapter.complete_json("sys", "user") == {"ok": 1}
+    assert agent.last_scope.model == "gpt-6.1-terra"
+    assert agent.last_scope.reasoning_effort == "high"
+    assert agent.last_scope.read_only

@@ -7,6 +7,15 @@ description: Producir videos de mapas 3D con el diseño Atlas Cinemático existe
 
 Usa este flujo cuando el usuario pida un video con **Atlas Cinemático**, el diseño MapLibre 3D del showcase. Es diferente de los antiguos diseños `atlas` del explainer-kit y `_mapas`.
 
+## Si el proyecto es Atlas noticiero
+
+Para el resumen geopolítico y escenas con `hud`, empieza por [noticiero/AGENTE.md](noticiero/AGENTE.md) (proceso completo, voz y estilo fijos, estilo `original` por defecto) y, para el otro estilo, [noticiero/QUICK.md](noticiero/QUICK.md).
+Descubre sus estilos con `/api/v1/showcase/designs/<episodio>/styles`; consulta la guía y solo los
+contratos elegidos con estilo y orientación. `dynamic-news` unifica la identidad; `original` conserva
+el dibujo anterior. Compón `scene.hud` con las piezas del noticiero, además de cámara y capas geográficas.
+Revisa `__newsHud.layout().overflow` en ambos formatos; secuencia los mensajes cuando no caben.
+La selección en Showcase/modal es una vista previa; guarda `estilo` en los JSON del episodio para fijarla.
+
 ## Entrada rápida
 
 Desde `nexa-brief-server/`, define la ruta una vez:
@@ -21,6 +30,32 @@ node "$A" new mi-video --title "Mi título" --duration 420
 `new` es una herramienta heredada que crea `src/templates/nodehistory/mi-video/`: no la uses para crear episodios de perfiles v2/v3. Usa el flujo de producción compatible con el perfil activo. **No copies `_atlas/` ni desarrolles HTML para cada video.** No registres un episodio en `templates.json` (es un video de datos, no una nueva plantilla de NodeMotion).
 
 Lee [PRODUCIR.md](PRODUCIR.md) para ejecutar el trabajo. Para elegir piezas lee [components.json](components.json), preferentemente filtrado por `catalog` y `example`. Los campos `target`, `params` y `demo` explican dónde insertar y qué entradas pasar. El `demo` es JSON listo para adaptar; sus cifras ilustrativas no son evidencia.
+
+## Orquestación propia de Atlas Cinemático
+
+[orchestration.json](orchestration.json) es el contrato de este diseño para seleccionar
+al agente de guion y planificar sus componentes. Prefiere `codex / gpt-6.1-terra / high`;
+solo si el proveedor no está disponible en la factoría usa `claude / claude-haiku-5-5 / medium`.
+No modifica `src/skills/models/roles.json` ni otros diseños. Una ejecución fallida no
+autoriza probar otro proveedor, quitar aislamiento o usar un CLI directo. Reutiliza
+el guion válido existente; registra selección solicitada, seleccionada, modelo real
+reportado y motivo del fallback. El esfuerzo real permanece desconocido si el adaptador
+no lo informa.
+
+La dirección visual bloqueada conserva el Atlas Cinemático original: Mercator,
+satélite realista, vista oblicua del país completo, pitch60° (rango58–68°) y bearing4°.
+Durante estados o regiones conserva ese encuadre, resalta en rojo y no hace zoom.
+La bandera persiste dentro del capítulo con opacidad94% en su presentación,12% durante
+país/insight y4% en regiones. El retrato mantiene una foto documental fija en pantalla,
+con escala de foto130% y texto120% respecto al layout aprobado previo, adaptada a ambos formatos.
+
+Planifica cada pieza en `work/component-plan.json` con `intent`, `component`, `timeAnchor`,
+`location`, `media`, `ref`, `layout` y `reason`, según el contrato JSON. Elige `polePhoto`,
+`hexPhoto` o `panel` solo cuando una imagen documental ayude a explicar el fragmento;
+no uses todas las piezas por decoración. La flecha visible país→siguiente país muestra
+el recorrido narrativo, con curva cuando convenga a trayectos largos; no representa
+comercio ni cantidades económicas. Los tiempos se resuelven con palabras reales,
+las fotos requieren créditos y el layout debe evitar retrato, PIB, mandato y subtítulos.
 
 ## Orden obligatorio
 

@@ -10,6 +10,7 @@ import { useImagePosts } from "@/features/image-posts/hooks/useImagePosts";
 import { useSandbox } from "@/features/sandbox/hooks/useSandbox";
 import {
   isPreparedVideo,
+  isReviewDemo,
   isRenderedImage,
   isRenderedVideo,
 } from "@/features/templates/lib/preparation-items";
@@ -42,6 +43,7 @@ export function ExplainerCategoryWindow({
   const t = useTranslations("explainer");
   const prep = useTranslations("templates.prep");
   const [createOpen, setCreateOpen] = useState(false);
+  const [initialTopic, setInitialTopic] = useState("");
   const [contentType, setContentType] = useState("videos");
   const [view, setView] = useState<PreparationView>("preparation");
   const videos = useExplainerVideos(category.path);
@@ -60,7 +62,7 @@ export function ExplainerCategoryWindow({
   const counts =
     contentType === "videos"
       ? {
-          preparation: videoItems.filter(isPreparedVideo).length + sandboxDemos.length,
+          preparation: videoItems.filter((video) => isPreparedVideo(video) || isReviewDemo(video)).length + sandboxDemos.length,
           rendered: videoItems.filter(isRenderedVideo).length,
         }
       : {
@@ -69,13 +71,30 @@ export function ExplainerCategoryWindow({
         };
   // Cambiar la key reinicia el formulario del modal en cada apertura.
   const [modalKey, setModalKey] = useState(0);
-  const openCreate = () => {
+  const openCreate = (topic = "") => {
+    setInitialTopic(topic);
     setModalKey((k) => k + 1);
     setCreateOpen(true);
   };
+  const newsIdeas = category.id === "node_actualidad" ? (category.strategy?.topicIdeas ?? []) : [];
 
   return (
     <div className="flex min-w-0 flex-col">
+      {newsIdeas.length > 0 && (
+        <section aria-labelledby="actualidad-ideas" className="mb-5 rounded-2xl border border-nb-line bg-nb-surface p-4">
+          <div className="mb-3">
+            <h2 id="actualidad-ideas" className="text-sm font-extrabold text-nb-ink">{t("window.newsIdeasTitle")}</h2>
+            <p className="mt-1 text-xs text-nb-mute">{t("window.newsIdeasHint")}</p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
+            {newsIdeas.map((idea) => (
+              <button key={idea} type="button" onClick={() => openCreate(idea)} className="rounded-xl border border-nb-line bg-white/60 p-3 text-left text-[12px] font-medium leading-relaxed text-nb-ink transition-colors hover:border-nb-ink hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2">
+                {idea}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
       <section aria-labelledby={`preparation-${category.id}`}>
         <h2 id={`preparation-${category.id}`} className="sr-only">
           {prep("heading")}
@@ -124,7 +143,7 @@ export function ExplainerCategoryWindow({
             </fieldset>
             <button
               type="button"
-              onClick={openCreate}
+              onClick={() => openCreate()}
               className="nb-btn-pill inline-flex h-9 w-26 items-center justify-center px-3 text-xs font-semibold sm:w-28"
             >
               {t("window.create")}
@@ -161,6 +180,7 @@ export function ExplainerCategoryWindow({
         onOpenChange={setCreateOpen}
         categoryPath={category.path}
         categoryName={category.displayName}
+        initialTopic={initialTopic}
       />
     </div>
   );

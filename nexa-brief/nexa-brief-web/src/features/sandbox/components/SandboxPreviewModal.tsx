@@ -40,6 +40,8 @@ export function SandboxPreviewModal({
   useEffect(() => {
     // Estilos que la API ofrece para esta plantilla (misma API para cualquier plantilla con estilos).
     if (!open) return;
+    setStyles({ default: null, styles: [] });
+    setValues({});
     const controller = new AbortController();
     fetch(resolveApiUrl(`/api/v1/showcase/designs/${encodeURIComponent(id)}/styles?folder=${encodeURIComponent(folder)}`), {
       signal: controller.signal,

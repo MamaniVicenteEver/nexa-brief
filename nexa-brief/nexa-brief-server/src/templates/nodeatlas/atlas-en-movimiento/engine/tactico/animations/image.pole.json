@@ -1,0 +1,84 @@
+{
+  "name": "image.pole",
+  "family": "image",
+  "estilo": {
+    "usa": [
+      "ucr2.imagen"
+    ]
+  },
+  "description": "Fotografía circular sobre poste con rótulo. Úsala como recurso visual en una escena.",
+  "duration": 12.35,
+  "loop": true,
+  "layer": 80,
+  "states": [],
+  "params": {
+    "src": {
+      "type": "string",
+      "default": "",
+      "doc": "Ruta local de la fotografía.",
+      "range": null,
+      "description": "Ruta local de la fotografía."
+    },
+    "at": {
+      "type": "place",
+      "doc": "Lugar [lon,lat] de la guía.",
+      "default": null,
+      "range": null,
+      "description": "Lugar [lon,lat] de la guía."
+    },
+    "credit": {
+      "type": "string",
+      "default": "",
+      "doc": "Crédito visible y obligatorio.",
+      "range": null,
+      "description": "Crédito visible y obligatorio."
+    },
+    "label": {
+      "type": "string",
+      "default": "",
+      "doc": "Rótulo visible.",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "size": {
+      "type": "number",
+      "default": null,
+      "min": 80,
+      "max": 800,
+      "doc": "Tamaño en píxeles de diseño.",
+      "range": {
+        "min": 80,
+        "max": 800
+      },
+      "description": "Tamaño en píxeles de diseño."
+    }
+  },
+  "sfx": [
+    "ui-tick"
+  ],
+  "example": {
+    "id": "demo-image-pole",
+    "t": 0,
+    "type": "image.pole",
+    "src": "assets/media/P01.png",
+    "at": [
+      51,
+      28
+    ],
+    "title": "Ruhollah Jomeini",
+    "description": "Líder supremo de Irán",
+    "label": "ARCHIVO",
+    "credit": "Ali Kaveh · PD-Iran · Commons",
+    "dur": 12
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/image.pole.png",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "assets/media/P01.png",
+    "identidad-opus/assets/fonts/Archivo.ttf"
+  ]
+}

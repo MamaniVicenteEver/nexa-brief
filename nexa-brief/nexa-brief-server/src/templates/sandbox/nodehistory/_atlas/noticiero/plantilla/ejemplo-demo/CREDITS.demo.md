@@ -1,0 +1,8 @@
+trump.jpg — 2025 Donald Trump -(cropped).jpg — The White House — Public domain — https://commons.wikimedia.org/wiki/File:2025_Donald_Trump_-(cropped).jpg
+zelenski.jpg — New Year's Eve from President of Ukraine Volodymyr Zelensky (31-12-2025) (cropped).jpg — Press Service of the President of Ukraine — CC BY 4.0 — https://commons.wikimedia.org/wiki/File:New_Year%27s_Eve_from_President_of_Ukraine_Volodymyr_Zelensky_(31-12-2025)_(cropped).jpg
+pena.jpg — President Santiago Peña.jpg — http://www.presidencia.gob.ec/ — Public domain — https://commons.wikimedia.org/wiki/File:President_Santiago_Pe%C3%B1a.jpg
+sanchez.jpg — Foto oficial del presidente del Gobierno Pedro Sánchez 2023 (cropped).jpg — Pool Moncloa — Attribution — https://commons.wikimedia.org/wiki/File:Foto_oficial_del_presidente_del_Gobierno_Pedro_S%C3%A1nchez_2023_(cropped).jpg
+capitolio.jpg — Capitol, Washington, D.C. USA13.jpg — Diego Delso — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:Capitol,_Washington,_D.C._USA13.jpg
+saharaui.jpg — Bandera del Sáhara Occidental - Madrid.jpg — Montserrat Boix — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Bandera_del_S%C3%A1hara_Occidental_-_Madrid.jpg
+medinski.jpg — Vladimir Medinsky portrait at Shkin-Opera festival 2025.jpg — FeklaIvanova16 — CC0 — https://commons.wikimedia.org/wiki/File:Vladimir_Medinsky_portrait_at_Shkin-Opera_festival_2025.jpg
+minurso.jpg — Commandant Padraic Kennedy from Dublin serving with MINURSO in Western Sahara.jpg — Óglaigh na hÉireann — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Commandant_Padraic_Kennedy_from_Dublin_serving_with_MINURSO_in_Western_Sahara.jpg

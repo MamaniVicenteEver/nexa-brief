@@ -18,7 +18,7 @@ from src.core.execution_logs import register_execution_log
 from src.config.exceptions import AIGenerationError, AIValidationError
 from src.config.settings import BASE_DIR, settings
 from src.config.profile_layout import layout_for_settings
-from src.core.ports.agent_port import AgentRunnerPort
+from src.core.ports.agent_port import AgentRunnerPort, AgentScope, AgentIsolationUnavailableError
 from src.core.ports.ai_port import AIPort
 
 logger = structlog.get_logger(__name__)
@@ -47,6 +47,9 @@ class LocalAgentAIAdapter(AIPort):
         self._agent = agent
         self._cwd = cwd
         self._timeout = timeout_seconds or settings.agent_text_timeout_seconds
+        from src.adapters.models.hub import roles_config
+        spec = roles_config()["roles"]["text_draft"]
+        self._model_spec = spec if agent.name == spec["provider"] else spec.get("fallback", {})
 
     @property
     def name(self) -> str:
@@ -59,6 +62,11 @@ class LocalAgentAIAdapter(AIPort):
     @staticmethod
     def _usage_from_result(agent: AgentRunnerPort, result) -> dict:
         usage = result.usage or {}
+        total = usage.get("total_tokens")
+        if total is None and isinstance(usage.get("input_tokens"), int) and isinstance(usage.get("output_tokens"), int):
+            total = usage["input_tokens"] + usage["output_tokens"]
+            if agent.name == "claude":
+                total += int(usage.get("cached_input_tokens") or 0)
         return {
             "provider": agent.name,
             "model": result.model or None,
@@ -66,7 +74,7 @@ class LocalAgentAIAdapter(AIPort):
             "cached_input_tokens": usage.get("cached_input_tokens"),
             "output_tokens": usage.get("output_tokens"),
             "reasoning_tokens": usage.get("reasoning_tokens"),
-            "total_tokens": usage.get("total_tokens"),
+            "total_tokens": total,
             "turns": usage.get("turns"),
             "cost_usd": usage.get("cost_usd"),
             "seconds": round(float(result.duration_seconds or 0), 3),
@@ -76,14 +84,29 @@ class LocalAgentAIAdapter(AIPort):
         if not self._agent.available():
             raise AIGenerationError(f"el agente local '{self._agent.name}' no está instalado")
         layout = layout_for_settings(settings)
+        from src.core.video_usage import current_video_call
+        call = current_video_call.get()
         log_dir = (layout.logs_dir / "agents" / self._agent.name if layout.schema_version >= 2
                    else settings.data_dir / "agent_logs")
+        if call is not None:
+            log_dir = layout.logs_dir / "jobs" / call.video_id / "agents" / self._agent.name
+        if any(part.is_symlink() for part in (log_dir, *log_dir.parents)):
+            raise AgentIsolationUnavailableError("Ruta de log con enlace simbólico")
+        log_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
         log = log_dir / f"text-{self._agent.name}-{uuid.uuid4().hex[:8]}.log"
-        registered = await register_execution_log(log.relative_to(layout.root), kind="agent")
+        registered = await register_execution_log(
+            log.relative_to(layout.root), kind="agent",
+            video_id=call.video_id if call else None,
+            production_id=call.video_id if call else None,
+            content_key=call.content_key if call else None,
+        )
         log = registered.path
         prompt = f"{system_prompt}\n\n---\n\n{user_prompt}"
-        result = await self._agent.run(prompt, cwd=self._cwd, log_path=log, timeout_seconds=self._timeout)
+        result = await self._agent.run(prompt, cwd=self._cwd, log_path=log, timeout_seconds=self._timeout,
+            scope=AgentScope(writable_dir=".", read_only=True, model=self._model_spec.get("model"),
+                             reasoning_effort=self._model_spec.get("reasoning_effort")))
         usage = self._usage_from_result(self._agent, result)
+        usage.update(requested_model=self._model_spec.get("model"), reasoning_effort=self._model_spec.get("reasoning_effort"))
         if result.timed_out:
             error = AIGenerationError(f"{self._agent.name} no respondió en {self._timeout:.0f} s")
             error.usage = usage

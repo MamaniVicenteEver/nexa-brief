@@ -23,6 +23,8 @@ from src.core.progress import report_step_progress
 ProgressParser = Callable[[str], float | None]
 
 _TAIL_LINES = 40
+_TAIL_CHARS = 4096
+_LINE_BUFFER_BYTES = 64 * 1024
 _PERCENT = re.compile(r"(\d{1,3}(?:\.\d+)?)\s?%")
 
 
@@ -77,10 +79,12 @@ async def run_with_progress(
         # Progress bars redraw with '\r' instead of newlines — split on both.
         buffer = b""
         while chunk := await stream.read(4096):
-            buffer += chunk
+            # A CLI may emit a long diagnostic or binary-like output without
+            # delimiters. Progress reporting must never buffer the whole run.
+            buffer = (buffer + chunk)[-_LINE_BUFFER_BYTES:]
             *lines, buffer = re.split(rb"[\r\n]", buffer)
             for raw in lines:
-                line = raw.decode(errors="replace").strip()
+                line = raw.decode(errors="replace").strip()[-_TAIL_CHARS:]
                 if not line:
                     continue
                 tails[name].append(line)
@@ -88,7 +92,11 @@ async def run_with_progress(
                 if fraction is not None:
                     report_step_progress(fraction)
         if buffer.strip():
-            tails[name].append(buffer.decode(errors="replace").strip())
+            line = buffer.decode(errors="replace").strip()[-_TAIL_CHARS:]
+            tails[name].append(line)
+            fraction = parse_progress(line)
+            if fraction is not None:
+                report_step_progress(fraction)
 
     async def stop_group() -> None:
         # Even after the CLI exits, a worker may survive with its pipes closed.

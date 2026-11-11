@@ -28,4 +28,14 @@ La fuente de entradas para agentes es `components.json`: `produce.mjs catalog` b
 - Las capas de overlays admiten `enter` y `exit`: `{ "style": "fade", "dur": 0.6 }`. Estilos: `fade`, `rise`, `scale`, `slide-left`, `slide-right`; `distance` opcional en píxeles de diseño. La salida empieza en `out` y acaba en `out + exit.dur`; sin `exit` conserva el corte anterior. Estos transformados no se aplican a los polígonos `highlight` del mapa.
 - Las fotos circular, hexagonal y de panel aceptan `focus: [0.5,0.5]` para el centro del recorte. Todas las imágenes de un tipo comparten un dibujante; sólo cambian `src`, ubicación, textos y tiempos. `src` es relativo a `assets/` del episodio.
 
+`pole-photo`, `hex-photo` y `panel` aceptan `screen:[x,y]`, con fracciones de 0 a 1. `at` sigue siendo el lugar geográfico: solo cambia la posición de la ficha. En las fotos circular/hexagonal, `screen` es el centro preferido de la foto y el poste se convierte en una línea diagonal al punto proyectado. En el panel, es el centro de toda la ficha (foto y texto), no solo del texto. Las fichas usan escala de pantalla `min(W,H)/1080`, sin perspectiva del punto.
+
+```json
+{"type":"panel","at":[2.3,48.8],"screen":[0.46,0.43],"src":"media/region.jpg","title":"REGIÓN","text":"Descripción de ejemplo","t":4}
+```
+
+En este modo, `layout()` reserva foto, texto y padding. Ajusta la ficha a los bordes con margen y busca una posición libre entre las fichas ya activas; no cambia el punto geográfico. Si excede el viewport, reduce la ficha completa. Los títulos mantienen su fuente de 25 U y se reparten en hasta dos líneas; la descripción se dibuja después de esas líneas, sin invadir la imagen. El subtítulo circular admite dos líneas; las descripciones de panel y hexágono, cuatro. Layout reserva ese alto máximo. El ancho de texto circular en screen es 260 U, suficiente para títulos como «Renania del Norte-Westfalia» en dos líneas. Un texto que exceda estos límites recibe elipsis; no se altera el nombre del episodio ni se comprime la fuente. Si no existe espacio suficiente para varias fichas, prioriza mantenerlas dentro del cuadro y puede quedar un solape: revisar la composición. La coordenada `screen` es preferida y puede desplazarse por estos ajustes. El punto debe seguir siendo visible según la proyección del mapa; una ficha no muestra un punto oculto tras el globo.
+
+Sin `screen` se mantiene la colocación y la escala geográfica anteriores. No se añade un canvas, un observador ni otro recurso persistente; layout y dibujo siguen siendo funciones del tiempo y del viewport. Los cambios de opacidad/escala de `enter` y `exit` mantienen su contrato anterior.
+
 Procedimiento de voz, montaje, preparación y revisión: `SKILL.md` → `PRODUCIR.md`. Los ejemplos numéricos del catálogo no son estadísticas reales.

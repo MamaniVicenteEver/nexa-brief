@@ -3,6 +3,13 @@
 **Antes de esto lee `../../AGENTE.md` (proceso, roles y puertas), `../../GUION.md` y `../../MENU-VISUAL.md`.** Después lee este archivo, `animations/index.json` COMPLETO (qué componentes hay y para qué) y el JSON de cada animación que vayas a usar (`animations/<nombre>.json`: parámetros, rangos, ejemplo para pegar). No leas `core.js`, `components/*.js` ni `plano.js`: el motor decide cómo se ve; tú decides qué se cuenta y cuándo.
 
 ## 1. Qué entregas
+
+El código de este motor existe únicamente en la plantilla compartida del repositorio. **No crees ni copies
+`engine/`, componentes o scripts de dibujo en el episodio.** El host crea `index.html` apuntando a
+`/api/v1/explainer/files/bundled/nodeatlas/atlas-en-movimiento/engine/plano/plano.js`.
+El orquestador solo configura tipos, parámetros y tiempos en JSON. Si falta una pieza, se implementa en
+el motor principal y se registra en Showcase; el episodio no añade una implementación alternativa.
+`python <plantilla>/tools/check_episode.py <episodio>` verifica esta puerta antes de aceptar o grabar.
 Un `assets/scene.json` (solo datos) más `assets/lyrics.json` (palabras con tiempos de la voz) y el audio. Nada de código. El video se ve en `index.html` de la plantilla; el estilo (letras, colores, posiciones) lo pone el motor.
 
 ```jsonc
@@ -61,3 +68,12 @@ No inventes cifras ni nombres; todo dato visible sale de la investigación. **Ta
 - Dos `label.country` en el mismo punto: se montan y se lee «IRÁK» en vez de IRAK e IRÁN. Cada país lleva su propio `at` dentro de su territorio, y `screen` solo si no hay `at` (si pones los dos, manda `screen`). El validador exige uno de los dos.
 - Cambiar de formato (móvil/escritorio) con la ventana: el motor elige el diseño por proporción; no fijes `formato` en la escena salvo que sea intencional.
 - Rutas `work/...` en la escena: la API no sirve `work/`; todo lo que lea la escena va en `assets/`.
+
+## Blender (MCP): abrir, usar y CERRAR
+
+La regla única de cierre está en `nodeatlas/AGENTS.md`, sección «Blender (MCP)».
+Cada agente debe guardar su trabajo, cerrar los procesos que abrió y verificar que
+finalizaron. La instancia y las conexiones compartidas se conservan mientras otro
+trabajo pueda utilizarlas; la antigüedad no demuestra que estén inactivas.
+El inventario y el cierre de PID identificados se hacen con
+`atlas-en-movimiento/tools/cerrar-blender-mcp.sh`; sin argumentos solo lista procesos.

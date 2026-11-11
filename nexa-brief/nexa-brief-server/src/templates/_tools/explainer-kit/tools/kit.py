@@ -232,6 +232,11 @@ def audio_dur(p):
 
 def cmd_manifest(a):
     d = vdir(a.id); A = d / "assets"
+    if design_of(d) == "cara-a-cara":
+        from src.core.explainer.cara_a_cara_production import refresh_manifest
+        result = refresh_manifest(d, a.id)
+        print(f"✓ manifest.json · Cara a Cara · {result['status']}")
+        return
     component_library.refresh(d)
     M = jload(d / "manifest.json", {}) or {}
     cfg = jload(A / "config.json", {}); C = cfg["configs"][0] if "configs" in cfg else cfg
@@ -362,7 +367,9 @@ def cmd_render(a):
             os.replace(out_dir / f"{a.id}-{f}{suffix}.mp4", destination)
             final_paths[f] = destination
     if not a.seconds:
-        cmd_manifest(a)
+        from src.core.explainer.production_templates import shared_demo
+        if shared_demo(settings.templates_dir, a.id) is None:
+            cmd_manifest(a)
         try:
             from src.core.explainer.backup_event import write_render_event
             if layout.schema_version < 3 or not managed:
@@ -382,6 +389,24 @@ def cmd_promote(a):
     d = find_video(a.id)
     if d is None:
         sys.exit(f"No existe {a.id}")
+    from src.config.profile_layout import layout_for_settings
+    from src.config.settings import settings
+    if layout_for_settings(settings).schema_version >= 2:
+        import asyncio
+        from src.adapters.showcase.production import FilesystemDesignProduction
+        from src.config.content_paths import sandbox_root
+        try:
+            folder, project = d.relative_to(sandbox_root()).parts
+            workflow = FilesystemDesignProduction()
+            status = workflow.inspect(folder, project)
+            if not status['can_pass']:
+                sys.exit('Verifica primero archivos y rutas desde Preparar para producción; --force no omite esta revisión')
+            draft = status['draft']
+            result = asyncio.run(workflow.move(folder, project, {'category':draft['category'], 'shared_categories':draft['shared_categories']}))
+            print('Pasado a producción: ' + result['destination'])
+            return
+        except ValueError as exc:
+            sys.exit(str(exc))
     try:
         plan = promote(d, force=a.force)
     except PromoteError as exc:

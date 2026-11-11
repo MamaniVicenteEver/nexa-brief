@@ -4,6 +4,7 @@ import { ChevronDownIcon, LogOutIcon, MenuIcon } from "lucide-react";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
 import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
 import { NotificationBell } from "@/features/notifications";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
@@ -22,12 +23,32 @@ export function AdminHeader() {
   const tResources = useTranslations("resources");
   const tShowcase = useTranslations("showcase");
   const pathname = usePathname();
+  const [managementOpen, setManagementOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openedByHover = useRef(false);
+  const cancelClose = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = null;
+  };
+  const scheduleClose = () => {
+    cancelClose();
+    closeTimer.current = setTimeout(() => setManagementOpen(false), 150);
+  };
+  useEffect(
+    () => () => {
+      if (closeTimer.current) clearTimeout(closeTimer.current);
+    },
+    [],
+  );
+
+  const QUICK_LINKS = [
+    { href: "/biblioteca", label: t("biblioteca") },
+    { href: "/showcase", label: tShowcase("navLabel") },
+  ] as const;
 
   const MANAGEMENT_LINKS = [
     { href: "/programacion", label: t("programacion") },
-    { href: "/biblioteca", label: t("biblioteca") },
     { href: "/recursos", label: tResources("navLabel") },
-    { href: "/showcase", label: tShowcase("navLabel") },
     { href: "/historial", label: t("historial") },
     { href: "/notificaciones", label: t("notificaciones") },
   ] as const;
@@ -102,11 +123,44 @@ export function AdminHeader() {
             {t("canales")}
           </Link>
         </li>
+        {QUICK_LINKS.map((link) => (
+          <li key={link.href}>
+            <Link
+              href={link.href}
+              aria-current={pathname === link.href ? "page" : undefined}
+              className={cn(
+                "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
+                pathname === link.href &&
+                  "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-0.5 after:rounded-full after:bg-nb-green-dark",
+              )}
+            >
+              {link.label}
+            </Link>
+          </li>
+        ))}
         <li>
-          <DropdownMenu>
+          <DropdownMenu
+            open={managementOpen}
+            onOpenChange={(open) => {
+              cancelClose();
+              openedByHover.current = false;
+              setManagementOpen(open);
+            }}
+            modal={false}
+          >
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
+                onPointerEnter={(event) => {
+                  if (event.pointerType === "mouse") {
+                    cancelClose();
+                    openedByHover.current = true;
+                    setManagementOpen(true);
+                  }
+                }}
+                onPointerLeave={(event) => {
+                  if (event.pointerType === "mouse") scheduleClose();
+                }}
                 className={cn(
                   "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft transition-colors hover:text-nb-ink",
                   isManagementActive &&
@@ -116,7 +170,19 @@ export function AdminHeader() {
                 {t("gestion")} <ChevronDownIcon className="size-2.5" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="center" className="min-w-[190px] rounded-[14px] p-2">
+            <DropdownMenuContent
+              align="center"
+              className="min-w-[190px] rounded-[14px] p-2"
+              onPointerEnter={(event) => {
+                if (event.pointerType === "mouse") cancelClose();
+              }}
+              onPointerLeave={(event) => {
+                if (event.pointerType === "mouse") scheduleClose();
+              }}
+              onCloseAutoFocus={(event) => {
+                if (openedByHover.current) event.preventDefault();
+              }}
+            >
               {MANAGEMENT_LINKS.map((link) => (
                 <DropdownMenuItem key={link.href} asChild>
                   <Link href={link.href} className="text-[13.5px] font-medium">
@@ -158,6 +224,7 @@ export function AdminHeader() {
                 { href: "/crear-video", label: t("crearVideo") },
                 { href: "/plantillas", label: t("plantillas") },
                 { href: "/canales", label: t("canales") },
+                ...QUICK_LINKS,
                 ...MANAGEMENT_LINKS,
               ].map((link) => (
                 <DropdownMenuItem key={link.href} asChild>

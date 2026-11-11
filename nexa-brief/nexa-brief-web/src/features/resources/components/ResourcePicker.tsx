@@ -1,13 +1,13 @@
 "use client";
 
-import { Check, Music, Search } from "lucide-react";
+import { Check, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import type { LibraryAsset } from "@/features/library/api/library-assets-service";
 import { cn } from "@/lib/utils";
 import { useLibraryList } from "../hooks/useResources";
-import { formatDuration, type ResourceKind, toApiKind } from "../kinds";
-import { TranscriptionBadge } from "./TranscriptionBadge";
+import { type ResourceKind, toApiKind } from "../kinds";
+import { AudioResourceOption } from "./AudioResourceOption";
 import { UploadDropzone } from "./UploadDropzone";
 
 interface CommonProps {
@@ -96,68 +96,51 @@ export function ResourcePicker(props: ResourcePickerProps) {
             const isSelected = selected.includes(asset.assetId);
             return (
               <li key={asset.assetId}>
-                <button
-                  type="button"
-                  onClick={() => toggle(asset)}
-                  aria-pressed={isSelected}
-                  className={cn(
-                    "relative w-full overflow-hidden rounded-xl border bg-nb-surface text-left transition-colors",
-                    isSelected
-                      ? "border-nb-green-dark ring-2 ring-nb-green"
-                      : "border-nb-line hover:border-nb-green-dark",
-                    isAudio && "flex items-center gap-2.5 p-2.5",
-                  )}
-                >
-                  {isAudio ? (
-                    <>
-                      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-nb-bg-2">
-                        <Music className="size-4 text-nb-mute" />
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[12.5px] font-semibold text-nb-ink">
-                          {asset.title}
-                        </span>
-                        <span className="flex items-center gap-1.5 text-[11px] text-nb-mute">
-                          {formatDuration(asset.durationSeconds)}
-                          {apiKind === "music" && (
-                            <TranscriptionBadge
-                              status={asset.transcriptionStatus}
-                              error={asset.transcriptionError}
-                            />
-                          )}
-                        </span>
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      {apiKind === "images" ? (
-                        // biome-ignore lint/performance/noImgElement: URL del backend, no un asset estático de Next
-                        <img
-                          src={asset.fileUrl}
-                          alt=""
-                          loading="lazy"
-                          className="aspect-video w-full object-cover"
-                        />
-                      ) : (
-                        <video
-                          src={`${asset.fileUrl}#t=0.5`}
-                          muted
-                          playsInline
-                          preload="metadata"
-                          className="aspect-video w-full bg-black object-cover"
-                        />
-                      )}
-                      <span className="block truncate px-2 py-1.5 text-[11.5px] font-medium text-nb-ink">
-                        {asset.title}
-                      </span>
-                    </>
-                  )}
-                  {isSelected && (
-                    <span className="absolute top-1.5 right-1.5 flex size-5 items-center justify-center rounded-full bg-nb-green-dark text-white">
-                      <Check className="size-3" />
+                {isAudio ? (
+                  <AudioResourceOption
+                    asset={asset}
+                    selected={isSelected}
+                    onClick={() => toggle(asset)}
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => toggle(asset)}
+                    aria-pressed={isSelected}
+                    className={cn(
+                      "relative w-full overflow-hidden rounded-xl border bg-nb-surface text-left transition-colors",
+                      isSelected
+                        ? "border-nb-green-dark ring-2 ring-nb-green"
+                        : "border-nb-line hover:border-nb-green-dark",
+                    )}
+                  >
+                    {apiKind === "images" ? (
+                      // biome-ignore lint/performance/noImgElement: URL del backend, no un asset estático de Next
+                      <img
+                        src={asset.fileUrl}
+                        alt=""
+                        loading="lazy"
+                        className="aspect-video w-full object-cover"
+                      />
+                    ) : (
+                      <video
+                        src={`${asset.fileUrl}#t=0.5`}
+                        muted
+                        playsInline
+                        preload="metadata"
+                        className="aspect-video w-full bg-black object-cover"
+                      />
+                    )}
+                    <span className="block truncate px-2 py-1.5 text-[11.5px] font-medium text-nb-ink">
+                      {asset.title}
                     </span>
-                  )}
-                </button>
+                    {isSelected && (
+                      <span className="absolute top-1.5 right-1.5 flex size-5 items-center justify-center rounded-full bg-nb-green-dark text-white">
+                        <Check className="size-3" />
+                      </span>
+                    )}
+                  </button>
+                )}
               </li>
             );
           })}

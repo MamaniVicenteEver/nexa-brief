@@ -2,6 +2,9 @@ import { ACTIVE_JOB_STATES, type ExplainerVideo } from "@/features/explainer/typ
 import type { ImagePost } from "@/features/image-posts/types";
 
 export function isPreparedVideo(video: ExplainerVideo): boolean {
+  if (video.status === "en preparación") return true;
+  if (video.scriptReviewRequired)
+    return !(video.lastJob && ACTIVE_JOB_STATES.includes(video.lastJob.state));
   return (
     (video.ready || (video.design === "mapas-satelitales" && video.status === "en progreso")) &&
     video.rendered.length === 0 &&
@@ -9,8 +12,12 @@ export function isPreparedVideo(video: ExplainerVideo): boolean {
   );
 }
 
+export function isReviewDemo(video: ExplainerVideo): boolean {
+  return video.demo && video.status.trim().toLocaleLowerCase() === "lista para revisar";
+}
+
 export function isRenderedVideo(video: ExplainerVideo): boolean {
-  return video.rendered.length > 0;
+  return !video.scriptReviewRequired && video.rendered.length > 0;
 }
 
 export function isRenderedImage(post: ImagePost): boolean {

@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import type { SandboxItem } from "@/features/sandbox/types";
-import { isPreparedVideo, isRenderedVideo } from "@/features/templates/lib/preparation-items";
+import { isPreparedVideo, isRenderedVideo, isReviewDemo } from "@/features/templates/lib/preparation-items";
 import {
   type PreparationView,
   usePreparationView,
@@ -30,7 +30,7 @@ export function ExplainerPrepSection({
   const sharedView = usePreparationView();
   const [localView, setLocalView] = useState<PreparationView>("preparation");
   const view = sharedView ?? localView;
-  const preparationVideos = videos.filter(isPreparedVideo);
+  const preparationVideos = videos.filter((video) => isPreparedVideo(video) || isReviewDemo(video));
   const renderedVideos = videos.filter(isRenderedVideo);
   const visible = [...(view === "preparation" ? preparationVideos : renderedVideos)].sort(
     (a, b) => Number(a.demo) - Number(b.demo) || a.title.localeCompare(b.title),

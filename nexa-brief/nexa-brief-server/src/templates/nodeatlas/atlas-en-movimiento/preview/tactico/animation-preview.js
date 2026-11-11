@@ -4,6 +4,7 @@ import {createView,mercator} from '../../engine/plano/view.js';
 import {createTerritories} from '../../engine/plano/territories.js';
 import {atlasURL,sharedModules,readJSON} from '../../engine/plano/paths.js';
 import {cachedPreviewLayout} from './preview-layout.js';
+import {previewItem} from './preview-data.js';
 
 export async function preview({query,alternate}) {
   const started=performance.now();
@@ -16,7 +17,7 @@ export async function preview({query,alternate}) {
   document.querySelector('#stage').append(canvas);
   const g=canvas.getContext('2d'),surface=new OffscreenCanvas(W,H),sg=surface.getContext('2d',{willReadFrequently:true});
   const [shared,collection,look,manifest,layouts]=await Promise.all([sharedModules(),readJSON(atlasURL('data/geo/admin0.geojson')),readJSON(new URL('../../engine/looks/tactico.json',import.meta.url)),readJSON(new URL('../../engine/tactico/sprites/sprites.json',import.meta.url)),readJSON(new URL('./preview-layouts.json',import.meta.url)).catch(()=>null)]);
-  const scene=structuredClone(alternate||{duration:8,items:[Tactico.get(name||'fx.explosion').demo]});
+  const scene=structuredClone(alternate||{duration:8,items:[previewItem(Tactico.get(name||'fx.explosion'),query.get('p'))]});
   if(query.has('estilo')) scene.estilo=query.get('estilo');
   if(query.has('formato')) scene.formato=query.get('formato');
   scene.places={Salida:[56.25,26.65],Paso:[56.45,26.5],Llegada:[56.75,26.35]};
@@ -42,10 +43,18 @@ export async function preview({query,alternate}) {
   const geo=shared.createGeo(scene,{},[collection]),territories=createTerritories(collection),points=[];
   const collect=v=>{if(Array.isArray(v)){if(v.length===2&&v.every(Number.isFinite)&&Math.abs(v[0])<=180&&Math.abs(v[1])<=85)points.push(v);else v.forEach(collect);}else if(v&&typeof v==='object')for(const [k,x] of Object.entries(v))if(['at','from','to','via','path','focus'].includes(k))collect(x);};
   for(const i of scene.items)collect(i);
+  // Encuadrar los polígonos iniciales y sus cambios de estado.
+  if(name==='territory.zone')for(const i of scene.items){collect(i.polygons);for(const state of i.states||[])collect(state.polygons);}
   let center=points[0]||[56.5,26.5],span=5;
   const region=scene.items.find(i=>i.region)?.region;
   if(region){const parts=territories.country(region)||[],bounds=parts.map(p=>p.bounds);if(bounds.length){const b=[Math.min(...bounds.map(b=>b[0])),Math.min(...bounds.map(b=>b[1])),Math.max(...bounds.map(b=>b[2])),Math.max(...bounds.map(b=>b[3]))];center=[(b[0]+b[2])/2*360-180,Math.atan(Math.sinh(Math.PI*(1-b[1]-b[3])))*180/Math.PI];span=Math.max(b[2]-b[0],b[3]-b[1])*360*1.5;}}
   else if(points.length){const p=points.map(p=>mercator(...p)),xs=p.map(p=>p[0]),ys=p.map(p=>p[1]);const x=(Math.min(...xs)+Math.max(...xs))/2,y=(Math.min(...ys)+Math.max(...ys))/2;center=[x*360-180,Math.atan(Math.sinh(Math.PI*(1-2*y)))*180/Math.PI];span=Math.max(3,(Math.max(...xs)-Math.min(...xs))*360*1.7,(Math.max(...ys)-Math.min(...ys))*360*1.7);}
+  // A geographic ring extends beyond its center; fit its full radius in both aspects.
+  for(const item of scene.items)if(item.type==='range.ring'&&item.radiusMode!=='screen'){
+    const diameter=(item.radiusKm??180)/6371*180/Math.PI*2.5;
+    const latitude=Array.isArray(item.at)?item.at[1]:center[1];
+    span=Math.max(span,diameter/Math.max(.1,Math.cos(latitude*Math.PI/180))*Math.max(1,W/H));
+  }
   const view=createView({lon:center[0],lat:center[1],zoom:Math.log2(W*360/(512*span))},W,H);
   const context={st:{W,H,U:1},scene,geo,territories,shared,look,base:location.href};
   const runtime=await create(context,scene);context.tactico=runtime;window.__tacticoContext=context;
@@ -53,7 +62,7 @@ export async function preview({query,alternate}) {
   let renderedKey,hasContent=false;
   const raw=t=>{const key=runtime.key(t);if(key===renderedKey)return hasContent;renderedKey=key;sg.resetTransform();sg.clearRect(0,0,W,H);runtime.draw(sg,view,t);pg.clearRect(0,0,64,64);pg.drawImage(surface,0,0,64,64);const pixels=pg.getImageData(0,0,64,64).data;hasContent=false;for(let n=3;n<pixels.length;n+=4)if(pixels[n]>1){hasContent=true;break;}return hasContent;};
   let crop=[W,H,0,0],peak=0,peakTime=.5,lastContent=0;const visibleTimes=[];
-  const cached=query.has('formato')||query.get('layout')==='measure'?null:cachedPreviewLayout(layouts,name,Tactico.get(name)?.demo);
+  const cached=query.has('p')||query.has('formato')||query.get('layout')==='measure'?null:cachedPreviewLayout(layouts,name,Tactico.get(name)?.demo);
   // One union crop per sequence keeps scale/centering stable during entry, motion and exit.
   if(cached){crop=[...cached.crop];peak=cached.peak;peakTime=cached.peakTime;lastContent=scene.duration;}
   else for(let n=1;n<=16;n++){const t=scene.duration*n/17;raw(t);const a=sg.getImageData(0,0,W,H).data;let count=0;for(let y=0;y<H;y+=4)for(let x=0;x<W;x+=4)if(a[(y*W+x)*4+3]>20){count++;crop[0]=Math.min(crop[0],x);crop[1]=Math.min(crop[1],y);crop[2]=Math.max(crop[2],x+4);crop[3]=Math.max(crop[3],y+4);}if(count){lastContent=t;visibleTimes.push(t);}if(count>peak){peak=count;peakTime=t;}}

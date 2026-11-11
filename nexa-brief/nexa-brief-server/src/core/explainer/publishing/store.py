@@ -27,6 +27,8 @@ from src.core.explainer import narrative
 PUBLISH_FILE = "publish.json"
 # Campos planos de v1 que save_package deriva del paquete (compat_fields).
 COMPAT_KEYS = frozenset({
+    "instagram_title",
+    "instagram_description",
     "youtube_title",
     "youtube_title_alternatives",
     "youtube_description",
@@ -81,12 +83,14 @@ def compat_fields(video_id: str, package: PublishPackage, strategies: ActiveStra
 
 def save_package(video_dir: Path, package: PublishPackage, strategies: ActiveStrategies) -> dict[str, Any]:
     """Escribe el paquete v2 con sus campos derivados; devuelve lo escrito."""
+    legacy = read_publish(video_dir)
     previous = load_package(video_dir)
     package = package.model_copy(update={"strategies_used": narrative.stamp_publish(video_dir, strategies.ids())})
     package_data = package.model_dump(mode="json")
     if package.thumbnail.tabloid is None:
         package_data["thumbnail"].pop("tabloid", None)  # Los paquetes viejos conservan su forma A/B.
-    data = {**package_data, **compat_fields(video_dir.name, package, strategies)}
+    data = {**{key: legacy[key] for key in ("instagram_title", "instagram_description") if key in legacy},
+            **package_data, **compat_fields(video_dir.name, package, strategies)}
     if previous is not None and previous.thumbnail != package.thumbnail:
         for option in ("A", "B", "C"):
             for suffix in ("jpg", "webp", "sha256"):

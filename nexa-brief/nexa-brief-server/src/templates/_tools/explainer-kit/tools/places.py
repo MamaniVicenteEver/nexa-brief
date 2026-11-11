@@ -51,7 +51,32 @@ def find_video(video_id: str) -> pathlib.Path | None:
     roots += [sandbox_root() / f for f in folders()]
     from src.config.profile_layout import layout_for_settings
     from src.config.settings import settings
-    if layout_for_settings(settings).schema_version < 2:
+    layout = layout_for_settings(settings)
+    if layout.schema_version >= 3:
+        from src.core.explainer.production_templates import shared_demo
+        principal = shared_demo(settings.templates_dir, video_id)
+        if principal is not None:
+            return principal
+        # The selected profile registry owns episode IDs and their canonical
+        # folders. Legacy niches.json is only a bundled design catalogue.
+        from src.core.content_registry import get_video
+        from src.config.content_paths import resolve_content_key
+        try:
+            registered = get_video(video_id)
+            key = ((registered or {}).get("details") or {}).get("folder_key")
+            parts = pathlib.PurePosixPath(key or "").parts
+            allowed = {"productions": production_root(), "sandbox": sandbox_root()}
+            if len(parts) != 3 or parts[0] not in allowed or parts[-1] != video_id:
+                return None
+            directory = resolve_content_key(key)
+            if (directory.is_symlink() or not directory.is_dir()
+                    or not directory.resolve().is_relative_to(allowed[parts[0]].resolve())
+                    or directory.resolve().name != video_id):
+                return None
+            return directory
+        except (ValueError, TypeError):
+            return None
+    if layout.schema_version < 2:
         roots += [TEMPLATES / f for f in folders()]
         roots += [TEMPLATES / "sandbox" / f for f in folders()]
     for root in dict.fromkeys(roots):

@@ -14,6 +14,8 @@ La elegida se sube a YouTube al publicar (`thumbnail_file`). Las capturas quedan
 from __future__ import annotations
 
 import asyncio
+import os
+import signal
 import hashlib
 import json
 import sys
@@ -23,7 +25,7 @@ from urllib.parse import unquote, urlsplit
 
 from src.adapters.data.file_locks import AsyncFileLock
 from src.config.settings import BASE_DIR
-from src.config.content_paths import preview_directory, resolve_content_key
+from src.config.content_paths import content_key, preview_directory, resolve_content_key
 from src.core.explainer.catalog import KIT_DIR, TEMPLATES_DIR, ExplainerVideo
 from src.core.explainer.publishing import service
 from src.core.explainer.publishing.opening import (
@@ -38,8 +40,9 @@ from src.core.explainer.publishing.opening import (
     validate_tabloid_photo,
     OpeningError,
 )
+from src.core.explainer.publishing.package import PublishPackage
 from src.core.explainer.publishing.store import PUBLISH_FILE, load_package, read_publish, save_package
-from src.core.explainer.publishing.strategies import active_strategies
+from src.core.explainer.publishing.strategies import strategies_for_review
 
 TOOL = KIT_DIR / "tools" / "thumbnail.py"
 
@@ -58,7 +61,8 @@ def thumbnail_file(video: ExplainerVideo, option: Option | None = None, orientat
 def _capture_digest(video: ExplainerVideo, spec: dict) -> str:
     """Invalidate captures when their text, local media or component changes."""
     digest = hashlib.sha256(json.dumps(spec, sort_keys=True, ensure_ascii=False).encode())
-    design_file = KIT_DIR / "designs" / video.design / "design.json"
+    render_design = _spec_design(video, spec)
+    design_file = KIT_DIR / "designs" / render_design / "design.json"
     design = json.loads(design_file.read_text(encoding="utf-8"))
     paths = [KIT_DIR / "designs/common/tabloid.js", design_file, TOOL,
              KIT_DIR / "engine/kit.js", KIT_DIR / "showcase/stage.html"]
@@ -104,17 +108,106 @@ def _kicker(video: ExplainerVideo) -> str:
     return json.loads(script_path.read_text(encoding="utf-8")).get("kicker", "") if script_path.exists() else ""
 
 
+def _spec_design(video: ExplainerVideo, spec: dict) -> str:
+    return str(spec.get("design") or video.design)
+
+
+def _legacy_atlas_specs(video: ExplainerVideo, publish: dict) -> dict[str, dict]:
+    """Renderiza variantes antiguas de Atlas como miniaturas sin cambiar la apertura."""
+    if video.design != "atlas-en-movimiento" and not video.design.startswith("sandbox-"):
+        return {}
+    variants = publish.get("thumbnail_variants")
+    if not isinstance(variants, list):
+        return {}
+
+    poster = preview_directory(video.path) / "poster.jpg"
+    poster_src = ""
+    if poster.is_file():
+        try:
+            poster_src = "/" + content_key(poster)
+        except ValueError:
+            pass
+
+    specs: dict[str, dict] = {}
+    kicker = _kicker(video) or "ATLAS EN MOVIMIENTO"
+    for variant in variants:
+        if not isinstance(variant, dict):
+            continue
+        option = variant.get("option")
+        if option not in OPTIONS:
+            continue
+        lines = variant.get("lines")
+        lines = lines if isinstance(lines, list) else []
+        text = str(variant.get("text") or "\n".join(line for line in lines if isinstance(line, str))).strip()
+        if not text:
+            continue
+        params = {
+            "text": text,
+            "accent": str(variant.get("highlight") or ""),
+            "strap": str(variant.get("strap", kicker)),
+            "palette": "brand",
+            "imageSide": "right",
+            "textIn": "none",
+            "accentIn": "none",
+        }
+        image = variant.get("image")
+        image_path = video.path / "assets" / "media" / str(image) if image else None
+        if image_path is not None and image_path.is_file():
+            try:
+                params["src"] = "/" + content_key(image_path)
+            except ValueError:
+                if poster_src:
+                    params["src"] = poster_src
+        elif poster_src:
+            params["src"] = poster_src
+        specs[option] = {"component": "common.tabloid", "design": "atlas", "params": params}
+    return specs
+
+
+def _atlas_package_specs(video: ExplainerVideo, package: PublishPackage) -> dict[str, dict]:
+    """Adapta el paquete A/B/C al diseño Atlas legado sin tocar su apertura nativa."""
+    if video.design != "atlas-en-movimiento" and not video.design.startswith("sandbox-"):
+        return {}
+    thumb = package.thumbnail
+    variants = [
+        {
+            "option": "A",
+            "lines": thumb.text_only.lines,
+            "highlight": thumb.text_only.highlight,
+            "strap": "",
+        },
+        {
+            "option": "B",
+            "text": thumb.with_image.text,
+            "image": thumb.with_image.image,
+            "strap": "",
+        },
+    ]
+    if thumb.tabloid is not None:
+        variants.append({
+            "option": "C",
+            "text": thumb.tabloid.text,
+            "highlight": thumb.tabloid.accent,
+            "image": thumb.tabloid.image,
+            "strap": "",
+        })
+    return _legacy_atlas_specs(video, {"thumbnail_variants": variants})
+
+
 def intro_specs(video: ExplainerVideo) -> dict[str, dict]:
     """{opción: {component, params}} de las miniaturas que este video puede tener."""
     package = load_package(video.path)
     if package is not None:
+        atlas_specs = _atlas_package_specs(video, package)
+        if atlas_specs:
+            return atlas_specs
         return opening_specs(package, video.path, video.design)
     catalog = kit_catalog()
     v1, v2 = catalog.get(f"{video.design}.introv1"), catalog.get(f"{video.design}.introv2")
     publish = read_publish(video.path)
     text = (publish.get("thumbnail_text") or video.title or "").strip()
     if v1 is None or not text:
-        return {}
+        return _legacy_atlas_specs(video, publish)
     specs = {"A": {"component": v1["name"], "params": intro_params(v1, text, _kicker(video))}}
     image = publish.get("thumbnail_image") or ""
     if image and (video.path / "assets" / "media" / image).is_file() and v2 is not None:
@@ -128,7 +221,10 @@ def chosen_option(video: ExplainerVideo) -> Option:
     package = load_package(video.path)
     if package is not None:
         return CHOSEN_TO_OPTION[package.thumbnail.chosen]  # type: ignore[return-value]
-    return "B" if read_publish(video.path).get("thumbnail_option") == "B" else "A"
+    chosen = read_publish(video.path).get("thumbnail_option")
+    if chosen in {"B", "C"} and (chosen == "B" or video.design == "atlas-en-movimiento" or video.design.startswith("sandbox-")):
+        return chosen
+    return "A"
 
 
 def _validate_c(video: ExplainerVideo) -> None:
@@ -151,7 +247,7 @@ def choose(video: ExplainerVideo, option: Option) -> None:
         if OPTION_TO_CHOSEN[option] == package.thumbnail.chosen:
             return
         updated = package.model_copy(update={"thumbnail": package.thumbnail.model_copy(update={"chosen": OPTION_TO_CHOSEN[option]})})
-        save_package(video.path, updated, active_strategies(updated.category))
+        save_package(video.path, updated, strategies_for_review(video))
         service.build(video)   # la elegida abre el video: beat 0, guion, manifest, portada y renders viejos
         return
     data = read_publish(video.path)
@@ -182,12 +278,24 @@ async def render(
             with TemporaryDirectory(prefix=".thumbnail-", dir=out.parent) as temporary:
                 pending = Path(temporary) / out.name
                 proc = await asyncio.create_subprocess_exec(
-                    sys.executable, str(TOOL), str(pending), "--design", video.design, "--component", spec["component"],
+                    sys.executable, str(TOOL), str(pending), "--design", _spec_design(video, spec), "--component", spec["component"],
                     "--params", json.dumps(spec["params"], ensure_ascii=False),
                     "--orientation", orientation,
-                    cwd=str(BASE_DIR), stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT,
+                    cwd=str(BASE_DIR), stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT, start_new_session=True,
                 )
-                log, _ = await proc.communicate()
+                try:
+                    log, _ = await asyncio.wait_for(proc.communicate(), timeout=180)
+                except BaseException:
+                    if proc.returncode is None:
+                        try:
+                            os.killpg(proc.pid, signal.SIGTERM)
+                            await asyncio.wait_for(proc.wait(), timeout=10)
+                        except asyncio.TimeoutError:
+                            os.killpg(proc.pid, signal.SIGKILL)
+                            await proc.wait()
+                        except ProcessLookupError:
+                            pass
+                    raise
                 if proc.returncode or not pending.is_file() or pending.stat().st_size == 0:
                     raise ThumbnailError(f"no se pudo capturar la miniatura {option}: {log.decode('utf-8', 'replace')[-400:]}")
                 pending.replace(out)

@@ -85,6 +85,23 @@ export interface DraftRequest {
   auto_render?: { recorder_engine?: RecorderEngine; publish_accounts: string[] };
 }
 
+export type DraftThumbnailOptionId = "A" | "B";
+
+export interface DraftThumbnailOption {
+  /** Texto de esta opción, independiente de los metadatos y copies de publicación. */
+  text: string;
+  /** Configuración visual que el renderer usa para generar la miniatura. */
+  design?: Record<string, unknown> | null;
+}
+
+export interface DraftThumbnails {
+  fingerprint: string;
+  selected: DraftThumbnailOptionId;
+  urls: Partial<Record<DraftThumbnailOptionId, string>>;
+  /** Opcional para poder leer drafts creados antes de guardar el manifest A/B. */
+  options?: Partial<Record<DraftThumbnailOptionId, DraftThumbnailOption>>;
+}
+
 export interface Draft {
   draftId: string;
   templateId: string;
@@ -108,6 +125,8 @@ export interface Draft {
   jobId: string | null;
   recoverable: boolean;
   details: DraftDetails | null;
+  thumbnails?: DraftThumbnails | null;
+  thumbnailError?: string | null;
   createdAt: string;
   updatedAt: string;
 }

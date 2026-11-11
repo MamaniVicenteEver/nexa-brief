@@ -70,9 +70,22 @@ export function groupAccountsByBrand(
     : brands;
 }
 
-/** Formatos que puede usar una cuenta: los grabados, y YouTube solo en 16:9. */
-export function allowedFormatsFor(platform: string, recorded: PublishFormat[]): PublishFormat[] {
-  return platform === "youtube" ? recorded.filter((f) => f === "16x9") : recorded;
+/** Cada cuenta puede elegir entre los formatos habilitados para esta grabación. */
+export function allowedFormatsFor(_platform: string, recorded: PublishFormat[]): PublishFormat[] {
+  return recorded;
+}
+
+/** YouTube decides classification after upload; only dimensions and duration are known here. */
+export function youtubeFormatHint(format: PublishFormat | null, seconds: number | null):
+  | "youtubeHorizontal"
+  | "youtubeShortEligible"
+  | "youtubeShortLong"
+  | "youtubeShortUnknown"
+  | null {
+  if (format === null) return null;
+  if (format === "16x9") return "youtubeHorizontal";
+  if (seconds === null || !Number.isFinite(seconds) || seconds <= 0) return "youtubeShortUnknown";
+  return seconds <= 180 ? "youtubeShortEligible" : "youtubeShortLong";
 }
 
 const DEFAULT_FORMAT: Record<string, PublishFormat> = {
@@ -87,8 +100,9 @@ export function formatFor(
   account: PublishAccountOption,
   recorded: PublishFormat[],
   chosen: Record<string, PublishFormat>,
+  preferred?: PublishFormat,
 ): PublishFormat | null {
   const allowed = allowedFormatsFor(account.platform, recorded);
-  const wanted = chosen[account.selector] ?? DEFAULT_FORMAT[account.platform] ?? "16x9";
+  const wanted = chosen[account.selector] ?? preferred ?? DEFAULT_FORMAT[account.platform] ?? "16x9";
   return allowed.includes(wanted) ? wanted : (allowed[0] ?? null);
 }

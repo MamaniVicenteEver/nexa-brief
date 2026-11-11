@@ -898,14 +898,39 @@
       "postsTab": "Images",
       "videoCount": "{count, plural, one {# video} other {# videos}}",
       "imageCount": "{count, plural, one {# image} other {# images}}",
-      "emptyImagesRendered": "There are no rendered images in this category yet."
+      "emptyImagesRendered": "There are no rendered images in this category yet.",
+      "statusReadyForReview": "Ready for review",
+      "reviewProposal": "Review proposal and pending items",
+      "designNotes": "Design notes",
+      "updatedAt": "Updated {date}",
+      "estimatedTokens": "≈{count} tokens"
     },
     "windows": {
       "label": "Main categories",
+      "allDesigns": "View all",
       "previousCategory": "Scroll categories left",
       "nextCategory": "Scroll categories right",
       "loading": "Loading categories…",
+      "emptyDesigns": "No design demos are available yet.",
       "loadError": "Couldn't load the categories.",
+      "catalogReport": {
+        "title": "Catalog overview",
+        "description": "Coverage and design availability across every category.",
+        "categories": "Categories",
+        "categoryStatus": "{active} active · {planned} planned · {empty} empty",
+        "categoriesWithItems": "With designs",
+        "coverage": "categories with at least one card",
+        "pipelineTemplates": "Templates",
+        "production": "production designs",
+        "demos": "Demos",
+        "totalCards": "{count} cards in total",
+        "categoryCoverage": "Included categories · available cards",
+        "expandAll": "Expand all",
+        "collapseAll": "Collapse all",
+        "expandCategory": "Expand {name} category",
+        "collapseCategory": "Collapse {name} category",
+        "emptyCategory": "This category does not have templates or demos yet."
+      },
       "status": {
         "active": "Active",
         "planned": "Planned",
@@ -917,10 +942,39 @@
       },
       "templatesCount": "{count, plural, one {# template} other {# templates}}",
       "designsCount": "{count, plural, one {# design} other {# designs}}",
+      "videosCount": "{count, plural, one {# video} other {# videos}}",
       "readyCount": "{count, plural, one {# ready} other {# ready}}",
       "others": "Others",
       "subcategories": "Subcategory",
-      "subcategoryEmpty": "This subcategory has no templates yet."
+      "subcategoryEmpty": "This subcategory has no templates yet.",
+      "addCategory": "Add category",
+      "categoryCreate": {
+        "title": "Create category",
+        "description": "Add an explainer category. Its profile folders and starter strategy will be created for you.",
+        "name": "Category name",
+        "namePlaceholder": "For example, NodeScience",
+        "topic": "What will this category explain?",
+        "topicPlaceholder": "For example, science and technology in the news",
+        "language": "Content language",
+        "english": "English",
+        "spanish": "Spanish",
+        "folderNote": "It starts as an empty Explainer Kit category, ready for its first video.",
+        "cancel": "Cancel",
+        "submit": "Create category",
+        "creating": "Creating…",
+        "created": "{name} created.",
+        "error": "Couldn't create the category."
+      },
+      "newsIdeasTitle": "News story ideas",
+      "newsIdeasHint": "Choose an angle, then add the specific story, its date, and sources."
+    },
+    "fields": {
+      "newsTopic": "Current news or topic",
+      "newsTopicPlaceholder": "Headline or news topic you want to explain"
+    },
+    "create": {
+      "newsSourceHint": "Include the headline, publication date, outlet, and link so the video can rely on verifiable information.",
+      "newsContextHint": "Add context or points you want to discuss; keep sourced facts distinct from analysis."
     }
   },
   "imagePosts": {
@@ -1515,7 +1569,10 @@
     "promote": "Move to production",
     "preparationScope": "Creates a draft and shows components; promotion requires validation.",
     "prepareWithAgent": "Prepare with AI",
-    "preparationState": { "queued": "Queued for preparation", "running": "Preparing with AI" },
+    "preparationState": {
+      "queued": "Queued for preparation",
+      "running": "Preparing with AI"
+    },
     "preparationReview": "Review proposal and outstanding items",
     "preparationFailed": "Could not prepare the project.",
     "promoteMainCategory": "Primary category",
@@ -1593,7 +1650,71 @@
       "saveError": "Could not save. Try again.",
       "loadError": "Could not load project visibility in Showcase.",
       "retry": "Retry"
-    }
+    },
+    "production": {
+      "review": "Review preparation",
+      "pass": "Move to production",
+      "requiresValidation": "Prepare and validate the design before moving it to production.",
+      "title": "Technical production review",
+      "description": "Check files, paths, engines, components and categories. This step uses no AI and generates no editorial content.",
+      "loading": "Loading…",
+      "designTitle": "Design name",
+      "designDescription": "Design description",
+      "mainCategory": "Main category",
+      "chooseCategory": "Choose a category",
+      "references": "Reference categories",
+      "manageCategories": "Manage categories",
+      "publication": "Titles, descriptions and thumbnails",
+      "thumbnailsHelp": "Prepare three thumbnail options while preserving the video opening.",
+      "thumbnail": "Thumbnail {option} text",
+      "pending": "Pending: {count}",
+      "notes": "Existing design notes",
+      "demoHelp": "Move the design or episode to its destination, then complete the editorial preparation from its category.",
+      "save": "Save draft",
+      "validate": "Check files and paths",
+      "discard": "Discard draft",
+      "states": {
+        "draft": "Draft for review",
+        "queued": "Validation queued",
+        "validating": "Checking files and paths…",
+        "failed": "Validation needs attention",
+        "ready": "Technical review complete: ready to move",
+        "production": "Design in production"
+      },
+      "fields": {
+        "youtube_title": "YouTube title",
+        "youtube_description": "YouTube description",
+        "youtube_tags": "YouTube tags, separated by commas",
+        "instagram_title": "Instagram title",
+        "instagram_description": "Instagram description",
+        "facebook_title": "Facebook title",
+        "facebook_description": "Facebook description",
+        "tiktok_caption": "TikTok caption",
+        "tiktok_hashtags": "TikTok hashtags, separated by commas"
+      },
+      "categories": {
+        "title": "Manage categories",
+        "description": "Create and edit available categories. Only categories without content or references can be deleted.",
+        "select": "Category to manage",
+        "new": "Create category",
+        "name": "Name",
+        "topic": "Topic",
+        "language": "Language",
+        "saved": "Changes saved.",
+        "deleteHelp": "Delete category {name}? Its folders will remain.",
+        "save": "Save changes",
+        "create": "Create category",
+        "delete": "Delete category",
+        "confirmDelete": "Confirm deletion"
+      },
+      "posterStyles": "Styles to review",
+      "reusePosters": "Only existing thumbnails are checked. No images are generated or replaced.",
+      "technicalPrepare": "Prepare for production",
+      "technicalReport": "Technical report",
+      "checkedResources": "{files} files and {resources} resources checked",
+      "existingPosters": "Existing thumbnails: {existing} of {total}"
+    },
+    "preparationFallback": "Preparing with {agent}: using the verified isolated fallback."
   },
   "createVideo": {
     "heading": "Create video",
@@ -2118,7 +2239,9 @@
       "lengthOption": "{minutes} min · {label}",
       "lengthCustom": "Other (30 min or more)",
       "lengthMinutes": "Minutes",
-      "lengthHint": "Longer videos get more research, chapters and topic-specific components; production takes longer."
+      "lengthHint": "Longer videos get more research, chapters and topic-specific components; production takes longer.",
+      "newsTopic": "News story or current topic",
+      "newsTopicPlaceholder": "e.g. elections, science, the economy…"
     },
     "create": {
       "title": "Create video · {category}",
@@ -2136,7 +2259,9 @@
       "showPreview": "Show",
       "hidePreview": "Hide",
       "designsOwn": "{name} templates",
-      "designsOther": "{name} templates (you can use them too)"
+      "designsOther": "{name} templates (you can use them too)",
+      "newsSourceHint": "Add the headline and date; use recent, verifiable sources.",
+      "newsContextHint": "Add links, context, and the angle you want to explain."
     },
     "narratives": {
       "title": "Narrative strategy",
@@ -2178,6 +2303,8 @@
       "partial": "Totals may be incomplete. Shared briefs are counted once."
     },
     "studio": {
+      "scriptReview": "Script for review",
+      "scriptReviewHint": "Draft awaiting approval. No new audio has been generated. Review the titles and descriptions for each platform too.",
       "toggleSidebar": "Show or hide the panel",
       "tab": {
         "texts": "Titles & metadata",
@@ -2243,6 +2370,11 @@
       "autoVerticalResult": "9:16 was added for Instagram or TikTok.",
       "otherChannels": "Others",
       "noFormatForAccount": "This account doesn't publish in the formats checked under \"Record\".",
+      "channelFormats": "Format for this account",
+      "youtubeHorizontal": "16:9 is uploaded as a horizontal video, not as a Short.",
+      "youtubeShortEligible": "With 9:16 and a duration of up to 3 minutes, YouTube may classify it as a Short.",
+      "youtubeShortLong": "This video exceeds 3 minutes and will be uploaded as a regular vertical video.",
+      "youtubeShortUnknown": "With 9:16 and a duration of up to 3 minutes, YouTube may classify it as a Short. Duration is not yet known.",
       "perFormatHint": "Each account publishes in one format. Only the formats checked under \"Record\" are shown.",
       "ab": {
         "title": "Prepare YouTube A/B tests",
@@ -2275,6 +2407,23 @@
       "calculating": "Estimating time left…",
       "finishing": "Finishing…",
       "eta": "≈ {time} left"
+    },
+    "completePreparation": {
+      "title": "Complete preparation",
+      "description": "AI understands the script and applies design, category or default strategies to prepare titles, platform copy and A/B/C thumbnails. It does not record or publish.",
+      "start": "Complete preparation with AI",
+      "working": "Preparing…",
+      "regenerate": "Also regenerate existing complete copy",
+      "model": "Model used: {model}",
+      "rules": "Effective strategies",
+      "states": {
+        "pending": "Editorial preparation pending",
+        "queued": "Queued",
+        "running": "Reading content and preparing the package…",
+        "incomplete": "Some items need attention",
+        "ready": "Preparation complete: ready to record",
+        "failed": "Preparation needs attention"
+      }
     }
   }
 }

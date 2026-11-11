@@ -134,6 +134,8 @@ class NichePublishingConfig(BaseModel):
     accounts: list[str] = Field(default_factory=list)
     youtube_playlist_id: str | None = None
     youtube_as_short: bool = False
+    # ID de categoría oficial de YouTube; None omite la categoría al subir.
+    youtube_category_id: str | None = Field(default=None, pattern=r"^[0-9]+$")
 
 
 class NicheMetadata(BaseModel):

@@ -3,6 +3,7 @@ import {createView,multiply,shutterView} from './view.js';
 import {createTiles} from './tiles.js';
 import {createTerritories} from './territories.js';
 import {blurSettings,sampleTimes,createBlur} from './blur.js';
+import {applyComponentDefaults} from '../tactico/episode-data.js';
 
 let resolveReady,rejectReady,context;
 const ready=new Promise((resolve,reject)=>{resolveReady=resolve;rejectReady=reject;});
@@ -75,6 +76,7 @@ Proto.run({
   missingTiles:()=>window.__atlas.missingTiles(),
   async setup(c){
     context=c;const started=performance.now(),{scene,T}=c;
+    c.mediaBase=new URL('.',location.href);
     if(scene.duration!=null&&scene.end==null)scene.end=scene.duration;
     const [shared,providers,collection,look,inventory]=await Promise.all([
       sharedModules(),readJSON(atlasURL('providers.json')),readJSON(atlasURL('data/geo/admin0.geojson')),
@@ -103,6 +105,7 @@ Proto.run({
         c.camZoom=(E.camara?.zoom||{})[(innerWidth>innerHeight?'escritorio':'movil')]||0;
       }catch(e){console.warn('[atlas-plano] opciones de estilo',e);}}
       const wrapCam=cam=>{const k=c.camZoom||0;if(!k||cam.__z)return cam;const at=cam.at.bind(cam);cam.at=t=>{const p=at(t);return {...p,zoom:p.zoom+k};};cam.__z=1;return cam;};c.wrapCam=wrapCam;
+      scene.items=applyComponentDefaults(scene.items,c.C?.componentDefaults,scene.componentDefaults);
       tm.expandScene(scene,{T});c.tacticoModule=tm;
     }
     c.geo=shared.createGeo(scene,{},[collection]);c.camera=shared.createCamera(shared.cameraKeys(scene,c.geo,T,c.st.W));if(c.wrapCam)c.camera=c.wrapCam(c.camera);

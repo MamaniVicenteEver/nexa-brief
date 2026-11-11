@@ -20,5 +20,5 @@ it("inicia la preparación y muestra la propuesta pendiente de revisión", async
   await waitFor(() => expect(screen.getByText("preparationReview")).toBeDefined());
   fireEvent.click(screen.getByText("preparationReview"));
   expect(screen.getByText("Revisar voz")).toBeDefined();
-  expect(httpClient).toHaveBeenCalledWith("/api/v1/explainer/sandbox/nodeaction/vida-en-escena/preparation", expect.objectContaining({ method: "POST", body: { agent: "codex" } }));
+  expect(httpClient).toHaveBeenCalledWith("/api/explainer/sandbox/nodeaction/vida-en-escena/preparation", expect.objectContaining({ method: "POST", body: { agent: "codex" } }));
 });

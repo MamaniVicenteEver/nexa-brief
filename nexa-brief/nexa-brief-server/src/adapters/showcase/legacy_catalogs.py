@@ -80,11 +80,18 @@ def _url(adapter, root: Path, path: str) -> str | None:
     file = _inside(root, path)
     if file is None or not file.is_file() or "work" in path.split("/"):
         return None
-    # Legacy v1 serves repository templates; v2 serves the selected profile.
+    # Legacy v1 serves repository Sandbox and category design packages; v2 serves the selected profile.
     template_root = adapter.templates / "sandbox"
-    if adapter.schema_version == 1 and root.resolve() != template_root.resolve():
-        return None
-    return f"{_PREFIX}/sandbox/" + "/".join(quote(part, safe="") for part in path.split("/"))
+    if adapter.schema_version == 1:
+        if root.resolve() == template_root.resolve():
+            namespace = "sandbox"
+        elif root.resolve() == adapter.templates.resolve():
+            namespace = "bundled"
+        else:
+            return None
+    else:
+        namespace = "sandbox"
+    return f"{_PREFIX}/{namespace}/" + "/".join(quote(part, safe="") for part in path.split("/"))
 
 
 def _catalog_base(adapter, root: Path, folder: str, declaration: dict) -> tuple[Path, str] | None:

@@ -898,14 +898,39 @@
       "postsTab": "Imágenes",
       "videoCount": "{count, plural, one {# video} other {# videos}}",
       "imageCount": "{count, plural, one {# imagen} other {# imágenes}}",
-      "emptyImagesRendered": "Todavía no hay imágenes renderizadas en esta categoría."
+      "emptyImagesRendered": "Todavía no hay imágenes renderizadas en esta categoría.",
+      "statusReadyForReview": "Lista para revisar",
+      "reviewProposal": "Revisar propuesta y pendientes",
+      "designNotes": "Notas del diseño",
+      "updatedAt": "Actualizado {date}",
+      "estimatedTokens": "≈{count} tokens"
     },
     "windows": {
       "label": "Categorías principales",
+      "allDesigns": "Ver todo",
       "previousCategory": "Desplazar categorías a la izquierda",
       "nextCategory": "Desplazar categorías a la derecha",
       "loading": "Cargando categorías…",
+      "emptyDesigns": "No hay demos de diseño disponibles.",
       "loadError": "No se pudieron cargar las categorías.",
+      "catalogReport": {
+        "title": "Resumen del catálogo",
+        "description": "Cobertura y disponibilidad de diseños de todas las categorías.",
+        "categories": "Categorías",
+        "categoryStatus": "{active} activas · {planned} planificadas · {empty} vacías",
+        "categoriesWithItems": "Con diseños",
+        "coverage": "categorías con al menos una tarjeta",
+        "pipelineTemplates": "Plantillas",
+        "production": "diseños de producción",
+        "demos": "Demos",
+        "totalCards": "{count} tarjetas en total",
+        "categoryCoverage": "Categorías incluidas · tarjetas disponibles",
+        "expandAll": "Expandir todo",
+        "collapseAll": "Contraer todo",
+        "expandCategory": "Expandir categoría {name}",
+        "collapseCategory": "Contraer categoría {name}",
+        "emptyCategory": "Esta categoría todavía no tiene plantillas ni demos."
+      },
       "status": {
         "active": "Activa",
         "planned": "Planificada",
@@ -917,10 +942,39 @@
       },
       "templatesCount": "{count, plural, one {# plantilla} other {# plantillas}}",
       "designsCount": "{count, plural, one {# diseño} other {# diseños}}",
+      "videosCount": "{count, plural, one {# video} other {# videos}}",
       "readyCount": "{count, plural, one {# listo} other {# listos}}",
       "others": "Otras",
       "subcategories": "Subcategoría",
-      "subcategoryEmpty": "Esta subcategoría todavía no tiene plantillas."
+      "subcategoryEmpty": "Esta subcategoría todavía no tiene plantillas.",
+      "addCategory": "Crear categoría",
+      "categoryCreate": {
+        "title": "Crear categoría",
+        "description": "Añade una categoría explicativa. Se crearán sus carpetas de perfil y una estrategia inicial.",
+        "name": "Nombre de la categoría",
+        "namePlaceholder": "Por ejemplo, NodeCiencia",
+        "topic": "¿Qué explicará esta categoría?",
+        "topicPlaceholder": "Por ejemplo, ciencia y tecnología de actualidad",
+        "language": "Idioma del contenido",
+        "english": "Inglés",
+        "spanish": "Español",
+        "folderNote": "Empieza vacía con Explainer Kit, lista para preparar su primer video.",
+        "cancel": "Cancelar",
+        "submit": "Crear categoría",
+        "creating": "Creando…",
+        "created": "Se creó {name}.",
+        "error": "No se pudo crear la categoría."
+      },
+      "newsIdeasTitle": "Sugerencias para hablar de noticias",
+      "newsIdeasHint": "Elige un enfoque y luego añade la noticia concreta, su fecha y sus fuentes."
+    },
+    "fields": {
+      "newsTopic": "Noticia o tema actual",
+      "newsTopicPlaceholder": "Titular o tema de la noticia que quieres explicar"
+    },
+    "create": {
+      "newsSourceHint": "Incluye titular, fecha de publicación, medio y enlace para trabajar con información verificable.",
+      "newsContextHint": "Añade contexto o puntos que quieras comentar; las fuentes y el análisis deben quedar diferenciados."
     }
   },
   "imagePosts": {
@@ -1513,9 +1567,12 @@
     "videoPoster": "Portada de video de {title}",
     "updatedAt": "Actualizado {date}",
     "promote": "Pasar a producción",
-    "preparationScope": "Genera un borrador y muestra componentes; la promoción requiere validación.",
+    "preparationScope": "Prepara títulos, descripciones y opciones de miniatura; revisa y valida para pasar a producción.",
     "prepareWithAgent": "Preparar con IA",
-    "preparationState": { "queued": "En cola de preparación", "running": "Preparando con IA" },
+    "preparationState": {
+      "queued": "En cola de preparación",
+      "running": "Preparando con IA"
+    },
     "preparationReview": "Revisar propuesta y pendientes",
     "preparationFailed": "No se pudo preparar el proyecto.",
     "promoteMainCategory": "Categoría principal",
@@ -1593,7 +1650,71 @@
       "saveError": "No se pudo guardar. Inténtalo de nuevo.",
       "loadError": "No se pudo consultar qué proyectos aparecen en Showcase.",
       "retry": "Reintentar"
-    }
+    },
+    "production": {
+      "review": "Revisar preparación",
+      "pass": "Pasar a producción",
+      "requiresValidation": "Prepara y valida el diseño para habilitar el paso a producción.",
+      "title": "Revisión técnica para producción",
+      "description": "Revisa archivos, rutas, motor, componentes y categorías. Esta etapa no utiliza IA ni genera contenido editorial.",
+      "loading": "Cargando preparación…",
+      "designTitle": "Nombre del diseño",
+      "designDescription": "Descripción del diseño",
+      "mainCategory": "Categoría principal",
+      "chooseCategory": "Selecciona una categoría",
+      "references": "Categorías de referencia",
+      "manageCategories": "Gestionar categorías",
+      "publication": "Títulos, descripciones y miniaturas",
+      "thumbnailsHelp": "Prepara tres opciones de miniatura sin cambiar la apertura del video.",
+      "thumbnail": "Texto de miniatura {option}",
+      "pending": "Pendientes: {count}",
+      "notes": "Notas conservadas del diseño",
+      "demoHelp": "La acción traslada el diseño o episodio a su destino. Completa los textos y miniaturas desde la categoría después del traslado.",
+      "save": "Guardar borrador",
+      "validate": "Verificar archivos y rutas",
+      "discard": "Descartar borrador",
+      "states": {
+        "draft": "Borrador por revisar",
+        "queued": "Validación en cola",
+        "validating": "Verificando archivos y rutas…",
+        "failed": "La validación necesita atención",
+        "ready": "Revisión técnica completa: puedes pasar a producción",
+        "production": "Diseño en producción"
+      },
+      "fields": {
+        "youtube_title": "Título de YouTube",
+        "youtube_description": "Descripción de YouTube",
+        "youtube_tags": "Etiquetas de YouTube, separadas por comas",
+        "instagram_title": "Título de Instagram",
+        "instagram_description": "Descripción de Instagram",
+        "facebook_title": "Título de Facebook",
+        "facebook_description": "Descripción de Facebook",
+        "tiktok_caption": "Texto de TikTok",
+        "tiktok_hashtags": "Hashtags de TikTok, separados por comas"
+      },
+      "categories": {
+        "title": "Gestionar categorías",
+        "description": "Crea y edita las categorías disponibles. Solo puedes eliminar categorías sin contenido ni referencias.",
+        "select": "Categoría que deseas gestionar",
+        "new": "Crear una categoría",
+        "name": "Nombre",
+        "topic": "Tema",
+        "language": "Idioma",
+        "saved": "Cambios guardados.",
+        "deleteHelp": "¿Eliminar la categoría {name}? Sus carpetas no se borran.",
+        "save": "Guardar cambios",
+        "create": "Crear categoría",
+        "delete": "Eliminar categoría",
+        "confirmDelete": "Confirmar eliminación"
+      },
+      "posterStyles": "Estilos que se revisarán",
+      "reusePosters": "Se comprueba la existencia de miniaturas. No se generan ni se reemplazan imágenes en esta revisión.",
+      "technicalPrepare": "Preparar para producción",
+      "technicalReport": "Informe técnico",
+      "checkedResources": "{files} archivos y {resources} recursos comprobados",
+      "existingPosters": "Miniaturas existentes: {existing} de {total}"
+    },
+    "preparationFallback": "Preparación con {agent}: se utiliza el ejecutor aislado de respaldo."
   },
   "createVideo": {
     "heading": "Crear video",
@@ -2118,7 +2239,9 @@
       "lengthOption": "{minutes} min · {label}",
       "lengthCustom": "Otra (30 min o más)",
       "lengthMinutes": "Minutos",
-      "lengthHint": "Cuanto más largo, más investigación, capítulos y componentes propios del tema; la producción tarda más."
+      "lengthHint": "Cuanto más largo, más investigación, capítulos y componentes propios del tema; la producción tarda más.",
+      "newsTopic": "Noticia o tema de actualidad",
+      "newsTopicPlaceholder": "Ej.: elecciones, ciencia, economía…"
     },
     "create": {
       "title": "Crear video · {category}",
@@ -2136,7 +2259,9 @@
       "showPreview": "Mostrar",
       "hidePreview": "Ocultar",
       "designsOwn": "Plantillas de {name}",
-      "designsOther": "Plantillas de {name} (también podés usarlas)"
+      "designsOther": "Plantillas de {name} (también podés usarlas)",
+      "newsSourceHint": "Añade el titular y la fecha; usa fuentes recientes y verificables.",
+      "newsContextHint": "Incluye enlaces, contexto y el enfoque que quieres explicar."
     },
     "narratives": {
       "title": "Estrategia narrativa",
@@ -2178,6 +2303,8 @@
       "partial": "Los totales pueden estar incompletos. Los briefs compartidos cuentan una sola vez."
     },
     "studio": {
+      "scriptReview": "Guion para revisar",
+      "scriptReviewHint": "Borrador pendiente de aprobación. No se ha generado audio nuevo. Revisa también los títulos y descripciones por red.",
       "toggleSidebar": "Mostrar u ocultar el panel",
       "tab": {
         "texts": "Títulos y metadatos",
@@ -2243,6 +2370,11 @@
       "autoVerticalResult": "9:16 se añadió para Instagram o TikTok.",
       "otherChannels": "Otros",
       "noFormatForAccount": "Esta cuenta no publica en los formatos marcados en «Grabar».",
+      "channelFormats": "Formato para esta cuenta",
+      "youtubeHorizontal": "16:9 se sube como video horizontal, no como Short.",
+      "youtubeShortEligible": "Con 9:16 y hasta 3 minutos, YouTube puede clasificarlo como Short.",
+      "youtubeShortLong": "Este video supera los 3 minutos: se subirá vertical como video normal.",
+      "youtubeShortUnknown": "Con 9:16 y hasta 3 minutos, YouTube puede clasificarlo como Short. Falta conocer la duración.",
       "perFormatHint": "Cada cuenta publica en un solo formato. Solo aparecen los formatos marcados en «Grabar».",
       "ab": {
         "title": "Preparar pruebas A/B de YouTube",
@@ -2275,6 +2407,23 @@
       "calculating": "Calculando tiempo restante…",
       "finishing": "Finalizando…",
       "eta": "≈ {time} restantes"
+    },
+    "completePreparation": {
+      "title": "Completar preparación",
+      "description": "La IA comprende el guion y aplica las estrategias del diseño, la categoría o las predeterminadas. Completa títulos, textos para redes y miniaturas A/B/C. No graba ni publica.",
+      "start": "Completar preparación con IA",
+      "working": "Preparando…",
+      "regenerate": "Volver a generar también los textos completos existentes",
+      "model": "Modelo utilizado: {model}",
+      "rules": "Estrategias utilizadas",
+      "states": {
+        "pending": "Preparación editorial pendiente",
+        "queued": "Preparación en cola",
+        "running": "Leyendo el contenido y preparando el paquete…",
+        "incomplete": "Hay pendientes que resolver",
+        "ready": "Preparación completa: listo para grabar",
+        "failed": "La preparación necesita atención"
+      }
     }
   }
 }

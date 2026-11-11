@@ -251,6 +251,7 @@ class VideoSummary(BaseModel):
     youtube_title: str
     youtube_description: str
     youtube_tags: list[str]
+    youtube_category_id: str | None = Field(default=None, pattern=r"^[0-9]+$")
     tiktok_caption: str
     tiktok_hashtags: list[str]
     language: str | None = None     # "es" | "en" — idioma en que se escribió el copy

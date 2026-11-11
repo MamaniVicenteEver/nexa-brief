@@ -1,0 +1,90 @@
+{
+  "name": "oil.derrick",
+  "family": "oil",
+  "estilo": {
+    "usa": []
+  },
+  "description": "Torre terrestre con perforación animada; úsala para ubicar un pozo o una operación de perforación en tierra.",
+  "duration": 7.35,
+  "loop": true,
+  "layer": 30,
+  "states": [
+    "normal"
+  ],
+  "params": {
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.15,
+      "max": 4,
+      "doc": "Tamaño del componente en pantalla.",
+      "range": {
+        "min": 0.15,
+        "max": 4
+      },
+      "description": "Tamaño del componente en pantalla."
+    },
+    "entrance": {
+      "type": "number",
+      "default": 0.6,
+      "min": 0,
+      "max": 5,
+      "doc": "Duración en segundos de la entrada del componente.",
+      "range": {
+        "min": 0,
+        "max": 5
+      },
+      "description": "Duración en segundos de la entrada del componente."
+    },
+    "animate": {
+      "type": "boolean",
+      "default": true,
+      "doc": "Activa el movimiento propio del componente cuando está disponible.",
+      "range": null,
+      "description": "Activa el movimiento propio del componente cuando está disponible."
+    },
+    "period": {
+      "type": "number",
+      "default": 2,
+      "min": 0.5,
+      "max": 20,
+      "doc": "Duración en segundos de un ciclo del mecanismo animado.",
+      "range": {
+        "min": 0.5,
+        "max": 20
+      },
+      "description": "Duración en segundos de un ciclo del mecanismo animado."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-oil-derrick",
+    "type": "oil.derrick",
+    "at": [
+      51,
+      28
+    ],
+    "scale": 1,
+    "animate": true,
+    "period": 2,
+    "t": 0,
+    "dur": 8,
+    "out": 7
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/oil.derrick.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/sprites3/oil-derrick-00.png",
+    "engine/tactico/sprites3/oil-derrick-01.png",
+    "engine/tactico/sprites3/oil-derrick-02.png",
+    "engine/tactico/sprites3/oil-derrick-03.png",
+    "engine/tactico/sprites3/oil-derrick-04.png",
+    "engine/tactico/sprites3/oil-derrick-05.png",
+    "engine/tactico/sprites3/oil-derrick-06.png",
+    "engine/tactico/sprites3/oil-derrick-07.png"
+  ]
+}

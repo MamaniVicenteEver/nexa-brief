@@ -220,6 +220,7 @@ class YouTubeAdapter(BasePlatformAdapter, ChannelCatalogPort):
             privacy=upload_privacy,
             file_size=file_size,
             language=kwargs.get("language"),
+            category_id=kwargs.get("youtube_category_id"),
         )
 
         # ── Step 2: Upload chunks ─────────────────────────────────────────────
@@ -459,6 +460,7 @@ class YouTubeAdapter(BasePlatformAdapter, ChannelCatalogPort):
         privacy: str,
         file_size: int,
         language: str | None = None,
+        category_id: str | None = None,
     ) -> str:
         """Initialize a YouTube resumable upload session.
 
@@ -468,8 +470,12 @@ class YouTubeAdapter(BasePlatformAdapter, ChannelCatalogPort):
             "title": title,
             "description": description,
             "tags": tags,
-            "categoryId": "10",  # 10 = Music
         }
+        if category_id is not None:
+            category_id = str(category_id).strip()
+            if not category_id.isascii() or not category_id.isdigit():
+                raise ValueError("youtube_category_id debe ser un ID numérico de YouTube")
+            snippet["categoryId"] = category_id
         if language:
             # Language of the title/description and of the sung audio — helps YouTube search/suggestions.
             snippet["defaultLanguage"] = language
@@ -830,11 +836,14 @@ class YouTubeAdapter(BasePlatformAdapter, ChannelCatalogPort):
         current = await self.get_video(video_id, account_alias)
         token = await self._token_manager.get_valid_token(self.PLATFORM, account_alias)
 
+        current_category = current.raw_response.get("snippet", {}).get("categoryId")
+        if not current_category:
+            raise ValueError("YouTube no devolvió la categoría actual necesaria para editar el video")
         snippet = {
             "title": title if title is not None else current.title,
             "description": description if description is not None else current.description,
             "tags": tags if tags is not None else current.tags,
-            "categoryId": current.raw_response.get("snippet", {}).get("categoryId", "10"),
+            "categoryId": current_category,
             **{k: v for k, v in current.raw_response.get("snippet", {}).items()
                if k == "defaultLanguage"},
         }

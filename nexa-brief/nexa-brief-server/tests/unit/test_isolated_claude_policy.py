@@ -68,7 +68,9 @@ async def test_scoped_runner_uses_only_files_and_constructs_environment(runner, 
     assert observed['tools'] == 'Read,Glob,Grep,Write,Edit'
     assert observed['inherited_secret'] is None and observed['config'] == str(config)
     assert not Path(observed['home']).exists()
-    assert result.usage == {'input_tokens': 3} and result.model == 'synthetic-model'
+    assert result.usage['input_tokens'] == 3 and result.model == 'synthetic-model'
+    assert result.usage['provider_usage']['usage'] == {'input_tokens': 3}
+    assert result.usage['cost_usd'] is None
     assert (tmp_path / 'run.log').is_file()
 
 
@@ -179,3 +181,62 @@ async def test_private_directory_cannot_be_used_as_workspace(runner, tmp_path):
     scope = AgentScope(writable_dir=str(private))
     with pytest.raises(AgentIsolationUnavailableError):
         await agent.run('no', cwd=private, log_path=tmp_path / 'log', timeout_seconds=1, scope=scope)
+
+
+@pytest.mark.asyncio
+async def test_cli_empty_mount_targets_are_removed_between_two_file_phases(runner, tmp_path):
+    agent, workspace, _ = runner
+    agent.binary.write_text("""#!/usr/bin/python3
+import json, pathlib, sys
+sys.stdin.read()
+for name in ('.env','.env.local','.env.test','.env.test.local','.env.development','.env.development.local','.env.production','.env.production.local'):
+    pathlib.Path(name).touch(mode=0o664)
+    pathlib.Path(name).chmod(0o664)
+pathlib.Path('.claude').mkdir(mode=0o700)
+pathlib.Path('.claude/commands').mkdir(mode=0o700)
+pathlib.Path('.claude/agents').mkdir(mode=0o700)
+pathlib.Path('new-public').mkdir(mode=0o775, exist_ok=True)
+pathlib.Path('new-public').chmod(0o775)
+print(json.dumps({'type':'result','result':'ok','usage':{'input_tokens':1}}))
+""")
+    agent.binary.chmod(0o700)
+    agent.expected_sha256 = hashlib.sha256(agent.binary.read_bytes()).hexdigest()
+    scope = AgentScope(writable_dir=str(workspace))
+    for phase in range(2):
+        result = await agent.run('phase', cwd=workspace, log_path=tmp_path / f'phase-{phase}.log', timeout_seconds=5, scope=scope)
+        assert result.ok
+        assert not (workspace / '.env').exists()
+        assert not (workspace / '.claude').exists()
+        assert (workspace / 'new-public').stat().st_mode & 0o777 == 0o700
+
+
+@pytest.mark.parametrize('unsafe', ['nonempty', 'symlink', 'hardlink', 'unexpected_child', 'preexisting'])
+def test_cleanup_never_exempts_or_deletes_private_data(tmp_path, unsafe):
+    import os
+    from src.adapters.agent.infrastructure.isolated_claude import _cleanup_cli_placeholders, _safe_workspace
+    workspace = tmp_path / 'work'
+    workspace.mkdir(mode=0o700)
+    before = frozenset()
+    if unsafe == 'unexpected_child':
+        (workspace / '.claude').mkdir(mode=0o700)
+        (workspace / '.claude/unexpected').write_text('synthetic')
+    elif unsafe == 'symlink':
+        (workspace / '.env').symlink_to(tmp_path / 'unrelated')
+    elif unsafe == 'hardlink':
+        outside = tmp_path / 'unrelated'
+        outside.touch(mode=0o600)
+        os.link(outside, workspace / '.env')
+    else:
+        (workspace / '.env').write_text('synthetic' if unsafe == 'nonempty' else '')
+        if unsafe == 'preexisting':
+            before = frozenset({'.env'})
+    if unsafe != 'preexisting':
+        with pytest.raises(AgentIsolationUnavailableError):
+            _cleanup_cli_placeholders(workspace, before)
+    else:
+        _cleanup_cli_placeholders(workspace, before)
+    preserved = workspace / ('.claude/unexpected' if unsafe == 'unexpected_child' else '.env')
+    assert preserved.exists() or preserved.is_symlink()
+    # Guard remains unchanged: every unsafe input is still rejected.
+    with pytest.raises(AgentIsolationUnavailableError):
+        _safe_workspace(workspace)

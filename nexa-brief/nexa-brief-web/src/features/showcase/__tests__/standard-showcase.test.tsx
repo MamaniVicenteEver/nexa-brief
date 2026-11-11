@@ -106,7 +106,7 @@ it("abre desde Plantillas el proyecto elegido en la sección Sandbox", async () 
     expect((await screen.findByRole("button", { name: /^Uno/ })).getAttribute("aria-pressed")).toBe(
       "true",
     );
-    expect(await screen.findByRole("article", { name: "Mapa" })).toBeDefined();
+    expect(await screen.findByRole("article", { name: "mapa" })).toBeDefined();
   } finally {
     window.history.replaceState(null, "", "/showcase");
   }
@@ -152,7 +152,7 @@ describe("Showcase estándar", () => {
           }
         : response(path),
     );
-    await screen.findByRole("article", { name: "Mapa" });
+    await screen.findByRole("article", { name: "mapa" });
     expect(screen.getByRole("button", { name: "texto" })).toBeDefined();
     expect(screen.getByRole("button", { name: "foto" })).toBeDefined();
     expect(screen.queryByRole("button", { name: "a11" })).toBeNull();
@@ -160,7 +160,7 @@ describe("Showcase estándar", () => {
     fireEvent.click(screen.getByRole("button", { name: "a11" }));
     fireEvent.click(screen.getByRole("button", { name: "Menos categorías" }));
     expect(screen.getByRole("button", { name: "a11" }).getAttribute("aria-pressed")).toBe("true");
-    expect(screen.getByRole("article", { name: "Mapa" })).toBeDefined();
+    expect(screen.getByRole("article", { name: "mapa" })).toBeDefined();
   });
   it("recupera tipos, categorías nativas y familias de sprites sin etiquetas", async () => {
     const native = {
@@ -211,29 +211,29 @@ describe("Showcase estándar", () => {
       ],
     };
     setup((path) => (path.endsWith("/catalog") ? native : response(path)));
-    await screen.findByRole("article", { name: "Rótulo" });
+    await screen.findByRole("article", { name: "label.chip" });
     const types = screen.getByRole("group", { name: "Mostrar" });
     expect(within(types).getByRole("button", { name: "Componentes" }).textContent).toContain("2");
     fireEvent.click(screen.getByRole("button", { name: "Textos" }));
-    expect(screen.getByRole("article", { name: "Rótulo" })).toBeDefined();
-    expect(screen.queryByRole("article", { name: "Tarjeta" })).toBeNull();
+    expect(screen.getByRole("article", { name: "label.chip" })).toBeDefined();
+    expect(screen.queryByRole("article", { name: "card.hero" })).toBeNull();
     fireEvent.click(screen.getByRole("button", { name: "Sprites" }));
     expect(screen.queryByRole("button", { name: "Textos" })).toBeNull();
-    expect(screen.queryByRole("article", { name: "Rótulo" })).toBeNull();
+    expect(screen.queryByRole("article", { name: "label.chip" })).toBeNull();
     expect(screen.getByText("2 de 4 entradas")).toBeDefined();
     fireEvent.click(screen.getByRole("button", { name: "Portaaviones" }));
-    expect(screen.getByRole("article", { name: "Portaavión" })).toBeDefined();
-    expect(screen.queryByRole("article", { name: "Avión" })).toBeNull();
+    expect(screen.getByRole("article", { name: "carrier" })).toBeDefined();
+    expect(screen.queryByRole("article", { name: "air" })).toBeNull();
     fireEvent.click(within(types).getByRole("button", { name: "Componentes" }));
     fireEvent.click(screen.getByRole("button", { name: "Tarjetas" }));
-    expect(screen.getByRole("article", { name: "Tarjeta" })).toBeDefined();
+    expect(screen.getByRole("article", { name: "card.hero" })).toBeDefined();
     fireEvent.change(screen.getByRole("searchbox", { name: "Buscar componentes" }), {
       target: { value: "inexistente" },
     });
     expect(screen.getByText("No hay entradas para estos filtros.")).toBeDefined();
     await sandbox();
-    expect(await screen.findByRole("article", { name: "Rótulo" })).toBeDefined();
-    expect(screen.getByRole("article", { name: "Avión" })).toBeDefined();
+    expect(await screen.findByRole("article", { name: "label.chip" })).toBeDefined();
+    expect(screen.getByRole("article", { name: "air" })).toBeDefined();
     expect(
       (screen.getByRole("searchbox", { name: "Buscar componentes" }) as HTMLInputElement).value,
     ).toBe("");
@@ -252,18 +252,18 @@ describe("Showcase estándar", () => {
   it("filtra por búsqueda y etiquetas y cambia formato de tarjeta", async () => {
     setup(response);
     await sandbox();
-    const mapa = await screen.findByRole("article", { name: "Mapa" });
+    const mapa = await screen.findByRole("article", { name: "mapa" });
     expect(mapa.querySelector("[data-preview-frame]")?.getAttribute("style")).toContain("16 / 9");
     fireEvent.click(screen.getByRole("button", { name: "9:16" }));
     expect(
       screen
-        .getByRole("article", { name: "Mapa" })
+        .getByRole("article", { name: "mapa" })
         .querySelector("[data-preview-frame]")
         ?.getAttribute("style"),
     ).toContain("9 / 16");
     fireEvent.click(screen.getByRole("button", { name: "retrato" }));
-    expect(screen.queryByRole("article", { name: "Mapa" })).toBeNull();
-    expect(screen.getByRole("article", { name: "Actor" })).toBeDefined();
+    expect(screen.queryByRole("article", { name: "mapa" })).toBeNull();
+    expect(screen.getByRole("article", { name: "actor" })).toBeDefined();
     fireEvent.change(screen.getByRole("searchbox", { name: "Buscar componentes" }), {
       target: { value: "inexistente" },
     });
@@ -272,7 +272,7 @@ describe("Showcase estándar", () => {
   it("abre y cierra el detalle sin dejar activa la tarjeta anterior", async () => {
     setup(response);
     await sandbox();
-    const card = await screen.findByRole("article", { name: "Mapa" });
+    const card = await screen.findByRole("article", { name: "mapa" });
     fireEvent.click(card);
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByTitle("Vista previa de Mapa")).toBeDefined();
@@ -355,7 +355,7 @@ describe("Showcase estándar", () => {
     expect((await screen.findByRole("alert")).textContent).toContain("Catálogo falló");
     fireEvent.click(screen.getByRole("button", { name: "Reintentar" }));
     await waitFor(() => expect(screen.queryByRole("alert")).toBeNull());
-    expect(screen.getByRole("article", { name: "Mapa" })).toBeDefined();
+    expect(screen.getByRole("article", { name: "mapa" })).toBeDefined();
   });
   it("rechaza URL externas o inseguras", () => {
     expect(safeShowcaseUrl("/api/v1/showcase/designs/x/preview")).toBeTruthy();
@@ -368,4 +368,23 @@ describe("Showcase estándar", () => {
     ])
       expect(safeShowcaseUrl(url)).toBeNull();
   });
+});
+
+it("ofrece estilos junto a los filtros y conserva el selector en el modal del componente", async () => {
+  vi.stubGlobal("fetch", vi.fn(async () => new Response(JSON.stringify({
+    default: "dynamic", styles: [
+      { id: "documentary", name: "Documentary", idea: "Documental", formats: ["movil", "escritorio"] },
+      { id: "dynamic", name: "Dynamic", idea: "Llamativo", formats: ["movil", "escritorio"] },
+    ],
+  }), { headers: { "Content-Type": "application/json" } })));
+  try {
+    setup((path) => path.includes("/catalog/") ? catalog.entries[0] : path.includes("/catalog") ? catalog : { schema_version: 1, designs: [rough, design] });
+    expect(await screen.findByRole("button", { name: "Dynamic" })).toBeDefined();
+    fireEvent.click(screen.getByRole("button", { name: "Documentary" }));
+    await waitFor(() => expect(vi.mocked(httpClient).mock.calls.some(([path]) => path.includes("estilo=documentary"))).toBe(true));
+    fireEvent.click(screen.getByRole("article", { name: "mapa" }));
+    expect(await screen.findByRole("combobox", { name: "Estilo visual del componente" })).toBeDefined();
+  } finally {
+    vi.unstubAllGlobals();
+  }
 });

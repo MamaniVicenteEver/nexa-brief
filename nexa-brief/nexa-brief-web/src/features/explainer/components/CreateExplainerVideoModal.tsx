@@ -2,8 +2,9 @@
 
 import { Play } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useVisualStyles } from "@/features/showcase/hooks/useVisualStyles";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/components/ui/dialog";
+import { useCaraCharacters } from "../hooks/useCaraCharacters";
 import {
   useCreateProduction,
   useDesignGroups,
@@ -54,6 +56,7 @@ export function CreateExplainerVideoModal({
   const [topic, setTopic] = useState(initialTopic);
   const [description, setDescription] = useState("");
   const [design, setDesign] = useState("");
+  const [characterId, setCharacterId] = useState("leo");
   const [files, setFiles] = useState<File[]>([]);
   const [provider, setProvider] = useState<TextProvider | "">("");
   const [agent, setAgent] = useState<AgentName | "">("");
@@ -69,8 +72,27 @@ export function CreateExplainerVideoModal({
 
   const designs = designGroups.flatMap((g) => g.designs);
   const selectedDesign = designs.find((d) => d.designId === design) ?? designs[0] ?? null;
+  const caraDesign = selectedDesign?.designId === "cara-a-cara";
+  const characters = useCaraCharacters(open && caraDesign);
+  const selectedCharacter = characters.data?.find((character) => character.id === characterId);
+  const [estilo, setEstilo] = useState("");
+  const visualStyles = useVisualStyles(selectedDesign?.designId ?? "", open);
+  useEffect(() => {
+    setEstilo(visualStyles.data?.default ?? "");
+  }, [visualStyles.data, selectedDesign?.designId]);
+  const nativeDesign =
+    selectedDesign?.designId === "mapas-satelitales" ||
+    selectedDesign?.designId === "atlas-en-movimiento";
+  const selectedPreviewUrl = (() => {
+    if (!selectedDesign?.previewUrl || !estilo) return selectedDesign?.previewUrl;
+    const preview = new URL(selectedDesign.previewUrl, "https://preview.invalid");
+    preview.searchParams.set("estilo", estilo);
+    return preview.origin === "https://preview.invalid"
+      ? `${preview.pathname}${preview.search}${preview.hash}`
+      : preview.toString();
+  })();
   const selectedProvider = provider || options?.defaultTextProvider || "deepseek";
-  const selectedAgent = agent || options?.defaultAgent || "claude";
+  const selectedAgent = agent || options?.defaultAgent || "codex";
   const providerAvailable = (name: string) =>
     options?.textProviders.find((p) => p.name === name)?.available ?? true;
   const agentAvailable = (name: string) =>
@@ -91,7 +113,8 @@ export function CreateExplainerVideoModal({
   const busy = briefMutation.isPending || productionMutation.isPending;
   const topicOk = topic.trim().length >= 3;
   const canBrief = topicOk && !busy;
-  const canProduce = topicOk && selectedDesign !== null && !busy;
+  const canProduce =
+    topicOk && selectedDesign !== null && !busy && (!caraDesign || !!selectedCharacter);
 
   const addFiles = (list: FileList | null) => {
     if (!list) return;
@@ -125,13 +148,15 @@ export function CreateExplainerVideoModal({
       {
         categoryPath,
         design: selectedDesign.designId,
+        characterId: caraDesign ? selectedCharacter?.id : undefined,
+        estilo: estilo || undefined,
         topic: topic.trim(),
         description: description.trim(),
         agent: selectedAgent,
         brief,
         narrativeId: selectedNarrativeId || undefined,
         titleLevel: selectedTitleLevel,
-        autoRecord,
+        autoRecord: nativeDesign ? false : autoRecord,
         files,
         minutes,
       },
@@ -161,15 +186,24 @@ export function CreateExplainerVideoModal({
           {/* Columna izquierda: datos del video + textos generados */}
           <div className="flex flex-col gap-3.5">
             <label className="flex flex-col gap-1.5">
-              <span className={LABEL_CLASS}>{t("fields.topic")} *</span>
+              <span className={LABEL_CLASS}>
+                {categoryPath === "node_actualidad" ? t("fields.newsTopic") : t("fields.topic")} *
+              </span>
               <input
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 maxLength={300}
-                placeholder={t("fields.topicPlaceholder")}
+                placeholder={
+                  categoryPath === "node_actualidad"
+                    ? t("fields.newsTopicPlaceholder")
+                    : t("fields.topicPlaceholder")
+                }
                 disabled={busy}
                 className={INPUT_CLASS}
               />
+              {categoryPath === "node_actualidad" && (
+                <p className="text-[11.5px] text-nb-mute">{t("create.newsSourceHint")}</p>
+              )}
             </label>
 
             <label className="flex flex-col gap-1.5">
@@ -183,6 +217,9 @@ export function CreateExplainerVideoModal({
                 disabled={busy}
                 className={INPUT_CLASS}
               />
+              {categoryPath === "node_actualidad" && (
+                <p className="text-[11.5px] text-nb-mute">{t("create.newsContextHint")}</p>
+              )}
             </label>
 
             <div className="flex flex-col gap-1.5">
@@ -240,6 +277,70 @@ export function CreateExplainerVideoModal({
               </div>
             </div>
 
+            {caraDesign && (
+              <div className="flex flex-col gap-1.5">
+                <label className={LABEL_CLASS} htmlFor="production-character">
+                  Personaje *
+                </label>
+                <select
+                  id="production-character"
+                  required
+                  value={selectedCharacter?.id ?? ""}
+                  onChange={(event) => {
+                    setCharacterId(event.target.value);
+                    setBrief(null);
+                  }}
+                  disabled={busy || characters.isPending || characters.isError}
+                  className={INPUT_CLASS}
+                >
+                  {!selectedCharacter && <option value="">Selecciona un personaje</option>}
+                  {(characters.data ?? []).map((character) => (
+                    <option key={character.id} value={character.id}>
+                      {character.name}
+                    </option>
+                  ))}
+                </select>
+                {selectedCharacter && (
+                  <p className="text-xs text-nb-mute">
+                    {selectedCharacter.topic}
+                    {selectedCharacter.voice && ` · Voz: ${selectedCharacter.voice}`}
+                  </p>
+                )}
+                {characters.isPending && (
+                  <p role="status" className="text-xs text-nb-mute">
+                    Cargando personajes…
+                  </p>
+                )}
+                {characters.isError && (
+                  <p role="alert" className="text-xs text-red-600">
+                    No se pudieron cargar los personajes. Vuelve a abrir el modal para reintentar.
+                  </p>
+                )}
+              </div>
+            )}
+
+            {!!visualStyles.data?.styles.length && (
+              <div className="space-y-2">
+                <label className={LABEL_CLASS} htmlFor="production-estilo">
+                  Estilo visual
+                </label>
+                <select
+                  id="production-estilo"
+                  value={estilo}
+                  onChange={(event) => setEstilo(event.target.value)}
+                  className={INPUT_CLASS}
+                >
+                  {visualStyles.data.styles.map((style) => (
+                    <option key={style.id} value={style.id}>
+                      {style.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-nb-mute">
+                  El agente recibirá los componentes, tamaños y posiciones de este estilo.
+                </p>
+              </div>
+            )}
             {selectedDesign && (
               <p className="-mt-1.5 text-[12px] text-nb-mute">
                 <span className="font-semibold text-nb-ink-soft">{selectedDesign.name}</span>
@@ -375,11 +476,11 @@ export function CreateExplainerVideoModal({
               <label className="flex items-center gap-2 self-end pb-2 text-[13px] text-nb-ink">
                 <input
                   type="checkbox"
-                  checked={autoRecord}
+                  checked={!nativeDesign && autoRecord}
                   onChange={(e) => setAutoRecord(e.target.checked)}
-                  disabled={busy}
+                  disabled={busy || nativeDesign}
                 />
-                {t("fields.autoRecord")}
+                {nativeDesign ? "Preparar escena para revisión" : t("fields.autoRecord")}
               </label>
             </div>
 
@@ -404,7 +505,7 @@ export function CreateExplainerVideoModal({
               >
                 {productionMutation.isPending
                   ? t("create.producing")
-                  : autoRecord
+                  : autoRecord && !nativeDesign
                     ? t("create.produceAndRecord")
                     : t("create.produce")}
               </button>
@@ -423,7 +524,11 @@ export function CreateExplainerVideoModal({
             )}
 
             {brief && (
-              <BriefEditor brief={brief} onChange={setBrief} voice={selectedDesign?.voice} />
+              <BriefEditor
+                brief={brief}
+                onChange={setBrief}
+                voice={caraDesign ? selectedCharacter?.voice : selectedDesign?.voice}
+              />
             )}
           </div>
 
@@ -431,7 +536,7 @@ export function CreateExplainerVideoModal({
           <aside className="flex flex-col gap-2 lg:sticky lg:top-0 lg:self-start">
             <div className="flex items-center justify-between gap-2">
               <span className={LABEL_CLASS}>{t("create.previewHeading")}</span>
-              {selectedDesign?.previewUrl && (
+              {selectedDesign && selectedPreviewUrl && (
                 <button
                   type="button"
                   onClick={() => setShowPreview((v) => !v)}
@@ -441,9 +546,9 @@ export function CreateExplainerVideoModal({
                 </button>
               )}
             </div>
-            {selectedDesign?.previewUrl ? (
+            {selectedDesign && selectedPreviewUrl ? (
               showPreview ? (
-                <PreviewFrame url={selectedDesign.previewUrl} title={selectedDesign.name} />
+                <PreviewFrame url={selectedPreviewUrl} title={selectedDesign.name} />
               ) : (
                 // Portada del demo: se ve al instante; un clic reproduce el video.
                 <button

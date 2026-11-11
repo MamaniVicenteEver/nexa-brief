@@ -23,7 +23,7 @@ import mimetypes
 from pathlib import Path
 
 import structlog
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException, Request, UploadFile, File, Query
 from starlette.responses import Response
 
 from src.config.niche_config import NicheConfig, find_niche_by_template_id, get_niche_config
@@ -55,6 +55,8 @@ from src.presentation.api.schemas.draft_schema import (
     DraftRenderRequest,
     DraftResponse,
     DraftUpdateRequest,
+    DraftThumbnailRequest,
+    DraftThumbnailOptionUpdateRequest,
 )
 
 router = APIRouter(tags=["drafts"])
@@ -70,6 +72,62 @@ _PREVIEW_SUFFIXES = {
     ".png", ".webp", ".gif", ".svg", ".woff", ".woff2", ".ttf", ".otf", ".css", ".js",
 }
 _PREVIEW_BLOCKED_DIRS = {"logs"}
+
+
+@router.get("/drafts/thumbnail-renderer.js", include_in_schema=False)
+async def get_draft_thumbnail_renderer() -> Response:
+    """Sirve el renderer liviano que presenta el manifest A/B en la web."""
+    path = Path(__file__).resolve().parents[3] / "core" / "draft_thumbnail_renderer.js"
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Thumbnail renderer unavailable")
+    return Response(path.read_text(encoding="utf-8"), media_type="application/javascript",
+                    headers={"Cache-Control": "no-cache"})
+
+
+@router.get("/drafts/thumbnail-fonts/{font_id}", include_in_schema=False)
+async def thumbnail_font(font_id: str) -> Response:
+    from src.core.draft_thumbnail_assets import font_path
+    path = font_path(font_id)
+    if path is None or not path.is_file():
+        raise HTTPException(status_code=404, detail="Fuente no disponible")
+    return Response(path.read_bytes(), media_type="font/woff2" if path.suffix == ".woff2" else "font/ttf", headers={"Cache-Control": "public, max-age=86400"})
+
+
+@router.get("/drafts/{draft_id}/thumbnail-background", include_in_schema=False)
+async def thumbnail_background(draft_id: str, kind: str = Query("frame", pattern="^(frame|image|solid)$"), time: float = Query(12, ge=0, le=86400), asset: str = Query("", max_length=24)) -> Response:
+    from src.core.draft_thumbnail_assets import background_file
+    draft = await drafts.get(draft_id)
+    job = drafts.load_job(draft_id) if draft else None
+    if job is None:
+        raise HTTPException(status_code=404, detail="Prototipo no disponible")
+    try:
+        path = await background_file(job, {"kind": kind, "time": time, "asset": asset})
+    except ValueError as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
+    if path is None:
+        return Response(status_code=204)
+    return Response(path.read_bytes(), media_type=mimetypes.guess_type(path.name)[0] or "image/jpeg", headers={"Cache-Control": "private, no-cache"})
+
+
+@router.post("/drafts/{draft_id}/thumbnail-background", include_in_schema=False)
+async def upload_thumbnail_background(draft_id: str, file: UploadFile = File(...)) -> dict:
+    from src.core.draft_thumbnail_assets import save_background
+    draft = await drafts.get(draft_id)
+    if draft is None:
+        raise HTTPException(status_code=404, detail="Prototipo no disponible")
+    if draft.status not in ("preview_ready", "prepared") or drafts.is_running(draft_id):
+        raise HTTPException(status_code=409, detail="El prototipo no se puede editar ahora")
+    job = drafts.load_job(draft_id)
+    if job is None:
+        raise HTTPException(status_code=404, detail="Prototipo sin recursos")
+    try:
+        data = await file.read(8 * 1024 * 1024 + 1)
+        ident = await asyncio.to_thread(save_background, job, data)
+    except ValueError as error:
+        raise HTTPException(status_code=422, detail=str(error)) from error
+    finally:
+        await file.close()
+    return {"asset": ident}
 
 
 def _spawn(coro) -> None:
@@ -93,9 +151,18 @@ async def _validate_render_options(niche_cfg: NicheConfig, options: RenderOption
     await _validate_publishing(JobPublishingConfig(
         enabled=bool(options.publish_accounts), accounts=list(options.publish_accounts),
     ))
-    if options.formats is not None and "16x9" not in options.formats:
-        # el grabador siempre produce el 16:9 (es su archivo principal); el 9:16 se suma
-        raise HTTPException(status_code=400, detail="formats debe incluir '16x9'")
+    if options.formats is not None and not options.formats:
+        raise HTTPException(status_code=400, detail="Elegí al menos un formato")
+    if options.formats and "16x9" not in options.formats:
+        engine = options.recorder_engine or niche_cfg.recorder_engine
+        if engine == "remotion":
+            raise HTTPException(status_code=400, detail="Remotion solo graba en Desktop 16:9")
+        if any(account.startswith("youtube:") for account in options.publish_accounts):
+            raise HTTPException(status_code=400, detail="YouTube requiere Desktop 16:9")
+        if engine == "hyperframes":
+            from src.adapters.recorder.infrastructure.hyperframes_adapter import _resolve_composition_dir
+            if _resolve_composition_dir(niche_cfg) is not None:
+                raise HTTPException(status_code=400, detail="Esta composición requiere Desktop 16:9")
     if options.formats and "9x16" in options.formats and not niche_cfg.has_reels_format():
         raise HTTPException(status_code=400, detail="Esta plantilla no graba en 9:16")
 
@@ -111,6 +178,7 @@ async def _start_render(draft: Draft, job: Job, options: RenderOptions) -> str:
     generation_seconds, historial y notificación igual que /videos) y lanza
     el grabado en background. Devuelve el job_id."""
     niche_cfg = get_niche_config(draft.niche_id)
+    job = drafts.load_job(draft.draft_id) or job
     job = drafts.apply_render_options(job, options, draft.details)
     # Un reintento tras un fallo reusa el registro existente (mismo job_id).
     if job_tracker.get(job.job_id) is None:
@@ -125,7 +193,15 @@ def _export_original(draft: Draft | None) -> None:
     """Los textos del original quedan en el publish.json de la plantilla."""
     if draft is not None and draft.original and draft.details is not None:
         niche = find_niche_by_template_id(draft.template_id)
-        template_original.write_publish(draft.template_id, draft.details, copy_profile(niche) if niche else None)
+        thumbnail_texts = {
+            option: item.text
+            for option, item in (draft.thumbnails.options.items() if draft.thumbnails else [])
+        }
+        template_original.write_publish(
+            draft.template_id, draft.details, copy_profile(niche) if niche else None,
+            thumbnail_texts=thumbnail_texts,
+            thumbnail_selected=draft.thumbnails.selected if draft.thumbnails else None,
+        )
 
 
 async def _prepare_original(draft: Draft, job: Job) -> None:
@@ -133,6 +209,9 @@ async def _prepare_original(draft: Draft, job: Job) -> None:
     original anterior, o los genera con las estrategias (y quedan en el publish.json)."""
     # con información de la canción se escribe de nuevo; si no, lo guardado de la plantilla
     saved = None if draft.song_notes else template_original.read_publish(draft.template_id)
+    if saved is not None:
+        saved._thumbnail_texts = template_original.read_thumbnail_texts(draft.template_id)
+        saved._thumbnail_selected = template_original.read_thumbnail_selection(draft.template_id)
     previous = saved or next(
         (d.details for d in await drafts.list_drafts(draft.template_id)
          if d.original and d.details and d.draft_id != draft.draft_id),
@@ -195,7 +274,9 @@ async def original_draft(template_id: str, request: DraftPrepareRequest | None =
         # guardados en su publish.json: se recuperan de ahí, sin volver a la IA
         saved = template_original.read_publish(template_id) if not notes and existing.details is None else None
         if saved is not None and existing.status == "preview_ready":
-            return await drafts.save_details(existing.draft_id, saved, edited=False) or existing
+            saved._thumbnail_texts = template_original.read_thumbnail_texts(template_id)
+            saved._thumbnail_selected = template_original.read_thumbnail_selection(template_id)
+            return await _save_details(existing.draft_id, saved, edited=False) or existing
         # sin textos todavía (la preparación falló) o con información nueva de la canción: se prepara
         if drafts.can_prepare(existing, job) and (notes or existing.details is None):
             started = await drafts.start_prepare(existing.draft_id, notes or None)
@@ -349,16 +430,78 @@ async def _prepare_and_export(draft: Draft, job: Job) -> None:
     _export_original(await drafts.get(draft.draft_id))
 
 
+async def _save_details(draft_id: str, details, *, edited: bool = True):
+    """Persiste texto y opciones A/B como datos, sin programar una captura."""
+    return await drafts.save_details(draft_id, details, edited=edited, capture_thumbnails=False)
+
+
 @router.put("/drafts/{draft_id}/details", response_model=DraftResponse)
 async def save_draft_details(draft_id: str, request: DraftDetailsRequest) -> DraftResponse:
     draft = await _get_or_404(draft_id)
     if draft.status not in ("preview_ready", "prepared"):
         raise HTTPException(status_code=409, detail=f"Draft '{draft_id}' is {draft.status}")
-    updated = await drafts.save_details(draft_id, request)
+    updated = await _save_details(draft_id, request)
     if updated is None:
         raise HTTPException(status_code=404, detail=f"Draft '{draft_id}' not found")
     _export_original(updated)
     return updated
+
+
+@router.post("/drafts/{draft_id}/thumbnails", response_model=DraftResponse, status_code=202)
+async def prepare_thumbnails(draft_id: str) -> DraftResponse:
+    draft = await _get_or_404(draft_id)
+    job = drafts.load_job(draft_id)
+    if not draft.details or not drafts.can_prepare(draft, job):
+        raise HTTPException(status_code=409, detail="Prepará primero el prototipo y sus detalles")
+    started = await drafts.start_prepare(draft_id)
+    _spawn(drafts.run_thumbnails(started, job))
+    return started
+
+
+@router.put("/drafts/{draft_id}/thumbnails", response_model=DraftResponse)
+async def choose_thumbnail(draft_id: str, request: DraftThumbnailRequest) -> DraftResponse:
+    draft = await _get_or_404(draft_id)
+    if draft.status not in ("preview_ready", "prepared"):
+        raise HTTPException(status_code=409, detail="No se puede cambiar la miniatura en este estado")
+    try:
+        updated = await drafts.select_thumbnail(draft, request.option)
+        _export_original(updated)
+        return updated
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+@router.put("/drafts/{draft_id}/thumbnails/{option}", response_model=DraftResponse)
+async def update_thumbnail_option(
+    draft_id: str, option: str, request: DraftThumbnailOptionUpdateRequest,
+) -> DraftResponse:
+    """Edita texto/diseño de A o B. La captura se hace solamente dentro de Grabar."""
+    draft = await _get_or_404(draft_id)
+    if draft.status not in ("preview_ready", "prepared"):
+        raise HTTPException(status_code=409, detail="No se puede editar la miniatura en este estado")
+    try:
+        updated = await drafts.update_thumbnail_option(
+            draft, option, text=request.text, design=request.design,
+        )
+        _export_original(updated)
+        return updated
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+@router.get("/drafts/{draft_id}/thumbnails/{option}")
+async def thumbnail_image(draft_id: str, option: str, request: Request):
+    from src.core.draft_thumbnails import image_path
+    draft = await _get_or_404(draft_id)
+    job = drafts.load_job(draft_id)
+    if option not in ("A", "B") or draft.thumbnails is None or job is None:
+        raise HTTPException(status_code=404, detail="Miniatura no disponible")
+    path = image_path(job, draft.thumbnails, option)
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Miniatura no disponible")
+    response = serve_file_with_range(path, request.headers.get("range"), "image/jpeg")
+    response.headers["Cache-Control"] = "private, no-cache"
+    return response
 
 
 @router.post("/drafts/{draft_id}/render", response_model=DraftRenderAcceptedResponse, status_code=202)

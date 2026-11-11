@@ -388,6 +388,34 @@
       "loop": false,
       "source_in": 0,
       "substitute": false
+    },
+    {
+      "id": "drone-buzz",
+      "file": "assets/sfx/drone-buzz.mp3",
+      "duration": 5,
+      "license": "CC0",
+      "provider": "NodeAction local synthesis",
+      "sha256": "1ab5908f79cd0983c09fa06292f051dfe56b8ebee3cc93cc8c1cee03d3506c5a",
+      "gain_db": -25,
+      "fade_in": 0.1,
+      "fade_out": 0.2,
+      "loop": false,
+      "source_in": 0,
+      "substitute": false
+    },
+    {
+      "id": "crowd-siren",
+      "file": "assets/sfx/crowd-siren.mp3",
+      "duration": 4,
+      "license": "CC0",
+      "provider": "NodeAction local synthesis",
+      "sha256": "bbe32937f99edb6d424c6aba41ec6b9caf4bd230155b6c6d5c8a111b8d3ecc1d",
+      "gain_db": -25,
+      "fade_in": 0.1,
+      "fade_out": 0.2,
+      "loop": false,
+      "source_in": 0,
+      "substitute": false
     }
   ],
   "aliases": {
@@ -397,7 +425,12 @@
     "air-prop-pass": "bomber-prop",
     "bomb-fall": "bomb-whistle",
     "industrial-bed": "industrial-hum",
-    "transition-soft": "whoosh"
+    "transition-soft": "whoosh",
+    "tank-rumble": "naval-engine-low",
+    "missile-launch": "missile-pass",
+    "radar-ping": "sonar-ping",
+    "sat-link": "sonar-ping",
+    "explosion-heavy": "explosion-near"
   },
   "notes": [
     "MP3 originales descargados del endpoint público; sin asset_id interno.",

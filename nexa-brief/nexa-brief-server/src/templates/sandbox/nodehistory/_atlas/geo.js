@@ -8,7 +8,8 @@ export function createGeo(scene = {}, resolved = {}, collections = []) {
     for (const key of [p.id, p.iso3, p.name, p.name_es]) add(key, item);
   }
   for (const item of resolved.regions || []) for (const key of [item.id, item.name]) index.set(norm(key), item);
-  for (const [name, item] of Object.entries(scene.regions || {})) add(name, item);
+  // Una región declarada explícitamente prevalece sobre homónimos del catálogo.
+  for (const [name, item] of Object.entries(scene.regions || {})) index.set(norm(name), item);
   const region = name => typeof name === 'object' && !Array.isArray(name) ? name : index.get(norm(name));
   const place = name => {
     if (Array.isArray(name) && typeof name[0] === 'number') return name.slice(0, 2);

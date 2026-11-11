@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { ORIGINAL, prototypeLabel } from "../../hooks/useRecordPrototype";
 import type { Draft } from "../../types";
+import { DeletePrototypeButton } from "../sandbox/DeletePrototypeButton";
 import { PrototypeStatus } from "../sandbox/PrototypeStatus";
 
 function Option({
@@ -14,6 +15,7 @@ function Option({
   subtitle,
   status,
   icon,
+  disabled = false,
 }: {
   checked: boolean;
   onSelect: () => void;
@@ -21,11 +23,13 @@ function Option({
   subtitle?: string;
   status: Draft["status"] | "new";
   icon?: React.ReactNode;
+  disabled?: boolean;
 }) {
   return (
     <label
       className={cn(
-        "flex cursor-pointer items-center gap-2.5 rounded-xl border px-3 py-2 transition-colors",
+        "flex items-center gap-2.5 rounded-xl border px-3 py-2 transition-colors",
+        disabled ? "cursor-not-allowed opacity-55" : "cursor-pointer",
         checked ? "border-nb-ink bg-nb-bg-2" : "border-nb-line",
       )}
     >
@@ -33,6 +37,7 @@ function Option({
         type="radio"
         name="record-prototype"
         checked={checked}
+        disabled={disabled}
         onChange={onSelect}
         className="size-3.5 accent-black"
       />
@@ -52,11 +57,13 @@ export function PrototypePicker({
   prototypes,
   choice,
   onSelect,
+  disabled = false,
 }: {
   original: Draft | null;
   prototypes: Draft[];
   choice: string;
   onSelect: (choice: string) => void;
+  disabled?: boolean;
 }) {
   const t = useTranslations("studio.sandbox");
   const tr = useTranslations("studio.record");
@@ -66,23 +73,33 @@ export function PrototypePicker({
       : undefined;
   return (
     <div className="flex flex-col gap-1.5" role="radiogroup">
-      <Option
-        checked={choice === ORIGINAL}
-        onSelect={() => onSelect(ORIGINAL)}
-        title={tr("original")}
-        subtitle={(original && song(original)) || tr("originalHint")}
-        status={original?.status ?? "new"}
-        icon={<Film className="size-3.5 shrink-0 text-nb-mute" />}
-      />
-      {prototypes.map((draft) => (
+      <div className="flex items-center gap-1 [&>label]:min-w-0 [&>label]:flex-1">
         <Option
-          key={draft.draftId}
-          checked={choice === draft.draftId}
-          onSelect={() => onSelect(draft.draftId)}
-          title={prototypeLabel(draft, t("noSongName"))}
-          subtitle={song(draft)}
-          status={draft.status}
+          checked={choice === ORIGINAL}
+          onSelect={() => !disabled && onSelect(ORIGINAL)}
+          disabled={disabled}
+          title={tr("original")}
+          subtitle={(original && song(original)) || tr("originalHint")}
+          status={original?.status ?? "new"}
+          icon={<Film className="size-3.5 shrink-0 text-nb-mute" />}
         />
+        {original && <DeletePrototypeButton draft={original} disabled={disabled} />}
+      </div>
+      {prototypes.map((draft) => (
+        <div
+          key={draft.draftId}
+          className="flex items-center gap-1 [&>label]:min-w-0 [&>label]:flex-1"
+        >
+          <Option
+            checked={choice === draft.draftId}
+            onSelect={() => !disabled && onSelect(draft.draftId)}
+            disabled={disabled}
+            title={prototypeLabel(draft, t("noSongName"))}
+            subtitle={song(draft)}
+            status={draft.status}
+          />
+          <DeletePrototypeButton draft={draft} disabled={disabled} />
+        </div>
       ))}
     </div>
   );

@@ -41,6 +41,10 @@ sys.exit(int(os.environ.get("FAKE_CODEX_EXIT", "0")))
 
 @pytest.fixture
 def video(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    from src.adapters.agent import factory
+    def forbid_real_agent(*args, **kwargs):
+        pytest.fail("Unit tests must never invoke real fallback agents")
+    monkeypatch.setattr(factory, "get_agent", forbid_real_agent)
     video_dir = tmp_path / "video"
     (video_dir / "work").mkdir(parents=True)
     (video_dir / "work" / "pedido.md").write_text("Escribe un borrador breve.", encoding="utf-8")
@@ -84,7 +88,7 @@ def test_terra_delegate_passes_model_effort_scope_and_records_output(video: Path
     assert args[args.index("-s") + 1] == "workspace-write"
     assert args[args.index("-m") + 1] == "gpt-6.1-terra"
     config_args = [args[index + 1] for index, item in enumerate(args[:-1]) if item == "-c"]
-    assert 'model_reasoning_effort="medium"' in config_args
+    assert 'model_reasoning_effort="high"' in config_args
     assert 'forced_login_method="chatgpt"' in config_args
     assert not any(item in ("--dangerously-bypass-approvals-and-sandbox", "--add-dir") for item in args)
     assert args_data["api_env"] == {"OPENAI_API_KEY": None, "CODEX_API_KEY": None, "OPENAI_BASE_URL": None}
@@ -157,6 +161,11 @@ def test_output_write_failure_is_recorded_as_failure(video: Path):
 
 
 def test_deepseek_delegate_contract_and_fenced_extraction_continue(video: Path, monkeypatch: pytest.MonkeyPatch):
+    # Explicit DeepSeek remains supported; the default copy role is now Codex.
+    import copy
+    cfg = copy.deepcopy(delegate.roles())
+    cfg["roles"]["copy_draft"].update(provider="deepseek", model="flash")
+    monkeypatch.setattr(delegate, "roles", lambda: cfg)
     def fake_deepseek(model: str, system: str, request: str):
         assert model == "deepseek-v4-flash"
         assert "Escribe un borrador breve." in request and system

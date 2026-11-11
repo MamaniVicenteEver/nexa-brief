@@ -19,5 +19,20 @@
     "family": "750d11d6436d613c5eab2b1f5ac389d87ce8fc7e9cdd8cfd75e9b86edc656780"
   },
   "definition_source": "legacy",
-  "schema_version": 1
+  "schema_version": 1,
+  "visual_styles": {
+    "index": "nodeatlas/atlas-en-movimiento/engine/tactico/estilos/index.json",
+    "episode_defaults": {},
+    "unavailable_components": {
+      "clasico": [
+        "header.date",
+        "label.country",
+        "label.landunit",
+        "legend.front",
+        "statement.jump",
+        "statement.title",
+        "year.big"
+      ]
+    }
+  }
 }

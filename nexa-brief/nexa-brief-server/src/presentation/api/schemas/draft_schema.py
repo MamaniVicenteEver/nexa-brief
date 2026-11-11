@@ -7,7 +7,10 @@ mantener en sincronía.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+import json
+from typing import Any, Literal
+
+from pydantic import BaseModel, Field, field_validator
 
 from src.core.draft_details import DraftDetails
 from src.core.drafts import Draft, RenderOptions
@@ -57,3 +60,44 @@ class DraftRenderAcceptedResponse(BaseModel):
     draft_id: str
     job_id: str
     status: str
+
+
+class DraftThumbnailRequest(BaseModel):
+    option: Literal["A", "B"]
+
+
+class DraftThumbnailOptionUpdateRequest(BaseModel):
+    """Texto y diseño JSON de una sola opción A/B, sin activar una captura."""
+    text: str = Field(..., min_length=1, max_length=200)
+    design: dict[str, Any] = Field(default_factory=dict)
+
+    @field_validator("text")
+    @classmethod
+    def normalize_text(cls, value: str) -> str:
+        value = " ".join(value.split())
+        if not value:
+            raise ValueError("El texto no puede estar vacío")
+        return value
+
+    @field_validator("design")
+    @classmethod
+    def validate_design(cls, value: dict[str, Any]) -> dict[str, Any]:
+        def check(item: Any, depth: int = 0) -> None:
+            if depth > 6:
+                raise ValueError("design supera la profundidad permitida")
+            if item is None or isinstance(item, (str, int, float, bool)):
+                return
+            if isinstance(item, list):
+                for child in item:
+                    check(child, depth + 1)
+                return
+            if isinstance(item, dict) and all(isinstance(key, str) for key in item):
+                for child in item.values():
+                    check(child, depth + 1)
+                return
+            raise ValueError("design solo puede contener datos JSON")
+
+        check(value)
+        if len(json.dumps(value, ensure_ascii=False)) > 12_000:
+            raise ValueError("design supera el tamaño permitido")
+        return value

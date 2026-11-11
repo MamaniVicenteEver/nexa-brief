@@ -197,18 +197,71 @@ def read_publish(template_id: str) -> DraftDetails | None:
         return None
     try:
         raw = json.loads(path.read_text(encoding="utf-8"))
-        return DraftDetails.model_validate({k: v for k, v in raw.items() if k not in ("schema", "template_id", "profile")})
+        return DraftDetails.model_validate({
+            k: v for k, v in raw.items()
+            if k not in ("schema", "template_id", "profile", "thumbnail_texts", "thumbnail_selected")
+        })
     except Exception:
         logger.warning("template_publish_invalid", template_id=template_id)
         return None
 
 
-def write_publish(template_id: str, details: DraftDetails, profile: str | None) -> Path | None:
+def read_thumbnail_texts(template_id: str) -> dict[str, str]:
+    """Thumbnail copy from newer publish.json files; old files simply return {}."""
+    path = publish_path(template_id)
+    if path is None or not path.is_file():
+        return {}
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        values = raw.get("thumbnail_texts") or {}
+        if not isinstance(values, dict):
+            return {}
+        result = {
+            option: " ".join(text.split())[:200]
+            for option in ("A", "B")
+            if isinstance((text := values.get(option)), str) and text.strip()
+        }
+        return result
+    except Exception:
+        logger.warning("template_publish_thumbnail_texts_invalid", template_id=template_id)
+        return {}
+
+
+def read_thumbnail_selection(template_id: str) -> str:
+    """Selected A/B option from newer publish.json files; legacy files default to A."""
+    path = publish_path(template_id)
+    if path is None or not path.is_file():
+        return "A"
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        selected = raw.get("thumbnail_selected")
+        return selected if selected in ("A", "B") else "A"
+    except Exception:
+        logger.warning("template_publish_thumbnail_selection_invalid", template_id=template_id)
+        return "A"
+
+
+def write_publish(
+    template_id: str,
+    details: DraftDetails,
+    profile: str | None,
+    thumbnail_texts: dict[str, str] | None = None,
+    thumbnail_selected: str | None = None,
+) -> Path | None:
     path = publish_path(template_id)
     if path is None:
         return None
     body = {"schema": PUBLISH_SCHEMA, "template_id": template_id, "profile": profile or "lyrics",
             **details.model_dump(mode="json")}
+    texts = {
+        option: " ".join(text.split())[:200]
+        for option in ("A", "B")
+        if isinstance((text := (thumbnail_texts or {}).get(option)), str) and text.strip()
+    }
+    if texts:
+        body["thumbnail_texts"] = texts
+    if thumbnail_selected in ("A", "B"):
+        body["thumbnail_selected"] = thumbnail_selected
     path.write_text(json.dumps(body, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return path
 

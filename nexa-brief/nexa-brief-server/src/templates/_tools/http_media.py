@@ -15,6 +15,9 @@ class ProfileContentMixin:
         from src.config.profile_layout import layout_for_settings
         try:
             key = unquote(urlsplit(path).path).lstrip("/")
+            api_prefix = "api/v1/explainer/files/"
+            if key.startswith(api_prefix):
+                key = key[len(api_prefix):]
             if is_private_content_key(key):
                 raise ValueError("Private file")
             if layout_for_settings(settings).schema_version < 2:

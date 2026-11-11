@@ -87,6 +87,9 @@ def _bullet_evidence_numbers(video_dir: Path, sources: list[str]) -> set[str]:
 
 def _credited_files(video_dir: Path) -> str:
     credits_path = video_dir / "assets" / "media" / "CREDITS.md"
+    if not credits_path.is_file():
+        # Los proyectos Atlas legados guardan este índice en la raíz del video.
+        credits_path = video_dir / "CREDITS.md"
     return credits_path.read_text(encoding="utf-8") if credits_path.exists() else ""
 
 

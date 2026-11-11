@@ -9,7 +9,7 @@ import type {
   SandboxRole,
 } from "../types";
 
-interface SandboxItemDto {
+export interface SandboxItemDto {
   id: string;
   folder: string;
   subcategory?: string | null;
@@ -22,6 +22,7 @@ interface SandboxItemDto {
   has_poster: boolean;
   has_info: boolean;
   has_components?: boolean;
+  production_design?: boolean;
   demo?: boolean;
   total_tokens: number | null;
   thumbnail_url: string | null;
@@ -78,7 +79,7 @@ export interface PromoteSandboxItemResult {
   categoryPath: string | null;
 }
 
-function mapSandboxItem(dto: SandboxItemDto): SandboxItem {
+export function mapSandboxItem(dto: SandboxItemDto): SandboxItem {
   return {
     id: dto.id,
     folder: dto.folder,
@@ -93,6 +94,7 @@ function mapSandboxItem(dto: SandboxItemDto): SandboxItem {
     hasPoster: dto.has_poster,
     hasInfo: dto.has_info,
     hasComponents: dto.has_components ?? false,
+    productionDesign: dto.production_design ?? false,
     demo: dto.demo ?? false,
     totalTokens: dto.total_tokens,
     thumbnailUrl: dto.thumbnail_url,

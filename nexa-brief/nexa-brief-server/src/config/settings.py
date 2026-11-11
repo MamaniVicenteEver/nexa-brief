@@ -67,7 +67,7 @@ class Settings(BaseSettings):
     # UNA vez por canción real gracias al cache por asset_id — ver lyrics_transcriber.py.
     whisper_model: str = "large-v3"
     whisper_device: str = "cpu"          # "cpu" | "cuda"
-    whisper_compute_type: str = "float32"  # "float32" (preciso) | "int8" (rápido)
+    whisper_compute_type: str = "int8"  # CPU: memoria acotada; CUDA puede configurar float16.
     # Solo para detectar si se canta en español o inglés (ver content_language.py):
     # un modelo chico basta y evita cargar large-v3 en nichos que no transcriben.
     whisper_language_detection_model: str = "small"
@@ -223,7 +223,7 @@ class Settings(BaseSettings):
     # Workers de renderizado en paralelo dentro de UN render local (flag -w/--workers
     # del CLI) — no confundir con hyperframes_max_concurrent_renders (cuántos
     # renders simultáneos acepta el servidor).
-    hyperframes_workers: int = 2
+    hyperframes_workers: int = 3
     hyperframes_quality: str = "high"
     # Límite de renders HyperFrames simultáneos en todo el servidor — mismo
     # motivo que remotion_max_concurrent_renders (separado del semáforo de

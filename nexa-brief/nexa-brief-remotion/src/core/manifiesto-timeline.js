@@ -26,7 +26,9 @@ const PUNCT_RE = /[.,;!?¡¿"']/g;
 function flattenWords(lyrics) {
   const out = [];
   for (const seg of lyrics.segments) {
-    for (const w of seg.words) {
+    // Mismo filtro del HTML: no convertir una despedida inventada en letra.
+    if (/^\s*gracias por ver (?:el|este) v[ií]deo[.!\s]*$/i.test(seg.text || '')) continue;
+    for (const w of seg.words || []) {
       const clean = w.word.trim().replace(PUNCT_RE, '');
       if (clean) out.push({t: w.start, text: clean});
     }
