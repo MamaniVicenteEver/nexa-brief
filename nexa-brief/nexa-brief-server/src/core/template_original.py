@@ -141,6 +141,9 @@ async def ensure_assets(template_id: str, niche_cfg: NicheConfig) -> OriginalAss
     """Los medios del original en la librería (los importa la primera vez)."""
     saved = _store().get(template_id)
     if saved and _still_there(saved):
+        for key, kind in (("music_asset_id", "music"), ("image_asset_id", "image"), ("video_asset_id", "video")):
+            if saved.get(key):
+                await asset_library.attach_resource_origin(kind, saved[key], template_id=template_id)
         return OriginalAssets.model_validate(saved)
 
     asset_dir = get_template_asset_dir(template_id)
@@ -153,7 +156,7 @@ async def ensure_assets(template_id: str, niche_cfg: NicheConfig) -> OriginalAss
     name = template_id
 
     music = await asset_library.register_music(
-        song, category=CATEGORY, source="template", provider="template",
+        song, category=CATEGORY, source="template", provider="template", template_id=template_id,
         filename=f"{template_id}{song.suffix}", track_name=track_name_of(song),
     )
     if lyrics is not None:
@@ -167,14 +170,14 @@ async def ensure_assets(template_id: str, niche_cfg: NicheConfig) -> OriginalAss
         path = background_file(asset_dir, config, "video")
         if path is None:
             raise OriginalUnavailable(f"La plantilla '{template_id}' no tiene un video de fondo propio")
-        video = await asset_library.register_video(path, category=CATEGORY, source="template", provider="template",
+        video = await asset_library.register_video(path, category=CATEGORY, source="template", provider="template", template_id=template_id,
                                                    filename=f"{template_id}{path.suffix}", label=f"{name} (fondo)")
         assets.video_asset_id = video.asset_id
     elif template.requires_image:
         path = background_file(asset_dir, config, "image")
         if path is None:
             raise OriginalUnavailable(f"La plantilla '{template_id}' no tiene una imagen de fondo propia")
-        image = await asset_library.register_image(path, category=CATEGORY, source="template", provider="template",
+        image = await asset_library.register_image(path, category=CATEGORY, source="template", provider="template", template_id=template_id,
                                                    filename=f"{template_id}{path.suffix}", label=f"{name} (fondo)")
         assets.image_asset_id = image.asset_id
 

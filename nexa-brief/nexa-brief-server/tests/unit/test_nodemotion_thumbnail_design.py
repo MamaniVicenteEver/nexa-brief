@@ -89,7 +89,7 @@ def test_each_template_gets_its_own_composition_palette_and_copy(tmp_path: Path,
 
     assert manifest["templateId"] == template_id
     assert set(manifest["options"]) == {"A", "B"}
-    assert a["text"] == "Dueles Tan Bien"
+    assert a["text"] == ("Gran Final" if template_id == "promo-editorial" else "Dueles Tan Bien")
     assert b["text"] == a["text"]  # Sin letra no se inventa una frase.
     assert a["design"]["layout"] == b["design"]["layout"] == EXPECTED_LAYOUT[template_id]
     assert a["design"]["composition"] == b["design"]["composition"] == "center"
@@ -98,7 +98,7 @@ def test_each_template_gets_its_own_composition_palette_and_copy(tmp_path: Path,
     assert set(a["design"]["palette"].values()) <= known_colors
     assert a["design"]["typography"]["display"] == thumbs._design_tokens()[template_id]["display"]
     assert a["design"]["badges"] == []
-    assert a["design"]["subtitle"] == "LETRAS"
+    assert a["design"]["subtitle"] == ("" if template_id == "promo-editorial" else "LETRAS")
 
 
 def test_partial_options_are_merged_safely_and_prepare_never_captures(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -247,7 +247,7 @@ def test_neon_outline_stripes_subtitle_and_brand_contract(tmp_path: Path):
     job = sample_job(tmp_path, "lyrics-manifiesto")
     manifest = thumbs.preview_manifest(job, DraftDetails(song_name="Hola Remix"))
     for key in ("A", "B"):
-        manifest["options"][key]["design"].update(style="neon")
+        manifest["options"][key]["design"].update(style="neon", rowTreatments=[])
     manifest["options"]["B"]["text"] = "SOY YO, EL QUE SIEMPRE LE HABLABA DE TI"
     script = r"""
 const fs=require('node:fs'), vm=require('node:vm');
@@ -267,9 +267,29 @@ console.log(JSON.stringify(['A','B'].map(key=>ctx.module.exports.renderSvg(m,key
         assert subtitle.attrib["fill"] == manifest["options"][key]["design"]["palette"]["foreground"]
         assert "opacity" not in subtitle.attrib
         assert float(subtitle.attrib["data-gap"]) > 0
-        assert float(subtitle.attrib["font-size"]) == pytest.approx(float(title.attrib["font-size"]) * (.243 if key == "A" else .3))
+        assert float(subtitle.attrib["font-size"]) == pytest.approx(float(title.attrib["font-size"]) * (.2187 if key == "A" else .345))
         assert subtitle.attrib["text-anchor"] == "end"
         assert float(subtitle.attrib["y"]) > float(rows[-1].attrib["y"])
         brand = next(item for item in tree if item.text == "NODEMOTION")
         assert brand.attrib["font-size"] == "15.6" and brand.attrib["font-weight"] == "900"
         assert brand.attrib["stroke-width"] == ".4"
+
+
+def test_neon_b_subtitle_moves_down_ten_percent_of_its_own_size(tmp_path: Path):
+    """Neón B lowers LETRAS; the same typography in another style stays unchanged."""
+    job = sample_job(tmp_path, "lyrics-manifiesto")
+    manifest = thumbs.preview_manifest(job, DraftDetails(song_name="Hola Remix"))
+    manifest["options"]["B"]["text"] = "SOY YO EL QUE SIEMPRE HABLABA DE TI"
+    script = r"""
+const fs=require('node:fs'), vm=require('node:vm');
+const ctx={module:{exports:{}}};vm.runInNewContext(fs.readFileSync(process.argv[1],'utf8'),ctx);
+const m=JSON.parse(fs.readFileSync(0,'utf8'));
+m.options.B.design.style='minimal'; const normal=ctx.module.exports.renderSvg(m,'B');
+m.options.B.design.style='neon'; const neon=ctx.module.exports.renderSvg(m,'B');
+console.log(JSON.stringify([normal,neon]));
+"""
+    result = subprocess.run([shutil.which("node"), "-e", script, str(thumbs.RENDERER_PATH)], input=json.dumps(manifest), text=True, capture_output=True, check=True, timeout=10)
+    normal, neon = [next(el for el in ET.fromstring(svg) if el.attrib.get("data-role") == "subtitle") for svg in json.loads(result.stdout)]
+    assert float(neon.attrib["y"]) - float(normal.attrib["y"]) == pytest.approx(float(neon.attrib["font-size"]) * .1)
+    assert neon.attrib["font-size"] == normal.attrib["font-size"]
+    assert neon.attrib["fill"] == normal.attrib["fill"]

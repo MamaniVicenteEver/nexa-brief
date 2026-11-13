@@ -267,6 +267,30 @@
         "reasoning_effort": "medium"
       },
       "fallback_policy": "codex_unavailable_or_quota"
+    },
+    "edition_lead": {
+      "provider": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "xhigh",
+      "does": "Escribe una edición nativa por mercado en un workspace aislado; el host valida textos, voz, alineación, escenas y publicación. Terra 6.1 xhigh; si Codex aislado no está disponible o sin cuota, respaldo Claude aislado.",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-sonnet-5-5",
+        "reasoning_effort": "high"
+      },
+      "fallback_policy": "codex_unavailable_or_quota"
+    },
+    "promo_orchestrator_codex": {
+      "provider": "codex",
+      "model": "gpt-6.1-terra",
+      "reasoning_effort": "high",
+      "does": "Orquesta la preparación y revisión de promociones desde el chat/API compartido. No graba ni confirma por el usuario."
+    },
+    "promo_orchestrator_claude": {
+      "provider": "claude",
+      "model": "claude-sonnet-5-5",
+      "reasoning_effort": "medium",
+      "does": "Orquestador comercial seleccionable y alternativa disponible a Codex; misma fuente de prompts y métricas."
     }
   },
   "editorial_policy": {

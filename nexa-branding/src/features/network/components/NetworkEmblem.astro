@@ -1,4 +1,5 @@
 ---
+import NetworkMosaic from './NetworkMosaic.astro';
 import { medallionUrl } from '@/shared/lib/images';
 import type { Channel } from '@/features/channels/model/types';
 import { text, type Locale } from '@/shared/lib/locale';
@@ -9,6 +10,7 @@ interface Props {
 const { locale, channels } = Astro.props;
 ---
 
+<div class="network-emblem-preview" data-emblem-preview>
 <div
   class="network-emblem"
   aria-label={text(
@@ -51,6 +53,7 @@ const { locale, channels } = Astro.props;
       opacity=".55"
     />
   </svg>
+  <NetworkMosaic locale={locale} />
   <div class="network-emblem__seal">
     <span>WHERE IDEAS</span>
     <strong>NODE</strong>
@@ -76,3 +79,29 @@ const { locale, channels } = Astro.props;
     </span>
   </div>
 </div>
+
+  <div class="emblem-versions" role="group" aria-label={text(locale, 'Diseño del emblema', 'Emblem design')}>
+    <span class="emblem-versions__label">{text(locale, 'DISEÑO', 'DESIGN')}</span>
+    <button type="button" class="emblem-versions__button" data-emblem-version="mosaic" aria-pressed="true">
+      {text(locale, 'Mosaico', 'Mosaic')}
+    </button>
+    <button type="button" class="emblem-versions__button" data-emblem-version="original" aria-pressed="false">
+      {text(locale, 'Original', 'Original')}
+    </button>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-emblem-preview]').forEach((preview) => {
+    const mosaic = preview.querySelector<HTMLElement>('[data-emblem-mosaic]');
+    const buttons = preview.querySelectorAll<HTMLButtonElement>('[data-emblem-version]');
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        if (!mosaic) return;
+        const showMosaic = button.dataset.emblemVersion === 'mosaic';
+        mosaic.hidden = !showMosaic;
+        buttons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+      });
+    });
+  });
+</script>

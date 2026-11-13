@@ -2,6 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useLibraryList } from "@/features/resources/hooks/useResources";
 import type { Template, TemplateRequirements } from "@/features/templates/types";
 import {
   createDraft,
@@ -17,7 +18,9 @@ import {
   studioValueSignature,
 } from "../lib/draft-request";
 import { type Draft, type DraftDetails, EMPTY_STUDIO_VALUE, type StudioValue } from "../types";
+import { backgroundVisibility, supportsBackgroundVisibility } from "../services/background-visibility";
 import { draftKey, draftsKey, isDraftRunning, useDraft } from "./useDraft";
+import { prototypeLabel } from "./useRecordPrototype";
 
 /** Qué toca hacer con el prototipo: previsualizar → preparar → (detalles / grabar). */
 export type PrototypeStep = "preview" | "prepare" | "prepared" | "busy" | "rendered";
@@ -46,7 +49,6 @@ export function usePrototypeEditor({
   template,
   requirements,
   draftId,
-  defaultName,
   onCreated,
 }: {
   template: Template;
@@ -56,10 +58,11 @@ export function usePrototypeEditor({
   onCreated: (draftId: string) => void;
 }) {
   const queryClient = useQueryClient();
+  const { data: songs } = useLibraryList("music");
   const draft = useDraft(draftId).data ?? null;
   const [value, setValue] = useState<StudioValue>(EMPTY_STUDIO_VALUE);
   const [baseSignature, setBaseSignature] = useState<string | null>(null);
-  const [name, setName] = useState(defaultName);
+  const [name, setName] = useState("");
   const [songNotes, setSongNotes] = useState("");
   const loadedFor = useRef<string | null>(null);
 
@@ -70,23 +73,32 @@ export function usePrototypeEditor({
     if (loadedFor.current === key) return;
     if (draftId === null) {
       loadedFor.current = key;
-      setValue(EMPTY_STUDIO_VALUE);
+      setValue({ ...EMPTY_STUDIO_VALUE, mediaOpacity: supportsBackgroundVisibility(template.id)
+        ? { background: backgroundVisibility.get(`new:${template.id}`) ?? 0.8 } : undefined });
       setBaseSignature(null);
-      setName(defaultName);
+      setName("");
       setSongNotes("");
       return;
     }
     if (!draft) return;
     loadedFor.current = key;
     const restored = studioValueFromDraft(draft, requirements);
+    if (supportsBackgroundVisibility(template.id)) {
+      restored.mediaOpacity = { ...restored.mediaOpacity, background: backgroundVisibility.get(draftId) ?? 0.8 };
+    }
     setValue(restored);
     setSongNotes(draft.songNotes);
-    setBaseSignature(studioValueSignature(template.id, requirements, restored));
-    setName(draft.name || defaultName);
-  }, [draftId, draft, requirements, template.id, defaultName]);
+    setBaseSignature(studioValueSignature(template.id, requirements, { ...restored, mediaOpacity: undefined }));
+    setName(prototypeLabel(draft, "", songs));
+  }, [draftId, draft, requirements, template.id, songs]);
+
+  useEffect(() => {
+    if (!draft) return;
+    setName((current) => current === draft.name || !current ? prototypeLabel(draft, current, songs) : current);
+  }, [draft, songs]);
 
   const signature = useMemo(
-    () => (requirements ? studioValueSignature(template.id, requirements, value) : null),
+    () => (requirements ? studioValueSignature(template.id, requirements, { ...value, mediaOpacity: undefined }) : null),
     [requirements, template.id, value],
   );
   const dirty = draft !== null && signature !== baseSignature;
@@ -100,10 +112,14 @@ export function usePrototypeEditor({
     mutationFn: async () => {
       if (!requirements) throw new Error("requirements not loaded");
       const request = buildDraftRequest(template.id, requirements, value);
-      return createDraft({ ...request, name: name.trim() || defaultName });
+      if (request.template_inputs) delete request.template_inputs.media_opacity;
+      return createDraft({ ...request, name: name.trim() || songs?.find((song) => song.assetId === value.musicAssetId)?.title || "" });
     },
     onSuccess: async (created) => {
       const replaced = draft;
+      const priorKey = draftId ?? `new:${template.id}`;
+      const opacity = backgroundVisibility.get(priorKey);
+      if (opacity !== null) backgroundVisibility.set(created.draftId, opacity);
       loadedFor.current = created.draftId;
       setBaseSignature(signature);
       store(created);
@@ -145,7 +161,13 @@ export function usePrototypeEditor({
   return {
     draft,
     value,
-    setValue,
+    setValue: (next: StudioValue) => {
+      if (supportsBackgroundVisibility(template.id) && next.mediaOpacity?.background !== value.mediaOpacity?.background &&
+          typeof next.mediaOpacity?.background === "number") {
+        backgroundVisibility.set(draftId ?? `new:${template.id}`, next.mediaOpacity.background);
+      }
+      setValue(next);
+    },
     name,
     setName,
     /** «Información de la canción» para Preparar (opcional). */

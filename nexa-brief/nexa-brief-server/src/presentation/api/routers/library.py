@@ -22,13 +22,17 @@ html_generator); estos endpoints son la puerta de entrada manual.
 
 from __future__ import annotations
 
+import asyncio
+import io
 import mimetypes
+import subprocess
+from functools import lru_cache
 import shutil
 from pathlib import Path
 from typing import Any, Literal
 
 import structlog
-from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi import Response as FastAPIResponse
 from pydantic import BaseModel
 from starlette.responses import Response
@@ -40,8 +44,11 @@ from src.presentation.api.file_streaming import serve_file_with_range
 from src.presentation.api.schemas.library_schema import (
     ImageLibraryEntryResponse,
     LibraryAssetPatch,
+    LibraryAssetPageResponse,
     LibraryDeleteResponse,
     MusicLibraryEntryResponse,
+    MusicGroupResponse,
+    MusicGroupPageResponse,
     SoundLibraryEntryResponse,
     TemplateConfigDetailResponse,
     TemplateConfigEntryResponse,
@@ -144,6 +151,45 @@ def _serve_asset_file(kind: str, asset_id: str, request: Request) -> Response:
         raise HTTPException(status_code=404, detail="File no longer exists on disk.")
     media_type = mimetypes.guess_type(str(path))[0] or "application/octet-stream"
     return serve_file_with_range(path, request.headers.get("range"), media_type)
+
+
+# Miniaturas pequeñas para que el selector no decodifique imágenes originales
+# ni mantenga una docena de reproductores de video abiertos.
+_preview_semaphore = asyncio.Semaphore(2)
+
+@lru_cache(maxsize=96)
+def _preview_bytes(kind: str, filename: str, modified_ns: int, size: int) -> bytes:
+    from PIL import Image, ImageOps
+
+    if kind == "videos":
+        result = subprocess.run(
+            ["ffmpeg", "-v", "error", "-i", filename, "-frames:v", "1", "-vf",
+             "scale=320:180:force_original_aspect_ratio=decrease", "-f", "image2pipe",
+             "-vcodec", "mjpeg", "pipe:1"],
+            capture_output=True, timeout=15, check=True,
+        )
+        return result.stdout
+    with Image.open(filename) as original:
+        original.draft("RGB", (320, 180))
+        image = ImageOps.exif_transpose(original).convert("RGB")
+        image.thumbnail((320, 180))
+        output = io.BytesIO()
+        image.save(output, format="JPEG", quality=76, optimize=True)
+        return output.getvalue()
+
+@router.get("/{kind}/{asset_id}/preview")
+async def get_asset_preview(kind: Literal["images", "videos"], asset_id: str) -> Response:
+    try:
+        path = asset_library.resolve_asset_path("image" if kind == "images" else "video", asset_id)
+        stat = path.stat()
+        async with _preview_semaphore:
+            content = await asyncio.to_thread(_preview_bytes, kind, str(path), stat.st_mtime_ns, stat.st_size)
+    except (AssetNotFoundError, FileNotFoundError) as exc:
+        raise HTTPException(status_code=404, detail="Resource not found") from exc
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        logger.warning("library_preview_failed", kind=kind, error=str(exc))
+        raise HTTPException(status_code=422, detail="Could not create preview") from exc
+    return Response(content, media_type="image/jpeg", headers={"Cache-Control": "private, max-age=3600"})
 
 
 # ── Images ───────────────────────────────────────────────────────────────────
@@ -267,17 +313,18 @@ async def get_sound_file(asset_id: str, request: Request) -> Response:
 
 
 @router.post("/sounds", response_model=SoundLibraryEntryResponse, status_code=201)
-async def upload_sound(response: FastAPIResponse, file: UploadFile = File(...), category: str = Form("sound_effects"),
+async def upload_sound(response: FastAPIResponse, file: UploadFile = File(...), category: str = Form("sound_effects"), template_id: str = Form(""),
                        title: str | None = Form(None), label: str | None = Form(None), description: str = Form(""),
                        tags: str = Form(""), recommended_uses: str = Form("")) -> SoundLibraryEntryResponse:
     """Subir un efecto nunca inicia Whisper ni modifica una canción."""
+    _validate_resource_context(category, template_id)
     _check_media_type("music", file)
     tmp = await save_upload_to_temp(file, ".wav")
     try:
         digest = asset_library.hash_file(tmp)
         existing = sound_library.find_sound_by_hash(digest)
         entry = await sound_library.register_sound(tmp, title=title or label or clean_filename_label(file.filename),
-            description=description, tags=tags, category=category.strip() or "sound_effects", source="upload", provider="user_upload", filename=file.filename,
+            description=description, tags=tags, category=category.strip() or "sound_effects", source="upload", provider="user_upload", filename=file.filename, template_id=template_id,
             recommended_uses=[s.strip() for s in recommended_uses.split("\n") if s.strip()])
         if existing:
             response.status_code = 200
@@ -289,6 +336,14 @@ async def upload_sound(response: FastAPIResponse, file: UploadFile = File(...), 
 
 
 # ── Subida suelta ────────────────────────────────────────────────────────────
+
+def _validate_resource_context(category: str, template_id: str) -> None:
+    from src.core.library.resource_metadata import resource_metadata
+    try:
+        resource_metadata(category, template_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
 
 def _check_media_type(kind: str, upload: UploadFile) -> None:
     prefix, suffixes = _ALLOWED[kind]
@@ -302,41 +357,35 @@ def _check_media_type(kind: str, upload: UploadFile) -> None:
         )
 
 
-def _orientation(width: int, height: int) -> str | None:
-    if not width or not height:
-        return None
-    ratio = width / height
-    if ratio > 1.1:
-        return "landscape"
-    if ratio < 0.9:
-        return "portrait"
-    return "squarish"
-
-
 @router.post("/images", response_model=ImageLibraryEntryResponse, status_code=201)
 async def upload_image(
+    response: FastAPIResponse,
     file: UploadFile = File(...),
     category: str = Form(DEFAULT_UPLOAD_CATEGORY),
+    template_id: str = Form(""),
     label: str | None = Form(None),
     description: str = Form(""),
     tags: str = Form(""),
 ) -> ImageLibraryEntryResponse:
     """Sube una imagen suelta a la librería (conserva el nombre original)."""
+    _validate_resource_context(category, template_id)
     _check_media_type("image", file)
     tmp_path = await save_upload_to_temp(file, _DEFAULT_SUFFIX["image"])
     try:
-        probe = await asset_library.probe_media(tmp_path)
-        width, height = int(probe.get("width", 0)), int(probe.get("height", 0))
-        entry = await asset_library.register_image(
-            tmp_path, category=category.strip() or DEFAULT_UPLOAD_CATEGORY,
-            source="upload", provider="user_upload", filename=file.filename,
+        entry, created = await asset_library.register_uploaded_visual(
+            "image", tmp_path, category=category.strip() or DEFAULT_UPLOAD_CATEGORY,
+            filename=file.filename or f"archivo{tmp_path.suffix}", template_id=template_id,
             label=label or clean_filename_label(file.filename),
             description=description, tags=tags,
-            width=width, height=height, orientation=_orientation(width, height),
         )
+    except asset_library.DuplicateFilenameError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     finally:
         shutil.rmtree(tmp_path.parent, ignore_errors=True)
-    await asset_library.publish_asset_changed("image", entry.asset_id, action="created")
+    if created:
+        await asset_library.publish_asset_changed("image", entry.asset_id, action="created")
+    else:
+        response.status_code = 200
     return _image_response(entry)
 
 
@@ -345,6 +394,7 @@ async def upload_music(
     response: FastAPIResponse,
     file: UploadFile = File(...),
     category: str = Form(DEFAULT_UPLOAD_CATEGORY),
+    template_id: str = Form(""),
     track_name: str | None = Form(None),
     label: str | None = Form(None),
     artist: str = Form(""),
@@ -362,19 +412,20 @@ async def upload_music(
     responde enseguida con `transcription_status: "pending"`. `false` sirve para
     pistas instrumentales (Whisper solo inventaría letra)."""
     await _reconcile_transcriptions()
+    _validate_resource_context(category, template_id)
     _check_media_type("music", file)
     tmp_path = await save_upload_to_temp(file, _DEFAULT_SUFFIX["music"])
     try:
         content_hash = asset_library.hash_file(tmp_path)
         existing = asset_library.find_music_by_hash(content_hash)
         if existing is not None:
-            entry = existing
+            entry = await asset_library.attach_resource_origin("music", existing.asset_id, category, template_id)
             response.status_code = 200
         else:
             probe = await asset_library.probe_media(tmp_path)
             entry = await asset_library.register_music(
                 tmp_path, category=category.strip() or DEFAULT_UPLOAD_CATEGORY,
-                source="upload", provider="user_upload",
+                source="upload", provider="user_upload", template_id=template_id,
                 content_hash=content_hash, filename=file.filename,
                 track_name=track_name or label or clean_filename_label(file.filename),
                 artist=artist, genre=genre, description=description, tags=tags,
@@ -397,28 +448,33 @@ async def upload_music(
 
 @router.post("/videos", response_model=VideoLibraryEntryResponse, status_code=201)
 async def upload_video(
+    response: FastAPIResponse,
     file: UploadFile = File(...),
     category: str = Form(DEFAULT_UPLOAD_CATEGORY),
+    template_id: str = Form(""),
     label: str | None = Form(None),
     description: str = Form(""),
     tags: str = Form(""),
 ) -> VideoLibraryEntryResponse:
     """Sube un video de fondo suelto; duración y tamaño se leen con ffprobe."""
+    _validate_resource_context(category, template_id)
     _check_media_type("video", file)
     tmp_path = await save_upload_to_temp(file, _DEFAULT_SUFFIX["video"])
     try:
-        probe = await asset_library.probe_media(tmp_path)
-        entry = await asset_library.register_video(
-            tmp_path, category=category.strip() or DEFAULT_UPLOAD_CATEGORY,
-            source="upload", provider="user_upload", filename=file.filename,
+        entry, created = await asset_library.register_uploaded_visual(
+            "video", tmp_path, category=category.strip() or DEFAULT_UPLOAD_CATEGORY,
+            filename=file.filename or f"archivo{tmp_path.suffix}", template_id=template_id,
             label=label or clean_filename_label(file.filename),
             description=description, tags=tags,
-            width=int(probe.get("width", 0)), height=int(probe.get("height", 0)),
-            duration_seconds=float(probe.get("duration_seconds", 0.0)),
         )
+    except asset_library.DuplicateFilenameError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     finally:
         shutil.rmtree(tmp_path.parent, ignore_errors=True)
-    await asset_library.publish_asset_changed("video", entry.asset_id, action="created")
+    if created:
+        await asset_library.publish_asset_changed("video", entry.asset_id, action="created")
+    else:
+        response.status_code = 200
     return _video_response(entry)
 
 
@@ -463,12 +519,42 @@ async def delete_asset(kind: ApiKind, asset_id: str) -> LibraryDeleteResponse:
 
 # ── Categorías y configs archivadas ──────────────────────────────────────────
 
+@router.get("/page/music/groups", response_model=MusicGroupPageResponse)
+async def list_music_group_page(page: int = Query(1, ge=1),
+                                page_size: int = Query(12, ge=1, le=48),
+                                category: str | None = None,
+                                q: str | None = None) -> MusicGroupPageResponse:
+    """Lista grupos de versiones sin alterar ni eliminar los recursos originales."""
+    await _reconcile_transcriptions()
+    groups, total = asset_library.page_music_groups(page=page, page_size=page_size, q=q, category=category)
+    return MusicGroupPageResponse(
+        items=[MusicGroupResponse(title=group[0].track_name, artist=group[0].artist,
+                                  items=[_music_response(entry) for entry in group])
+               for group in groups],
+        total=total, page=page, page_size=page_size,
+    )
+
+
+@router.get("/page/{kind}", response_model=LibraryAssetPageResponse)
+async def list_asset_page(kind: ApiKind, page: int = Query(1, ge=1),
+                          page_size: int = Query(12, ge=1, le=48),
+                          category: str | None = None, q: str | None = None) -> LibraryAssetPageResponse:
+    if kind == "music":
+        await _reconcile_transcriptions()
+    internal = asset_library.API_KINDS[kind]
+    entries, total = asset_library.page_assets(internal, page=page, page_size=page_size, q=q, category=category)
+    return LibraryAssetPageResponse(items=[_response(internal, entry) for entry in entries],
+                                    total=total, page=page, page_size=page_size)
+
+
 @router.get("/categories", response_model=list[str])
 async def list_categories(kind: str = "images") -> list[str]:
     """List distinct categories present in the library ("images" | "music" | "videos")."""
     if kind not in asset_library.API_KINDS:
         raise HTTPException(status_code=400, detail="kind must be 'images', 'music', 'videos' or 'sounds'")
-    return sorted({e.category for e in asset_library.search_assets(asset_library.API_KINDS[kind])})
+    return sorted({category for e in asset_library.search_assets(asset_library.API_KINDS[kind])
+                   for category in ([e.category_id] + [o.category_id for o in e.resource_origins] if e.category_id else [e.category])
+                   if category})
 
 
 @router.get("/configs", response_model=list[TemplateConfigEntryResponse])

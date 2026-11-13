@@ -1,3 +1,7 @@
+Para crear cualquier contenido empieza por el [índice](../../../skills/README.md),
+[CALIDAD.md](../../../skills/CALIDAD.md) (estándar obligatorio) y
+[ORQUESTACION.md](../../../skills/ORQUESTACION.md) (roles, delegación, terminado e informe).
+
 # AGENTS.md · explainer-kit — cómo producir un video explicativo narrado
 
 > **Diseño imperio:** leer [guides/imperio-production.md](guides/imperio-production.md) antes de planificar: video visible 8–16 s, fotografía 6–12 s y sonido de biblioteca en una capa sobre la voz continua. Es una política específica del estilo; los mapas/rótulos no son medios documentales y las demás familias conservan sus reglas.

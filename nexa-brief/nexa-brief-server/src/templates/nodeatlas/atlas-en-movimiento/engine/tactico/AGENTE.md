@@ -1,3 +1,8 @@
+Antes: [CALIDAD.md](../../../../../skills/CALIDAD.md) (manda) y, si orquestas, [ORQUESTACION.md](../../../../../skills/ORQUESTACION.md).
+Al delegar: [PLANTILLA-BRIEF.md](../../../../../skills/PLANTILLA-BRIEF.md). Al entregar: [PLANTILLA-INFORME.md](../../../../../skills/PLANTILLA-INFORME.md) como `INFORME.md`.
+
+## Específico de esta skill
+
 # Guía para el agente que arma un video con Atlas en Movimiento
 
 **Antes de esto lee `../../AGENTE.md` (proceso, roles y puertas), `../../GUION.md` y `../../MENU-VISUAL.md`.** Después lee este archivo, `animations/index.json` COMPLETO (qué componentes hay y para qué) y el JSON de cada animación que vayas a usar (`animations/<nombre>.json`: parámetros, rangos, ejemplo para pegar). No leas `core.js`, `components/*.js` ni `plano.js`: el motor decide cómo se ve; tú decides qué se cuenta y cuándo.
@@ -52,7 +57,7 @@ Unidades (naval.*, air.*, ground.*, unit.*, army.*): ponles `label` y el rótulo
 - Mientras haya `year.big`, las frases van en `slot:"nota"` (el año ocupa la zona del titular).
 - Dos hechos seguidos en la misma ranura: deja que el primero termine (`out`) antes de que entre el segundo, o pasa uno a `nota`.
 - No más de 3 textos de primer plano a la vez: encabezado, titular (o año) y transcripción.
-- Comprueba: `node work/escena/estilo-audit.mjs` (desde la carpeta del prototipo) lista cualquier choque de ranuras con tiempos. Debe decir 0.
+- La auditoría `work/escena/estilo-audit.mjs` lee la escena de la demo, no otros episodios. Revisa choques de ranuras del episodio en ambos formatos; si hace falta auditoría automática y no existe una compatible, informa el bloqueo.
 - Mira fotogramas reales: abre `index.html?estilo=v4-atlas` y usa la consola: `await __promo.seek(t)` y captura la pantalla en 8–12 tiempos repartidos (principio, cambios de ranura, portadas, cierre).
 
 ## 4. Estilos

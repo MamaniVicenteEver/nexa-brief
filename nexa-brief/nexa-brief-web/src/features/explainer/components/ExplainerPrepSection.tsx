@@ -2,7 +2,6 @@
 
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import type { SandboxItem } from "@/features/sandbox/types";
 import { isPreparedVideo, isRenderedVideo, isReviewDemo } from "@/features/templates/lib/preparation-items";
 import {
   type PreparationView,
@@ -11,18 +10,13 @@ import {
 import { cn } from "@/lib/utils";
 import { useExplainerVideos } from "../hooks/useExplainer";
 import { ExplainerVideoCard } from "./ExplainerVideoCard";
-import { SandboxDesignDemoCard } from "./SandboxDesignDemoCard";
 
 /** Videos completos listos para grabar y videos que ya tienen un render final. */
 export function ExplainerPrepSection({
   categoryPath,
-  sandboxDemos = [],
-  productionDesignIds = [],
   embedded = false,
 }: {
   categoryPath?: string;
-  sandboxDemos?: SandboxItem[];
-  productionDesignIds?: string[];
   embedded?: boolean;
 } = {}) {
   const t = useTranslations("templates");
@@ -37,7 +31,6 @@ export function ExplainerPrepSection({
   );
   const productions = visible.filter((video) => !video.demo);
   const demos = visible.filter((video) => video.demo);
-  const visibleSandboxDemos = view === "preparation" ? sandboxDemos : [];
 
   return (
     <section
@@ -86,7 +79,7 @@ export function ExplainerPrepSection({
         </p>
       )}
       {isLoading && <p className="py-6 text-sm text-nb-mute">{t("prep.loading")}</p>}
-      {!isLoading && visible.length === 0 && visibleSandboxDemos.length === 0 && (
+      {!isLoading && visible.length === 0 && (
         <p className="py-6 text-sm text-nb-mute">
           {view === "preparation" ? t("prep.emptyPreparation") : t("prep.emptyRendered")}
         </p>
@@ -96,7 +89,7 @@ export function ExplainerPrepSection({
           <ExplainerVideoCard key={video.videoId} video={video} />
         ))}
       </div>
-      {(demos.length > 0 || visibleSandboxDemos.length > 0) && (
+      {demos.length > 0 && (
         <>
           <div className="my-5 flex items-center gap-3">
             <h3 className="shrink-0 text-xs font-semibold text-nb-mute">{t("prep.designDemos")}</h3>
@@ -105,9 +98,6 @@ export function ExplainerPrepSection({
           <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,280px),1fr))] gap-2">
             {demos.map((video) => (
               <ExplainerVideoCard key={video.videoId} video={video} />
-            ))}
-            {visibleSandboxDemos.map((item) => (
-              <SandboxDesignDemoCard key={`${item.folder}/${item.id}`} item={item} productionDesign={productionDesignIds.includes(item.id)} />
             ))}
           </div>
         </>

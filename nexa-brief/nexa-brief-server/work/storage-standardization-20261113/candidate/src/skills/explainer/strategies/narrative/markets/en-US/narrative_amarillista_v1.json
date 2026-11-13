@@ -1,0 +1,62 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "narrative_amarillista_v1",
+  "piece": "narrative",
+  "locale": "en-US",
+  "status": "draft",
+  "intent": "Open with the strongest defensible risk, build concern with evidence, restore the missing context, then ask a personal question.",
+  "templates": {
+    "hook": "{verified event}. Here is what that means for your {everyday stake}.",
+    "escalation": "First {fact}. Then {fact}. But one detail changes the picture.",
+    "turn": "Here is what that headline leaves out.",
+    "question": "Would you {option A}, or {option B}?"
+  },
+  "examples": [
+    "You deleted the chat. Does that mean the company deleted it too?",
+    "Here is the distinction: a retention rule is not a promise that every conversation will be read.",
+    "Would you put a work document in a chatbot?"
+  ],
+  "conventions": [
+    "Address one viewer as you; contractions sound natural.",
+    "Keep the original act IDs. Resolve every opening alarm with evidence and state the limits.",
+    "Keep title_level alto: short, concrete tension; a named company or figure requires a source.",
+    "Keep the historical before/after comparison, using only verified figures; do not invent a US example to replace the source."
+  ],
+  "sounds_false": [
+    "In this video we will explore the fascinating world of AI.",
+    "Your chats WILL be sold: certainty that the evidence does not support.",
+    "A breathless cable-news delivery from start to finish."
+  ],
+  "overrides": {
+    "name": "Evidence-led alarm, context, then a question",
+    "title": {
+      "levels": {
+        "alto": {
+          "name": "High tension",
+          "description": "A short, concrete warning with a factual basis.",
+          "rules": [
+            "No invented outcome or causality.",
+            "Maximum 60 characters."
+          ],
+          "examples": {
+            "node_tech": [
+              "YOUR CHATS IN COURT?",
+              "Deleting a chat is not the whole story"
+            ]
+          }
+        }
+      }
+    },
+    "question": {
+      "delivery_note": "Lower and slower, as if speaking to one person. Pause briefly before the question."
+    }
+  },
+  "variants": {
+    "short": {
+      "instructions": [
+        "Keep hook, concern, turn, evidence and one final question.",
+        "Give the resolution enough time; do not compress it into a disclaimer."
+      ]
+    }
+  }
+}

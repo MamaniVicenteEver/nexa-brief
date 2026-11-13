@@ -149,7 +149,8 @@ def source_revision(templates: Path, sandbox: Path, engine: str, target: str) ->
     if cached and time.monotonic() - cached[0] < 30:
         return cached[1]
     roots = []
-    engine_path = templates / ("_tools/explainer-kit" if engine == "explainer-kit" else f"sandbox/{engine}")
+    from src.core.explainer.engine_locations import engine_root
+    engine_path = engine_root(templates, engine)
     if engine_path.resolve().is_relative_to(templates.resolve()):
         roots.append(engine_path)
     target_path = urlsplit(target).path

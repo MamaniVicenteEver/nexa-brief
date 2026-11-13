@@ -71,6 +71,8 @@ function isPublicApiRequest(request: NextRequest): boolean {
   // instagram_adapter.py → publisher.py. Sin esta excepción Meta recibe 401.
   if (/^\/api\/v1\/publish\/instagram\/media\/[^/]+$/.test(pathname)) return true;
   if (
+    pathname === "/api/v1/catalog" ||
+    pathname.startsWith("/api/v1/catalog/media/") ||
     pathname === "/api/v1/stats/public" ||
     pathname === "/api/v1/templates" ||
     pathname === "/api/v1/explainer/design-groups"

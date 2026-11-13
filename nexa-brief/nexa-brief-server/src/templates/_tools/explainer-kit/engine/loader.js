@@ -40,7 +40,19 @@
 
   window.KitReady = (async () => {
     const noboot = me.hasAttribute("data-noboot");
-    const configP = noboot ? Promise.resolve(null) : getJSON("config.json", "assets/config.json");
+    const edition = query.get("edition");
+    const revision = query.get("revision");
+    const editionQuery = new URLSearchParams({ edition });
+    if (revision) editionQuery.set("revision", revision);
+    const production = /\/productions\/[^/]+\/[^/]+\/index\.html$/.test(location.pathname);
+    const configUrls = me.dataset.config ? [me.dataset.config]
+      : production ? ["assets/config.json"] : ["config.json", "assets/config.json"];
+    const configP = noboot ? Promise.resolve(null) : edition
+      ? getJSON("assets/config.json?" + editionQuery.toString()).then(raw => {
+          if (!raw) throw new Error("No se pudo cargar la edición solicitada");
+          return raw;
+        })
+      : getJSON(...configUrls);
     const D = await (await fetch(KIT + "designs/" + design + "/design.json")).json();
     D.root = KIT;
     document.documentElement.dataset.family = D.family;
@@ -57,6 +69,7 @@
     const dataP = configP.then(async raw => {
       const C0 = raw && raw.configs ? raw.configs[0] : raw;
       if (!C0) return {};
+      if (edition && C0.locale) document.documentElement.lang = C0.locale;
       const defs = D.defaults || {};
       const src = C0.audio?.src ?? defs.audio?.src;
       const audio = document.getElementById("audio");

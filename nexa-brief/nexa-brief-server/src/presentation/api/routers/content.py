@@ -60,14 +60,32 @@ def _summarize_design_items(items: list[dict]) -> dict:
 @router.get("/usage/{scope}/{folder}/{item_id}")
 async def content_usage(scope: str, folder: str, item_id: str):
     """Uso registrado de un contenido, separado por ámbito y perfil activo."""
-    if scope not in {"sandbox", "productions"} or any(
+    if scope not in {"sandbox", "productions", "bundled"} or any(
         not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}", value)
         for value in (folder, item_id)
     ):
         raise HTTPException(status_code=404, detail="Contenido no encontrado")
     layout = layout_for_settings(settings)
-    root = (layout.sandbox_dir if scope == "sandbox" else layout.productions_dir).resolve()
-    item = (root / folder / item_id).resolve()
+    marker = None
+    if scope == 'bundled':
+        from src.core.explainer.production_templates import definitions
+        root = settings.templates_dir
+        # Shared content must be an explicitly registered principal demo; do
+        # not follow links, even when a link points back inside the repository.
+        item = root / folder / item_id
+        guarded = (root, root / folder, item, item / 'manifest.json', item / 'info.json',
+                   item / 'usage.json', item / 'usage-report.json', item / 'work', item / 'work/usage.jsonl')
+        if any(path.is_symlink() for path in guarded):
+            raise HTTPException(status_code=404, detail="Contenido no encontrado")
+        matches = [(design, directory) for design, directory in definitions(root) if directory == item]
+        if len(matches) != 1:
+            raise HTTPException(status_code=404, detail="Contenido no encontrado")
+        design, _ = matches[0]
+        marker = design['production_template']
+        root, item = root.resolve(), item.resolve()
+    else:
+        root = (layout.sandbox_dir if scope == "sandbox" else layout.productions_dir).resolve()
+        item = (root / folder / item_id).resolve()
     if not item.is_relative_to(root) or not item.is_dir():
         raise HTTPException(status_code=404, detail="Contenido no encontrado")
     info = {}
@@ -85,16 +103,27 @@ async def content_usage(scope: str, folder: str, item_id: str):
     }
     # Promotion keeps the original content key as an audit alias, so prior
     # traces remain attributable without duplicating or rewriting events.
-    previous_keys = info.get("usage_previous_keys", []) if scope == "productions" else []
+    previous_keys = info.get("usage_previous_keys", []) if scope in {"productions", "bundled"} else []
+    if scope == 'bundled':
+        previous_keys = list(previous_keys) if isinstance(previous_keys, list) else []
+        old_folder, old_id = marker.get('origin_folder'), marker.get('project_id')
+        if isinstance(old_folder, str) and isinstance(old_id, str):
+            previous_keys.append(f'sandbox/{old_folder}/{old_id}')
+        legacy = marker.get('legacy_production_folders')
+        if isinstance(legacy, list):
+            previous_keys.extend(f'productions/{key}' for key in legacy if isinstance(key, str))
     if isinstance(previous_keys, list):
         for previous in previous_keys:
-            if not isinstance(previous, str) or not re.fullmatch(r"sandbox/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+", previous):
+            if not isinstance(previous, str) or not re.fullmatch(r"(?:sandbox|productions)/[A-Za-z0-9_-]+/[A-Za-z0-9_-]+", previous):
                 continue
             trace_ids.update(row.get("trace_id") for row in collection("execution_logs").list({"content_key": previous})
                              if row.get("kind") == "usage_trace" and row.get("trace_id"))
     design_id = None
-    if scope == "productions":
-        for production in collection("explainer_productions").list({"video_id": item_id}):
+    if scope in {"productions", "bundled"}:
+        video_ids = [item_id]
+        if marker and isinstance(marker.get('aliases'), list):
+            video_ids += [alias for alias in marker['aliases'] if isinstance(alias, str) and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,127}', alias)]
+        for production in [row for video_id in video_ids for row in collection("explainer_productions").list({"video_id": video_id})]:
             if production.get("folder") != folder:
                 continue
             design_id = production.get("design") or design_id
@@ -146,6 +175,14 @@ async def design_usage(design_id: str):
             videos.append(await content_usage("productions", folder, video_id))
         except HTTPException:
             continue
+    from src.core.explainer.production_templates import definitions
+    for design, directory in definitions(settings.templates_dir):
+        if design.get('id') != design_id:
+            continue
+        try:
+            videos.append(await content_usage('bundled', directory.parent.name, directory.name))
+        except HTTPException:
+            continue
     sandbox = []
     root = layout.sandbox_dir.resolve()
     if root.is_dir():
@@ -178,8 +215,12 @@ async def video_usage(video_id: str):
     root = layout_for_settings(settings).productions_dir.resolve()
     candidates = [path for path in root.glob(f"*/{video_id}")
                   if path.is_dir() and path.resolve().is_relative_to(root)] if root.is_dir() else []
-    if len(candidates) != 1:
-        raise HTTPException(status_code=409 if candidates else 404, detail="Video ambiguo o no encontrado")
+    from src.core.explainer.production_templates import shared_demo
+    bundled = shared_demo(settings.templates_dir, video_id)
+    if len(candidates) + int(bundled is not None) != 1:
+        raise HTTPException(status_code=409 if candidates or bundled else 404, detail="Video ambiguo o no encontrado")
+    if bundled:
+        return await content_usage('bundled', bundled.parent.name, bundled.name)
     return await content_usage("productions", candidates[0].parent.name, video_id)
 
 

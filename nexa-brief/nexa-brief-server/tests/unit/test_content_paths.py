@@ -106,7 +106,7 @@ async def test_v2_cannot_read_legacy_episodes_but_can_read_explicit_samples(prof
     from src.presentation.api.routers.explainer import get_explainer_file
 
     root, templates = profile
-    request = Request({'type': 'http', 'method': 'GET', 'path': '/', 'headers': []})
+    request = Request({'type': 'http', 'method': 'GET', 'path': '/', 'headers': [], 'query_string': b''})
     for key in ('sandbox/nodeaction/private-episode/index.html', 'nodetech/private-video/index.html'):
         source = templates / key
         source.parent.mkdir(parents=True, exist_ok=True)

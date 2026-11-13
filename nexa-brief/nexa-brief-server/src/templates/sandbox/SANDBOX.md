@@ -1,31 +1,40 @@
+Para crear cualquier contenido empieza por el [índice](../../skills/README.md),
+[CALIDAD.md](../../skills/CALIDAD.md) (estándar obligatorio) y
+[ORQUESTACION.md](../../skills/ORQUESTACION.md) (roles, delegación, terminado e informe).
+
 # Sandbox: guía rápida
 
 > En perfiles v2/v3, `sandbox/<categoría>/<id>` significa
 > `$NEXA_PROFILE_DIR/sandbox/<categoría>/<id>`. Antes de usar las herramientas
 > heredadas exporta `NEXA_SANDBOX_DIR="$NEXA_PROFILE_DIR/sandbox"`; las rutas de
-> herramientas y motores siguen en el repositorio. Verifica el perfil activo.
+> herramientas y motores compartidos siguen en el repositorio. Verifica el perfil
+> activo. Aquí solo se guardan motores experimentales, herramientas y documentación;
+> todos los proyectos y referencias, también históricos, pertenecen al perfil.
+> La demo principal validada pertenece al repositorio en `src/templates/<categoría>/<id>/`.
+> Norma: [ubicación de demos, pruebas y episodios](../../../docs/ubicacion-demos-pruebas-episodios.md).
 
 > ¿Plantilla NUEVA desde una referencia? Empezá por [PROTOTIPO.md](PROTOTIPO.md).
+> Toda entrega aplica [PREPARAR-PRODUCCION.md](PREPARAR-PRODUCCION.md): archivos, rutas, catálogo y pendientes para el flujo vigente. Las recetas antiguas de cada tema no sustituyen ese contrato.
 
 El sandbox es el taller para probar videos y plantillas sin tocar producción. El usuario revisa lo que tenga `index.html` o un MP4 en [la web](https://nexa-brief.everdev.space/plantillas?cat=sandbox) o en `http://192.168.20.23:3000/plantillas?cat=sandbox`.
 
 ## Mapa
 
-| Carpeta | Motor compartido | Referencia para copiar | Guía detallada |
+| Tema | Motor compartido (repositorio) | Ejemplo de datos que localizar por ID | Guía compartida |
 |---|---|---|---|
 | `nodemotion` | HTML propio; puente en `_player/` y, según el caso, HyperFrames | `lyrics-final-cut/`, `promo-fuerza-motivacion/` | `nodemotion/AGENTS.md` |
 | `nodetech` | `_tools/explainer-kit/` | `clip-prueba/` | `EXPLAINER.md`, `nodetech/AGENTS.md` |
-| `nodehistory` | Explainer-kit; también `_mapas/` + `_proto/` | `memorias-demo/`; mapas: `bolivia-mar/` | `EXPLAINER.md`, `nodehistory/AGENTS.md`, `_mapas/ESCENA.md` |
+| `nodehistory` | Explainer-kit; también `_mapas/` + `_proto/` | `memorias-demo/`; mapas: `bolivia-mar/` | `EXPLAINER.md`, `nodehistory/AGENTS.md`, `nodehistory/_mapas/ESCENA.md` |
 | `nodepolitics` | `_tools/explainer-kit/` | `atlas-demo/`, `imperio-demo/` | `EXPLAINER.md`, `nodepolitics/AGENTS.md` |
 | `nodeeconomy` | `_tools/explainer-kit/` | `dinero-demo/` | `EXPLAINER.md`, `nodeeconomy/AGENTS.md` |
-| `nodeaction` | `_engine/`; pizarra: `_pizarra/` + `_proto/` | `paintwick-demo/`; pizarra: `pizarra-olvido/` | `nodeaction/AGENTS.md`, `_pizarra/ESCENA.md` |
+| `nodeaction` | `_engine/`; pizarra: `_pizarra/` + `_proto/` | `paintwick-demo/`; pizarra: `pizarra-olvido/` | `nodeaction/AGENTS.md`, `nodeaction/_pizarra/ESCENA.md` |
 | `referencias` | Ninguno: material de inspiración para agentes | `nodeaction/welcome-to-the-eng-pizarra/`, `nodehistory/mapas-con-banderas/` | `referencias/README.md`, `_proto/FABRICA.md` |
 
-Las referencias viven en `referencias/<categoría>/<idea-id>/`, separadas de los proyectos que aparecen en **Todos**. Consultá `referencias/README.md` y las ideas de la categoría correspondiente antes de diseñar algo nuevo.
+Las referencias viven físicamente en `$NEXA_PROFILE_DIR/sandbox/referencias/<categoría>/<idea-id>/`, separadas de los proyectos que aparecen en **Todos**. Los ejemplos de la tabla no son destinos dentro del repositorio: una demo validada se localiza mediante su definición de diseño y un episodio o prueba mediante el perfil activo. Consultá `referencias/README.md` y las ideas de la categoría correspondiente antes de diseñar algo nuevo.
 
 ## Crear una plantilla
 
-1. Leé esta guía y el `AGENTS.md` de tu carpeta. Copiá la referencia más cercana; **no empieces de cero ni dupliques motores**.
+1. Leé esta guía y el `AGENTS.md` del tema. Localiza la referencia más cercana por ID y reutiliza sus datos autorizados en una carpeta nueva del perfil; **no dupliques el motor ni copies otro perfil**.
 2. Asegurá `index.html`, `info.json`, `assets/` y `render/` en `sandbox/<carpeta>/<id>/`; conservá los archivos extra que requiera el motor, como `manifest.json` en explainer-kit.
 3. Desde la raíz del repo, creá la ficha y completá resumen, librerías, entradas y notas:
 
@@ -58,7 +67,7 @@ caché de lectura se informa aparte. La caché se muestra en su propia fila y no
 
 ## Visibilidad y producción
 
-Con `index.html` o MP4 aparece en Sandbox. Solo explainer-kit con `manifest.json` en estado `listo` puede pasar a producción. NodeAction, mapas y pizarra requieren graduar sus motores; NodeMotion requiere alta manual en `templates.json`. No muevas solo la carpeta.
+Con `index.html` o MP4 aparece en Sandbox; eso no significa que esté listo para pasar a producción. El flujo vigente es **Preparar para producción → Verificar archivos y rutas → Pasar a producción**, por servicio/API y sin IA. Una demo principal nueva necesita `is_new_design: true` y catálogo aislado; un episodio de diseño existente necesita su manifest y motor compatible. El servicio comprueba la categoría y las dependencias: no inventes compatibilidad para motores que aún no la tienen. La demo principal se incorpora al repositorio; los episodios van a `productions/` del perfil. No muevas carpetas ni edites registros manualmente. La preparación editorial con IA ocurre después, desde la categoría. Consulta el contrato de entrega para requisitos y límites de la comprobación.
 
 ## Ahorrar tokens
 
@@ -72,4 +81,4 @@ Con `index.html` o MP4 aparece en Sandbox. Solo explainer-kit con `manifest.json
 - [ ] Revisé `index.html`, `assets/`, `render/` y completé `info.json`.
 - [ ] Probé el preview en navegador y anoté los recursos/librerías usados.
 - [ ] Registré el uso de esta sesión al terminar.
-- [ ] Confirmé que el usuario puede verla en Sandbox; no moví nada a producción sin cumplir su vía de promoción.
+- [ ] Confirmé que el usuario puede verla en Sandbox; no moví nada a producción sin cumplir su vía técnica de traslado.

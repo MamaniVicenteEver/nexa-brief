@@ -40,6 +40,8 @@ class DraftDetails(BaseModel):
     research: str = ""
     # True cuando la persona los editó: volver a «Preparar» los pisaría.
     edited: bool = False
+    # Referencia ligera al paquete central; nunca una copia editable de los prompts.
+    promo_prompt_reference: dict[str, Any] | None = None
     # Textos de miniatura generados en el mismo llamado que las copias. Son un dato
     # de transporte: drafts los guardan en Draft.thumbnails, separado de metadatos.
     _thumbnail_texts: dict[str, str] = PrivateAttr(default_factory=dict)
@@ -67,16 +69,20 @@ Respondes ÚNICAMENTE con un objeto JSON válido: {"song": str|null, "artist": s
 - song/artist: como aparecen en plataformas de música, o null si no se sabe con seguridad."""
 
 
-async def research(ai: Any, notes: str, facts: str) -> str:
+async def research(ai: Any, notes: str, facts: str, *, profile: str | None = None, promo_prompt_version: str | None = None) -> str:
     """Investigación previa breve: ordena la información que dio la persona junto con la letra."""
-    raw = await ai.complete_json(_RESEARCH_SYSTEM, f"LO QUE CUENTA LA PERSONA:\n{notes.strip()}\n\nDATOS DEL VIDEO:\n{facts}")
+    system = _RESEARCH_SYSTEM
+    if profile == "commercial":
+        from src.core.promo_prompts import compose
+        system = compose("contexto", version=promo_prompt_version)
+    raw = await ai.complete_json(system, f"LO QUE CUENTA LA PERSONA:\n{notes.strip()}\n\nDATOS DEL VIDEO:\n{facts}")
     lines = [f"- {f.strip()}" for f in (raw.get("facts") or []) if isinstance(f, str) and f.strip()][:5]
     if raw.get("song"):
         lines.insert(0, f"- Canción: {raw['song']}" + (f" · {raw['artist']}" if raw.get("artist") else ""))
     return "\n".join(lines)
 
 
-async def generate(job: Job, niche_id: str, seed: str, notes: str = "") -> DraftDetails:
+async def generate(job: Job, niche_id: str, seed: str, notes: str = "", *, ai_override: Any = None) -> DraftDetails:
     """Pide los textos con las estrategias activas (una llamada a la IA, como al grabar). Con `notes`
     (información de la canción que escribió la persona) antes hace una investigación breve."""
     # imports diferidos: arrastran adaptadores de IA y la config de nichos
@@ -89,11 +95,23 @@ async def generate(job: Job, niche_id: str, seed: str, notes: str = "") -> Draft
     niche_cfg = get_niche_config(niche_id)
     profile = copy_profile(niche_cfg)
     language_code = copy_language(profile, (await resolve_content_language(job)).code)
-    ai = get_copy_ai()
-    found = await research(for_video(ai, job, "song_research"), notes, build_facts(job, niche_cfg, notes)) if notes.strip() else ""
+    ai = ai_override if ai_override is not None else get_copy_ai()
+    promo_reference = None
+    if profile == "commercial":
+        from src.core.promo_prompts import bind_reference, reference, reference_file
+        output = job.artifacts.output_dir
+        pinned = Path(output) / "promo-prompts-version.json" if output else None
+        promo_reference = reference_file(pinned) if pinned and pinned.is_file() else reference()
+        if pinned:
+            bind_reference(pinned, promo_reference)
+    version = promo_reference["version"] if promo_reference else None
+    found = await research(
+        for_video(ai, job, "promo_context" if profile == "commercial" else "song_research"),
+        notes, build_facts(job, niche_cfg, notes), profile=profile, promo_prompt_version=version,
+    ) if notes.strip() else ""
     result = await write_copy(
         for_video(ai, job, "publication_copy"), build_facts(job, niche_cfg, notes, found),
-        language_code, seed=seed, profile=profile, include_thumbnail_options=True,
+        language_code, seed=seed, profile=profile, include_thumbnail_options=True, promo_prompt_version=version,
     )
     name, artist = song_of(job, result.pieces.song, result.pieces.artist)
     details = DraftDetails(
@@ -109,6 +127,7 @@ async def generate(job: Job, niche_id: str, seed: str, notes: str = "") -> Draft
         },
         generated_at=_now_iso(),
         research=found,
+        promo_prompt_reference=result.promo_prompt_reference,
     )
     # Las opciones viven en Draft.thumbnails, no en los datos de canción ni en
     # las copias de publicación. Para una canción, A parte del nombre real; B
@@ -121,10 +140,16 @@ async def generate(job: Job, niche_id: str, seed: str, notes: str = "") -> Draft
         option_a = name or option_a
     option_a = option_a or next(iter(titles), "Música")
     if not option_b or option_b.casefold() == option_a.casefold():
-        option_b = next((title for title in titles if title.casefold() != option_a.casefold()), "")
-    if not option_b or option_b.casefold() == option_a.casefold():
-        option_b = "Descubre esta propuesta" if profile == "commercial" else "Siente la historia"
+        if profile == "commercial":
+            option_b = next((title for title in titles if title.casefold() != option_a.casefold()), option_a)
+        else:
+            # Una frase real de la letra, o el título cuando no hay letra utilizable.
+            from src.core.draft_thumbnails import _alternate_title
+            option_b = _alternate_title(job, details, option_a)
     details._thumbnail_texts = {"A": option_a[:60], "B": option_b[:60]}
+    details._thumbnail_selected = getattr(result, "thumbnail_selected", "A")
+    if details._thumbnail_selected not in {"A", "B"}:
+        details._thumbnail_selected = "A"
     return details
 
 

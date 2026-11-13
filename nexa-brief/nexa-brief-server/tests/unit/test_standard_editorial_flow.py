@@ -77,7 +77,8 @@ async def test_duplicate_submit_shares_active_job(video,monkeypatch):
     assert service.latest('demo')['state']=='queued'
 
 @pytest.mark.asyncio
-async def test_complete_package_saves_three_platforms_and_six_images_without_recording(video,monkeypatch):
+@pytest.mark.parametrize('design', ['sandbox-test', 'mapas-satelitales'])
+async def test_complete_package_saves_three_platforms_and_six_images_without_recording(video,monkeypatch,design):
     import copy
     from PIL import Image
     from test_publishing_package import PACKAGE, SCRIPT_TEXT
@@ -85,6 +86,8 @@ async def test_complete_package_saves_three_platforms_and_six_images_without_rec
     from src.core.explainer.publishing.checks import check_package
     from src.core.explainer import thumbnails
     import src.core.explainer.editorial_preparation as module
+    video.design=design
+    (video.path/'manifest.json').write_text(json.dumps({'status':'en preparación','design':design,'category':'node_atlas'}))
     payload=copy.deepcopy(PACKAGE)
     payload['category']='node_atlas'
     payload['thumbnail']['tabloid']={'text':'LA ALARMA','image':'hamilton.jpg','pair_title':'C'}

@@ -1,3 +1,7 @@
+Para crear cualquier contenido empieza por el [índice](nexa-brief-server/src/skills/README.md),
+[CALIDAD.md](nexa-brief-server/src/skills/CALIDAD.md) (estándar obligatorio) y
+[ORQUESTACION.md](nexa-brief-server/src/skills/ORQUESTACION.md) (roles, delegación, terminado e informe).
+
 # Nexa Brief — instrucciones para agentes
 
 ## Perfil activo: ubicación de proyectos y diseños
@@ -10,10 +14,14 @@
   no leas ni imprimas el `.env` completo. Para cambiar de perfil, actualiza la
   variable y ejecuta `scripts/storage-profile.py activate <id>` para mantener el
   selector heredado alineado; reinicia servicios coordinadamente sin trabajos activos.
-- Los prototipos, sus archivos y evidencias van en `"$NEXA_PROFILE_DIR/sandbox/<categoría>/<id>/"`;
-  las producciones van en `"$NEXA_PROFILE_DIR/productions/<categoría>/<id>/"`.
-  `src/templates/sandbox/` contiene herramientas, motores y documentación compartidos,
-  además de contenido histórico; no es el destino de proyectos nuevos del perfil.
+- Todos los prototipos, pruebas, referencias y sus medios/evidencias van en
+  `"$NEXA_PROFILE_DIR/sandbox/<categoría>/<id>/"`; los episodios de producción van
+  en `"$NEXA_PROFILE_DIR/productions/<categoría>/<id>/"`.
+  Las demos principales validadas viven en
+  `nexa-brief-server/src/templates/<categoría>/<id>/` del repositorio.
+  `src/templates/sandbox/` solo admite motores compartidos experimentales,
+  herramientas y documentación; no admite proyectos de prueba ni históricos.
+  Norma completa: `nexa-brief-server/docs/ubicacion-demos-pruebas-episodios.md`.
 - Comprueba `profile.json`, la ruta real y el perfil correcto antes de crear o modificar
   archivos. No copies, muevas, borres ni agregues a Git proyectos del perfil por inferencia.
   Las definiciones y motores compartidos del repositorio se editan solo si la tarea
@@ -24,8 +32,10 @@
 
 - Un **motor reutilizable** creado o modificado como código compartido puede vivir en
   `nexa-brief-server/src/templates/sandbox/<categoría>/_<motor>/` y registrarse en el
-  catálogo de diseños. Los episodios, sus medios, pruebas y evidencias permanecen en
-  el sandbox del perfil; no se traslada un proyecto completo al repositorio junto al motor.
+  catálogo de diseños mientras sea experimental. Para usarlo en producción,
+  ubícalo una sola vez en la raíz compartida de producción declarada por su definición;
+  conserva su `engine_id` y actualiza `engine_root` y consumidores mediante una
+  migración verificada. Los episodios nunca incluyen una copia del motor.
 
 ## Demos principales de diseños compartidos
 
@@ -35,8 +45,13 @@ pasar completa desde el Sandbox del perfil al repositorio en
 regla de proyectos privados: solo demos declaradas `is_new_design`, revisadas y
 registradas por el servicio «Pasar a producción». El motor se mantiene compartido.
 Los videos posteriores permanecen en `productions/<categoría>/<id>/` del perfil.
-Una categoría es dueña del diseño; las otras lo usan mediante referencias sin
-copiar carpetas. Sigue `nexa-brief-server/docs/pasar-a-produccion-disenos.md`.
+Las demos aún en pruebas se muestran solo en Sandbox; una categoría de producción
+usa su demo registrada desde el repositorio, sin fallback a proyectos de Sandbox.
+La carpeta canónica de una demo usa un nombre estable sin fecha; un cambio de ruta
+no cambia IDs de video, motor o Showcase. Una categoría es dueña del diseño;
+las otras lo usan mediante referencias sin copiar carpetas. Una demo y su motor
+puestos en producción no permanecen como otra ficha experimental en Sandbox.
+Sigue `nexa-brief-server/docs/pasar-a-produccion-disenos.md`.
 
 ## Respaldos y uso del disco
 
@@ -91,10 +106,25 @@ No es necesario hacer un perfilado exhaustivo para cambios que no afecten recurs
 - Mantén separado el acceso directo de desarrollo y las reglas de autenticación de Docker. No cambies el comportamiento de login para resolver problemas del túnel.
 - Para el servidor futuro, revisa `cloudflare-tunnel/README.md`: la topología de red puede requerir que el origen cambie de `localhost:3000` a un servicio de Docker.
 
-## Prototipos nuevos (plantillas desde una referencia)
+## Prototipos nuevos y preparación por lotes
 
-Si te piden crear una plantilla NUEVA a partir de una referencia (o te pasan una URL `/api/v1/agent/prototipo/...`), leé y seguí `nexa-brief-server/src/templates/sandbox/PROTOTIPO.md`: es el único punto de entrada.
+El índice común indica las guías vigentes. La preparación por lotes usa la cola
+persistente con máximo cinco productores y sin grabación automática.
 
-## Preparación por lotes desde chat
 
-Para varios videos o preparación programada, lee `nexa-brief-server/src/skills/explainer/batch/SKILL.md`. Usa la cola persistente con máximo cinco productores y sin grabación automática.
+## Promos: chat y flujo compartido
+
+Para Editorial, Sports, Dynamic, Kinetic, Trendy y Urban, un pedido de plantilla
+y tema se inicia desde el chat de la app o con `chat.py create`; ambas entradas
+usan la misma API e historial. Sigue [OPERAR.md](nexa-brief-server/src/skills/nodemotion/promo/OPERAR.md) para consultar estado,
+enviar correcciones y revisar consumo. La calidad automática es técnica: la
+persona revisa fuentes, imágenes, licencias y composición, y solo ella aprueba
+la revisión vigente. Aprobar no inicia grabación ni publicación.
+
+Usa los roles de `src/skills/models/roles.json`: Codex `gpt-6.1-terra` high por
+defecto y Claude `claude-sonnet-5-5` medium como alternativa seleccionable.
+La disponibilidad no demuestra cuota, que es `unknown` si no se informa. El
+servicio utiliza los prompts centrales fijados por versión y hash y las
+herramientas compartidas; cada video conserva datos, resultados, referencias y
+evidencias, sin copiar prompts editables ni motores. No crees otro productor.
+El registro incluye uso conocido y deja lo desconocido en `null`.

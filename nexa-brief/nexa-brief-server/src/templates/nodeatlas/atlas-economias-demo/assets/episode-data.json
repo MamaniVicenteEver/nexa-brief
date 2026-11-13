@@ -1,0 +1,734 @@
+{
+  "title": "Las ocho mayores economías: del octavo al primer puesto",
+  "ranking": {
+    "metric": "PIB nominal",
+    "unit": "dólares corrientes",
+    "year": 2026,
+    "kind": "projection",
+    "source": "imf-weo-2026",
+    "edition": "octubre2026",
+    "source_label": "FMI · WEO octubre 2026"
+  },
+  "countries": [
+    {
+      "iso2": "US",
+      "name": "Estados Unidos",
+      "leader": {
+        "name": "Donald Trump",
+        "title": "Presidente",
+        "as_of": "2026-11-09",
+        "term_note": "Mandato ordinario 2025–2029",
+        "fact_ids": [
+          "us-leader"
+        ]
+      },
+      "regions": [
+        {
+          "id": "california",
+          "geometry_id": "US-CA",
+          "name": "California",
+          "criterion": "Mayor economía estatal 2025; tecnología, agricultura y economía creativa",
+          "fact_ids": [
+            "us-states",
+            "us-ca"
+          ],
+          "center": [
+            -119.98369,
+            37.26058
+          ],
+          "span": 21.208,
+          "photo": {
+            "src": "media/regional-california.jpg",
+            "caption": "Vista de Los Ángeles, California",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        },
+        {
+          "id": "texas",
+          "geometry_id": "US-TX",
+          "name": "Texas",
+          "criterion": "Segunda economía estatal 2025; energía y diversidad productiva",
+          "fact_ids": [
+            "us-states",
+            "us-tx"
+          ],
+          "center": [
+            -99.6343,
+            31.15579
+          ],
+          "span": 23.869,
+          "photo": {
+            "src": "media/regional-texas.jpg",
+            "caption": "Vista de Houston, Texas",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        }
+      ],
+      "fact_ids": [
+        "us-ratio"
+      ],
+      "rank": 1,
+      "iso3": "USA",
+      "center": [
+        -120,
+        43
+      ],
+      "span": 135,
+      "flag_src": "media/flag-us.svg",
+      "portrait_src": "media/portrait-us.jpg",
+      "gdp": {
+        "value": 32642.373,
+        "unit": "miles de millones USD",
+        "year": 2026,
+        "fact_ids": [
+          "gdp-us-2026"
+        ]
+      },
+      "frame_note": "Encuadre principal nacional con margen vertical; se conserva completa la geometría territorial de resaltado y bandera.",
+      "flag_fit": "landmass",
+      "cinematic_frame": {
+        "center": [
+          -103,
+          37
+        ],
+        "span": 78,
+        "pitch": 60,
+        "basis": "Tilted satellite style of original atlas-cinematico; countrywide hold during regions"
+      }
+    },
+    {
+      "iso2": "CN",
+      "name": "China",
+      "leader": {
+        "name": "Xi Jinping",
+        "title": "Presidente de la República Popular China",
+        "as_of": "2026-11-09",
+        "term_note": "Reelegido el 10 de marzo de 2023; ciclo presidencial ordinario 2023–2028.",
+        "fact_ids": [
+          "research-cn-leader",
+          "research-cn-term"
+        ],
+        "display_role": "Presidente"
+      },
+      "regions": [
+        {
+          "id": "guangdong",
+          "geometry_id": "CN-GD",
+          "name": "Guangdong",
+          "criterion": "Primera economía provincial 2025; manufactura avanzada y comercio exterior.",
+          "fact_ids": [
+            "research-cn-guangdong-economy"
+          ],
+          "center": [
+            112.30456,
+            22.87905
+          ],
+          "span": 12.021,
+          "photo": {
+            "src": "media/regional-guangdong.jpg",
+            "caption": "Vista de Guangzhou, Guangdong",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        },
+        {
+          "id": "jiangsu",
+          "geometry_id": "CN-JS",
+          "name": "Jiangsu",
+          "criterion": "Gran economía provincial; equipos, tecnología y exportación.",
+          "fact_ids": [
+            "research-cn-jiangsu-economy"
+          ],
+          "center": [
+            119.94998,
+            32.93572
+          ],
+          "span": 9.736,
+          "photo": {
+            "src": "media/regional-jiangsu.jpg",
+            "caption": "Vista de Nankín, Jiangsu",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        }
+      ],
+      "fact_ids": [],
+      "rank": 2,
+      "iso3": "CHN",
+      "center": [
+        104,
+        37.5
+      ],
+      "span": 98,
+      "flag_src": "media/flag-cn.svg",
+      "portrait_src": "media/portrait-cn.jpg",
+      "gdp": {
+        "value": 21546.403,
+        "unit": "miles de millones USD",
+        "year": 2026,
+        "fact_ids": [
+          "gdp-cn-2026"
+        ]
+      },
+      "frame_note": "Encuadre principal nacional con margen vertical; se conserva completa la geometría territorial de resaltado y bandera.",
+      "cinematic_frame": {
+        "center": [
+          104,
+          35
+        ],
+        "span": 74,
+        "pitch": 60,
+        "basis": "Tilted satellite style of original atlas-cinematico; countrywide hold during regions"
+      }
+    },
+    {
+      "iso2": "DE",
+      "name": "Alemania",
+      "leader": {
+        "name": "Friedrich Merz",
+        "title": "Canciller federal",
+        "as_of": "2026-11-09",
+        "term_note": "Desde el 6 de mayo de 2025; depende del Bundestag, sin fecha final personal fija.",
+        "fact_ids": [
+          "research-de-leader",
+          "research-de-term"
+        ]
+      },
+      "regions": [
+        {
+          "id": "north-rhine-westphalia",
+          "geometry_id": "DE-NW",
+          "name": "Renania del Norte-Westfalia",
+          "criterion": "Primer Land por PIB nominal 2025; industria y servicios.",
+          "fact_ids": [
+            "research-de-regions-gdp",
+            "research-de-nrw-economy"
+          ],
+          "center": [
+            7.55751,
+            51.42987
+          ],
+          "span": 5.775,
+          "photo": {
+            "src": "media/regional-north-rhine-westphalia.jpg",
+            "caption": "Vista de Colonia, Renania del Norte-Westfalia",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        },
+        {
+          "id": "bavaria",
+          "geometry_id": "DE-BY",
+          "name": "Baviera",
+          "criterion": "Segundo Land por PIB nominal 2025; automoción y tecnología.",
+          "fact_ids": [
+            "research-de-regions-gdp",
+            "research-de-bavaria-economy"
+          ],
+          "center": [
+            12.04285,
+            48.91808
+          ],
+          "span": 7.744,
+          "photo": {
+            "src": "media/regional-bavaria.jpg",
+            "caption": "Vista de Múnich, Baviera",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        }
+      ],
+      "fact_ids": [],
+      "rank": 3,
+      "iso3": "DEU",
+      "center": [
+        10,
+        51
+      ],
+      "span": 28,
+      "flag_src": "media/flag-de.svg",
+      "portrait_src": "media/portrait-de.jpg",
+      "gdp": {
+        "value": 5471.299,
+        "unit": "miles de millones USD",
+        "year": 2026,
+        "fact_ids": [
+          "gdp-de-2026"
+        ]
+      },
+      "frame_note": "Encuadre principal nacional con margen vertical; se conserva completa la geometría territorial de resaltado y bandera.",
+      "cinematic_frame": {
+        "center": [
+          10,
+          51
+        ],
+        "span": 18,
+        "pitch": 60,
+        "basis": "Tilted satellite style of original atlas-cinematico; countrywide hold during regions"
+      }
+    },
+    {
+      "iso2": "JP",
+      "name": "Japón",
+      "leader": {
+        "name": "Sanae Takaichi",
+        "title": "Primera ministra",
+        "as_of": "2026-11-09",
+        "term_note": "Depende de la confianza parlamentaria; sin fecha final personal fija.",
+        "fact_ids": [
+          "research-jp-leader",
+          "research-jp-term"
+        ]
+      },
+      "regions": [
+        {
+          "id": "tokyo",
+          "geometry_id": "JP-13",
+          "name": "Tokio",
+          "criterion": "Prefectura metropolitana; gran concentración de producto, finanzas y servicios.",
+          "fact_ids": [
+            "research-jp-tokyo-economy"
+          ],
+          "center": [
+            139.48188,
+            35.67493
+          ],
+          "span": 4,
+          "photo": {
+            "src": "media/regional-tokyo.jpg",
+            "caption": "Minato, Tokio",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        },
+        {
+          "id": "osaka",
+          "geometry_id": "JP-27",
+          "name": "Osaka",
+          "criterion": "Prefectura manufacturera, comercial y logística; selección funcional.",
+          "fact_ids": [
+            "research-jp-osaka-economy"
+          ],
+          "center": [
+            135.53285,
+            34.63426
+          ],
+          "span": 1.62,
+          "photo": {
+            "src": "media/regional-osaka.jpg",
+            "caption": "Foso del castillo y distrito de negocios de Osaka",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        }
+      ],
+      "fact_ids": [],
+      "rank": 4,
+      "iso3": "JPN",
+      "center": [
+        138,
+        35.7
+      ],
+      "span": 52,
+      "flag_src": "media/flag-jp.svg",
+      "portrait_src": "media/portrait-jp.jpg",
+      "gdp": {
+        "value": 4341.986,
+        "unit": "miles de millones USD",
+        "year": 2026,
+        "fact_ids": [
+          "gdp-jp-2026"
+        ]
+      },
+      "frame_note": "Encuadre principal nacional con margen vertical; se conserva completa la geometría territorial de resaltado y bandera.",
+      "cinematic_frame": {
+        "center": [
+          137,
+          37
+        ],
+        "span": 33,
+        "pitch": 60,
+        "basis": "Tilted satellite style of original atlas-cinematico; countrywide hold during regions"
+      }
+    },
+    {
+      "iso2": "GB",
+      "name": "Reino Unido",
+      "leader": {
+        "name": "Andy Burnham",
+        "title": "Primer ministro",
+        "as_of": "2026-11-09",
+        "term_note": "Desde el 20 de julio de 2026; depende de la confianza de los Comunes, sin fecha final personal fija.",
+        "fact_ids": [
+          "research-gb-leader",
+          "research-gb-term"
+        ]
+      },
+      "regions": [
+        {
+          "id": "england",
+          "geometry_id": "GB-ENG",
+          "name": "Inglaterra",
+          "criterion": "Nación constitutiva que contiene el gran polo financiero londinense.",
+          "fact_ids": [
+            "research-gb-nations",
+            "research-gb-england-finance"
+          ],
+          "center": [
+            -1.59888,
+            52.86521
+          ],
+          "span": 13.32,
+          "photo": {
+            "src": "media/regional-england.jpg",
+            "caption": "City de Londres, Inglaterra",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        },
+        {
+          "id": "scotland",
+          "geometry_id": "GB-SCT",
+          "name": "Escocia",
+          "criterion": "Nación constitutiva; contraste entre servicios financieros y energía.",
+          "fact_ids": [
+            "research-gb-nations",
+            "research-gb-scotland-economy"
+          ],
+          "center": [
+            -3.91606,
+            56.6528
+          ],
+          "span": 13.95,
+          "photo": {
+            "src": "media/regional-scotland.jpg",
+            "caption": "Vista de Edimburgo, Escocia",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        }
+      ],
+      "fact_ids": [
+        "research-gb-nations"
+      ],
+      "rank": 5,
+      "iso3": "GBR",
+      "center": [
+        -3,
+        55.6
+      ],
+      "span": 42,
+      "flag_src": "media/flag-gb.svg",
+      "portrait_src": "media/portrait-gb.jpg",
+      "gdp": {
+        "value": 4268.446,
+        "unit": "miles de millones USD",
+        "year": 2026,
+        "fact_ids": [
+          "gdp-gb-2026"
+        ]
+      },
+      "frame_note": "Encuadre principal nacional con margen vertical; se conserva completa la geometría territorial de resaltado y bandera.",
+      "cinematic_frame": {
+        "center": [
+          -3,
+          55
+        ],
+        "span": 23,
+        "pitch": 60,
+        "basis": "Tilted satellite style of original atlas-cinematico; countrywide hold during regions"
+      }
+    },
+    {
+      "iso2": "IN",
+      "name": "India",
+      "leader": {
+        "name": "Narendra Modi",
+        "title": "Primer ministro",
+        "as_of": "2026-11-09",
+        "term_note": "Tercer mandato desde 9 de junio de 2024; depende de la confianza parlamentaria, sin fecha final personal fija.",
+        "fact_ids": [
+          "research-in-leader",
+          "research-in-term"
+        ]
+      },
+      "regions": [
+        {
+          "id": "maharashtra",
+          "geometry_id": "IN-MH",
+          "name": "Maharashtra",
+          "criterion": "Gran economía estatal y centro financiero de Mumbai.",
+          "fact_ids": [
+            "research-in-maharashtra-economy"
+          ],
+          "center": [
+            75.43674,
+            18.8201
+          ],
+          "span": 14.357,
+          "photo": {
+            "src": "media/regional-maharashtra.jpg",
+            "caption": "Navi Mumbai, Maharashtra",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        },
+        {
+          "id": "tamil-nadu",
+          "geometry_id": "IN-TN",
+          "name": "Tamil Nadu",
+          "criterion": "Gran economía estatal y manufactura de ingeniería y automoción en Chennai.",
+          "fact_ids": [
+            "research-in-tamilnadu-economy",
+            "research-in-chennai-manufacturing"
+          ],
+          "center": [
+            78.3604,
+            10.80349
+          ],
+          "span": 12.227,
+          "photo": {
+            "src": "media/regional-tamil-nadu.jpg",
+            "caption": "Vista de Chennai, Tamil Nadu",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        }
+      ],
+      "fact_ids": [],
+      "rank": 6,
+      "iso3": "IND",
+      "center": [
+        80,
+        22
+      ],
+      "span": 64,
+      "flag_src": "media/flag-in.svg",
+      "portrait_src": "media/portrait-in.jpg",
+      "gdp": {
+        "value": 4060.207,
+        "unit": "miles de millones USD",
+        "year": 2026,
+        "fact_ids": [
+          "gdp-in-2026"
+        ]
+      },
+      "frame_note": "Encuadre principal nacional con margen vertical; se conserva completa la geometría territorial de resaltado y bandera.",
+      "cinematic_frame": {
+        "center": [
+          80,
+          23
+        ],
+        "span": 50,
+        "pitch": 60,
+        "basis": "Tilted satellite style of original atlas-cinematico; countrywide hold during regions"
+      }
+    },
+    {
+      "iso2": "FR",
+      "name": "Francia",
+      "leader": {
+        "name": "Emmanuel Macron",
+        "title": "Presidente de la República",
+        "as_of": "2026-11-09",
+        "term_note": "Segundo mandato: ciclo ordinario 2022–2027; duración constitucional de cinco años.",
+        "fact_ids": [
+          "research-fr-leader",
+          "research-fr-term"
+        ]
+      },
+      "regions": [
+        {
+          "id": "ile-de-france",
+          "geometry_id": "FR-IDF",
+          "name": "Île-de-France",
+          "criterion": "Primera por PIB regional 2024; polo de servicios.",
+          "fact_ids": [
+            "research-fr-regions-gdp",
+            "research-fr-idf-services"
+          ],
+          "center": [
+            2.09048,
+            48.67734
+          ],
+          "span": 3.351,
+          "photo": {
+            "src": "media/regional-ile-de-france.jpg",
+            "caption": "La Défense, Île-de-France",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        },
+        {
+          "id": "auvergne-rhone-alpes",
+          "geometry_id": "FR-ARA",
+          "name": "Auvergne-Rhône-Alpes",
+          "criterion": "Segunda por PIB regional 2024 y primera por empleo industrial; economía diversa.",
+          "fact_ids": [
+            "research-fr-regions-gdp",
+            "research-fr-ara-economy"
+          ],
+          "center": [
+            4.84626,
+            45.45778
+          ],
+          "span": 8.163,
+          "photo": {
+            "src": "media/regional-auvergne-rhone-alpes.jpg",
+            "caption": "Vista de Lyon, Auvergne-Rhône-Alpes",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        }
+      ],
+      "fact_ids": [],
+      "rank": 7,
+      "iso3": "FRA",
+      "center": [
+        2.7,
+        46.5
+      ],
+      "span": 30,
+      "flag_src": "media/flag-fr.svg",
+      "portrait_src": "media/portrait-fr.jpg",
+      "gdp": {
+        "value": 3554.155,
+        "unit": "miles de millones USD",
+        "year": 2026,
+        "fact_ids": [
+          "gdp-fr-2026"
+        ]
+      },
+      "frame_note": "Encuadre principal nacional con margen vertical; se conserva completa la geometría territorial de resaltado y bandera.",
+      "flag_fit": "landmass",
+      "cinematic_frame": {
+        "center": [
+          2.7,
+          46.5
+        ],
+        "span": 23,
+        "pitch": 60,
+        "basis": "Tilted satellite style of original atlas-cinematico; countrywide hold during regions"
+      }
+    },
+    {
+      "iso2": "RU",
+      "name": "Rusia",
+      "leader": {
+        "name": "Vladímir Putin",
+        "title": "Presidente",
+        "as_of": "2026-11-09",
+        "term_note": "Mandato ordinario 2024–2030",
+        "fact_ids": [
+          "ru-leader"
+        ]
+      },
+      "regions": [
+        {
+          "id": "moscow",
+          "geometry_id": "moscow-city",
+          "name": "Moscú, ciudad federal",
+          "criterion": "Nodo de comercio, finanzas y manufactura; selección funcional",
+          "fact_ids": [
+            "ru-moscow"
+          ],
+          "center": [
+            37.39934,
+            55.46158
+          ],
+          "span": 2.394,
+          "photo": {
+            "src": "media/regional-moscow.jpg",
+            "caption": "Centro internacional de negocios de Moscú",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        },
+        {
+          "id": "tatarstan",
+          "geometry_id": "RU-TA",
+          "name": "Tatarstán",
+          "criterion": "Nodo manufacturero y petroquímico; selección funcional",
+          "fact_ids": [
+            "ru-tatarstan"
+          ],
+          "center": [
+            50.72148,
+            55.32831
+          ],
+          "span": 11.182,
+          "photo": {
+            "src": "media/regional-tatarstan.jpg",
+            "caption": "Vista de Kazán, Tatarstán",
+            "focus": [
+              0.5,
+              0.5
+            ]
+          }
+        }
+      ],
+      "fact_ids": [
+        "ru-insight"
+      ],
+      "rank": 8,
+      "iso3": "RUS",
+      "center": [
+        98,
+        61
+      ],
+      "span": 165,
+      "flag_src": "media/flag-ru.svg",
+      "portrait_src": "media/portrait-ru.jpg",
+      "gdp": {
+        "value": 2861.156,
+        "unit": "miles de millones USD",
+        "year": 2026,
+        "fact_ids": [
+          "gdp-ru-2026"
+        ]
+      },
+      "frame_note": "Encuadre principal nacional con margen vertical; se conserva completa la geometría territorial de resaltado y bandera.",
+      "cinematic_frame": {
+        "center": [
+          96,
+          61
+        ],
+        "span": 156,
+        "pitch": 60,
+        "basis": "Tilted satellite style of original atlas-cinematico; countrywide hold during regions"
+      }
+    }
+  ]
+}

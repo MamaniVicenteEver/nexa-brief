@@ -27,6 +27,9 @@ _DECLARATIONS = {
 
 def catalog_navigation(templates: Path, design_id: str, catalog: dict) -> dict:
     source_path = _SOURCES.get(design_id)
+    if design_id == 'atlas-cinematico':
+        from src.core.explainer.engine_locations import engine_root
+        source_path = (engine_root(templates, 'nodehistory/_atlas') / 'components.json').relative_to(templates).as_posix()
     source = _gallery_index(templates, *source_path.split("/")) if source_path else {}
     entries = []
     for row in catalog["entries"]:

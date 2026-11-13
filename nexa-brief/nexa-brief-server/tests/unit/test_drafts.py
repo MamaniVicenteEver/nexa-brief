@@ -138,6 +138,7 @@ def test_prepared_details_become_the_job_summary():
 
 
 def test_result_summarizer_uses_prepared_summary_without_ai(tmp_path: Path):
+    from src.config.niche_config import get_niche_config
     from src.core.draft_details import DraftDetails, PlatformDetails, to_summary
     from src.modules import result_summarizer
 
@@ -145,7 +146,7 @@ def test_result_summarizer_uses_prepared_summary_without_ai(tmp_path: Path):
     job = _job(JobStage.VIDEO_RECORDED)
     job = job.model_copy(update={"artifacts": job.artifacts.model_copy(
         update={"summary": to_summary(details), "output_dir": tmp_path})})
-    result = asyncio.run(result_summarizer.run(job, ai=None, niche_cfg=None))   # sin IA: no la toca
+    result = asyncio.run(result_summarizer.run(job, ai=None, niche_cfg=get_niche_config(NICHE_ID)))
     assert result.stage == JobStage.SUMMARY_GENERATED
     assert (tmp_path / "logs" / "08_resumen_final.json").exists()
 
@@ -189,6 +190,28 @@ async def _create(job: Job | None = None, **kwargs) -> drafts.Draft:
     return await drafts.create(
         template_id=TEMPLATE_ID, niche_id=NICHE_ID, inputs=DraftInputs(), job=job or _job(), **kwargs
     )
+
+
+@pytest.mark.parametrize("status", ["prepared", "rendered", "failed"])
+def test_read_migrates_unnamed_recordable_drafts(status: str):
+    async def scenario():
+        draft = await _create(job=_job(JobStage.HTML_GENERATED))
+        await collection("drafts").update(draft.draft_id, {
+            "status": status, "name": "", "recoverable": status == "failed",
+            "details": {"song_name": "  Canción  "},
+        })
+        loaded = await drafts.get(draft.draft_id)
+        assert loaded.name == "Canción"
+        assert collection("drafts").get(draft.draft_id)["name"] == "Canción"
+        assert (await drafts.list_drafts(TEMPLATE_ID))[0].name == "Canción"
+    asyncio.run(scenario())
+
+
+def test_working_draft_can_remain_unnamed():
+    async def scenario():
+        draft = await _create()
+        assert (await drafts.get(draft.draft_id)).name == ""
+    asyncio.run(scenario())
 
 
 def test_run_preview_persists_job_and_marks_ready(fake_stages: list[str]):
@@ -403,13 +426,62 @@ def test_full_flow_preview_then_render(fake_stages: list[str]):
     assert client.get(f"/api/v1/drafts/{draft_id}").status_code == 404
 
 
-def test_auto_render_chains_preview_and_render(fake_stages: list[str]):
-    r = client.post("/api/v1/drafts", json={"template_id": TEMPLATE_ID, "auto_render": {}})
-    assert r.status_code == 202
-    done = _wait_status(r.json()["draft_id"], "rendered", "failed")
-    assert done["status"] == "rendered"
-    assert done["job_id"]
+def test_auto_render_prepares_ai_details_before_recording_and_publishes_selected_format(fake_stages, monkeypatch):
+    from contextlib import asynccontextmanager
+    from types import SimpleNamespace
+    from src.core import draft_details, draft_publishing
+    from src.core.draft_details import DraftDetails, PlatformDetails
+    from src.presentation.api.routers import drafts as draft_router
+
+    observed = []
+
+    async def generate(*_args, **_kwargs):
+        observed.append("prepare")
+        details = DraftDetails(song_name="Cielo", copies={"youtube": PlatformDetails(title="Cielo")})
+        details._thumbnail_texts = {"A": "Cielo", "B": "Una frase real"}
+        details._thumbnail_selected = "B"
+        return details
+
+    async def capture(draft_id, job):
+        draft = await drafts.get(draft_id)
+        assert draft.details.song_name == "Cielo"
+        assert draft.thumbnails.options["B"].text == "Una frase real"
+        assert draft.thumbnails.selected == "B"
+        assert job.input.formats == ["16x9", "9x16"]
+        observed.append("capture")
+        return job
+
+    async def publish(job_id, options):
+        observed.append(("publish", draft_publishing.format_for("instagram:cuenta", options)))
+
+    @asynccontextmanager
+    async def queue_slot(_job_id):
+        yield
+
+    async def start_render(draft, job, options):
+        job = drafts.apply_render_options(job, options, draft.details)
+        await drafts.start_render(draft.draft_id, job)
+        await draft_router._render_then_publish(draft.draft_id, job, options)
+        return job.job_id
+
+    monkeypatch.setattr(draft_details, "generate", generate)
+    monkeypatch.setattr(drafts, "_capture_selected_thumbnail", capture)
+    monkeypatch.setattr(drafts, "get_job_queue", lambda: SimpleNamespace(slot=queue_slot))
+    monkeypatch.setattr(draft_publishing, "publish_rendered", publish)
+    monkeypatch.setattr(draft_router, "_start_render", start_render)
+    monkeypatch.setattr(draft_router, "_job_on_stage", None)
+
+    async def scenario():
+        options = RenderOptions(publish_accounts=["instagram:cuenta"])
+        draft = await _create(auto_render=options)
+        await draft_router._preview_then_maybe_render(draft, drafts.load_job(draft.draft_id))
+        return await drafts.get(draft.draft_id)
+
+    done = asyncio.run(scenario())
+    assert done.status == "rendered"
+    assert done.job_id
     assert fake_stages[-1] == "packager"
+    assert observed == ["prepare", "capture", ("publish", "9x16")]
 
 
 def test_render_before_preview_ready_409():
@@ -504,11 +576,11 @@ def test_prepare_failure_keeps_preview_ready(fake_stages: list[str], monkeypatch
     asyncio.run(scenario())
 
 
-def test_render_requires_16x9_format_400(fake_stages: list[str]):
+def test_render_accepts_vertical_only_on_supported_engine(fake_stages: list[str]):
     created = client.post("/api/v1/drafts", json={"template_id": TEMPLATE_ID}).json()
     for _ in range(50):
         if client.get(f"/api/v1/drafts/{created['draft_id']}").json()["status"] == "preview_ready":
             break
         time.sleep(0.05)
     response = client.post(f"/api/v1/drafts/{created['draft_id']}/render", json={"formats": ["9x16"]})
-    assert response.status_code == 400
+    assert response.status_code == 202

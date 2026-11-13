@@ -196,6 +196,7 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
             and "src" in config_dict["bg"]
         ):
             config_dict["bg"]["src"] = niche_cfg.template.media_src_filename
+            config_dict["bg"]["type"] = "video" if niche_cfg.template.requires_video else "image"
 
     # Algunas plantillas esperan una COLECCIÓN de casos, no un objeto top-level
     # — esa decisión la declara el niche y no depende de la carpeta física.
@@ -227,6 +228,9 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
         niche_cfg.template.template_id,
         assets_dir,
     )
+
+    from src.core.library.lyric_appearance import ensure_intro_title
+    ensure_intro_title(config_dict, job, niche_cfg.template.template_id)
 
     written_config = (
         {"activeId": "active", "configs": [config_dict]}

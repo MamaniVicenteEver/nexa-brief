@@ -48,7 +48,6 @@ from src.presentation.api.preview_media import media_for_request, preview_config
 from src.presentation.api.schemas.template_catalog_schema import (
     TemplateCatalogCategory,
     TemplateCatalogResponse,
-    TemplateCatalogSandboxDemo,
     TemplateCatalogSummary,
 )
 from src.presentation.api.schemas.template_schema import (
@@ -133,8 +132,11 @@ def _build_template_response(template_id: str, niche: NicheConfig | None) -> Tem
 
 
 def _requirements_or_none(template_id: str) -> TemplateRequirementsResponse | None:
-    inputs = get_template_inputs(template_id)
-    return TemplateRequirementsResponse.model_validate(inputs) if inputs is not None else None
+    inputs = get_template_inputs(template_id, fresh=True)
+    if inputs is None:
+        return None
+    from src.core.library.resource_metadata import resource_metadata
+    return TemplateRequirementsResponse.model_validate({**inputs, "resource_context": resource_metadata(template_id=template_id) or None})
 
 
 @router.get("/templates", response_model=list[TemplateResponse])
@@ -160,26 +162,14 @@ async def list_template_categories_endpoint() -> list[TemplateCategoryResponse]:
 @router.get("/templates/catalog", response_model=TemplateCatalogResponse)
 async def get_template_catalog() -> TemplateCatalogResponse:
     """Catálogo de lectura para la vista «Ver todo»: agrupa fuentes existentes por categoría."""
-    from dataclasses import asdict
-
     from src.core.categories import list_categories as get_categories
-    from src.core.explainer import sandbox as sandbox_catalog
     from src.presentation.api.routers.explainer import list_explainer_videos
-    from src.presentation.api.routers.showcase import get_showcase_service
-    from src.presentation.api.schemas.explainer_schema import SandboxItemResponse
 
     category_tree = get_categories()
     templates = await list_templates()
     demo_videos = [video for video in await list_explainer_videos() if video.demo]
-    sandbox_folders = sandbox_catalog.list_sandbox()
-
-    # Showcase es un registro opcional usado para reconocer demos ya promovidas.
-    # Si no está disponible, las demos explícitas del sandbox siguen apareciendo.
-    try:
-        showcase_designs = get_showcase_service().list_designs().designs
-    except Exception as exc:
-        logger.warning("template_catalog_showcase_unavailable", error=str(exc))
-        showcase_designs = []
+    # Producción solo usa demos ya registradas desde su ubicación canónica.
+    # Las pruebas y demos experimentales siguen en su propia sección Sandbox.
 
     def path_matches(path: str | None, category_path: str) -> bool:
         return bool(path and (path == category_path or path.startswith(f"{category_path}/")))
@@ -226,49 +216,10 @@ async def get_template_catalog() -> TemplateCatalogResponse:
 
         category_videos = [
             video for video in demo_videos
-            if path_matches(video.category_path, category_id)
+            if any(path_matches(path, category_id)
+                   for path in [video.category_path, *video.category_paths])
         ]
-        category_designs = [
-            design for design in showcase_designs
-            if design.state == "produccion"
-            and (
-                path_matches(design.category_path, category_id)
-                or any(path_matches(path, category_id) for path in (design.shared_categories or []))
-            )
-        ]
-        registered = {design.id: design.name for design in category_designs}
-        represented = {video.design for video in demo_videos}
-        sandbox_demos = []
-        if node.engine != "pipeline":
-            for folder in sandbox_folders:
-                if folder.role != "projects":
-                    continue
-                for item in folder.items:
-                    registered_demo = item.id in registered
-                    design_id = item.id if registered_demo else item.design
-                    sandbox_demo = (
-                        folder.category_id == category_id
-                        and item.demo
-                        and item.kind == "explainer_kit"
-                    )
-                    if (
-                        not design_id
-                        or design_id in represented
-                        or item.player == "none"
-                        or (not registered_demo and not sandbox_demo)
-                    ):
-                        continue
-                    represented.add(design_id)
-                    item_data = asdict(item)
-                    item_data["design"] = design_id
-                    if registered_demo:
-                        item_data["title"] = registered[item.id]
-                    sandbox_demos.append(TemplateCatalogSandboxDemo(
-                        item=SandboxItemResponse.model_validate(item_data),
-                        production_design=any(design.id == item.id for design in category_designs),
-                    ))
-
-        total = len(category_templates) + len(category_videos) + len(sandbox_demos)
+        total = len(category_templates) + len(category_videos)
         sections.append(TemplateCatalogCategory(
             id=category_id,
             path=category_id,
@@ -278,11 +229,11 @@ async def get_template_catalog() -> TemplateCatalogResponse:
             engine=node.engine,
             template_count=len(category_templates),
             demo_video_count=len(category_videos),
-            sandbox_demo_count=len(sandbox_demos),
+            sandbox_demo_count=0,
             total_item_count=total,
             templates=category_templates,
             demo_videos=category_videos,
-            sandbox_demos=sandbox_demos,
+            sandbox_demos=[],
         ))
 
     category_count = len(sections)
@@ -291,7 +242,7 @@ async def get_template_catalog() -> TemplateCatalogResponse:
     empty_count = sum(section.status == "empty" for section in sections)
     with_items = sum(section.total_item_count > 0 for section in sections)
     template_count = sum(section.template_count for section in sections)
-    demo_count = sum(section.demo_video_count + section.sandbox_demo_count for section in sections)
+    demo_count = sum(section.demo_video_count for section in sections)
 
     return TemplateCatalogResponse(
         summary=TemplateCatalogSummary(
@@ -314,6 +265,24 @@ async def get_template(template_id: str) -> TemplateResponse:
     if not any(candidate_id == template_id for candidate_id, _ in list_template_catalog()):
         raise HTTPException(status_code=404, detail=f"Template '{template_id}' not found")
     return _build_template_response(template_id, niche)
+
+
+@router.get("/templates/{template_id}/videos")
+async def list_template_videos(template_id: str) -> list[dict]:
+    from src.core import drafts, job_tracker
+    from src.core.progress import get_progress
+    result = []
+    for draft in await drafts.list_drafts(template_id):
+        if not draft.job_id:
+            continue
+        job = job_tracker.get(draft.job_id) or {}
+        result.append({"draft_id": draft.draft_id, "job_id": draft.job_id,
+                       "name": "Demo" if draft.original else draft.name,
+                       "status": draft.status, "recoverable": draft.recoverable,
+                       "created_at": job.get("created_at", draft.created_at),
+                       "formats": list(job_tracker.format_paths(job).keys()),
+                       "percent": (get_progress(draft.job_id).percent if get_progress(draft.job_id) else None)})
+    return sorted(result, key=lambda item: item["created_at"], reverse=True)
 
 
 @router.get("/templates/{template_id}/requirements", response_model=TemplateRequirementsResponse)

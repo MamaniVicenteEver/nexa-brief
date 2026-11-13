@@ -153,6 +153,8 @@ function ProductionForm({
 	const running =
 		mutation.isPending || ["queued", "validating"].includes(status.state);
 	const dirty = JSON.stringify(draft) !== JSON.stringify(status.draft);
+	const destinationCurrent =
+		draft.demo === status.draft.demo && draft.category === status.draft.category;
 	function field(name: keyof ProductionDraft, value: unknown) {
 		setDraft((current) => ({ ...current, [name]: value }));
 	}
@@ -172,6 +174,18 @@ function ProductionForm({
 				</p>
 			)}
 			<fieldset disabled={running} className="space-y-4 disabled:opacity-60">
+				<label className="block space-y-1">
+					<span className="text-sm font-semibold">{t("contentType")}</span>
+					<select
+						className={input}
+						value={draft.demo ? "demo" : "video"}
+						onChange={(e) => field("demo", e.target.value === "demo")}
+					>
+						<option value="demo">{t("mainDemo")}</option>
+						<option value="video">{t("derivedVideo")}</option>
+					</select>
+				</label>
+				<p className="text-xs text-nb-mute">{t("contentTypeHelp")}</p>
 				<label className="block space-y-1">
 					<span className="text-sm font-semibold">{t("designTitle")}</span>
 					<input
@@ -271,6 +285,14 @@ function ProductionForm({
                 )}
 
 			</fieldset>
+			<section aria-label={t("destination")} className="space-y-1 rounded-xl border border-nb-line p-3 text-xs">
+				<p className="font-semibold">{t(draft.demo ? "repositoryDestination" : "profileDestination")}</p>
+				{destinationCurrent && status.destination ? (
+					<code className="block break-all">{status.destination}</code>
+				) : (
+					<p>{t("destinationAfterValidation")}</p>
+				)}
+			</section>
             {status.report && <section className="rounded-xl border border-nb-line p-3 text-xs" aria-label={t("technicalReport")}>
                 <p>{t("checkedResources", { files: status.report.files_checked, resources: status.report.resources_checked })}</p>
                 <p>{t("existingPosters", { existing: status.report.posters.filter((p) => p.exists).length, total: status.report.posters.length })}</p>

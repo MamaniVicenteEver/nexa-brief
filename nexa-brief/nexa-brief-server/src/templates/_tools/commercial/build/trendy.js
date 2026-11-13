@@ -88,6 +88,17 @@ function punches(X, layer) {
   }
 }
 const word0 = X => (X.lines[0]?.text || X.sc.seg.text || "").toUpperCase();
+/* Rótulo legible sobre la composición; se conserva la animación de fondo. */
+function readableLabel(X, parent, word, y = 0.5) {
+  const { W, H } = X, portrait = H > W;
+  const fs = fit(word, "mi", 0, 0.82 * W, (portrait ? 0.048 : 0.095) * H);
+  const h = Math.max(fs * 1.65, (portrait ? 0.065 : 0.12) * H);
+  const band = div(parent, "patch", { left: 0.05 * W + "px", top: y * H - h / 2 + "px", width: 0.9 * W + "px", height: h + "px", background: "rgba(0,0,18,0.88)" });
+  band.dataset.trendyLabel = "background";
+  const label = tx(parent, word, { cls: "mi", fs, x: 0.5 * W, y: y * H, color: P.paper });
+  label.el.dataset.trendyLabel = "text";
+}
+
 
 const B = {};
 
@@ -103,9 +114,9 @@ B.title = (sc, X) => {
       <line x1="${0.36 * W}" y1="${0.3 * H}" x2="${0.78 * W}" y2="${0.3 * H}" opacity=".5"/>
       <line x1="${0.52 * W}" y1="${0.66 * H}" x2="${0.95 * W}" y2="${0.66 * H}"/></g>`);
   const [l1, l2] = [X.lines[0] || { text: "" }, X.lines[1] || { text: "" }];
-  const fs = Math.min(fit(l1.text.toUpperCase(), "mi", 0, 0.36 * W, 0.13 * H), fit(l2.text.toUpperCase(), "mi", 0, 0.36 * W, 0.13 * H));
-  const a = tx(L, l1.text.toUpperCase(), { cls: "mi", fs, x: 0.66 * W, y: 0.44 * H, color: P.paper });
-  const b = tx(L, l2.text.toUpperCase(), { cls: "mi", fs, x: 0.7 * W, y: 0.44 * H + fs * 0.9, color: P.lime });
+  const fs = Math.min(fit(l1.text.toUpperCase(), "mi", 0, (H > W ? 0.86 : 0.36) * W, 0.13 * H), fit(l2.text.toUpperCase(), "mi", 0, (H > W ? 0.86 : 0.36) * W, 0.13 * H));
+  const a = tx(L, l1.text.toUpperCase(), { cls: "mi", fs, x: (H > W ? 0.5 : 0.66) * W, y: 0.44 * H, color: P.paper });
+  const b = tx(L, l2.text.toUpperCase(), { cls: "mi", fs, x: (H > W ? 0.5 : 0.7) * W, y: 0.44 * H + fs * 0.9, color: P.lime });
   glitchIn(X, a, Math.max(0.12, l1.rt)); glitchIn(X, b, Math.max(0.2, l2.rt));
   [["×", 0.64], ["+", 0.68], ["×", 0.72]].forEach(([c, fx], i) => mark(X, L, c, fx * W, 0.19 * H, 22 * u, i === 1 ? P.lime : P.paper, 0.3 + i * 0.05));
   [["+", 0.76], ["+", 0.8], ["+", 0.84]].forEach(([c, fx], i) => mark(X, L, c, fx * W, 0.84 * H, 20 * u, i === 1 ? P.lime : P.paper, 0.45 + i * 0.05));
@@ -141,6 +152,7 @@ B.stack = (sc, X) => {
     X.T(g, "visibility", "hidden", true).set(tg, "visible").set(tg + 0.14, "hidden");
   }
   punches(X, L);
+  if (H > W) readableLabel(X, L, word, 0.72);
 };
 
 B.split = (sc, X) => {
@@ -173,6 +185,7 @@ B.split = (sc, X) => {
   mark(X, L, "×", 0.07 * W, 0.12 * H, 20 * u, P.paper, 0.2);
   mark(X, L, "+", 0.53 * W, 0.12 * H, 20 * u, P.paper, 0.25);
   if ((sc.slot.out ?? "zoom") === "zoom") punches(X, L);
+  if (H > W) readableLabel(X, L, word, 0.82);
 };
 
 B.grid = (sc, X) => {
@@ -193,6 +206,7 @@ B.grid = (sc, X) => {
   }
   X.T(g, "transform", "scale(2.05)").to(0, X.dur, "scale(0.92)", "cubic-bezier(.3,.1,.3,1)");
   leak(L, "0% 100%", 0.25);
+  readableLabel(X, L, word);
 };
 
 B.circle = (sc, X) => {
@@ -201,7 +215,7 @@ B.circle = (sc, X) => {
   const R = 0.3 * H, rg = ring(L, W / 2, H / 2, R, "rgba(242,239,230,0.55)", 1.4 * u);
   X.T(rg, "transform", "scale(0.12)").to(0, 0.35, "scale(1)", EASE_OUT).to(0.35, X.dur, "scale(1.08)");
   const word = word0(X), n = sc.slot.repeat || 3;
-  const fs = fit(word, "mi", 0, 0.38 * W, 0.12 * H), lh = fs * 0.95;
+  const fs = fit(word, "mi", 0, (H > W ? 0.84 : 0.38) * W, 0.12 * H), lh = fs * 0.95;
   const grp = div(L, "lay");
   for (let i = 0; i < n; i++) {
     const o = tx(grp, word, { cls: "mi", fs, x: W / 2, y: H / 2 + (i - (n - 1) / 2) * lh, color: i % 2 ? P.paper : P.lime });
@@ -231,6 +245,7 @@ B.maskword = (sc, X) => {
     .to(0.6, Math.max(0.3, X.dur - 0.6), "translateY(0%) scale(1.1) rotate(2deg)");
   dots(L, 0.78 * W, 0.72 * H, 0.08 * W, 0.1 * H, P.paper, 6 * u);
   punches(X, L);
+  readableLabel(X, L, word, 0.73);
 };
 
 B.spaced = (sc, X) => {
@@ -240,10 +255,10 @@ B.spaced = (sc, X) => {
   leak(L); vignette(L);
   zoomTrail(X, L, 0, DUO, 0, 0.4, 1);
   const word = word0(X), n = sc.slot.repeat || 3;
-  const fs = fit(word, "mi", 0.38, 0.5 * W, 0.12 * H), lh = fs * 0.98, t0 = Math.max(0.15, X.lines[0]?.rt ?? 0.2);
+  const fs = fit(word, "mi", H > W ? 0.06 : 0.38, (H > W ? 0.88 : 0.5) * W, 0.12 * H), lh = fs * 0.98, t0 = Math.max(0.15, X.lines[0]?.rt ?? 0.2);
   for (let i = 0; i < n; i++) {
     const ghost = i % 2 === 1;
-    const o = tx(L, word, { cls: "mi", fs, x: 0.22 * W, y: 0.5 * H + (i - (n - 1) / 2) * lh, ax: 0, color: ghost ? "rgba(242,239,230,0.55)" : P.paper, ls: 0.38, stroke: ghost, sw: 0.02 });
+    const o = tx(L, word, { cls: "mi", fs, x: (H > W ? 0.06 : 0.22) * W, y: 0.5 * H + (i - (n - 1) / 2) * lh, ax: 0, color: ghost ? "rgba(242,239,230,0.55)" : P.paper, ls: H > W ? 0.06 : 0.38, stroke: ghost, sw: 0.02 });
     slideIn(X, o.el, t0 + i * 0.07, 0.5 * W);
   }
   if (X.dur > 1.3) {
@@ -276,6 +291,7 @@ B.tunnel = (sc, X) => {
   mark(X, L, "+", 0.84 * W, 0.12 * H, 30 * u, P.paper, 0.3);
   ring(L, 0.08 * W, 0.95 * H, 0.2 * H, "rgba(242,239,230,0.35)", 1.2 * u);
   punches(X, L);
+  readableLabel(X, L, word, 0.68);
 };
 
 B.action = (sc, X) => {
@@ -287,7 +303,7 @@ B.action = (sc, X) => {
   ring(L, 0.42 * W, 0.5 * H, 0.28 * H, "rgba(242,239,230,0.6)", 1.3 * u);
   svgShape(L, W, H, `<polyline points="${0.3 * W},${0.66 * H} ${0.38 * W},${0.52 * H} ${0.46 * W},${0.66 * H}" fill="none" stroke="${P.paper}" stroke-width="${1.6 * u}" opacity=".8"/>
     <line x1="${0.1 * W}" y1="${0.66 * H}" x2="${0.6 * W}" y2="${0.66 * H}" stroke="${P.paper}" stroke-width="${1.2 * u}" opacity=".6"/>`);
-  const word = word0(X), fs = fit(word, "mi", 0, 0.42 * W, 0.16 * H), t0 = Math.max(0.2, X.lines[0]?.rt ?? 0.3);
+  const word = word0(X), fs = fit(word, "mi", 0, (H > W ? 0.84 : 0.42) * W, 0.16 * H), t0 = Math.max(0.2, X.lines[0]?.rt ?? 0.3);
   const o = tx(L, word, { cls: "mi", fs, x: 0.47 * W, y: 0.5 * H, color: P.paper });
   X.T(o.el, "transform", "scale(1.5)").to(t0, 0.25, "scale(1)", EASE_OUT);
   blurPass(X.T(o.el, "filter", "none", true), t0, 0.22, "x");
@@ -311,7 +327,7 @@ B.end = (sc, X) => {
   X.T(r1, "transform", "scale(0.2)").to(0, 0.4, "scale(1)", EASE_OUT);
   X.T(r2, "transform", "scale(0.2)").to(0.05, 0.45, "scale(1)", EASE_OUT);
   const ls = X.lines.length ? X.lines : [{ text: sc.seg.text, rt: 0.2 }];
-  const fs = Math.min(...ls.map(l => fit(l.text.toUpperCase(), "mi", 0.06, 0.38 * W, 0.11 * H)));
+  const fs = Math.min(...ls.map(l => fit(l.text.toUpperCase(), "mi", 0.06, (H > W ? 0.84 : 0.38) * W, 0.11 * H)));
   const grp = div(L, "lay");
   ls.forEach((l, i) => {
     const o = tx(grp, l.text.toUpperCase(), { cls: "mi", fs, x: W / 2, y: H / 2 + (i - (ls.length - 1) / 2) * fs * 0.98, color: P.lime, ls: 0.06 });

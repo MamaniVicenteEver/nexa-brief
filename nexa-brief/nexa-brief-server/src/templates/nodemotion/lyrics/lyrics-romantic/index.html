@@ -815,6 +815,7 @@
 
   /* fondo imagen/video con filtro cálido-rosado (CONFIG.bg) */
   #bgMedia {
+    opacity: var(--custom-bg-opacity, 1);
     position: fixed; inset: -6%; width: 112%; height: 112%; object-fit: cover; z-index: 0;
     animation: bgBreath 58s ease-in-out infinite alternate; will-change: transform;
   }
@@ -886,7 +887,7 @@
   #outro { opacity: 0; pointer-events: none; }
   #outro.show { opacity: 1; pointer-events: auto; }
   body.outroActive #viewport { opacity: 0.10; transition: opacity 2.2s ease; }
-  body.outroActive #bgMedia { opacity: 0.50; transition: opacity 2.2s ease; }
+  body.outroActive #bgMedia { opacity: calc(0.50 * var(--custom-bg-opacity, 1)); transition: opacity 2.2s ease; }
   #hint {
     position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
     font-family: var(--fontSerif); font-size: 1.5vh; letter-spacing: 0.4em;
@@ -1197,7 +1198,22 @@ function setupBg() {
   }
   el.src = encodeURI(C.bg.src);
   el.style.display = "block";
-  el.style.filter = C.bg.filter || "";
+  // El material elegido por la persona controla su propia visibilidad; la
+  // demo sin opacity conserva los filtros y tintes originales de la plantilla.
+  const customOpacity = C.bg.opacity;
+  if (typeof customOpacity === "number" && Number.isFinite(customOpacity)) {
+    const value = Math.max(0, Math.min(1, customOpacity));
+    el.style.setProperty("--custom-bg-opacity", String(value));
+    el.style.filter = "none";
+    for (const id of ["darkTint", "warmTint", "coldTint"]) {
+      const tint = $(id);
+      if (tint) tint.style.opacity = "0.25";
+    }
+    const vignette = $("vignette");
+    if (vignette) vignette.style.opacity = "0.35";
+  } else {
+    el.style.filter = C.bg.filter || "";
+  }
 }
 
 setupBg();

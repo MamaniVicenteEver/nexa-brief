@@ -29,7 +29,13 @@ Los tokens complementarios de miniaturas se consultan en `../../design-tokens.js
 
 ## Composición y miniaturas
 
-A ocupa el centro con hasta cinco palabras en una o dos filas. B admite una frase más larga en hasta cuatro filas. Mantener la paleta en ambas. Fondo independiente de imagen propia o del medio existente, con recorte a sangre y encuadre ajustable. Sin artista; «LETRAS» siempre debajo de la última fila, alineada a su extremo derecho, con el color principal de la plantilla a opacidad completa, al 24,3% en A y al 30% en B, con el hueco al 25,2% del original en A y al 28% en B. NODEMOTION queda discreta en la esquina inferior derecha.
+Ambas opciones salen de escenas reales del video: fondo lima #C9FF1F con la retícula de puntos, rayados, cuadritos, fecha, contador y texto vertical del HUD; tinta #1E1E1E; Archivo 900 extendida. La foto conserva sus colores.
+
+**A (escena «INTRO», segundo 2):** sin foto. La palabra más larga del titular ocupa el ancho en contorno gigante (≈400 px sobre 720, puede salirse por la derecha como en el video) y el titular completo va sólido en una fila al centro, un 15% más grande que en el video (≈58 px sobre 720; se reduce solo si no cabe).
+
+**B (escena «FUERZA PURA», segundo 5):** titular en dos filas, la primera sólida y la segunda en contorno, con la palabra en contorno gigante detrás. La foto lleva el borde escalonado tipo píxel y la estela de copias y la tira de píxel estirado congeladas, a un lado (`design.side`, derecha por defecto). La marca (`brand.tag`) va debajo. Usa las mismas palabras que A o menos.
+
+Titular por defecto: el primer rótulo de dos filas del guion (`lyrics.json`, campo `lines`), por ejemplo «FUERZA PURA»; si no hay guion, el título del borrador. Sin «LETRAS» ni artista. NODEMOTION queda discreta en la esquina inferior derecha.
 
 ![Miniaturas A y B de promo-dynamic](../../docs/previews/promo-dynamic.jpg)
 

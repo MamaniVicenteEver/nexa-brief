@@ -46,18 +46,17 @@ class CopyResult:
     raw_responses: list[dict[str, Any]] = field(default_factory=list)
     unresolved_errors: list[str] = field(default_factory=list)
     thumbnail_options: dict[str, str] = field(default_factory=dict)
+    thumbnail_selected: str = "A"
+    promo_prompt_reference: dict[str, Any] | None = None
 
 
-def _thumbnail_prompt(profile: str | None) -> str:
+def _thumbnail_prompt(profile: str | None, promo_prompt_version: str | None = None) -> str:
     if profile == "commercial":
-        guidance = (
-            "A y B son dos frases promocionales distintas, muy cortas (máximo 60 caracteres), "
-            "basadas solo en los textos o beneficios que aparecen en el video. No inventes ofertas, "
-            "fechas, cifras ni características. No repitas el mismo texto con otras palabras."
-        )
+        from src.core.promo_prompts import compose
+        guidance = compose("miniaturas", version=promo_prompt_version, include_base=False)
     else:
         guidance = (
-            "A usa de 1 a 5 palabras: el nombre limpio de la canción o una frase potente. B propone una frase distinta, "
+            "A usa de 1 a 5 palabras del nombre limpio de la canción. B propone una frase distinta, "
             "breve (máximo 60 caracteres) y fiel a la letra o al tema. No inventes hechos."
         )
     return (
@@ -66,7 +65,8 @@ def _thumbnail_prompt(profile: str | None) -> str:
         "Añade al objeto JSON raíz la clave \"thumbnail_options\" con esta forma exacta: "
         "{\"A\": \"texto breve\", \"B\": \"otro texto distinto\"}. "
         "Completa ambos textos en el idioma obligatorio. No incluyas artista, marca, LETRA, LYRIC VIDEO, emojis, hashtags ni comillas. "
-        "B puede ser más larga que A, pero debe proceder de la letra o del contenido disponible."
+        "B puede ser más larga que A, pero debe proceder de la letra o del contenido disponible. "
+        "Añade al objeto raíz thumbnail_selected con el valor A o B: elegí la miniatura más clara y atractiva para este contenido."
     )
 
 
@@ -139,7 +139,7 @@ def build_facts(job: Job, niche_cfg: NicheConfig, user_notes: str = "", research
             f"Descripción: {song.description}" if song.description else "",
         ]))
     if user_notes.strip():
-        sections.append(_section("Lo que cuenta la persona sobre la canción (fuente confiable: úsalo y no lo contradigas)",
+        sections.append(_section("Lo que cuenta la persona sobre el contenido (fuente proporcionada; no inventes datos)",
                                  [user_notes.strip()]))
     if research.strip():
         sections.append(_section("Investigación previa (resumen de lo anterior y de la letra)", [research.strip()]))
@@ -206,11 +206,17 @@ async def write_copy(
     strategies: dict[str, CopyStrategy] | None = None,
     profile: str | None = None,
     include_thumbnail_options: bool = False,
+    promo_prompt_version: str | None = None,
 ) -> CopyResult:
     strategies = strategies or active_strategies(profile=profile)
     system, user = build_copy_prompt(strategies, facts, language, profile)
+    promo_reference = None
+    if profile == "commercial":
+        from src.core.promo_prompts import compose, reference
+        promo_reference = reference(version=promo_prompt_version)
+        system = compose("publicar", version=promo_reference["version"]) + "\n\n" + system
     if include_thumbnail_options:
-        user += _thumbnail_prompt(profile)
+        user += _thumbnail_prompt(profile, promo_reference["version"] if promo_reference else None)
 
     raw = await ai.complete_json(system, user)
     raws = [raw]
@@ -219,6 +225,8 @@ async def write_copy(
     if include_thumbnail_options:
         thumbnail_options, thumbnail_errors = _parse_thumbnail_options(raw)
         errors.extend(thumbnail_errors)
+    selected_raw = raw.get("thumbnail_selected") if include_thumbnail_options else None
+    thumbnail_selected = selected_raw.strip().upper() if isinstance(selected_raw, str) and selected_raw.strip().upper() in thumbnail_options else "A"
     if errors:
         logger.info("copy_writer_retry", errors=errors)
         raw = await ai.complete_json(system, user + build_retry_note(errors))
@@ -231,8 +239,10 @@ async def write_copy(
         if len(retry_errors) <= len(errors):
             pieces, errors = retry_pieces, retry_errors
             thumbnail_options = retry_thumbnail_options
+            selected_raw = raw.get("thumbnail_selected") if include_thumbnail_options else None
+            thumbnail_selected = selected_raw.strip().upper() if isinstance(selected_raw, str) and selected_raw.strip().upper() in thumbnail_options else "A"
 
     copies = {platform: render_copy(strategy, pieces, language, seed) for platform, strategy in strategies.items()}
     if errors:
         logger.warning("copy_writer_unresolved_errors", errors=errors)
-    return CopyResult(copies, pieces, system, user, raws, errors, thumbnail_options)
+    return CopyResult(copies, pieces, system, user, raws, errors, thumbnail_options, thumbnail_selected, promo_reference)

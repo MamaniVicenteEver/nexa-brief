@@ -5,6 +5,7 @@ adaptador de `AgentRunnerPort` y una rama acá; quien llama no cambia.
 """
 
 import os
+import platform
 from pathlib import Path
 
 from src.adapters.agent.isolation_policy import require_legacy_agent_launch_allowed
@@ -42,10 +43,16 @@ def get_agent(name: str | None = None) -> AgentRunnerPort:
             raise AgentIsolationUnavailableError("Los agentes CLI están deshabilitados para perfiles v2/v3: Claude aislado no está verificado para este host.")
         return runner
     if effective == "codex" and layout_for_settings(settings).schema_version >= 2:
-        from src.adapters.agent.infrastructure.isolated_executor import IsolatedCodexRunner
+        from src.adapters.agent.infrastructure.isolated_executor import APPROVED_BUILDS, IsolatedCodexRunner
 
         runner = IsolatedCodexRunner()
         if not runner.available():
+            if platform.system() == "Linux" and not any(
+                build.kernel_release == platform.release() for build in APPROVED_BUILDS
+            ):
+                raise AgentIsolationUnavailableError(
+                    "El aislamiento de Codex no está verificado para el kernel actual del servidor."
+                )
             raise AgentIsolationUnavailableError("Los agentes CLI están deshabilitados para perfiles v2/v3: Codex aislado no está verificado para este host.")
         return runner
     require_legacy_agent_launch_allowed()

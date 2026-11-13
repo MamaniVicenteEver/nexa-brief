@@ -77,12 +77,33 @@ class RenderOptions(BaseModel):
     """Opciones de grabado: se aplican al Job recién al grabar, no en el preview."""
 
     recorder_engine: Literal["playwright", "hyperframes", "remotion"] | None = None
+    background_opacity: float | None = Field(default=None, ge=0, le=1, allow_inf_nan=False)
     render_target: Literal["local", "aws"] | None = None
     publish_accounts: list[str] = Field(default_factory=list)  # "platform:alias"
     # Formatos a grabar (None = los del nicho). 16:9 va siempre: es el archivo principal del grabador.
     formats: list[RecordFormat] | None = None
     # Un formato por cuenta ("platform:alias" → "16x9" | "9x16"); sin entrada, el de su red.
     account_formats: dict[str, RecordFormat] = Field(default_factory=dict)
+
+
+DEFAULT_ACCOUNT_FORMAT: dict[str, RecordFormat] = {
+    "youtube": "16x9", "facebook": "16x9", "instagram": "9x16", "tiktok": "9x16",
+}
+
+
+def effective_record_formats(options: RenderOptions) -> list[RecordFormat]:
+    """One list used for both recording and account publication."""
+    if options.formats is not None:
+        return list(options.formats)
+    formats: list[RecordFormat] = ["16x9"]
+    for selector in options.publish_accounts:
+        platform = selector.split(":", 1)[0]
+        chosen = "16x9" if platform == "youtube" else (
+            options.account_formats.get(selector) or DEFAULT_ACCOUNT_FORMAT.get(platform, "16x9")
+        )
+        if chosen not in formats:
+            formats.append(chosen)
+    return formats
 
 
 class Draft(BaseModel):
@@ -149,7 +170,10 @@ def can_render(draft: Draft, job: Job | None) -> bool:
     `rendered` no se regraba: el video ya está en Biblioteca con ese job_id."""
     if not _has_preview_stage(job) or draft.status in _IN_FLIGHT:
         return False
-    return draft.status in ("preview_ready", "prepared") or (draft.status == "failed" and draft.recoverable)
+    if draft.status not in ("preview_ready", "prepared") and not (draft.status == "failed" and draft.recoverable):
+        return False
+    from src.core.promos.readiness import approved_for_recording
+    return approved_for_recording(draft)
 
 
 def can_prepare(draft: Draft, job: Job | None) -> bool:
@@ -301,11 +325,35 @@ def _clear_selected_thumbnail(draft_id: str) -> None:
         }))
 
 
+def _default_name(draft: Draft, details: DraftDetails | None = None) -> str:
+    details = details or draft.details
+    if details and details.song_name.strip():
+        return details.song_name.strip()[:120]
+    if draft.inputs.music_asset_id:
+        from src.core.library.asset_library import AssetNotFoundError, get_music_entry
+        try:
+            title = get_music_entry(draft.inputs.music_asset_id).title.strip()
+            if title:
+                return title[:120]
+        except (AssetNotFoundError, KeyError, ValueError, FileNotFoundError):
+            pass
+    records = _drafts().list({"template_id": draft.template_id})
+    records.sort(key=lambda record: (record.get("created_at", ""), record.get("draft_id", "")))
+    number = next((i for i, record in enumerate(records, 1) if record.get("draft_id") == draft.draft_id), 1)
+    return f"Prototipo {number}"
+
+
+async def _ensure_name(draft: Draft) -> Draft:
+    if not draft.original and not draft.name.strip() and (draft.status in ("prepared", "rendering", "rendered") or (draft.status == "failed" and draft.recoverable)):
+        return await _patch(draft.draft_id, {"name": _default_name(draft)}) or draft
+    return draft
+
+
 async def get(draft_id: str) -> Draft | None:
     record = _drafts().get(draft_id)
     if record is None:
         return None
-    draft = _hide_missing_preview(await _recover_if_orphaned(Draft.model_validate(record)))
+    draft = await _ensure_name(_hide_missing_preview(await _recover_if_orphaned(Draft.model_validate(record))))
     manifest = thumbnail_manifest(draft, load_job(draft_id))
     return draft.model_copy(update={"thumbnails": manifest}) if manifest is not None else draft
 
@@ -316,7 +364,7 @@ async def list_drafts(template_id: str | None = None) -> list[Draft]:
     records.sort(key=lambda r: r.get("created_at", ""), reverse=True)
     items = []
     for record in records:
-        draft = _hide_missing_preview(await _recover_if_orphaned(Draft.model_validate(record)))
+        draft = await _ensure_name(_hide_missing_preview(await _recover_if_orphaned(Draft.model_validate(record))))
         manifest = thumbnail_manifest(draft, load_job(draft.draft_id))
         items.append(draft.model_copy(update={"thumbnails": manifest}) if manifest is not None else draft)
     return items
@@ -372,6 +420,7 @@ async def save_details(draft_id: str, details: DraftDetails, *, edited: bool = T
             "details": details.model_copy(update={"edited": edited or details.edited}).model_dump(mode="json"),
             "thumbnails": thumbnails.model_dump(mode="json") if thumbnails else None,
             "thumbnail_error": error, "status": "prepared",
+            "name": draft.name if draft.name.strip() or draft.original else _default_name(draft, details),
         })
     finally:
         _running.discard(draft_id)
@@ -401,6 +450,15 @@ async def run_prepare(draft: Draft, job: Job) -> None:
             draft.model_copy(update={"details": details}), job,
             generated_texts=getattr(details, "_thumbnail_texts", None),
         )
+        # Only an automatic run may use the AI choice. A selection already
+        # persisted by the user always takes precedence over that suggestion.
+        stored = _drafts().get(draft.draft_id) or {}
+        stored_thumbnails = stored.get("thumbnails")
+        previously_selected = isinstance(stored_thumbnails, dict) and stored_thumbnails.get("selected") in ("A", "B")
+        suggested = getattr(details, "_thumbnail_selected", None)
+        if (draft.auto_render is not None and not previously_selected and thumbnails is not None
+                and suggested in ("A", "B")):
+            thumbnails = thumbnails.model_copy(update={"selected": suggested})
         thumbnail_error = None
         if job.artifacts.output_dir is not None:
             logs_dir = job.artifacts.log_dir or job.artifacts.output_dir / "logs"
@@ -414,6 +472,7 @@ async def run_prepare(draft: Draft, job: Job) -> None:
                 await pipeline._index_job_logs(job)
         await _patch(draft.draft_id, {
             "status": "prepared", "details": details.model_dump(mode="json"), "errors": [],
+            "name": (stored.get("name") or "").strip() or (draft.name if draft.original else _default_name(draft, details)),
             "thumbnails": thumbnails.model_dump(mode="json") if thumbnails else None,
             "thumbnail_error": thumbnail_error,
         })
@@ -541,7 +600,7 @@ def apply_render_options(job: Job, options: RenderOptions, details: DraftDetails
         "recorder_engine_override": options.recorder_engine,
         "render_target": options.render_target,
         "publishing": JobPublishingConfig(enabled=False, accounts=[]),
-        "formats": options.formats or ["16x9"],
+        "formats": effective_record_formats(options),
     })})
     if details is not None and details.copies:
         artifacts = job.artifacts.model_copy(update={"summary": to_summary(details)})
@@ -552,6 +611,33 @@ def apply_render_options(job: Job, options: RenderOptions, details: DraftDetails
 async def start_render(draft_id: str, job: Job) -> Draft | None:
     """Pasa el draft a `rendering` con el job_id que va a aparecer en
     Biblioteca. El caller lanza `run_render` enseguida."""
+    current = await get(draft_id)
+    from src.core.promo_prompts import TEMPLATES
+    if current is not None and current.template_id in TEMPLATES:
+        from src.core.data import collection, coordination
+        if current.original:
+            # La demo no tiene sesión de revisión: protege la transición y
+            # comprueba de nuevo el preview y la preparación antes de grabar.
+            async with coordination('promo-original-' + draft_id):
+                current = await get(draft_id)
+                if current is None or not current.original or not can_render(current, job):
+                    return None
+                return await _mark_rendering(draft_id, job)
+        session = next((row for row in collection('promo_chat_sessions').list(where={'template_id':current.template_id})
+                        if row.get('draft_id') == draft_id), None)
+        if session is None:
+            return None
+        # Correcciones y aprobación usan este mismo lock: no puede revocarse la
+        # revisión entre la comprobación final y la transición a rendering.
+        async with coordination('promo-chat-' + session['session_id']):
+            current = await get(draft_id)
+            if current is None or not can_render(current, job):
+                return None
+            return await _mark_rendering(draft_id,job)
+    return await _mark_rendering(draft_id,job)
+
+
+async def _mark_rendering(draft_id: str, job: Job) -> Draft | None:
     _running.add(draft_id)
     _save_job(draft_id, job)
     draft = await _patch(draft_id, {
@@ -586,11 +672,10 @@ async def _capture_selected_thumbnail(draft_id: str, job: Job) -> Job:
         raise ValueError(f"No se pudo obtener el texto de la opción {selected}")
 
     details = draft.details or _fallback_thumbnail_details(job)
-    selected_details = details.model_copy(update={"song_name": option.text})
     from src.core import draft_details, draft_thumbnails
-    # La intro del video adopta el texto elegido al grabar; el Draft.details y sus
-    # metadatos de publicación siguen conteniendo el nombre de canción original.
-    draft_details.apply_to_intro(job.artifacts.content_dir, selected_details)
+    # B puede ser una frase de la letra; conserva el nombre real en la intro.
+    intro_details = details if selected == "B" or draft.template_id == "lyrics-impact" else details.model_copy(update={"song_name": option.text})
+    draft_details.apply_to_intro(job.artifacts.content_dir, intro_details)
     try:
         image = await draft_thumbnails.capture_selected(
             draft_id, job, details, selected, options=manifest.model_dump(mode="json").get("options"),

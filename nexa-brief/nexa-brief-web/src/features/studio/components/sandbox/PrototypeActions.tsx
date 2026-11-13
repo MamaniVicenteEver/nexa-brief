@@ -60,7 +60,6 @@ export function PrototypeActions({
   if (editor.step === "prepare") {
     return (
       <>
-        <p className="text-[11.5px] text-nb-mute">{t("prepareHint")}</p>
         <SongNotesField value={editor.songNotes} onChange={editor.setSongNotes} />
         <button
           type="button"

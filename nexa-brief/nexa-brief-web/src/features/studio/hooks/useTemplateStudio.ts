@@ -1,17 +1,20 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
+import { httpClient } from "@/infrastructure/api/http-client";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { useNiches } from "@/features/create-video/hooks/useNiches";
 import { useTemplateRequirements } from "@/features/templates/hooks/useTemplateRequirements";
 import type { Template } from "@/features/templates/types";
+import { listPromoSessions, PROMO_IDS, promoSessionsKey } from "../api/promo-service";
 import { useTemplateDrafts } from "./useDraft";
 import { useOriginalDraft } from "./useOriginalDraft";
 import { usePrototypeEditor } from "./usePrototypeEditor";
 import { useRecordPrototype } from "./useRecordPrototype";
 
 export type StudioView = "default" | "mine";
-export type StudioTab = "original" | "sandbox" | "record";
+export type StudioTab = "original" | "sandbox" | "record" | "videos";
 
 /** Estado del Estudio de una plantilla de NodeMotion: la pestaña (Video original · Sandbox ·
  * Grabar), el prototipo abierto, la grabación y qué muestra el escenario del modal. Vive en el
@@ -20,6 +23,7 @@ export type StudioTab = "original" | "sandbox" | "record";
 export function useTemplateStudio(template: Template, open: boolean) {
   const t = useTranslations("studio.sandbox");
   const requirements = useTemplateRequirements(template.id, open);
+  const videos = useQuery({ queryKey: ["template-videos", template.id], queryFn: ({ signal }) => httpClient<TemplateVideo[]>(`/api/v1/templates/${encodeURIComponent(template.id)}/videos`, { signal }), enabled: open && template.canGenerate, refetchInterval: (q) => q.state.data?.some((video) => video.status === "rendering") ? 5000 : false });
   const { data: niches } = useNiches();
   const niche = niches?.find((n) => n.id === template.nicheId);
   const draftsQuery = useTemplateDrafts(template.id, open && template.canGenerate);
@@ -36,18 +40,22 @@ export function useTemplateStudio(template: Template, open: boolean) {
   const editor = usePrototypeEditor({
     template,
     requirements: requirements.data,
-    draftId: editing === "new" ? null : editing,
+    draftId: editing === "new" || editing === "__demo" ? null : editing,
     defaultName: t("defaultName", { n: prototypes.length + 1 }),
     onCreated: setEditing,
   });
-  const recorder = useRecordPrototype(template, niche, prototypes, original.draft, open);
+  const isPromo = PROMO_IDS.has(template.id);
+  const promoSessions = useQuery({ queryKey: promoSessionsKey(template.id), queryFn: ({ signal }) => listPromoSessions(template.id, signal), enabled: open && isPromo });
+  const archivedDraftIds = new Set(promoSessions.data?.archived_draft_ids ?? []);
+  const approvedIds = new Set((promoSessions.data?.sessions ?? []).filter((session) => session.state === "ready" && session.draft_id && !archivedDraftIds.has(session.draft_id)).map((session) => session.draft_id));
+  const recorder = useRecordPrototype(template, niche, isPromo ? prototypes.filter((draft) => approvedIds.has(draft.draftId)) : prototypes, original.draft, open);
 
   // El escenario muestra el prototipo de la pestaña activa, si ya tiene preview.
   const stageDraft =
     tab === "sandbox"
       ? editing
         ? editor.draft
-        : prototypes.find((draft) => draft.draftId === previewing)
+        : drafts.find((draft) => draft.draftId === previewing)
       : tab === "record"
         ? recorder.selected
         : null;
@@ -59,6 +67,10 @@ export function useTemplateStudio(template: Template, open: boolean) {
 
   return {
     template,
+    isOpen: open,
+    isPromo,
+    promoSessions,
+    videos,
     niche,
     requirements,
     prototypes,
@@ -74,12 +86,18 @@ export function useTemplateStudio(template: Template, open: boolean) {
     closePrototype: () => setEditing(null),
     previewPlaybackRequest,
     previewPrototype: (id: string) => {
-      if (!prototypes.some((draft) => draft.draftId === id && draft.previewUrl)) return;
+      if (!drafts.some((draft) => draft.draftId === id && draft.previewUrl)) return;
       setPreviewPlaybackRequest((request) => request + 1);
       setPreviewing(id);
       setEditing(null);
       setTab("sandbox");
       setView("mine");
+    },
+    /** Una ficha sin preview no debe heredar el escenario de otra. */
+    clearPrototypePreview: () => {
+      setPreviewing(null);
+      setEditing(null);
+      setView("default");
     },
     /** Lleva un prototipo preparado a la pestaña Grabar. */
     recordPrototype: (id: string) => {
@@ -96,3 +114,5 @@ export function useTemplateStudio(template: Template, open: boolean) {
 }
 
 export type TemplateStudioController = ReturnType<typeof useTemplateStudio>;
+
+export interface TemplateVideo { draft_id: string; job_id: string; name: string; status: string; recoverable: boolean; created_at: string; formats: string[]; percent: number | null }

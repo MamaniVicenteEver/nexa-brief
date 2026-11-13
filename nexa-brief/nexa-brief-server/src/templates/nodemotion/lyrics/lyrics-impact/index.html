@@ -822,6 +822,7 @@
   /* fondo imagen/video muy oscuro y difuso, como video borroso de fondo (CONFIG.bg) */
   #stage { position: fixed; inset: 0; will-change: transform; }
   #bgMedia {
+    opacity: var(--custom-bg-opacity, 1);
     position: absolute; inset: -8%; width: 116%; height: 116%; object-fit: cover;
     animation: bgBreath 40s ease-in-out infinite alternate; will-change: transform;
   }
@@ -960,6 +961,7 @@
 <div id="hint">CLICK PARA EMPEZAR</div>
 <audio id="audio" preload="auto"></audio>
 
+<script src="./components/background-sequence.js"></script>
 <script src="./components/intro.js"></script>
 <script src="./components/outro.js"></script>
 <script type="module">
@@ -1243,6 +1245,7 @@ let clusters = [], ptr = 0;
 function frame(now) {
   const t = clock();
   maybeOutro();
+  updateBackground(t);
   const introState = introController.update(t, introDurationSeconds, outroShown);
   doc.body.classList.toggle("introActive", introState.active && !outroShown);
   if (!outroShown) {
@@ -1263,6 +1266,32 @@ function frame(now) {
 }
 
 /* ---- fondo imagen/video con filtro del CONFIG ---- */
+let activeBackgroundKey = "";
+function updateBackground(t) {
+  const choice = window.NexaBackgroundSequence.at(C.bg && C.bg.playlist, t, introDurationSeconds);
+  if (!choice) return;
+  const key = choice.index + ":" + choice.start;
+  let el = $("bgMedia");
+  if (key !== activeBackgroundKey) {
+    activeBackgroundKey = key;
+    if (el.tagName === "VIDEO") { el.pause(); el.removeAttribute("src"); el.load(); }
+    const next = doc.createElement(choice.item.type === "video" ? "video" : "img");
+    next.id = "bgMedia";
+    if (choice.item.type === "video") {
+      next.muted = true; next.setAttribute("playsinline", ""); next.preload = "auto";
+    }
+    el.replaceWith(next); el = next;
+    el.src = encodeURI(choice.item.src);
+    styleBackground(el);
+  }
+  if (el.tagName === "VIDEO") {
+    if (Math.abs(el.currentTime - choice.offset) > 0.12) {
+      try { el.currentTime = choice.offset; } catch (_) {}
+    }
+    if (audio.paused || audio.ended) { if (!el.paused) el.pause(); }
+    else if (el.paused) el.play().catch(() => {});
+  }
+}
 function setupBg() {
   if (!C.bg || C.bg.type === "none" || !C.bg.src) return;
   let el = $("bgMedia");
@@ -1278,8 +1307,26 @@ function setupBg() {
     el.load();
     el.play().catch(() => {});
   }
+  styleBackground(el);
+}
+function styleBackground(el) {
   el.style.display = "block";
-  el.style.filter = C.bg.filter || "";
+  // El material elegido por la persona controla su propia visibilidad; la
+  // demo sin opacity conserva los filtros y tintes originales de la plantilla.
+  const customOpacity = C.bg.opacity;
+  if (typeof customOpacity === "number" && Number.isFinite(customOpacity)) {
+    const value = Math.max(0, Math.min(1, customOpacity));
+    el.style.setProperty("--custom-bg-opacity", String(value));
+    el.style.filter = "none";
+    for (const id of ["darkTint", "warmTint", "coldTint"]) {
+      const tint = $(id);
+      if (tint) tint.style.opacity = "0.25";
+    }
+    const vignette = $("vignette");
+    if (vignette) vignette.style.opacity = "0.35";
+  } else {
+    el.style.filter = C.bg.filter || "";
+  }
 }
 
 setupBg();

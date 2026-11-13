@@ -53,7 +53,8 @@ export function AdminHeader() {
     { href: "/notificaciones", label: t("notificaciones") },
   ] as const;
 
-  const isManagementActive = MANAGEMENT_LINKS.some((link) => pathname === link.href);
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+  const activeManagementLink = MANAGEMENT_LINKS.find((link) => isActive(link.href));
 
   return (
     <nav className="nb-glass-nav fixed inset-x-0 top-0 z-50 flex items-center justify-between gap-2 px-3 py-1 sm:px-6 2xl:px-10">
@@ -74,14 +75,15 @@ export function AdminHeader() {
         </span>
       </Link>
 
-      <ul className="absolute left-1/2 hidden -translate-x-1/2 gap-3 text-[12px] 2xl:flex">
+      <ul className="absolute left-1/2 hidden -translate-x-1/2 gap-3 text-[13.8px] 2xl:flex">
         <li>
           <Link
             href="/dashboard"
+            aria-current={isActive("/dashboard") ? "page" : undefined}
             className={cn(
               "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
-              pathname === "/dashboard" &&
-                "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-0.5 after:rounded-full after:bg-nb-green-dark",
+              isActive("/dashboard") &&
+                "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-[3px] after:rounded-full after:bg-nb-green-dark",
             )}
           >
             {t("dashboard")}
@@ -90,10 +92,11 @@ export function AdminHeader() {
         <li>
           <Link
             href="/crear-video"
+            aria-current={isActive("/crear-video") ? "page" : undefined}
             className={cn(
               "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
-              pathname === "/crear-video" &&
-                "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-0.5 after:rounded-full after:bg-nb-green-dark",
+              isActive("/crear-video") &&
+                "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-[3px] after:rounded-full after:bg-nb-green-dark",
             )}
           >
             {t("crearVideo")}
@@ -102,10 +105,11 @@ export function AdminHeader() {
         <li>
           <Link
             href="/plantillas"
+            aria-current={isActive("/plantillas") ? "page" : undefined}
             className={cn(
               "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
-              (pathname === "/plantillas" || pathname.startsWith("/plantillas/")) &&
-                "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-0.5 after:rounded-full after:bg-nb-green-dark",
+              isActive("/plantillas") &&
+                "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-[3px] after:rounded-full after:bg-nb-green-dark",
             )}
           >
             {t("plantillas")}
@@ -114,10 +118,11 @@ export function AdminHeader() {
         <li>
           <Link
             href="/canales"
+            aria-current={isActive("/canales") ? "page" : undefined}
             className={cn(
               "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
-              pathname === "/canales" &&
-                "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-0.5 after:rounded-full after:bg-nb-green-dark",
+              isActive("/canales") &&
+                "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-[3px] after:rounded-full after:bg-nb-green-dark",
             )}
           >
             {t("canales")}
@@ -127,11 +132,11 @@ export function AdminHeader() {
           <li key={link.href}>
             <Link
               href={link.href}
-              aria-current={pathname === link.href ? "page" : undefined}
+              aria-current={isActive(link.href) ? "page" : undefined}
               className={cn(
                 "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft no-underline transition-colors hover:text-nb-ink",
-                pathname === link.href &&
-                  "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-0.5 after:rounded-full after:bg-nb-green-dark",
+                isActive(link.href) &&
+                  "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-[3px] after:rounded-full after:bg-nb-green-dark",
               )}
             >
               {link.label}
@@ -163,11 +168,11 @@ export function AdminHeader() {
                 }}
                 className={cn(
                   "relative inline-flex items-center gap-1 px-0.5 py-0.5 font-medium text-nb-ink-soft transition-colors hover:text-nb-ink",
-                  isManagementActive &&
-                    "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-0.5 after:rounded-full after:bg-nb-green-dark",
+                  activeManagementLink &&
+                    "text-nb-ink after:absolute after:-bottom-1.5 after:left-0.5 after:right-0.5 after:h-[3px] after:rounded-full after:bg-nb-green-dark",
                 )}
               >
-                {t("gestion")} <ChevronDownIcon className="size-2.5" />
+                {activeManagementLink?.label ?? t("gestion")} <ChevronDownIcon className="size-3" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -185,7 +190,14 @@ export function AdminHeader() {
             >
               {MANAGEMENT_LINKS.map((link) => (
                 <DropdownMenuItem key={link.href} asChild>
-                  <Link href={link.href} className="text-[13.5px] font-medium">
+                  <Link
+                    href={link.href}
+                    aria-current={isActive(link.href) ? "page" : undefined}
+                    className={cn(
+                      "text-[15.525px] font-medium",
+                      isActive(link.href) && "bg-nb-green/15 text-nb-green-dark",
+                    )}
+                  >
                     {link.label}
                   </Link>
                 </DropdownMenuItem>
@@ -230,8 +242,11 @@ export function AdminHeader() {
                 <DropdownMenuItem key={link.href} asChild>
                   <Link
                     href={link.href}
-                    aria-current={pathname === link.href ? "page" : undefined}
-                    className="text-[13px] font-medium"
+                    aria-current={isActive(link.href) ? "page" : undefined}
+                    className={cn(
+                      "text-[14.95px] font-medium",
+                      isActive(link.href) && "bg-nb-green/15 text-nb-green-dark",
+                    )}
                   >
                     {link.label}
                   </Link>

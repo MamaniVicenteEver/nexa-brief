@@ -1,8 +1,9 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, CircleUserRound } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { PlatformIcon } from "@/features/channels/components/PlatformIcon";
 import { PLATFORM_META } from "@/features/channels/constants/platforms";
 import { formatCompact, type PublicStats } from "@/features/stats";
+import { publicChannelPlatform } from "@/features/stats/public-channel";
 import { StatCounter } from "./StatCounter";
 
 /** Prueba de que el sistema ya funciona: cifras reales y los canales que ya
@@ -56,57 +57,47 @@ export async function LiveNumbersSection({ stats }: { stats: PublicStats | null 
             <p className="text-[12px] font-semibold tracking-[0.08em] text-nb-mute uppercase">
               {t("channelsTitle")}
             </p>
-            <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-4 grid grid-cols-2 gap-2 sm:gap-3 lg:grid-cols-3">
               {stats.channelList.map((channel) => {
+                const platform = publicChannelPlatform(channel.publicUrl);
                 const body = (
                   <>
-                    <span className="relative shrink-0">
-                      {channel.avatar ? (
-                        // biome-ignore lint/performance/noImgElement: avatar remoto de la plataforma
-                        <img
-                          src={channel.avatar}
-                          alt=""
-                          referrerPolicy="no-referrer"
-                          className="size-11 rounded-full object-cover ring-1 ring-nb-line"
+                    <span className="shrink-0">
+                      {platform ? (
+                        <PlatformIcon
+                          platform={platform}
+                          className="size-8 sm:size-11"
+                          rounded="rounded-full"
                         />
                       ) : (
-                        <PlatformIcon
-                          platform={channel.platform}
-                          className="size-11"
-                          rounded="rounded-full"
-                        />
-                      )}
-                      {channel.avatar && (
-                        <PlatformIcon
-                          platform={channel.platform}
-                          className="absolute -right-1 -bottom-1 size-5 ring-2 ring-nb-surface"
-                          rounded="rounded-full"
-                        />
+                        <CircleUserRound className="size-8 text-nb-mute sm:size-11" />
                       )}
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[14px] font-bold text-nb-ink">
+                      <span className="block break-words text-[12px] leading-snug font-bold text-nb-ink sm:truncate sm:text-[14px]">
                         {channel.name}
                       </span>
-                      <span className="text-[12px] text-nb-mute">
-                        {PLATFORM_META[channel.platform].label} ·{" "}
-                        {t("channelVideos", { count: channel.publishedCount })}
-                      </span>
+                      {platform && (
+                        <span className="text-[11px] text-nb-mute sm:text-[12px]">
+                          {PLATFORM_META[platform].label}
+                        </span>
+                      )}
                     </span>
                     {channel.publicUrl && (
-                      <ArrowUpRight className="size-4 shrink-0 text-nb-mute transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-nb-ink" />
+                      <ArrowUpRight className="absolute top-2 right-2 size-3 shrink-0 sm:static sm:size-4 text-nb-mute transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-nb-ink" />
                     )}
                   </>
                 );
                 const className =
-                  "group flex items-center gap-3 rounded-2xl border border-nb-line bg-nb-bg/50 px-4 py-3 no-underline transition-colors";
+                  "group relative flex h-full min-h-24 flex-col items-start justify-center gap-2 rounded-2xl border border-nb-line bg-nb-bg/50 px-3 py-3 no-underline transition-colors sm:min-h-0 sm:flex-row sm:items-center sm:justify-start sm:gap-3 sm:px-4";
                 return (
-                  <li key={channel.id}>
+                  <li key={`${channel.publicUrl ?? "unlinked"}:${channel.name}`}>
                     {channel.publicUrl ? (
                       <a
                         href={channel.publicUrl}
                         target="_blank"
-                        rel="noreferrer"
+                        rel="noopener noreferrer"
+                        title={channel.name}
                         className={`${className} hover:border-nb-ink/30 hover:bg-nb-surface`}
                       >
                         {body}

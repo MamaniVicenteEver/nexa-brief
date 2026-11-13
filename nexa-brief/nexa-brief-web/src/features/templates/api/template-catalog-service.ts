@@ -1,11 +1,9 @@
 import { httpClient } from "@/infrastructure/api/http-client";
 import type { CategoryNode } from "@/features/categories";
 import { mapVideo, type ExplainerVideoDto } from "@/features/explainer/api/explainer-service";
-import { mapSandboxItem, type SandboxItemDto } from "@/features/sandbox/api/sandbox-service";
 import { mapTemplate, type TemplateDto } from "./templates-service";
 import type { Template } from "../types";
 import type { ExplainerVideo } from "@/features/explainer/types";
-import type { SandboxItem } from "@/features/sandbox/types";
 
 export interface TemplateCatalogSummary {
   categoryCount: number;
@@ -22,11 +20,9 @@ export interface TemplateCatalogSection {
   category: Pick<CategoryNode, "id" | "path" | "displayName" | "topic" | "status" | "engine">;
   templateCount: number;
   demoVideoCount: number;
-  sandboxDemoCount: number;
   totalItemCount: number;
   templates: Template[];
   demoVideos: ExplainerVideo[];
-  sandboxDemos: { item: SandboxItem; productionDesign: boolean }[];
 }
 
 interface TemplateCatalogResponseDto {
@@ -49,11 +45,9 @@ interface TemplateCatalogResponseDto {
     engine: CategoryNode["engine"];
     template_count: number;
     demo_video_count: number;
-    sandbox_demo_count: number;
     total_item_count: number;
     templates: TemplateDto[];
     demo_videos: ExplainerVideoDto[];
-    sandbox_demos: { item: SandboxItemDto; production_design: boolean }[];
   }[];
 }
 
@@ -86,14 +80,9 @@ export async function getTemplateCatalog(signal?: AbortSignal): Promise<Template
       },
       templateCount: section.template_count,
       demoVideoCount: section.demo_video_count,
-      sandboxDemoCount: section.sandbox_demo_count,
       totalItemCount: section.total_item_count,
       templates: section.templates.map(mapTemplate),
       demoVideos: section.demo_videos.map(mapVideo),
-      sandboxDemos: section.sandbox_demos.map((demo) => ({
-        item: mapSandboxItem(demo.item),
-        productionDesign: demo.production_design,
-      })),
     })),
   };
 }

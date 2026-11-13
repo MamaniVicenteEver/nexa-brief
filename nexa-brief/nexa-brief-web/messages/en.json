@@ -1670,6 +1670,14 @@
       "pending": "Pending: {count}",
       "notes": "Existing design notes",
       "demoHelp": "Move the design or episode to its destination, then complete the editorial preparation from its category.",
+      "contentType": "Content type",
+      "mainDemo": "Main design demo",
+      "derivedVideo": "Video based on an existing design",
+      "contentTypeHelp": "The validated main demo belongs in the repository. Videos based on the design belong in profile productions.",
+      "destination": "Move destination",
+      "repositoryDestination": "Main demo · repository",
+      "profileDestination": "Derived video · profile productions",
+      "destinationAfterValidation": "Save and verify the selection to confirm the destination path.",
       "save": "Save draft",
       "validate": "Check files and paths",
       "discard": "Discard draft",
@@ -2107,6 +2115,7 @@
     "skipBack": "Back 5 seconds",
     "skipForward": "Forward 5 seconds",
     "fullscreen": "Fullscreen",
+    "exitFullscreen": "Exit fullscreen",
     "unavailable": "Preview unavailable.",
     "loadError": "This video format could not be loaded.",
     "shortcutsHint": "Space · ← → · M · F",
@@ -2425,5 +2434,21 @@
         "failed": "Preparation needs attention"
       }
     }
+  },
+  "catalog": {
+    "title": "Template demos",
+    "categories": "Categories",
+    "all": "All",
+    "pageSize": "Show",
+    "pagination": "Pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "results": "{count} results",
+    "play": "Play {title}",
+    "loading": "Loading…",
+    "error": "Could not load the catalogue. Please try again.",
+    "empty": "No demos in this category.",
+    "information": "Information and tools",
+    "publicHint": "Click a thumbnail to play the demo with sound."
   }
 }

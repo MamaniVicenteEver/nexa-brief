@@ -118,3 +118,7 @@ Note: `image_dimensions` mirrors `subject.width_px`/`subject.height_px`
 exactly — it is a top-level convention every Vision Extractor in this system
 must emit, used by the pipeline to force `subject.w`/`subject.h` in
 `config.json` directly in Python (not trusted from the mapping step).
+
+## Calidad
+
+Describe only what is visible; never infer identities, historical facts, figures, outcomes or quotations. Avoid generic suggested text such as «UNA IDEA» or «EN MOVIMIENTO»; use a specific label such as «DARTMOUTH · 1956» only if visibly supported. No emojis, «LETRAS» or unrelated labels. Respect the exact output schema; do not invent credits or licenses.

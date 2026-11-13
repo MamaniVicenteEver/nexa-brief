@@ -11,11 +11,13 @@ from __future__ import annotations
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
+from src.core.library.resource_metadata import ResourceMetadata
 
 TranscriptionStatus = Literal["none", "pending", "running", "done", "failed"]
 
 
-class ImageLibraryEntryResponse(BaseModel):
+class ImageLibraryEntryResponse(ResourceMetadata):
+    media_type: Literal["image"] = "image"
     video_id: str | None = None
     production_id: str | None = None
     production_name: str = ""
@@ -41,7 +43,8 @@ class ImageLibraryEntryResponse(BaseModel):
     file_url: str = ""
 
 
-class MusicLibraryEntryResponse(BaseModel):
+class MusicLibraryEntryResponse(ResourceMetadata):
+    media_type: Literal["music"] = "music"
     video_id: str | None = None
     production_id: str | None = None
     production_name: str = ""
@@ -71,7 +74,8 @@ class MusicLibraryEntryResponse(BaseModel):
     lyrics_url: str | None = None
 
 
-class VideoLibraryEntryResponse(BaseModel):
+class VideoLibraryEntryResponse(ResourceMetadata):
+    media_type: Literal["video"] = "video"
     video_id: str | None = None
     production_id: str | None = None
     production_name: str = ""
@@ -96,7 +100,8 @@ class VideoLibraryEntryResponse(BaseModel):
     file_url: str = ""
 
 
-class SoundLibraryEntryResponse(BaseModel):
+class SoundLibraryEntryResponse(ResourceMetadata):
+    media_type: Literal["sound"] = "sound"
     video_id: str | None = None
     production_id: str | None = None
     production_name: str = ""
@@ -124,11 +129,32 @@ class SoundLibraryEntryResponse(BaseModel):
     file_url: str = ""
 
 
+class LibraryAssetPageResponse(BaseModel):
+    items: list[ImageLibraryEntryResponse | MusicLibraryEntryResponse | VideoLibraryEntryResponse | SoundLibraryEntryResponse]
+    total: int
+    page: int
+    page_size: int
+
+
+class MusicGroupResponse(BaseModel):
+    title: str
+    artist: str
+    items: list[MusicLibraryEntryResponse]
+
+
+class MusicGroupPageResponse(BaseModel):
+    items: list[MusicGroupResponse]
+    total: int
+    page: int
+    page_size: int
+
+
 class LibraryAssetPatch(BaseModel):
     """Cuerpo de PATCH /library/{kind}/{asset_id}. Todos opcionales: solo se
     aplica lo que viene. Los campos que no corresponden al kind se ignoran
     (ej. `artist` en una imagen). `tags` acepta lista o string con comas."""
 
+    display_name: str | None = Field(default=None, min_length=1, max_length=240, pattern=r".*\S.*")
     title: str | None = Field(default=None, min_length=1, max_length=240)
     recommended_uses: list[str] | None = None
     approval_status: Literal["pending", "approved", "rejected"] | None = None

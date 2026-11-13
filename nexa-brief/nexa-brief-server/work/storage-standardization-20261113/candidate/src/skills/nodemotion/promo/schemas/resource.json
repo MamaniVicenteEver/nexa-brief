@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/schemas/nodemotion-promo/resource.json",
+  "type": "object",
+  "properties": {
+    "derived_from": {"type": "string", "minLength": 1},
+    "focus": {"type": "array", "items": {"type": "number", "minimum": 0, "maximum": 1}, "minItems": 2, "maxItems": 2},
+    "credit": {"type": "string"},
+    "usage_terms": {"type": "string"},
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "type": {
+      "enum": [
+        "image",
+        "video",
+        "music",
+        "sound"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1
+    },
+    "download_url": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1
+    },
+    "license": {
+      "type": "string",
+      "minLength": 1
+    },
+    "license_url": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1
+    },
+    "attribution": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "width": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "height": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "duration_seconds": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "fps": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "exclusiveMinimum": 0
+    },
+    "orientation": {
+      "enum": [
+        "landscape",
+        "portrait",
+        "square",
+        null
+      ]
+    },
+    "query": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fetched_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "Fecha conocida de incorporación; null si un registro anterior no la conserva."
+    },
+    "used_by": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "file": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ready_file": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "type",
+    "category",
+    "name",
+    "tags",
+    "description",
+    "source",
+    "source_url",
+    "download_url",
+    "author",
+    "license",
+    "license_url",
+    "attribution",
+    "hash",
+    "width",
+    "height",
+    "duration_seconds",
+    "fps",
+    "orientation",
+    "query",
+    "fetched_at",
+    "used_by",
+    "file",
+    "ready_file"
+  ],
+  "additionalProperties": false
+}

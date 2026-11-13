@@ -25,7 +25,11 @@ import uuid
 
 SERVER = Path(__file__).resolve().parents[1]
 TOOLS = SERVER / "src/templates/_tools/explainer-kit/tools"
-ATLAS = SERVER / "src/templates/sandbox/nodehistory/_atlas"
+TEMPLATES = SERVER / "src/templates"
+if str(SERVER) not in sys.path:
+    sys.path.insert(0, str(SERVER))
+from src.core.explainer.engine_locations import engine_root
+ATLAS = engine_root(TEMPLATES, "nodehistory/_atlas")
 ORCHESTRATION = ATLAS / "orchestration.json"
 SLUG = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
 TOKEN_FIELDS = ("input_tokens", "cached_input_tokens", "output_tokens", "reasoning_tokens")
@@ -174,16 +178,17 @@ def snapshot(ctx):
 
 def render_wrapper(title):
     """Canonical, single-config loader; no optional 404 probes or duplicated engine."""
-    base = "/api/v1/explainer/files/sandbox/"
+    base = "/api/v1/explainer/files/bundled/" + ATLAS.relative_to(TEMPLATES).as_posix() + "/"
+    proto = "/api/v1/explainer/files/bundled/sandbox/_proto/proto.js"
     return f'''<!doctype html>
 <html lang="es" data-atlas-manual="true"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(title)}</title>
-<link rel="stylesheet" href="{base}nodehistory/_atlas/assets/fonts/fonts.css">
-<link rel="stylesheet" href="{base}nodehistory/_atlas/vendor/maplibre-gl.css">
+<link rel="stylesheet" href="{base}assets/fonts/fonts.css">
+<link rel="stylesheet" href="{base}vendor/maplibre-gl.css">
 <style>html,body{{margin:0;height:100%;background:#000;overflow:hidden}}#stage,#stage>canvas{{position:fixed;inset:0;display:block}}</style>
 </head><body><audio id="audio" preload="auto"></audio><div id="stage"></div>
-<script src="{base}_proto/proto.js"></script><script type="module">
-import {{runAtlas}} from '{base}nodehistory/_atlas/atlas.js';
+<script src="{proto}"></script><script type="module">
+import {{runAtlas}} from '{base}atlas.js';
 const episodeBase = new URL('./', location.href);
 async function readJSON(path) {{
   const url = new URL(path, episodeBase);
@@ -761,7 +766,7 @@ def self_test():
         assert {"version", "title", "summary", "engine", "based_on", "is_new_design", "status",
                 "created_at", "libraries", "inputs", "notes"} <= info.keys()
         assert info["status"] == "en progreso" and dt.date.fromisoformat(info["created_at"])
-        assert "src=\"/api/v1/explainer/files/sandbox/_proto/proto.js\"" in ctx.file("index.html").read_text()
+        assert "src=\"/api/v1/explainer/files/bundled/sandbox/_proto/proto.js\"" in ctx.file("index.html").read_text()
         try:
             initialize(ctx)
             raise AssertionError("init overwrote existing episode")

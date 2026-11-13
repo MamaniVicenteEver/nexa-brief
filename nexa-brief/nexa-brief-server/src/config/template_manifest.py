@@ -275,13 +275,14 @@ def _derived_template_inputs(entry: dict) -> dict:
     }
 
 
-def get_template_inputs(template_id: str) -> dict | None:
+def get_template_inputs(template_id: str, *, fresh: bool = False) -> dict | None:
     """Requisitos normalizados de una plantilla, o None si no está registrada.
 
     Siempre devuelve las cuatro claves (audio, media, texts, brief) con formas
     estables: los slots traen min/max/target/label/hint aunque el JSON los omita.
     """
-    entry = get_template_entry(template_id)
+    path = settings.templates_dir / "templates.json"
+    entry = (json.loads(path.read_text(encoding="utf-8")).get("templates", {}).get(template_id) if path.exists() else None) if fresh else get_template_entry(template_id)
     if not entry:
         return None
     raw = entry.get("inputs") or _derived_template_inputs(entry)

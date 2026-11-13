@@ -12,7 +12,7 @@
   "promote_blocker": null,
   "episodes": [],
   "visual_styles": {
-    "index": "sandbox/nodehistory/_atlas/noticiero/estilos/index.json",
+    "index": "nodeatlas/atlas-cinematico/_atlas/noticiero/estilos/index.json",
     "unavailable_components": {
       "original": [
         "noticiero.alert",
@@ -34,5 +34,9 @@
     "demo": true,
     "origin_folder": "nodepolitics",
     "project_id": "resumen-geopolitico-demo"
-  }
+  },
+  "engine_root": "nodeatlas/atlas-cinematico/_atlas",
+  "legacy_engine_roots": [
+    "sandbox/nodehistory/_atlas"
+  ]
 }

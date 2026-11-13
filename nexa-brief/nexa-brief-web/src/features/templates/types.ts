@@ -77,6 +77,12 @@ export interface RequirementText {
 }
 
 export interface TemplateRequirements {
+  resourceContext?: {
+    categoryId: string;
+    categoryName: string;
+    templateId: string;
+    templateName: string;
+  };
   audio: { required: boolean; lyrics: "auto" | "optional" | "none" };
   media: RequirementMediaSlot[];
   texts: RequirementText[];

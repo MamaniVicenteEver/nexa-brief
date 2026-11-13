@@ -34,7 +34,13 @@ Los tokens complementarios de miniaturas se consultan en `../../design-tokens.js
 
 ## Composición y miniaturas
 
-A ocupa el centro con hasta cinco palabras en una o dos filas. B admite una frase más larga en hasta cuatro filas. Mantener la paleta en ambas. Fondo independiente de imagen propia o del medio existente, con recorte a sangre y encuadre ajustable. Sin artista; «LETRAS» siempre debajo de la última fila, alineada a su extremo derecho, con el color principal de la plantilla a opacidad completa, al 24,3% en A y al 30% en B, con el hueco al 25,2% del original en A y al 28% en B. NODEMOTION queda discreta en la esquina inferior derecha.
+Ambas opciones salen de escenas reales del video y, como él, son solo tipografía, sin foto: Montserrat 900 en hueso #BDBDB8 sobre gris #1C1C1D, con grano, rayones finos y el HUD monoespaciado (marca, contador y código de tiempo).
+
+**A (escena «SAMURÁI», segundo 37):** cuadrado naranja #A23A12 al centro y el titular repetido en filas a lo alto del cuadro, que alternan su desplazamiento. La fila central queda entera y centrada.
+
+**B (escena «WOW», segundo 4):** el titular entre paréntesis vectoriales en forma de media luna, con tres ecos a cada lado, cada uno más bajo, más fino y más apagado hacia fuera. Si el titular no cabe a buen tamaño en una fila, se reparte en dos y los paréntesis crecen con el bloque. Usa las mismas palabras que A o menos. La escena «LUNES», con letras estiradas, se descartó porque pierde lectura en tamaño de miniatura.
+
+Titular por defecto: el primer rótulo del guion (por ejemplo «DESDE EL CENTRO»). Sin «LETRAS» ni artista.
 
 ![Miniaturas A y B de promo-kinetic](../../docs/previews/promo-kinetic.jpg)
 

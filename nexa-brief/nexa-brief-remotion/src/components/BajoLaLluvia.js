@@ -1,5 +1,5 @@
 const React = require('react');
-const {useCurrentFrame, AbsoluteFill, Audio, interpolate} = require('remotion');
+const {useCurrentFrame, AbsoluteFill, Audio, Html5Video, interpolate} = require('remotion');
 const {loadFont: loadOswald} = require('@remotion/google-fonts/Oswald');
 const {loadFont: loadSpecialElite} = require('@remotion/google-fonts/SpecialElite');
 const {
@@ -197,12 +197,17 @@ function BajoLaLluvia({configData, lyricsData, audioSrc, bgSrc}) {
   const grainStep = Math.floor(frame / fps / 0.3) % 4;
   const [grainX, grainY] = GRAIN_STEPS[grainStep];
 
+  const hasCustomOpacity = typeof C.bg?.opacity === 'number' && Number.isFinite(C.bg.opacity);
+  const bgOpacity = hasCustomOpacity ? Math.max(0, Math.min(1, C.bg.opacity)) : 1;
+  const bgIsVideo = C.bg?.type === 'video';
+
   return React.createElement(
     AbsoluteFill,
     {style: {background: '#07090c', overflow: 'hidden'}},
     React.createElement(Audio, {src: resolveMediaSrc(audioSrc)}),
     bgSrc &&
-      React.createElement('img', {
+      React.createElement(bgIsVideo ? Html5Video : 'img', {
+        ...(bgIsVideo ? {loop: true, muted: true} : {}),
         src: resolveMediaSrc(bgSrc),
         style: {
           position: 'absolute',
@@ -210,9 +215,9 @@ function BajoLaLluvia({configData, lyricsData, audioSrc, bgSrc}) {
           width: '112%',
           height: '112%',
           objectFit: 'cover',
-          filter: C.bg?.filter || '',
+          filter: hasCustomOpacity ? 'none' : C.bg?.filter || '',
           transform: `scale(${bgScale}) translate(${bgTX}%, ${bgTY}%)`,
-          opacity: worldDim,
+          opacity: worldDim * bgOpacity,
         },
       }),
     React.createElement('div', {
@@ -222,6 +227,7 @@ function BajoLaLluvia({configData, lyricsData, audioSrc, bgSrc}) {
         background:
           'radial-gradient(ellipse at 50% 30%, rgba(110,150,190,0.07) 0%, rgba(8,12,18,0.6) 74%, rgba(4,6,9,0.85) 100%)',
         mixBlendMode: 'multiply',
+        opacity: hasCustomOpacity ? 0.25 : 1,
       },
     }),
     React.createElement(Rain, {rain, frame, tint: rainTint}),
@@ -245,6 +251,7 @@ function BajoLaLluvia({configData, lyricsData, audioSrc, bgSrc}) {
         inset: 0,
         pointerEvents: 'none',
         background: 'radial-gradient(ellipse at 50% 42%, transparent 36%, rgba(3,5,8,0.8) 100%)',
+        opacity: hasCustomOpacity ? 0.35 : 1,
       },
     }),
     React.createElement('div', {

@@ -22,7 +22,7 @@ Los tokens complementarios de miniaturas se consultan en `../../design-tokens.js
 
 ## Composición y miniaturas
 
-A ocupa el centro con hasta cinco palabras en una o dos filas. B admite una frase más larga en hasta cuatro filas. Mantener la paleta en ambas. Fondo independiente de imagen propia o del medio existente, con recorte a sangre y encuadre ajustable. Sin artista; «LETRAS» siempre debajo de la última fila, alineada a su extremo derecho, con el color principal de la plantilla a opacidad completa, al 24,3% en A y al 30% en B, con el hueco al 25,2% del original en A y al 28% en B. NODEMOTION queda discreta en la esquina inferior derecha.
+A ocupa el centro con hasta cinco palabras en una o dos filas. B admite una frase más larga en hasta cuatro filas. Mantener la paleta en ambas. Fondo independiente de imagen propia o del medio existente, con recorte a sangre y encuadre ajustable. Sin artista; «LETRAS» siempre debajo de la última fila, alineada a su extremo derecho, con el color principal de la plantilla a opacidad completa, al 24,3% en A y al 34,5% en B, con el hueco al 25,2% del original en A y al 28% en B. NODEMOTION queda discreta en la esquina inferior derecha.
 
 ![Miniaturas A y B de lyrics-expediente](../../docs/previews/lyrics-expediente.jpg)
 
@@ -57,3 +57,7 @@ Transiciones y animaciones CSS registradas en el código:
 3. Mantener los tiempos de transición indicados y los del timeline del código cuando no hay CSS. La entrada de cada palabra sigue `lyrics.json` y el reloj del audio.
 4. Adaptar a 16:9 y 9:16 con las reglas originales de viewport; comprobar que la palabra dominante cabe completa.
 5. Para miniaturas, usar el renderer compartido y las reglas A/B. Capturar ambas y comparar a tamaño pequeño; verificar también el JPEG final de la opción elegida.
+
+## Miniaturas: revisión de diseño
+
+Special Elite crema #EFE6CF sobre el negro cálido #14110C; «LETRAS» usa #E0503E, tomado de los acentos del expediente. No hay imagen de fondo por defecto. Las dos opciones comparten paleta; el texto, el fondo y el encuadre siguen siendo independientes.

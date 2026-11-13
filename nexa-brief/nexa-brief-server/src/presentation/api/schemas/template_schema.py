@@ -9,6 +9,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 from src.core import preview_tracker
+from src.core.library.resource_metadata import ResourceOrigin
 
 # Unión de todos los nombres de archivo reales usados por required_output_assets
 # en cualquier src/templates/*/manifest.json — whitelist estática de lo que el
@@ -54,6 +55,7 @@ class TemplateTextField(BaseModel):
 
 class TemplateRequirementsResponse(BaseModel):
     """GET /templates/{template_id}/requirements — ver template_manifest.get_template_inputs."""
+    resource_context: ResourceOrigin | None = None
     audio: TemplateAudioRequirement
     media: list[TemplateMediaSlot] = []
     texts: list[TemplateTextField] = []

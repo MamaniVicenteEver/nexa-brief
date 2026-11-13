@@ -18,10 +18,12 @@ export function IntroSongFields({
   draft,
   details,
   thumbnailEditor,
+  onArtistDirtyChange,
 }: {
   draft: Draft;
   details: DraftDetails;
   thumbnailEditor: DraftThumbnailEditor;
+  onArtistDirtyChange?: (dirty: boolean) => void;
 }) {
   const t = useTranslations("studio.introSong");
   const queryClient = useQueryClient();
@@ -30,25 +32,27 @@ export function IntroSongFields({
     mutationFn: () => saveDraftDetails(draft.draftId, { ...details, artist: artist.trim() }),
     onSuccess: (updated) => {
       queryClient.setQueryData(draftKey(updated.draftId), updated);
-      void queryClient.invalidateQueries({ queryKey: draftsKey(updated.templateId) });
+      void queryClient.invalidateQueries({
+        queryKey: draftsKey(updated.templateId),
+      });
+      onArtistDirtyChange?.(false);
     },
   });
   const changed = artist.trim() !== details.artist;
 
-  return (
-    <section className="flex flex-col gap-2 rounded-2xl border border-nb-line p-3">
-      <div>
-        <p className="text-[12px] font-bold text-nb-ink">{t("title")}</p>
-        <p className="text-[11px] text-nb-mute">{t("hint")}</p>
-      </div>
-      <DraftThumbnailPicker draft={draft} editor={thumbnailEditor} disabled={save.isPending} />
+  const artistField = (
+    <>
       <label className="flex flex-col gap-1 text-[11px] font-semibold text-nb-mute">
         {t("artist")}
         <input
           value={artist}
-          onChange={(e) => setArtist(e.target.value)}
+          onChange={(e) => {
+            setArtist(e.target.value);
+            onArtistDirtyChange?.(e.target.value.trim() !== details.artist);
+          }}
           placeholder={t("artist")}
           aria-label={t("artist")}
+          disabled={save.isPending}
           className={FIELD}
         />
       </label>
@@ -75,6 +79,16 @@ export function IntroSongFields({
           {t("save")}
         </button>
       )}
+    </>
+  );
+  return (
+    <section className="rounded-2xl border border-nb-line p-3">
+      <DraftThumbnailPicker
+        draft={draft}
+        editor={thumbnailEditor}
+        disabled={save.isPending}
+        artistField={artistField}
+      />
     </section>
   );
 }

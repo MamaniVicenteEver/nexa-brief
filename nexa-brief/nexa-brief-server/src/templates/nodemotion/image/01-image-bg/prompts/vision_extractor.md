@@ -407,3 +407,7 @@ reasoning in LAYER C (disqualify zones with prominent embedded_text or a
     applying the bottom > middle > top default — it is not just "bottom
     always", it is a reasoned recommendation the engine will actually try
     first.
+
+## Calidad
+
+Describe only what is visible; never infer identities, historical facts, figures, outcomes or quotations. Avoid generic suggested text such as «UNA IDEA» or «EN MOVIMIENTO»; use a specific label such as «DARTMOUTH · 1956» only if visibly supported. No emojis, «LETRAS» or unrelated labels. Respect the exact output schema; do not invent credits or licenses.

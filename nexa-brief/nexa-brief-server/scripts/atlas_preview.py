@@ -289,8 +289,11 @@ async def verify_browser(ctx, args, cache, resources, report, fetcher=None):
     origin = origin_url(args.base_url)
     files = "/api/v1/explainer/files/"
     episode_prefix = files + "sandbox/" + quote(args.category) + "/" + quote(args.episode) + "/"
-    engine_prefix = files + "sandbox/nodehistory/_atlas/"
-    allowed = (episode_prefix, engine_prefix, files + "sandbox/_proto/")
+    engine_roots = tuple(dict.fromkeys((host.ATLAS.relative_to(host.TEMPLATES).as_posix(),
+                                      "nodeatlas/atlas-cinematico/_atlas", "sandbox/nodehistory/_atlas")))
+    engine_prefixes = tuple(files + prefix + root + "/"
+                            for root in engine_roots for prefix in ("", "bundled/"))
+    allowed = (episode_prefix, *engine_prefixes, files + "sandbox/_proto/", files + "bundled/sandbox/_proto/")
     url = origin + episode_prefix + "index.html?" + urlencode({"warm": "1", "autoplay": "0", "loop": "0", "t": "0"})
     scene = host.load(ctx.file("assets/scene.json"))
     duration = scene["duration"]
@@ -321,8 +324,10 @@ async def verify_browser(ctx, args, cache, resources, report, fetcher=None):
                     report["blocked_requests"].append({"origin": parsed.scheme + "://" + parsed.netloc, "path": path})
                     await route.abort()
                     return
-                if path.startswith(engine_prefix + "cache/"):
-                    suffix = path[len(engine_prefix + "cache/"):]
+                cache_prefix = next((prefix + "cache/" for prefix in engine_prefixes
+                                     if path.startswith(prefix + "cache/")), None)
+                if cache_prefix is not None:
+                    suffix = path[len(cache_prefix):]
                     cache_root = cache.root.resolve()
                     target = (cache_root / suffix).resolve()
                     match = re.fullmatch(r"([a-z0-9-]+)/(\d+)/(\d+)/(\d+)\.(jpg|png|webp)", suffix)

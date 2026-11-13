@@ -42,10 +42,13 @@ async def main() -> None:
                     config = _active_config(json.loads(config_path.read_text()))
                     lyric_path = template.parent / str(config.get("lyricsUrl", "assets/lyrics.json"))
                     lyrics = json.loads(lyric_path.read_text()) if lyric_path.is_file() else {}
-                    song = str(config.get("intro", {}).get("title") or config.get("track") or "Siente la música").replace("\n", " ")
+                    segments = lyrics.get("segments", []) if isinstance(lyrics, dict) else []
+                    first_lyric = next((item.get("text", "").strip() for item in segments
+                                        if isinstance(item, dict) and isinstance(item.get("text"), str) and item["text"].strip()), "")
+                    song = str(config.get("intro", {}).get("title") or config.get("track") or first_lyric or "Música").replace("\n", " ")
                     assets_dir = Path(temporary) / tid
                     assets_dir.mkdir()
-                    job = Job(input=JobInput(category_name=tid), artifacts=JobArtifacts(output_dir=template.parent, assets_dir=assets_dir, html_path=template, config_json_path=config_path, lyrics_json=lyrics))
+                    job = Job(input=JobInput(category_name=tid), artifacts=JobArtifacts(output_dir=template.parent, content_dir=assets_dir, assets_dir=assets_dir, html_path=template, config_json_path=config_path, lyrics_json=lyrics))
                     manifest = preview_manifest(job, DraftDetails(song_name=song))
                     assets = {option: await embedded_assets(job, manifest["options"][option]["design"]) for option in ("A", "B")}
                     measured = await page.evaluate('''async ({manifest, assets}) => {

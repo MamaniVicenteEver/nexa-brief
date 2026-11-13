@@ -23,9 +23,13 @@ Previsualizar:
 from __future__ import annotations
 
 import hashlib
+import asyncio
+import gzip
 import json
 import shutil
 import tempfile
+import threading
+from collections import OrderedDict
 from functools import lru_cache
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -33,7 +37,7 @@ from urllib.parse import urlsplit
 import structlog
 from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, Response
-from pydantic import ValidationError
+from pydantic import BaseModel, Field, ValidationError
 
 from src.adapters.agent.factory import AGENTS, agents_status
 from src.adapters.ai.factory import TEXT_PROVIDERS, get_text_ai
@@ -106,6 +110,10 @@ def is_servable(parts: tuple[str, ...]) -> bool:
         return (layout_for_settings(settings).schema_version >= 2 and len(parts) >= 3
                 and is_shared_template_key(parts[1:]) and is_servable(parts[1:]))
     if parts[0] == "productions":
+        if len(parts) > 3 and parts[3] == "languages":
+            from src.core.explainer.editions.preview import public_edition_file
+            return (layout_for_settings(settings).schema_version >= 2 and parts[1] in production_folders()
+                    and public_edition_file(parts))
         return (layout_for_settings(settings).schema_version >= 2 and len(parts) >= 4
                 and parts[1] in production_folders() and parts[3] not in {"work", "test"})
     if parts[0] == "renders":
@@ -135,6 +143,102 @@ def get_recorder() -> ExplainerRecorder:
 @lru_cache(maxsize=1)
 def get_producer() -> ExplainerProducer:
     return ExplainerProducer(recorder_getter=get_recorder)
+
+
+@lru_cache(maxsize=1)
+def get_edition_service():
+    from src.core.explainer.editions.service import EditionService
+    return EditionService()
+
+
+class LocalizationRequest(BaseModel):
+    locale: str = Field(min_length=2, max_length=20)
+
+
+@router.get("/explainer/videos/{video_id}/localizations/{locale}/preflight")
+async def localization_preflight(video_id: str, locale: str):
+    from src.core.explainer.editions.service import EditionError
+    try:
+        await get_edition_service().reconcile(video_id=video_id)
+        return await get_edition_service().preflight(video_id, locale)
+    except EditionError as exc:
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
+
+
+@router.get("/explainer/videos/{video_id}/localizations")
+async def list_localizations(video_id: str):
+    from src.core.explainer.editions.service import EditionError
+    try:
+        await get_edition_service().reconcile(video_id=video_id)
+        data = get_edition_service().list(video_id)
+        for item in data["locales"]:
+            if item.get("studio"):
+                from src.core.explainer.editions.packaging import resolve_video, package_response
+                selected = resolve_video(_video_or_404(video_id), item["locale"], item["revision"], require_current=False)
+                item["studio"]["publish_package"] = package_response(selected)
+                if item["studio"]["publish_package"]:
+                    item["studio"]["publish_package"]["issues"] = item["studio"]["issues"]
+                item["studio"]["thumbnails"] = _thumbnails(selected).model_dump()
+                latest = get_recorder().latest_for_video(video_id, selected.locale, selected.revision)
+                item["studio"]["last_job"] = _job_response(latest).model_dump(mode="json") if latest else None
+        return data
+    except EditionError as exc:
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
+
+
+class EditionApprovalRequest(BaseModel):
+    revision: str = Field(pattern=r"^rev-\d{3,}$")
+    artifact_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+
+
+@router.post("/explainer/videos/{video_id}/localizations/{locale}/approve")
+async def approve_localization(video_id: str, locale: str, body: EditionApprovalRequest):
+    from src.core.explainer.editions.packaging import resolve_video, approval_token, approve
+    try:
+        selected = resolve_video(_video_or_404(video_id), locale, body.revision)
+        if selected.edition_path is None or approval_token(selected.edition_path) != body.artifact_sha256:
+            raise ValueError("La edición cambió; vuelve a revisarla antes de aprobarla")
+        approve(selected.edition_path, note="Aprobación editorial y de audio desde el estudio")
+        return {"status": "approved", "locale": selected.locale, "revision": selected.revision}
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+@router.post("/explainer/videos/{video_id}/localizations", status_code=202)
+async def create_localization(video_id: str, body: LocalizationRequest):
+    from src.core.explainer.editions.service import EditionError
+    try:
+        return await get_edition_service().submit(video_id, body.locale)
+    except EditionError as exc:
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
+
+
+@router.get("/explainer/videos/{video_id}/localizations/{locale}/usage")
+async def localization_usage(video_id: str, locale: str):
+    from src.core.explainer.editions.service import EditionError
+    try:
+        return get_edition_service().usage(video_id, locale)
+    except EditionError as exc:
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
+
+
+@router.get("/explainer/localization-jobs/{job_id}")
+async def get_localization_job(job_id: str):
+    from src.core.explainer.editions.service import EditionError
+    try:
+        await get_edition_service().reconcile(job_id=job_id)
+        return get_edition_service().get_job(job_id)
+    except EditionError as exc:
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
+
+
+@router.post("/explainer/localization-jobs/{job_id}/resume", status_code=202)
+async def resume_localization_job(job_id: str):
+    from src.core.explainer.editions.service import EditionError
+    try:
+        return await get_edition_service().resume(job_id)
+    except EditionError as exc:
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
 
 
 def _video_preview_url(video: ExplainerVideo) -> str:
@@ -234,6 +338,8 @@ def _job_response(job: RecordJob) -> ExplainerJobResponse:
     return ExplainerJobResponse(
         job_id=job.job_id,
         video_id=job.video_id,
+        locale=job.locale,
+        revision=job.revision,
         state=job.state.value,
         category_path=job.category_path,
         duration=job.duration,
@@ -254,8 +360,8 @@ def _job_response(job: RecordJob) -> ExplainerJobResponse:
         progress_phase=job.progress_phase,
         started_at=job.started_at,
         eta_seconds=job.eta_seconds,
-        title=(video.youtube_title or video.title) if (video := get_video(job.video_id)) else None,
-        poster_url=_poster_url(video) if video else None,
+        title=job.title or ((video.youtube_title or video.title) if (video := get_video(job.video_id)) else None),
+        poster_url=_poster_url(video) if job.locale == "es-419" and (video := get_video(job.video_id)) else None,
     )
 
 
@@ -286,10 +392,14 @@ def _publish_package(video: ExplainerVideo) -> PublishPackageResponse | None:
     )
 
 
-def _video_response(video: ExplainerVideo) -> ExplainerVideoResponse:
+def _video_response(video: ExplainerVideo, *, catalog_item=None) -> ExplainerVideoResponse:
+    preview = _video_preview_url(video)
+    storyboard_file = video.path / "assets/storyboard.json"
+    if storyboard_file.is_file():
+        preview += f"?opening={storyboard_file.stat().st_mtime_ns}"
     top_id = video.category_path.split("/", 1)[0]
     top = list_categories().get(top_id)
-    last = get_recorder().latest_for_video(video.video_id)
+    last = get_recorder().latest_for_video(video.video_id) if catalog_item is None else None
     return ExplainerVideoResponse(
         video_id=video.video_id,
         design=video.design,
@@ -325,11 +435,11 @@ def _video_response(video: ExplainerVideo) -> ExplainerVideoResponse:
         narrative_id=video.narrative_id,
         narrative_label=video.narrative_label,
         quality_issues=video.quality_issues,
-        preview_url=_video_preview_url(video),
-        poster_url=_poster_url(video),
+        preview_url=catalog_item.playback.engine_url if catalog_item else preview,
+        poster_url=catalog_item.poster_url if catalog_item else _poster_url(video),
         last_job=_job_response(last) if last else None,
-        publish_package=_publish_package(video),
-        thumbnails=_thumbnails(video),
+        publish_package=_publish_package(video) if catalog_item is None else None,
+        thumbnails=_thumbnails(video) if catalog_item is None else ThumbnailsResponse(),
     )
 
 
@@ -373,6 +483,8 @@ async def record_explainer_video(video_id: str, body: RecordExplainerRequest) ->
     if video is None:
         raise HTTPException(status_code=404, detail=f"video no encontrado: {video_id}")
     try:
+        from src.core.explainer.editions.packaging import resolve_video
+        video = resolve_video(video, body.locale, body.revision)
         job = get_recorder().submit(
             video,
             duration=body.duration,
@@ -398,9 +510,9 @@ def _video_or_404(video_id: str) -> ExplainerVideo:
 
 
 @router.post("/explainer/videos/{video_id}/thumbnails", response_model=ThumbnailsResponse)
-async def capture_thumbnails(video_id: str, only_missing: bool = False) -> ThumbnailsResponse:
+async def capture_thumbnails(video_id: str, only_missing: bool = False, locale: str = "es-419", revision: str | None = None) -> ThumbnailsResponse:
     """Captura las miniaturas A/B del diseño y C (common.tabloid), si están disponibles."""
-    video = _video_or_404(video_id)
+    video = _selected_video(video_id, locale, revision)
     if not thumbnails.intro_specs(video):
         raise HTTPException(status_code=409, detail=f"el diseño {video.design} no tiene intros para miniaturas")
     try:
@@ -414,15 +526,26 @@ async def capture_thumbnails(video_id: str, only_missing: bool = False) -> Thumb
 
 
 @router.put("/explainer/videos/{video_id}/thumbnail", response_model=ThumbnailsResponse)
-async def choose_thumbnail(video_id: str, body: ThumbnailChoiceRequest) -> ThumbnailsResponse:
+async def choose_thumbnail(video_id: str, body: ThumbnailChoiceRequest, locale: str = "es-419", revision: str | None = None) -> ThumbnailsResponse:
     """Elige la miniatura que se sube a YouTube (queda en publish.json)."""
-    video = _video_or_404(video_id)
+    video = _selected_video(video_id, locale, revision)
+    active_job = get_recorder().latest_for_video(video_id, video.locale, video.revision)
+    if active_job and active_job.state.value in {"queued", "rendering", "publishing"}:
+        raise HTTPException(status_code=409, detail="Espera a que termine la grabación antes de cambiar su apertura")
     try:
         thumbnails.choose(video, body.option)
         await thumbnails.ensure(video, body.option)
     except thumbnails.ThumbnailError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
     return _thumbnails(video)
+
+
+def _selected_video(video_id, locale, revision):
+    from src.core.explainer.editions.packaging import resolve_video
+    try:
+        return resolve_video(_video_or_404(video_id), locale, revision)
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
 @router.get("/explainer/jobs/{job_id}", response_model=ExplainerJobResponse)
@@ -698,11 +821,6 @@ def _preview_resource_urls(value):
 
 
 # La caché guarda solo bytes comprimidos y limita tanto entradas como memoria.
-import asyncio
-import gzip
-import threading
-from collections import OrderedDict
-
 _PREVIEW_GZIP_TYPES = frozenset({".json", ".geojson", ".js", ".mjs", ".css", ".html", ".svg", ".md", ".txt"})
 _PREVIEW_GZIP_MIN_SIZE = 64 * 1024
 _PREVIEW_GZIP_CACHE_LIMIT = 64 * 1024 * 1024
@@ -771,6 +889,12 @@ async def get_explainer_file(file_path: str, request: Request) -> Response:
         raise HTTPException(status_code=404, detail="no encontrado")
     if not target.is_file():
         raise HTTPException(status_code=404, detail="no encontrado")
+    if request.query_params.get("edition") and parts[-2:] == ("assets", "config.json"):
+        from src.core.explainer.editions.preview import edition_config
+        try:
+            target = edition_config(target, request.query_params["edition"], request.query_params.get("revision"))
+        except (ValueError, OSError):
+            raise HTTPException(status_code=404, detail="edición no encontrada")
     # Los previews cambian durante desarrollo: revalidamos, pero un ETag válido no
     # debe volver a transferir el audio o las imágenes completas.
     stat = target.stat()

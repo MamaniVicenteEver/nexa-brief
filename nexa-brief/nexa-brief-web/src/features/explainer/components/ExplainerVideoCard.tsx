@@ -2,9 +2,10 @@
 
 import { ArrowLeft, Play } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useVisualStyles } from "@/features/showcase/hooks/useVisualStyles";
 import { isReviewDemo } from "@/features/templates/lib/preparation-items";
+import { resolveApiUrl } from "@/infrastructure/api/http-client";
 import { cn } from "@/lib/utils";
 import { MediaPlayerModal } from "@/shared/components/media/MediaPlayerModal";
 import {
@@ -15,6 +16,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shared/components/ui/dialog";
+import {
+  activeLocalization,
+  useLocalizationPreflight,
+  useLocalizations,
+} from "../hooks/useLocalizations";
 import type { ExplainerVideo, ThumbnailPreview } from "../types";
 import { ExplainerStudioSidebar } from "./ExplainerStudioSidebar";
 import { ThumbnailArtwork } from "./ThumbnailArtwork";
@@ -24,7 +30,8 @@ const POSTER_SECOND = 6;
 const PLAYER_VOLUME = 0.5;
 
 function withParam(url: string, param: string): string {
-  return `${url}${url.includes("?") ? "&" : "?"}${param}`;
+  const [base, hash] = url.split("#", 2);
+  return `${base}${base.includes("?") ? "&" : "?"}${param}${hash ? `#${hash}` : ""}`;
 }
 
 function playableComponentUrl(url: string): string {
@@ -45,6 +52,87 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
   const playerText = useTranslations("mediaPlayer");
   const narrativeLabel = video.narrativeLabel;
   const [open, setOpen] = useState(false);
+  const localizations = useLocalizations(video.videoId, open && !video.scriptReviewRequired);
+  const [selectedLocale, setSelectedLocale] = useState<string | null>(null);
+  // Reinicia la selección al abrir otro video o volver a abrir el modal.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: los cambios de identidad y apertura son los disparadores.
+  useEffect(() => {
+    setSelectedLocale(null);
+  }, [video.videoId, open]);
+  const data = localizations.data;
+  const selected = data?.locales.find(
+    (item) => item.locale === (selectedLocale ?? data.default_locale),
+  );
+  const translated = selected && !selected.is_original;
+  const job = localizations.jobs.find((item) => item.locale === selected?.locale);
+  const status = job?.status === "running" ? "generating" : (job?.status ?? selected?.status);
+  const playable = !translated || Boolean(selected.preview_url);
+  const preflight = useLocalizationPreflight(
+    video.videoId,
+    translated ? selected.locale : undefined,
+    open && Boolean(translated && !playable && (status === "missing" || status === "failed")),
+  );
+  const creationLock = useRef(false);
+  const syncingPreflight = useRef("");
+  useEffect(() => {
+    const check = preflight?.data;
+    if (!open || !translated || !check || preflight?.isFetching) return;
+    const identity = `${selected.locale}:${check.next_action}:${check.job_id ?? ""}:${check.revision ?? ""}`;
+    if (syncingPreflight.current === identity) return;
+    if (check.next_action === "wait" && check.job_id) {
+      syncingPreflight.current = identity;
+      localizations.track({ job_id: check.job_id, locale: selected.locale, status: "queued" });
+    } else if (check.next_action === "review" || check.next_action === "ready") {
+      syncingPreflight.current = identity;
+      void localizations.refetch();
+    }
+  }, [
+    preflight?.data,
+    preflight?.isFetching,
+    open,
+    translated,
+    selected?.locale,
+    localizations.track,
+    localizations.refetch,
+  ]);
+  const canCreate =
+    preflight?.data?.ready === true &&
+    !preflight.isFetching &&
+    preflight.data.next_action === "create";
+  const resumableJob = preflight?.data?.next_action === "resume" ? preflight.data.job_id : null;
+  const canResume =
+    preflight?.data?.ready === true && !preflight.isFetching && Boolean(resumableJob);
+  const resumeOrCreate = () => {
+    if (
+      !selected ||
+      creationLock.current ||
+      localizations.create.isPending ||
+      localizations.resume.isPending
+    )
+      return;
+    if (canResume && resumableJob) {
+      creationLock.current = true;
+      localizations.resume.mutate(resumableJob, {
+        onSettled: () => {
+          creationLock.current = false;
+        },
+      });
+    } else if (canCreate) {
+      creationLock.current = true;
+      localizations.create.mutate(selected.locale, {
+        onSettled: () => {
+          creationLock.current = false;
+        },
+      });
+    }
+  };
+  const languageName = (locale: string, name: string) => {
+    try {
+      return new Intl.DisplayNames(["es"], { type: "language" }).of(locale.split("-")[0]) ?? name;
+    } catch {
+      return name;
+    }
+  };
   const [thumbnailPreview, setThumbnailPreview] = useState<ThumbnailPreview | null>(null);
   const visualStyles = useVisualStyles(
     video.design,
@@ -180,18 +268,135 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
       }}
       trigger={trigger}
       title={
-        thumbnailPreview ? `${video.title} · Miniatura ${thumbnailPreview.option}` : video.title
+        thumbnailPreview
+          ? `${video.title} · Miniatura ${thumbnailPreview.option}`
+          : translated && selected.title
+            ? selected.title
+            : translated
+              ? `Versión en ${languageName(selected.locale, selected.name)}`
+              : video.title
       }
       description={`${video.designName || video.design} · ${video.categoryName}${narrativeLabel ? ` · ${tx("narratives.used", { label: narrativeLabel })}` : ""}${video.demo ? ` · ${t("prep.demoNote")}` : ""}`}
-      source={{
-        kind: "iframe",
-        url: thumbnailPreview?.componentPreviewUrl
-          ? playableComponentUrl(thumbnailPreview.componentPreviewUrl)
-          : withParam(video.previewUrl, `controls=1&volume=${PLAYER_VOLUME}`),
-        poster: thumbnailPreview ? null : video.posterUrl,
-      }}
+      source={
+        playable
+          ? {
+              kind: "iframe",
+              url: thumbnailPreview?.componentPreviewUrl
+                ? playableComponentUrl(thumbnailPreview.componentPreviewUrl)
+                : withParam(
+                    translated && selected.preview_url
+                      ? resolveApiUrl(selected.preview_url)
+                      : video.previewUrl,
+                    `controls=1&volume=${PLAYER_VOLUME}`,
+                  ),
+              poster: thumbnailPreview || translated ? null : video.posterUrl,
+            }
+          : null
+      }
+      leftControls={
+        data?.supported && data.locales.length > 1 ? (
+          <fieldset aria-label="Idioma" className="flex gap-1">
+            {data.locales.map((item) => (
+              <button
+                key={item.locale}
+                type="button"
+                aria-pressed={item.locale === (selectedLocale ?? data.default_locale)}
+                onClick={() => {
+                  setSelectedLocale(item.locale);
+                  setThumbnailPreview(null);
+                }}
+                className="rounded-full bg-white/10 px-3 py-1.5 text-xs font-semibold aria-pressed:bg-white aria-pressed:text-black"
+              >
+                {item.label}
+              </button>
+            ))}
+          </fieldset>
+        ) : undefined
+      }
+      stageContent={
+        translated && !playable ? (
+          <div className="text-center" role="status">
+            {status === "missing" || status === "failed" ? (
+              <>
+                <p>
+                  {status === "failed"
+                    ? (job?.error ?? selected.error ?? "No se pudo crear la versión.")
+                    : `Esta versión aún no está disponible en ${languageName(selected.locale, selected.name)}.`}
+                </p>
+                <button
+                  type="button"
+                  disabled={
+                    localizations.create.isPending ||
+                    localizations.resume.isPending ||
+                    (!canCreate && !canResume)
+                  }
+                  onClick={resumeOrCreate}
+                  className="mt-3 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black disabled:opacity-50"
+                >
+                  {canResume
+                    ? "Reanudar versión"
+                    : status === "failed"
+                      ? "Reintentar"
+                      : `Crear versión en ${languageName(selected.locale, selected.name)}`}
+                </button>
+                {preflight?.isPending && (
+                  <p className="mt-2 text-sm">Comprobando que todo esté listo…</p>
+                )}
+                {preflight?.data?.issues.map((issue) => (
+                  <p key={`${issue.field}:${issue.message}`} className="mt-2 text-sm">
+                    {issue.message}
+                  </p>
+                ))}
+                {preflight?.data?.ready === false && !preflight.isFetching && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void preflight.refetch();
+                    }}
+                    className="mt-2 text-sm underline"
+                  >
+                    Volver a comprobar
+                  </button>
+                )}
+                {preflight?.isError && (
+                  <div className="mt-2 text-sm">
+                    <p>No se pudo comprobar si la edición está lista para crearse.</p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        void preflight.refetch();
+                      }}
+                      className="mt-1 underline"
+                    >
+                      Volver a comprobar
+                    </button>
+                  </div>
+                )}
+                {localizations.create.error && (
+                  <p className="mt-2">{localizations.create.error.message}</p>
+                )}
+                {localizations.resume.error && (
+                  <p className="mt-2">{localizations.resume.error.message}</p>
+                )}
+              </>
+            ) : (
+              <p>
+                {status === "ready" || status === "needs_review"
+                  ? "Vista previa no disponible."
+                  : status === "completed"
+                    ? "Finalizando edición…"
+                    : `${job?.stage ?? selected.progress?.stage ?? "En cola"} · ${job?.percent ?? selected.progress?.percent ?? 0}%`}
+              </p>
+            )}
+          </div>
+        ) : undefined
+      }
       actions={
-        thumbnailPreview?.componentPreviewUrl ? (
+        localizations.isError ? (
+          <span role="status" className="text-xs text-amber-200">
+            No se pudo actualizar el estado del idioma.
+          </span>
+        ) : thumbnailPreview?.componentPreviewUrl ? (
           <button
             type="button"
             onClick={() => setThumbnailPreview(null)}
@@ -209,6 +414,28 @@ export function ExplainerVideoCard({ video }: { video: ExplainerVideo }) {
       sidebar={
         <ExplainerStudioSidebar
           video={video}
+          edition={
+            translated && !playable
+              ? {
+                  ...selected,
+                  status:
+                    status === "failed"
+                      ? "failed"
+                      : activeLocalization(status ?? "") || status === "completed"
+                        ? "generating"
+                        : selected.status,
+                  progress: job
+                    ? {
+                        stage: job.status === "completed" ? "Finalizando edición" : job.stage,
+                        percent: job.percent,
+                      }
+                    : selected.progress,
+                  title: null,
+                  publish: null,
+                  studio: null,
+                }
+              : selected
+          }
           thumbnailPreview={thumbnailPreview}
           onThumbnailPreview={setThumbnailPreview}
         />

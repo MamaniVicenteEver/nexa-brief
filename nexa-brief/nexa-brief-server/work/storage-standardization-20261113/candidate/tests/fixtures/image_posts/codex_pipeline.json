@@ -1,0 +1,349 @@
+{
+  "sueno": {
+    "PLAN.md": "# Dormir poco y el costo para la atención\n\n## 1. Finalidad\nPrueba propia del motor, sin publicación. No trata sobre celulares.\n\n## 2. Investigación\nFuentes oficiales verificadas el 30 de octubre de 2026; cifras con año de estudio, no año actual.\n\n## 3. Hechos verificados\n\n| # | hecho | fuente | cotejo / uso |\n|---|---|---|---|\n| 1 | En 2024, 30,5 % de adultos de Estados Unidos declararon dormir menos de 7 horas al día. | CDC/NCHS: https://www.cdc.gov/nchs/products/databriefs/db559.htm | Sí; rol=portada; NHIS 2024; publicado abril 2026, hallazgos principales. No extrapolar al mundo. |\n| 2 | En la NHIS de 2024, 30,5 % de adultos de Estados Unidos declararon menos de 7 horas de sueño al día. | CDC/NCHS: https://www.cdc.gov/nchs/products/databriefs/db559.htm | Sí; rol=prueba; Figura 1, total. Autorreporte; población civil no institucionalizada. |\n| 3 | Sin embargo, el informe mide horas declaradas de sueño; no diagnostica un trastorno a cada encuestado. | CDC/NCHS: https://www.cdc.gov/nchs/products/databriefs/db559.htm | Sí; rol=giro; Data source and methods y Definitions. Conclusión limitada a lo medido. |\n| 4 | La falta de sueño puede dificultar la atención y tomar decisiones, y hacer más lentas las reacciones. | NIH/NHLBI: https://www.nhlbi.nih.gov/health/sleep-deprivation/health-effects | Sí; rol=reflexion; Apartado de efectos diurnos. Organismo de salud, síntesis de evidencia. Mantener puede; sin daño irreversible ni diagnóstico personal. |\n",
+    "post.json": {
+      "category_id": "node_tech",
+      "title": "Dormir poco y el costo para la atención",
+      "sources": [
+        "https://www.cdc.gov/nchs/products/databriefs/db559.htm",
+        "https://www.nhlbi.nih.gov/health/sleep-deprivation/health-effects"
+      ],
+      "editorial_notes": "Hechos sanitarios con incertidumbre: no culpar al lector ni prometer enfermedad o curación. El costo del sueño se refiere a atención/decisiones; el de inactividad a perder beneficios posibles. Usar verbos puede y asociación cuando corresponda."
+    },
+    "visuals.json": {
+      "claim_3": {
+        "kind": "timeline",
+        "label": "Lo que mide la encuesta",
+        "items": [
+          {
+            "label": "Pregunta",
+            "detail": "Horas de sueño declaradas"
+          },
+          {
+            "label": "Límite",
+            "detail": "No es un diagnóstico individual"
+          }
+        ],
+        "claim_ids": [
+          "claim_3"
+        ]
+      },
+      "claim_4": {
+        "kind": "timeline",
+        "label": "Qué puede cambiar al dormir poco",
+        "items": [
+          {
+            "label": "Atención",
+            "detail": "Puede costar más concentrarse"
+          },
+          {
+            "label": "Decisiones",
+            "detail": "Pueden resultar más difíciles"
+          },
+          {
+            "label": "Reacciones",
+            "detail": "Pueden ser más lentas"
+          }
+        ],
+        "claim_ids": [
+          "claim_4"
+        ]
+      }
+    },
+    "copy": {
+      "topic": "sueno",
+      "titles": {
+        "basico": "Casi un tercio declara dormir poco",
+        "medio": "¿Cuántas horas te deja el día?",
+        "alto": "El sueño se queda corto",
+        "negro": "El descanso sigue en DEUDA"
+      },
+      "qualifier": "Adultos de EE. UU., NHIS 2024: menos de 7 horas declaradas.",
+      "questions": {
+        "basico": "¿Cuántas horas sueles dormir?",
+        "medio": "¿Cómo cuidas tus horarios?",
+        "alto": "¿Qué ayuda a tu descanso?",
+        "negro": "¿Qué sacrificas por dormir menos?"
+      },
+      "reflections": {
+        "basico": "Dormir poco puede dificultar la atención y las decisiones.",
+        "medio": "¿Cómo podría afectar tu atención dormir poco?",
+        "alto": "Vale pensar cómo dormir poco puede afectar la atención.",
+        "negro": "Si sacrificas sueño, tu atención puede pagar el costo."
+      },
+      "items": [
+        {
+          "claim_id": "claim_1",
+          "body": "",
+          "image_query": "adult daily activity context"
+        },
+        {
+          "claim_id": "claim_2",
+          "body": "Adultos de EE. UU., NHIS 2024: menos de 7 horas declaradas.",
+          "image_query": "adult daily activity context"
+        },
+        {
+          "claim_id": "claim_3",
+          "body": "Sin embargo, son horas declaradas, no diagnósticos individuales.",
+          "image_query": "adult daily activity context"
+        },
+        {
+          "claim_id": "claim_4",
+          "body": "",
+          "image_query": "adult daily activity context"
+        }
+      ]
+    }
+  },
+  "actividad": {
+    "PLAN.md": "# La actividad física que falta en tu día\n\n## 1. Finalidad\nPrueba propia del motor, sin publicación. No trata sobre celulares.\n\n## 2. Investigación\nFuentes oficiales verificadas el 30 de octubre de 2026; cifras con año de estudio, no año actual.\n\n## 3. Hechos verificados\n\n| # | hecho | fuente | cotejo / uso |\n|---|---|---|---|\n| 1 | En 2022, 31 % de adultos del mundo no alcanzó los niveles recomendados de actividad física. | OMS: https://www.who.int/news/item/26-06-2024-nearly-1.8-billion-adults-at-risk-of-disease-from-not-doing-enough-physical-activity/ | Sí; rol=portada; Comunicado 26 junio 2024, primer párrafo. Estimación global; no significa que nunca se muevan. |\n| 2 | En 2022, 31 % de adultos del mundo no alcanzó los niveles recomendados de actividad física, según la OMS. | OMS: https://www.who.int/news/item/26-06-2024-nearly-1.8-billion-adults-at-risk-of-disease-from-not-doing-enough-physical-activity/ | Sí; rol=prueba; Primer párrafo. No llamar a todos sedentarios ni diagnosticar enfermedad. |\n| 3 | La inactividad física adulta aumentó unos 5 puntos porcentuales entre 2010 y 2022 a nivel mundial. | OMS: https://www.who.int/news/item/26-06-2024-nearly-1.8-billion-adults-at-risk-of-disease-from-not-doing-enough-physical-activity/ | Sí; rol=segunda_prueba; Primer párrafo. Puntos porcentuales, no aumento relativo de 5 %. |\n| 4 | Sin embargo, la actividad física también incluye caminar y moverse para transportarse o realizar tareas domésticas; no solo deporte. | OMS: https://www.who.int/news-room/fact-sheets/detail/physical-activity | Sí; rol=giro; Overview: definición de actividad física. No equiparar todo movimiento con intensidad moderada. |\n| 5 | La OMS señala que cualquier cantidad de actividad física es mejor que ninguna y que toda actividad cuenta. | OMS: https://www.who.int/news-room/fact-sheets/detail/physical-activity | Sí; rol=verdad; How much physical activity is recommended. No garantiza prevención individual. |\n| 6 | En adultos, la actividad física regular se asocia con mejor salud mental y sueño. | OMS: https://www.who.int/news-room/fact-sheets/detail/physical-activity | Sí; rol=reflexion; Benefits of physical activity, adultos. Síntesis de evidencia sanitaria; asociación, no cura ni promesa personal. |\n| 7 | La OMS recomienda a los adultos al menos 150 minutos semanales de actividad moderada o 75 de actividad vigorosa, o equivalente. | OMS: https://www.who.int/news/item/26-06-2024-nearly-1.8-billion-adults-at-risk-of-disease-from-not-doing-enough-physical-activity/ | Sí; rol=que_hacer; Segundo párrafo. Recomendación poblacional, no prescripción individual. |\n",
+    "post.json": {
+      "category_id": "node_tech",
+      "title": "La actividad física que falta en tu día",
+      "sources": [
+        "https://www.who.int/news/item/26-06-2024-nearly-1.8-billion-adults-at-risk-of-disease-from-not-doing-enough-physical-activity/",
+        "https://www.who.int/news-room/fact-sheets/detail/physical-activity"
+      ],
+      "editorial_notes": "Hechos sanitarios con incertidumbre: no culpar al lector ni prometer enfermedad o curación. El costo del sueño se refiere a atención/decisiones; el de inactividad a perder beneficios posibles. Usar verbos puede y asociación cuando corresponda."
+    },
+    "visuals.json": {
+      "claim_3": {
+        "kind": "quantity",
+        "value": "5",
+        "unit": "puntos porcentuales",
+        "label": "Aumento mundial entre 2010 y 2022",
+        "claim_ids": [
+          "claim_3"
+        ]
+      },
+      "claim_4": {
+        "kind": "timeline",
+        "label": "Actividad también fuera del deporte",
+        "items": [
+          {
+            "label": "Transporte",
+            "detail": "Caminar para desplazarse"
+          },
+          {
+            "label": "Vida diaria",
+            "detail": "Movimiento en tareas domésticas"
+          }
+        ],
+        "claim_ids": [
+          "claim_4"
+        ]
+      },
+      "claim_5": {
+        "kind": "timeline",
+        "label": "Criterio de la OMS",
+        "items": [
+          {
+            "label": "Cantidad",
+            "detail": "Algo es mejor que nada"
+          },
+          {
+            "label": "Actividad",
+            "detail": "Toda actividad cuenta"
+          }
+        ],
+        "claim_ids": [
+          "claim_5"
+        ]
+      },
+      "claim_6": {
+        "kind": "timeline",
+        "label": "Asociaciones observadas en adultos",
+        "items": [
+          {
+            "label": "Actividad regular",
+            "detail": "Se asocia con mejor salud mental"
+          },
+          {
+            "label": "Descanso",
+            "detail": "Se asocia con mejor sueño"
+          }
+        ],
+        "claim_ids": [
+          "claim_6"
+        ]
+      },
+      "claim_7": {
+        "kind": "timeline",
+        "label": "Alternativas semanales para adultos",
+        "items": [
+          {
+            "label": "Moderada",
+            "detail": "Al menos 150 minutos por semana"
+          },
+          {
+            "label": "Vigorosa",
+            "detail": "Al menos 75 minutos por semana, o combinación equivalente"
+          }
+        ],
+        "claim_ids": [
+          "claim_7"
+        ]
+      }
+    },
+    "copy": {
+      "topic": "actividad",
+      "titles": {
+        "basico": "Adultos sin suficiente actividad física",
+        "medio": "¿Cuánto movimiento cabe en tu semana?",
+        "alto": "El movimiento recomendado sigue pendiente",
+        "negro": "FALTA movimiento en el mundo"
+      },
+      "qualifier": "Adultos del mundo, 2022: niveles recomendados por la OMS.",
+      "questions": {
+        "basico": "¿Qué actividad haces durante tu semana?",
+        "medio": "¿Cuándo encuentras tiempo para moverte?",
+        "alto": "¿Qué significa para ti moverte?",
+        "negro": "¿Qué movimiento estás dejando pendiente?"
+      },
+      "reflections": {
+        "basico": "La actividad física regular se asocia con mejor salud mental y sueño.",
+        "medio": "¿Qué lugar tiene esa asociación con el bienestar en tu rutina?",
+        "alto": "Vale pensar en la asociación entre actividad física regular, salud mental y sueño.",
+        "negro": "Si ignoras esa asociación con salud mental y sueño, pierdes una razón para moverte."
+      },
+      "items": [
+        {
+          "claim_id": "claim_1",
+          "body": "",
+          "image_query": "adult daily activity context"
+        },
+        {
+          "claim_id": "claim_2",
+          "body": "Adultos del mundo, estimación de la OMS para 2022.",
+          "image_query": "adult daily activity context"
+        },
+        {
+          "claim_id": "claim_3",
+          "body": "Aumento mundial entre 2010 y 2022, según la OMS.",
+          "image_query": "adult daily activity context"
+        },
+        {
+          "claim_id": "claim_4",
+          "body": "Sin embargo, caminar para transportarse y las tareas domésticas también son actividad física.",
+          "image_query": "adult daily activity context"
+        },
+        {
+          "claim_id": "claim_5",
+          "body": "Para la OMS, algo de actividad es mejor que nada y toda actividad cuenta.",
+          "image_query": "adult daily activity context"
+        },
+        {
+          "claim_id": "claim_6",
+          "body": "",
+          "image_query": "adult daily activity context"
+        },
+        {
+          "claim_id": "claim_7",
+          "body": "La OMS recomienda al menos 150 minutos moderados o 75 vigorosos por semana, o equivalente.",
+          "image_query": "adult daily activity context"
+        }
+      ]
+    }
+  },
+  "ia-tiempo": {
+    "PLAN.md": "# La rapidez con IA que no coincidía con el reloj\n\n## 1. Finalidad\nContrastar sensación y evidencia sin generalizar un ensayo.\n\n## 2. Investigación\nFuente primaria de METR, consultada el 30 de octubre de 2026. El sitio enlaza un seguimiento de febrero de 2026: este post trata únicamente sobre el ensayo de comienzos de 2025, nunca lo presenta como el estado actual de los modelos.\n\n## 3. Hechos verificados\n| # | hecho | fuente | cotejo / uso |\n|---|---|---|---|\n| 1 | En un ensayo de METR de comienzos de 2025, desarrolladores expertos tardaron 19 % más con herramientas de IA. | METR: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/ | Sí; rol=portada; Core Result; limitado a este ensayo y herramientas de comienzos de 2025. |\n| 2 | En el ensayo METR de comienzos de 2025, con 16 desarrolladores y 246 tareas, permitir IA aumentó 19 % el tiempo de finalización. | METR: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/ | Sí; rol=prueba; Methodology y Core Result. No todas las tareas de programación ni modelos actuales. |\n| 3 | Sin embargo, tras completar las tareas de este ensayo, los desarrolladores creían que la IA los había acelerado 20 %. | METR: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/ | Sí; rol=giro; Core Result. Contraste entre percepción y tiempo medido, no engaño intencional. |\n| 4 | En este ensayo METR de comienzos de 2025, la percepción de ahorrar tiempo con IA no coincidió con el mayor tiempo medido. | METR: https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/ | Sí; rol=reflexion; Core Result y FAQ. Implicación: la sensación de rapidez no demuestra ahorro; no asegura que toda IA ralentice ni culpa al usuario. |\n",
+    "post.json": {
+      "category_id": "node_tech",
+      "title": "El tiempo con IA en un ensayo de 2025",
+      "sources": [
+        "https://metr.org/blog/2025-07-10-early-2025-ai-experienced-os-dev-study/"
+      ],
+      "editorial_notes": "Mantén visible el alcance ensayo de comienzos de 2025. No extrapoles a las herramientas de hoy. La reflexión trata sobre el contraste entre sensación de rapidez y tiempo observado; no sobre enfermedades. No escribas que la IA siempre ralentiza."
+    },
+    "visuals.json": {
+      "claim_3": {
+        "kind": "quantity",
+        "value": "20",
+        "unit": "% de aceleración percibida",
+        "label": "Lo que creían los participantes, después de las tareas",
+        "claim_ids": [
+          "claim_3"
+        ]
+      },
+      "claim_4": {
+        "kind": "timeline",
+        "label": "Percepción frente al reloj en ese ensayo",
+        "items": [
+          {
+            "label": "Sensación",
+            "detail": "Los participantes creían ahorrar tiempo"
+          },
+          {
+            "label": "Medición",
+            "detail": "El tiempo con IA fue mayor"
+          }
+        ],
+        "claim_ids": [
+          "claim_4"
+        ]
+      },
+      "claim_1": {
+        "kind": "quantity",
+        "value": "19",
+        "unit": "% más tiempo",
+        "label": "Tiempo con IA frente a sin IA en ese ensayo",
+        "claim_ids": [
+          "claim_1"
+        ]
+      },
+      "claim_2": {
+        "kind": "quantity",
+        "value": "19",
+        "unit": "% más tiempo",
+        "label": "Tiempo con IA frente a sin IA en ese ensayo",
+        "claim_ids": [
+          "claim_2"
+        ]
+      }
+    },
+    "copy": {
+      "topic": "ia-tiempo",
+      "titles": {
+        "basico": "Expertos tardaron más con IA",
+        "medio": "¿Y si tardas más con IA?",
+        "alto": "El ensayo encontró más demora",
+        "negro": "La IA no AHORRÓ tiempo aquí"
+      },
+      "qualifier": "Ensayo METR de comienzos de 2025: 16 expertos, 246 tareas.",
+      "questions": {
+        "basico": "¿Qué midió este ensayo de IA?",
+        "medio": "¿Cómo mides tu tiempo de trabajo?",
+        "alto": "¿Qué compararías antes de usar IA?",
+        "negro": "¿Cuánto confías en tu sensación de rapidez?"
+      },
+      "reflections": {
+        "basico": "En ese ensayo, sentir rapidez no coincidió con ahorrar tiempo.",
+        "medio": "¿Cómo sabes si tu sensación coincide con el reloj?",
+        "alto": "Vale pensar si la sensación coincide con el tiempo medido en ese ensayo.",
+        "negro": "Si confundes sensación con ahorro, ignoras el contraste de ese ensayo."
+      },
+      "items": [
+        {
+          "claim_id": "claim_1",
+          "body": "",
+          "image_query": "adult daily activity context"
+        },
+        {
+          "claim_id": "claim_2",
+          "body": "Ensayo METR, comienzos de 2025: 16 desarrolladores expertos, 246 tareas.",
+          "image_query": "adult daily activity context"
+        },
+        {
+          "claim_id": "claim_3",
+          "body": "Sin embargo, al terminar, los participantes creían haber ahorrado tiempo con IA.",
+          "image_query": "adult daily activity context"
+        },
+        {
+          "claim_id": "claim_4",
+          "body": "",
+          "image_query": "adult daily activity context"
+        }
+      ]
+    }
+  }
+}

@@ -7,7 +7,12 @@
       "weight": 900,
       "weightB": 900,
       "slant": "normal",
-      "style": "geometric"
+      "style": "promo-dynamic",
+      "roles": {
+        "background": "neon",
+        "foreground": "ink",
+        "accent": "neon"
+      }
     },
     "promo-editorial": {
       "display": "Archivo",
@@ -15,7 +20,12 @@
       "weight": 900,
       "weightB": 900,
       "slant": "normal",
-      "style": "editorial"
+      "style": "promo-editorial",
+      "roles": {
+        "background": "paper",
+        "foreground": "black",
+        "accent": "white"
+      }
     },
     "promo-kinetic": {
       "display": "Montserrat",
@@ -23,7 +33,12 @@
       "weight": 900,
       "weightB": 900,
       "slant": "normal",
-      "style": "kinetic"
+      "style": "promo-kinetic",
+      "roles": {
+        "background": "bg",
+        "foreground": "white",
+        "accent": "orange"
+      }
     },
     "promo-sports": {
       "display": "Roboto",
@@ -31,7 +46,18 @@
       "weight": 900,
       "weightB": 900,
       "slant": "italic",
-      "style": "sports"
+      "style": "promo-sports",
+      "roles": {
+        "background": "dark",
+        "foreground": "white",
+        "accent": "yellow"
+      },
+      "rolesA": {
+        "subtitle": "white"
+      },
+      "rolesB": {
+        "subtitle": "white"
+      }
     },
     "promo-trendy": {
       "display": "Montserrat",
@@ -39,7 +65,18 @@
       "weight": 900,
       "weightB": 900,
       "slant": "italic",
-      "style": "trendy"
+      "style": "promo-trendy",
+      "roles": {
+        "background": "limedark",
+        "foreground": "ink",
+        "accent": "lime"
+      },
+      "rolesA": {
+        "subtitle": "paper"
+      },
+      "rolesB": {
+        "subtitle": "paper"
+      }
     },
     "promo-urban": {
       "display": "Inter Tight",
@@ -47,7 +84,18 @@
       "weight": 800,
       "weightB": 800,
       "slant": "normal",
-      "style": "urban"
+      "style": "promo-urban",
+      "roles": {
+        "background": "reddark",
+        "foreground": "white",
+        "accent": "orange"
+      },
+      "rolesA": {
+        "subtitle": "red"
+      },
+      "rolesB": {
+        "subtitle": "red"
+      }
     },
     "lyrics-amor-impredecible": {
       "display": "Bodoni Moda",
@@ -57,9 +105,9 @@
       "slant": "normal",
       "style": "romantic",
       "fallback": {
-        "background": "#130B12",
-        "foreground": "#F1D9D1",
-        "accent": "#E68A9C"
+        "background": "#010101",
+        "foreground": "#FFFDF8",
+        "accent": "#DF1633"
       }
     },
     "lyrics-calado": {
@@ -84,7 +132,13 @@
       "weight": 400,
       "weightB": 400,
       "slant": "normal",
-      "style": "caution"
+      "style": "caution",
+      "roles": {
+        "background": "dark",
+        "foreground": "light",
+        "accent": "primary",
+        "subtitle": "primary"
+      }
     },
     "lyrics-ceniza": {
       "display": "Playfair Display",
@@ -101,7 +155,8 @@
       "roles": {
         "background": "charcoal",
         "foreground": "bone",
-        "accent": "ember"
+        "accent": "ember",
+        "subtitle": "embertext"
       }
     },
     "lyrics-collage": {
@@ -115,6 +170,12 @@
         "background": "#17130F",
         "foreground": "#E7DFC7",
         "accent": "#B81F19"
+      },
+      "roles": {
+        "background": "ink",
+        "foreground": "paperwhite",
+        "accent": "red",
+        "subtitle": "paperwhite"
       }
     },
     "lyrics-cristal": {
@@ -132,7 +193,8 @@
       "roles": {
         "background": "night",
         "foreground": "text",
-        "accent": "cool"
+        "accent": "cool",
+        "subtitle": "cool"
       }
     },
     "lyrics-expediente": {
@@ -146,6 +208,12 @@
         "background": "#181411",
         "foreground": "#D8C8A6",
         "accent": "#A0211C"
+      },
+      "roles": {
+        "background": "ink",
+        "foreground": "paper",
+        "accent": "red",
+        "subtitle": "red"
       }
     },
     "lyrics-grunge": {
@@ -154,7 +222,13 @@
       "weight": 400,
       "weightB": 400,
       "slant": "normal",
-      "style": "grunge"
+      "style": "grunge",
+      "roles": {
+        "background": "black",
+        "foreground": "white",
+        "accent": "red",
+        "subtitle": "red"
+      }
     },
     "lyrics-impact": {
       "display": "Anton",
@@ -181,9 +255,9 @@
       "slant": "italic",
       "style": "romantic",
       "fallback": {
-        "background": "#080508",
-        "foreground": "#F3E7DE",
-        "accent": "#C31632"
+        "background": "#080205",
+        "foreground": "#FFD9DE",
+        "accent": "#FF2B4A"
       }
     },
     "lyrics-lluvia-gris": {
@@ -223,6 +297,12 @@
         "background": "#1A1410",
         "foreground": "#EADFC8",
         "accent": "#B9877A"
+      },
+      "roles": {
+        "background": "dark",
+        "foreground": "cream",
+        "accent": "rose",
+        "subtitle": "rose"
       }
     },
     "lyrics-mirada": {
@@ -249,7 +329,13 @@
       "weight": 900,
       "weightB": 900,
       "slant": "normal",
-      "style": "mixed"
+      "style": "mixed",
+      "roles": {
+        "background": "black",
+        "foreground": "white",
+        "accent": "lime",
+        "subtitle": "lime"
+      }
     },
     "lyrics-neon": {
       "display": "Monoton",
@@ -274,7 +360,18 @@
       "weight": 800,
       "weightB": 800,
       "slant": "normal",
-      "style": "night"
+      "style": "night",
+      "fallback": {
+        "background": "#0B2B4F",
+        "foreground": "#FFF3DC",
+        "accent": "#F0955A"
+      },
+      "roles": {
+        "background": "night",
+        "foreground": "texttop",
+        "accent": "textbottom",
+        "subtitle": "textbottom"
+      }
     },
     "lyrics-resaltado": {
       "display": "Lora",
@@ -284,9 +381,15 @@
       "slant": "normal",
       "style": "highlight",
       "fallback": {
-        "background": "#F4E8CE",
-        "foreground": "#211B13",
+        "background": "#F1E6C8",
+        "foreground": "#241A0E",
         "accent": "#FFE066"
+      },
+      "roles": {
+        "background": "paper",
+        "foreground": "ink",
+        "accent": "marker",
+        "subtitle": "ink"
       }
     },
     "lyrics-romantic": {
@@ -311,8 +414,8 @@
         "subtitle": "serif"
       },
       "rolesB": {
-        "foreground": "serif",
-        "subtitle": "script"
+        "foreground": "script",
+        "subtitle": "serif"
       }
     },
     "lyrics-stylish-kinetic": {
@@ -326,6 +429,12 @@
         "background": "#E31D40",
         "foreground": "#FFFFFF",
         "accent": "#F3C10A"
+      },
+      "roles": {
+        "background": "bg",
+        "foreground": "ink",
+        "accent": "accent",
+        "subtitle": "accent"
       }
     },
     "lyrics-suave": {
@@ -334,15 +443,25 @@
       "weight": 400,
       "weightB": 400,
       "slant": "normal",
-      "style": "soft"
+      "style": "soft",
+      "fallback": {
+        "background": "#0A0A0B",
+        "foreground": "#EFEFF0",
+        "accent": "#D6262C"
+      }
     },
     "lyrics-triste": {
       "display": "Oswald",
       "displayB": "Oswald",
-      "weight": 600,
-      "weightB": 600,
+      "weight": 700,
+      "weightB": 700,
       "slant": "normal",
-      "style": "sad"
+      "style": "sad",
+      "fallback": {
+        "background": "#07090C",
+        "foreground": "#C9D6E2",
+        "accent": "#7FA6C4"
+      }
     },
     "lyrics-vacio": {
       "display": "Big Shoulders Display",

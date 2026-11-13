@@ -1,3 +1,1 @@
-# Atlas en Movimiento
-
-@AGENTE.md
+@AGENTS.md

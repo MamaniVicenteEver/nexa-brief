@@ -1,12 +1,12 @@
 # Amarillista: una historia en 5–8 imágenes
 
-Instrucción vigente: `BRIEF-motor-amarillista-hilo.md`. Manda sobre los contratos de fases anteriores. La opción por defecto es **hilo, alto**: una historia de un estudio, noticia o caso, de principio a fin. El contrato ejecutable es [image_amarillista_v1.json](image_amarillista_v1.json), sección `hilo`. Los roles antiguos se conservan para leer entradas históricas; no son la plantilla de nuevas entradas. No hace falta una reflexión, otro estudio ni un giro artificial.
+Estándar editorial vigente: `../../CALIDAD.md`; ante conflicto con briefs o contratos anteriores, manda el pedido actual y luego ese estándar. La opción por defecto es **hilo, alto**: una historia de un estudio, noticia o caso, de principio a fin. El contrato ejecutable es [image_amarillista_v1.json](image_amarillista_v1.json), sección `hilo`. Los roles antiguos se conservan para leer entradas históricas; no son la plantilla de nuevas entradas. No hace falta una reflexión, otro estudio ni un giro artificial.
 
-Trabaja solo en `/home/alfred/codex/nexa-brief/wt-amarillista/`. No edites el src vivo, reinicies, mates procesos, publiques ni apliques el parche. Ejecuta con `nice -n 10`; Playwright de a uno. No leas, imprimas o copies .env, sesiones ni claves: `with-env.sh` carga el entorno. Máximo dos intentos por enfoque y tres enfoques por problema, con checkpoints en `BITACORA.md`.
+Nota histórica: los comandos y rutas de esta guía corresponden al experimento aislado Amarillista, no al flujo vigente de publicaciones. Para un pedido nuevo empieza en `image_posts/SKILL.md`. En ese experimento se trabajó en `/home/alfred/codex/nexa-brief/wt-amarillista/`. No edites el src vivo, reinicies, mates procesos, publiques ni apliques el parche. Ejecuta con `nice -n 10`; Playwright de a uno. No leas, imprimas o copies .env, sesiones ni claves: `with-env.sh` carga el entorno. Máximo dos intentos por enfoque y tres enfoques por problema, con checkpoints en `BITACORA.md`.
 
 ## Entrada para cualquier agente
 
-Investiga **una** fuente principal, ábrela y verifica quién habla o estudió, cuándo, qué población/caso describe, qué encontró y cómo termina. Usa el estudio original si está identificado. Si una entrevista solo menciona informes sin identificarlos, no inventes uno: describe el caso como noticia y atribuye sus afirmaciones. La URL no sustituye leer la fuente.
+Anota la fecha actual y busca expresamente cambios de los últimos 12 meses. Abre una fuente principal y otra independiente (una oficial o primaria) por cada cifra; registra URL, fecha del dato y consulta. Verifica quién habla o estudió, cuándo, qué población/caso describe, qué encontró y cómo termina; si las fuentes discrepan o falta evidencia, no uses la cifra. Usa el estudio original si está identificado. Si una entrevista solo menciona informes sin identificarlos, no inventes uno: describe el caso como noticia y atribuye sus afirmaciones. La URL no sustituye leer la fuente.
 
 Prepara una carpeta con `post.json` y `PLAN.md`. `post.json` contiene:
 

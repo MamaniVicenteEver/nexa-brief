@@ -247,7 +247,9 @@ def scaffold(rec, root):
             for name in ["geo", "camera", "flags", "layers", "mapas"]
         ]
     elif is_news(rec['design']):
-        scripts += [f'<script type="module" src="{prefix}sandbox/nodehistory/_atlas/atlas.js"></script>']
+        from src.core.explainer.engine_locations import engine_root
+        engine_relative = engine_root(settings.templates_dir, 'nodehistory/_atlas').relative_to(settings.templates_dir).as_posix()
+        scripts += [f'<script type="module" src="{prefix}bundled/{engine_relative}/atlas.js"></script>']
     else:
         scripts += [
             f'<script type="module" src="{ATLAS_ENGINE_URL}"></script>'

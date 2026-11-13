@@ -11,7 +11,18 @@ export function SandboxShowcaseToggle({ state }: { state: SandboxShowcaseState }
   const locale = useLocale();
   const prefix = locale === routing.defaultLocale ? "" : `/${encodeURIComponent(locale)}`;
   const update = useSandboxShowcaseToggle(state.folder, state.project_id);
-  if (!state.managed) return null;
+  if (!state.managed) {
+    return (
+      <div className="border-t border-nb-line/70 px-3 py-2 text-[11px]">
+        <a
+          href={`${prefix}/showcase?design=${encodeURIComponent(state.design_id)}`}
+          className="block text-center font-semibold text-nb-green-dark underline underline-offset-2"
+        >
+          {t("open")}
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-2 border-t border-nb-line/70 px-3 py-2 text-[11px]">

@@ -143,6 +143,12 @@ export async function getPreviewStatus(
 }
 
 interface TemplateRequirementsDto {
+  resource_context?: {
+    category_id: string;
+    category_name: string;
+    template_id: string;
+    template_name: string;
+  } | null;
   audio: { required: boolean; lyrics: TemplateRequirements["audio"]["lyrics"] };
   media: {
     slot: string;
@@ -170,6 +176,14 @@ export async function getTemplateRequirements(
     { signal },
   );
   return {
+    resourceContext: dto.resource_context
+      ? {
+          categoryId: dto.resource_context.category_id,
+          categoryName: dto.resource_context.category_name,
+          templateId: dto.resource_context.template_id,
+          templateName: dto.resource_context.template_name,
+        }
+      : undefined,
     audio: dto.audio,
     media: dto.media.map((slot) => ({
       slot: slot.slot,

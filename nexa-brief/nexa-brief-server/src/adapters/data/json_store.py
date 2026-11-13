@@ -291,9 +291,20 @@ class JsonDataStore:
             path = data_directory() / "showcase" / ".coordination.lock"
         elif name == "sandbox-preparations":
             path = data_directory() / "prototypes" / ".preparation-coordination.lock"
+        elif re.fullmatch(r"localization-[a-f0-9]{32}", name):
+            path = data_directory() / "explainer" / f".{name}.lock"
+        elif name in {"library-upload-image", "library-upload-video"}:
+            path = data_directory() / "library" / f".{name}.lock"
+        elif (name == "promo-host-preparation"
+              or re.fullmatch(r"promo-chat-[a-f0-9]{32}", name)
+              or re.fullmatch(r"promo-chat-import-[A-Za-z0-9][A-Za-z0-9_-]{0,127}", name)):
+            path = data_directory() / "promos" / f".{name}.lock"
         else:
             raise KeyError(f"Unknown coordination lock: {name}")
-        return AsyncFileLock(lock_path(path, path))
+        # Host preparation includes media discovery and previews, and can take
+        # longer than the default short transaction timeout. Waiting is async
+        # and cancellation closes the descriptor in AsyncFileLock.__aenter__.
+        return AsyncFileLock(lock_path(path, path), timeout=7200 if name == "promo-host-preparation" else 150)
 
     def collection(self, name: str) -> JsonRecordCollection:
         if name not in self._collections:

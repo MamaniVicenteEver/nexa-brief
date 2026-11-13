@@ -16,9 +16,25 @@ Las rutas se verifican desde el archivo que las consume. Los cambios de contenid
 
 - Una demo principal declarada `info.json.is_new_design: true` se incorpora al repositorio: `src/templates/<carpeta-categoría>/<id>/`.
 - Un episodio existente con manifest pasa a `$NEXA_PROFILE_DIR/productions/<carpeta-categoría>/<id>/`.
+- La carpeta canónica de una demo tiene nombre estable sin fecha; cambiar su ruta no cambia el ID de video, diseño o motor.
 - Los videos posteriores siempre se crean en el perfil, reutilizando motores compartidos.
+- Todos los proyectos de prueba, referencias y variantes históricas se guardan en el `sandbox/` del perfil. `src/templates/sandbox/` solo admite motores experimentales, herramientas y documentación; no es un segundo almacén de demos o episodios.
+- Si la demo depende de un motor experimental compartido del diseño, el servicio traslada ese motor a una raíz compartida de producción fuera de `src/templates/sandbox/`, con diario y rollback coordinados. La definición conserva `engine_id`, declara `engine_root` y admite raíces antiguas en `legacy_engine_roots` para resolver aliases sin symlinks ni copias. Actualiza consumidores y Showcase; cambiar solo el estado del catálogo no satisface la ubicación física. Un motor sin integración sigue como pendiente técnico.
+- Las categorías de producción solo muestran la demo principal registrada desde el repositorio y sus episodios de producción. Una demo aún en Sandbox se muestra únicamente allí: no se usa como fallback automático de la categoría.
+- Atlas Cinemático usa `src/templates/nodeatlas/atlas-cinematico/_atlas/`; su demo económica usa `src/templates/nodeatlas/atlas-economias-demo/`. Son una implementación compartida y una demo, respectivamente.
 - Las categorías adicionales usan referencias; no se copian carpetas por categoría.
 - El traslado de demos conserva el ID de Showcase y registra el catálogo compartido. Las imágenes existentes no se recapturan.
+- La miniatura de tarjeta del Sandbox se reutiliza en el video trasladado si no tiene ya una propia y la imagen existente es válida. Al trasladar un episodio a una categoría vacía, la categoría pasa a estar activa.
+- Si la demo utiliza un diseño ya registrado con el mismo motor, se conserva su ID, su catálogo y su revisión; se registra la demo principal en esa definición. Las categorías adicionales apuntan al mismo diseño, sin duplicar componentes ni cachés.
+- El motor histórico `nodehistory/_mapas` admite episodios sin `manifest.json` cuando pasan sus comprobaciones de origen y dependencias; el servicio crea el manifest al moverlos al perfil. La revisión interpreta los recursos de las escenas según la raíz de la página y los motores compartidos.
+
+La norma completa de rutas, conciliación de proyectos históricos y aceptación está en
+[ubicación de demos, pruebas y episodios](ubicacion-demos-pruebas-episodios.md).
+Después del traslado, verifica una sola carpeta canónica, ausencia del origen en
+Sandbox, resolución de la demo y sus recursos, y todas las entradas aisladas y
+miniaturas existentes del diseño en Showcase Producción. Una categoría adicional
+es una referencia y no crea otro proyecto físico. Una URL legacy puede resolverse
+por alias; no necesita conservar una segunda carpeta con los mismos archivos.
 
 La operación usa exclusión, detección de colisiones y diario de recuperación. Mantiene los datos editoriales que ya existan, pero deja el estado **En preparación**, independiente de la ubicación en producción. El comando legacy `kit.py promote` de perfiles actuales exige la misma validación; `--force` no la omite.
 

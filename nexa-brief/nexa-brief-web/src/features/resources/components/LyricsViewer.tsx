@@ -11,11 +11,13 @@ interface LyricsViewerProps {
   /** Reproductor externo con el que sincronizar. Si falta, se muestra uno propio. */
   audioRef?: RefObject<HTMLAudioElement | null>;
   className?: string;
+  /** Si se oculta, pausa solo el reproductor interno y conserva su posición. */
+  visible?: boolean;
 }
 
 /** Letra transcripta palabra por palabra. Resalta la palabra que suena y
  * hacer clic en una palabra salta a ese momento de la canción. */
-export function LyricsViewer({ assetId, audioRef, className }: LyricsViewerProps) {
+export function LyricsViewer({ assetId, audioRef, className, visible = true }: LyricsViewerProps) {
   const t = useTranslations("resources.lyrics");
   const { data: lyrics, isLoading, isError } = useLyrics(assetId);
   const ownAudioRef = useRef<HTMLAudioElement>(null);
@@ -47,6 +49,10 @@ export function LyricsViewer({ assetId, audioRef, className }: LyricsViewerProps
       audio.removeEventListener("seeked", onSeek);
     };
   }, [activeAudio]);
+
+  useEffect(() => {
+    if (!visible && !audioRef) ownAudioRef.current?.pause();
+  }, [visible, audioRef]);
 
   // Mantener visible la palabra activa sin mover la página entera.
   useEffect(() => {

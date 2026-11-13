@@ -41,3 +41,7 @@ con 12 a 16 segmentos (uno por momento de la animación). "tone" debe ser uno de
 intriga, suspenso, explicativo, tensión, tensión creciente, peso, silencio, dolor contenido, duelo, revelación,
 reflexivo, cierre. Curva: empieza en intriga, sube hasta el clímax (ametralladoras/Terranova, intensidad ~1),
 baja a duelo y cierra reflexivo.
+
+## Calidad
+
+Usa solo los hechos facilitados y conserva sus matices: no inventes cifras, resultados ni citas. Cada cifra debe conservar su contexto y fecha; si una afirmación sobre el presente no está documentada, omítela. Evita «la historia continúa» y «una batalla increíble»; sí: «El 1 de julio de 1916 sonaron los silbatos», si lo permiten las anclas. Español natural, sin emojis, «LETRAS» ni etiquetas ajenas; respeta anclas y JSON.

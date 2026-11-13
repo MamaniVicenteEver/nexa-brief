@@ -2,7 +2,7 @@
   "resources": {
     "navLabel": "Recursos",
     "title": "Recursos",
-    "subtitle": "Tus canciones, imágenes, videos y efectos de sonido para reutilizar en las plantillas.",
+    "subtitle": "Canciones, imágenes, videos y sonidos para tus plantillas.",
     "tabs": {
       "music": "Canciones",
       "images": "Imágenes",
@@ -26,7 +26,7 @@
       "sounds": "Todavía no guardaste efectos de sonido"
     },
     "emptyFiltered": "No hay resultados con esos filtros",
-    "emptyHint": "Arrastrá archivos a la zona de subida para sumarlos.",
+    "emptyHint": "Usá la primera tarjeta para subir archivos.",
     "upload": {
       "title": {
         "music": "Subí canciones",
@@ -34,6 +34,7 @@
         "videos": "Subí videos",
         "sounds": "Subí efectos de sonido"
       },
+      "invalidType": "Este tipo de archivo no corresponde a la pestaña seleccionada.",
       "hint": "Arrastrá y soltá, o hacé clic para elegir",
       "state": {
         "queued": "En cola",
@@ -88,7 +89,8 @@
       "approvalStatus": "Revisión",
       "pending": "Por revisar",
       "approved": "Aprobado",
-      "rejected": "Descartado"
+      "rejected": "Descartado",
+      "genre": "Género"
     },
     "delete": {
       "title": "¿Eliminar este recurso?",
@@ -101,7 +103,19 @@
       "search": "Buscar en tu librería…",
       "loading": "Cargando…",
       "empty": "Tu librería está vacía.",
-      "noResults": "Sin resultados."
+      "noResults": "Sin resultados.",
+      "versions": "{count} versiones",
+      "version": "Versión {number}"
+    },
+    "typeLabel": "Tipo de recurso",
+    "retry": "Reintentar",
+    "retryCategories": "No se cargaron las categorías. Reintentar",
+    "pagination": {
+      "label": "Páginas de recursos",
+      "previous": "Página anterior",
+      "next": "Siguientes 12",
+      "range": "{start}–{end} de {total}",
+      "page": "{page} / {pages}"
     }
   }
 }

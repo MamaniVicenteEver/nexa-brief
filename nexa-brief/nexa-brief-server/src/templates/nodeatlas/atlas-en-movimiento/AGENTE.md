@@ -1,3 +1,8 @@
+Antes: [CALIDAD.md](../../../skills/CALIDAD.md) (manda) y, si orquestas, [ORQUESTACION.md](../../../skills/ORQUESTACION.md).
+Al delegar: [PLANTILLA-BRIEF.md](../../../skills/PLANTILLA-BRIEF.md). Al entregar: [PLANTILLA-INFORME.md](../../../skills/PLANTILLA-INFORME.md) como `INFORME.md`.
+
+## Específico de esta skill
+
 # AGENTE · Producir un video con Atlas en Movimiento (cualquier tema)
 
 > Punto de entrada único. Sirve para cualquier IA (Claude Code, Codex, Haiku, otra) y para cualquier tema:
@@ -78,14 +83,14 @@ QUICK, índice y entradas del estilo seleccionado. Reutiliza `tools/build_scene.
 La guía manual completa de abajo sigue disponible; no hay que releerla para cada episodio preparado
 por el host. El estado de producción no cambia la definición compartida de los estilos.
 
-## 1. Qué leer (en este orden, y no más)
+## 1. Lecturas manuales de consulta (recorrido normal: SKILL.md y API)
 
 | # | archivo | para qué |
 |---|---|---|
 | 1 | este `AGENTE.md` | el proceso, los roles y las puertas de calidad |
 | 2 | `GUION.md` | **cómo se genera el diálogo**: quién lo escribe, qué estrategia narrativa usa, cómo se piensa para imagen |
 | 3 | `MENU-VISUAL.md` | qué componente usar para cada tipo de hecho (ofensiva, ocupación, tratado, ataque, cifra…) |
-| 4 | **`COMPONENTES.md`** (todas las piezas con título, descripción, parámetros y ejemplo; se regenera con `node tools/componentes-md.mjs`) | saber qué existe y cómo armarlo sin abrir código; no se planea sin haberlo leído |
+| 4 | guía de producción y contratos seleccionados de Showcase | saber qué existe y cómo armarlo sin leer el catálogo completo ni abrir código |
 | 5 | `engine/tactico/animations/<nombre>.json` solo si necesitas más detalle de una pieza | parámetros y rangos |
 | 6 | `engine/tactico/AGENTE.md` | reglas de ranuras de texto, estilos, errores ya vistos |
 | 7 | `engine/tactico/ORQUESTACION.md` | cómo se reparten las ranuras cuando hay muchas piezas |
@@ -105,25 +110,17 @@ Fuente única: `src/skills/models/roles.json`. Cambiar quién hace un rol se hac
 | storyboard / plan visual | Codex (`storyboard`) | el campo `plan` de cada segmento |
 | medios | líder o Codex | descarga imágenes/documentos libres con crédito en `assets/media/` |
 | verificación de hechos | DeepSeek (`fact_check`) | segunda lectura del guion contra el ledger |
-| textos de publicación | DeepSeek (`copy_draft`) | títulos, descripción, miniaturas |
+| textos de publicación | proveedor de `copy_draft` en `roles.json` | títulos, descripción, miniaturas |
 | voz | Gemini TTS | `narrate.py` |
 | tiempos | Whisper large-v3 | `transcribe.py` |
 | revisión visual | el líder, con sus ojos | hoja de contactos de 24 cuadros |
 
-### Si Codex no responde (sin cuota, límite, caída)
+### Si un proveedor no responde
 
-`roles.json` declara un **respaldo `claude-haiku-5-5`** para los roles de Codex. `kit.py delegate` lo usa
-solo cuando Codex falla y deja el cambio registrado (`work/delegate/*.fallback.jsonl`). Para el trabajo
-largo (investigación, guion, plan visual) que se lanza fuera de `delegate`:
-
-1. **Detecta** el fallo: la corrida termina sin entregables, o el log dice límite/cuota/usage limit.
-2. **No sigas con una versión reducida.** No reemplaces la mitad del trabajo con atajos.
-3. **Relanza el mismo brief** con Haiku 5.5 (`claude -p --model claude-haiku-5-5 …`, o `agent: "claude"`
-   en `POST /api/v1/explainer/productions`). Los briefs ya son autosuficientes; no los resumas.
-4. **Anótalo** al inicio del reporte final: qué rol cambió de modelo y por qué.
-5. Haiku escribe borradores; **el líder revisa** guion, plan visual y medios con el mismo rigor.
-6. Si tampoco hay Haiku, **detente y avisa al usuario**. Nunca entregues como "listo" un video armado con
-   la mitad del flujo.
+No reduzcas el trabajo. Consulta `roles.json` y la política de `ORQUESTACION.md`;
+usa un respaldo solo si la sesión lo permite, y registra el modelo real y el motivo.
+El líder revisa los borradores. Si no puedes obtener un resultado verificable,
+informa el bloqueo con la evidencia correspondiente.
 
 ## 3. El proceso (con puertas)
 
@@ -142,8 +139,8 @@ compartida; no se copian al episodio. **No grabes MP4. No hagas commit.**
 | 6 | **Voz** → `assets/song.mp3` (Gemini TTS, `_atlas/voice.json`) | `song.qc.json` sin omisiones; se escucha un tramo |
 | 7 | **Transcripción** → `assets/lyrics.json` (Whisper). **Aquí mismo arranca el paso 12 en paralelo** | tiempos reales, nunca estimados |
 | 8 | **Escena**: `python3 tools/build_scene.py <episodio>` (generador universal) | sin segmentos sin plan |
-| 9 | **Auditorías**: `python tools/check_episode.py <episodio>`, `node tools/cobertura-audit.mjs <episodio>` **y** la auditoría de estilo | **motor compartido, cobertura OK y 0 choques**; todas son obligatorias |
-| 10 | **Mapa**: teselas para cada zona/zoom de cámara (`_atlas/PRODUCIR.md` §5) | barrido de navegador sin teselas faltantes |
+| 9 | **Auditorías**: `python tools/check_episode.py <episodio>`, `node tools/cobertura-audit.mjs <episodio>` **y** revisión de estilo del episodio | **motor compartido, cobertura OK y 0 choques**; no usar la auditoría ligada a los datos de la demo para certificar otro episodio |
+| 10 | **Mapa**: teselas para cada zona/zoom de cámara (`../_atlas/PRODUCIR.md` §5) | barrido de navegador sin teselas faltantes |
 | 11 | **Revisión visual**: hoja de 24 cuadros en 9:16 y en 16:9 + un tramo animado | escribir en el resultado: tipos, imágenes, unidades, tramos sin movimiento |
 | 12 | **Paquete de publicación COMPLETO** (miniaturas A/B/C, 3 títulos, Facebook/TikTok, descripción con capítulos, fuentes, créditos, tags, comentario fijado; estrategia amarillista v1). **NO se deja para el final**: se lanza con Terra 6.1 alto en cuanto existe `lyrics.json` (paso 7), en paralelo a los pasos 8–11, con `PUBLICACION.md` como brief. Estado `listo` (sin MP4) solo si el paquete existe | `publishing check <id>` con 0 errores; en la web, «Títulos y metadatos» sin «Faltan los textos de publicación» |
 | 13 | **Reporte final** (§7) | honesto, con lo que falta al inicio |
@@ -200,14 +197,11 @@ esté disponible y validada en Showcase. No se acepta copiarla entre motores. Al
    en el motor principal queda disponible en ambos. No dupliques su esquema en un catálogo independiente.
    La definición compartida solo conserva organización y ejemplos de datos; estos reutilizan el `type` original
    y sus parámetros. Comprueba en `/showcase` que la tarjeta existe y se anima usando ese mismo componente.
-4. **Encárgalo a Luna (`gpt-6-luna`, esfuerzo máximo = `xhigh` en `run-model.sh`)**: el orquestador NO registra a mano, solo
-   orquesta. Brief `~/codex/nexa-brief/BRIEF-showcase-<video>.md` con la lista de piezas nuevas; Luna regenera el catálogo,
-   comprueba que cada pieza aparece en `/showcase` (Atlas en Movimiento) con su vista previa, completa `demo`/`summary`/tokens
-   de estilo en los 4 estilos (`estilo-validate` con 0 errores), genera el poster si falta y escribe `work/results/showcase-<video>.md`.
-   Lanza: `~/codex/nexa-brief/run-model.sh gpt-6-luna xhigh showcase-<video>` (añade la tarea a `budgets.txt`).
-5. **Es obligatorio y no se puede omitir**: toda pieza o marca de mapa NUEVA se registra en el catálogo en el mismo video en que
-   se crea, para que cualquier agente futuro la encuentre en `COMPONENTES.md`/Showcase y la reutilice. Un video con piezas nuevas
-   no registradas NO está listo. El informe final nombra las piezas nuevas y pega la confirmación de Luna.
+4. Regenera el catálogo, comprueba en Showcase la vista previa de cada pieza, completa
+   `demo`, `summary` y tokens de los cuatro estilos, ejecuta `estilo-validate`, genera
+   el poster si falta y guarda la revisión. Puedes delegar esta tarea cuando esté permitido.
+5. Toda pieza o marca de mapa nueva debe registrarse para su reutilización. El informe
+   identifica las piezas y la verificación; sin registro el video no está listo.
 
 ### Leyendas que permanecen: se APILAN hacia arriba (regla fija, pedida el 2026-11-10)
 
@@ -264,7 +258,9 @@ Los parámetros de `componentes` y `medios` son los del JSON de esa pieza (`anim
 `example`). El generador copia cada pieza con su tipo real y marca `segment` para que la auditoría compruebe
 el plan. Tiempos relativos al inicio de la frase (`offset`) → si la voz cambia, la escena se reacomoda.
 
-## 7. Reporte final (siempre, y empieza por lo que falta)
+## 7. Detalle específico para el informe común (siempre, y empieza por lo que falta)
+
+El informe obligatorio completo es `INFORME.md` según `PLANTILLA-INFORME.md`; añade estos detalles:
 
 1. **Lo que falta o salió reducido**, primero. Si Codex falló y entró Haiku, o faltan imágenes, se dice aquí.
 2. Tema, duración, formato, estado `"listo"` (así aparece en la pestaña Preparación; "en preparación" NO lo reconoce la web), sin MP4.
@@ -281,7 +277,7 @@ el plan. Tiempos relativos al inicio de la frase (`offset`) → si la voz cambia
 - **`visual_cue` ignorado.** El guion pedía 21 documentos y 3 cambios de control; el generador no los
   implementaba. Ahora el `plan` es dato obligatorio y el audit compara plan contra escena.
 - **Sin etapa de medios.** Nadie descargó imágenes; los documentos se omitieron en silencio. El paso 5 es obligatorio.
-- **Codex sin cuota y el flujo siguió con la mitad.** Ver §2: respaldo Haiku 5.5, nunca versión reducida.
+- **Codex sin cuota y el flujo siguió con la mitad.** Ver §2: consulta la política común de respaldo, nunca versión reducida.
 - **"Detalles menores" para fallas centrales.** El reporte dice primero lo que falta.
 - **Guion como lista de hechos.** Ver `GUION.md`: un video se cuenta con escenas, personas y tensión.
 - Países con rótulo en el mismo punto, rutas `work/…` en la escena, `bando` solo admite `atacante|otro`
@@ -291,7 +287,7 @@ el plan. Tiempos relativos al inicio de la frase (`offset`) → si la voz cambia
 
 Resultado: ~11,8 min, 195 piezas de 32 tipos, 22 imágenes con crédito, 48 sonidos, 0 tramos sin acción. Receta:
 
-1. **Guion** por Terra 6.1 (rol `script`, respaldo Haiku 5.5): ledger ampliado + `script.json` con `plan` por segmento. Una **segunda pasada** de Terra con el informe de `cobertura-audit` llenó los huecos (el primer plan dejó tramos de 20–26 s sin acción).
+1. **Guion** en el ejemplo histórico por Terra 6.1 (el respaldo vigente se consulta en `roles.json`): ledger ampliado + `script.json` con `plan` por segmento. Una **segunda pasada** de Terra con el informe de `cobertura-audit` llenó los huecos (el primer plan dejó tramos de 20–26 s sin acción).
 2. **Medios**: `python3 tools/media-fetch.py <episodio>` con `work/medios-necesarios.json`; si la búsqueda automática elige mal, ponga `commons: "File:..."` exacto (búsqueda auxiliar: `python3 tools/media-search.py "consulta"` → lista títulos y licencias de Commons). **Mira siempre la hoja de contactos de las imágenes**: la búsqueda trajo un carrusel por «ONU». Sin imagen libre del hecho (tratados, documentos) se quita la pieza, no se inventa.
 3. **Voz** (`narrate.py`, Charon) → **transcripción** (`transcribe.py`) → `build_scene.py`. Whisper escribe las cifras con dígitos: `build_scene.py` resuelve anclas «veinticuatro», «mil» al primer número del segmento.
 4. **Auditorías**: `cobertura-audit.mjs` (las piezas de más de 60 s —retratos— no cuentan como actividad) y revisión visual real con capturas 9:16 y 16:9 (`seek` con `window.__promo.seek(t)`).

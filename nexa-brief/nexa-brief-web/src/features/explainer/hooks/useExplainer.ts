@@ -5,6 +5,7 @@ import {
   captureThumbnails,
   chooseThumbnail,
   createProduction,
+  type EditionRequest,
   generateBrief,
   generatePublishTexts,
   getCategoryDesigns,
@@ -67,10 +68,14 @@ export function useRecordExplainerVideo() {
       useRecordingTrayStore.getState().addRecording({
         jobId: job.jobId,
         videoId: job.videoId,
-        title: video?.youtubeTitle || video?.title || input.videoId,
+        title:
+          job.title ||
+          (!input.locale ? video?.youtubeTitle || video?.title : null) ||
+          input.videoId,
       });
       queryClient.invalidateQueries({ queryKey: VIDEOS_KEY });
       queryClient.invalidateQueries({ queryKey: RECORDING_JOBS_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: ["explainer-localizations", input.videoId] });
     },
   });
 }
@@ -91,7 +96,7 @@ export function useExplainerRecordings() {
   useEffect(() => {
     const jobs = query.data;
     if (!jobs) return;
-    const finished = jobs.some((job) => {
+    const finished = jobs.filter((job) => {
       const before = previous.current.get(job.jobId);
       return (
         before !== undefined &&
@@ -100,7 +105,10 @@ export function useExplainerRecordings() {
       );
     });
     previous.current = new Map(jobs.map((job) => [job.jobId, job.state]));
-    if (finished) {
+    if (finished.length) {
+      for (const videoId of new Set(finished.map((job) => job.videoId))) {
+        queryClient.invalidateQueries({ queryKey: ["explainer-localizations", videoId] });
+      }
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
       queryClient.invalidateQueries({ queryKey: VIDEOS_KEY });
     }
@@ -111,8 +119,16 @@ export function useExplainerRecordings() {
 export function useCaptureThumbnails() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (videoId: string) => captureThumbnails(videoId, true),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: VIDEOS_KEY }),
+    mutationFn: (input: string | ({ videoId: string } & EditionRequest)) =>
+      typeof input === "string"
+        ? captureThumbnails(input, true)
+        : captureThumbnails(input.videoId, true, input),
+    onSuccess: (_, input) => {
+      queryClient.invalidateQueries({ queryKey: VIDEOS_KEY });
+      queryClient.invalidateQueries({
+        queryKey: ["explainer-localizations", typeof input === "string" ? input : input.videoId],
+      });
+    },
   });
 }
 
@@ -147,9 +163,12 @@ export function usePrepareThumbnails(video: ExplainerVideo) {
 export function useChooseThumbnail() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (input: { videoId: string; option: ThumbnailOptionId }) =>
-      chooseThumbnail(input.videoId, input.option),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: VIDEOS_KEY }),
+    mutationFn: (input: { videoId: string; option: ThumbnailOptionId } & EditionRequest) =>
+      chooseThumbnail(input.videoId, input.option, input),
+    onSuccess: (_, input) => {
+      queryClient.invalidateQueries({ queryKey: VIDEOS_KEY });
+      queryClient.invalidateQueries({ queryKey: ["explainer-localizations", input.videoId] });
+    },
   });
 }
 
@@ -277,9 +296,10 @@ interface AccountDto {
 
 const PUBLISHABLE = ["youtube", "tiktok", "facebook", "instagram"];
 
-export function usePublishAccounts() {
+export function usePublishAccounts(enabled = true) {
   return useQuery({
     queryKey: ["publish-accounts"],
+    enabled,
     queryFn: async ({ signal }): Promise<PublishAccount[]> => {
       const dtos = await httpClient<AccountDto[]>("/api/v1/publish/accounts", { signal });
       return dtos

@@ -4,7 +4,6 @@ import { ChevronDown, ChevronsDownUp, ChevronsUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { ExplainerVideoCard } from "@/features/explainer/components/ExplainerVideoCard";
-import { SandboxDesignDemoCard } from "@/features/explainer/components/SandboxDesignDemoCard";
 import { useTemplateCatalog } from "../hooks/useTemplateCatalog";
 import { TemplateCard } from "./TemplateCard";
 
@@ -218,13 +217,6 @@ export function AllDesignsWindow() {
                     ))}
                     {section.demoVideos.map((video) => (
                       <ExplainerVideoCard key={video.videoId} video={video} />
-                    ))}
-                    {section.sandboxDemos.map((demo) => (
-                      <SandboxDesignDemoCard
-                        key={demo.item.folder + "/" + demo.item.id}
-                        item={demo.item}
-                        productionDesign={demo.productionDesign}
-                      />
                     ))}
                   </div>
                 ))}

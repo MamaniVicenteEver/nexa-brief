@@ -1,0 +1,201 @@
+import type { JobStage } from "@/features/create-video/types";
+import { httpClient, resolveApiUrl } from "@/infrastructure/api/http-client";
+import { appendResourceSourceFields, type ResourceSelection } from "@/shared/lib/resource-source";
+import type {
+  PreviewFile,
+  PreviewStatus,
+  RequirementMediaSlot,
+  Template,
+  TemplatePreviewHandle,
+  TemplateRequirements,
+} from "../types";
+
+export interface TemplateDto {
+  template_id: string;
+  niche_id: string;
+  category_id?: string;
+  category_name?: string;
+  category_order?: number;
+  tags?: string[];
+  sort_order?: number;
+  status?: string;
+  can_generate?: boolean;
+  display_name: string;
+  native_orientation: Template["nativeOrientation"];
+  requires_image: boolean;
+  requires_video: boolean;
+  requires_lyrics: boolean;
+  active: boolean;
+  preview_image_url?: string | null;
+  preview_video_url?: string | null;
+  preview_audio_url?: string | null;
+  showcase_url?: string | null;
+}
+
+export function mapTemplate(dto: TemplateDto): Template {
+  return {
+    id: dto.template_id,
+    nicheId: dto.niche_id,
+    categoryId: dto.category_id ?? "uncategorized",
+    categoryName: dto.category_name ?? "Sin categoría",
+    categoryOrder: dto.category_order ?? 999,
+    tags: dto.tags ?? [],
+    sortOrder: dto.sort_order ?? 999,
+    status: dto.status ?? "ready",
+    canGenerate: dto.can_generate ?? Boolean(dto.niche_id),
+    displayName: dto.display_name,
+    nativeOrientation: dto.native_orientation,
+    requiresImage: dto.requires_image,
+    requiresVideo: dto.requires_video,
+    requiresLyrics: dto.requires_lyrics,
+    active: dto.active,
+    previewImageUrl: dto.preview_image_url ? resolveApiUrl(dto.preview_image_url) : null,
+    previewVideoUrl: dto.preview_video_url ? resolveApiUrl(dto.preview_video_url) : null,
+    previewAudioUrl: dto.preview_audio_url ? resolveApiUrl(dto.preview_audio_url) : null,
+    showcaseUrl: dto.showcase_url ? resolveApiUrl(dto.showcase_url) : null,
+  };
+}
+
+export async function getTemplates(signal?: AbortSignal): Promise<Template[]> {
+  const dtos = await httpClient<TemplateDto[]>("/api/v1/templates", { signal });
+  return dtos.map(mapTemplate);
+}
+
+export async function getTemplate(templateId: string, signal?: AbortSignal): Promise<Template> {
+  const dto = await httpClient<TemplateDto>(`/api/v1/templates/${templateId}`, { signal });
+  return mapTemplate(dto);
+}
+
+interface TemplatePreviewAcceptedDto {
+  preview_id: string;
+  template_id: string;
+  category_name: string;
+  stage: JobStage;
+}
+
+export interface TemplatePreviewSelections {
+  image?: ResourceSelection;
+  music?: ResourceSelection;
+  video?: ResourceSelection;
+}
+
+export async function createTemplatePreview(
+  templateId: string,
+  selections: TemplatePreviewSelections,
+  signal?: AbortSignal,
+): Promise<TemplatePreviewHandle> {
+  const formData = new FormData();
+  appendResourceSourceFields(formData, "image", selections.image);
+  appendResourceSourceFields(formData, "music", selections.music);
+  appendResourceSourceFields(formData, "video", selections.video);
+
+  const dto = await httpClient<TemplatePreviewAcceptedDto>(
+    `/api/v1/templates/${templateId}/preview`,
+    {
+      method: "POST",
+      body: formData,
+      signal,
+    },
+  );
+  return {
+    previewId: dto.preview_id,
+    templateId: dto.template_id,
+    categoryName: dto.category_name,
+    stage: dto.stage,
+  };
+}
+
+interface PreviewFileDto {
+  filename: string;
+  url: string | null;
+}
+
+interface PreviewStatusDto {
+  preview_id: string;
+  category: string;
+  stage: JobStage;
+  is_terminal: boolean;
+  is_success: boolean;
+  errors: string[];
+  files: PreviewFileDto[];
+}
+
+function mapPreviewFile(dto: PreviewFileDto): PreviewFile {
+  return { filename: dto.filename, url: dto.url ? resolveApiUrl(dto.url) : null };
+}
+
+export async function getPreviewStatus(
+  previewId: string,
+  signal?: AbortSignal,
+): Promise<PreviewStatus> {
+  const dto = await httpClient<PreviewStatusDto>(`/api/v1/templates/preview/${previewId}/status`, {
+    signal,
+  });
+  return {
+    previewId: dto.preview_id,
+    category: dto.category,
+    stage: dto.stage,
+    isTerminal: dto.is_terminal,
+    isSuccess: dto.is_success,
+    errors: dto.errors,
+    files: dto.files.map(mapPreviewFile),
+  };
+}
+
+interface TemplateRequirementsDto {
+  resource_context?: {
+    category_id: string;
+    category_name: string;
+    template_id: string;
+    template_name: string;
+  } | null;
+  audio: { required: boolean; lyrics: TemplateRequirements["audio"]["lyrics"] };
+  media: {
+    slot: string;
+    kind: RequirementMediaSlot["kind"];
+    count?: number | null;
+    min: number;
+    max: number;
+    orientation: RequirementMediaSlot["orientation"];
+    target: RequirementMediaSlot["target"];
+    label: string;
+    hint: string;
+  }[];
+  texts: { key: string; label: string; max: number | null; default: string | null }[];
+  brief: boolean;
+}
+
+/** Qué pide cada plantilla (canción, lugares de medios, textos): el Estudio y
+ * Crear video arman su formulario a partir de esto. */
+export async function getTemplateRequirements(
+  templateId: string,
+  signal?: AbortSignal,
+): Promise<TemplateRequirements> {
+  const dto = await httpClient<TemplateRequirementsDto>(
+    `/api/v1/templates/${templateId}/requirements`,
+    { signal },
+  );
+  return {
+    resourceContext: dto.resource_context
+      ? {
+          categoryId: dto.resource_context.category_id,
+          categoryName: dto.resource_context.category_name,
+          templateId: dto.resource_context.template_id,
+          templateName: dto.resource_context.template_name,
+        }
+      : undefined,
+    audio: dto.audio,
+    media: dto.media.map((slot) => ({
+      slot: slot.slot,
+      kind: slot.kind,
+      min: slot.min,
+      max: slot.max,
+      orientation: slot.orientation,
+      target: slot.target,
+      label: slot.label,
+      hint: slot.hint,
+    })),
+    texts: dto.texts.map((text) => ({ ...text })),
+    brief: dto.brief,
+  };
+}

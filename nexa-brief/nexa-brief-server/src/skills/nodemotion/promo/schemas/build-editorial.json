@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/schemas/nodemotion-promo/build-editorial.json",
+  "type": "object",
+  "properties": {
+    "template": {
+      "const": "promo-editorial"
+    },
+    "texts": {
+      "type": "object",
+      "properties": {
+        "brand.name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "brand.round": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "brand.left": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "brand.right": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 20
+        },
+        "brand.tagline": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        }
+      },
+      "required": [
+        "brand.name",
+        "brand.round",
+        "brand.left",
+        "brand.right",
+        "brand.tagline"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "template",
+    "texts"
+  ]
+}

@@ -7,6 +7,11 @@ import {
   updateDraftThumbnailOption,
   uploadDraftThumbnailBackground,
 } from "../api/studio-service";
+import {
+  restoreThumbnailEdits,
+  serializeThumbnailEdits,
+  thumbnailLocalEdits,
+} from "../services/thumbnail-local-edits";
 import type {
   Draft,
   DraftThumbnailOption,
@@ -16,7 +21,6 @@ import type {
 import { draftKey, draftsKey } from "./useDraft";
 
 const OPTION_IDS: DraftThumbnailOptionId[] = ["A", "B"];
-const SAVE_DELAY_MS = 350;
 
 export type DraftThumbnailManifest = DraftThumbnails & {
   options: Record<DraftThumbnailOptionId, DraftThumbnailOption>;
@@ -57,6 +61,7 @@ export function useDraftThumbnailEditor(draft: Draft | null) {
     draft?.thumbnails?.selected ?? "A",
   );
   const [pendingCount, setPendingCount] = useState(0);
+  const [isLocalStored, setIsLocalStored] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isSelecting, setIsSelecting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -67,14 +72,12 @@ export function useDraftThumbnailEditor(draft: Draft | null) {
   const revisions = useRef<Record<DraftThumbnailOptionId, number>>({ A: 0, B: 0 });
   const dirty = useRef(new Set<DraftThumbnailOptionId>());
   const pending = useRef(new Map<DraftThumbnailOptionId, PendingOption>());
-  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const flushPromise = useRef<Promise<void> | null>(null);
   const desiredSelection = useRef<DraftThumbnailOptionId>(selected);
   const persistedSelection = useRef<DraftThumbnailOptionId>(selected);
   const selecting = useRef(false);
   const selectionRequested = useRef(false);
   const selectionPromise = useRef<Promise<void> | null>(null);
-  const flushTextRef = useRef<() => Promise<void>>(() => Promise.resolve());
 
   const setLocalOptions = useCallback(
     (next: Record<DraftThumbnailOptionId, DraftThumbnailOption>) => {
@@ -127,33 +130,36 @@ export function useDraftThumbnailEditor(draft: Draft | null) {
   // biome-ignore lint/correctness/useExhaustiveDependencies: draft identity intentionally owns this reset.
   useEffect(() => {
     activeDraftId.current = draftId;
-    setLocalOptions(optionsFor(draft));
-    const nextSelected = draft?.thumbnails?.selected ?? "A";
+    const cached = draftId ? thumbnailLocalEdits.get(draftId) : null;
+    const nextOptions = restoreThumbnailEdits(optionsFor(draft), cached);
+    setLocalOptions(nextOptions);
+    const remoteSelected = draft?.thumbnails?.selected ?? "A";
+    const nextSelected =
+      cached?.selected === "B" ? "B" : cached?.selected === "A" ? "A" : remoteSelected;
     setSelected(nextSelected);
-    setEditingOption(nextSelected);
+    setEditingOption(cached?.editing === "B" ? "B" : cached?.editing === "A" ? "A" : nextSelected);
     desiredSelection.current = nextSelected;
-    persistedSelection.current = nextSelected;
+    persistedSelection.current = remoteSelected;
     pending.current.clear();
     dirty.current.clear();
     revisions.current = { A: 0, B: 0 };
-    setPendingCount(0);
+    for (const option of OPTION_IDS) {
+      if (cached?.options?.[option]) {
+        dirty.current.add(option);
+        pending.current.set(option, { value: nextOptions[option], revision: 0 });
+      }
+    }
+    setPendingCount(pending.current.size);
     setError(null);
     // A new draft gets an independent editor queue.
-    if (timer.current) clearTimeout(timer.current);
-    timer.current = null;
     flushPromise.current = null;
     selectionPromise.current = null;
-    selectionRequested.current = false;
+    selectionRequested.current = nextSelected !== remoteSelected;
     selecting.current = false;
     setIsSaving(false);
     setIsSelecting(false);
     setIsUploading(false);
     mediaPromise.current = null;
-    return () => {
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = null;
-      if (pending.current.size > 0) void flushTextRef.current().catch(() => undefined);
-    };
   }, [draftId, setLocalOptions]);
 
   useEffect(() => {
@@ -173,8 +179,6 @@ export function useDraftThumbnailEditor(draft: Draft | null) {
   }, []);
 
   const flushText = useCallback((): Promise<void> => {
-    if (timer.current) clearTimeout(timer.current);
-    timer.current = null;
     if (flushPromise.current) return flushPromise.current;
     if (!draftId || pending.current.size === 0) {
       if (dirty.current.size === 0) setPendingCount(0);
@@ -226,17 +230,10 @@ export function useDraftThumbnailEditor(draft: Draft | null) {
     promise = run().finally(() => {
       if (flushPromise.current === promise) flushPromise.current = null;
       if (activeDraftId.current === draftId) publishPendingCount();
-      else if (pending.current.size > 0) {
-        void Promise.resolve().then(() => flushTextRef.current().catch(() => undefined));
-      }
     });
     flushPromise.current = promise;
     return promise;
   }, [draftId, publishPendingCount, writeCache]);
-
-  useEffect(() => {
-    flushTextRef.current = flushText;
-  }, [flushText]);
 
   const updateOption = useCallback(
     (option: DraftThumbnailOptionId, patch: Partial<DraftThumbnailOption>) => {
@@ -248,12 +245,14 @@ export function useDraftThumbnailEditor(draft: Draft | null) {
       pending.current.set(option, { value: next[option], revision });
       setError(null);
       publishPendingCount();
-      if (timer.current) clearTimeout(timer.current);
-      timer.current = setTimeout(() => {
-        void flushText().catch(() => undefined);
-      }, SAVE_DELAY_MS);
+      setIsLocalStored(
+        thumbnailLocalEdits.set(
+          draftId,
+          serializeThumbnailEdits(next, dirty.current, desiredSelection.current, editingOption),
+        ),
+      );
     },
-    [draft?.thumbnails, draftId, flushText, publishPendingCount, setLocalOptions],
+    [draft?.thumbnails, draftId, editingOption, publishPendingCount, setLocalOptions],
   );
   const setText = useCallback(
     (option: DraftThumbnailOptionId, text: string) => {
@@ -362,9 +361,16 @@ export function useDraftThumbnailEditor(draft: Draft | null) {
           : current,
       );
       publishPendingCount();
-      return runSelectionQueue();
+      if (draftId)
+        setIsLocalStored(
+          thumbnailLocalEdits.set(
+            draftId,
+            serializeThumbnailEdits(optionsRef.current, dirty.current, option, option),
+          ),
+        );
+      return Promise.resolve();
     },
-    [client, draftId, publishPendingCount, runSelectionQueue],
+    [client, draftId, publishPendingCount],
   );
 
   const flush = useCallback(async () => {
@@ -372,7 +378,8 @@ export function useDraftThumbnailEditor(draft: Draft | null) {
     await flushText();
     await runSelectionQueue();
     await flushText();
-  }, [flushText, runSelectionQueue]);
+    if (draftId) thumbnailLocalEdits.remove(draftId);
+  }, [draftId, flushText, runSelectionQueue]);
 
   const manifest: DraftThumbnailManifest = {
     draftId: draftId ?? undefined,
@@ -397,7 +404,9 @@ export function useDraftThumbnailEditor(draft: Draft | null) {
     isUploading,
     choose,
     flush,
-    isSaving: error === null && (isSaving || isUploading || pendingCount > 0),
+    isLocalStored,
+    hasLocalChanges: pendingCount > 0 || selected !== persistedSelection.current,
+    isSaving: error === null && (isSaving || isUploading),
     isSelecting,
     hasError: error !== null,
     error,

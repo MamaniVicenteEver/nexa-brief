@@ -3,6 +3,11 @@ name: atlas-cinematico-produce
 description: Producir videos de mapas 3D con el diseño Atlas Cinemático existente. Usar su catálogo JSON, investigar fuentes, preparar guion y voz, componer escenas por datos y validar mapas antes de exportar; no editar el motor para un episodio.
 ---
 
+Antes: [CALIDAD.md](../../../skills/CALIDAD.md) (manda) y, si orquestas, [ORQUESTACION.md](../../../skills/ORQUESTACION.md).
+Al delegar: [PLANTILLA-BRIEF.md](../../../skills/PLANTILLA-BRIEF.md). Al entregar: [PLANTILLA-INFORME.md](../../../skills/PLANTILLA-INFORME.md) como `INFORME.md`.
+
+## Específico de esta skill
+
 # Atlas Cinemático: producir con JSON
 
 Usa este flujo cuando el usuario pida un video con **Atlas Cinemático**, el diseño MapLibre 3D del showcase. Es diferente de los antiguos diseños `atlas` del explainer-kit y `_mapas`.

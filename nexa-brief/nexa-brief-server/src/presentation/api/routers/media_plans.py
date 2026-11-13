@@ -46,8 +46,9 @@ def _analysis_ai() -> AIPort | None:
         return None
 
 
-async def _import_item(item: StockItem) -> str:
+async def _import_item(item: StockItem, template_id: str = "") -> str:
     result = await import_stock_item(
+        template_id=template_id,
         provider=item.provider,
         provider_id=item.provider_id,
         kind=item.kind,
@@ -112,7 +113,9 @@ async def update_media_plan(plan_id: str, body: MediaPlanSelectionRequest) -> Me
 async def accept_media_plan(plan_id: str) -> MediaPlanAcceptResponse:
     plan = _get_or_404(plan_id)
     try:
-        media = await media_director.accept_plan(plan_id, importer=_import_item)
+        async def importer(item: StockItem) -> str:
+            return await _import_item(item, plan["template_id"])
+        media = await media_director.accept_plan(plan_id, importer=importer)
     except MediaPlanStateError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
     except Exception as exc:  # noqa: BLE001 - descarga fallida (ej. URL de Pixabay vencida)

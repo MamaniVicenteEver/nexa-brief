@@ -36,6 +36,9 @@ def _resource_slot():
 
 
 def worker(video, fd):
+    if os.environ.get("NEXA_EDITION"):
+        os.close(fd)
+        raise SystemExit("Esta herramienta aún no admite ediciones; no se modificaron archivos.")
     # Foreground job.launch calls worker directly, without executing __main__.
     # The shared budget belongs here so both foreground and detached paths use it.
     with _resource_slot():
@@ -72,6 +75,8 @@ def _worker(video, fd):
 
 
 def launch(video, background):
+    from edition_guard import reject_unsupported_edition
+    reject_unsupported_edition()
     return job.launch(video, "transcribe", background, worker, TOOLS / "transcribe_job.py")
 
 

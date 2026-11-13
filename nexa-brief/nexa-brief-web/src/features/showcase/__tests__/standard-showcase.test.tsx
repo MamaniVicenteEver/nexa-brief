@@ -112,6 +112,21 @@ it("abre desde Plantillas el proyecto elegido en la sección Sandbox", async () 
   }
 });
 
+it.each([
+  ["rough", /^Producción/, /^Rough/],
+  ["one", /^Sandbox/, /^Uno/],
+])("abre el diseño registrado %s en su sección real", async (id, section, name) => {
+  window.history.replaceState(null, "", `/showcase?design=${id}`);
+  try {
+    setup(response);
+    const sectionButton = await screen.findByRole("button", { name: section });
+    await waitFor(() => expect(sectionButton.getAttribute("aria-pressed")).toBe("true"));
+    await waitFor(() => expect(screen.getByRole("button", { name }).getAttribute("aria-pressed")).toBe("true"));
+  } finally {
+    window.history.replaceState(null, "", "/showcase");
+  }
+});
+
 it("indica que un proyecto seleccionado todavía no tiene componentes declarados", async () => {
   setup((path) =>
     path.endsWith("/catalog")

@@ -79,6 +79,20 @@ def review_files(source: Path, folder: str, project: str, destination: Path, rew
                     continue
                 else:
                     resolved = (path.parent / name).resolve()
+                    shared_resolved = False
+                    if path.suffix == '.json':
+                        # Scene/config references are often interpreted from
+                        # the document root rather than the JSON directory.
+                        document_relative = (source / name).resolve()
+                        if document_relative.is_relative_to(root) and document_relative.is_file():
+                            resolved = document_relative
+                        elif not document_relative.is_relative_to(root):
+                            from posixpath import normpath
+                            from src.config.content_paths import is_shared_template_key
+                            key = normpath(str(Path('sandbox') / folder / project / name))
+                            if is_shared_template_key(tuple(key.split('/'))):
+                                resolved = resolve_content_key(key)
+                                shared_resolved = True
                     if path.suffix == '.json' and not resolved.is_file():
                         # Scene src fields are relative to assets; publication
                         # image names are relative to assets/media by contract.
@@ -86,7 +100,7 @@ def review_files(source: Path, folder: str, project: str, destination: Path, rew
                             candidate = (base/name).resolve()
                             if candidate.is_relative_to(root) and candidate.is_file():
                                 resolved = candidate; break
-                    if not resolved.is_relative_to(root):
+                    if not shared_resolved and not resolved.is_relative_to(root):
                         # A sandbox sibling engine is physically in templates,
                         # not in the selected profile. Resolve the public alias.
                         from posixpath import normpath
@@ -113,5 +127,5 @@ def review_files(source: Path, folder: str, project: str, destination: Path, rew
             'issues': list(dict.fromkeys(issues)), 'warnings': warnings}
 
 def selection_signature(draft):
-    selection = {key: draft.get(key) for key in ('category','shared_categories','title','description','poster_styles')}
+    selection = {key: draft.get(key) for key in ('category','shared_categories','title','description','poster_styles','demo')}
     return hashlib.sha256(json.dumps(selection, sort_keys=True).encode()).hexdigest()

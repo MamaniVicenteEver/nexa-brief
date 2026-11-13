@@ -1,0 +1,685 @@
+import { parseErrorBody } from "@/infrastructure/api/api-error";
+import { httpClient, resolveApiUrl } from "@/infrastructure/api/http-client";
+import type {
+  AgentName,
+  BriefInput,
+  CategoryDesigns,
+  CreateProductionInput,
+  DesignGroup,
+  ExplainerBrief,
+  ExplainerDesign,
+  ExplainerJob,
+  ExplainerOptions,
+  ExplainerVideo,
+  NarrativeAct,
+  NarrativeTitleLevel,
+  Production,
+  PublishIssue,
+  PublishPackage,
+  PublishPackageReview,
+  PublishTextsResult,
+  RecordExplainerInput,
+  TextProvider,
+  ThumbnailOptionId,
+  TitleLevel,
+  TitleOption,
+  VideoThumbnails,
+} from "../types";
+
+// Capturar las miniaturas abre el navegador del server (~10 s cada una).
+const THUMBNAILS_TIMEOUT_MS = 120_000;
+// Generar textos o un brief usa un LLM: puede tardar minutos.
+const PUBLISH_TEXTS_TIMEOUT_MS = 240_000;
+const BRIEF_TIMEOUT_MS = 300_000;
+const UPLOAD_TIMEOUT_MS = 300_000;
+
+export interface ExplainerJobDto {
+  locale?: string;
+  revision?: string | null;
+  job_id: string;
+  video_id: string;
+  title?: string | null;
+  poster_url?: string | null;
+  state: ExplainerJob["state"];
+  category_path: string;
+  duration: ExplainerJob["duration"];
+  publish: boolean;
+  privacy: ExplainerJob["privacy"];
+  account_selector: string | null;
+  error: string | null;
+  outputs: string[];
+  output_dir: string | null;
+  scheduled_job_id: string | null;
+  publish_result: { post_id: string; url: string; platform: string; account_alias: string } | null;
+  publish_results?: {
+    thumbnail?: { status: string; reason: string } | null;
+    account_selector: string;
+    format?: "16x9" | "9x16";
+    url?: string;
+    error?: string;
+  }[];
+  formats?: ExplainerJob["formats"];
+  render_seconds?: number | null;
+  progress?: number;
+  progress_format?: ExplainerJob["progressFormat"];
+  progress_phase?: ExplainerJob["progressPhase"];
+  started_at?: string | null;
+  eta_seconds?: number | null;
+}
+
+interface TitleOptionDto {
+  option: TitleOption["option"];
+  text: string;
+  strategy: number;
+  emotion: string;
+}
+
+interface PublishPackageDto {
+  preserve_opening?: boolean;
+  thumbnail: {
+    kicker: string;
+    text_only: { lines: string[]; highlight: string; pair_title: TitleOption["option"] };
+    with_image: {
+      text: string;
+      pair_title: TitleOption["option"];
+      image_side: PublishPackage["thumbnail"]["withImage"]["imageSide"];
+    };
+    tabloid: {
+      text: string;
+      image: string | null;
+      image_side: PublishPackage["thumbnail"]["tabloid"]["imageSide"];
+      mode: PublishPackage["thumbnail"]["tabloid"]["mode"];
+      strap: string;
+      seal: string;
+      tape_text: string;
+      marker: boolean;
+      target: [number, number];
+      pair_title: TitleOption["option"];
+    } | null;
+    chosen: PublishPackage["thumbnail"]["chosen"];
+  };
+  titles: {
+    youtube: TitleOptionDto[];
+    chosen: TitleOption["option"];
+  };
+  pinned_comment: string;
+}
+
+export interface PublishPackageReviewDto {
+  package: PublishPackageDto | null;
+  issues: PublishIssue[];
+  thumbnail_image_url: string | null;
+  thumbnail_tabloid_image_url: string | null;
+  hook_strategy_names: Record<string, string>;
+  title_max_chars: number | null;
+}
+
+export interface ExplainerVideoDto {
+  video_id: string;
+  design: string;
+  category_id: string;
+  category_name: string;
+  category_path: string;
+  category_paths?: string[];
+  title: string;
+  topic?: string;
+  status: string;
+  ready: boolean;
+  publish_ready: boolean;
+  rendered: string[];
+  duration_seconds: number | null;
+  preview_mode?: "desktop" | "mobile";
+  youtube_title: string;
+  youtube_description?: string;
+  youtube_tags?: string[];
+  instagram_title?: string;
+  instagram_description?: string;
+  script_text?: string;
+  script_review_required?: boolean;
+  facebook_title?: string;
+  facebook_description?: string;
+  tiktok_caption?: string;
+  tiktok_hashtags?: string[];
+  design_name?: string;
+  demo?: boolean;
+  demo_summary?: string;
+  review_requirements?: string[];
+  estimated_tokens?: number | null;
+  updated_at?: string | null;
+  narrative_id?: string | null;
+  narrative_label?: string | null;
+  quality_issues?: string[];
+  preview_url: string;
+  poster_url?: string | null;
+  last_job: ExplainerJobDto | null;
+  publish_package?: PublishPackageReviewDto | null;
+  thumbnails?: ThumbnailsDto;
+}
+
+export interface ThumbnailsDto {
+  chosen: ThumbnailOptionId | null;
+  options: {
+    option: ThumbnailOptionId;
+    component: string;
+    params: Record<string, unknown>;
+    url: string | null;
+  }[];
+}
+
+export function mapThumbnails(dto: ThumbnailsDto | undefined): VideoThumbnails {
+  return {
+    chosen: dto?.chosen ?? null,
+    options: (dto?.options ?? []).map((o) => ({
+      option: o.option,
+      component: o.component,
+      params: o.params ?? {},
+      url: o.url ? resolveApiUrl(o.url) : null,
+    })),
+  };
+}
+
+export function mapPublishPackage(dto: PublishPackageReviewDto): PublishPackageReview {
+  const p = dto.package;
+  return {
+    issues: dto.issues,
+    titleMaxChars: dto.title_max_chars ?? 0,
+    package: p && {
+      preserveOpening: p.preserve_opening ?? false,
+      thumbnail: {
+        kicker: p.thumbnail.kicker,
+        textOnly: {
+          lines: p.thumbnail.text_only.lines,
+          highlight: p.thumbnail.text_only.highlight,
+          pairTitle: p.thumbnail.text_only.pair_title,
+        },
+        withImage: {
+          text: p.thumbnail.with_image.text,
+          imageUrl: dto.thumbnail_image_url ? resolveApiUrl(dto.thumbnail_image_url) : null,
+          pairTitle: p.thumbnail.with_image.pair_title,
+          imageSide: p.thumbnail.with_image.image_side,
+        },
+        tabloid: {
+          text: p.thumbnail.tabloid?.text || p.thumbnail.text_only.lines.join(" "),
+          imageUrl: dto.thumbnail_tabloid_image_url
+            ? resolveApiUrl(dto.thumbnail_tabloid_image_url)
+            : null,
+          imageSide: p.thumbnail.tabloid?.image_side ?? p.thumbnail.with_image.image_side,
+          mode: p.thumbnail.tabloid?.mode ?? "impact",
+          strap: p.thumbnail.tabloid?.strap ?? p.thumbnail.kicker,
+          seal: p.thumbnail.tabloid?.seal ?? "",
+          tapeText: p.thumbnail.tabloid?.tape_text ?? "",
+          marker: p.thumbnail.tabloid?.marker ?? false,
+          target: p.thumbnail.tabloid?.target ?? [0.72, 0.52],
+          pairTitle: p.thumbnail.tabloid?.pair_title ?? "C",
+        },
+        chosen: p.thumbnail.chosen,
+      },
+      titles: {
+        youtube: p.titles.youtube.map((t) => ({
+          ...t,
+          strategyName: dto.hook_strategy_names[String(t.strategy)] ?? "",
+        })),
+        chosen: p.titles.chosen,
+      },
+      pinnedComment: p.pinned_comment,
+    },
+  };
+}
+
+export function mapJob(dto: ExplainerJobDto): ExplainerJob {
+  return {
+    jobId: dto.job_id,
+    locale: dto.locale ?? "es-419",
+    revision: dto.revision ?? null,
+    videoId: dto.video_id,
+    title: dto.title ?? null,
+    posterUrl: dto.poster_url ? resolveApiUrl(dto.poster_url) : null,
+    state: dto.state,
+    categoryPath: dto.category_path,
+    duration: dto.duration,
+    publish: dto.publish,
+    privacy: dto.privacy,
+    accountSelector: dto.account_selector,
+    error: dto.error,
+    outputs: dto.outputs,
+    outputDir: dto.output_dir,
+    scheduledJobId: dto.scheduled_job_id,
+    formats: dto.formats ?? [],
+    renderSeconds: dto.render_seconds ?? null,
+    progress: dto.progress ?? 0,
+    progressFormat: dto.progress_format ?? null,
+    progressPhase: dto.progress_phase ?? null,
+    startedAt: dto.started_at ?? null,
+    etaSeconds: dto.eta_seconds ?? null,
+    publishResults: (dto.publish_results ?? []).map((r) => ({
+      accountSelector: r.account_selector,
+      thumbnail: r.thumbnail,
+      format: r.format,
+      url: r.url ?? null,
+      error: r.error ?? null,
+    })),
+    publishResult: dto.publish_result
+      ? {
+          postId: dto.publish_result.post_id,
+          url: dto.publish_result.url,
+          platform: dto.publish_result.platform,
+          accountAlias: dto.publish_result.account_alias,
+        }
+      : null,
+  };
+}
+
+export function mapVideo(dto: ExplainerVideoDto): ExplainerVideo {
+  return {
+    videoId: dto.video_id,
+    design: dto.design,
+    categoryId: dto.category_id,
+    categoryName: dto.category_name,
+    categoryPath: dto.category_path,
+    categoryPaths: dto.category_paths ?? [dto.category_path],
+    title: dto.title,
+    topic: dto.topic ?? "",
+    status: dto.status,
+    ready: dto.ready,
+    publishReady: dto.publish_ready,
+    rendered: dto.rendered,
+    durationSeconds: dto.duration_seconds,
+    previewMode: dto.preview_mode === "mobile" ? "mobile" : "desktop",
+    youtubeTitle: dto.youtube_title,
+    youtubeDescription: dto.youtube_description ?? "",
+    youtubeTags: dto.youtube_tags ?? [],
+    instagramTitle: dto.instagram_title ?? "",
+    instagramDescription: dto.instagram_description ?? "",
+    scriptText: dto.script_text ?? "",
+    scriptReviewRequired: dto.script_review_required ?? false,
+    facebookTitle: dto.facebook_title ?? "",
+    facebookDescription: dto.facebook_description ?? "",
+    tiktokCaption: dto.tiktok_caption ?? "",
+    tiktokHashtags: dto.tiktok_hashtags ?? [],
+    designName: dto.design_name ?? dto.design,
+    demo: dto.demo ?? false,
+    demoSummary: dto.demo_summary ?? "",
+    reviewRequirements: dto.review_requirements ?? [],
+    estimatedTokens: dto.estimated_tokens ?? null,
+    updatedAt: dto.updated_at ?? null,
+    narrativeId: dto.narrative_id ?? null,
+    narrativeLabel: dto.narrative_label ?? null,
+    qualityIssues: dto.quality_issues ?? [],
+    previewUrl: resolveApiUrl(dto.preview_url),
+    posterUrl: dto.poster_url ? resolveApiUrl(dto.poster_url) : null,
+    lastJob: dto.last_job ? mapJob(dto.last_job) : null,
+    publishPackage: dto.publish_package ? mapPublishPackage(dto.publish_package) : null,
+    thumbnails: mapThumbnails(dto.thumbnails),
+  };
+}
+
+function categoryQuery(category?: string): string {
+  return category ? `?category=${encodeURIComponent(category)}` : "";
+}
+
+export async function getExplainerVideos(
+  category?: string,
+  signal?: AbortSignal,
+): Promise<ExplainerVideo[]> {
+  const dtos = await httpClient<ExplainerVideoDto[]>(
+    `/api/v1/explainer/videos${categoryQuery(category)}`,
+    { signal },
+  );
+  return dtos.map(mapVideo);
+}
+
+export async function recordExplainerVideo(input: RecordExplainerInput): Promise<ExplainerJob> {
+  const dto = await httpClient<ExplainerJobDto>(
+    `/api/v1/explainer/videos/${input.videoId}/record`,
+    {
+      method: "POST",
+      body: {
+        duration: input.duration,
+        publish: input.publish,
+        privacy: input.privacy,
+        account_selector: input.accountSelector ?? null,
+        account_selectors: input.accountSelectors ?? [],
+        formats: input.formats ?? ["16x9"],
+        account_formats: input.accountFormats ?? null,
+        thumbnail: input.thumbnail ?? null,
+        ...(input.locale ? { locale: input.locale, revision: input.revision ?? null } : {}),
+      },
+    },
+  );
+  return mapJob(dto);
+}
+
+/** Estado de una grabación, también cuando se cierra el modal de Plantillas. */
+export async function getExplainerJob(jobId: string, signal?: AbortSignal): Promise<ExplainerJob> {
+  const dto = await httpClient<ExplainerJobDto>(`/api/v1/explainer/jobs/${jobId}`, { signal });
+  return mapJob(dto);
+}
+
+/** Jobs activos y grabaciones terminadas recientemente, para la Biblioteca. */
+export async function getExplainerJobs(
+  signal?: AbortSignal,
+  active = true,
+): Promise<ExplainerJob[]> {
+  const dtos = await httpClient<ExplainerJobDto[]>(`/api/v1/explainer/jobs?active=${active}`, {
+    signal,
+  });
+  return dtos.map(mapJob);
+}
+
+export interface EditionRequest {
+  locale?: string;
+  revision?: string | null;
+}
+
+function thumbnailQuery(edition: EditionRequest, onlyMissing = false) {
+  const params = new URLSearchParams();
+  if (onlyMissing) params.set("only_missing", "true");
+  if (edition.locale) params.set("locale", edition.locale);
+  if (edition.revision) params.set("revision", edition.revision);
+  return params.size ? `?${params}` : "";
+}
+
+/** Captura las miniaturas con los textos de la edición seleccionada. */
+export async function captureThumbnails(
+  videoId: string,
+  onlyMissing = false,
+  edition: EditionRequest = {},
+): Promise<VideoThumbnails> {
+  const dto = await httpClient<ThumbnailsDto>(
+    `/api/v1/explainer/videos/${encodeURIComponent(videoId)}/thumbnails${thumbnailQuery(edition, onlyMissing)}`,
+    {
+      method: "POST",
+      timeoutMs: THUMBNAILS_TIMEOUT_MS,
+    },
+  );
+  return mapThumbnails(dto);
+}
+
+/** Elige la miniatura que se sube a YouTube (queda guardada en el video). */
+export async function chooseThumbnail(
+  videoId: string,
+  option: ThumbnailOptionId,
+  edition: EditionRequest = {},
+): Promise<VideoThumbnails> {
+  const dto = await httpClient<ThumbnailsDto>(
+    `/api/v1/explainer/videos/${encodeURIComponent(videoId)}/thumbnail${thumbnailQuery(edition)}`,
+    {
+      method: "PUT",
+      body: { option },
+      timeoutMs: THUMBNAILS_TIMEOUT_MS,
+    },
+  );
+  return mapThumbnails(dto);
+}
+
+export async function generatePublishTexts(input: {
+  videoId: string;
+  provider?: TextProvider;
+  overwrite?: boolean;
+}): Promise<PublishTextsResult> {
+  const dto = await httpClient<{ video_id: string; written: boolean; brief: ExplainerBrief }>(
+    `/api/v1/explainer/videos/${input.videoId}/publish-texts`,
+    {
+      method: "POST",
+      body: { provider: input.provider ?? null, overwrite: input.overwrite ?? false },
+      timeoutMs: PUBLISH_TEXTS_TIMEOUT_MS,
+    },
+  );
+  return { videoId: dto.video_id, written: dto.written, brief: dto.brief };
+}
+
+// ── Crear: opciones, diseños, textos y producción ──────────────────────────
+
+interface OptionsDto {
+  agents: { name: AgentName; available: boolean }[];
+  text_providers: { name: TextProvider; available: boolean }[];
+  default_agent: AgentName;
+  default_text_provider: TextProvider;
+  lengths: {
+    presets: { minutes: number; id: string; label: string }[];
+    default_minutes: number;
+    min_minutes: number;
+    max_minutes: number;
+  };
+  narratives?: {
+    id: string;
+    label: string;
+    name: string;
+    description: string;
+    status: string;
+    acts: NarrativeAct[];
+    title_levels: NarrativeTitleLevel[];
+    default_title_level: TitleLevel | null;
+  }[];
+  default_narrative?: string | null;
+}
+
+export async function getExplainerOptions(
+  categoryPath?: string,
+  signal?: AbortSignal,
+): Promise<ExplainerOptions> {
+  const query = categoryPath ? `?category=${encodeURIComponent(categoryPath)}` : "";
+  const dto = await httpClient<OptionsDto>(`/api/v1/explainer/options${query}`, { signal });
+  return {
+    agents: dto.agents,
+    textProviders: dto.text_providers,
+    defaultAgent: dto.default_agent,
+    defaultTextProvider: dto.default_text_provider,
+    lengths: {
+      presets: dto.lengths.presets,
+      defaultMinutes: dto.lengths.default_minutes,
+      minMinutes: dto.lengths.min_minutes,
+      maxMinutes: dto.lengths.max_minutes,
+    },
+    narratives: (dto.narratives ?? []).map((narrative) => ({
+      id: narrative.id,
+      label: narrative.label,
+      name: narrative.name,
+      description: narrative.description,
+      status: narrative.status,
+      acts: narrative.acts,
+      titleLevels: narrative.title_levels,
+      defaultTitleLevel: narrative.default_title_level,
+    })),
+    defaultNarrative: dto.default_narrative ?? null,
+  };
+}
+
+interface DesignDto {
+  design_id: string;
+  name: string;
+  tagline: string;
+  topics: string[];
+  voice: string;
+  category_path: string | null;
+  preview_url: string | null;
+  poster_url?: string | null;
+  video_url?: string | null;
+  video_portrait_url?: string | null;
+}
+
+interface DesignsDto {
+  category_path: string;
+  shared: boolean;
+  designs: DesignDto[];
+}
+
+function mapDesign(d: DesignDto): ExplainerDesign {
+  return {
+    designId: d.design_id,
+    // Atlas and Imperio share a channel brand; give the Atlas design its
+    // established library name so the two choices remain distinguishable.
+    name: d.design_id === "atlas" ? "Atlas · Neón Geopolítica" : d.name,
+    tagline: d.tagline,
+    topics: d.topics,
+    voice: d.voice,
+    categoryPath: d.category_path,
+    previewUrl: d.preview_url ? resolveApiUrl(d.preview_url) : null,
+    posterUrl: d.poster_url ? resolveApiUrl(d.poster_url) : null,
+    videoUrl: d.video_url ? resolveApiUrl(d.video_url) : null,
+    videoPortraitUrl: d.video_portrait_url ? resolveApiUrl(d.video_portrait_url) : null,
+  };
+}
+
+/** Todos los diseños del kit, agrupados por categoría; `first` va primero. */
+export async function getDesignGroups(first: string, signal?: AbortSignal): Promise<DesignGroup[]> {
+  const dtos = await httpClient<
+    { category_path: string; category_name: string; designs: DesignDto[] }[]
+  >(`/api/v1/explainer/design-groups?first=${encodeURIComponent(first)}`, { signal });
+  return dtos.map((g) => ({
+    categoryPath: g.category_path,
+    categoryName: g.category_name,
+    designs: g.designs.map(mapDesign),
+  }));
+}
+
+export async function getCategoryDesigns(
+  category: string,
+  signal?: AbortSignal,
+): Promise<CategoryDesigns> {
+  const dto = await httpClient<DesignsDto>(`/api/v1/explainer/designs${categoryQuery(category)}`, {
+    signal,
+  });
+  return {
+    categoryPath: dto.category_path,
+    shared: dto.shared,
+    designs: dto.designs.map(mapDesign),
+  };
+}
+
+export async function generateBrief(input: BriefInput): Promise<ExplainerBrief> {
+  return httpClient<ExplainerBrief>("/api/v1/explainer/briefs", {
+    method: "POST",
+    body: {
+      category_path: input.categoryPath,
+      topic: input.topic,
+      description: input.description ?? "",
+      design: input.design ?? null,
+      provider: input.provider ?? null,
+      media_names: input.mediaNames ?? [],
+      minutes: input.minutes ?? null,
+      narrative_id: input.narrativeId ?? null,
+      title_level: input.titleLevel ?? null,
+    },
+    timeoutMs: BRIEF_TIMEOUT_MS,
+  });
+}
+
+interface ProductionDto {
+  production_id: string;
+  video_id: string;
+  category_path: string;
+  design: string;
+  topic: string;
+  description?: string;
+  agent: string;
+  auto_record?: boolean;
+  state: Production["state"];
+  phase?: string | null;
+  error?: string | null;
+  video_status?: string | null;
+  record_job_id?: string | null;
+  media?: string[];
+  narrative_id?: string | null;
+  title_level?: TitleLevel | null;
+  brief?: ExplainerBrief | null;
+  agent_report?: string | null;
+  plan_item_id?: string | null;
+  created_at: string;
+  updated_at: string;
+  log_tail?: string | null;
+}
+
+function mapProduction(dto: ProductionDto): Production {
+  return {
+    productionId: dto.production_id,
+    videoId: dto.video_id,
+    categoryPath: dto.category_path,
+    design: dto.design,
+    topic: dto.topic,
+    description: dto.description ?? "",
+    agent: dto.agent,
+    autoRecord: dto.auto_record ?? false,
+    state: dto.state,
+    phase: dto.phase ?? null,
+    error: dto.error ?? null,
+    videoStatus: dto.video_status ?? null,
+    recordJobId: dto.record_job_id ?? null,
+    media: dto.media ?? [],
+    narrativeId: dto.narrative_id ?? null,
+    titleLevel: dto.title_level ?? null,
+    brief: dto.brief ?? null,
+    agentReport: dto.agent_report ?? null,
+    planItemId: dto.plan_item_id ?? null,
+    createdAt: dto.created_at,
+    updatedAt: dto.updated_at,
+    logTail: dto.log_tail ?? null,
+  };
+}
+
+/** Multipart: `payload` (JSON) + `files` (imágenes/videos opcionales). */
+export async function createProduction(input: CreateProductionInput): Promise<Production> {
+  if (input.design === "cara-a-cara" && !input.characterId) {
+    throw new Error("Selecciona un personaje para Cara a Cara.");
+  }
+  const form = new FormData();
+  form.append(
+    "payload",
+    JSON.stringify({
+      category_path: input.categoryPath,
+      design: input.design,
+      character_id: input.design === "cara-a-cara" ? input.characterId : undefined,
+      estilo: input.estilo ?? null,
+      topic: input.topic,
+      description: input.description ?? "",
+      agent: input.agent ?? null,
+      brief: input.brief ?? null,
+      auto_record: input.autoRecord ?? false,
+      plan_item_id: input.planItemId ?? null,
+      minutes: input.minutes ?? null,
+      narrative_id: input.narrativeId ?? null,
+      title_level: input.titleLevel ?? null,
+    }),
+  );
+  for (const file of input.files ?? []) form.append("files", file);
+  const dto = await httpClient<ProductionDto>("/api/v1/explainer/productions", {
+    method: "POST",
+    body: form,
+    timeoutMs: UPLOAD_TIMEOUT_MS,
+  });
+  return mapProduction(dto);
+}
+
+export async function getProductions(
+  category?: string,
+  signal?: AbortSignal,
+): Promise<Production[]> {
+  const dtos = await httpClient<ProductionDto[]>(
+    `/api/v1/explainer/productions${categoryQuery(category)}`,
+    { signal },
+  );
+  return dtos.map(mapProduction);
+}
+
+export async function getProduction(id: string, signal?: AbortSignal): Promise<Production> {
+  const dto = await httpClient<ProductionDto>(`/api/v1/explainer/productions/${id}`, { signal });
+  return mapProduction(dto);
+}
+
+export async function resumeProduction(id: string): Promise<Production> {
+  const dto = await httpClient<ProductionDto>(`/api/v1/explainer/productions/${id}/resume`, {
+    method: "POST",
+  });
+  return mapProduction(dto);
+}
+
+/** Escuchar la voz del narrador (WAV). No pasa por httpClient porque devuelve un blob. */
+export async function previewVoice(input: { text: string; voice?: string }): Promise<Blob> {
+  const res = await fetch(resolveApiUrl("/api/v1/voice/preview"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text: input.text, voice: input.voice || null }),
+  });
+  if (!res.ok) throw parseErrorBody(res.status, await res.json().catch(() => null));
+  return res.blob();
+}

@@ -11,9 +11,10 @@
       "media": "Medios",
       "texts": "Textos",
       "render": "Grabar",
-      "original": "Video original",
+      "original": "Demo",
       "sandbox": "Sandbox",
-      "record": "Grabar"
+      "record": "Grabar",
+      "videos": "Videos"
     },
     "actions": {
       "preview": "Previsualizar",
@@ -28,7 +29,7 @@
     "progress": {
       "previewing": "Previsualizando",
       "rendering": "Grabando",
-      "ready": "Tu versión está lista. Si te gusta, grabala.",
+      "ready": "Vista previa lista.",
       "changed": "Cambiaste algo: previsualizá de nuevo antes de grabar.",
       "failed": "No se pudo generar. Revisá lo elegido y previsualizá de nuevo.",
       "failedRecoverable": "La grabación falló. Podés reintentar sin volver a previsualizar.",
@@ -49,7 +50,7 @@
         "failed": "falló"
       },
       "preparing": "Preparando los textos de publicación…",
-      "prepared": "Preparado: revisá los Detalles o grabalo."
+      "prepared": "Textos listos para revisar."
     },
     "song": {
       "title": "Canción",
@@ -67,10 +68,13 @@
       "remove": "Quitar",
       "library": "Librería",
       "stock": "Stock",
+      "backgroundVisibility": "Transparencia del fondo",
       "kindImage": "Imagen",
       "kindVideo": "Video",
       "none": "Esta plantilla no usa medios propios.",
-      "noSong": "Esta plantilla no usa canción."
+      "noSong": "Esta plantilla no usa canción.",
+      "openPicker": "Abrir recursos",
+      "closePicker": "Cerrar recursos"
     },
     "texts": {
       "title": "Textos",
@@ -90,10 +94,10 @@
       "importError": "No se pudo importar. Si era de Pixabay, buscá de nuevo."
     },
     "ai": {
-      "title": "Que lo elija la IA",
+      "title": "Buscar imágenes o videos con IA",
       "briefLabel": "Descripción para la IA",
-      "briefPlaceholder": "Contale de qué va el video (ej. «zapatillas urbanas, noche, ciudad con neón»). Si lo dejás vacío, usa la descripción de la plantilla.",
-      "start": "Buscar medios con IA",
+      "briefPlaceholder": "Describí el contenido que querés buscar",
+      "start": "Buscar",
       "planning": "Buscando… {done}/{total}",
       "failed": "La IA no pudo armar el plan. Probá de nuevo.",
       "startError": "No pudimos iniciar la búsqueda.",
@@ -105,6 +109,8 @@
       "acceptError": "No se pudieron importar. Probá de nuevo."
     },
     "render": {
+      "engineUnavailable": "No disponible por ahora",
+      "hyperframesUnsupported": "HyperFrames no está disponible para esta categoría.",
       "engine": "Motor de grabación",
       "engines": {
         "remotion": "Remotion",
@@ -123,7 +129,7 @@
     },
     "original": {
       "hint": "Así se ve la plantilla tal cual. Para hacer tu versión, creá un prototipo en el Sandbox.",
-      "needs": "Qué pide",
+      "needs": "¿Qué necesitás?",
       "song": "Canción",
       "songLyrics": "la letra se transcribe sola",
       "songOnly": "sin letra en pantalla",
@@ -152,10 +158,14 @@
       "editPublication": "Editar textos",
       "preparing": "Preparando (previsualiza y escribe los textos)…",
       "preparePublication": "Preparar la publicación",
-      "prepareAgain": "Volver a preparar con esta información"
+      "prepareAgain": "Volver a preparar con esta información",
+      "createPrototype": "Crear mi prototipo",
+      "formatsTitle": "Formatos",
+      "required": "obligatorio",
+      "optional": "opcional"
     },
     "sandbox": {
-      "title": "Prototipos",
+      "title": "Mis prototipos",
       "count": "{n, plural, =0 {ninguno} one {# prototipo} other {# prototipos}}",
       "hint": "Cada prototipo es una versión de esta plantilla con su canción, video o imagen de fondo y textos.",
       "loading": "Cargando prototipos…",
@@ -183,7 +193,7 @@
         "working": "Trabajando…",
         "preparing": "Preparando textos…",
         "prepare": "Preparar",
-        "prepareHint": "Preparar genera el nombre de la canción y los títulos, descripciones y etiquetas para YouTube, Facebook, Instagram y TikTok.",
+        "prepareHint": "Genera los textos para publicar.",
         "details": "Detalles",
         "hideDetails": "Ver medios",
         "goRecord": "Ir a grabar",
@@ -193,7 +203,19 @@
         "missingMedia": "Completá los medios marcados para previsualizar."
       },
       "play": "Previsualizar {name}",
-      "previewUnavailable": "Previsualizá este prototipo para poder reproducirlo."
+      "previewUnavailable": "Previsualizá este prototipo para poder reproducirlo.",
+      "phaseWork": "Fase de trabajo",
+      "phaseReady": "Listos para grabar",
+      "phaseEmpty": "Nada en esta fase",
+      "edit": "Editar",
+      "record": "Grabar",
+      "missingPreview": "Falta crear vista previa",
+      "creatingPreview": "Creando vista previa…",
+      "missingPrepare": "Vista previa lista · Falta preparar",
+      "preparingLine": "Preparando textos…",
+      "readyLine": "Preparado",
+      "failedRetry": "Falló · Reintentá la grabación",
+      "failedEdit": "Falló · Editá y previsualizá de nuevo"
     },
     "details": {
       "title": "Detalles",
@@ -215,27 +237,28 @@
       "songHint": "También es lo que muestra la tarjeta de intro del video."
     },
     "record": {
-      "empty": "No hay prototipos preparados. En el Sandbox, previsualizá uno y tocá «Preparar».",
-      "goSandbox": "Crear un prototipo en el Sandbox",
+      "empty": "Ningún prototipo listo para grabar",
+      "goSandbox": "Ir al Sandbox",
       "prototype": "Prototipo",
       "prototypeHint": "El video original o uno de tus prototipos preparados.",
       "formats": "Formatos",
-      "formatsHint": "Elegí Desktop, Móvil o ambos. Seleccioná al menos un formato.",
+      "formatsHint": "Elegí uno o ambos.",
       "publish": "Publicar al terminar",
-      "publishHint": "Opcional. Cada cuenta publica en un solo formato. Si no elegís ninguna, el video queda en Biblioteca.",
+      "publishHint": "Opcional. Si no elegís cuentas, el video queda en Biblioteca.",
       "record": "Grabar",
       "recording": "Grabando…",
       "recordAndPublish": "{count, plural, one {Grabar y publicar en # canal} other {Grabar y publicar en # canales}}",
       "original": "Video original",
       "originalHint": "La plantilla tal cual: su canción y su fondo",
       "originalNotPrepared": "El original todavía no tiene sus textos de publicación. Preparalo (tarda unos segundos) y después grabalo.",
-      "prepareOriginal": "Preparar el video original"
+      "prepareOriginal": "Preparar el video original",
+      "saveArtistFirst": "Guardá el artista antes de grabar."
     },
     "songNotes": {
-      "label": "Información de la canción",
+      "label": "Información de la canción para la IA",
       "optional": "Opcional",
-      "placeholder": "Nombre, artista, de qué trata, a quién le habla, en qué momento se escucha…",
-      "hint": "Si la escribes, la IA investiga con esto antes de escribir los textos. Si no, identifica la canción por su nombre o su letra."
+      "placeholder": "Artista o detalles para crear los textos de publicación.",
+      "hint": "Dale contexto a la IA para crear los textos de publicación."
     },
     "introSong": {
       "title": "Canción en la intro",
@@ -246,7 +269,7 @@
     },
     "thumbnails": {
       "stopViewing": "Dejar de ver",
-      "title": "Miniatura",
+      "title": "Opciones de miniatura",
       "hint": "Dos opciones con el estilo del video. Cada una conserva su texto y fondo.",
       "option": "Opción {option}",
       "chosen": "Elegida",
@@ -254,7 +277,7 @@
       "chooseOption": "Elegir opción {option}",
       "view": "Ver",
       "viewOption": "Ver y comparar opción {option}",
-      "textLabel": "Título o frase de esta opción",
+      "textLabel": "Título o frase",
       "compareTitle": "Comparar miniaturas",
       "compareHint": "Elegí una opción y editá su título. La vista cambia al instante.",
       "editingOption": "Editando la opción {option}",
@@ -271,8 +294,8 @@
       "accountsError": "No se pudieron cargar las categorías de cuentas.",
       "retryAccounts": "Volver a cargar categorías",
       "reauth": "Volver a conectar",
-      "shortCopyHint": "A · Hasta 5 palabras, centradas en 1 o 2 filas.",
-      "longCopyHint": "B · Una frase de la canción, hasta 4 filas.",
+      "shortCopyHint": "Hasta 5 palabras.",
+      "longCopyHint": "Hasta 4 filas.",
       "background": "Fondo de esta opción",
       "frame": "Fotograma del video",
       "image": "Imagen propia",
@@ -290,7 +313,21 @@
       "templateImage": "Imagen de la plantilla",
       "changeThumbnail": "Cambiar imagen de la miniatura",
       "selectImage": "Seleccionar imagen",
-      "originalColors": "Colores originales del medio. Capa negra del 20% por defecto."
+      "originalColors": "Colores originales del medio. Capa negra del 20% por defecto.",
+      "videoFrame": "Fotograma del video",
+      "savedLocally": "Guardado en este navegador durante 24 horas. Se sincroniza al guardar o grabar.",
+      "keptInMemory": "Cambios en esta sesión. Se sincronizan al guardar o grabar.",
+      "positionHint": "Izquierda y derecha amplían el fondo un 20% para desplazarlo.",
+      "shortPromoHint": "Hasta {words} palabras.",
+      "editorialStyleHint": "Archivo y composición editorial de papel, tinta y medios de la plantilla."
+    },
+    "videos": {
+      "demo": "Demo original",
+      "error": "No se pudieron cargar los videos.",
+      "recording": "Grabando…",
+      "recorded": "Grabado",
+      "failed": "Falló",
+      "retry": "Reintentar"
     }
   }
 }

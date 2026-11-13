@@ -27,7 +27,9 @@ export function AssetCard({ asset, onEdit, onDelete, onShowLyrics }: AssetCardPr
   const meta = [
     asset.width && asset.height ? `${asset.width}×${asset.height}` : "",
     formatDuration(asset.durationSeconds),
-    asset.category === "sound_effects" ? t("soundCategory") : asset.category,
+    asset.categoryName ||
+      (asset.category === "sound_effects" ? t("soundCategory") : asset.category),
+    asset.templateName ?? "",
   ].filter(Boolean);
 
   return (
@@ -51,7 +53,7 @@ export function AssetCard({ asset, onEdit, onDelete, onShowLyrics }: AssetCardPr
           className="aspect-video w-full bg-black object-cover"
         />
       )}
-      <div className="flex flex-1 flex-col gap-3 p-5">
+      <div className="flex min-w-0 flex-1 flex-col gap-2 p-3">
         {isSound && (
           <div className="flex items-center justify-between gap-2">
             <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-nb-green-dark">
@@ -73,7 +75,7 @@ export function AssetCard({ asset, onEdit, onDelete, onShowLyrics }: AssetCardPr
         <div className="flex items-start gap-2">
           <div className="min-w-0 flex-1">
             <h3
-              className="break-words text-[16px] leading-snug font-semibold text-nb-ink"
+              className="line-clamp-2 break-all text-[13px] leading-snug font-semibold text-nb-ink"
               title={asset.title}
             >
               {asset.title}
@@ -104,7 +106,7 @@ export function AssetCard({ asset, onEdit, onDelete, onShowLyrics }: AssetCardPr
           </div>
         </div>
         {asset.description && (
-          <p className="whitespace-pre-line break-words text-[13px] leading-relaxed text-nb-ink-soft">
+          <p className="line-clamp-2 break-words text-xs leading-relaxed text-nb-ink-soft">
             {asset.description}
           </p>
         )}

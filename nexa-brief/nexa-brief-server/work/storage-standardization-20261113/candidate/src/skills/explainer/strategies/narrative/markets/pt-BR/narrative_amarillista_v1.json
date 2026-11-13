@@ -1,0 +1,62 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "narrative_amarillista_v1",
+  "piece": "narrative",
+  "locale": "pt-BR",
+  "status": "draft",
+  "intent": "Abrir com o risco mais forte que os fatos sustentam, aumentar a tensão com provas, devolver o contexto e terminar numa pergunta pessoal.",
+  "templates": {
+    "hook": "{fato verificado}. Isso mexe com o seu {interesse cotidiano}.",
+    "escalation": "Primeiro {fato}. Depois {fato}. Só que tem um detalhe.",
+    "turn": "Agora vem a parte que ficou fora da manchete.",
+    "question": "Você prefere {opção A} ou {opção B}?"
+  },
+  "examples": [
+    "Você apagou o chat. A empresa apagou a cópia dela também?",
+    "Guardar uma conversa e ler cada conversa são coisas diferentes.",
+    "Você colocaria um documento do trabalho num chatbot?"
+  ],
+  "conventions": [
+    "Fale com você, sem alternar para tu ou vós.",
+    "Mantenha os identificadores dos atos e resolva cada alarme com fatos e seus limites.",
+    "No nível alto, use frases curtas e uma tensão concreta; empresas e números precisam de fonte.",
+    "Preserve a comparação histórica de antes e agora com números verificados; não invente um caso brasileiro."
+  ],
+  "sounds_false": [
+    "Neste vídeo exploraremos o fascinante universo da inteligência artificial.",
+    "Seus chats VÃO ser vendidos: uma certeza que a fonte não permite.",
+    "Tom de plantão policial em cada frase."
+  ],
+  "overrides": {
+    "name": "Alarme com prova, contexto e uma pergunta",
+    "title": {
+      "levels": {
+        "alto": {
+          "name": "Tensão alta",
+          "description": "Uma frase curta, concreta e sustentada pelos fatos.",
+          "rules": [
+            "Sem inventar resultados nem causalidade.",
+            "Máximo de 60 caracteres."
+          ],
+          "examples": {
+            "node_tech": [
+              "SEUS CHATS NO TRIBUNAL?",
+              "Apagar o chat não encerra a história"
+            ]
+          }
+        }
+      }
+    },
+    "question": {
+      "delivery_note": "Mais baixo e mais devagar, conversando com uma pessoa. Faça uma pausa curta antes da pergunta."
+    }
+  },
+  "variants": {
+    "short": {
+      "instructions": [
+        "Mantenha gancho, tensão, virada, evidência e uma pergunta final.",
+        "Dê espaço para explicar a virada; não esconda o contexto numa ressalva apressada."
+      ]
+    }
+  }
+}

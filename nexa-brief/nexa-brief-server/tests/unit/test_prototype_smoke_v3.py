@@ -107,6 +107,9 @@ async def test_smoke_run_uses_file_only_agent_and_host_validation_then_cleans_on
             calls.append((cwd, scope, prompt))
             assert cwd == v3 / 'sandbox/nodehistory' / ('zz-smoke-' + idea.slug)
             assert scope.commands == scope.extra_writable == () and scope.extra_env == {}
+            contract = cwd / 'work/agent-context/PREPARAR-PRODUCCION.md'
+            assert contract.is_file() and 'Pasar a producción' in contract.read_text()
+            assert 'work/agent-context/PREPARAR-PRODUCCION.md' in prompt
             (cwd / 'info.json').write_text(json.dumps(info(idea.slug)))
             (cwd / 'index.html').write_text('<html><body>synthetic</body></html>')
             log_path.write_text('fake agent\n')

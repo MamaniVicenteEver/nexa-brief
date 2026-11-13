@@ -85,6 +85,8 @@ def test_v3_prompt_is_file_only_and_preserves_phase_contract(tmp_path, monkeypat
 
 def test_prototype_workspace_contains_only_requested_idea_and_scope(tmp_path, monkeypatch):
     root = profile(monkeypatch, tmp_path)
+    from pathlib import Path
+    monkeypatch.setattr(settings, 'templates_dir', Path(__file__).resolve().parents[2] / 'src/templates')
     idea = ideas.create_idea('nodehistory', 'Referencia', 'Notas propias', [('example.png', b'image')])
     other = ideas.create_idea('nodehistory', 'Otra', 'NO compartir', [])
     service = runs.PrototypeRunService(agent_getter=lambda _: None)
@@ -94,6 +96,10 @@ def test_prototype_workspace_contains_only_requested_idea_and_scope(tmp_path, mo
     context = cwd / 'work/agent-context'
     assert cwd == root / 'sandbox/nodehistory/test-design'
     assert (context / 'references/example.png').read_bytes() == b'image'
+    contract = (context / 'PREPARAR-PRODUCCION.md').read_text()
+    assert contract == (settings.templates_dir / 'sandbox/PREPARAR-PRODUCCION.md').read_text()
+    assert 'is_new_design' in contract and 'showcase/components.json' in contract
+    assert 'Completar preparación con IA' in contract
     brief = (context / 'BRIEF.md').read_text()
     assert 'Notas propias' in brief and 'NO compartir' not in brief and other.slug not in brief
     scope = service._scope(rec)
@@ -101,6 +107,8 @@ def test_prototype_workspace_contains_only_requested_idea_and_scope(tmp_path, mo
     assert scope.commands == scope.extra_writable == () and scope.extra_env == {}
     prompt = service._prompt(rec)
     assert 'no puedes ejecutar comandos' in prompt.lower() and 'validacion-pendiente.md' in prompt
+    assert 'work/agent-context/PREPARAR-PRODUCCION.md' in prompt
+    assert 'entrega-produccion.md' in prompt and 'no valides, muevas ni grabes' in prompt
     assert service._isolated_artifact_failure(rec)
     (cwd / 'index.html').write_text('<html>synthetic</html>')
     (cwd / 'info.json').write_text(json.dumps({'reference': f'referencias/nodehistory/{idea.slug}'}))

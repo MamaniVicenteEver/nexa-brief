@@ -1,0 +1,454 @@
+{
+  "$defs": {
+    "Chapter": {
+      "additionalProperties": false,
+      "properties": {
+        "segment_id": {
+          "title": "Segment Id",
+          "type": "string"
+        },
+        "title": {
+          "maxLength": 160,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "segment_id",
+        "title"
+      ],
+      "title": "Chapter",
+      "type": "object"
+    },
+    "Cue": {
+      "additionalProperties": false,
+      "properties": {
+        "segment_id": {
+          "title": "Segment Id",
+          "type": "string"
+        },
+        "target_phrase": {
+          "minLength": 1,
+          "title": "Target Phrase",
+          "type": "string"
+        }
+      },
+      "required": [
+        "segment_id",
+        "target_phrase"
+      ],
+      "title": "Cue",
+      "type": "object"
+    },
+    "ImageText": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "pair_title": {
+          "default": "B",
+          "enum": [
+            "A",
+            "B",
+            "C"
+          ],
+          "title": "Pair Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "ImageText",
+      "type": "object"
+    },
+    "NativePackaging": {
+      "additionalProperties": false,
+      "properties": {
+        "titles": {
+          "items": {
+            "$ref": "#/$defs/NativeTitle"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "title": "Titles",
+          "type": "array"
+        },
+        "chosen_title": {
+          "default": "A",
+          "enum": [
+            "A",
+            "B",
+            "C"
+          ],
+          "title": "Chosen Title",
+          "type": "string"
+        },
+        "text_only": {
+          "$ref": "#/$defs/TextOnly"
+        },
+        "with_image": {
+          "$ref": "#/$defs/ImageText"
+        },
+        "tabloid": {
+          "$ref": "#/$defs/TabloidText"
+        },
+        "chosen_thumbnail": {
+          "default": "tabloid",
+          "enum": [
+            "text_only",
+            "with_image",
+            "tabloid"
+          ],
+          "title": "Chosen Thumbnail",
+          "type": "string"
+        },
+        "kicker": {
+          "default": "",
+          "title": "Kicker",
+          "type": "string"
+        }
+      },
+      "required": [
+        "titles",
+        "text_only",
+        "with_image",
+        "tabloid"
+      ],
+      "title": "NativePackaging",
+      "type": "object"
+    },
+    "NativeTitle": {
+      "additionalProperties": false,
+      "properties": {
+        "option": {
+          "enum": [
+            "A",
+            "B",
+            "C"
+          ],
+          "title": "Option",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "strategy": {
+          "minimum": 1,
+          "title": "Strategy",
+          "type": "integer"
+        },
+        "emotion": {
+          "minLength": 1,
+          "title": "Emotion",
+          "type": "string"
+        }
+      },
+      "required": [
+        "option",
+        "text",
+        "strategy",
+        "emotion"
+      ],
+      "title": "NativeTitle",
+      "type": "object"
+    },
+    "Publish": {
+      "additionalProperties": false,
+      "properties": {
+        "youtube": {
+          "$ref": "#/$defs/Youtube"
+        },
+        "instagram": {
+          "$ref": "#/$defs/Social"
+        },
+        "facebook": {
+          "$ref": "#/$defs/Social"
+        },
+        "tiktok": {
+          "$ref": "#/$defs/Tiktok"
+        }
+      },
+      "required": [
+        "youtube",
+        "instagram",
+        "facebook",
+        "tiktok"
+      ],
+      "title": "Publish",
+      "type": "object"
+    },
+    "Segment": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 2400,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "delivery_note": {
+          "maxLength": 1400,
+          "minLength": 1,
+          "title": "Delivery Note",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "delivery_note"
+      ],
+      "title": "Segment",
+      "type": "object"
+    },
+    "Social": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "description"
+      ],
+      "title": "Social",
+      "type": "object"
+    },
+    "TabloidText": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "pair_title": {
+          "default": "C",
+          "enum": [
+            "A",
+            "B",
+            "C"
+          ],
+          "title": "Pair Title",
+          "type": "string"
+        },
+        "accent": {
+          "default": "",
+          "title": "Accent",
+          "type": "string"
+        },
+        "bullet": {
+          "default": "",
+          "title": "Bullet",
+          "type": "string"
+        },
+        "strap": {
+          "default": "",
+          "title": "Strap",
+          "type": "string"
+        },
+        "seal": {
+          "default": "",
+          "title": "Seal",
+          "type": "string"
+        },
+        "tape_text": {
+          "default": "",
+          "title": "Tape Text",
+          "type": "string"
+        },
+        "before_label": {
+          "default": "",
+          "title": "Before Label",
+          "type": "string"
+        },
+        "after_label": {
+          "default": "",
+          "title": "After Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "TabloidText",
+      "type": "object"
+    },
+    "TextOnly": {
+      "additionalProperties": false,
+      "properties": {
+        "lines": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 3,
+          "minItems": 1,
+          "title": "Lines",
+          "type": "array"
+        },
+        "highlight": {
+          "title": "Highlight",
+          "type": "string"
+        },
+        "pair_title": {
+          "default": "A",
+          "enum": [
+            "A",
+            "B",
+            "C"
+          ],
+          "title": "Pair Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "lines",
+        "highlight"
+      ],
+      "title": "TextOnly",
+      "type": "object"
+    },
+    "Tiktok": {
+      "additionalProperties": false,
+      "properties": {
+        "caption": {
+          "title": "Caption",
+          "type": "string"
+        },
+        "hashtags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Hashtags",
+          "type": "array"
+        }
+      },
+      "required": [
+        "caption",
+        "hashtags"
+      ],
+      "title": "Tiktok",
+      "type": "object"
+    },
+    "Youtube": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "tags": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Tags",
+          "type": "array"
+        },
+        "chapters": {
+          "items": {
+            "$ref": "#/$defs/Chapter"
+          },
+          "title": "Chapters",
+          "type": "array"
+        },
+        "pinned": {
+          "title": "Pinned",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "tags",
+        "chapters",
+        "pinned"
+      ],
+      "title": "Youtube",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "locale": {
+      "title": "Locale",
+      "type": "string"
+    },
+    "segments": {
+      "items": {
+        "$ref": "#/$defs/Segment"
+      },
+      "title": "Segments",
+      "type": "array"
+    },
+    "strings": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Strings",
+      "type": "object"
+    },
+    "cues": {
+      "additionalProperties": {
+        "$ref": "#/$defs/Cue"
+      },
+      "title": "Cues",
+      "type": "object"
+    },
+    "publish": {
+      "$ref": "#/$defs/Publish"
+    },
+    "observations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Observations",
+      "type": "array"
+    },
+    "packaging": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/NativePackaging"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    }
+  },
+  "required": [
+    "locale",
+    "segments",
+    "strings",
+    "cues",
+    "publish",
+    "observations"
+  ],
+  "title": "EditionOutput",
+  "type": "object"
+}

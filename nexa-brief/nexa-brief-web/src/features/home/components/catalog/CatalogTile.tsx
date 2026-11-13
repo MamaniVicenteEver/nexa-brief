@@ -96,6 +96,7 @@ export function CatalogTile({
 }) {
   const [hover, setHover] = useState(false);
   const [open, setOpen] = useState(false);
+  const [posterFailed, setPosterFailed] = useState(false);
   const preview = item.shape === "tall" ? (item.liveTall ?? item.live) : item.live;
   const live = hover && !open ? preview : null;
 
@@ -111,7 +112,7 @@ export function CatalogTile({
       onFocus={() => setHover(true)}
       onBlur={() => setHover(false)}
     >
-      {item.poster ? (
+      {item.poster && !posterFailed ? (
         <Image
           src={item.poster}
           alt=""
@@ -119,9 +120,14 @@ export function CatalogTile({
           draggable={false}
           sizes={`${width}px`}
           unoptimized
+          onError={() => setPosterFailed(true)}
           className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
         />
-      ) : null}
+      ) : (
+        <span className="flex size-full items-center justify-center px-4 text-center text-sm text-nb-mute">
+          {item.title}
+        </span>
+      )}
       {live ? <LivePreview live={live} title={item.title} /> : null}
 
       <div

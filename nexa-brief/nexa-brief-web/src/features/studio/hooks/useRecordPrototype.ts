@@ -7,6 +7,7 @@ import type { Template } from "@/features/templates/types";
 import { useJobsTrayStore } from "@/shared/store/jobs-tray-store";
 import { renderDraft } from "../api/studio-service";
 import type { Draft, RecorderEngine, RecordFormat } from "../types";
+import { backgroundVisibility, supportsBackgroundVisibility } from "../services/background-visibility";
 import { draftKey, draftsKey } from "./useDraft";
 
 /** Opción «Video original» en el selector (la plantilla tal cual). */
@@ -19,8 +20,15 @@ export function isRecordable(draft: Draft): boolean {
   return draft.status === "prepared" || (draft.status === "failed" && draft.recoverable);
 }
 
-export function prototypeLabel(draft: Draft, fallback: string): string {
-  return draft.name || draft.details?.songName || fallback;
+export function songTitle(draft: Draft, songs?: { assetId: string; title: string }[]): string {
+  return songs?.find((song) => song.assetId === draft.inputs?.musicAssetId)?.title?.trim() || draft.details?.songName?.trim() || "";
+}
+
+export function prototypeLabel(draft: Draft, fallback: string, songs?: { assetId: string; title: string }[]): string {
+  if (draft.original) return "Demo";
+  const name = draft.name?.trim() || "";
+  const song = songTitle(draft, songs);
+  return ((!name || /^prototipo\s+\d+$/i.test(name)) && song) || name || fallback;
 }
 
 /** Pestaña Grabar: qué grabar (el «Video original» o un prototipo preparado), motor (HyperFrames
@@ -36,23 +44,20 @@ export function useRecordPrototype(
   const queryClient = useQueryClient();
   const addJobs = useJobsTrayStore((s) => s.addJobs);
   const recordable = prototypes.filter(isRecordable);
+  const originalReady = original !== null && isRecordable(original);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   // Sin elegir: el primer prototipo preparado; si no hay ninguno, el original.
   const choice =
-    selectedId && (selectedId === ORIGINAL || prototypes.some((d) => d.draftId === selectedId))
+    selectedId && ((selectedId === ORIGINAL && (originalReady || original?.status === "rendering")) || prototypes.some((d) => d.draftId === selectedId && (isRecordable(d) || d.status === "rendering")))
       ? selectedId
-      : (recordable[0]?.draftId ?? ORIGINAL);
+      : (originalReady ? ORIGINAL : (recordable[0]?.draftId ?? ""));
   const selected =
     choice === ORIGINAL ? original : (prototypes.find((d) => d.draftId === choice) ?? null);
 
-  const engines = ENGINE_ORDER.filter((e) => niche?.supportedEngines.includes(e));
-  const defaultEngine: RecorderEngine | undefined = engines.includes("hyperframes")
-    ? "hyperframes"
-    : ((niche?.recorderEngine as RecorderEngine | undefined) ?? engines[0]);
-  const [engineChoice, setEngine] = useState<RecorderEngine | undefined>(undefined);
-  const engine = engineChoice && engines.includes(engineChoice) ? engineChoice : defaultEngine;
-  // Remotion graba solo 16:9.
-  const canVertical = engine !== "remotion";
+  const engines = ENGINE_ORDER;
+  const engine = "hyperframes" as const;
+  const hyperframesSupported = niche?.supportedEngines.includes(engine) ?? false;
+  const canVertical = true;
   const [vertical, setVertical] = useState(false);
   const [desktop, setDesktop] = useState(true);
   useEffect(() => {
@@ -72,6 +77,9 @@ export function useRecordPrototype(
     mutationFn: async (draft: Draft) => {
       const result = await renderDraft(draft.draftId, {
         recorderEngine: engine,
+        backgroundOpacity: !draft.original && supportsBackgroundVisibility(template.id) &&
+          (draft.inputs.templateInputs?.media?.background?.length || draft.inputs.imageAssetId || draft.inputs.videoAssetId)
+          ? (backgroundVisibility.get(draft.draftId) ?? 0.8) : undefined,
         publishAccounts: accounts,
         formats,
         accountFormats,
@@ -79,7 +87,7 @@ export function useRecordPrototype(
       return { draft, result };
     },
     onSuccess: ({ draft, result }) => {
-      setSelectedId(draft.draftId);
+      setSelectedId(draft.original ? ORIGINAL : draft.draftId);
       addJobs([
         {
           jobId: result.job_id,
@@ -89,6 +97,7 @@ export function useRecordPrototype(
       ]);
       queryClient.invalidateQueries({ queryKey: draftKey(draft.draftId) });
       queryClient.invalidateQueries({ queryKey: draftsKey(template.id) });
+      queryClient.invalidateQueries({ queryKey: ["template-videos", template.id] });
     },
   });
 
@@ -98,11 +107,12 @@ export function useRecordPrototype(
     isOriginal: choice === ORIGINAL,
     selected,
     /** El elegido está listo para grabar (preparado o reintentable). */
-    ready: selected !== null && isRecordable(selected) && formats.length > 0,
+    ready: selected !== null && isRecordable(selected) && hyperframesSupported && formats.length > 0,
     select: setSelectedId,
     engines,
+    defaultEngine: niche?.recorderEngine as RecorderEngine | undefined,
     engine,
-    setEngine,
+    hyperframesSupported,
     canVertical,
     formats,
     desktop,

@@ -1,5 +1,4 @@
-"""Canales conectados. Lo público es nombre, avatar, enlace y cuántos videos
-lleva; el estado del token y demás detalles solo van al dashboard."""
+"""Canales conectados. Solo nombre y URL son públicos; los detalles van al dashboard."""
 
 from __future__ import annotations
 
@@ -10,9 +9,11 @@ from src.core.stats.models import ChannelDetail, ChannelStats, PublicChannel
 
 
 def public_url(platform: str, target_id: str | None, handle: str | None = None) -> str | None:
-    """Enlace público al canal; TikTok no expone un @usuario al autorizar."""
+    """Enlace público; para TikTok se requiere un handle conocido, nunca el ID OAuth."""
     if platform == "instagram" and handle:
         return f"https://www.instagram.com/{handle.lstrip('@').strip('/')}"
+    if platform == "tiktok" and handle:
+        return f"https://www.tiktok.com/@{handle.lstrip('@').strip('/')}"
     if not target_id:
         return None
     if platform == "youtube":
@@ -60,4 +61,9 @@ def details(ctx: StatsContext) -> list[ChannelDetail]:
 
 
 def public_list(ctx: StatsContext) -> list[PublicChannel]:
-    return [PublicChannel(**c.model_dump(include=set(PublicChannel.model_fields))) for c in details(ctx)]
+    # Allowlist explícita: nunca serializar la cuenta o los detalles privados.
+    names = {(a["platform"], a["alias"]): a.get("name") or "Canal" for a in ctx.accounts}
+    return [
+        PublicChannel(name=names[(c.platform, c.alias)], public_url=c.public_url)
+        for c in details(ctx)
+    ]

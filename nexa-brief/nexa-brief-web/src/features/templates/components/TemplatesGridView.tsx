@@ -3,13 +3,13 @@
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Suspense, useEffect, useState } from "react";
+import { CatalogWindow as AllDesignsWindow } from "@/features/catalog/components/CatalogWindow";
 import { useCategories } from "@/features/categories";
 import { ExplainerCategoryWindow } from "@/features/explainer";
 import { PublicationsSection } from "@/features/image-posts";
 import { SamplesSection } from "@/features/samples/components/SamplesSection";
 import { SandboxWindow } from "@/features/sandbox";
 import { useTemplates } from "../hooks/useTemplates";
-import { AllDesignsWindow } from "./AllDesignsWindow";
 import { CategoryWindowTabs, SANDBOX_CATEGORY_ID } from "./CategoryWindowTabs";
 import { groupMotionTemplates, MotionCategoryWindow } from "./MotionCategoryWindow";
 
@@ -74,9 +74,7 @@ function CategoryWindows() {
         templateCount={motionCount}
         onSelect={select}
       />
-      {selectedId === "all" && (
-        <AllDesignsWindow />
-      )}
+      {selectedId === "all" && <AllDesignsWindow />}
       {selectedId === SANDBOX_CATEGORY_ID && <SandboxWindow />}
       {selected?.engine === "pipeline" && (
         <MotionCategoryWindow

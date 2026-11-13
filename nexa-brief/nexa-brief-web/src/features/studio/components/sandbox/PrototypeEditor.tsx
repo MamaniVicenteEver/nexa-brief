@@ -2,7 +2,7 @@
 
 import { ArrowLeft } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDraftThumbnailEditor } from "../../hooks/useDraftThumbnailEditor";
 import type { TemplateStudioController } from "../../hooks/useTemplateStudio";
 import { DraftProgress } from "../DraftProgress";
@@ -19,6 +19,11 @@ export function PrototypeEditor({ studio }: { studio: TemplateStudioController }
   const thumbnailEditor = useDraftThumbnailEditor(editor.draft);
   const req = studio.requirements.data;
   const [showDetails, setShowDetails] = useState(false);
+  const bodyRef = useRef<HTMLDivElement>(null);
+  const showDetailsAtTop = (visible: boolean) => {
+    setShowDetails(visible);
+    if (bodyRef.current) bodyRef.current.scrollTop = 0;
+  };
   const details = editor.draft?.details ?? null;
   if (!req) return null;
 
@@ -47,45 +52,47 @@ export function PrototypeEditor({ studio }: { studio: TemplateStudioController }
         <PrototypeStatus status={editor.draft?.status ?? "new"} />
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto p-3">
-        {showDetails && details && editor.draft ? (
-          <DetailsEditor
-            key={`${editor.draft.draftId}:${JSON.stringify(details)}`}
-            details={details}
-            saving={editor.saveDetails.isPending}
-            onSave={(next) => editor.saveDetails.mutate(next)}
-            onClose={() => setShowDetails(false)}
-          />
-        ) : (
-          <RequirementsForm
-            compactSong
-            templateId={studio.template.id}
-            requirements={req}
-            value={editor.value}
-            onChange={editor.setValue}
-          />
-        )}
-      </div>
+      <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+        <div className="p-3">
+          {showDetails && details && editor.draft ? (
+            <DetailsEditor
+              key={`${editor.draft.draftId}:${JSON.stringify(details)}`}
+              details={details}
+              saving={editor.saveDetails.isPending}
+              onSave={(next) => editor.saveDetails.mutate(next)}
+              onClose={() => showDetailsAtTop(false)}
+            />
+          ) : (
+            <RequirementsForm
+              compactSong
+              templateId={studio.template.id}
+              requirements={req}
+              value={editor.value}
+              onChange={editor.setValue}
+            />
+          )}
+        </div>
 
-      {editor.draft?.details && (
-        <div className="shrink-0 border-t border-nb-line p-3">
-          <DraftThumbnailPicker
-            draft={editor.draft}
-            disabled={editor.dirty}
-            editor={thumbnailEditor}
+        {editor.draft?.details && (
+          <div className="shrink-0 border-t border-nb-line p-3">
+            <DraftThumbnailPicker
+              draft={editor.draft}
+              disabled={editor.dirty}
+              editor={thumbnailEditor}
+            />
+          </div>
+        )}
+        <div className="flex shrink-0 flex-col gap-2 border-t border-nb-line p-3">
+          {editor.draft && <DraftProgress draft={editor.draft} dirty={editor.dirty} />}
+          {editor.error && (
+            <p className="text-[11.5px] text-nb-accent-coral">{editor.error.message}</p>
+          )}
+          <PrototypeActions
+            studio={studio}
+            showingDetails={showDetails}
+            onToggleDetails={() => showDetailsAtTop(!showDetails)}
           />
         </div>
-      )}
-      <div className="flex shrink-0 flex-col gap-2 border-t border-nb-line p-3">
-        {editor.draft && <DraftProgress draft={editor.draft} dirty={editor.dirty} />}
-        {editor.error && (
-          <p className="text-[11.5px] text-nb-accent-coral">{editor.error.message}</p>
-        )}
-        <PrototypeActions
-          studio={studio}
-          showingDetails={showDetails}
-          onToggleDetails={() => setShowDetails((v) => !v)}
-        />
       </div>
     </div>
   );

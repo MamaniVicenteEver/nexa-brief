@@ -14,6 +14,8 @@ Ambas devuelven PCM 16-bit mono 24 kHz → se guarda como WAV.
 """
 from __future__ import annotations
 import base64, hashlib, json, os, pathlib, re, time, wave, urllib.request, urllib.error
+from contextlib import contextmanager
+from contextvars import ContextVar
 
 # claves: se leen de estos .env (en orden) o de variables de entorno; NUNCA se imprimen.
 # Rutas relativas al repo (tools → explainer-kit → _tools → templates → src → nexa-brief-server),
@@ -79,6 +81,26 @@ def with_key_rotation(model, call):
     raise QuotaError(f"todas las claves agotadas para {model}")
 
 LAST_USAGE: dict = {}   # usageMetadata de la última respuesta (narrate.py lo anota en el registro del video)
+_USAGE_OBSERVER = ContextVar("native_tts_usage_observer", default=None)
+
+
+@contextmanager
+def observe_usage(callback):
+    """Opt-in host observer; original-language calls retain their existing ledger."""
+    token = _USAGE_OBSERVER.set(callback)
+    try:
+        yield
+    finally:
+        _USAGE_OBSERVER.reset(token)
+
+
+def _notify_usage(started, *, ok, data=None, error=None):
+    callback = _USAGE_OBSERVER.get()
+    if callback is not None:
+        callback({"ok": ok, "seconds": time.monotonic() - started,
+                  "usage": extract_usage_metadata(data) if isinstance(data, dict) else {},
+                  "model": data.get("modelVersion") if isinstance(data, dict) else None,
+                  "error_type": type(error).__name__ if error is not None else None})
 
 
 def extract_usage_metadata(data: dict) -> dict:
@@ -105,12 +127,15 @@ def _post(url: str, body: dict, headers: dict, timeout=300) -> dict:
     req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) nexa-explainer-kit/1.0", **headers}, method="POST")
     for attempt in range(4):
         LAST_USAGE.clear()
+        started = time.monotonic()
         try:
             with urllib.request.urlopen(req, timeout=timeout) as r:
                 data = json.loads(r.read())
                 LAST_USAGE.clear(); LAST_USAGE.update(extract_usage_metadata(data))
+                _notify_usage(started, ok=True, data=data)
                 return data
         except urllib.error.HTTPError as e:
+            _notify_usage(started, ok=False, error=e)
             msg = e.read().decode(errors="replace")[:400]
             # en el plan gratuito CADA intento cuenta para la cuota: no reintentar un 429 diario y
             # reintentar un 503 (alta demanda) una sola vez
@@ -119,9 +144,13 @@ def _post(url: str, body: dict, headers: dict, timeout=300) -> dict:
                 time.sleep(20 * (attempt + 1)); continue
             raise RuntimeError(f"HTTP {e.code}: {msg}") from None
         except (urllib.error.URLError, TimeoutError, ConnectionError) as e:   # red caída / DNS: reintentar
+            _notify_usage(started, ok=False, error=e)
             if attempt < 3:
                 time.sleep(10 * (attempt + 1)); continue
             raise RuntimeError(f"red: {e}") from None
+        except BaseException as e:
+            _notify_usage(started, ok=False, error=e)
+            raise
 
 def _save_pcm(pcm: bytes, dest: pathlib.Path, rate=24000) -> float:
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -190,8 +219,16 @@ TAG_BY_TONE = {
     "cercano": "warmly, close", "alarma": "urgently, like a breaking-news alert", "admiración": "with admiration",
 }
 
-def director_prompt(script: dict, segs: list[dict]) -> str:
+def director_prompt(script: dict, segs: list[dict], profile: str | None = None, pace: str | None = None,
+                    language: str | None = None) -> str:
     lines = "\n\n".join(f"[{TAG_BY_TONE.get(s['tone'], 'naturally')}] {s['text']}" for s in segs)
+    if profile is not None:   # edición en otro idioma: perfil y ritmo de la identidad del canal
+        return ("GENERATE SPEECH AUDIO ONLY.\nDo not read section titles or bracketed delivery notes aloud.\n\n"
+                f"AUDIO PROFILE\n{profile}\n\n"
+                f"SCENE\nA short documentary for social media: {script['title']}.\n\n"
+                f"DIRECTOR'S NOTES\n{script.get('voice_direction', '')} {pace or ''} "
+                f"Natural human breathing, clear diction. Numbers read naturally in {language or 'the transcript language'}.\n\n"
+                f"TRANSCRIPT BEGINS\n{lines}\nTRANSCRIPT ENDS")
     return ("GENERATE SPEECH AUDIO ONLY.\nDo not read section titles or bracketed delivery notes aloud.\n\n"
             "AUDIO PROFILE\nOne mature, close, natural Latin American Spanish documentary narrator. Neutral Latin American accent "
             "(no Castilian ceceo). Do not imitate a real person.\n\n"

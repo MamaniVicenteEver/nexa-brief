@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/schemas/nodemotion-promo/research.json",
+  "type": "object",
+  "properties": {
+    "researched_at": {
+      "type": "string",
+      "format": "date"
+    },
+    "discarded": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "claim",
+          "reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "topic": {
+      "type": "string",
+      "minLength": 1
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "strength": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "recency": {
+            "type": "string",
+            "minLength": 1
+          },
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "minLength": 1
+                },
+                "accessed_at": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "data_date": {
+                  "description": "Fecha publicada por la fuente; null si no consta. Nunca reemplazarla por la fecha de consulta.",
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    {
+                      "type": "string",
+                      "pattern": "^[0-9]{4}(-(?:0[1-9]|1[0-2]))?$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "date_note": {
+                  "type": "string",
+                  "maxLength": 300
+                }
+              },
+              "required": [
+                "title",
+                "url",
+                "accessed_at",
+                "data_date"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 2
+          }
+        },
+        "required": [
+          "claim",
+          "sources"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "topic",
+    "findings"
+  ],
+  "additionalProperties": false
+}

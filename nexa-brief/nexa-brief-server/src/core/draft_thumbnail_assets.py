@@ -56,17 +56,10 @@ def background_kind(job: Job) -> str:
     return "video" if source.suffix.lower() in {".mp4", ".webm", ".mov"} else "image"
 
 
-def background_source(job: Job) -> Path | None:
-    from src.core.draft_thumbnails import _active_config, _read_config
-
-    for path in (job.artifacts.video_path, job.artifacts.image_path):
-        if path and path.is_file():
-            return path
-    spec = background_spec(_active_config(_read_config(job)))
-    name = spec.get("src")
+def _resolve_medium(name: Any, roots: list[Path | None]) -> Path | None:
     if not isinstance(name, str) or not name or ":" in name or Path(name).is_absolute():
         return None
-    for root in (job.artifacts.output_dir, job.artifacts.content_dir, job.artifacts.html_path.parent if job.artifacts.html_path else None):
+    for root in roots:
         if root is None:
             continue
         root = root.resolve()
@@ -75,6 +68,60 @@ def background_source(job: Job) -> Path | None:
             if candidate.is_relative_to(root) and candidate.is_file() and candidate.suffix.lower() in {".mp4", ".webm", ".mov", ".jpg", ".jpeg", ".png", ".webp"}:
                 return candidate
     return None
+
+
+def background_sources(job: Job) -> dict[str, Path]:
+    """Current media first; retain the template's existing alternative image/video."""
+    from src.core.draft_thumbnails import _active_config, _read_config, _template_id, DESIGN_ROOT
+    sources: dict[str, Path] = {}
+    def add(path: Path | None) -> None:
+        if path and path.is_file():
+            kind = "video" if path.suffix.lower() in {".mp4", ".webm", ".mov"} else "image"
+            sources.setdefault(kind, path)
+    for path in (job.artifacts.video_path, job.artifacts.image_path):
+        add(path)
+    roots = [job.artifacts.output_dir, job.artifacts.content_dir, job.artifacts.html_path.parent if job.artifacts.html_path else None]
+    config = _active_config(_read_config(job))
+    tid = _template_id(job)
+    def add_config_media(config: dict, roots: list[Path | None]) -> None:
+        for key in ("bg", "background", "video", "image"):
+            spec = config.get(key)
+            if isinstance(spec, dict):
+                add(_resolve_medium(spec.get("src"), roots))
+        # Las plantillas por escenas declaran sus clips originales en `media`.
+        media = config.get("media")
+        if tid in {"lyrics-mixtas", "lyrics-grunge", "lyrics-lluvia-gris", "lyrics-memoria", "lyrics-ceniza", "lyrics-vacio", "promo-editorial", "promo-dynamic", "promo-trendy", "promo-urban", "promo-sports"} and isinstance(media, list):
+            # El plano nocturno conserva mejor el contraste del texto fino de Lluvia Gris.
+            preferred = "street-rain" if tid == "lyrics-lluvia-gris" else None
+            candidates = sorted(media, key=lambda item: 0 if isinstance(item, dict) and item.get("id") == preferred else 1)
+            for spec in candidates:
+                if isinstance(spec, dict):
+                    add(_resolve_medium(spec.get("src"), roots))
+        # Estas plantillas declaran videos dentro de escenas, no en `bg`.
+        scene_key = {"lyrics-night-journey": "scenes", "lyrics-cristal": "worlds"}.get(tid)
+        scenes = config.get(scene_key) if scene_key else None
+        if isinstance(scenes, list):
+            for scene in scenes:
+                if isinstance(scene, dict):
+                    spec = scene.get("video") if isinstance(scene.get("video"), dict) else scene
+                    add(_resolve_medium(spec.get("src"), roots))
+    add_config_media(config, roots)
+    if re.fullmatch(r"[a-z0-9-]{1,80}", tid):
+        template = next(DESIGN_ROOT.glob(f"*/{tid}/assets/config.json"), None)
+        if template:
+            config = _active_config(json.loads(template.read_text()))
+            add_config_media(config, [template.parent.parent])
+    return sources
+
+
+def background_source(job: Job, source: str = "auto") -> Path | None:
+    sources = background_sources(job)
+    return sources.get(source) if source in {"image", "video"} else next(iter(sources.values()), None)
+
+
+def media_version(job: Job) -> str:
+    descriptor = [(kind, str(path), path.stat().st_size, path.stat().st_mtime_ns) for kind, path in background_sources(job).items()]
+    return hashlib.sha256(json.dumps(descriptor).encode()).hexdigest()[:20]
 
 
 def save_background(job: Job, data: bytes) -> str:
@@ -143,7 +190,7 @@ async def background_file(job: Job, design: dict[str, Any]) -> Path | None:
         if not path.is_file():
             raise ValueError("La imagen de fondo ya no está disponible")
         return path
-    source = background_source(job)
+    source = background_source(job, design.get("mediaSource", "auto"))
     if source is None:
         return None  # Plantillas sin medios conservan su campo de color original.
     if source.suffix.lower() not in {".mp4", ".webm", ".mov"}:
@@ -196,8 +243,8 @@ def data_url(path: Path, mime: str) -> str:
 async def embedded_assets(job: Job, design: dict) -> dict:
     typography = design.get("typography", {})
     fonts = []
-    for font in (typography.get("font"), typography.get("outlineFont")):
-        if not font or any(item["family"] == font["family"] for item in fonts):
+    for font in (typography.get("font"), typography.get("outlineFont"), typography.get("subtitleFont")):
+        if not font or any((item["family"],item["weight"],item["style"]) == (font["family"],font["weight"],font["style"]) for item in fonts):
             continue
         path = font_path(font["url"].rsplit("/", 1)[-1])
         if path:

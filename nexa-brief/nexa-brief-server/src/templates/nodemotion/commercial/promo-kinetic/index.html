@@ -1592,6 +1592,11 @@ const COL = { white: P.white, red: P.red, green: P.green, orange: P.orange, yell
 const col = X => COL[X.sc.slot.color] || P.white;
 const W0 = X => U(X.lines[0]?.text || X.sc.seg.text || "");
 const T0 = X => Math.max(0.02, X.lines[0]?.rt ?? 0.05);
+// En vertical el ancho, no la altura, limita la palabra completa.
+const portrait = X => X.W < X.H;
+const safeZoom = (X, s, fs, ls, wanted) => portrait(X)
+  ? Math.max(1, Math.min(wanted, X.W * 0.90 / Math.max(1, textW(s, "ki", ls, fs))))
+  : wanted;
 const GRAD = ["#F2C81E", "#F08A1A", "#E3401E", "#C02B8E", "#5A3FD6", "#2F5FE0", "#B8B7B0"];
 
 /* ---- fondo: carbón + grano + rayas de película + HUD de esquinas ---- */
@@ -1628,7 +1633,8 @@ function base(X) {
 /* filas de la misma palabra: n filas, alto de fila lh, tamaño fs */
 function rowsOf(X, L, s, n, o = {}) {
   const { W, H } = X;
-  const fs = o.fs ?? Math.min(fit(s, "ki", o.ls ?? 0, (o.w ?? 0.62) * W, 1e9), (0.9 * H / n) / (o.lh ?? 0.92));
+  const rowWidth = portrait(X) ? Math.max(o.w ?? 0.62, 0.84) : (o.w ?? 0.62);
+  const fs = o.fs ?? Math.min(fit(s, "ki", o.ls ?? 0, rowWidth * W, 1e9), (0.9 * H / n) / (o.lh ?? 0.92));
   const lh = fs * (o.lh ?? 0.92), y0 = H / 2 - (n - 1) * lh / 2;
   const out = [];
   for (let i = 0; i < n; i++) {
@@ -1655,10 +1661,10 @@ const B = {};
 
 /* desde el centro: filas que nacen desde la del medio (arriba/abajo) */
 B.fromCenter = (sc, X) => {
-  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 9, { rows: R, lh } = rowsOf(X, G, s, n, { w: 0.5 });
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 9, { rows: R, fs, lh } = rowsOf(X, G, s, n, { w: 0.5 });
   R.forEach((t, i) => { const d = i - mid(n), at = T0(X) + Math.abs(d) * 0.05; X.T(t.box, "transform", `translate(-50%, ${-d * lh - 50}%)`).to(at, 0.35, "translate(-50%, -50%)", EASE_OUT); show(X, t.box, at); });
   const t2 = X.dur * 0.55;
-  X.T(G, "transform", "scale(1)").to(t2, 0.35, "scale(3.2)", EASE_IN);
+  X.T(G, "transform", "scale(1)").to(t2, 0.35, `scale(${safeZoom(X, s, fs, 0, 3.2)})`, EASE_IN);
   R.forEach((t, i) => { if (i !== Math.round(mid(n))) hideAt(X, t.box, t2 + 0.2); });
 };
 
@@ -1671,9 +1677,9 @@ B.stretchChars = (sc, X) => {
   t.chars.forEach((c, i) => {
     const edge = i === 0 || i === n - 1;
     show(X, c, T0(X) + Math.abs(i - mid(n)) * 0.03);
-    if (edge) { c.style.transformOrigin = i === 0 ? "100% 50%" : "0% 50%"; X.T(c, "transform", "scaleX(1)").to(X.dur * 0.35, 0.4, "scaleX(6)", EASE_IO); }
+    if (edge) { c.style.transformOrigin = i === 0 ? "100% 50%" : "0% 50%"; X.T(c, "transform", "scaleX(1)").to(X.dur * 0.35, 0.4, `scaleX(${portrait(X) ? 1.2 : 6})`, EASE_IO); }
   });
-  X.T(t.el, "letterSpacing", "0.2em").to(T0(X), 0.6, "0.5em", EASE_OUT);
+  X.T(t.el, "letterSpacing", "0.2em").to(T0(X), 0.6, portrait(X) ? "0.25em" : "0.5em", EASE_OUT);
   exit(X, G, "fade");
 };
 
@@ -1748,7 +1754,7 @@ B.marker = (sc, X) => {
     X.T(b, "transform", "scaleX(0)").to(at, 0.25, "scaleX(1)", EASE_OUT);
     show(X, t.box, at + 0.12);
   });
-  X.T(G, "transform", "scale(1)").to(X.dur * 0.5, 0.4, "scale(1.9)", EASE_IO);
+  X.T(G, "transform", "scale(1)").to(X.dur * 0.5, 0.4, `scale(${safeZoom(X, s, fs, 0, 1.9)})`, EASE_IO);
   exit(X, G, "fade");
 };
 
@@ -1796,7 +1802,7 @@ B.breakDown = (sc, X) => {
 /* crecimiento: filas que crecen de tamaño hacia abajo */
 B.growing = (sc, X) => {
   const { W, H } = X, L = base(X), G = div(X.root, "lay"), s = W0(X), n = 7;
-  const fs0 = fit(s, "ki", 0, 0.46 * W, 1e9), lhs = []; let y = 0.06 * H;
+  const fs0 = fit(s, "ki", 0, (portrait(X) ? 0.84 : 0.46) * W, 1e9), lhs = []; let y = 0.06 * H;
   for (let i = 0; i < n; i++) {
     const f = fs0 * (0.35 + i * 0.11);
     const t = tx(G, s, { cls: "ki", fs: Math.min(f, 0.16 * H), x: W / 2, y: y + Math.min(f, 0.16 * H) * 0.46, color: col(X) });
@@ -1811,22 +1817,22 @@ B.growing = (sc, X) => {
 /* gran palabra en bloque de color: filas gigantes cortadas por el marco */
 B.bigBlock = (sc, X) => {
   sc.slot.bg = "block";
-  const { W, H } = X, L = base(X), G = div(X.root, "lay", { clipPath: `inset(${0.02 * H}px ${0.22 * W}px ${0.02 * H}px ${0.22 * W}px)` }), s = W0(X), n = 5;
-  const fs = 0.25 * H, lh = fs * 0.9, y0 = H / 2 - (n - 1) * lh / 2;
+  const { W, H } = X, L = base(X), insetX = 0, G = div(X.root, "lay", { clipPath: `inset(${0.02 * H}px ${insetX}px ${0.02 * H}px ${insetX}px)` }), s = W0(X), n = 5;
+  const fs = Math.min(0.18 * H, fit(s, "ki", 0, 0.84 * W, 0.18 * H)), lh = fs * 0.9, y0 = H / 2 - (n - 1) * lh / 2;
   for (let i = 0; i < n; i++) {
     const t = tx(G, s, { cls: "ki", fs, x: W / 2, y: y0 + i * lh, color: P.white });
     const at = T0(X) + 0.1 + i * 0.05; show(X, t.box, at);
     X.T(t.el, "transform", `translateX(${(i % 2 ? 1 : -1) * 40}%)`).to(at, 0.4, `translateX(${(i % 2 ? -1 : 1) * 4}%)`, EASE_OUT);
   }
-  X.T(G, "clipPath", `inset(${0.02 * H}px ${0.22 * W}px ${0.02 * H}px ${0.22 * W}px)`).to(X.dur * 0.55, 0.35, "inset(0px 0px 0px 0px)", EASE_IO);
+  X.T(G, "clipPath", `inset(${0.02 * H}px ${insetX}px ${0.02 * H}px ${insetX}px)`).to(X.dur * 0.55, 0.35, "inset(0px 0px 0px 0px)", EASE_IO);
   exit(X, G);
 };
 
 /* constructor: letras que faltan y se completan (se construye la palabra) */
 B.constructor_ = (sc, X) => {
-  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 7, { rows: R } = rowsOf(X, G, s, n, { w: 0.5, split: "chars" });
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 7, { rows: R, fs } = rowsOf(X, G, s, n, { w: 0.5, split: "chars" });
   R.forEach((t, i) => t.chars.forEach((c, k) => show(X, c, T0(X) + ((k * 7 + i * 3) % 10) * 0.05)));
-  X.T(G, "transform", "scale(1)").to(X.dur * 0.55, 0.4, "scale(1.6)", EASE_IO);
+  X.T(G, "transform", "scale(1)").to(X.dur * 0.55, 0.4, `scale(${safeZoom(X, s, fs, 0, 1.6)})`, EASE_IO);
   exit(X, G);
 };
 
@@ -1851,8 +1857,8 @@ B.waving = (sc, X) => {
 
 /* compresión: filas apretadas que se estiran verticalmente */
 B.squeeze = (sc, X) => {
-  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 9, { rows: R } = rowsOf(X, G, s, n, { w: 0.5, lh: 0.6 });
-  R.forEach((t, i) => { const d = Math.abs(i - mid(n)); show(X, t.box, T0(X) + d * 0.03); X.T(t.el, "transform", `scaleY(${0.3 + d * 0.05})`).to(T0(X), 0.6, `scaleY(${1.4 - d * 0.12})`, EASE_OUT); });
+  const L = base(X), G = div(X.root, "lay"), s = W0(X), n = 9, { rows: R } = rowsOf(X, G, s, n, { w: 0.5, lh: 1.05 });
+  R.forEach((t, i) => { const d = Math.abs(i - mid(n)); show(X, t.box, T0(X) + d * 0.03); X.T(t.el, "transform", `scaleY(${0.3 + d * 0.05})`).to(T0(X), 0.6, `scaleY(${0.96 - d * 0.04})`, EASE_OUT); });
   exit(X, G);
 };
 
@@ -1866,6 +1872,20 @@ B.blink = (sc, X) => {
 /* vertical: letras en columna que se multiplican hacia los lados */
 B.verticalWord = (sc, X) => {
   const { W, H } = X, L = base(X), G = div(X.root, "lay"), s = W0(X).replace(/ /g, "");
+  if (/^\d+$/.test(s)) {
+    // Una cifra necesita una lectura horizontal completa; las columnas siguen
+    // animadas, separadas de ese rótulo y entre sí.
+    const fs = Math.min(0.08 * H, 0.13 * W), n = s.length;
+    for (let c = -2; c <= 2; c++) s.split("").forEach((ch, i) => {
+      const o = tx(G, ch, { cls: "ki", fs, x: W / 2 + c * fs * 1.15, y: 0.34 * H + (i - mid(n)) * fs * 1.05, color: col(X) });
+      show(X, o.box, T0(X) + Math.abs(c) * 0.06 + i * 0.02);
+    });
+    const titleFs = Math.min(0.13 * H, fit(s, "ki", 0, 0.8 * W, 0.13 * H));
+    const title = tx(G, s, { cls: "ki", fs: titleFs, x: W / 2, y: 0.7 * H, color: col(X) });
+    show(X, title.box, T0(X));
+    exit(X, G);
+    return;
+  }
   const n = s.length, fs = Math.min(0.14 * H, 0.86 * H / n);
   for (let c = -4; c <= 4; c++) s.split("").forEach((ch, i) => {
     const o = tx(G, ch, { cls: "ki", fs, x: W / 2 + c * fs * 0.62, y: H / 2 + (i - mid(n)) * fs * 0.9, color: col(X) });
@@ -1878,10 +1898,10 @@ B.verticalWord = (sc, X) => {
 
 /* máquina de escribir: filas que se escriben con cursor */
 B.typing = (sc, X) => {
-  const { W } = X, L = base(X), G = div(X.root, "lay"), s = W0(X), n = 8, { rows: R } = rowsOf(X, G, s, n, { w: 0.62, x: 0.2 * W, ax: 0, split: "chars" });
+  const { W } = X, L = base(X), G = div(X.root, "lay"), s = W0(X), n = 8, left = (portrait(X) ? 0.08 : 0.2) * W, { rows: R } = rowsOf(X, G, s, n, { w: 0.62, x: left, ax: 0, split: "chars" });
   R.forEach((t, i) => t.chars.forEach((c, k) => show(X, c, T0(X) + i * 0.08 + k * 0.035)));
   /* filas fantasma en contorno detrás */
-  R.forEach(t => { const g = tx(G, s, { cls: "ki", fs: parseFloat(t.el.style.fontSize), x: 0.2 * W, y: parseFloat(t.box.style.top), ax: 0, color: "transparent", stroke: true }); g.el.style.webkitTextStroke = "1px rgba(230,230,230,0.25)"; G.insertBefore(g.box, G.firstChild); });
+  R.forEach(t => { const g = tx(G, s, { cls: "ki", fs: parseFloat(t.el.style.fontSize), x: left, y: parseFloat(t.box.style.top), ax: 0, color: "transparent", stroke: true }); g.el.style.webkitTextStroke = "1px rgba(230,230,230,0.25)"; G.insertBefore(g.box, G.firstChild); });
   exit(X, G);
 };
 

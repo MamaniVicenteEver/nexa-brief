@@ -1,3 +1,7 @@
+Para crear cualquier contenido empieza por el [índice](../../../skills/README.md),
+[CALIDAD.md](../../../skills/CALIDAD.md) (estándar obligatorio) y
+[ORQUESTACION.md](../../../skills/ORQUESTACION.md) (roles, delegación, terminado e informe).
+
 # AGENTS.md — NodeMotion: prototipos de plantillas de música
 
 > Para cualquier agente de IA o persona que vaya a **prototipar una plantilla nueva de música**
@@ -432,3 +436,8 @@ Resumen de `docs/investigaciones/estrategia-cro-titulos-descripciones-2026-09.md
 - `tests/unit/test_drafts.py::test_create_draft_rejects_unsupported_engine_400` busca una plantilla de
   letras **fuera** de la whitelist; con todas habilitadas falla con `StopIteration`. No es bug de tu
   plantilla: avisá al usuario, no saques ids de la whitelist.
+
+
+## Promos: instrucciones compartidas, sin copias por video
+
+Para Editorial, Sports, Dynamic, Kinetic, Trendy y Urban, usa [el flujo único de promos](../../../skills/nodemotion/promo/OPERAR.md). Los prompts versionados viven en `src/skills/nodemotion/promo/prompts/` del servidor y se resuelven con `promo.py prompt --id ID --stage ETAPA`; nunca crees `work/instrucciones/prompts/`, copias de esos Markdown, otro productor ni scripts de campaña para repetir el flujo. Cada proyecto conserva solo la referencia de versión y hashes, sus datos y evidencias. Las reglas específicas del diseño proceden de `templates/<template-id>.json` y `DESIGN.md`; no se copian al proyecto. `CLAUDE.md` incorpora este archivo mediante `@AGENTS.md`. Las recetas de crear o bifurcar una plantilla nueva no aplican a videos basados en una promo existente.

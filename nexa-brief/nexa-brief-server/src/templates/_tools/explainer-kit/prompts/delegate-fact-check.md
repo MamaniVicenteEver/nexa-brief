@@ -23,3 +23,7 @@ Markdown, una tabla y una conclusión:
 
 Después: **Veredicto**: `OK` (sin problemas graves) o `CORREGIR` (con la lista de los graves: 1, 2 y 3).
 Si no encontrás nada, decilo: no inventes problemas.
+
+## Calidad
+
+Comprueba también fecha actual recibida, relevancia de los últimos 12 meses, contexto y fecha de cifras, declaraciones y citas inventadas, frases genéricas y créditos y licencias cuando se aporte una descripción. Si no hay evidencia o fecha actual, informa el límite; no inventes. Evita aprobar «la historia continúa» o «un hecho increíble»; sí una frase documentada como «Dartmouth, 1956: propuesta de investigación».

@@ -545,11 +545,11 @@ def prepare_geography(ctx):
     from src.adapters.maps.geodata import GeoData
     scratch = ctx.file("assets/.atlas-geoprep-compiler.json")
     program = """import fs from 'node:fs';
-import {geographicPreparation} from './src/templates/sandbox/nodehistory/_atlas/produce.mjs';
+const {geographicPreparation} = await import(process.argv[3]);
 fs.writeFileSync(process.argv[2],JSON.stringify(geographicPreparation(JSON.parse(fs.readFileSync(process.argv[1],'utf8')))));
 """
     try:
-        subprocess.run(["node", "--input-type=module", "-e", program, str(ctx.file("assets/scene.json")), str(scratch)],
+        subprocess.run(["node", "--input-type=module", "-e", program, str(ctx.file("assets/scene.json")), str(scratch), (host.ATLAS / "produce.mjs").as_uri()],
                        cwd=host.SERVER, capture_output=True, text=True, check=True, timeout=30)
         GeoData().resolve_scene(scratch)
     finally:

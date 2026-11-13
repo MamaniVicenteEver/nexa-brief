@@ -1,13 +1,21 @@
 "use client";
 
-import { Check, Search } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Check, ChevronDown, Music, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import type { LibraryAsset } from "@/features/library/api/library-assets-service";
+import { useEffect, useState } from "react";
+import {
+  getMusicGroupsPage,
+  type LibraryAsset,
+  resolveAssetPreviewUrl,
+} from "@/features/library/api/library-assets-service";
+import { libraryAssetsKey, useDebouncedValue } from "@/features/library/hooks/useLibraryAssets";
 import { cn } from "@/lib/utils";
-import { useLibraryList } from "../hooks/useResources";
+import { useLibraryCategories, useLibraryPage } from "../hooks/useResources";
 import { type ResourceKind, toApiKind } from "../kinds";
+import { useResourceScope } from "../ResourceScope";
 import { AudioResourceOption } from "./AudioResourceOption";
+import { ResourcePagination } from "./ResourcePagination";
 import { UploadDropzone } from "./UploadDropzone";
 
 interface CommonProps {
@@ -37,10 +45,31 @@ export type ResourcePickerProps = SingleProps | MultipleProps;
 export function ResourcePicker(props: ResourcePickerProps) {
   const { kind, allowUpload, className } = props;
   const t = useTranslations("resources.picker");
+  const tr = useTranslations("resources");
   const apiKind = toApiKind(kind);
   const isAudio = apiKind === "music" || apiKind === "sounds";
+  const scope = useResourceScope();
   const [query, setQuery] = useState("");
-  const { data: assets, isLoading } = useLibraryList(apiKind, query);
+  const [category, setCategory] = useState("");
+  const [page, setPage] = useState(1);
+  const debouncedQuery = useDebouncedValue(query);
+  // Las canciones se agrupan antes de paginar; las demás clases conservan su página habitual.
+  const ordinaryPage = useLibraryPage(apiKind, debouncedQuery, category, page, apiKind !== "music");
+  const musicPage = useQuery({
+    queryKey: [...libraryAssetsKey("music"), "groups", { q: debouncedQuery, category, page }],
+    queryFn: ({ signal }) =>
+      getMusicGroupsPage({ q: debouncedQuery, category, page, pageSize: 12 }, signal),
+    enabled: apiKind === "music" && (!scope.templateId || Boolean(scope.categoryId)),
+  });
+  const activePage = apiKind === "music" ? musicPage : ordinaryPage;
+  const { data, isLoading, isError, isFetching, refetch } = activePage;
+  const { data: categories } = useLibraryCategories(apiKind);
+  const assets = apiKind === "music" ? undefined : ordinaryPage.data?.items;
+  const musicGroups = apiKind === "music" ? musicPage.data?.items : undefined;
+  useEffect(() => {
+    if (data && page > Math.max(1, Math.ceil(data.total / 12)))
+      setPage(Math.max(1, Math.ceil(data.total / 12)));
+  }, [data, page]);
   const selected = props.multiple ? props.value : props.value ? [props.value] : [];
 
   function toggle(asset: LibraryAsset) {
@@ -71,25 +100,116 @@ export function ResourcePicker(props: ResourcePickerProps) {
         <input
           type="search"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setPage(1);
+          }}
           placeholder={t("search")}
           aria-label={t("search")}
           className="w-full rounded-full border border-nb-line bg-nb-surface py-2 pr-3 pl-8.5 text-[13px] text-nb-ink outline-none placeholder:text-nb-mute focus:border-nb-green-dark focus:ring-3 focus:ring-nb-green/30"
         />
       </div>
+      <select
+        value={category}
+        onChange={(e) => {
+          setCategory(e.target.value);
+          setPage(1);
+        }}
+        aria-label={tr("categoryLabel")}
+        className="min-w-0 rounded-xl border border-nb-line bg-nb-surface px-3 py-2 text-xs text-nb-ink"
+      >
+        <option value="">{tr("allCategories")}</option>
+        {categories?.map((c) => (
+          <option key={c} value={c}>
+            {c === "sound_effects" ? tr("tabs.sounds") : c}
+          </option>
+        ))}
+      </select>
 
       {isLoading && <p className="py-4 text-center text-[12.5px] text-nb-mute">{t("loading")}</p>}
-      {!isLoading && assets?.length === 0 && (
+      {isError && (
+        <button
+          type="button"
+          onClick={() => void refetch()}
+          className="py-3 text-xs text-nb-accent-coral"
+        >
+          {tr("loadError")} {tr("retry")}
+        </button>
+      )}
+      {!isLoading && !isError && data?.total === 0 && (
         <p className="py-4 text-center text-[12.5px] text-nb-mute">
-          {query ? t("noResults") : t("empty")}
+          {query || category ? t("noResults") : t("empty")}
         </p>
+      )}
+
+      {musicGroups && musicGroups.length > 0 && (
+        <ul className="grid grid-cols-1 gap-2">
+          {musicGroups.map((group) => {
+            const first = group.items[0];
+            if (!first) return null;
+            const groupSelected = group.items.some((asset) => selected.includes(asset.assetId));
+            if (group.items.length === 1) {
+              return (
+                <li key={first.assetId}>
+                  <AudioResourceOption
+                    asset={first}
+                    selected={groupSelected}
+                    onClick={() => toggle(first)}
+                  />
+                </li>
+              );
+            }
+            return (
+              <li key={first.assetId}>
+                <details
+                  open={groupSelected || undefined}
+                  className="group overflow-hidden rounded-xl border border-nb-line bg-nb-surface"
+                >
+                  <summary className="flex cursor-pointer list-none items-center gap-2.5 p-2.5 [&::-webkit-details-marker]:hidden">
+                    <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-nb-bg-2">
+                      <Music className="size-4 text-nb-mute" />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block break-words text-[12.5px] font-semibold text-nb-ink">
+                        {first.title}
+                      </span>
+                      <span className="text-[11px] text-nb-mute">
+                        {t("versions", { count: group.items.length })}
+                      </span>
+                    </span>
+                    {groupSelected && <Check className="size-4 shrink-0 text-nb-green-dark" />}
+                    <ChevronDown className="size-4 shrink-0 text-nb-mute transition-transform group-open:rotate-180" />
+                  </summary>
+                  <ul className="flex flex-col gap-1.5 border-t border-nb-line p-2">
+                    {group.items.map((asset, index) => (
+                      <li key={asset.assetId}>
+                        <AudioResourceOption
+                          asset={asset}
+                          label={t("version", { number: index + 1 })}
+                          detail={[
+                            asset.productionName || asset.templateName,
+                            asset.addedAt?.slice(0, 10),
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                          selected={selected.includes(asset.assetId)}
+                          onClick={() => toggle(asset)}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              </li>
+            );
+          })}
+        </ul>
       )}
 
       {assets && assets.length > 0 && (
         <ul
           className={cn(
-            "grid max-h-[340px] gap-2 overflow-y-auto pr-0.5",
-            isAudio ? "grid-cols-1" : "grid-cols-[repeat(auto-fill,minmax(110px,1fr))]",
+            "grid gap-2 pr-0.5",
+            isAudio ? "grid-cols-1" : "grid-cols-2 sm:grid-cols-4",
           )}
         >
           {assets.map((asset) => {
@@ -114,23 +234,14 @@ export function ResourcePicker(props: ResourcePickerProps) {
                         : "border-nb-line hover:border-nb-green-dark",
                     )}
                   >
-                    {apiKind === "images" ? (
-                      // biome-ignore lint/performance/noImgElement: URL del backend, no un asset estático de Next
-                      <img
-                        src={asset.fileUrl}
-                        alt=""
-                        loading="lazy"
-                        className="aspect-video w-full object-cover"
-                      />
-                    ) : (
-                      <video
-                        src={`${asset.fileUrl}#t=0.5`}
-                        muted
-                        playsInline
-                        preload="metadata"
-                        className="aspect-video w-full bg-black object-cover"
-                      />
-                    )}
+                    {/* biome-ignore lint/performance/noImgElement: vista previa del backend */}
+                    <img
+                      src={resolveAssetPreviewUrl(apiKind, asset.assetId)}
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className="aspect-video w-full bg-nb-bg-2 object-cover"
+                    />
                     <span className="block truncate px-2 py-1.5 text-[11.5px] font-medium text-nb-ink">
                       {asset.title}
                     </span>
@@ -145,6 +256,14 @@ export function ResourcePicker(props: ResourcePickerProps) {
             );
           })}
         </ul>
+      )}
+      {data && !isError && (
+        <ResourcePagination
+          page={page}
+          total={data.total}
+          onChange={setPage}
+          disabled={isFetching || query !== debouncedQuery}
+        />
       )}
 
       {allowUpload && (

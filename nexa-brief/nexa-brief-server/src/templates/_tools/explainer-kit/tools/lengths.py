@@ -12,7 +12,7 @@ Uso por consola (para mirar los rangos):
 """
 from __future__ import annotations
 
-import argparse, json, math, pathlib
+import argparse, json, math, pathlib, sys
 
 KIT = pathlib.Path(__file__).resolve().parents[1]
 SPEC = json.loads((KIT / "lengths.json").read_text(encoding="utf-8"))
@@ -28,7 +28,11 @@ def design_wpm(design: str) -> tuple[int, int]:
     return DEFAULT_WPM
 
 
-def clamp_minutes(minutes: float) -> float:
+def clamp_minutes(minutes: float, format_id: str | None = None) -> float:
+    if format_id:
+        sys.path.insert(0, str(KIT.parents[3]))
+        from src.core.explainer.lengths import clamp_minutes as clamp
+        return clamp(minutes, format_id)
     return max(SPEC["min_minutes"], min(SPEC["max_minutes"], float(minutes)))
 
 
@@ -41,8 +45,12 @@ def domain_components(minutes: float) -> int:
     return need
 
 
-def targets(minutes: float | None, wpm: tuple[int, int] = DEFAULT_WPM) -> dict:
+def targets(minutes: float | None, wpm: tuple[int, int] = DEFAULT_WPM, format_id: str | None = None) -> dict:
     """Rangos [mín, máx] de palabras, segmentos, fotos, letras grandes, planos y capítulos."""
+    if format_id:
+        sys.path.insert(0, str(KIT.parents[3]))
+        from src.core.editions.formats import targets as format_targets
+        return format_targets(None if minutes is None else minutes * 60, format_id, wpm)
     if not minutes:
         legacy = {k: v for k, v in SPEC["legacy"].items() if not k.startswith("_")}
         return {"minutes": None, "legacy": True, **legacy}
@@ -57,8 +65,13 @@ def targets(minutes: float | None, wpm: tuple[int, int] = DEFAULT_WPM) -> dict:
     return out
 
 
-def of_script(script: dict, design: str | None = None) -> dict:
+def of_script(script: dict, design: str | None = None, format_id: str | None = None, wpm: tuple[int, int] | None = None) -> dict:
     """Rangos del video a partir de su script.json (target_minutes + voz del diseño)."""
+    selected = format_id or script.get("format_id")
+    if not selected and script.get("format") in ("animado-corto", "documental-largo"):
+        selected = script["format"]
+    if selected:
+        return targets(script.get("target_minutes"), wpm or design_wpm(design or script.get("design", "binary")), selected)
     profile = SPEC.get("formats", {}).get(script.get("format"))
     if profile:
         result = {"legacy": False, **profile}
@@ -90,8 +103,9 @@ def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("minutes", type=float)
     ap.add_argument("--design", default="binary")
+    ap.add_argument("--format", dest="format_id")
     a = ap.parse_args()
-    print(json.dumps(targets(a.minutes, design_wpm(a.design)), ensure_ascii=False, indent=1))
+    print(json.dumps(targets(a.minutes, design_wpm(a.design), a.format_id), ensure_ascii=False, indent=1))
 
 
 if __name__ == "__main__":

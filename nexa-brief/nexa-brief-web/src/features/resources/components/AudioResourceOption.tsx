@@ -11,10 +11,14 @@ export function AudioResourceOption({
   asset,
   selected,
   onClick,
+  label,
+  detail,
 }: {
   asset: LibraryAsset;
   selected: boolean;
   onClick: () => void;
+  label?: string;
+  detail?: string;
 }) {
   return (
     <button
@@ -33,11 +37,12 @@ export function AudioResourceOption({
       </span>
       <span className="min-w-0 flex-1 pr-4">
         <span
-          className="block truncate text-[12.5px] font-semibold text-nb-ink"
+          className="block break-words text-[12.5px] font-semibold text-nb-ink"
           title={asset.title}
         >
-          {asset.title}
+          {label ?? asset.title}
         </span>
+        {detail && <span className="block break-words text-[11px] text-nb-mute">{detail}</span>}
         <span className="flex items-center gap-1.5 text-[11px] text-nb-mute">
           {formatDuration(asset.durationSeconds)}
           {asset.kind === "music" && (

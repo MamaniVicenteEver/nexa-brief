@@ -2,8 +2,7 @@
 
 Una sección = un modelo acá + una función en `sections/` + una línea en
 `registry.py`. Las secciones públicas (landing) solo exponen agregados y
-datos que el dueño aceptó mostrar (nombre, avatar y enlace público de cada
-canal); nunca tokens, errores ni configuración interna.
+datos que el dueño aceptó mostrar (nombre y enlace público de cada canal); nunca tokens, errores ni configuración interna.
 """
 
 from __future__ import annotations
@@ -43,15 +42,15 @@ class PublicationStats(BaseModel):
 # ── Canales ──────────────────────────────────────────────────────────────────
 
 class PublicChannel(BaseModel):
-    id: str
-    platform: Platform
     name: str
-    avatar: str | None = None
     public_url: str | None = None
-    published_count: int = 0
 
 
 class ChannelDetail(PublicChannel):
+    id: str
+    platform: Platform
+    avatar: str | None = None
+    published_count: int = 0
     alias: str
     label: str = ""
     status: str = "ok"                    # "ok" | "requires_reauth"

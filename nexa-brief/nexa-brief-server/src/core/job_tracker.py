@@ -210,7 +210,8 @@ def list_jobs(
     offset: int = 0,
 ) -> tuple[list[dict[str, Any]], int]:
     """Lista jobs, más recientes primero. `stage` filtra por stage exacto si se da."""
-    records = _jobs().list({"stage": stage} if stage is not None else None)
+    records = [r for r in _jobs().list({"stage": stage} if stage is not None else None)
+               if r.get("kind") != "localization"]
     records.sort(key=lambda r: r.get("created_at", ""), reverse=True)
     total = len(records)
     return records[offset : offset + limit], total
@@ -219,7 +220,7 @@ def list_jobs(
 def count_active() -> int:
     """Cuenta jobs cuyo stage todavía no es terminal (pending...packaged/failed)."""
     terminal_values = {s.value for s in _TERMINAL_STAGES}
-    return sum(1 for r in _jobs().list() if r.get("stage") not in terminal_values)
+    return sum(1 for r in _jobs().list() if r.get("kind") != "localization" and r.get("stage") not in terminal_values)
 
 
 def get_summary(job_id: str) -> dict[str, Any] | None:

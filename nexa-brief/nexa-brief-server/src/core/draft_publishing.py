@@ -10,22 +10,18 @@ from __future__ import annotations
 
 import structlog
 
-from src.core.drafts import RecordFormat, RenderOptions
+from src.core.drafts import DEFAULT_ACCOUNT_FORMAT, RecordFormat, RenderOptions, effective_record_formats
 from src.core.schedule import engine, queue_repository
 from src.core.schedule.models import QueueSource
 
 logger = structlog.get_logger(__name__)
 
-# Formato de cada red cuando la persona no eligió uno (y está grabado).
-DEFAULT_FORMAT: dict[str, RecordFormat] = {"youtube": "16x9", "facebook": "16x9", "instagram": "9x16", "tiktok": "9x16"}
-
-
 def format_for(selector: str, options: RenderOptions) -> RecordFormat:
     platform = selector.split(":", 1)[0]
-    recorded = options.formats or ["16x9", "9x16"]
+    recorded = effective_record_formats(options)
     if platform == "youtube":
         return "16x9"
-    chosen = options.account_formats.get(selector) or DEFAULT_FORMAT.get(platform, "16x9")
+    chosen = options.account_formats.get(selector) or DEFAULT_ACCOUNT_FORMAT.get(platform, "16x9")
     return chosen if chosen in recorded else recorded[0]
 
 

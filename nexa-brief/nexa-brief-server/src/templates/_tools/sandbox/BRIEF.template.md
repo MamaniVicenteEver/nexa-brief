@@ -28,3 +28,10 @@
 - No cambies plantillas publicadas ni herramientas compartidas fuera de los archivos autorizados.
 
 Todo prototipo con variantes, cierres, fichas u otras partes elegibles debe declarar `components` en `info.json` según `_proto/COMPONENTES.md` e informar la lista en el resultado.
+
+## Contrato de entrega para producción
+
+- Lee `sandbox/PREPARAR-PRODUCCION.md` (o la copia en `work/agent-context/`).
+- Conserva rutas portables, recursos reales y los contratos del motor y catálogo.
+- Informa en tu resultado los archivos afectados, dependencias, componentes, estilos y pruebas pendientes para que el líder complete `work/results/entrega-produccion.md`.
+- No simules informes aprobados, no generes el paquete editorial para habilitar el traslado y no muevas ni grabes automáticamente.

@@ -1,7 +1,8 @@
 const React = require('react');
 const ImpactIntro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-impact/components/intro.js');
 const ImpactOutro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-impact/components/outro.js');
-const {useCurrentFrame, AbsoluteFill, Audio, interpolate} = require('remotion');
+const {useCurrentFrame, AbsoluteFill, Audio, Html5Video, Sequence, interpolate} = require('remotion');
+const BackgroundSequence = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-impact/components/background-sequence.js');
 const {loadFont} = require('@remotion/google-fonts/Anton');
 const {
   FPS,
@@ -133,6 +134,12 @@ function LyricsImpact({configData, lyricsData, audioSrc, bgSrc}) {
   const grainStep = Math.floor(frame / fps / (0.9 / 4)) % 4;
   const [grainX, grainY] = GRAIN_STEPS[grainStep];
 
+  const hasCustomOpacity = typeof C.bg?.opacity === 'number' && Number.isFinite(C.bg.opacity);
+  const bgOpacity = hasCustomOpacity ? Math.max(0, Math.min(1, C.bg.opacity)) : 1;
+  const selection = BackgroundSequence.at(C.bg?.playlist, frame / fps, introDurationSeconds);
+  const bgIsVideo = (selection?.item.type || C.bg?.type) === 'video';
+  const selectedBg = selection?.item.src || bgSrc;
+
   return React.createElement(
     AbsoluteFill,
     {style: {background: '#050404', overflow: 'hidden'}},
@@ -146,19 +153,20 @@ function LyricsImpact({configData, lyricsData, audioSrc, bgSrc}) {
           transform: `scale(${punchScale})`,
         },
       },
-      React.createElement('img', {
-        src: resolveMediaSrc(bgSrc),
+      React.createElement(Sequence, {from: selection ? Math.round(selection.start * fps) : 0, key: selection ? `${selection.index}-${selection.start}` : 'background'}, React.createElement(bgIsVideo ? Html5Video : 'img', {
+        ...(bgIsVideo ? {loop: !selection, muted: true} : {}),
+        src: resolveMediaSrc(selectedBg),
         style: {
           position: 'absolute',
           inset: '-8%',
           width: '116%',
           height: '116%',
           objectFit: 'cover',
-          filter: C.bg?.filter || '',
+          filter: hasCustomOpacity ? 'none' : C.bg?.filter || '',
           transform: `scale(${bgScale}) translate(${bgTX}%, ${bgTY}%)`,
-          opacity: worldDim,
+          opacity: worldDim * bgOpacity,
         },
-      }),
+      })),
       React.createElement('div', {
         style: {
           position: 'absolute',
@@ -166,7 +174,7 @@ function LyricsImpact({configData, lyricsData, audioSrc, bgSrc}) {
           background:
             'radial-gradient(ellipse at 50% 50%, rgba(120,20,22,0.10) 0%, rgba(8,4,4,0.62) 70%, rgba(3,2,2,0.88) 100%)',
           mixBlendMode: 'multiply',
-          opacity: worldDim,
+          opacity: worldDim * (hasCustomOpacity ? 0.25 : 1),
         },
       }),
       React.createElement('div', {
@@ -224,6 +232,7 @@ function LyricsImpact({configData, lyricsData, audioSrc, bgSrc}) {
           zIndex: 5,
           pointerEvents: 'none',
           background: 'radial-gradient(ellipse at 50% 50%, transparent 42%, rgba(0,0,0,0.7) 100%)',
+          opacity: hasCustomOpacity ? 0.35 : 1,
         },
       }),
       React.createElement('div', {

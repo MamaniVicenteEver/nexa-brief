@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import ctypes
 from contextlib import ExitStack
 from dataclasses import dataclass, replace
 import hashlib
@@ -10,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import select
 import signal
 import stat
 import tempfile
@@ -39,6 +41,15 @@ class CodexBuild:
 # workspace writes, private paths, symlinks, environment and network denial.
 # A different binary, kernel or policy fails closed until separately reviewed.
 APPROVED_BUILDS: tuple[CodexBuild, ...] = (
+    # Native matrix and independent replay, 2026-11-13; prompt-only queries.
+    CodexBuild(
+        executable=Path("/home/alfred/.local/lib/node_modules/@openai/codex/bin/codex.js"),
+        executable_sha256="61b0194f3bb6534439c8d26a3ed57d0805f84b884588b761795323eeb92fcf70",
+        native_binary=Path("/home/alfred/.local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex"),
+        native_sha256="b93f6811d3f653f0fb83be4050d857fb9abbb111dfa2ce160563327daff7f306",
+        kernel_release="7.0.0-43-generic",
+        policy_sha256="4e928044aa32bbca7745a1a66e175fde558635005df9e9724640d2b7b8cf9706",
+    ),
     CodexBuild(
         executable=Path("/home/alfred/.local/lib/node_modules/@openai/codex/bin/codex.js"),
         executable_sha256="61b0194f3bb6534439c8d26a3ed57d0805f84b884588b761795323eeb92fcf70",
@@ -60,6 +71,8 @@ def _digest(path: Path) -> str:
 
 def _policy_digest() -> str:
     relevant = (_digest, _policy_digest, _verified_build, _workspace, _environment, _skills_config, _command,
+                _pidfd_open, _pidfd_signal, _process_identity, _descendant_pidfds,
+                _track_process_tree, _terminate_process_tree,
                 IsolatedCodexRunner.run)
     source = "\n".join(inspect.getsource(item) for item in relevant)
     return hashlib.sha256(source.encode()).hexdigest()
@@ -69,6 +82,11 @@ def _verified_build(binary: str | None) -> CodexBuild:
     if not binary or platform.system() != "Linux":
         raise AgentIsolationUnavailableError("Codex aislado no está disponible en este host.")
     try:
+        handle = _pidfd_open(os.getpid())
+        try:
+            _pidfd_signal(handle, 0)
+        finally:
+            os.close(handle)
         executable = Path(binary).resolve(strict=True)
         for build in APPROVED_BUILDS:
             if (build.policy_version == POLICY_VERSION
@@ -78,7 +96,7 @@ def _verified_build(binary: str | None) -> CodexBuild:
                 and _digest(executable) == build.executable_sha256
                 and _digest(build.native_binary.resolve(strict=True)) == build.native_sha256):
                 return build
-    except (OSError, ValueError):
+    except (OSError, ValueError, AttributeError):
         pass
     raise AgentIsolationUnavailableError("La versión y política de Codex no están verificadas para este host.")
 
@@ -125,8 +143,8 @@ def _skills_config(work: Path, home: Path) -> str:
         roots.add(parent / ".agents" / "skills")
         roots.add(parent / ".codex" / "skills")
     # This CLI installs its builtin skills at startup even when they are absent.
-    manifests = {home / "skills/.system/skill-creator/SKILL.md",
-                 home / "skills/.system/skill-installer/SKILL.md"}
+    manifests = {home / "skills/.system" / name / "SKILL.md"
+                 for name in ("skill-creator", "skill-installer", "imagegen", "openai-docs")}
     try:
         for root in roots:
             if root.resolve() != Path(os.path.abspath(root)):
@@ -171,8 +189,12 @@ def _command(build: CodexBuild, work: Path, runtime: Path, home: Path, last: Pat
         directory.mkdir(exist_ok=True)
     policy = {":root": "deny", ":minimal": "read", ":slash_tmp": "deny", str(runtime): "write",
               str(helper): "read", str(build.native_binary.resolve()): "read", ":workspace_roots": {".": "write"}}
-    policy[str(work / ".agents")] = "deny"
-    policy[str(work / ".codex")] = "deny"
+    # Query workspaces are fresh, empty and read-only. Nested deny mounts
+    # cannot be assembled below a read-only root by the native sandbox.
+    # Writable workspaces still protect these configuration directories.
+    if not scope.read_only:
+        policy[str(work / ".agents")] = "deny"
+        policy[str(work / ".codex")] = "deny"
     for path in extra_paths:
         policy[str(path)] = "write"
     if scope.read_only:
@@ -205,6 +227,144 @@ def _command(build: CodexBuild, work: Path, runtime: Path, home: Path, last: Pat
     if scope.output_schema:
         cmd += ["--output-schema", str(scope.output_schema)]
     return cmd + ["-"]
+
+
+def _pidfd_open(pid: int) -> int:
+    libc = ctypes.CDLL("libc.so.6", use_errno=True)
+    function = libc.pidfd_open
+    function.argtypes = [ctypes.c_int, ctypes.c_uint]
+    function.restype = ctypes.c_int
+    handle = function(pid, 0)
+    if handle < 0:
+        error = ctypes.get_errno()
+        raise OSError(error, os.strerror(error))
+    return handle
+
+
+def _pidfd_signal(handle: int, number: int) -> None:
+    libc = ctypes.CDLL("libc.so.6", use_errno=True)
+    function = libc.pidfd_send_signal
+    function.argtypes = [ctypes.c_int, ctypes.c_int, ctypes.c_void_p, ctypes.c_uint]
+    function.restype = ctypes.c_int
+    if function(handle, number, None, 0) != 0:
+        error = ctypes.get_errno()
+        raise OSError(error, os.strerror(error))
+
+
+def _process_identity(pid: int) -> tuple[int, int] | None:
+    try:
+        fields = Path(f"/proc/{pid}/stat").read_text().rsplit(") ", 1)[1].split()
+        return int(fields[1]), int(fields[19])
+    except (OSError, ValueError, IndexError):
+        return None
+
+
+def _descendant_pidfds(pid: int, identity: tuple[int, int] | None) -> dict[tuple[int, int], int]:
+    handles: dict[tuple[int, int], int] = {}
+    pending = [(pid, identity)]
+    seen = {pid}
+    try:
+        while pending and len(seen) < 4096:
+            parent, expected = pending.pop()
+            if expected is None or _process_identity(parent) != expected:
+                continue
+            try:
+                tasks = list(Path(f"/proc/{parent}/task").iterdir())
+            except OSError:
+                continue
+            for task in tasks:
+                if _process_identity(parent) != expected:
+                    break
+                try:
+                    children = (task / "children").read_text().split()
+                except OSError:
+                    continue
+                for raw in children:
+                    child = int(raw)
+                    if child in seen:
+                        continue
+                    seen.add(child)
+                    before = _process_identity(child)
+                    if before is None or before[0] != parent or _process_identity(parent) != expected:
+                        continue
+                    try:
+                        handle = _pidfd_open(child)
+                    except ProcessLookupError:
+                        continue
+                    if _process_identity(child) != before or _process_identity(parent) != expected:
+                        os.close(handle)
+                        continue
+                    handles[(child, before[1])] = handle
+                    pending.append((child, before))
+        return handles
+    except BaseException:
+        for handle in handles.values():
+            os.close(handle)
+        raise
+
+
+async def _track_process_tree(process, identity, handles, stop: asyncio.Event) -> None:
+    while True:
+        poller = select.poll()
+        for handle in handles.values():
+            poller.register(handle, select.POLLIN)
+        exited = {handle for handle, _ in poller.poll(0)}
+        for key, handle in list(handles.items()):
+            if handle in exited:
+                os.close(handle)
+                del handles[key]
+        for key, handle in _descendant_pidfds(process.pid, identity).items():
+            if key in handles:
+                os.close(handle)
+            else:
+                handles[key] = handle
+        if stop.is_set() or process.returncode is not None:
+            return
+        try:
+            await asyncio.wait_for(stop.wait(), timeout=0.05)
+        except asyncio.TimeoutError:
+            pass
+
+
+async def _terminate_process_tree(process, identity, handles) -> None:
+    try:
+        if identity is not None and _process_identity(process.pid) == identity:
+            try:
+                os.killpg(process.pid, signal.SIGTERM)
+            except ProcessLookupError:
+                pass
+        for handle in handles.values():
+            try:
+                _pidfd_signal(handle, signal.SIGTERM)
+            except ProcessLookupError:
+                pass
+        deadline = time.monotonic() + 5
+        try:
+            await asyncio.wait_for(process.wait(), timeout=5)
+        except asyncio.TimeoutError:
+            if identity is not None and _process_identity(process.pid) == identity:
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+            await process.wait()
+        poller = select.poll()
+        remaining = set(handles.values())
+        for handle in remaining:
+            poller.register(handle, select.POLLIN)
+        while remaining and time.monotonic() < deadline:
+            remaining.difference_update(handle for handle, _ in poller.poll(0))
+            if remaining:
+                await asyncio.sleep(0.05)
+        for handle in remaining:
+            try:
+                _pidfd_signal(handle, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+    finally:
+        for handle in handles.values():
+            os.close(handle)
+        handles.clear()
 
 
 class IsolatedCodexRunner(AgentRunnerPort):
@@ -277,25 +437,24 @@ class IsolatedCodexRunner(AgentRunnerPort):
                     *cmd, cwd=work, stdin=asyncio.subprocess.PIPE, stdout=log, stderr=log,
                     env=_environment(work, runtime), start_new_session=True,
                 )
+                identity = _process_identity(process.pid)
+                handles: dict[tuple[int, int], int] = {}
+                stop = asyncio.Event()
+                tracker = asyncio.create_task(_track_process_tree(process, identity, handles, stop))
                 try:
-                    await asyncio.wait_for(process.communicate(prompt.encode()), timeout_seconds)
-                    timed_out = False
-                except (asyncio.TimeoutError, asyncio.CancelledError) as exc:
                     try:
-                        os.killpg(process.pid, signal.SIGTERM)
-                    except ProcessLookupError:
-                        pass
+                        await asyncio.wait_for(process.communicate(prompt.encode()), timeout_seconds)
+                        timed_out = False
+                    except (asyncio.TimeoutError, asyncio.CancelledError) as exc:
+                        timed_out = True
+                        if isinstance(exc, asyncio.CancelledError):
+                            raise
+                finally:
+                    stop.set()
                     try:
-                        await asyncio.wait_for(process.wait(), timeout=5)
-                    except asyncio.TimeoutError:
-                        try:
-                            os.killpg(process.pid, signal.SIGKILL)
-                        except ProcessLookupError:
-                            pass
-                        await process.wait()
-                    if isinstance(exc, asyncio.CancelledError):
-                        raise
-                    timed_out = True
+                        await tracker
+                    finally:
+                        await _terminate_process_tree(process, identity, handles)
         code = process.returncode if process.returncode is not None else -1
         result = _tail(last, 20000)
         if code != 0 or timed_out:

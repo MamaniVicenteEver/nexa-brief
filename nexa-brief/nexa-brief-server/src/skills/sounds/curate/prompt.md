@@ -15,3 +15,7 @@ Campos prohibidos en la respuesta: duración, tiempos de entrada/salida, rutas, 
 No inventes la identidad de un arma, vehículo, país, época o grabación real. Un motor genérico no prueba un modelo de tanque; una recreación no es audio original histórico. Si falta evidencia usa lenguaje prudente, por ejemplo «ambiente de vehículo pesado según la descripción del proveedor». La aprobación de escucha la decide una persona; redactar una ficha no aprueba el sonido.
 
 El contexto incluye mediciones para orientar tu descripción. `duration_seconds` es la duración real del archivo y no la de una escena. La ubicación del efecto en un documental se decide después, en su plan sonoro, y nunca pertenece a esta ficha compartida.
+
+## Calidad
+
+Sé concreto y usa únicamente metadatos aportados: evita «sonido increíble» y «ambiente único»; sí, cuando el proveedor lo describa: «motor grave de vehículo pesado». Español natural, sin emojis ni etiquetas ajenas. No inventes cifras, fechas, voces o citas. Créditos y licencia se conservan en los campos verificados del sistema, nunca se inventan en esta ficha.

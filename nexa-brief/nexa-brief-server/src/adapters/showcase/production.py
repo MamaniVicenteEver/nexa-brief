@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import asyncio
 import hashlib
+import io
 import json
+import math
 import os
 import posixpath
 import re
@@ -48,6 +50,81 @@ def fingerprint(directory: Path):
     return digest.hexdigest()
 
 
+def _known_duration(directory: Path):
+    """Reuse existing scene or transcription metadata; never render to measure."""
+    for relative, key in (('assets/scene.json', 'scene'), ('assets/lyrics.json', 'lyrics')):
+        try:
+            data = json.loads((directory / relative).read_text())
+            value = data.get('duration') if key == 'scene' else (data.get('metadata') or {}).get('duration')
+            if not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(value) and value > 0:
+                return value
+        except (OSError, ValueError, AttributeError, TypeError):
+            continue
+    return None
+
+
+def _review_notes(info):
+    notes = info.get('notes')
+    if not isinstance(notes, list):
+        return []
+    return [note for note in notes if isinstance(note, str)
+            and any(word in note.lower() for word in ('no verificado', 'pendiente', 'licencia'))]
+
+
+def _existing_card_poster(layout, source, folder, project):
+    """Read a valid existing Sandbox card image; preserve any project poster."""
+    if _safe(source, 'assets', 'thumbnails', 'poster.jpg').exists():
+        return None
+    cached = _safe(layout.cache_dir, 'sandbox-thumbs', folder, project + '.jpg')
+    if not cached.is_file() or cached.stat().st_size > 10_000_000:
+        return None
+    try:
+        from PIL import Image
+        data = cached.read_bytes()
+        with Image.open(io.BytesIO(data)) as image:
+            image.verify()
+        return data
+    except (OSError, ValueError):
+        return None
+
+
+def _write_card_poster(target, data):
+    if data is None:
+        return
+    path = _safe(target, 'assets', 'thumbnails', 'poster.jpg')
+    path.parent.mkdir(parents=True, exist_ok=True)
+    # Exclusive creation preserves any poster that appeared concurrently.
+    with path.open('xb') as stream:
+        stream.write(data)
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
+def _remove_added_card_poster(target, expected):
+    if not expected:
+        return
+    path = _safe(target, 'assets', 'thumbnails', 'poster.jpg')
+    if path.is_file() and hashlib.sha256(path.read_bytes()).hexdigest() == expected:
+        path.unlink()
+
+
+def _activate_category(category, *, restore=None):
+    from src.core.category_creation import _config_lock, _write_config_atomically
+    from src.core.categories import reload_categories
+    path = settings.niches_path
+    with _config_lock(path):
+        config = json.loads(path.read_text())
+        node = config['categories'].get(category)
+        if node is None:
+            raise ProductionError('La categoría seleccionada ya no existe')
+        if restore is None:
+            node['status'] = 'active'
+        elif node.get('status') == 'active':
+            node['status'] = restore
+        _write_config_atomically(path, config)
+    reload_categories()
+
+
 def rewrite_references(text, old_folder, project, new_folder, namespace="bundled", relative_file="index.html"):
     old = f"sandbox/{old_folder}/{project}"
     new = f"{namespace}/{new_folder}/{project}"
@@ -59,6 +136,14 @@ def rewrite_references(text, old_folder, project, new_folder, namespace="bundled
             return match.group(0)
         parsed = urlsplit(value)
         path = posixpath.normpath(posixpath.join(old, posixpath.dirname(relative_file), parsed.path))
+        # Scene JSON can contain media paths resolved by the page at the
+        # project root, rather than by the location of the JSON itself.
+        # Prefer that interpretation only for explicitly shared namespaces.
+        if relative_file.endswith('.json'):
+            from src.config.content_paths import is_shared_template_key
+            root_relative = posixpath.normpath(posixpath.join(old, parsed.path))
+            if is_shared_template_key(tuple(root_relative.split('/'))):
+                path = root_relative
         if path.startswith(old + "/"):
             return match.group(0)
         if not path.startswith(("sandbox/", "_tools/")):
@@ -115,7 +200,8 @@ class FilesystemDesignProduction:
             if marker.is_file() and json.loads(marker.read_text()).get('origin') == f'{folder}/{project}':
                 return directory, True
         for design, directory in definitions(settings.templates_dir):
-            if design["id"] == ident:
+            marker = design.get('production_template') or {}
+            if design["id"] == ident or (marker.get('origin_folder'), marker.get('project_id')) == (folder, project):
                 return directory, True
         raise FileNotFoundError("Diseño no encontrado")
 
@@ -131,6 +217,31 @@ class FilesystemDesignProduction:
         except FileNotFoundError:
             return {}
 
+    def _shared_contract(self, folder, project, info):
+        """Find a matching existing design without duplicating its catalog or cache."""
+        if info.get('is_new_design') is not True:
+            return None
+        item = self.showcase.projects._item(folder, project, self.showcase.projects._shared_ids())
+        if not item or item['managed']:
+            return None
+        contract = self.showcase._definition(item['design_id'])
+        engine = info.get('engine')
+        same_engine = bool(contract and contract[0].get('engine_id') == engine)
+        # A kit design declares "explainer-kit:<design-id>" in Sandbox while
+        # its shared catalog declares the common engine as "explainer-kit".
+        kit_design = (isinstance(engine, str) and engine.startswith('explainer-kit:')
+                      and engine.removeprefix('explainer-kit:') == item['design_id']
+                      and contract and contract[0].get('engine_id') == 'explainer-kit')
+        if not same_engine and not kit_design:
+            return None
+        return item['design_id'], contract[0], contract[1]
+
+    def _review_info(self, folder, project, info):
+        shared = self._shared_contract(folder, project, info)
+        if shared and not info.get('visual_styles') and shared[1].get('visual_styles'):
+            return {**info, 'visual_styles': shared[1]['visual_styles']}
+        return info
+
     def _styles(self, info):
         from types import SimpleNamespace
         from src.adapters.showcase.styles import list_styles
@@ -143,8 +254,15 @@ class FilesystemDesignProduction:
     def inspect(self, folder, project):
         source, moved = self._source(folder, project)
         info = json.loads(_safe(source, "info.json").read_text()) if (source / "info.json").is_file() else {}
+        manifest = json.loads((source / 'manifest.json').read_text()) if (source / 'manifest.json').is_file() else {}
         record = self._record(source)
         draft = record.get("draft", {})
+        principal = draft.get('demo') if isinstance(draft.get('demo'), bool) else (
+            info.get('is_new_design') is True or manifest.get('demo') is True)
+        info = {**info, 'is_new_design': principal}
+        shared = self._shared_contract(folder, project, info) if not moved else None
+        info = self._review_info(folder, project, info) if not moved else info
+        ident = shared[0] if shared else manifest.get('design') or design_id(folder, project)
         from src.core.categories import explainer_folders
         default_category = explainer_folders().get(folder, "")
         if not draft:
@@ -155,7 +273,7 @@ class FilesystemDesignProduction:
         styles = self._styles(info)
         draft = {**draft, 'poster_styles': draft.get('poster_styles') or
                  ([styles['default']] if styles.get('default') else [])}
-        issues = self._issues(source, info, draft)
+        issues = self._issues(source, info, draft, shared)
         state = record.get("state", "draft")
         if state in {'queued', 'validating'} and not task_is_owned('design-validation', design_id(folder, project)):
             state = 'failed'
@@ -164,7 +282,7 @@ class FilesystemDesignProduction:
             state = "draft"
             issues.append("Los archivos cambiaron después de validar; vuelve a validar")
         from src.adapters.showcase.technical_review import selection_signature
-        if state == 'ready' and (record.get('validation_version') != 2 or
+        if state == 'ready' and (record.get('validation_version') != 3 or
                 record.get('selection_signature') != selection_signature(draft)):
             state = 'draft'
             issues.append('Verifica la selección y las rutas con el flujo técnico actualizado')
@@ -172,13 +290,12 @@ class FilesystemDesignProduction:
             state = "production"
         from src.core.categories import get_category
         category_node = get_category(draft.get('category', '').split('/', 1)[0])
-        return {"folder": folder, "project_id": project, "design_id": design_id(folder, project),
+        return {"folder": folder, "project_id": project, "design_id": ident,
                 "state": state, "draft": draft, "issues": issues,
-                "warnings": [n for n in info.get("notes", []) if isinstance(n, str) and
-                             any(v in n.lower() for v in ("no verificado", "pendiente", "licencia"))],
+                "warnings": _review_notes(info),
                 "error": record.get("error"), "can_pass": state == "ready" and not issues,
                 "component_count": record.get("component_count", 0),
-                "report": record.get("report"), "validation_version": 2,
+                "report": record.get("report"), "validation_version": 3,
                 "styles": [{"id": row["id"], "name": row["name"]} for row in styles["styles"]],
                 "destination": f"{'bundled' if info.get('is_new_design') else 'productions'}/{category_node.folder if category_node else folder}/{project}"}
 
@@ -196,10 +313,15 @@ class FilesystemDesignProduction:
                 raise ProductionError("Esta categoría no admite diseños de video")
         return get_category(values[0].split("/", 1)[0]).folder
 
-    def _issues(self, source, info, draft):
+    def _issues(self, source, info, draft, shared=None):
         issues = []
         if info.get("is_new_design") is not True and not (source / "manifest.json").is_file():
-            issues.append("Declara una demo principal o un episodio con manifest antes de verificar")
+            from src.core.explainer.promote import plan_promotion, PromoteError
+            try:
+                plan_promotion(source, force=True, category=draft.get('category'),
+                               shared_categories=draft.get('shared_categories', []))
+            except PromoteError:
+                issues.append("Declara una demo principal o un episodio con manifest antes de verificar")
         try:
             self._categories(draft)
         except ProductionError as exc:
@@ -212,11 +334,15 @@ class FilesystemDesignProduction:
             issues.append('Selecciona estilos existentes sin repetirlos')
         if not (source / 'index.html').is_file():
             issues.append('Falta index.html')
-        if info.get('is_new_design') is True and not isinstance(info.get('catalog'), dict):
+        if shared and shared[1].get('production_template'):
+            issues.append('Este diseño ya tiene una demo principal en producción')
+        if info.get('is_new_design') is True and not isinstance(info.get('catalog'), dict) and not shared:
             issues.append('Falta el catálogo de componentes aislados del diseño principal')
         return issues
 
     async def save(self, folder, project, draft):
+        if not isinstance(draft.get('demo'), bool):
+            raise ProductionError('Selecciona demo principal o video derivado')
         async with coordination("showcase"):
             source, moved = self._source(folder, project)
             if moved:
@@ -225,7 +351,8 @@ class FilesystemDesignProduction:
             if current.get("state") in {"queued", "validating"} and task_is_owned('design-validation', design_id(folder, project)):
                 raise ProductionConflict("Espera a que termine la validación")
             self._categories(draft)
-            styles = self._styles(json.loads((source / 'info.json').read_text()))
+            info = {**json.loads((source / 'info.json').read_text()), 'is_new_design': draft['demo']}
+            styles = self._styles(self._review_info(folder, project, info))
             draft = {**draft, 'poster_styles': draft.get('poster_styles') or
                      ([styles['default']] if styles.get('default') else [])}
             if any(value not in {row['id'] for row in styles['styles']} for value in draft['poster_styles']):
@@ -265,29 +392,47 @@ class FilesystemDesignProduction:
             original = fingerprint(source)
             draft = record['draft']
             info = json.loads((source / 'info.json').read_text()) if (source / 'info.json').is_file() else {}
+            info = {**info, 'is_new_design': draft['demo']}
+            shared = self._shared_contract(folder, project, info)
             from src.config.content_paths import production_root
             target = (settings.templates_dir if info.get('is_new_design') else production_root()) / self._categories(draft) / project
             report = await asyncio.to_thread(review_files, source, folder, project, target, rewrite_references)
             item = self.showcase.projects._item(folder, project, set())
-            catalog, _ = self.showcase.projects._catalog(item)
+            catalog = shared[2] if shared else self.showcase.projects._catalog(item)[0]
             if info.get('is_new_design') and (not catalog['entries'] or any(not e.get('summary') or not e.get('label') or
                     (e.get('preview_kind') == 'iframe' and not e.get('preview_url')) for e in catalog['entries'])):
                 report['issues'].append('Cada componente necesita nombre, descripción y vista previa aislada')
             # Inventory only: missing posters never start a browser or an agent.
-            from src.adapters.showcase.posters import poster_path
+            from src.adapters.showcase.posters import poster_path, legacy_style_poster_path
             cache = self.layout.cache_dir
             inventory = []
+            available_styles = self._styles(self._review_info(folder, project, info))['styles']
             for entry in catalog['entries']:
                 url = entry.get('preview_url') or ''
                 for style in draft.get('poster_styles', []) or ['']:
                     from src.adapters.showcase.posters import with_style
-                    image = poster_path(cache, design_id(folder, project), '', entry['id'], '16x9',
-                        with_style(url, style), engine=info.get('engine'))
-                    inventory.append({'entry': entry['id'], 'style': style, 'exists': image.is_file()})
+                    ident = shared[0] if shared else design_id(folder, project)
+                    target_url = with_style(url, style)
+                    revision = next((row.get('revision') for row in available_styles if row['id'] == style), None)
+                    if revision:
+                        target_url += ('&' if '?' in target_url else '?') + 'styleRevision=' + revision
+                    engine = shared[1].get('engine_id') if shared else info.get('engine')
+                    image = poster_path(cache, ident, '', entry['id'], '16x9', target_url, engine=engine)
+                    previous = legacy_style_poster_path(cache, ident, '', entry['id'], '16x9', target_url, engine=engine)
+                    inventory.append({'entry': entry['id'], 'style': style,
+                                      'exists': image.is_file() or bool(previous and previous.is_file())})
             report['posters'] = inventory
             report['warnings'].append('Revisión visual manual pendiente; esta comprobación no genera imágenes')
             if fingerprint(source) != original:
                 raise ProductionConflict('Los archivos cambiaron durante la revisión')
+            if info.get('is_new_design'):
+                from src.core.explainer.engine_locations import plan_engine_move
+                try:
+                    report['engine_move'] = plan_engine_move(settings.templates_dir, info.get('engine', ''),
+                        self._categories(draft), shared[0] if shared else design_id(folder, project),
+                        shared[1] if shared else None)
+                except ValueError as exc:
+                    report['issues'].append(str(exc))
             if not info.get('is_new_design'):
                 from src.core.explainer.promote import plan_promotion, PromoteError
                 try:
@@ -295,7 +440,7 @@ class FilesystemDesignProduction:
                 except PromoteError as exc:
                     report['issues'].append(str(exc))
             record.update(state='failed' if report['issues'] else 'ready', fingerprint=original,
-                selection_signature=selection_signature(draft), validation_version=2,
+                selection_signature=selection_signature(draft), validation_version=3,
                 component_count=len(catalog['entries']), report=report,
                 error='; '.join(report['issues'])[:1500] if report['issues'] else None)
         except Exception as exc:
@@ -316,23 +461,38 @@ class FilesystemDesignProduction:
             new_folder = self._categories(draft)
             info_path = source / 'info.json'
             info = json.loads(info_path.read_text()) if info_path.is_file() else {}
+            info = {**info, 'is_new_design': draft['demo']}
             if not info.get('is_new_design'):
                 return await self._move_episode(source, folder, project, draft)
             target = _safe(settings.templates_dir, new_folder, project)
-            ident = design_id(folder, project)
+            shared = self._shared_contract(folder, project, info)
+            ident = shared[0] if shared else design_id(folder, project)
             definition = _safe(settings.templates_dir, "_tools", "design-definitions", ident)
-            if target.exists() or definition.exists():
+            if target.exists() or (definition.exists() and not shared):
                 raise ProductionConflict("El destino ya existe; no se sobrescribe")
+            if shared and (shared[1].get('production_template') or (definition / '.production-transaction.json').exists()):
+                raise ProductionConflict('El diseño compartido ya tiene una demo o un traslado pendiente')
             if source.stat().st_dev != settings.templates_dir.stat().st_dev:
                 raise ProductionConflict("El traslado entre discos requiere una migración supervisada")
-            info = json.loads((source / "info.json").read_text())
+            info = {**json.loads((source / "info.json").read_text()), 'is_new_design': draft['demo']}
             native = self.showcase.projects._item(folder, project, set())
-            catalog, gallery = self.showcase.projects._catalog(native)
-            from src.adapters.showcase.legacy_catalogs import legacy_entry_preview
-            for entry in catalog['entries']:
-                if entry.get('preview_kind') == 'iframe':
-                    entry['preview_url'] = legacy_entry_preview(entry, gallery, '9x16')
-            design = self.showcase.projects._design(native)
+            if shared:
+                # Retain revision, component URLs and cache keys of the existing design.
+                design, catalog = dict(shared[1]), shared[2]
+            else:
+                catalog, gallery = self.showcase.projects._catalog(native)
+                from src.adapters.showcase.legacy_catalogs import legacy_entry_preview
+                for entry in catalog['entries']:
+                    if entry.get('preview_kind') == 'iframe':
+                        entry['preview_url'] = legacy_entry_preview(entry, gallery, '9x16')
+                design = self.showcase.projects._design(native)
+            from src.core.explainer.engine_locations import plan_engine_move, apply_engine_move, rollback_engine_move
+            try:
+                engine_move = plan_engine_move(settings.templates_dir, info.get('engine', ''), new_folder, ident, design)
+            except ValueError as exc:
+                raise ProductionConflict(str(exc)) from exc
+            if engine_move != self._record(source).get('report', {}).get('engine_move'):
+                raise ProductionConflict('El motor cambió después de validar; vuelve a verificar')
             verified_thumbnails = set()
             # Reconcile only captures whose old signatures are already valid.
             # Malformed/incomplete publication never blocks a technical move.
@@ -377,31 +537,37 @@ class FilesystemDesignProduction:
                          for name in ("manifest.json", "info.json", "production-template.json")}
             record = self._record(source)
             record_before = json.loads(json.dumps(record))
+            poster_data = _existing_card_poster(self.layout, source, folder, project)
+            poster_hash = hashlib.sha256(poster_data).hexdigest() if poster_data else None
             from src.core.content_registry import get_video
             old_video = get_video(project)
             old_showcase = collection('showcase_designs').get(ident)
+            old_definition = (definition / 'design.json').read_text() if shared else None
             journal_path = self.layout.runtime_dir / 'design-production' / (ident + '.json')
             transaction = uuid.uuid4().hex
             journal = {'state': 'moving', 'transaction': transaction, 'folder': folder, 'project': project,
                 'target_folder': new_folder, 'originals': originals, 'protected': protected,
+                'engine_move': engine_move,
                 'record': record, 'old_showcase': old_showcase, 'old_video': old_video,
+                'design_id': ident, 'old_definition': old_definition,
+                'added_card_poster': poster_hash,
                 'old_categories': old_config.get('categories', {})}
             _write(_safe(source, 'work', 'production', 'transaction.json'), {'id': transaction})
             _write(journal_path, journal)
             moved_here = False
+            engine_applied = False
             definition_created = False
             try:
                 target.parent.mkdir(parents=True, exist_ok=True)
                 os.rename(source, target)
                 moved_here = True
+                _write_card_poster(target, poster_data)
                 for relative in originals:
                     path = target / relative
                     path.write_text(rewrite_references(originals[relative], folder, project, new_folder, relative_file=relative))
-                scene_path = target / "assets/scene.json"
-                scene = json.loads(scene_path.read_text()) if scene_path.is_file() else {}
                 manifest.update(video_id=project, title=draft["title"], design=ident, category=draft["category"],
                     shared_categories=draft["shared_categories"], status="en preparación", demo=True, editorial_status="pending",
-                    engine=info.get("engine"), duration_seconds=scene.get("duration"),
+                    engine=info.get("engine"), duration_seconds=_known_duration(target),
                     demo_summary=draft["description"], review_requirements=current["warnings"])
                 _write(target / "manifest.json", manifest)
                 info.update(title=draft["title"], summary=draft["description"], design=ident, status="en preparación")
@@ -410,20 +576,38 @@ class FilesystemDesignProduction:
                     "origin": f"sandbox/{folder}/{project}"})
                 old_prefix = PREFIX + f"sandbox/{folder}/{project}/"
                 new_prefix = PREFIX + f"bundled/{new_folder}/{project}/"
-                catalog = json.loads(rewrite_references(json.dumps(catalog), folder, project, new_folder))
-                revision = hashlib.sha256(json.dumps(catalog, sort_keys=True).encode()).hexdigest()
-                catalog["revision"] = revision
-                design.update(name=draft["title"], description=draft["description"], state="produccion", family="native",
-                    category=new_folder, category_path=draft["category"], shared_categories=draft["shared_categories"],
-                    schema_version=1, revision=revision, definition_source="production-template",
-                    editorial_strategies=info.get("editorial_strategies", {}),
-                    preview_url=new_prefix + "index.html", episodes=[],
-                    production_template={"folder": f"{new_folder}/{project}", "demo": True,
-                                         "origin_folder": folder, "project_id": project})
-                definition.mkdir(parents=True)
-                definition_created = True
+                marker = {"folder": f"{new_folder}/{project}", "demo": True,
+                          "origin_folder": folder, "project_id": project,
+                          "title": draft['title'], "preview_url": new_prefix + 'index.html'}
+                if shared:
+                    revision = design['revision']
+                    design.update(production_template=marker, state='produccion')
+                    if info.get('editorial_strategies'):
+                        design['editorial_strategies'] = info['editorial_strategies']
+                else:
+                    catalog = json.loads(rewrite_references(json.dumps(catalog), folder, project, new_folder))
+                    revision = hashlib.sha256(json.dumps(catalog, sort_keys=True).encode()).hexdigest()
+                    catalog["revision"] = revision
+                    design.update(name=draft["title"], description=draft["description"], state="produccion", family="native",
+                        category=new_folder, category_path=draft["category"], shared_categories=draft["shared_categories"],
+                        schema_version=1, revision=revision, definition_source="production-template",
+                        editorial_strategies=info.get("editorial_strategies", {}),
+                        preview_url=new_prefix + "index.html", episodes=[], production_template=marker)
+                    definition.mkdir(parents=True)
+                    definition_created = True
+                apply_engine_move(settings.templates_dir, engine_move, design)
+                engine_applied = engine_move is not None
+                if not engine_move and info.get('engine'):
+                    from src.core.explainer.engine_locations import engine_root, contracts
+                    resolved_engine = engine_root(settings.templates_dir, info['engine'])
+                    if resolved_engine.is_dir() and not resolved_engine.is_relative_to(settings.templates_dir / 'sandbox'):
+                        design['engine_root'] = resolved_engine.relative_to(settings.templates_dir).as_posix()
+                        aliases = [a for _, d in contracts(settings.templates_dir) if d.get('engine_id') == info['engine']
+                                   for a in d.get('legacy_engine_roots', [])]
+                        design['legacy_engine_roots'] = list(dict.fromkeys(aliases))
                 _write(definition / '.production-transaction.json', {'id': transaction})
-                _write(definition / "catalog.json", catalog)
+                if not shared:
+                    _write(definition / "catalog.json", catalog)
                 _write(definition / "design.json", design)
                 if verified_thumbnails:
                     try:
@@ -456,6 +640,8 @@ class FilesystemDesignProduction:
                 _write(journal_path, {'state': 'complete', 'folder': folder, 'project': project,
                                      'destination': f'{new_folder}/{project}', 'design_id': ident})
             except BaseException:
+                if engine_applied:
+                    rollback_engine_move(settings.templates_dir, engine_move)
                 if moved_here and target.exists():
                     for relative, value in originals.items():
                         (target / relative).write_text(value)
@@ -464,11 +650,16 @@ class FilesystemDesignProduction:
                             (target / name).unlink(missing_ok=True)
                         else:
                             (target / name).write_text(value)
+                    _remove_added_card_poster(target, poster_hash)
                     os.rename(target, source)
                     record_before['fingerprint'] = fingerprint(source)
                     _write(self._record_path(source), record_before)
                 if definition_created and definition.exists():
                     shutil.rmtree(definition)
+                elif shared and definition.exists():
+                    if old_definition is not None:
+                        (definition / 'design.json').write_text(old_definition)
+                    (definition / '.production-transaction.json').unlink(missing_ok=True)
                 with _config_lock(config_path):
                     latest = json.loads(config_path.read_text())
                     for key, node in latest['categories'].items():
@@ -510,23 +701,50 @@ class FilesystemDesignProduction:
         protected = {name:(source/name).read_text() if (source/name).is_file() else None
                      for name in ('manifest.json','info.json')}
         record = self._record(source)
+        poster_data = _existing_card_poster(self.layout, source, folder, project)
+        poster_hash = hashlib.sha256(poster_data).hexdigest() if poster_data else None
         old_video = get_video(project)
         transaction = uuid.uuid4().hex
         journal_path = self.layout.runtime_dir/'design-production'/(design_id(folder,project)+'.json')
+        old_categories = json.loads(settings.niches_path.read_text()).get('categories', {})
+        category_id = draft['category'].split('/', 1)[0]
+        old_status = old_categories.get(category_id, {}).get('status', 'empty')
+        activation = category_id if old_status != 'active' else None
         journal = {'state':'moving','namespace':'productions','transaction':transaction,'folder':folder,'project':project,
             'target_folder':target.parent.name,'originals':originals,'protected':protected,'record':record,
             'old_showcase':collection('showcase_designs').get(design_id(folder,project)), 'old_video':old_video,
-            'old_categories':json.loads(settings.niches_path.read_text()).get('categories',{})}
+            'old_categories':old_categories,'added_card_poster':poster_hash,
+            'category_activation':activation,'old_category_status':old_status}
         _write(source/'work/production/transaction.json', {'id':transaction})
         _write(journal_path,journal)
         os.rename(source, target)
         try:
+            _write_card_poster(target, poster_data)
             for relative, text in originals.items():
                 (target/relative).write_text(rewrite_references(text,folder,project,target.parent.name,'productions',relative))
-            manifest=json.loads((target/'manifest.json').read_text())
+            if (target/'manifest.json').is_file():
+                manifest=json.loads((target/'manifest.json').read_text())
+            else:
+                info=json.loads((target/'info.json').read_text())
+                if info.get('engine') != 'nodehistory/_mapas':
+                    raise ProductionError('El episodio necesita un manifest válido')
+                manifest={'video_id':project, 'title':info.get('title') or project,
+                          'design':'mapas-satelitales', 'engine':info['engine'],
+                          'duration_seconds':_known_duration(target)}
+            info = json.loads((target/'info.json').read_text()) if (target/'info.json').is_file() else {}
+            notes = _review_notes(info)
+            if notes:
+                existing = manifest.get('review_requirements') or []
+                if not isinstance(existing, list):
+                    existing = []
+                manifest['review_requirements'] = list(dict.fromkeys([*(n for n in existing if isinstance(n, str)), *notes]))
             manifest.update(category=draft['category'], shared_categories=draft['shared_categories'],
-                            status='en preparación',editorial_status='pending')
+                            status='en preparación',editorial_status='pending', demo=False)
+            info['is_new_design'] = False
+            _write(target/'info.json', info)
             _write(target/'manifest.json',manifest)
+            if activation:
+                _activate_category(activation)
             _write(target/'work/production/origin.json',{'origin':f'{folder}/{project}'})
             _write(self._record_path(target),{**record,'state':'production','draft':draft})
             await upsert_video(project,(old_video or {}).get('production_id',project),
@@ -538,7 +756,10 @@ class FilesystemDesignProduction:
             for relative,value in protected.items():
                 if value is None:(target/relative).unlink(missing_ok=True)
                 else:(target/relative).write_text(value)
+            _remove_added_card_poster(target, poster_hash)
             os.rename(target,source)
+            if activation:
+                _activate_category(activation, restore=old_status)
             _write(self._record_path(source),record)
             if old_video:
                 await upsert_video(project,old_video['production_id'],details=old_video.get('details',{}))
@@ -549,6 +770,8 @@ class FilesystemDesignProduction:
 
     async def recover(self):
         """Restore an interrupted move on API startup, before serving requests."""
+        from src.adapters.showcase.engine_production import RegisteredEngineProduction
+        await RegisteredEngineProduction(self.showcase, self.layout).recover()
         root = self.layout.runtime_dir / 'design-production'
         if not root.is_dir():
             return
@@ -564,7 +787,11 @@ class FilesystemDesignProduction:
                 from src.config.content_paths import production_root
                 base = production_root() if journal.get('namespace') == 'productions' else settings.templates_dir
                 target = _safe(base, destination, project)
-                ident = design_id(folder, project)
+                ident = journal.get('design_id') or design_id(folder, project)
+                if not isinstance(ident, str) or not ID.fullmatch(ident):
+                    raise ProductionError('Identidad de diseño inválida en el diario')
+                from src.core.explainer.engine_locations import rollback_engine_move
+                rollback_engine_move(settings.templates_dir, journal.get('engine_move'))
                 marker = target / 'work/production/transaction.json'
                 if not source.exists() and target.is_dir() and marker.is_file() and json.loads(marker.read_text()).get('id') == journal['transaction']:
                     for relative, value in journal['originals'].items():
@@ -575,17 +802,26 @@ class FilesystemDesignProduction:
                             file.unlink(missing_ok=True)
                         else:
                             file.write_text(value)
+                    _remove_added_card_poster(target, journal.get('added_card_poster'))
                     os.rename(target, source)
                     journal['record']['fingerprint'] = fingerprint(source)
                     _write(self._record_path(source), journal['record'])
                 definition = _safe(settings.templates_dir, '_tools', 'design-definitions', ident)
                 ownership = definition / '.production-transaction.json'
                 if ownership.is_file() and json.loads(ownership.read_text()).get('id') == journal['transaction']:
-                    shutil.rmtree(definition)
+                    old_definition = journal.get('old_definition')
+                    if old_definition is None:
+                        shutil.rmtree(definition)
+                    else:
+                        (definition / 'design.json').write_text(old_definition)
+                        ownership.unlink(missing_ok=True)
                 from src.core.category_creation import _config_lock, _write_config_atomically
                 from src.core.categories import reload_categories
                 with _config_lock(settings.niches_path):
                     config = json.loads(settings.niches_path.read_text())
+                    activation = journal.get('category_activation')
+                    if activation and activation in config['categories'] and config['categories'][activation].get('status') == 'active':
+                        config['categories'][activation]['status'] = journal.get('old_category_status', 'empty')
                     for key, node in config['categories'].items():
                         for field in ('designs','shared_designs'):
                             node[field] = [value for value in node.get(field, []) if value != ident]

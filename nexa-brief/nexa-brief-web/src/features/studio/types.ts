@@ -13,6 +13,8 @@ export interface MediaRef {
 export interface StudioValue {
   musicAssetId: string | null;
   media: Record<string, MediaRef[]>;
+  /** Opacidad del fondo por slot (0 = invisible; 1 = visible). */
+  mediaOpacity?: Record<string, number>;
   texts: Record<string, string>;
   brief: string;
 }
@@ -29,6 +31,7 @@ export type RecordFormat = "16x9" | "9x16";
 
 export interface RenderOptions {
   recorderEngine?: RecorderEngine;
+  backgroundOpacity?: number;
   publishAccounts: string[];
   /** Formatos a grabar: 16:9 siempre; 9:16 se suma. */
   formats?: RecordFormat[];
@@ -71,6 +74,8 @@ export interface DraftDetails {
 
 export interface TemplateInputsPayload {
   media: Record<string, string[]>;
+  media_kinds?: Record<string, MediaAssetKind[]>;
+  media_opacity?: Record<string, number>;
   texts: Record<string, string>;
   brief?: string | null;
 }

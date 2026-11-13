@@ -26,6 +26,8 @@ from __future__ import annotations
 
 import asyncio
 import copy
+import json
+import math
 import shutil
 from pathlib import Path
 from typing import Any
@@ -123,6 +125,8 @@ async def _apply_media_slot(
     # Cada asset se copia una sola vez aunque se reparta en varias entradas.
     copied: dict[str, dict[str, str]] = {}
     for index, asset_id in enumerate(asset_ids):
+        if asset_id in copied:
+            continue
         real_kind, source = _resolve_asset(slot["kind"], asset_id)
         relative = f"{INPUTS_DIR}/{slot['slot']}-{index + 1}{source.suffix.lower()}"
         shutil.copy2(source, output_dir / relative)
@@ -164,6 +168,46 @@ def _apply_config_slot(config: dict[str, Any], slot: dict, asset_ids: list[str],
     return True
 
 
+async def _sequence_video_duration(source: Path) -> float:
+    """Duración real para que cada video termine antes de pasar al siguiente."""
+    proc = await asyncio.create_subprocess_exec(
+        "ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "json", str(source),
+        stdin=asyncio.subprocess.DEVNULL, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+    )
+    try:
+        stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=10)
+    except (asyncio.TimeoutError, asyncio.CancelledError):
+        proc.kill()
+        await proc.wait()
+        raise
+    try:
+        duration = float(json.loads(stdout).get("format", {}).get("duration", 0))
+    except (ValueError, TypeError, json.JSONDecodeError):
+        duration = 0
+    if proc.returncode != 0 or not math.isfinite(duration) or duration <= 0:
+        raise ValueError("No se pudo leer la duración de un video seleccionado")
+    return duration
+
+
+async def _apply_impact_sequence(config: dict[str, Any], slot: dict, asset_ids: list[str],
+                                 kinds: list[str], output_dir: Path) -> int:
+    """Copia la lista en orden sin depender de rutas del perfil durante la grabación."""
+    if len(asset_ids) <= 1 or not isinstance(config.get("bg"), dict):
+        return 0
+    playlist = []
+    dest_dir = output_dir / INPUTS_DIR
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    for index, asset_id in enumerate(asset_ids[:slot["max"]]):
+        expected = kinds[index] if index < len(kinds) and kinds[index] in {"image", "video"} else slot["kind"]
+        real_kind, source = _resolve_asset(expected, asset_id)
+        relative = f"{INPUTS_DIR}/background-{index + 1}{source.suffix.lower()}"
+        duration = await _sequence_video_duration(source) if real_kind == "video" else 5.0
+        await asyncio.to_thread(shutil.copy2, source, output_dir / relative)
+        playlist.append({"type": real_kind, "src": relative, "duration": duration})
+    config["bg"]["playlist"] = playlist
+    return len(playlist)
+
+
 async def apply_template_inputs(
     config: dict[str, Any],
     inputs: TemplateInputs | None,
@@ -180,12 +224,27 @@ async def apply_template_inputs(
     result = copy.deepcopy(config)
     applied_texts = _apply_texts(result, inputs.texts, requirements["texts"])
 
+    # Only the four lyric backgrounds have the matching browser/recorder
+    # implementation. An explicitly selected source defaults to fully visible;
+    # legacy/demo configurations without a selected source remain unchanged.
+    if template_id in {"lyrics-impact", "lyrics-romantic", "lyrics-suave", "lyrics-triste"}:
+        selected_slot = next((
+            slot["slot"] for slot in requirements["media"]
+            if slot.get("target") == "source" and inputs.media.get(slot["slot"])
+        ), None)
+        if selected_slot and isinstance(result.get("bg"), dict):
+            result["bg"]["opacity"] = inputs.media_opacity.get(selected_slot, 0.8)
+
+
     slots = {slot["slot"]: slot for slot in requirements["media"]}
     replaced: dict[str, int] = {}
     for slot_name, asset_ids in inputs.media.items():
         slot = slots.get(slot_name)
         if slot is None:
             logger.warning("template_inputs_unknown_slot", template_id=template_id, slot=slot_name)
+            continue
+        if template_id == "lyrics-impact" and slot_name == "background" and slot["target"] == "source":
+            replaced[slot_name] = await _apply_impact_sequence(result, slot, list(asset_ids), inputs.media_kinds.get(slot_name, []), output_dir)
             continue
         if slot["target"] == "config":
             replaced[slot_name] = int(_apply_config_slot(result, slot, list(asset_ids), output_dir))

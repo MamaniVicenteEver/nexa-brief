@@ -31,3 +31,7 @@ Un único bloque ```json``` con esta forma (sin texto fuera del bloque):
 ```
 
 Devolvé 5 títulos, 3 textos de miniatura y entre 5 y 8 hashtags.
+
+## Calidad
+
+Usa solo hechos aportados por la investigación o el guion: no inventes cifras, partidos, finales, declaraciones ni citas. Para cifras, usa la fecha actual proporcionada, prioriza datos verificados de los últimos 12 meses y acompaña cada cifra de su contexto y fecha; si falta evidencia o actualidad, omítela y avisa. Cuando el idioma solicitado sea español, usa español natural; sin emojis, «LETRAS» ni etiquetas ajenas. No rellenes: evita «una historia que continúa» y «un momento increíble»; sí, si consta en los datos: «Dartmouth, 1956: científicos propusieron estudiar la inteligencia artificial». No copies el ejemplo. En una descripción con recursos, agrega créditos completos aportados (autor, licencia, URL y modificaciones, también de la música); si el esquema no tiene campo, incluye la falta en warnings. Miniaturas: máximo cinco palabras y dos filas; B con iguales palabras que A o menos.

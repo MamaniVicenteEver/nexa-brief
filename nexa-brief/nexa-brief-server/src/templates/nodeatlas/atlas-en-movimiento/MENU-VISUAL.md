@@ -2,7 +2,7 @@
 
 > Para planificar el campo `plan` de cada segmento (`GUION.md §5`). Los nombres son los reales del catálogo
 > (`engine/tactico/animations/index.json`, 109 piezas). Cada una tiene su JSON con `params` y `example`:
-> **abre el JSON de la pieza antes de usarla** y pega su `example`. Este menú no sustituye al catálogo; sirve
+> consulta el contrato de la pieza elegida en Showcase y usa su ejemplo. Este menú no sustituye al contrato; sirve
 > para no olvidar que existe.
 
 ## 1. Hecho → pieza

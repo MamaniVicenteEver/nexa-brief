@@ -14,10 +14,12 @@ import uuid
 from pydantic import BaseModel, Field
 
 from src.core.data import collection, files
+from src.core.library.resource_metadata import ResourceMetadata, resource_metadata
 
 ApprovalStatus = Literal["pending", "approved", "rejected"]
 
-class SoundLibraryEntry(BaseModel):
+class SoundLibraryEntry(ResourceMetadata):
+    media_type: Literal["sound"] = "sound"
     video_id: str | None = None
     production_id: str | None = None
     production_name: str = ""
@@ -67,7 +69,7 @@ def search_sounds(q: str | None = None, category: str | None = None, approved_on
 async def register_sound(source_path: Path, *, title: str, description: str = "", recommended_uses: list[str] | None = None,
                          tags: str | list[str] = "", provider: str = "", provider_sound_id: str = "", original_url: str | None = None,
                          license_note: str = "unknown", license_url: str = "", approval_status: ApprovalStatus = "pending",
-                         category: str = "sound_effects", source: str = "auto", filename: str | None = None) -> SoundLibraryEntry:
+                         category: str = "sound_effects", source: str = "auto", filename: str | None = None, template_id: str = "") -> SoundLibraryEntry:
     from src.core.library.asset_library import hash_file, normalize_tags, probe_media, publish_asset_changed
     source_path = Path(source_path)
     digest = hash_file(source_path)
@@ -76,7 +78,7 @@ async def register_sound(source_path: Path, *, title: str, description: str = ""
     duration = float(probe.get("duration_seconds", 0))
     if duration <= 0:
         raise ValueError("El efecto debe ser un archivo de audio válido con duración positiva.")
-    candidate = SoundLibraryEntry(asset_id=uuid.uuid4().hex, relative_path="", original_filename=Path(filename or source_path.name).name,
+    candidate = SoundLibraryEntry(**resource_metadata(category, template_id), asset_id=uuid.uuid4().hex, relative_path="", original_filename=Path(filename or source_path.name).name,
         title=title.strip(), description=description.strip(), recommended_uses=[s.strip() for s in (recommended_uses or []) if s.strip()],
         tags=normalize_tags(tags), provider=provider, provider_sound_id=provider_sound_id, original_url=original_url,
         license_note=license_note, license_url=license_url, approval_status=approval_status, category=category,
@@ -90,7 +92,8 @@ async def register_sound(source_path: Path, *, title: str, description: str = ""
             if not files("sounds").local_path(entry.relative_path).is_file():
                 candidate = entry.model_copy(update={"original_filename": source_path.name})
             else:
-                return entry
+                from src.core.library.asset_library import attach_resource_origin
+                return await attach_resource_origin("sound", entry.asset_id, category, template_id)
         storage = files("sounds")
         from src.config.profile_layout import layout_for_settings
         from src.config.settings import settings

@@ -103,13 +103,21 @@ const L0 = X => (X.lines[0]?.text || X.sc.seg.text || "").toUpperCase();
 const L1 = X => (X.lines[1]?.text || "").toUpperCase();
 const rt0 = (X, i = 0) => Math.max(0.08, X.lines[i]?.rt ?? 0.15);
 function base(X) { const L = div(X.root, "lay", { background: P.neon }); hudDecor(X, L); return L; }
+/* Placa opaca para separar el titular del contorno decorativo. */
+function mainPlate(X, L, text, y) {
+  const { W, H } = X;
+  const fs = fit(text, "ex", 0, 0.82 * W, 0.11 * H);
+  const width = Math.min(0.9 * W, textW(text, "ex", 0, fs) + fs * 0.45);
+  div(L, "patch", { left: (W - width) / 2 + "px", top: (y * H - fs * 0.68) + "px", width: width + "px", height: fs * 1.36 + "px", background: P.neon });
+  return fs;
+}
 
 const B = {};
 
 B.word = (sc, X) => {
   const { W, H } = X, L = base(X), word = L0(X);
   bgWord(X, L, word, 0.5);
-  const fs = fit(word, "ex", 0, 0.34 * W, 0.075 * H);
+  const fs = mainPlate(X, L, word, 0.5);
   mainWord(X, L, word, 0.5 * W, 0.5 * H, fs, { ax: 0.5, t0: rt0(X), stretch: sc.slot.stretch !== false && X.dur > 1 });
   flyer(X, L, sc.slot.flyer, sc.slot.flyerAt ?? 0, 0.45);
   const sub = sc.seg.sub;
@@ -120,27 +128,32 @@ B.photo = (sc, X) => {
   const { W, H, u } = X, L = base(X), word = L0(X), sub = L1(X);
   const right = (sc.slot.side || (sc.idx % 2 ? "left" : "right")) === "right";
   const shape = sc.slot.shape || "portrait";
-  const pw = shape === "square" ? 0.28 * W : shape === "landscape" ? 0.36 * W : 0.22 * W;
+  const portrait = W < H;
+  const pw = portrait ? 0.46 * W : shape === "square" ? 0.28 * W : shape === "landscape" ? 0.36 * W : 0.22 * W;
   const ph = shape === "square" ? 0.44 * H : shape === "landscape" ? 0.48 * H : 0.56 * H;
   bgWord(X, L, word, 0.52);
-  const px = right ? 0.56 * W : 0.14 * W, py = 0.5 * H - ph / 2;
+  const px = portrait ? (right ? 0.51 * W : 0.03 * W) : (right ? 0.56 * W : 0.14 * W), py = 0.5 * H - ph / 2;
   cut(X, L, 0, { x: px, y: py, w: pw, h: ph }, { dir: right ? "right" : "left", out: true });
-  const fs = fit(word, "ex", 0, 0.3 * W, 0.085 * H);
+  const fs = fit(word, "ex", 0, (portrait ? 0.42 : 0.3) * W, 0.085 * H);
   const tx0 = right ? px - 0.03 * W : px + pw + 0.03 * W;
   mainWord(X, L, word, tx0, 0.47 * H, fs, { ax: right ? 1 : 0, t0: rt0(X), stretch: X.dur > 1.2 });
-  if (sub) mainWord(X, L, sub, tx0, 0.47 * H + fs * 1.02, fs, { ax: right ? 1 : 0, t0: rt0(X, 1), stroke: true });
+  if (sub) {
+    const subSize = Math.min(fs, fit(sub, "ex", 0, (portrait ? 0.42 : 0.3) * W, 0.085 * H));
+    mainWord(X, L, sub, tx0, 0.47 * H + fs * 1.02, subSize, { ax: right ? 1 : 0, t0: rt0(X, 1), stroke: !portrait });
+  }
   if (BR.tag) tx(L, BR.tag.toUpperCase(), { cls: "lb", fs: 8.5 * u, x: right ? px + pw + 0.012 * W : px - 0.012 * W, y: py + ph * 0.93, ax: right ? 0 : 1, color: P.ink });
   flyer(X, L, sc.slot.flyer, sc.slot.flyerAt ?? 0.3, 0.5);
 };
 
 B.stack = (sc, X) => {
   const { W, H } = X, L = base(X), word = L0(X), n = sc.slot.rows || 4;
-  const pw = 0.18 * W, ph = 0.52 * H, px = 0.6 * W, py = 0.26 * H;
+  const portrait = W < H;
+  const pw = (portrait ? 0.44 : 0.18) * W, ph = 0.52 * H, px = (portrait ? 0.53 : 0.6) * W, py = 0.26 * H;
   cut(X, L, 0, { x: px, y: py, w: pw, h: ph }, { dir: "right", echo: 6, d: 0.45 });
-  const fs = fit(word, "ex", 0, 0.28 * W, 0.08 * H), lh = fs * 0.98;
+  const fs = fit(word, "ex", 0, (portrait ? 0.45 : 0.28) * W, 0.08 * H), lh = fs * 0.98;
   for (let i = 0; i < n; i++) {
     const solid = i === n - 2;
-    mainWord(X, L, word, 0.56 * W, 0.5 * H + (i - (n - 1) / 2) * lh, fs, { ax: 1, t0: rt0(X) + i * 0.05, stroke: !solid });
+    mainWord(X, L, word, (portrait ? 0.49 : 0.56) * W, 0.5 * H + (i - (n - 1) / 2) * lh, fs, { ax: 1, t0: rt0(X) + i * 0.05, stroke: !solid });
   }
 };
 
@@ -152,11 +165,21 @@ B.collage = (sc, X) => {
     { x: 0.6 * W, y: 0.55 * H, w: 0.2 * W, h: 0.34 * H, dir: "right" },
     { x: 0.2 * W, y: 0.62 * H, w: 0.12 * W, h: 0.2 * H, dir: "down" }
   ];
+  if (W < H) {
+    rects[0] = { x: 0.03 * W, y: 0.04 * H, w: 0.43 * W, h: 0.29 * H, dir: "left" };
+    rects[1] = { x: 0.51 * W, y: 0.03 * H, w: 0.46 * W, h: 0.38 * H, dir: "up" };
+    rects[2] = { x: 0.52 * W, y: 0.58 * H, w: 0.45 * W, h: 0.32 * H, dir: "right" };
+    rects[3] = { x: 0.03 * W, y: 0.64 * H, w: 0.43 * W, h: 0.24 * H, dir: "down" };
+  }
   rects.forEach((rc, i) => cut(X, L, i, rc, { dir: rc.dir, t0: 0.05 + i * 0.12, echo: 4, stretch: i === 1 }));
   bgWord(X, L, a, 0.6, 0.12);
   const fs = fit(a, "ex", 0, 0.24 * W, 0.08 * H);
   mainWord(X, L, a, 0.03 * W, 0.47 * H, fs, { t0: rt0(X) });
-  if (b) mainWord(X, L, b, 0.56 * W, 0.22 * H, fit(b, "ex", 0, 0.28 * W, 0.09 * H), { t0: rt0(X, 1), stretch: X.dur > 2 });
+  if (b) {
+    const bSize = fit(b, "ex", 0, (W < H ? 0.40 : 0.28) * W, 0.09 * H);
+    if (W < H) div(L, "patch", { left: 0.54 * W + "px", top: (0.22 * H - bSize * 0.63) + "px", width: Math.min(0.43 * W, textW(b, "ex", 0, bSize) + bSize * 0.25) + "px", height: bSize * 1.26 + "px", background: P.neon });
+    mainWord(X, L, b, 0.56 * W, 0.22 * H, bSize, { t0: rt0(X, 1), stretch: X.dur > 2 });
+  }
   if (sc.seg.sub) {
     const s = tx(L, sc.seg.sub.toUpperCase(), { cls: "lb", fs: 8.5 * u, x: 0.03 * W, y: 0.55 * H, ax: 0, color: P.ink });
     s.el.style.whiteSpace = "pre"; s.el.style.lineHeight = "1.2";
@@ -167,8 +190,8 @@ B.banner = (sc, X) => {
   const { W, H, u } = X, L = base(X), word = L0(X);
   bgWord(X, L, word, 0.2, 0.06);
   cut(X, L, 0, { x: 0.18 * W, y: 0.31 * H, w: 0.64 * W, h: 0.3 * H }, { dir: "up", t0: 0.05, out: true });
-  const fs = fit(word, "ex", 0, 0.24 * W, 0.1 * H);
-  mainWord(X, L, word, 0.64 * W, 0.2 * H, fs, { ax: 0.5, t0: rt0(X) });
+  const fs = mainPlate(X, L, word, 0.2);
+  mainWord(X, L, word, 0.5 * W, 0.2 * H, fs, { ax: 0.5, t0: rt0(X) });
   if (BR.tag) tx(L, BR.tag.toUpperCase(), { cls: "lb", fs: 8.5 * u, x: 0.8 * W, y: 0.66 * H, ax: 1, color: P.ink });
   flyer(X, L, sc.slot.flyer, sc.slot.flyerAt ?? 1.2, 0.55, 0.3);
 };
@@ -178,7 +201,7 @@ B.duo = (sc, X) => {
   bgWord(X, L, word, 0.5, 0.1);
   cut(X, L, 0, { x: 0.42 * W, y: 0.02 * H, w: 0.52 * W, h: 0.3 * H }, { dir: "right" });
   cut(X, L, 1, { x: 0.02 * W, y: 0.6 * H, w: 0.55 * W, h: 0.33 * H }, { dir: "left", t0: 0.15 });
-  const fs = fit(word, "ex", 0, 0.26 * W, 0.09 * H);
+  const fs = mainPlate(X, L, word, 0.47);
   mainWord(X, L, word, 0.5 * W, 0.47 * H, fs, { ax: 0.5, t0: rt0(X) });
   flyer(X, L, sc.slot.flyer, sc.slot.flyerAt ?? X.dur * 0.5, 0.5);
 };
@@ -187,9 +210,13 @@ B.full = (sc, X) => {
   const { W, H } = X, L = base(X), word = L0(X);
   bgWord(X, L, word, 0.5, 0.2);
   const land = (sc.slot.shape || "portrait") === "landscape";
-  const pw = land ? 0.62 * W : 0.34 * W, ph = land ? 0.9 * H : 0.96 * H;
+  const portrait = W < H;
+  const pw = portrait ? 0.82 * W : land ? 0.62 * W : 0.34 * W, ph = land ? 0.9 * H : 0.96 * H;
   cut(X, L, 0, { x: (W - pw) / 2, y: (H - ph) / 2, w: pw, h: ph }, { dir: "up", d: 0.22, echo: 3, stretch: false });
-  const fs = fit(word, "ex", 0, 0.3 * W, 0.1 * H);
+  const fs = fit(word, "ex", 0, (portrait ? 0.76 : 0.3) * W, 0.1 * H);
+  // La placa conserva el contraste del titular sobre cualquier fotografía.
+  const plateW = Math.min(W * 0.9, textW(word, "ex", 0, fs) + fs * 0.35);
+  div(L, "patch", { left: (W - plateW) / 2 + "px", top: (0.5 * H - fs * 0.63) + "px", width: plateW + "px", height: fs * 1.26 + "px", background: P.neon });
   [-2, -1, 1, 2].forEach(k => mainWord(X, L, word, 0.5 * W, 0.5 * H + k * fs * 0.95, fs, { ax: 0.5, t0: rt0(X) + Math.abs(k) * 0.04, stroke: true, color: "#FFFFFF" }));
   mainWord(X, L, word, 0.5 * W, 0.5 * H, fs, { ax: 0.5, t0: rt0(X) });
 };

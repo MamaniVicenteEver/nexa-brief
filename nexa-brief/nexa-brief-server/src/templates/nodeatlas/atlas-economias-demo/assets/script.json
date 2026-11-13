@@ -1,0 +1,491 @@
+{
+  "title": "Las ocho mayores economías: del octavo al primer puesto",
+  "language": "es",
+  "design": "atlas-cinematico",
+  "voice": "Orus",
+  "voice_direction": "Español latinoamericano neutro. Personalidad de guía de viaje informado: amable, curioso, cercano y seguro. Habla como una persona que explica un mapa a otra persona. Sonrisa leve, sin tono publicitario, solemnidad ni voz de tráiler. Timbre cómodo, respiración natural y énfasis selectivo. Mantén la misma identidad entre segmentos. Ritmo de 130 palabras por minuto y pausas entre ideas. Pronuncia las cifras completas y las siglas PIB como pe, i, be. No leer instrucciones ni imitar personas reales.",
+  "segments": [
+    {
+      "id": "01-intro",
+      "text": "¿Sabes qué país encabeza el mundo por el tamaño de su economía? Acompáñame desde el octavo puesto hasta el primero. Seguiremos las proyecciones del Fondo Monetario Internacional para dos mil veintiséis: el producto interno bruto nominal, o PIB, mide el valor de los bienes y servicios finales producidos durante un período, a precios corrientes.",
+      "tone": "curiosidad",
+      "intensity": 0.5,
+      "fact_ids": [
+        "gdp-definition"
+      ],
+      "plan": {
+        "kind": "intro"
+      }
+    },
+    {
+      "id": "02-ru-country",
+      "text": "Empezamos en Rusia, en el puesto ocho. Su PIB proyectado es de dos coma ochenta y seis billones de dólares. Vladímir Putin ocupa la presidencia.",
+      "tone": "descubrimiento",
+      "intensity": 0.5,
+      "fact_ids": [
+        "gdp-ru-2026",
+        "ru-leader"
+      ],
+      "plan": {
+        "kind": "country",
+        "country": "RU"
+      }
+    },
+    {
+      "id": "03-ru-insight",
+      "text": "El FMI describe una resistencia inicial apoyada por condiciones comerciales favorables y el giro hacia una economía de guerra. Pero mantener una producción grande no significa salir ileso: también hubo inflación, escasez de trabajadores y tasas de interés más altas.",
+      "tone": "reflexivo",
+      "intensity": 0.45,
+      "fact_ids": [
+        "ru-insight"
+      ],
+      "plan": {
+        "kind": "insight",
+        "country": "RU"
+      }
+    },
+    {
+      "id": "04-ru-moscow",
+      "text": "Nuestra primera parada es Moscú, ciudad federal donde encontramos comercio, finanzas y manufactura. Entre las empresas rentables estudiadas por la ciudad a comienzos de dos mil veinticinco, esos sectores encabezaron los beneficios.",
+      "tone": "descubrimiento",
+      "intensity": 0.5,
+      "fact_ids": [
+        "ru-moscow"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "RU",
+        "region": "moscow"
+      }
+    },
+    {
+      "id": "05-ru-tatarstan",
+      "text": "Ahora viajemos a Tatarstán. Aquí aparece otra pieza del mapa: la industria manufacturera. En dos mil veinticinco contribuyó al crecimiento regional, con la petroquímica entre sus actividades destacadas. Así se dibuja otra cara de la producción rusa.",
+      "tone": "cercano",
+      "intensity": 0.5,
+      "fact_ids": [
+        "ru-tatarstan"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "RU",
+        "region": "tatarstan"
+      }
+    },
+    {
+      "id": "06-fr-country",
+      "text": "De Rusia pasamos a Francia, en el séptimo puesto, con tres coma cincuenta y cinco billones de dólares proyectados. Emmanuel Macron es el presidente de la República.",
+      "tone": "explicativo",
+      "intensity": 0.5,
+      "fact_ids": [
+        "gdp-fr-2026",
+        "research-fr-leader",
+        "research-fr-term"
+      ],
+      "plan": {
+        "kind": "country",
+        "country": "FR"
+      }
+    },
+    {
+      "id": "07-fr-insight",
+      "text": "En el mapa francés destacan Île-de-France y Auvergne-Rhône-Alpes. Fueron la primera y la segunda región por PIB en dos mil veinticuatro.",
+      "tone": "curiosidad",
+      "intensity": 0.5,
+      "fact_ids": [
+        "research-fr-regions-gdp"
+      ],
+      "plan": {
+        "kind": "insight",
+        "country": "FR"
+      }
+    },
+    {
+      "id": "08-fr-ile-de-france",
+      "text": "Empecemos por Île-de-France. Cerca de nueve de cada diez empleos de la región correspondían a servicios en dos mil veinticuatro.",
+      "tone": "explicativo",
+      "intensity": 0.5,
+      "fact_ids": [
+        "research-fr-regions-gdp",
+        "research-fr-idf-services"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "FR",
+        "region": "ile-de-france"
+      }
+    },
+    {
+      "id": "09-fr-auvergne-rhone-alpes",
+      "text": "En Auvergne-Rhône-Alpes encontramos un contraste: fue la primera región industrial francesa por número de empleos. Y, aun así, su economía reúne mucho más: los servicios aportaban alrededor de tres cuartas partes de su valor añadido en dos mil veintidós.",
+      "tone": "descubrimiento",
+      "intensity": 0.55,
+      "fact_ids": [
+        "research-fr-ara-economy",
+        "research-fr-regions-gdp"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "FR",
+        "region": "auvergne-rhone-alpes"
+      }
+    },
+    {
+      "id": "10-in-country",
+      "text": "El viaje continúa hacia India, que ocupa el sexto lugar con cuatro coma cero seis billones de dólares proyectados. Su primer ministro es Narendra Modi.",
+      "tone": "cercano",
+      "intensity": 0.5,
+      "fact_ids": [
+        "gdp-in-2026",
+        "research-in-leader",
+        "research-in-term"
+      ],
+      "plan": {
+        "kind": "country",
+        "country": "IN"
+      }
+    },
+    {
+      "id": "11-in-insight",
+      "text": "Maharashtra aparece como la mayor economía estatal en una comunicación del Gobierno de India. Por su parte, el gobierno de Tamil Nadu presenta a su estado como la segunda mayor economía del país. Acerquémonos a cada estado para conocer mejor este contraste.",
+      "tone": "explicativo",
+      "intensity": 0.5,
+      "fact_ids": [
+        "research-in-maharashtra-economy",
+        "research-in-tamilnadu-economy"
+      ],
+      "plan": {
+        "kind": "insight",
+        "country": "IN"
+      }
+    },
+    {
+      "id": "12-in-maharashtra",
+      "text": "En Maharashtra está Mumbai, presentada por el Gobierno de India como la capital financiera del país.",
+      "tone": "curiosidad",
+      "intensity": 0.45,
+      "fact_ids": [
+        "research-in-maharashtra-economy"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "IN",
+        "region": "maharashtra"
+      }
+    },
+    {
+      "id": "13-in-tamil-nadu",
+      "text": "En Tamil Nadu, la mirada cambia hacia Chennai. La ciudad es un centro de manufactura de ingeniería y componentes para automóviles.",
+      "tone": "descubrimiento",
+      "intensity": 0.45,
+      "fact_ids": [
+        "research-in-tamilnadu-economy",
+        "research-in-chennai-manufacturing"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "IN",
+        "region": "tamil-nadu"
+      }
+    },
+    {
+      "id": "14-gb-country",
+      "text": "Subimos un puesto y llegamos al Reino Unido. En quinto lugar, su PIB proyectado alcanza cuatro coma veintisiete billones de dólares. Andy Burnham es el primer ministro.",
+      "tone": "descubrimiento",
+      "intensity": 0.55,
+      "fact_ids": [
+        "gdp-gb-2026",
+        "research-gb-leader",
+        "research-gb-term"
+      ],
+      "plan": {
+        "kind": "country",
+        "country": "GB"
+      }
+    },
+    {
+      "id": "15-gb-insight",
+      "text": "El Reino Unido reúne cuatro naciones. En este recorrido nos detendremos en dos de ellas: Inglaterra y Escocia.",
+      "tone": "explicativo",
+      "intensity": 0.45,
+      "fact_ids": [
+        "research-gb-nations"
+      ],
+      "plan": {
+        "kind": "insight",
+        "country": "GB"
+      }
+    },
+    {
+      "id": "16-gb-england",
+      "text": "En Inglaterra está Londres. La ciudad generó cerca de la mitad de la producción británica de servicios financieros y seguros en dos mil veinticinco.",
+      "tone": "descubrimiento",
+      "intensity": 0.5,
+      "fact_ids": [
+        "research-gb-nations",
+        "research-gb-england-finance"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "GB",
+        "region": "england"
+      }
+    },
+    {
+      "id": "17-gb-scotland",
+      "text": "Escocia ofrece otra combinación. Los servicios dominan su economía; en Edimburgo encontramos finanzas y servicios profesionales. En el noreste aparecen el petróleo, el gas, la ingeniería y los servicios energéticos.",
+      "tone": "curiosidad",
+      "intensity": 0.5,
+      "fact_ids": [
+        "research-gb-nations",
+        "research-gb-scotland-economy"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "GB",
+        "region": "scotland"
+      }
+    },
+    {
+      "id": "18-jp-country",
+      "text": "Ahora cruzamos a Japón, cuarto puesto, con cuatro coma treinta y cuatro billones de dólares proyectados. Sanae Takaichi es la primera ministra.",
+      "tone": "cercano",
+      "intensity": 0.5,
+      "fact_ids": [
+        "gdp-jp-2026",
+        "research-jp-leader",
+        "research-jp-term"
+      ],
+      "plan": {
+        "kind": "country",
+        "country": "JP"
+      }
+    },
+    {
+      "id": "19-jp-insight",
+      "text": "La prefectura metropolitana de Tokio representó el veintiuno por ciento del PIB japonés en el año fiscal dos mil veintitrés.",
+      "tone": "descubrimiento",
+      "intensity": 0.5,
+      "fact_ids": [
+        "research-jp-tokyo-economy"
+      ],
+      "plan": {
+        "kind": "insight",
+        "country": "JP"
+      }
+    },
+    {
+      "id": "20-jp-tokyo",
+      "text": "En Tokio, las finanzas y los seguros, los servicios profesionales y la hostelería contribuyeron al aumento del producto de ese año fiscal.",
+      "tone": "explicativo",
+      "intensity": 0.45,
+      "fact_ids": [
+        "research-jp-tokyo-economy"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "JP",
+        "region": "tokyo"
+      }
+    },
+    {
+      "id": "21-jp-osaka",
+      "text": "Osaka nos presenta una cadena diferente: desde la investigación y los materiales hasta la producción y el ensamblaje. Sus conexiones aéreas, portuarias y ferroviarias acompañan esa actividad manufacturera. Sigamos ahora hacia Europa para entrar en los tres primeros puestos.",
+      "tone": "descubrimiento",
+      "intensity": 0.5,
+      "fact_ids": [
+        "research-jp-osaka-economy"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "JP",
+        "region": "osaka"
+      }
+    },
+    {
+      "id": "22-de-country",
+      "text": "Ya estamos entre los tres primeros. Alemania ocupa el tercer puesto con cinco coma cuarenta y siete billones de dólares proyectados. Su canciller federal es Friedrich Merz.",
+      "tone": "cercano",
+      "intensity": 0.5,
+      "fact_ids": [
+        "gdp-de-2026",
+        "research-de-leader",
+        "research-de-term"
+      ],
+      "plan": {
+        "kind": "country",
+        "country": "DE"
+      }
+    },
+    {
+      "id": "23-de-insight",
+      "text": "Renania del Norte-Westfalia fue el estado federado de mayor PIB nominal en dos mil veinticinco, y Baviera ocupó el segundo lugar.",
+      "tone": "explicativo",
+      "intensity": 0.5,
+      "fact_ids": [
+        "research-de-regions-gdp"
+      ],
+      "plan": {
+        "kind": "insight",
+        "country": "DE"
+      }
+    },
+    {
+      "id": "24-de-nrw",
+      "text": "En Renania del Norte-Westfalia conviven maquinaria, metales y química con logística, banca y seguros. También hay información y comunicaciones.",
+      "tone": "descubrimiento",
+      "intensity": 0.5,
+      "fact_ids": [
+        "research-de-regions-gdp",
+        "research-de-nrw-economy"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "DE",
+        "region": "north-rhine-westphalia"
+      }
+    },
+    {
+      "id": "25-de-bavaria",
+      "text": "En Baviera nos encontramos con fabricantes de automóviles y sus proveedores. Allí también se investiga en movilidad eléctrica, software para vehículos y conducción automatizada.",
+      "tone": "curiosidad",
+      "intensity": 0.45,
+      "fact_ids": [
+        "research-de-regions-gdp",
+        "research-de-bavaria-economy"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "DE",
+        "region": "bavaria"
+      }
+    },
+    {
+      "id": "26-cn-country",
+      "text": "Nos acercamos al primer lugar. Antes está China, en el puesto dos, con veintiuno coma cincuenta y cinco billones de dólares proyectados. Xi Jinping es presidente de la República Popular China.",
+      "tone": "descubrimiento",
+      "intensity": 0.55,
+      "fact_ids": [
+        "gdp-cn-2026",
+        "research-cn-leader",
+        "research-cn-term"
+      ],
+      "plan": {
+        "kind": "country",
+        "country": "CN"
+      }
+    },
+    {
+      "id": "27-cn-insight",
+      "text": "Guangdong fue la mayor economía entre las provincias chinas en dos mil veinticinco, según su informe oficial.",
+      "tone": "explicativo",
+      "intensity": 0.5,
+      "fact_ids": [
+        "research-cn-guangdong-economy"
+      ],
+      "plan": {
+        "kind": "insight",
+        "country": "CN"
+      }
+    },
+    {
+      "id": "28-cn-guangdong",
+      "text": "En Guangdong destacan el comercio exterior, la inversión en investigación y la manufactura avanzada.",
+      "tone": "cercano",
+      "intensity": 0.5,
+      "fact_ids": [
+        "research-cn-guangdong-economy"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "CN",
+        "region": "guangdong"
+      }
+    },
+    {
+      "id": "29-cn-jiangsu",
+      "text": "En Jiangsu encontramos equipos, manufactura tecnológica y exportaciones. Su PIB provincial superó los catorce billones de yuanes en dos mil veinticinco.",
+      "tone": "descubrimiento",
+      "intensity": 0.5,
+      "fact_ids": [
+        "research-cn-jiangsu-economy"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "CN",
+        "region": "jiangsu"
+      }
+    },
+    {
+      "id": "30-us-country",
+      "text": "Y por fin llegamos al primer puesto: Estados Unidos. El FMI proyecta un PIB nominal de treinta y dos coma sesenta y cuatro billones de dólares para dos mil veintiséis. Donald Trump ocupa la presidencia.",
+      "tone": "descubrimiento",
+      "intensity": 0.6,
+      "fact_ids": [
+        "gdp-us-2026",
+        "us-leader"
+      ],
+      "plan": {
+        "kind": "country",
+        "country": "US"
+      }
+    },
+    {
+      "id": "31-us-insight",
+      "text": "California y Texas ocupan el primer y el segundo lugar entre las economías estatales, respectivamente, según datos de dos mil veinticinco. Veamos qué actividades nos muestra el mapa en cada uno.",
+      "tone": "explicativo",
+      "intensity": 0.5,
+      "fact_ids": [
+        "us-states"
+      ],
+      "plan": {
+        "kind": "insight",
+        "country": "US"
+      }
+    },
+    {
+      "id": "32-us-california",
+      "text": "En California, el mapa nos lleva de la tecnología y los campos agrícolas a Hollywood. El cine y la televisión forman parte de su economía creativa, junto a una variedad de servicios.",
+      "tone": "descubrimiento",
+      "intensity": 0.5,
+      "fact_ids": [
+        "us-states",
+        "us-ca"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "US",
+        "region": "california"
+      }
+    },
+    {
+      "id": "33-us-texas",
+      "text": "Texas nos muestra otra combinación: petróleo y gas, junto con energías renovables.",
+      "tone": "reflexivo",
+      "intensity": 0.45,
+      "fact_ids": [
+        "us-states",
+        "us-tx"
+      ],
+      "plan": {
+        "kind": "region",
+        "country": "US",
+        "region": "texas"
+      }
+    },
+    {
+      "id": "34-outro",
+      "text": "La respuesta a nuestra pregunta era Estados Unidos. Su PIB proyectado es más de once veces el de Rusia en esta comparación. Pero el PIB no mide por sí solo el bienestar. ¿Qué indicador te gustaría que exploremos en el próximo mapa, y por qué? Te leo en los comentarios.",
+      "tone": "cierre",
+      "intensity": 0.5,
+      "fact_ids": [
+        "us-ratio",
+        "gdp-us-2026",
+        "gdp-definition"
+      ],
+      "plan": {
+        "kind": "outro"
+      }
+    }
+  ]
+}

@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl";
 import { type ReactNode, useState } from "react";
 import type { CategoryNode } from "@/features/categories";
 import { useImagePosts } from "@/features/image-posts/hooks/useImagePosts";
-import { useSandbox } from "@/features/sandbox/hooks/useSandbox";
 import {
   isPreparedVideo,
   isReviewDemo,
@@ -18,7 +17,6 @@ import {
   type PreparationView,
   PreparationViewContext,
 } from "@/features/templates/lib/preparation-view";
-import { sandboxDesignDemos } from "@/features/templates/lib/sandbox-design-demos";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { useExplainerVideos } from "../hooks/useExplainer";
@@ -57,12 +55,10 @@ export function ExplainerCategoryWindow({
   const selected = contentType === "videos" ? videos : images;
   const videoItems = videos.data ?? [];
   const imageItems = images.data ?? [];
-  const sandbox = useSandbox();
-  const sandboxDemos = sandboxDesignDemos(sandbox.data ?? [], category.id, videoItems, categoryDesigns);
   const counts =
     contentType === "videos"
       ? {
-          preparation: videoItems.filter((video) => isPreparedVideo(video) || isReviewDemo(video)).length + sandboxDemos.length,
+          preparation: videoItems.filter((video) => isPreparedVideo(video) || isReviewDemo(video)).length,
           rendered: videoItems.filter(isRenderedVideo).length,
         }
       : {
@@ -157,8 +153,6 @@ export function ExplainerCategoryWindow({
             <TabsContent value="videos" forceMount hidden={contentType !== "videos"}>
               <ExplainerPrepSection
                 categoryPath={category.path}
-                sandboxDemos={sandboxDemos}
-                productionDesignIds={categoryDesigns.map((design) => design.id)}
                 embedded
               />
               <ProductionsList categoryPath={category.path} />

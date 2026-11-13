@@ -8,6 +8,8 @@ export type ExplainerJobState = "queued" | "rendering" | "publishing" | "done" |
 
 export interface ExplainerJob {
   jobId: string;
+  locale?: string;
+  revision?: string | null;
   videoId: string;
   title: string | null;
   posterUrl: string | null;
@@ -176,6 +178,8 @@ export interface VideoThumbnails {
 }
 
 export interface RecordExplainerInput {
+  locale?: string;
+  revision?: string | null;
   videoId: string;
   duration: RecordDuration;
   publish: boolean;

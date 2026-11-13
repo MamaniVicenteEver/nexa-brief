@@ -1,6 +1,16 @@
 # Layout de perfiles v3 — 5 de noviembre de 2026
 
-## Estado real
+## Regla vigente de ubicación — 13 de noviembre de 2026
+
+La norma actual es [ubicación de demos, pruebas y episodios](ubicacion-demos-pruebas-episodios.md):
+las demos principales validadas pertenecen al repositorio; los episodios de
+producción y todos los proyectos/pruebas/referencias pertenecen al perfil.
+El `sandbox/` del repositorio solo admite motores compartidos experimentales,
+herramientas y documentación. Los hechos, conteos y verificaciones de la migración
+del 5 de noviembre que aparecen más abajo son históricos; no autorizan conservar
+proyectos antiguos dentro de `src/templates/sandbox/`.
+
+## Estado de la migración del 5 de noviembre
 
 El código admite v1, v2 y v3 sin convertir un perfil al arrancar. El 5 de noviembre
 se instaló el código compatible en alfred-server y se compilaron API y web.
@@ -38,8 +48,10 @@ REPOSITORIO/nexa-brief-server/src/templates/
 │   │   └── catalog.json            # entradas reutilizables, parámetros y ejemplos
 │   ├── explainer-kit/              # motor y componentes compartidos existentes
 │   └── sandbox/                    # herramientas de prototipos existentes
-├── nodetech/muestras/              # ejemplos de componentes y video largo
-└── sandbox/...                    # motores históricos referenciados, sin copiarlos
+├── <categoría>/<demo_id>/          # demos principales validadas; carpeta sin fecha
+├── nodeatlas/atlas-cinematico/_atlas/ # motor compartido Atlas Cinemático de producción
+├── nodetech/muestras/              # ejemplos públicos de componentes
+└── sandbox/...                    # motores experimentales/herramientas/docs; sin proyectos
 
 <perfil>/
 ├── profile.json                    # ID, versión de layout y proveedores seleccionados
@@ -135,11 +147,19 @@ una sola vez en `resources`. El borrado desde la biblioteca comprueba referencia
 
 ## Definiciones compartidas
 
-El repositorio contiene 19 definiciones públicas: 15 del kit y Vida en Escena,
-Cara a Cara, Atlas Cinemático y Atlas en Movimiento. No incluyen episodios ni
-recursos privados del perfil. Los motores conservan sus ubicaciones; la ficha
-los referencia. Promover un diseño en v3 cambia su estado en `designs.json` sin
-mover ni duplicar el motor. Cada perfil mantiene su estado independiente.
+La migración inicial registró 19 definiciones públicas: 15 del kit y Vida en
+Escena, Cara a Cara, Atlas Cinemático y Atlas en Movimiento. No incluyen episodios
+ni recursos privados del perfil. Las demos principales públicas validadas sí
+pertenecen al repositorio en `src/templates/<categoría>/<demo_id>/`.
+
+Cambiar el estado de Showcase en `designs.json` no mueve por sí mismo archivos.
+El flujo **Pasar a producción** distingue la demo principal, que se incorpora al
+repositorio, del episodio, que se traslada al perfil. Un motor compartido de
+producción se ubica una sola vez fuera de `src/templates/sandbox/`; conserva su
+`engine_id` y declara su `engine_root`. Una migración de motor actualiza los
+consumidores y catálogos, conservando IDs, parámetros y cachés válidas; nunca
+copia el motor a cada episodio. Cada perfil conserva su estado de visibilidad
+independiente. Consulta el flujo técnico vigente antes de operar.
 
 La API común es `/api/v1/showcase/designs`. Para una tarea, consulta la ficha
 asignada y solo la entrada `/catalog/<entry_id>` necesaria. Los bundles heredados

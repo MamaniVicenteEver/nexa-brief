@@ -1,0 +1,54 @@
+{
+  "post.json": {
+    "category_id": "node_tech",
+    "title": "El imán de las pantallas y la vida adolescente",
+    "sources": [
+      "https://www.eltiempo.com/salud/las-pantallas-son-el-iman-invisible-que-dana-cerebros-jovenes-3589093"
+    ],
+    "narrativa": "hilo",
+    "historia": {
+      "id": "entrevista-soledad-pantallas",
+      "tipo": "noticia",
+      "fuente_principal": "https://www.eltiempo.com/salud/las-pantallas-son-el-iman-invisible-que-dana-cerebros-jovenes-3589093",
+      "quien": "Soledad Gutiérrez Eguía, autora entrevistada por Mariángeles López Salon (La Nación, republicada por El Tiempo)",
+      "cuando": "26 de septiembre de 2026",
+      "poblacion": "Adolescentes a quienes se dirige el libro y jóvenes con los que la autora trabajó; no es una muestra de un estudio identificado.",
+      "tesis": "Soledad Gutiérrez Eguía advierte que el exceso de pantallas puede desplazar experiencias de la vida adolescente.",
+      "nudo": "La autora veía cómo los adolescentes quedaban atrapados en las pantallas. ¿Qué los mantenía mirando cuando ya no disfrutaban?",
+      "datos": [],
+      "explicacion": "La autora describe el temor a quedar fuera y la comparación constante con las vidas aparentes que muestran las redes. Lo presenta como parte del círculo que dificulta apartarse de las pantallas.",
+      "resolucion": "La autora propone preguntarse si la red social realmente divirtió o enseñó algo, acompañar con diálogo y fomentar proyectos y actividades reales."
+    },
+    "editorial_notes": "La noticia es una entrevista, no identifica título, autores, muestra ni DOI de un estudio. NO inventar ni atribuir un estudio concreto. Contar solo este caso y atribuir interpretaciones/consejos a la autora. No añadir cifras clínicas ni recomendaciones de otra fuente. El titular del medio no demuestra daño cerebral medido.",
+    "fotos_sugeridas": {
+      "portada": "teenager smartphone home",
+      "desarrollo_1": "young person smartphone art workshop",
+      "desarrollo_2": "teenager social media phone home",
+      "resolucion_1": "parent teenager talking home"
+    }
+  },
+  "PLAN.md": "# Pantallas: una sola historia\n\n## 1. Finalidad\nContar el problema observado por una autora, su explicación y la salida que propone, sin saltar entre estudios.\n\n## 2. Investigación\nConsulta: 2026-10-31. Artículo leído completo por HTTPS con urllib (el navegador de búsqueda no pudo abrirlo). Publicación: 2026-09-26 22:01. Es una entrevista a Soledad Gutiérrez Eguía sobre su libro, no un estudio identificado. El pedido de usar su estudio no se puede cumplir literalmente: el artículo menciona informes de varias entidades sin identificarlos. No se suplanta ese vacío con otro estudio. Se elige la noticia/caso, variante permitida por el brief, y se atribuyen explicación y recomendaciones a la entrevistada. No se toma el titular del medio como prueba de daño cerebral medido. No se añaden porcentajes, muestras, fechas de estudios ni umbrales clínicos.\n\n## 3. Hechos verificados\n| # | hecho | fuente | cotejo / uso |\n|---|---|---|---|\n| 1 | La autora Soledad Gutiérrez Eguía advierte que el uso excesivo de celulares y pantallas puede desplazar experiencias y relaciones de la vida adolescente. | El Tiempo, entrevista a Soledad Gutiérrez Eguía: https://www.eltiempo.com/salud/las-pantallas-son-el-iman-invisible-que-dana-cerebros-jovenes-3589093 | Sí; rol=portada; caso=entrevista-soledad-pantallas; entrevista: observación, explicación y propuesta atribuidas a la autora, no hallazgo experimental |\n| 2 | En una entrevista publicada en 2026, Soledad Gutiérrez Eguía cuenta que trabajaba con niños y adolescentes en programas de arte y comenzó a observar problemas con el exceso de pantallas. ¿Qué los mantenía mirando aunque dejaran de disfrutar? | El Tiempo, entrevista a Soledad Gutiérrez Eguía: https://www.eltiempo.com/salud/las-pantallas-son-el-iman-invisible-que-dana-cerebros-jovenes-3589093 | Sí; rol=desarrollo_1; caso=entrevista-soledad-pantallas; entrevista: observación, explicación y propuesta atribuidas a la autora, no hallazgo experimental |\n| 3 | La autora explica que el miedo a quedar fuera y la comparación con las vidas aparentes de las redes alimentan un círculo que dificulta apartarse de las pantallas y puede quitar ganas de estudiar o conversar. | El Tiempo, entrevista a Soledad Gutiérrez Eguía: https://www.eltiempo.com/salud/las-pantallas-son-el-iman-invisible-que-dana-cerebros-jovenes-3589093 | Sí; rol=desarrollo_2; caso=entrevista-soledad-pantallas; entrevista: observación, explicación y propuesta atribuidas a la autora, no hallazgo experimental |\n| 4 | Para recuperar espacio fuera de las pantallas, la autora propone preguntarse si mirar una red social realmente divirtió o enseñó algo. Recomienda acompañar a los adolescentes con diálogo y fomentar proyectos y actividades reales, sin limitarse al castigo. | El Tiempo, entrevista a Soledad Gutiérrez Eguía: https://www.eltiempo.com/salud/las-pantallas-son-el-iman-invisible-que-dana-cerebros-jovenes-3589093 | Sí; rol=resolucion_1; caso=entrevista-soledad-pantallas; entrevista: observación, explicación y propuesta atribuidas a la autora, no hallazgo experimental |\n",
+  "copy": {
+    "levels": {
+      "negro": {
+        "statement": "Las pantallas pueden quitarles vida real a los adolescentes",
+        "hook_question": "¿Quién decide cuándo dejas de mirar?",
+        "items": {
+          "claim_2": {
+            "text": "Soledad Gutiérrez Eguía contó en 2026 que veía problemas por el exceso de pantallas entre los jóvenes de sus talleres de arte. ¿Por qué seguían mirando cuando ya no disfrutaban?",
+            "stat": ""
+          },
+          "claim_3": {
+            "text": "Según la autora, el miedo a quedar fuera y compararse con las vidas que muestran las redes alimentan ese círculo. Apartarse cuesta y estudiar o conversar puede perder atractivo.",
+            "stat": ""
+          },
+          "claim_4": {
+            "text": "Para salir de ese círculo, la autora propone preguntarte si lo que miraste te divirtió o te enseñó algo. También recomienda diálogo, proyectos y actividades reales, más allá del castigo.",
+            "stat": ""
+          }
+        },
+        "question": "¿Deberían los adultos poner límites a las pantallas o dejar decidir a los adolescentes? Cuéntanos en los comentarios, te leemos."
+      }
+    }
+  }
+}

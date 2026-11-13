@@ -1,0 +1,216 @@
+"""Pydantic schemas for the social-media publishing API.
+
+These are the request/response models for the /api/v1/publish router.
+"""
+
+from __future__ import annotations
+
+from typing import Any
+from pydantic import BaseModel, Field
+
+
+# ── Request schemas ───────────────────────────────────────────────────────────
+
+class ManualPublishRequest(BaseModel):
+    """Request body for POST /api/v1/publish — manual video publish."""
+
+    idempotency_key: str | None = Field(default=None, min_length=1, max_length=200)
+
+    video_path: str = Field(
+        ...,
+        description=(
+            "Absolute or relative path to the video file to upload. "
+            "For TikTok use tiktok_video.mp4; for YouTube/Facebook use youtube_video.mp4."
+        ),
+        examples=["output/abc12345/tiktok_video.mp4"],
+    )
+    title: str = Field(
+        ...,
+        max_length=200,
+        description="Video title. Platform-specific limits apply (TikTok: 2200, YouTube: 100).",
+    )
+    description: str = Field(
+        default="",
+        max_length=5000,
+        description="Video description / caption.",
+    )
+    tags: list[str] = Field(
+        default_factory=list,
+        description="Tags or hashtag words WITHOUT the leading '#'.",
+        examples=[["lofi", "study", "chill"]],
+    )
+    account_selector: str = Field(
+        default="",
+        description=(
+            "Account in 'platform:alias' format (e.g. 'tiktok:cuenta_1'). "
+            "If empty, uses ACTIVE_ACCOUNT from .env."
+        ),
+        examples=["youtube:canal_1"],
+    )
+    privacy: str = Field(
+        default="public",
+        description="Privacy setting: 'public' | 'private' | 'unlisted' (YouTube) | 'friends_only' (TikTok).",
+    )
+    facebook_publish_as_reel: bool = Field(
+        default=True,
+        description="For Facebook, whether to publish as a Reel (vertical 9:16) or standard video."
+    )
+    youtube_playlist_id: str | None = Field(
+        default=None,
+        description="For YouTube, optional playlist ID to add the video to after upload."
+    )
+    youtube_publish_as_short: bool = Field(
+        default=False,
+        description="For YouTube, whether to append #Shorts to the title and treat it as a Short."
+    )
+
+
+class UpdateVideoRequest(BaseModel):
+    """Request body for PUT /api/v1/publish/{platform}/{alias}/{video_id}."""
+
+    title: str | None = Field(default=None, max_length=200)
+    description: str | None = Field(default=None, max_length=5000)
+    tags: list[str] | None = Field(default=None)
+    privacy: str | None = Field(default=None)
+
+
+# ── Response schemas ──────────────────────────────────────────────────────────
+
+class PublishResponse(BaseModel):
+    """Returned after a successful publish operation."""
+
+    post_id: str = Field(description="Platform-assigned video/post ID.")
+    url: str = Field(description="Public URL to the published video.")
+    platform: str
+    account_alias: str
+    message: str = "Video published successfully."
+
+
+class VideoMetadataResponse(BaseModel):
+    """Returned by GET and PUT (after update) operations."""
+
+    video_id: str
+    title: str
+    description: str
+    tags: list[str]
+    status: str
+    platform: str
+    raw_response: dict[str, Any] = Field(default_factory=dict)
+
+
+class AccountStatusResponse(BaseModel):
+    """One entry in the GET /api/v1/publish/accounts list."""
+
+    platform: str
+    alias: str
+    name: str
+    target_id: str
+    status: str                     # 'ok' | 'requires_reauth'
+    expires_in_seconds: float | None
+    has_refresh_token: bool
+    mode: str = "api"               # 'api' | 'browser'
+    last_session_check: float | None = None
+    avatar: str | None = None
+    handle: str | None = None
+    description: str = ""
+    custom_url: str | None = None
+    profile_synced_at: float | None = None
+    linked_page_name: str | None = None
+    linked_page_id: str | None = None
+    publication_count: int | None = None
+    published_count: int = 0        # Videos published to this channel (see data/canales/published_videos.json)
+    label: str = ""                 # User-defined purpose, e.g. "Letras románticas"
+    notes: str = ""
+    connected_at: float | None = None
+    last_published_at: float | None = None
+    # Sincronización de Canales: totales reales de la plataforma y cuándo se leyeron.
+    stats: ChannelStatsResponse | None = None
+    synced_at: float | None = None
+    youtube_thumbnail_capability: dict[str, Any] | None = None
+    youtube_feature_access: dict[str, Any] | None = None
+    can_sync: bool = False          # la red implementa ChannelCatalogPort
+
+
+class ChannelHealthResponse(BaseModel):
+    """Result of a live, read-only account check against its platform API."""
+
+    platform: str
+    alias: str
+    status: str  # 'ok' | 'requires_reauth' | 'attention'
+    reason: str
+    checked_at: float
+
+
+class UpdateAccountRequest(BaseModel):
+    """Body of PATCH /api/v1/publish/accounts/{platform}/{alias} — omitted fields stay unchanged."""
+
+    label: str | None = Field(default=None, max_length=60)
+    notes: str | None = Field(default=None, max_length=500)
+
+
+class VideoMetricsResponse(BaseModel):
+    """Números de un post según su plataforma, a la fecha de la última sincronización."""
+
+    views: int | None = None
+    likes: int | None = None
+    comments: int | None = None
+    synced_at: float | None = None
+
+
+class ChannelStatsResponse(BaseModel):
+    """Totales de la cuenta según su plataforma (None = la red no lo informa)."""
+
+    video_count: int | None = None
+    followers: int | None = None
+    views: int | None = None
+    likes: int | None = None
+
+
+class ChannelSyncResponse(BaseModel):
+    """Resultado de POST /accounts/{platform}/{alias}/sync."""
+
+    platform: str
+    alias: str
+    remote_total: int
+    imported: int
+    updated: int
+    stats: ChannelStatsResponse
+    synced_at: float
+
+
+class PublishedVideoResponse(BaseModel):
+    """One entry in the GET /api/v1/publish/accounts/{platform}/{alias}/videos list."""
+
+    platform: str
+    alias: str
+    post_id: str
+    url: str
+    title: str
+    published_at: float
+    job_id: str | None = None
+    origin: str = "nexa"            # 'nexa' (lo publicó Nexa) | 'imported' (sincronización de Canales)
+    privacy: str | None = None
+    kind: str | None = None         # 'video' | 'short' | 'reel'
+    duration_seconds: float | None = None
+    thumbnail_url: str | None = None
+    image_count: int | None = None
+    metrics: VideoMetricsResponse | None = None
+
+
+class DeleteResponse(BaseModel):
+    """Returned after a successful delete operation."""
+
+    video_id: str
+    platform: str
+    account_alias: str
+    deleted: bool
+    message: str = "Video deleted successfully."
+
+
+class AccountDeleteResponse(BaseModel):
+    """Returned by DELETE /api/v1/publish/accounts/{platform}/{alias}."""
+
+    platform: str
+    alias: str
+    deleted: bool
+    message: str = "Account disconnected successfully."

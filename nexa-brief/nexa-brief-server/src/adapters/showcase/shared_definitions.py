@@ -125,8 +125,8 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
         design["episodes"] = relations.get(ident, [])
         if design.get('production_template'):
             marker = design['production_template']
-            design['episodes'] = [dict(id=marker['project_id'], title=design['name'], design_id=ident,
-                preview_url=design.get('preview_url')), *design['episodes']]
+            design['episodes'] = [dict(id=marker['project_id'], title=marker.get('title') or design['name'], design_id=ident,
+                preview_url=marker.get('preview_url') or design.get('preview_url')), *design['episodes']]
         if ident == "mapas-satelitales":
             # Both videos reference the same engine, not duplicate designs.
             project_adapter = self.projects
@@ -164,7 +164,8 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
             design["preview_url"] = None
         blocker = None if available else "Vista previa no disponible"
         if ident == "mapas-satelitales":
-            required = [self.templates / "sandbox/nodehistory/_mapas" / name
+            from src.core.explainer.engine_locations import engine_root
+            required = [engine_root(self.templates, "nodehistory/_mapas", design) / name
                         for name in ("mapas.js", "geo.js", "camera.js", "flags.js", "layers.js")]
             required.append(self.templates / "sandbox/_proto/proto.js")
             if not all(path.is_file() and not path.is_symlink() for path in required):
@@ -176,9 +177,13 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
                 blocker = "Faltan recursos reales de mapa para la vista previa"
         design["promotable"] = design["state"] == "prueba" and blocker is None
         design["promote_blocker"] = blocker
-        if design.get('production_template'):
-            design['promotable'] = False
-            design['promote_blocker'] = None
+        if design.get('production_template') and design['state'] == 'prueba':
+            from src.adapters.showcase.engine_production import RegisteredEngineProduction
+            from src.config.profile_layout import layout_for_settings
+            from src.config.settings import settings
+            blocker = blocker or RegisteredEngineProduction(self, layout_for_settings(settings)).blocker(design, catalog)
+            design['promotable'] = blocker is None
+            design['promote_blocker'] = blocker
         return design
 
     def list_designs(self):
@@ -267,6 +272,38 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
 
     def promote(self, design_id, category_path=None, shared_categories=None):
         ident = _id(design_id)
+        contract = self._definition(ident)
+        if contract and contract[0].get('production_template'):
+            from src.adapters.showcase.engine_production import RegisteredEngineProduction
+            from src.config.profile_layout import layout_for_settings
+            from src.config.settings import settings
+            try:
+                asyncio.run(RegisteredEngineProduction(self, layout_for_settings(settings)).pass_to_production(
+                    ident, apply=True, category_path=category_path, shared_categories=shared_categories))
+            except ValueError as exc:
+                raise ShowcaseConflict(str(exc)) from exc
+            return self.get_design(ident)
+        if contract and not contract[0].get('production_template'):
+            principal = [item for item in self.projects._items()
+                         if item['design_id'] == ident and item['info'].get('is_new_design') is True]
+            if len(principal) > 1:
+                raise ShowcaseConflict('Hay más de una demo principal para este diseño')
+            if principal:
+                from src.adapters.showcase.production import FilesystemDesignProduction
+                from src.core.design_production import ProductionConflict, ProductionError
+                item = principal[0]
+                workflow = FilesystemDesignProduction(self)
+                draft = workflow.inspect(item['folder'], item['project_id'])['draft']
+                try:
+                    asyncio.run(workflow.move(item['folder'], item['project_id'], {
+                        'category': category_path or draft['category'],
+                        'shared_categories': shared_categories if shared_categories is not None else draft['shared_categories'],
+                    }))
+                except ProductionConflict as exc:
+                    raise ShowcaseConflict(str(exc)) from exc
+                except ProductionError as exc:
+                    raise ShowcaseInvalid(str(exc)) from exc
+                return self.get_design(ident)
         if self._definition(ident) is None:
             item = next((item for item in self.projects._enabled() if item['design_id'] == ident), None)
             if item:

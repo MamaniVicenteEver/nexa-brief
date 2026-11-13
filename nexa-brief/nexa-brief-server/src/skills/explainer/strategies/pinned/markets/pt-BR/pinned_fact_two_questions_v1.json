@@ -1,0 +1,34 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "pinned_fact_two_questions_v1",
+  "piece": "pinned",
+  "locale": "pt-BR",
+  "status": "draft",
+  "intent": "Trazer um dado extra com fonte e duas perguntas: uma sobre o assunto e outra sobre uma próxima investigação.",
+  "templates": {
+    "comment": "Um detalhe a mais: {fato extra verificado}. {pergunta sobre o assunto}? {pergunta sobre o próximo tema}?"
+  },
+  "examples": [
+    "Um detalhe a mais: {dado com fonte que ficou de fora}. O que faria você confiar um arquivo de trabalho a um chatbot? Que tecnologia vale investigar depois?"
+  ],
+  "conventions": [
+    "Até 420 caracteres, como uma mensagem de quem fez o vídeo.",
+    "Repita a pergunta central quando a narrativa pedir; deixe a segunda pergunta aberta."
+  ],
+  "sounds_false": [
+    "Querida comunidade, agradecemos por esta jornada incrível.",
+    "Não se esqueça do like e da inscrição!"
+  ],
+  "overrides": {
+    "opener": "Um detalhe a mais:",
+    "forbidden_openers": [
+      "Querida comunidade",
+      "Neste vídeo",
+      "Não se esqueça",
+      "Convidamos você"
+    ],
+    "tone": [
+      "Frases curtas, palavras do dia a dia e conversa de igual para igual."
+    ]
+  }
+}

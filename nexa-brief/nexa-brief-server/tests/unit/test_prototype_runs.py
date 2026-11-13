@@ -96,6 +96,7 @@ async def test_smoke_rebuilds_brief_scopes_agent_records_tokens_and_cleans_templ
     template_settings: Path,
     monkeypatch: pytest.MonkeyPatch,
 ):
+    monkeypatch.setattr(runs, "_leader_model", lambda _agent: ("test-prototype-lead", "high"))
     slug = _make_reference(template_settings, "Mapas con banderas")
     leader = FakeLeader()
     service = runs.PrototypeRunService(agent_getter=lambda _name: leader, timeout_seconds=20)
@@ -127,7 +128,7 @@ async def test_smoke_rebuilds_brief_scopes_agent_records_tokens_and_cleans_templ
     assert "BRIEF.md" in leader.calls[0]["prompt"]
     scope = leader.calls[0]["scope"]
     assert scope.writable_dir == "src/templates/sandbox"
-    assert scope.model == "claude-opus-5-5" and scope.reasoning_effort == "high"
+    assert scope.model == "test-prototype-lead" and scope.reasoning_effort == "high"
     assert scope.commands == runs.LEAD_COMMANDS
     assert scope.extra_writable == ("/tmp",)
     assert all(command != "Bash" for command in scope.commands)

@@ -33,7 +33,9 @@ const PUBLISH_TEXTS_TIMEOUT_MS = 240_000;
 const BRIEF_TIMEOUT_MS = 300_000;
 const UPLOAD_TIMEOUT_MS = 300_000;
 
-interface ExplainerJobDto {
+export interface ExplainerJobDto {
+  locale?: string;
+  revision?: string | null;
   job_id: string;
   video_id: string;
   title?: string | null;
@@ -103,7 +105,7 @@ interface PublishPackageDto {
   pinned_comment: string;
 }
 
-interface PublishPackageReviewDto {
+export interface PublishPackageReviewDto {
   package: PublishPackageDto | null;
   issues: PublishIssue[];
   thumbnail_image_url: string | null;
@@ -154,7 +156,7 @@ export interface ExplainerVideoDto {
   thumbnails?: ThumbnailsDto;
 }
 
-interface ThumbnailsDto {
+export interface ThumbnailsDto {
   chosen: ThumbnailOptionId | null;
   options: {
     option: ThumbnailOptionId;
@@ -164,7 +166,7 @@ interface ThumbnailsDto {
   }[];
 }
 
-function mapThumbnails(dto: ThumbnailsDto | undefined): VideoThumbnails {
+export function mapThumbnails(dto: ThumbnailsDto | undefined): VideoThumbnails {
   return {
     chosen: dto?.chosen ?? null,
     options: (dto?.options ?? []).map((o) => ({
@@ -176,7 +178,7 @@ function mapThumbnails(dto: ThumbnailsDto | undefined): VideoThumbnails {
   };
 }
 
-function mapPublishPackage(dto: PublishPackageReviewDto): PublishPackageReview {
+export function mapPublishPackage(dto: PublishPackageReviewDto): PublishPackageReview {
   const p = dto.package;
   return {
     issues: dto.issues,
@@ -224,9 +226,11 @@ function mapPublishPackage(dto: PublishPackageReviewDto): PublishPackageReview {
   };
 }
 
-function mapJob(dto: ExplainerJobDto): ExplainerJob {
+export function mapJob(dto: ExplainerJobDto): ExplainerJob {
   return {
     jobId: dto.job_id,
+    locale: dto.locale ?? "es-419",
+    revision: dto.revision ?? null,
     videoId: dto.video_id,
     title: dto.title ?? null,
     posterUrl: dto.poster_url ? resolveApiUrl(dto.poster_url) : null,
@@ -338,6 +342,7 @@ export async function recordExplainerVideo(input: RecordExplainerInput): Promise
         formats: input.formats ?? ["16x9"],
         account_formats: input.accountFormats ?? null,
         thumbnail: input.thumbnail ?? null,
+        ...(input.locale ? { locale: input.locale, revision: input.revision ?? null } : {}),
       },
     },
   );
@@ -361,13 +366,27 @@ export async function getExplainerJobs(
   return dtos.map(mapJob);
 }
 
-/** Captura de nuevo las miniaturas A (introv1) y B (introv2) con los textos actuales. */
+export interface EditionRequest {
+  locale?: string;
+  revision?: string | null;
+}
+
+function thumbnailQuery(edition: EditionRequest, onlyMissing = false) {
+  const params = new URLSearchParams();
+  if (onlyMissing) params.set("only_missing", "true");
+  if (edition.locale) params.set("locale", edition.locale);
+  if (edition.revision) params.set("revision", edition.revision);
+  return params.size ? `?${params}` : "";
+}
+
+/** Captura las miniaturas con los textos de la edición seleccionada. */
 export async function captureThumbnails(
   videoId: string,
   onlyMissing = false,
+  edition: EditionRequest = {},
 ): Promise<VideoThumbnails> {
   const dto = await httpClient<ThumbnailsDto>(
-    `/api/v1/explainer/videos/${encodeURIComponent(videoId)}/thumbnails${onlyMissing ? "?only_missing=true" : ""}`,
+    `/api/v1/explainer/videos/${encodeURIComponent(videoId)}/thumbnails${thumbnailQuery(edition, onlyMissing)}`,
     {
       method: "POST",
       timeoutMs: THUMBNAILS_TIMEOUT_MS,
@@ -380,12 +399,16 @@ export async function captureThumbnails(
 export async function chooseThumbnail(
   videoId: string,
   option: ThumbnailOptionId,
+  edition: EditionRequest = {},
 ): Promise<VideoThumbnails> {
-  const dto = await httpClient<ThumbnailsDto>(`/api/v1/explainer/videos/${videoId}/thumbnail`, {
-    method: "PUT",
-    body: { option },
-    timeoutMs: THUMBNAILS_TIMEOUT_MS,
-  });
+  const dto = await httpClient<ThumbnailsDto>(
+    `/api/v1/explainer/videos/${encodeURIComponent(videoId)}/thumbnail${thumbnailQuery(edition)}`,
+    {
+      method: "PUT",
+      body: { option },
+      timeoutMs: THUMBNAILS_TIMEOUT_MS,
+    },
+  );
   return mapThumbnails(dto);
 }
 

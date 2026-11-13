@@ -33,7 +33,13 @@ Los tokens complementarios de miniaturas se consultan en `../../design-tokens.js
 
 ## Composición y miniaturas
 
-A ocupa el centro con hasta cinco palabras en una o dos filas. B admite una frase más larga en hasta cuatro filas. Mantener la paleta en ambas. Fondo independiente de imagen propia o del medio existente, con recorte a sangre y encuadre ajustable. Sin artista; «LETRAS» siempre debajo de la última fila, alineada a su extremo derecho, con el color principal de la plantilla a opacidad completa, al 24,3% en A y al 30% en B, con el hueco al 25,2% del original en A y al 28% en B. NODEMOTION queda discreta en la esquina inferior derecha.
+Ambas opciones salen de escenas reales del video: Montserrat 900 cursiva, lima #A6EB35, tinta #101114 y papel #F2EFE6. La foto se trata con los dos grades del video como filtros SVG (`duoLime`: #0E1A06→lima, contraste 1,35; `bwWarm`: #0C0C0E→papel, contraste 1,4). Llevan marcas ✖/+ dibujadas (no emoji), viñeta y grano.
+
+**A (escena «ÉLITE», segundo 19):** toma completa en duotono lima, oscurecida para que el contorno se lea en pequeño, con fuga de luz cálida abajo a la derecha y viñeta. El titular va en contorno claro (papel) con una sombra suave, en una fila (dos si tiene más de dos palabras). Lleva una marca «+» arriba a la derecha y un aro fino abajo a la izquierda.
+
+**B (escena «CADA DÍA», segundo 7):** una sola toma continua, con la mitad izquierda en duotono lima y la derecha en B/N cálido. El titular se parte en dos filas sobre bandas lima en escalera: la primera anclada a la izquierda y la segunda a sangre por la derecha. No repite texto; usa las mismas palabras que A o menos.
+
+Titular por defecto: el primer rótulo de dos filas del guion (`lyrics.json`, campo `lines`), por ejemplo «SIN LÍMITES». Sin «LETRAS» ni artista. NODEMOTION queda discreta en la esquina.
 
 ![Miniaturas A y B de promo-trendy](../../docs/previews/promo-trendy.jpg)
 

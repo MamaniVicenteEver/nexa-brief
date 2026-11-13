@@ -3,6 +3,7 @@
 import { Check, Download, Loader2, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { useResourceScope } from "@/features/resources/ResourceScope";
 import type { RequirementMediaSlot } from "@/features/templates/types";
 import { cn } from "@/lib/utils";
 import { candidateRef } from "../api/studio-service";
@@ -22,6 +23,7 @@ export function StockSearchPanel({
   onImported: (ref: MediaRef) => void;
 }) {
   const t = useTranslations("studio.stock");
+  const scope = useResourceScope();
   const [draft, setDraft] = useState("");
   const [query, setQuery] = useState("");
   const search = useStockSearch(query ? { q: query, kind, orientation: slot.orientation } : null);
@@ -33,7 +35,7 @@ export function StockSearchPanel({
   async function onImport(item: StockItem) {
     const ref = candidateRef(item);
     const existing = item.library_asset_id ?? imported[ref];
-    if (existing) {
+    if (existing && !scope.templateId) {
       onImported({ assetId: existing, kind: item.kind });
       return;
     }

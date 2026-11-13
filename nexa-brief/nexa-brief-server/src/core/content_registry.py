@@ -150,13 +150,18 @@ async def index_production_assets(video_id: str, production_dir: Path, inventory
 
 
 async def register_recording(video_id: str, recording_id: str, *, outputs: list[Path],
-                             log_id: str, duration: str) -> dict:
+                             log_id: str, duration: str, locale: str = "es-419",
+                             revision: str | None = None, title: str = "") -> dict:
     """Agrega una grabación y sus archivos sin duplicar sus bytes."""
     import hashlib
     from src.core.data import get_data_store
     root = _layout().root.resolve()
     _id(video_id, "video_id")
     _id(recording_id, "recording_id")
+    from src.core.markets import normalize_locale
+    locale = normalize_locale(locale)
+    if revision is not None and not re.fullmatch(r"rev-\d{3,}", revision):
+        raise ValueError("revision inválida")
     refs = []
     for path in outputs:
         key = path.relative_to(root).as_posix()
@@ -167,7 +172,8 @@ async def register_recording(video_id: str, recording_id: str, *, outputs: list[
         details = store.get(video_id) or {}
         recordings = dict(details.get("recordings") or {})
         recordings[recording_id] = {"recording_id": recording_id, "asset_ids": refs,
-                                    "log_id": log_id, "duration": duration}
+                                    "log_id": log_id, "duration": duration, "locale": locale,
+                                    "revision": revision, "title": title}
         details["recordings"] = recordings
         store.put(video_id, details)
     return recordings[recording_id]

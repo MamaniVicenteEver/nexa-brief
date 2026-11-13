@@ -1,3 +1,7 @@
+Para crear cualquier contenido empieza por el [índice](../../../skills/README.md),
+[CALIDAD.md](../../../skills/CALIDAD.md) (estándar obligatorio) y
+[ORQUESTACION.md](../../../skills/ORQUESTACION.md) (roles, delegación, terminado e informe).
+
 # AGENTS.md · NodeAction (casa de pruebas) — escenas de acción con personajes
 
 > **Vida en Escena (`_vida/`):** para personajes, voces, animaciones y componentes empezá por

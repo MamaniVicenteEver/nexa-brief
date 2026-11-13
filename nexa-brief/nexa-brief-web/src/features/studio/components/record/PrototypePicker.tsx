@@ -2,8 +2,9 @@
 
 import { Film } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useLibraryList } from "@/features/resources/hooks/useResources";
 import { cn } from "@/lib/utils";
-import { ORIGINAL, prototypeLabel } from "../../hooks/useRecordPrototype";
+import { isRecordable, ORIGINAL, prototypeLabel } from "../../hooks/useRecordPrototype";
 import type { Draft } from "../../types";
 import { DeletePrototypeButton } from "../sandbox/DeletePrototypeButton";
 import { PrototypeStatus } from "../sandbox/PrototypeStatus";
@@ -66,6 +67,7 @@ export function PrototypePicker({
   disabled?: boolean;
 }) {
   const t = useTranslations("studio.sandbox");
+  const { data: songs } = useLibraryList("music");
   const tr = useTranslations("studio.record");
   const song = (draft: Draft) =>
     draft.details?.songName
@@ -73,18 +75,17 @@ export function PrototypePicker({
       : undefined;
   return (
     <div className="flex flex-col gap-1.5" role="radiogroup">
-      <div className="flex items-center gap-1 [&>label]:min-w-0 [&>label]:flex-1">
+      {original && (isRecordable(original) || (choice === ORIGINAL && original.status === "rendering")) && <div className="flex items-center gap-1 [&>label]:min-w-0 [&>label]:flex-1">
         <Option
           checked={choice === ORIGINAL}
           onSelect={() => !disabled && onSelect(ORIGINAL)}
           disabled={disabled}
-          title={tr("original")}
+          title="Demo"
           subtitle={(original && song(original)) || tr("originalHint")}
           status={original?.status ?? "new"}
           icon={<Film className="size-3.5 shrink-0 text-nb-mute" />}
         />
-        {original && <DeletePrototypeButton draft={original} disabled={disabled} />}
-      </div>
+      </div>}
       {prototypes.map((draft) => (
         <div
           key={draft.draftId}
@@ -94,7 +95,7 @@ export function PrototypePicker({
             checked={choice === draft.draftId}
             onSelect={() => !disabled && onSelect(draft.draftId)}
             disabled={disabled}
-            title={prototypeLabel(draft, t("noSongName"))}
+            title={prototypeLabel(draft, t("noSongName"), songs)}
             subtitle={song(draft)}
             status={draft.status}
           />

@@ -71,6 +71,8 @@ def render_filename(video_id: str, fmt: str, seconds: int | None) -> str:
 
 def _refresh_v3_manifest(video: ExplainerVideo, format_paths: dict[str, Path]) -> None:
     """kit.py writes the manifest before managed renders leave the workspace."""
+    if video.edition_path is not None:
+        return  # Native recordings never replace the original edition's manifest.
     path = video.path / "manifest.json"
     if not path.is_file():
         return
@@ -167,11 +169,9 @@ async def run_kit_render(
     formats: tuple[str, ...] = FORMATS,
     on_output: RenderOutputCallback | None = None,
     output_dir: Path | None = None,
+    edition_path: Path | None = None,
 ) -> None:
     """Llama a `kit.py render <id>` leyendo su salida en vivo línea a línea."""
-    cmd = [sys.executable, str(KIT_CLI), "render", video_id, "--formats", ",".join(formats)]
-    if seconds:
-        cmd += ["--seconds", str(seconds)]
     env = os.environ.copy()
     env["PYTHONUNBUFFERED"] = "1"
     # El CLI administrado se respalda desde el job persistente de Biblioteca.
@@ -185,12 +185,46 @@ async def run_kit_render(
             on_output(line)
         return None
 
-    result = await run_with_progress(
-        cmd, cwd=settings.templates_dir.parent.parent, timeout=None,
-        parse_progress=consume, env=env,
-    )
-    if result.returncode != 0:
-        raise RenderError(f"kit.py render terminó con código {result.returncode}: {result.stderr_tail or result.stdout_tail}")
+    commands = []
+    if edition_path is None:
+        cmd = [sys.executable, str(KIT_CLI), "render", video_id, "--formats", ",".join(formats)]
+        if seconds:
+            cmd += ["--seconds", str(seconds)]
+        commands.append((None, cmd))
+    else:
+        # Use the same frame encoder, bypassing kit.py's original-manifest writes.
+        from src.config.content_paths import content_key, resolve_content_key
+        edition_path = Path(edition_path).absolute()
+        if (len(edition_path.parts) < 6 or edition_path != edition_path.resolve() or edition_path.parent.name != "revisions"
+                or edition_path.parents[2].name != "languages"):
+            raise RenderError("La revisión de idioma no es válida")
+        production = edition_path.parents[3]
+        if production.name != video_id:
+            raise RenderError("La revisión pertenece a otro video")
+        page = content_key(production / "index.html")
+        if resolve_content_key(page) != production / "index.html":
+            raise RenderError("La revisión no pertenece al perfil seleccionado")
+        destination = output_dir or edition_path / "render" / ("preview" if seconds else "full")
+        destination.mkdir(parents=True, exist_ok=True)
+        sizes = {"9x16": "1080x1920", "16x9": "1920x1080"}
+        for fmt in formats:
+            if fmt not in sizes:
+                raise RenderError(f"Formato inválido: {fmt}")
+            cmd = [sys.executable, str(settings.templates_dir / "_tools/commercial/render_promo.py"),
+                   page, str(destination / render_filename(video_id, fmt, seconds)),
+                   "--edition", str(edition_path / "edition.json"), "--size", sizes[fmt], "--workers", "4"]
+            if seconds:
+                cmd += ["--to", str(seconds)]
+            commands.append((fmt, cmd))
+    for index, (fmt, cmd) in enumerate(commands, start=1):
+        if fmt is not None:
+            consume(f"@@format {fmt} {index} {len(commands)}")
+        result = await run_with_progress(
+            cmd, cwd=settings.templates_dir.parent.parent, timeout=None,
+            parse_progress=consume, env=env,
+        )
+        if result.returncode != 0:
+            raise RenderError(f"El render terminó con código {result.returncode}: {result.stderr_tail or result.stdout_tail}")
 
 
 
@@ -203,7 +237,9 @@ def _copy_for(video: ExplainerVideo, platform: str) -> tuple[str, str, list[str]
     """Título, descripción y tags propios de cada red (publish.json), con YouTube de respaldo."""
     if platform == "tiktok" and video.tiktok_caption:
         title, description, tags = video.tiktok_caption, video.tiktok_caption, video.tiktok_hashtags or video.youtube_tags
-    elif platform in ("facebook", "instagram") and video.facebook_title:
+    elif platform == "instagram" and video.instagram_title:
+        title, description, tags = video.instagram_title, video.instagram_description or video.youtube_description, video.youtube_tags
+    elif platform == "facebook" and video.facebook_title:
         title, description, tags = video.facebook_title, video.facebook_description or video.youtube_description, video.youtube_tags
     else:
         title, description, tags = video.youtube_title, video.youtube_description, video.youtube_tags
@@ -211,6 +247,12 @@ def _copy_for(video: ExplainerVideo, platform: str) -> tuple[str, str, list[str]
         from src.core.social_caption import social_video_parts
         description, tags = social_video_parts(title, description, tags)
     return _clean(title), _clean(description), [t for t in (strip_emojis(t) for t in tags) if t.strip("#")]
+
+
+def _pinned_comment(video: ExplainerVideo) -> str:
+    if video.edition_path is not None:
+        return _clean(video.pinned_comment)
+    return _clean(video.pinned_comment or read_publish(video.path).get("pinned_comment") or "")
 
 
 @dataclass
@@ -242,6 +284,9 @@ class RecordJob:
     started_at: datetime | None = None
     eta_seconds: int | None = None
     finished_at: datetime | None = None
+    locale: str = "es-419"
+    revision: str | None = None
+    title: str = ""
 
     @property
     def seconds(self) -> int | None:
@@ -268,8 +313,9 @@ class ExplainerRecorder:
     def get_job(self, job_id: str) -> RecordJob | None:
         return self._jobs.get(job_id)
 
-    def latest_for_video(self, video_id: str) -> RecordJob | None:
-        matches = [j for j in self._jobs.values() if j.video_id == video_id]
+    def latest_for_video(self, video_id: str, locale: str = "es-419", revision: str | None = None) -> RecordJob | None:
+        matches = [j for j in self._jobs.values() if j.video_id == video_id and j.locale == locale
+                   and (revision is None or j.revision == revision)]
         return matches[-1] if matches else None
 
     def list_jobs(self, *, active: bool = True) -> list[RecordJob]:
@@ -314,7 +360,9 @@ class ExplainerRecorder:
             if duration != "full":
                 raise ValueError("publicar requiere una grabación completa (duration='full')")
             if not video.publish_ready:
-                raise ValueError(f"{video.video_id} no tiene youtube_title en publish.json")
+                if not video.youtube_title.strip():
+                    raise ValueError(f"{video.video_id} no tiene título de YouTube (youtube_title) en {video.locale}")
+                raise ValueError(f"{video.video_id}: completa los metadatos de publicación de {video.locale}")
             if not selectors:
                 raise ValueError("publish=true requiere al menos un canal ('youtube:alias', ...)")
             for selector in selectors:
@@ -342,6 +390,12 @@ class ExplainerRecorder:
                     selector: (PLATFORM_FORMAT[selector.split(":", 1)[0]],)
                     for selector in selectors
                 }
+        if video.edition_path is not None and any(
+            job.video_id == video.video_id and job.locale == video.locale and job.revision == video.revision
+            and job.state in (RecordState.queued, RecordState.rendering, RecordState.publishing)
+            for job in self._jobs.values()
+        ):
+            raise ValueError("Espera a que termine la grabación de esta edición antes de crear otra")
         if thumbnail is not None:
             thumbnails.choose(video, thumbnail)   # ThumbnailError (ValueError) si no está disponible
 
@@ -357,6 +411,9 @@ class ExplainerRecorder:
             account_formats=resolved_account_formats,
             formats=resolved_formats,
             thumbnail=thumbnail,
+            locale=video.locale,
+            revision=video.revision,
+            title=video.youtube_title or video.title,
         )
         self._jobs[job.job_id] = job
         task = asyncio.create_task(self._run(job, video))
@@ -375,6 +432,14 @@ class ExplainerRecorder:
     async def _run(self, job: RecordJob, video: ExplainerVideo) -> None:
         async with self._slots:
             try:
+                if video.edition_path is not None:
+                    from src.core.explainer.editions.packaging import load_native, resolve_video
+                    video = resolve_video(video, job.locale, job.revision)
+                    if job.duration == "full" and load_native(video.edition_path) is None:
+                        raise ValueError("Prepara las tres miniaturas de esta edición antes de grabar el video completo")
+                    if not video.ready or (job.publish and not video.publish_ready):
+                        raise ValueError("La edición cambió mientras esperaba; revisa su preparación antes de continuar")
+                    job.title = video.youtube_title or video.title
                 await self._run_locked(job, video)
             except Exception as exc:  # noqa: BLE001 - el job guarda el error
                 job.state = RecordState.failed
@@ -409,7 +474,7 @@ class ExplainerRecorder:
 
     async def _run_locked(self, job: RecordJob, video: ExplainerVideo) -> None:
         started = time.monotonic()
-        render_dir = video.path / "render"
+        render_dir = (video.edition_path or video.path) / "render"
         seconds = job.seconds
         src_dir = render_dir / "preview" if seconds else render_dir
         profile_layout = layout_for_settings(settings)
@@ -469,6 +534,10 @@ class ExplainerRecorder:
                 if not any(p.name == "output_dir" or p.kind == inspect.Parameter.VAR_KEYWORD for p in parameters):
                     raise RenderError("El grabador no admite el destino del perfil v2")
                 kwargs["output_dir"] = src_dir
+            if video.edition_path is not None:
+                if not any(p.name == "edition_path" or p.kind == inspect.Parameter.VAR_KEYWORD for p in parameters):
+                    raise RenderError("El grabador no admite revisiones por idioma")
+                kwargs["edition_path"] = video.edition_path
             await self._render(video.video_id, seconds, missing, **kwargs)
             for fmt in missing:
                 stamp_render(src_dir / render_filename(video.video_id, fmt, seconds), signature)
@@ -477,7 +546,7 @@ class ExplainerRecorder:
         job.progress = 1.0
         job.eta_seconds = 0
 
-        out_dir = (video.path if profile_layout.schema_version >= 3 else
+        out_dir = ((video.edition_path or video.path) if profile_layout.schema_version >= 3 else
                    src_dir if direct else self._output_root / video.category_path / video.design / video.video_id)
         if not direct:
             out_dir = out_dir / (f"preview-{seconds}s" if seconds else recording_id)
@@ -511,7 +580,8 @@ class ExplainerRecorder:
             if direct:
                 from src.core.content_registry import register_recording
                 await register_recording(video.video_id, recording_id, outputs=[Path(p) for p in job.outputs],
-                                         log_id=job.log_id, duration=job.duration)
+                                         log_id=job.log_id, duration=job.duration, locale=video.locale,
+                                         revision=video.revision, title=video.youtube_title or video.title)
             job.render_seconds = round(time.monotonic() - started, 1)
             job.state = RecordState.done
             return
@@ -526,9 +596,15 @@ class ExplainerRecorder:
         if direct:
             from src.core.content_registry import register_recording
             await register_recording(video.video_id, recording_id, outputs=[Path(p) for p in job.outputs],
-                                     log_id=job.log_id, duration=job.duration)
+                                     log_id=job.log_id, duration=job.duration, locale=video.locale,
+                                     revision=video.revision, title=video.youtube_title or video.title)
 
-        thumbnail_dir = preview_directory(video.path) if profile_layout.schema_version >= 3 else out_dir
+        if profile_layout.schema_version >= 3 and video.edition_path is not None:
+            # A later A/B/C choice must not replace a thumbnail already queued
+            # with an older recording, even inside the same language revision.
+            thumbnail_dir = next(iter(format_paths.values())).parent
+        else:
+            thumbnail_dir = preview_directory(video.path) if profile_layout.schema_version >= 3 else out_dir
         thumbnail_dir.mkdir(parents=True, exist_ok=True)
         thumbnail = await self._thumbnail(video, thumbnail_dir, job.formats)
         job.scheduled_job_id = await self._register_for_scheduling(
@@ -543,7 +619,7 @@ class ExplainerRecorder:
         job.state = RecordState.publishing
         facade = self._publisher_getter()
         failures: list[str] = []
-        pinned_comment = _clean(read_publish(video.path).get("pinned_comment") or "")
+        pinned_comment = _pinned_comment(video)
         published_count = 0
         async def publish_channel_locked(selector: str) -> None:
             nonlocal published_count
@@ -554,6 +630,8 @@ class ExplainerRecorder:
                 extra = {"thumbnail_path": thumbnail} if platform == "youtube" and thumbnail else {}
                 if platform == "youtube" and video.youtube_category_id is not None:
                     extra["youtube_category_id"] = video.youtube_category_id
+                if platform == "youtube" and video.edition_path is not None:
+                    extra["language"] = video.locale
                 if platform == "youtube" and pinned_comment:
                     extra["comment_text"] = pinned_comment
                 queue_entry = await queue_repository.start_direct(
@@ -674,8 +752,11 @@ class ExplainerRecorder:
         summary = {
             "job_id": job_id,
             "video_id": video.video_id,
+            "locale": video.locale,
+            "revision": video.revision,
+            "language": video.locale,
             "youtube_category_id": video.youtube_category_id,
-            "pinned_comment": _clean(read_publish(video.path).get("pinned_comment") or ""),
+            "pinned_comment": _pinned_comment(video),
             "platform_copies": {
                 platform: {"title": title, "description": description, "tags": tags}
                 for platform, (title, description, tags) in copies.items()
@@ -700,6 +781,15 @@ class ExplainerRecorder:
         publication_fields = ({"publication_hold": True,
                                "publication_hold_reason": str(manifest.get("publication_hold_reason") or "manual_hold")[:120]}
                               if manifest.get("publication_hold") is True else {})
+        if video.edition_path is not None:
+            # Category schedules have no market/channel binding. Only the
+            # accounts explicitly chosen for this native recording may upload it.
+            # start_direct records those uploads separately and does not use this
+            # automatic-scheduling hold.
+            publication_fields = {
+                "publication_hold": True,
+                "publication_hold_reason": f"Selecciona los canales de {video.locale}; los horarios generales no determinan el idioma.",
+            }
         await collection("jobs").insert({
             **publication_fields,
             "job_id": job_id,
@@ -707,6 +797,7 @@ class ExplainerRecorder:
             "title": video.youtube_title or video.title,
             "stage": JobStage.PACKAGED.value,
             "output_dir": str(out_dir),
+            "log_dir": str(logs),
             "errors": [],
             "created_at": created,
             "updated_at": now.isoformat(),
@@ -721,6 +812,8 @@ class ExplainerRecorder:
             "source": "explainer",
             "video_id": video.video_id,
             "design": video.design,
+            "locale": video.locale,
+            "revision": video.revision,
         })
         logger.info("explainer_job_registered", job_id=job_id, category=video.category_path)
         return job_id

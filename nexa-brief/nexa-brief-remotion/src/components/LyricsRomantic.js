@@ -1,7 +1,7 @@
 const React = require('react');
 const RomanticIntro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-romantic/components/intro.js');
 const RomanticOutro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-romantic/components/outro.js');
-const {useCurrentFrame, AbsoluteFill, Audio, interpolate} = require('remotion');
+const {useCurrentFrame, AbsoluteFill, Audio, Html5Video, interpolate} = require('remotion');
 const {loadFont: loadAnton} = require('@remotion/google-fonts/Anton');
 loadAnton();
 const {loadFont: loadPlayfair} = require('@remotion/google-fonts/PlayfairDisplay');
@@ -157,11 +157,16 @@ function LyricsRomantic({configData, lyricsData, audioSrc, bgSrc}) {
   const grainStep = Math.floor(frame / fps / (1.3 / 4)) % 4;
   const [grainX, grainY] = GRAIN_STEPS[grainStep];
 
+  const hasCustomOpacity = typeof C.bg?.opacity === 'number' && Number.isFinite(C.bg.opacity);
+  const bgOpacity = hasCustomOpacity ? Math.max(0, Math.min(1, C.bg.opacity)) : 1;
+  const bgIsVideo = C.bg?.type === 'video';
+
   return React.createElement(
     AbsoluteFill,
     {style: {background: '#0d0709', overflow: 'hidden'}},
     React.createElement(Audio, {src: resolveMediaSrc(audioSrc)}),
-    React.createElement('img', {
+    React.createElement(bgIsVideo ? Html5Video : 'img', {
+        ...(bgIsVideo ? {loop: true, muted: true} : {}),
       src: resolveMediaSrc(bgSrc),
       style: {
         position: 'absolute',
@@ -169,9 +174,9 @@ function LyricsRomantic({configData, lyricsData, audioSrc, bgSrc}) {
         width: '112%',
         height: '112%',
         objectFit: 'cover',
-        filter: C.bg?.filter || '',
+        filter: hasCustomOpacity ? 'none' : C.bg?.filter || '',
         transform: `scale(${bgScale}) translate(${bgTX}%, ${bgTY}%)`,
-        opacity: backgroundDim,
+        opacity: backgroundDim * bgOpacity,
       },
     }),
     React.createElement('div', {
@@ -181,6 +186,7 @@ function LyricsRomantic({configData, lyricsData, audioSrc, bgSrc}) {
         background:
           'radial-gradient(ellipse at 50% 62%, rgba(210,120,120,0.10) 0%, rgba(24,8,10,0.55) 75%, rgba(10,4,5,0.8) 100%)',
         mixBlendMode: 'multiply',
+        opacity: hasCustomOpacity ? 0.25 : 1,
       },
     }),
     React.createElement(Bokeh, {lights, frame, tint: C.bokeh.tint}),
@@ -221,6 +227,7 @@ function LyricsRomantic({configData, lyricsData, audioSrc, bgSrc}) {
         inset: 0,
         pointerEvents: 'none',
         background: 'radial-gradient(ellipse at 50% 46%, transparent 38%, rgba(6,2,3,0.78) 100%)',
+        opacity: hasCustomOpacity ? 0.35 : 1,
       },
     }),
     React.createElement('div', {

@@ -88,7 +88,9 @@ async def test_recorder_module_waits_for_transcription_adapter(tmp_path, monkeyp
         started.set()
         assert finish.wait(3)
         return {'metadata': {'language': 'en'}, 'segments': []}
-    monkeypatch.setattr(whisper, '_transcribe_sync', cpu)
+    # The adapter now dispatches an ephemeral subprocess; mock that boundary so
+    # this scheduling test cannot load Whisper or start a real worker.
+    monkeypatch.setattr(whisper, '_run_worker', cpu)
     niche = get_niche_config('lyrics_video_caution')
     job = Job(input=JobInput(category_name=niche.id))
     analysis = AnalyzedInput(genre='', mood_tags=[], image_query='', description='', duration_seconds=1, category_name=niche.id)

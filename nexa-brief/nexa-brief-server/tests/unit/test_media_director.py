@@ -12,7 +12,10 @@ from src.core.ports.ai_port import AIPort
 from src.core.ports.stock_media_port import StockItem
 from src.core.stock import StockSearchResult
 from src.presentation.api.routers import media_plans as media_plans_router
-from src.presentation.main import app
+from fastapi import FastAPI
+
+app = FastAPI()
+app.include_router(media_plans_router.router, prefix="/api/v1")
 
 REQUIREMENTS = {
     "media": [
@@ -133,7 +136,8 @@ def test_router_flow(monkeypatch):
     monkeypatch.setattr(media_plans_router, "search_stock", search)
     monkeypatch.setattr(media_plans_router, "_analysis_ai", lambda: None)
 
-    async def fake_import(item: StockItem) -> str:
+    async def fake_import(item: StockItem, template_id: str = "") -> str:
+        assert template_id == "promo-dynamic"
         return f"asset-{item.provider_id}"
 
     monkeypatch.setattr(media_plans_router, "_import_item", fake_import)

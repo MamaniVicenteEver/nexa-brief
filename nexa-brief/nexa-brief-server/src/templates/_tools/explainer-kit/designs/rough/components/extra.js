@@ -390,7 +390,13 @@
     },
     create(ctx, p) {
       const P = ctx.C.palette, g = R.root(ctx), { W, u, cx, cy, portrait } = ctx.stage;
-      const fmt = v => p.prefix + Math.round(v).toLocaleString("es-ES").replace(/ |,/g, ".") + p.suffix;
+      const locale = ctx.C.locale || "es-ES";
+      // Conserva el formato histórico español y usa el mercado de la edición para los demás.
+      const numberLocale = locale.toLowerCase().startsWith("es") ? "es-ES" : locale;
+      const fmt = v => {
+        const n = Math.round(v).toLocaleString(numberLocale);
+        return p.prefix + (numberLocale === "es-ES" ? n.replace(/ |,/g, ".") : n) + p.suffix;
+      };
       const final = fmt(p.to), fs = Math.min(W * 0.86 / Math.max(3, R.measure(final, "900 100px Inter") / 100), ctx.stage.H * (portrait ? 0.12 : 0.24));
       const num = R.text(ctx, g, fmt(p.from), { x: cx, y: cy, size: fs / u, weight: 900, color: P.ink });
       const w = R.measure(final, `900 ${fs}px Inter`);

@@ -174,6 +174,7 @@ def compose_brief(
             "## Instrucciones",
             "",
             "- Si hay variantes, cierres, fichas u otras partes elegibles, declaralas en `info.json` según `_proto/COMPONENTES.md` e informá la lista en el resultado.",
+            "- Aplica `sandbox/PREPARAR-PRODUCCION.md`: entrega rutas portables, identidad, catálogo y reporte de pendientes para Preparar para producción → Pasar a producción, sin IA editorial ni traslado automático.",
             f"Seguí [PROTOTIPO.md]({public_base}{PROTOTIPO_URL_PATH}) (URL pública + ruta).",
             f"- Ruta local: `{(root / 'sandbox' / 'PROTOTIPO.md').resolve()}`",
             "- Ruta SSH: `alfred-server:~/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/sandbox/PROTOTIPO.md`",

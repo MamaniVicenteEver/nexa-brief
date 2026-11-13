@@ -5,13 +5,17 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import type { StudioTab, TemplateStudioController } from "../hooks/useTemplateStudio";
 import { OriginalTab } from "./original/OriginalTab";
+import { VideosTab } from "./VideosTab";
 import { RecordTab } from "./record/RecordTab";
 import { SandboxTab } from "./sandbox/SandboxTab";
+import { promoPrototypeGroups } from "../lib/promo-prototypes";
+import { isRecordable } from "../hooks/useRecordPrototype";
 
 const TABS: { id: StudioTab; Icon: typeof Film }[] = [
   { id: "original", Icon: Film },
   { id: "sandbox", Icon: FlaskConical },
   { id: "record", Icon: Clapperboard },
+  { id: "videos", Icon: Film },
 ];
 
 /** Panel lateral del modal de una plantilla de NodeMotion: Video original · Sandbox (prototipos) ·
@@ -35,12 +39,17 @@ export function StudioSidebar({ studio }: { studio: TemplateStudioController }) 
     return <p className="p-4 text-[12.5px] text-nb-accent-coral">{t("loadError")}</p>;
   }
 
-  const recordableCount = studio.recorder.recordable.length;
+  const original = studio.original.draft;
+  const recordableCount = studio.recorder.recordable.length + (original && isRecordable(original) ? 1 : 0);
+  const sandboxCount = studio.isPromo
+    ? (studio.promoSessions.data ? promoPrototypeGroups(studio.promoSessions.data.sessions, studio.prototypes, studio.promoSessions.data.archived_draft_ids).count : 0) + (original ? 1 : 0)
+    : studio.prototypes.filter((d) => d.status !== "rendering" && d.status !== "rendered").length +
+      (!original || (original.status !== "rendering" && original.status !== "rendered") ? 1 : 0);
   return (
     <div className="flex h-full min-h-0 flex-col">
       <div
         role="tablist"
-        className="flex shrink-0 gap-1 overflow-x-auto border-b border-nb-line p-2"
+        className="flex shrink-0 gap-0.5 border-b border-nb-line px-1 py-2"
       >
         {TABS.map(({ id, Icon }) => (
           <button
@@ -50,15 +59,16 @@ export function StudioSidebar({ studio }: { studio: TemplateStudioController }) 
             aria-selected={studio.tab === id}
             onClick={() => studio.setTab(id)}
             className={cn(
-              "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[12px] font-semibold whitespace-nowrap transition-colors",
+              "flex min-w-0 flex-1 items-center justify-center gap-1 rounded-full px-1 py-1.5 text-[11px] font-semibold whitespace-nowrap transition-colors",
               studio.tab === id ? "bg-nb-ink text-nb-surface" : "text-nb-ink-soft hover:bg-nb-bg-2",
             )}
           >
-            <Icon className="size-3.5" />
+            <Icon className="size-3 shrink-0 max-[450px]:hidden" />
             {t(`tabs.${id}`)}
-            {id === "sandbox" && studio.prototypes.length > 0 && (
-              <span className="text-[10.5px] opacity-70">{studio.prototypes.length}</span>
+            {id === "sandbox" && (
+              <span className="text-[10.5px] opacity-70">{sandboxCount}</span>
             )}
+            {id === "videos" && <span className="text-[10.5px] opacity-70">{studio.videos.data?.filter((video) => video.status === "rendered").length ?? 0}</span>}
             {id === "record" && recordableCount > 0 && (
               <span className="size-1.5 rounded-full bg-nb-green-dark" aria-hidden="true" />
             )}
@@ -69,6 +79,7 @@ export function StudioSidebar({ studio }: { studio: TemplateStudioController }) 
         {studio.tab === "original" && <OriginalTab studio={studio} />}
         {studio.tab === "sandbox" && <SandboxTab studio={studio} />}
         {studio.tab === "record" && <RecordTab studio={studio} />}
+        {studio.tab === "videos" && <VideosTab studio={studio} />}
       </div>
     </div>
   );

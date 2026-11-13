@@ -133,3 +133,7 @@ no commentary. Start with `{` and end with `}`.
   "outro": { "leadSec": 7, "songTitle": "", "title": "Gracias", "sub": "Por ver", "feats": "Suscribete" }
 }
 ```
+
+## Calidad
+
+Map only supplied inputs. Never invent facts, figures, results, quotations or names; retain supplied context and date for any figure. Preserve supplied lyrics verbatim. Do not add generic labels such as «UNA IDEA» or «EN MOVIMIENTO»; a topic-specific label such as «DARTMOUTH · 1956» is acceptable only when supplied. No emojis, «LETRAS» or unrelated labels. Keep the exact JSON schema and its documented defaults; credits belong in the publication description, not invented config fields.

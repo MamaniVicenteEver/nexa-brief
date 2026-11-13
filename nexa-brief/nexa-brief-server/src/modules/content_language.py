@@ -11,6 +11,8 @@ from __future__ import annotations
 
 import structlog
 
+from src.core.markets import get_market
+
 from src.adapters.lyrics.factory import get_lyrics_transcriber
 from src.config.settings import settings
 from src.core.job import Job
@@ -34,7 +36,9 @@ async def _from_audio(job: Job) -> ResolvedLanguage | None:
     if not settings.metadata_detect_audio_language or music_path is None or not music_path.exists():
         return None
     try:
-        probabilities = await get_lyrics_transcriber().detect_language(music_path, SUPPORTED_LANGUAGES)
+        # The registry owns provider codes; this legacy flow still accepts only es/en.
+        languages = tuple(get_market(code).whisper for code in SUPPORTED_LANGUAGES)
+        probabilities = await get_lyrics_transcriber().detect_language(music_path, languages)
     except Exception as exc:  # detection is best-effort; never fail the job over it
         logger.warning("content_language_audio_detection_failed", job_id=job.job_id, error=str(exc))
         return None

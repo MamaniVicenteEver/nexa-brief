@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "engine": "nodehistory/_atlas",
+  "design": "atlas-cinematico",
+  "destination": "selected-profile/sandbox/category/episode",
+  "commands": [
+    "atlas_factory.py init",
+    "supervisor: dataset + research + brief",
+    "atlas_factory.py run-script",
+    "supervisor: editorial-review approved_for_tts + script hash",
+    "atlas_factory.py voice",
+    "atlas_factory.py transcribe",
+    "supervisor: raw audio/ASR differences + geometry + credited media",
+    "atlas_compile.py",
+    "atlas_preview.py --fetch --width 1920 --height 1080 --step .25 --capture-checkpoints --gpu intel-vulkan",
+    "atlas_preview.py --fetch --width 1080 --height 1920 --step .25 --capture-checkpoints --gpu intel-vulkan",
+    "supervisor: inspect both formats and record source/frame hashes",
+    "atlas_factory.py audit",
+    "atlas_finalize.py"
+  ],
+  "postconditions": {
+    "status": "lista para revisar",
+    "production_ready": false,
+    "rendered": false,
+    "publication": false
+  },
+  "verified_gpu_modes": {
+    "1920x1080": "intel-vulkan",
+    "1080x1920": "intel-vulkan"
+  },
+  "note": "Receta de preparación host. La opción GPU requiere verificar el renderer real en cada servidor; no certifica integración NATIVE_DESIGNS ni rendimiento/coste global y no copia motores."
+}

@@ -1,0 +1,19 @@
+"""Contratos para fuentes, caché y extracción vectorial."""
+from pathlib import Path
+from typing import Protocol
+from .providers import Provider
+
+class TileProviderPort(Protocol):
+    id: str
+    license: str
+    attribution: str
+    def tile_url(self, z: int, x: int, y: int) -> str: ...
+
+class TileCachePort(Protocol):
+    def path_for(self, provider: Provider, z: int, x: int, y: int) -> Path: ...
+    def has(self, provider: Provider, z: int, x: int, y: int) -> bool: ...
+    def get(self, provider: Provider, z: int, x: int, y: int) -> bytes | None: ...
+    def put(self, provider: Provider, z: int, x: int, y: int, data: bytes) -> Path: ...
+
+class VectorExtractPort(Protocol):
+    def extract(self, bbox: tuple[float, float, float, float], maxzoom: int, out: Path, build: str | None = None) -> Path: ...

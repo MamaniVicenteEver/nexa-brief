@@ -8,15 +8,14 @@ import { FieldShell } from "../FieldShell";
 export function OriginalDetails({ studio }: { studio: TemplateStudioController }) {
   const t = useTranslations("studio.original");
   const tr = useTranslations("studio.render");
+  const tf = useTranslations("templates.prep.format");
   const req = studio.requirements.data;
   if (!req) return null;
-  const engines = studio.recorder.engines;
   const hasSong = req.audio.required || req.audio.lyrics !== "none";
+  const defaultEngine = studio.recorder.defaultEngine;
 
   return (
     <div className="flex flex-col gap-5">
-      <p className="text-[12px] text-nb-mute">{t("hint")}</p>
-
       <FieldShell title={t("needs")}>
         <ul className="flex flex-col gap-1.5 text-[12.5px] text-nb-ink-soft">
           {hasSong && (
@@ -32,7 +31,7 @@ export function OriginalDetails({ studio }: { studio: TemplateStudioController }
               {" · "}
               {t(`kind.${slot.kind === "video" || slot.kind === "image" ? slot.kind : "any"}`)}
               {" · "}
-              {t("count", { min: slot.min, max: slot.max })}
+              {slot.min > 0 ? t("required") : t("optional")} · {t("count", { min: slot.min, max: slot.max })}
             </li>
           ))}
           {req.texts.length > 0 && (
@@ -45,22 +44,11 @@ export function OriginalDetails({ studio }: { studio: TemplateStudioController }
         </ul>
       </FieldShell>
 
-      <FieldShell title={t("records")}>
-        <p className="text-[12.5px] text-nb-ink-soft">
-          {engines.map((e) => tr(`engines.${e}`)).join(" · ") || "—"}
-          {studio.recorder.engine &&
-            ` (${t("default", { engine: tr(`engines.${studio.recorder.engine}`) })})`}
-        </p>
-        <p className="text-[12px] text-nb-mute">{t("formats")}</p>
+      <FieldShell title={t("formatsTitle")}>
+        <p className="text-[12.5px] text-nb-ink-soft">{tf("16x9")}{defaultEngine && defaultEngine !== "remotion" ? ` · ${tf("9x16")}` : ""}</p>
       </FieldShell>
-
-      <FieldShell title={t("flowTitle")}>
-        <ol className="flex list-decimal flex-col gap-1 pl-4 text-[12px] text-nb-ink-soft">
-          <li>{t("flow1")}</li>
-          <li>{t("flow2")}</li>
-          <li>{t("flow3")}</li>
-          <li>{t("flow4")}</li>
-        </ol>
+      <FieldShell title={t("records")}>
+        <p className="text-[12.5px] text-nb-ink-soft">{defaultEngine ? tr(`engines.${defaultEngine}`) : "—"}</p>
       </FieldShell>
     </div>
   );

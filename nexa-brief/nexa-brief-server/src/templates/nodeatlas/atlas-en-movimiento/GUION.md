@@ -1,14 +1,19 @@
+Antes: [CALIDAD.md](../../../skills/CALIDAD.md) (manda) y, si orquestas, [ORQUESTACION.md](../../../skills/ORQUESTACION.md).
+Al delegar: [PLANTILLA-BRIEF.md](../../../skills/PLANTILLA-BRIEF.md). Al entregar: [PLANTILLA-INFORME.md](../../../skills/PLANTILLA-INFORME.md) como `INFORME.md`.
+
+## Específico de esta skill
+
 # GUION · cómo se genera el diálogo de un video de Atlas en Movimiento
 
 > Vale para cualquier tema (guerra, suceso histórico, política, economía). Aquí no hay tema: hay un método.
-> Lo lee quien escribe el guion (Codex `script`, Haiku 5.5 de respaldo, o el líder) y quien lo revisa.
+> Lo lee quien escribe el guion (el rol `script` de `roles.json` o el líder) y quien lo revisa.
 
 ## 1. Quién se encarga del diálogo y de qué fuentes sale
 
 | pieza | quién / dónde |
 |---|---|
 | **la estrategia narrativa** (arco, actos, golpe, retención, pregunta final) | datos en `src/skills/explainer/strategies/narrative/<id>.json`. Por defecto `narrative_amarillista_v1` (default de todas las categorías en `_active.json`); alternativa sobria: `narrative_documental_v1`. Módulo: `src/core/explainer/narrative/` (README) |
-| **quién escribe el guion** | rol `script` de `roles.json` (Codex; respaldo Haiku 5.5). Borradores de texto: `text_draft`; voces de personajes: `dialogue_draft` |
+| **quién escribe el guion** | rol `script` y respaldo de `roles.json`, cuando la sesión lo permita. Borradores de texto: `text_draft`; voces de personajes: `dialogue_draft` |
 | **reglas de estilo del guion** | `src/templates/_tools/explainer-kit/guides/storytelling.md` §4–7 y el bloque `narrativa` del brief |
 | **la categoría** (tono, hashtags, reglas de título) | `src/skills/explainer/categories/node_atlas.json` (y `node_history|node_politics|node_tech.json` si aplica) |
 | **verificación** | `fact_check` (DeepSeek) contra el ledger; `kit.py check` valida la forma y `narrative_check.py` el orden de actos |

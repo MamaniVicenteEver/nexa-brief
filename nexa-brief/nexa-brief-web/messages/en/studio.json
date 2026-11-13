@@ -11,9 +11,10 @@
       "media": "Media",
       "texts": "Texts",
       "render": "Record",
-      "original": "Original video",
+      "original": "Demo",
       "sandbox": "Sandbox",
-      "record": "Record"
+      "record": "Record",
+      "videos": "Videos"
     },
     "actions": {
       "preview": "Preview",
@@ -28,7 +29,7 @@
     "progress": {
       "previewing": "Previewing",
       "rendering": "Recording",
-      "ready": "Your version is ready. If you like it, record it.",
+      "ready": "Preview ready.",
       "changed": "You changed something: preview again before recording.",
       "failed": "It couldn't be generated. Check your choices and preview again.",
       "failedRecoverable": "Recording failed. You can retry without previewing again.",
@@ -49,7 +50,7 @@
         "failed": "failed"
       },
       "preparing": "Preparing the publishing texts…",
-      "prepared": "Prepared: review the Details or record it."
+      "prepared": "Publication text ready to review."
     },
     "song": {
       "title": "Song",
@@ -67,10 +68,13 @@
       "remove": "Remove",
       "library": "Library",
       "stock": "Stock",
+      "backgroundVisibility": "Background transparency",
       "kindImage": "Image",
       "kindVideo": "Video",
       "none": "This template doesn't use your own media.",
-      "noSong": "This template doesn't use a song."
+      "noSong": "This template doesn't use a song.",
+      "openPicker": "Open resources",
+      "closePicker": "Close resources"
     },
     "texts": {
       "title": "Texts",
@@ -90,10 +94,10 @@
       "importError": "Import failed. If it was from Pixabay, search again."
     },
     "ai": {
-      "title": "Let AI choose",
+      "title": "Find images or videos with AI",
       "briefLabel": "Description for the AI",
-      "briefPlaceholder": "Tell it what the video is about (e.g. “urban sneakers, night, neon city”). If left empty, the template description is used.",
-      "start": "Find media with AI",
+      "briefPlaceholder": "Describe the content you want to find",
+      "start": "Search",
       "planning": "Searching… {done}/{total}",
       "failed": "The AI couldn't build the plan. Try again.",
       "startError": "We couldn't start the search.",
@@ -105,6 +109,8 @@
       "acceptError": "Import failed. Try again."
     },
     "render": {
+      "engineUnavailable": "Not available for now",
+      "hyperframesUnsupported": "HyperFrames is not available for this category.",
       "engine": "Recording engine",
       "engines": {
         "remotion": "Remotion",
@@ -123,7 +129,7 @@
     },
     "original": {
       "hint": "This is the template as is. To make your version, create a prototype in the Sandbox.",
-      "needs": "What it needs",
+      "needs": "What do you need?",
       "song": "Song",
       "songLyrics": "lyrics are transcribed automatically",
       "songOnly": "no lyrics on screen",
@@ -152,10 +158,14 @@
       "editPublication": "Edit texts",
       "preparing": "Preparing (previewing and writing the texts)…",
       "preparePublication": "Prepare the publishing",
-      "prepareAgain": "Prepare again with this information"
+      "prepareAgain": "Prepare again with this information",
+      "createPrototype": "Create my prototype",
+      "formatsTitle": "Formats",
+      "required": "required",
+      "optional": "optional"
     },
     "sandbox": {
-      "title": "Prototypes",
+      "title": "My prototypes",
       "count": "{n, plural, =0 {none} one {# prototype} other {# prototypes}}",
       "hint": "Each prototype is a version of this template with its song, background video or image, and texts.",
       "loading": "Loading prototypes…",
@@ -183,7 +193,7 @@
         "working": "Working…",
         "preparing": "Preparing texts…",
         "prepare": "Prepare",
-        "prepareHint": "Prepare generates the song name and the titles, descriptions and tags for YouTube, Facebook, Instagram and TikTok.",
+        "prepareHint": "Generate publication text.",
         "details": "Details",
         "hideDetails": "Back to media",
         "goRecord": "Go to record",
@@ -193,7 +203,19 @@
         "missingMedia": "Fill the highlighted media to preview."
       },
       "play": "Preview {name}",
-      "previewUnavailable": "Generate a preview to play this prototype."
+      "previewUnavailable": "Generate a preview to play this prototype.",
+      "phaseWork": "In progress",
+      "phaseReady": "Ready to record",
+      "phaseEmpty": "Nothing in this phase",
+      "edit": "Edit",
+      "record": "Record",
+      "missingPreview": "Preview needed",
+      "creatingPreview": "Creating preview…",
+      "missingPrepare": "Preview ready · Preparation needed",
+      "preparingLine": "Preparing text…",
+      "readyLine": "Ready",
+      "failedRetry": "Failed · Retry recording",
+      "failedEdit": "Failed · Edit and preview again"
     },
     "details": {
       "title": "Details",
@@ -215,27 +237,28 @@
       "songHint": "It's also what the video's intro card shows."
     },
     "record": {
-      "empty": "No prepared prototypes. In the Sandbox, preview one and tap “Prepare”.",
-      "goSandbox": "Create a prototype in the Sandbox",
+      "empty": "No prototypes ready to record",
+      "goSandbox": "Go to Sandbox",
       "prototype": "Prototype",
       "prototypeHint": "The original video or one of your prepared prototypes.",
       "formats": "Formats",
-      "formatsHint": "Choose Desktop, Mobile, or both. Select at least one format.",
+      "formatsHint": "Choose one or both.",
       "publish": "Publish when done",
-      "publishHint": "Optional. Each account publishes in one format. If you pick none, the video stays in the Library.",
+      "publishHint": "Optional. With no accounts selected, the video stays in the Library.",
       "record": "Record",
       "recording": "Recording…",
       "recordAndPublish": "{count, plural, one {Record and publish to # channel} other {Record and publish to # channels}}",
       "original": "Original video",
       "originalHint": "The template as is: its song and background",
       "originalNotPrepared": "The original has no publishing texts yet. Prepare it (takes a few seconds) and then record it.",
-      "prepareOriginal": "Prepare the original video"
+      "prepareOriginal": "Prepare the original video",
+      "saveArtistFirst": "Save the artist before recording."
     },
     "songNotes": {
-      "label": "About the song",
+      "label": "Song information for AI",
       "optional": "Optional",
-      "placeholder": "Name, artist, what it is about, who it speaks to, when people listen to it…",
-      "hint": "If you write it, the AI researches with it before writing the texts. If not, it identifies the song by its name or lyrics."
+      "placeholder": "Artist or details to create the publication text.",
+      "hint": "Give AI context to create the publication text."
     },
     "introSong": {
       "title": "Song in the intro",
@@ -246,7 +269,7 @@
     },
     "thumbnails": {
       "stopViewing": "Stop viewing",
-      "title": "Thumbnail",
+      "title": "Thumbnail options",
       "hint": "Two options styled like the video. Each keeps its own text and background.",
       "option": "Option {option}",
       "chosen": "Selected",
@@ -254,7 +277,7 @@
       "chooseOption": "Choose option {option}",
       "view": "View",
       "viewOption": "View and compare option {option}",
-      "textLabel": "Title or phrase for this option",
+      "textLabel": "Title or phrase",
       "compareTitle": "Compare thumbnails",
       "compareHint": "Choose an option and edit its title. The preview updates immediately.",
       "editingOption": "Editing option {option}",
@@ -271,8 +294,8 @@
       "accountsError": "Could not load account categories.",
       "retryAccounts": "Reload categories",
       "reauth": "Reconnect",
-      "shortCopyHint": "A · Up to 5 words, centered on 1 or 2 lines.",
-      "longCopyHint": "B · A phrase from the song, up to 4 lines.",
+      "shortCopyHint": "Up to 5 words.",
+      "longCopyHint": "Up to 4 lines.",
       "background": "Background for this option",
       "frame": "Video frame",
       "image": "Your image",
@@ -290,7 +313,21 @@
       "templateImage": "Template image",
       "changeThumbnail": "Change thumbnail image",
       "selectImage": "Choose image",
-      "originalColors": "Original media colors. A 20% black layer by default."
+      "originalColors": "Original media colors. A 20% black layer by default.",
+      "videoFrame": "Video frame",
+      "savedLocally": "Saved in this browser for 24 hours. Synced when saving or recording.",
+      "keptInMemory": "Changes kept in this session. Synced when saving or recording.",
+      "positionHint": "Left and right zoom the background by 20% to move it.",
+      "shortPromoHint": "Up to {words} words.",
+      "editorialStyleHint": "Archivo type with the template’s paper, ink and media composition."
+    },
+    "videos": {
+      "demo": "Original demo",
+      "error": "Could not load videos.",
+      "recording": "Recording…",
+      "recorded": "Recorded",
+      "failed": "Failed",
+      "retry": "Retry"
     }
   }
 }

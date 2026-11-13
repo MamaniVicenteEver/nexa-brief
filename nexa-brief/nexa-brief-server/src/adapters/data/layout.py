@@ -28,11 +28,14 @@ COLLECTIONS: dict[str, tuple[str, str | None]] = {
     "template_configs": ("library/template_configs.json", "job_id"),
     # Creación interactiva (ver docs/investigaciones/estudio-creacion-interactiva-2026-09.md)
     "drafts": ("studio/drafts.json", "draft_id"),
+    "promo_chat_sessions": ("promos/chat-sessions.json", "session_id"),
     "media_plans": ("studio/media_plans.json", "plan_id"),
     # Explainer (NodeTech/History/Politics/Economy): producciones con agente local
     "explainer_runtime": ("explainer/runtime.json", "id"),
     "explainer_batches": ("explainer/batches.json", "batch_id"),
     "explainer_productions": ("explainer/productions.json", "production_id"),
+    "video_localizations": ("explainer/localizations.json", "localization_id"),
+    "video_localization_revisions": ("explainer/localization-revisions.json", "revision_id"),
     # Fábrica: ejecuciones del agente líder para prototipos del sandbox
     "prototype_runs": ("prototypes/runs.json", "run_id"),
     "editorial_preparations": ("explainer/editorial-preparations.json", "run_id"),

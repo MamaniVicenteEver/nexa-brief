@@ -30,9 +30,17 @@ Los tokens complementarios de miniaturas se consultan en `../../design-tokens.js
 
 ## Composición y miniaturas
 
-A ocupa el centro con hasta cinco palabras en una o dos filas. B admite una frase más larga en hasta cuatro filas. Mantener la paleta en ambas. Fondo independiente de imagen propia o del medio existente, con recorte a sangre y encuadre ajustable. Sin artista; «LETRAS» siempre debajo de la última fila, alineada a su extremo derecho, con el color principal de la plantilla a opacidad completa, al 24,3% en A y al 30% en B, con el hueco al 25,2% del original en A y al 28% en B. NODEMOTION queda discreta en la esquina inferior derecha.
+Archivo 900, extendida al 112%, conserva la grotesca del video. Papel #ECECEA, tinta #050505 y blanco #FBFBFB proceden del config activo.
 
-![Miniaturas A y B de promo-editorial](../../docs/previews/promo-editorial.jpg)
+Ambas opciones salen de escenas reales del video y tratan la foto en blanco y negro, igual que el gradado de la promo.
+
+**A (escena «FINAL ROUND», segundo 4):** papel con los dos bloques negros del video convertidos en ventanas a la misma foto o fotograma (izquierda arriba, derecha abajo). El título, de una a cinco palabras y máximo dos filas, va centrado entre filetes finos; encima, una marca vertical y el nombre de la promoción en versalitas espaciadas; debajo, una placa negra con la frase. Sin medio, las ventanas quedan como los bloques negros originales.
+
+**B (escena de equipos, segundos 13 y 14):** foto a sangre en un lado (`design.side`: `right` por defecto o `left`), fundida con el papel. Tiene las dos primeras letras del título en contorno gigante (tinta sobre papel, blanco sobre la foto), la barra negra vertical en el corte y una barra horizontal en el borde izquierdo. El título usa la misma cantidad de palabras que A o menos e incluye la misma placa (nombre espaciado y placa negra con la frase).
+
+Placa: el nombre sale de `brand.name` y la frase de `brand.left` + «vs» + `brand.right` (o `brand.tagline`); no se inventan textos. No se añaden «LETRAS» ni artista. NODEMOTION mantiene una presencia discreta en la esquina. El título por defecto es `brand.round` o `brand.name`.
+
+![Miniaturas A y B de Promo Editorial](../../docs/previews/promo-editorial.jpg)
 
 ## Movimiento, transiciones y componentes
 

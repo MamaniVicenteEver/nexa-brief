@@ -80,6 +80,10 @@ class ExplainerVideo:
     shared_categories: list[str] = field(default_factory=list)
     preview_mode: str = "desktop"
     youtube_category_id: str | None = None
+    locale: str = "es-419"
+    revision: str | None = None
+    edition_path: Path | None = None
+    pinned_comment: str = ""
 
     @property
     def category_paths(self) -> list[str]:
@@ -89,6 +93,8 @@ class ExplainerVideo:
     def ready(self) -> bool:
         if self.script_review_required or self.status not in READY_STATUSES:
             return False
+        if self.edition_path is not None:
+            return True
         # New standardized preparations are checked against their content;
         # historical videos remain readable until explicitly prepared.
         marker = self.path / 'work/editorial/effective-strategies.json'
@@ -99,6 +105,21 @@ class ExplainerVideo:
 
     @property
     def publish_ready(self) -> bool:
+        from src.core.explainer.editions.attribution import description_issues
+        if description_issues(self.youtube_description):
+            return False
+        if self.edition_path is not None:
+            from src.core.explainer.editions.studio import review_issues
+            if review_issues(self.path, self.edition_path):
+                return False
+        else:
+            from src.core.explainer.publishing.service import review
+            try:
+                package_review = review(self)
+            except (ValueError, OSError):
+                return False
+            if package_review is not None and package_review.errors:
+                return False
         fields = [self.youtube_title]
         if self.design == "cara-a-cara":
             fields += [self.youtube_description, self.instagram_title, self.instagram_description,
@@ -122,6 +143,16 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
     if not manifest:
         return None
     publish = _read_json(video_dir / "publish.json")
+    youtube_description = publish.get("youtube_description", "") or ""
+    if publish.get("schema_version") == 2:
+        from types import SimpleNamespace
+        from src.core.explainer.editions.attribution import youtube_description as compose_description
+        sources = publish.get("sources", [])
+        credits = publish.get("credits", [])
+        if isinstance(sources, list) and isinstance(credits, list):
+            package = SimpleNamespace(sources=[s for s in sources if isinstance(s, str)],
+                                      credits=[s for s in credits if isinstance(s, str)])
+            youtube_description = compose_description(youtube_description, package, "es-419")
     story = narrative.recorded(video_dir)
     review = _read_json(video_dir / "work/script-review.json")
     script_review_required = bool(review) and review.get("status") != "approved"
@@ -151,6 +182,15 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
         )
     from src.core.explainer.design_options import resolve_design_options
     options = resolve_design_options(design, manifest)
+    estimated_tokens = manifest.get("estimated_tokens")
+    if (not isinstance(estimated_tokens, int) or isinstance(estimated_tokens, bool) or estimated_tokens < 0):
+        estimated_tokens = None
+        if (video_dir / "usage-report.json").is_file():
+            # Only explicitly registered demos may expose a historical report.
+            from src.core.explainer.production_templates import shared_demo
+            if shared_demo(TEMPLATES_DIR, video_dir.name) == video_dir:
+                from src.core.explainer.sandbox_info import get_item_costs
+                _, estimated_tokens, _ = get_item_costs(video_dir.parent.parent, video_dir)
     return ExplainerVideo(
         video_id=video_dir.name,
         path=video_dir,
@@ -164,7 +204,7 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
         rendered=([] if manifest.get("render_revision_stale") else
                   sorted({render_label(video_dir, p) for p in full_render_files(video_dir)})),
         youtube_title=publish.get("youtube_title", "") or "",
-        youtube_description=publish.get("youtube_description", "") or "",
+        youtube_description=youtube_description,
         youtube_tags=list(publish.get("youtube_tags", []) or []),
         instagram_title=publish.get("instagram_title", "") or "",
         instagram_description=publish.get("instagram_description", "") or "",
@@ -181,7 +221,7 @@ def load_video(video_dir: Path) -> ExplainerVideo | None:
         demo=bool(manifest.get("demo")),
         demo_summary=str(manifest.get("demo_summary") or ""),
         review_requirements=[str(item) for item in manifest.get("review_requirements", []) if isinstance(item, str)],
-        estimated_tokens=(manifest.get("estimated_tokens") if isinstance(manifest.get("estimated_tokens"), int) and manifest.get("estimated_tokens") >= 0 else None),
+        estimated_tokens=estimated_tokens,
         updated_at=str(manifest.get("updated_at")) if manifest.get("updated_at") else None,
         shared_categories=[c for c in manifest.get("shared_categories", [])
                            if isinstance(c, str) and get_category(c) is not None],

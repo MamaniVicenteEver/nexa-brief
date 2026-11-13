@@ -235,6 +235,61 @@ def _ledger_metric_events(item_dir: Path) -> list[dict]:
         return []
 
 
+def _registered_historical_report(item_dir: Path) -> dict[tuple[str, str], dict] | None:
+    """Read a legacy aggregate only for an explicitly registered principal demo.
+
+    Reports are alternatives to ledgers, not additional events. Aggregate by
+    provider because this historical format does not guarantee model totals.
+    """
+    try:
+        from src.config.settings import settings
+        from src.core.explainer.production_templates import shared_demo
+        if shared_demo(settings.templates_dir, item_dir.name) != item_dir:
+            return None
+        path = item_dir / 'usage-report.json'
+        if path.is_symlink() or not path.is_file() or not path.resolve().is_relative_to(item_dir.resolve()):
+            return None
+        report = json.loads(path.read_text(encoding='utf-8'))
+        providers = report.get('by_provider')
+        known_totals = report.get('known_totals')
+        unknown_calls = report.get('unknown_calls')
+        if not isinstance(providers, dict) or not providers or not isinstance(known_totals, dict):
+            return None
+        if isinstance(unknown_calls, bool) or not isinstance(unknown_calls, int) or unknown_calls < 0:
+            return None
+        result = {}
+        for provider, row in providers.items():
+            if not isinstance(provider, str) or not provider or not isinstance(row, dict):
+                return None
+            calls, known, unknown = (row.get(key) for key in ('calls', 'known_calls', 'unknown_calls'))
+            if any(isinstance(value, bool) or not isinstance(value, int) or value < 0 for value in (calls, known, unknown)):
+                return None
+            if calls != known + unknown:
+                return None
+            bucket = _bucket()
+            for field in ('input_tokens', 'cached_input_tokens', 'output_tokens', 'reasoning_tokens'):
+                value = row.get(field)
+                if value is None and not known:
+                    continue
+                if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                    return None
+                bucket[field] = value
+            bucket.update(calls=calls, unmeasured_calls=unknown, usage_known=known > 0,
+                          unknown_cost_calls=calls)
+            result[(provider, '')] = bucket
+        if sum(bucket['unmeasured_calls'] for bucket in result.values()) != unknown_calls:
+            return None
+        for field in ('input_tokens', 'cached_input_tokens', 'output_tokens', 'reasoning_tokens'):
+            value = known_totals.get(field)
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                return None
+            if sum(bucket[field] for bucket in result.values()) != value:
+                return None
+        return result
+    except (OSError, ValueError, TypeError, AttributeError, ImportError):
+        return None
+
+
 def _template_cost(item_dir: Path, info: dict, *, extra_events: list[dict] | None = None) -> dict:
     """Mantiene separados los registros y estimaciones de origen incierto."""
     by_model = _model_totals(item_dir)
@@ -244,6 +299,19 @@ def _template_cost(item_dir: Path, info: dict, *, extra_events: list[dict] | Non
         _add(bucket, event)
         _call_metadata(bucket, event)
     backfill = info.get("usage_backfill") or {}
+    ledger_events = _ledger_metric_events(item_dir)
+    legacy_ledger = item_dir / 'work' / 'usage.jsonl'
+    # A non-empty legacy ledger takes precedence even if the optional parser
+    # could not read it; never silently combine an aggregate with its source.
+    try:
+        legacy_has_data = legacy_ledger.is_file() and legacy_ledger.stat().st_size > 0
+    except OSError:
+        legacy_has_data = True
+    historical = None
+    if not by_model and not backfill and not extra_events and not ledger_events and not legacy_has_data:
+        historical = _registered_historical_report(item_dir)
+        if historical:
+            by_model = historical
     rows = backfill.get("by_model", []) if isinstance(backfill, dict) else []
     estimated_models: dict[tuple[str, str], dict[str, int]] = {}
     for row in rows:
@@ -279,7 +347,7 @@ def _template_cost(item_dir: Path, info: dict, *, extra_events: list[dict] | Non
         })
     return {
         "totals_by_model": rows,
-        "ledger_events": _ledger_metric_events(item_dir),
+        "ledger_events": ledger_events,
         "fresh_input_tokens": fresh_input_total,
         "total_tokens": total_tokens,
         "cached_tokens": totals["cached_input_tokens"],
@@ -287,7 +355,8 @@ def _template_cost(item_dir: Path, info: dict, *, extra_events: list[dict] | Non
         "reported_cost_usd": round(sum(row["reported_cost_usd"] or 0 for row in rows), 10) if any(row["reported_cost_usd"] is not None for row in rows) else None,
         "cost_status": ("partial" if any(row.get("unknown_cost_calls", 0) for row in rows) else "reported") if any(row["reported_cost_usd"] is not None for row in rows) else "unknown",
         "unknown_cost_calls": sum(int(row.get("unknown_cost_calls") or 0) for row in rows),
-        "estimated": bool(estimated_models and not separate_estimate),
+        "estimated": bool(historical or estimated_models and not separate_estimate),
+        "usage_source": "historical_report" if historical else None,
         "unreconciled_estimate_tokens": (
             sum(_total_tokens(provider, bucket) for (provider, _), bucket in estimated_models.items())
             if separate_estimate else None

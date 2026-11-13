@@ -411,7 +411,7 @@ def documents(ctx, evidence):
     plan = re.sub(pattern, lambda _: section, plan, flags=re.S) if re.search(pattern, plan, re.S) else plan.rstrip() + "\n\n" + section
     text_file(ctx, "PLAN.md", plan)
     ctx.save("voice-profile.json", {"voice": evidence["script"]["voice"], "voice_direction": evidence["script"]["voice_direction"],
-        "sources": {name: {"source": "sandbox/nodehistory/_atlas/" + name, "sha256": sha(host.ATLAS / name)}
+        "sources": {name: {"source": (host.ATLAS / name).relative_to(host.TEMPLATES).as_posix(), "sha256": sha(host.ATLAS / name)}
                     for name in ("voice.json", "narrative.json")},
         "public_profile": host.load(host.ATLAS / "voice.json"), "subjective_listening_verified": False})
     gpu_modes = {size: read(ctx, EVIDENCE + "preview-" + size + ".json").get("gpu", {}).get("requested_mode", "software")

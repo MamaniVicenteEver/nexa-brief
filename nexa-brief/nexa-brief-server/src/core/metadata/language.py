@@ -11,6 +11,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Literal
 
+from src.core.markets import legacy_language
+
 ContentLanguage = Literal["es", "en"]
 SUPPORTED_LANGUAGES: tuple[ContentLanguage, ...] = ("es", "en")
 
@@ -34,7 +36,7 @@ def normalize_language(value: str | None) -> ContentLanguage | None:
     if not value:
         return None
     key = value.strip().lower().replace("_", "-")
-    return _ALIASES.get(key) or _ALIASES.get(key.split("-")[0])
+    return _ALIASES.get(key) or _ALIASES.get(key.split("-")[0]) or legacy_language(key)
 
 
 def language_from_lyrics(lyrics_json: dict[str, Any] | None, min_confidence: float) -> ResolvedLanguage | None:

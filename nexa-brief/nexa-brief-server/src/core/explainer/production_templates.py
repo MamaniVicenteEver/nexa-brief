@@ -34,8 +34,34 @@ def definitions(templates: Path):
 
 
 def shared_demo(templates: Path, video_id: str):
-    return next((directory for _, directory in definitions(templates)
-                 if directory.name == video_id), None)
+    entries = list(definitions(templates))
+    # A real directory name always wins over a compatibility alias. Ambiguous
+    # registrations fail closed rather than selecting whichever sorts first.
+    exact = [directory for _, directory in entries if directory.name == video_id]
+    if exact:
+        return exact[0] if len(exact) == 1 else None
+    matches = []
+    for design, directory in entries:
+        aliases = design["production_template"].get("aliases")
+        if isinstance(aliases, list) and any(
+            isinstance(alias, str) and ID.fullmatch(alias) and alias == video_id for alias in aliases
+        ):
+            matches.append(directory)
+    return matches[0] if len(matches) == 1 else None
+
+
+def legacy_production_file(templates: Path, parts: tuple[str, ...]):
+    """Resolve only explicit former production locations of registered demos."""
+    if len(parts) < 3:
+        return None
+    old_folder = "/".join(parts[:2])
+    matches = []
+    for design, directory in definitions(templates):
+        marker = design["production_template"]
+        aliases = marker.get("legacy_production_folders")
+        if isinstance(aliases, list) and old_folder in aliases and registered_public_file(templates, (*directory.relative_to(templates).parts, *parts[2:])):
+            matches.append((*directory.relative_to(templates).parts, *parts[2:]))
+    return matches[0] if len(matches) == 1 else None
 
 
 def registered_public_file(templates: Path, parts: tuple[str, ...]) -> bool:

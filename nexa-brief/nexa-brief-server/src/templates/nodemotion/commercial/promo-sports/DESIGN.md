@@ -31,7 +31,13 @@ Los tokens complementarios de miniaturas se consultan en `../../design-tokens.js
 
 ## Composición y miniaturas
 
-A ocupa el centro con hasta cinco palabras en una o dos filas. B admite una frase más larga en hasta cuatro filas. Mantener la paleta en ambas. Fondo independiente de imagen propia o del medio existente, con recorte a sangre y encuadre ajustable. Sin artista; «LETRAS» siempre debajo de la última fila, alineada a su extremo derecho, con el color principal de la plantilla a opacidad completa, al 24,3% en A y al 30% en B, con el hueco al 25,2% del original en A y al 28% en B. NODEMOTION queda discreta en la esquina inferior derecha.
+Ambas opciones parten de escenas reales del video, pero no son copias: Roboto 900 cursiva, amarillo #EBE609, blanco #F3F3F1 y fondo #050607. Los grades del video se aplican como filtros SVG (`cine`: saturación .55, contraste 1,18, brillo .72; `duoYel`: #0A0A03→amarillo). Llevan viñeta y grano.
+
+**A (escena «DEPORTE», segundo 1):** toma «cine» con un velo frío. La palabra más larga va en letras gigantes de piedra moteada (#DEDBD3), más pequeñas que en el video para que quepan enteras. El titular amarillo con espaciado va más grande (≈96 px sobre 720) sobre una franja oscura inclinada que sólo cubre el centro de la piedra.
+
+**B (escena «ENERGÍA», segundo 15):** toma «cine» oscurecida con un velo frío #05080C (mínimo 50%), sin tinte amarillo, para que el contorno amarillo y el titular blanco sean los únicos colores. Una sola palabra de fondo, sólo en contorno amarillo y muy grande (unos 1500 px de ancho sobre 1280): se recorta un poco por los lados pero se lee. El titular blanco espaciado va más grande (≈112 px) con sombra y una raya amarilla inclinada.
+
+Titular por defecto: el primer rótulo del guion sin # ^ ~ * (por ejemplo «DEPORTE»), porque Sports no tiene un rótulo de dos filas útil. Sin «LETRAS» ni artista.
 
 ![Miniaturas A y B de promo-sports](../../docs/previews/promo-sports.jpg)
 

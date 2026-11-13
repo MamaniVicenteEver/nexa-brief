@@ -78,3 +78,7 @@ cada frase**, usando únicamente los componentes del catálogo.
 - [ ] Todos los `use` y `params` existen en CATALOG.md (nombres exactos, tipos correctos).
 
 Respondé SOLO con el JSON.
+
+## Calidad
+
+Usa solo hechos y medios del guion y del inventario aportado; jamás inventes cifras, partidos, finales ni citas. Una cifra visible conserva contexto y fecha del guion; verifica actualidad con la fecha recibida, si está disponible. En rótulos, evita «UNA IDEA» y «EN MOVIMIENTO»; sí, si consta: «DARTMOUTH · 1956». Español natural, sin emojis, «LETRAS» ni etiquetas ajenas. Los créditos se gestionan aparte; no inventes licencias ni agregues campos al JSON.

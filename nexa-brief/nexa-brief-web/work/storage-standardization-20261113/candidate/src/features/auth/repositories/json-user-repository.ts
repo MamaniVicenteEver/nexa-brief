@@ -1,0 +1,28 @@
+import { randomUUID } from "node:crypto";
+import type { UserRecord } from "../types";
+import { mutateJsonFile, readJsonFile } from "./json-store";
+import type { CreateUserInput, UserRepository } from "./user-repository";
+
+const FILE_NAME = "users.json";
+
+export class JsonUserRepository implements UserRepository {
+  async findByEmail(email: string): Promise<UserRecord | null> {
+    const users = await readJsonFile<UserRecord>(FILE_NAME);
+    return users.find((user) => user.email.toLowerCase() === email.toLowerCase()) ?? null;
+  }
+
+  async create(input: CreateUserInput): Promise<UserRecord> {
+    return mutateJsonFile<UserRecord, UserRecord>(FILE_NAME, (users) => {
+      const user: UserRecord = {
+        id: randomUUID(),
+        email: input.email,
+        name: input.name,
+        passwordHash: input.passwordHash,
+        role: "editor",
+        createdAt: new Date().toISOString(),
+      };
+      users.push(user);
+      return { records: users, result: user };
+    });
+  }
+}

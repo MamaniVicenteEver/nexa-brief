@@ -146,6 +146,7 @@ export async function renderDraft(draftId: string, options: RenderOptions) {
       method: "POST",
       body: {
         recorder_engine: options.recorderEngine,
+        background_opacity: options.backgroundOpacity,
         publish_accounts: options.publishAccounts,
         formats: options.formats,
         account_formats: options.accountFormats ?? {},
@@ -225,10 +226,16 @@ export async function searchStock(
   });
 }
 
-export async function importStockItem(item: StockItem): Promise<StockImportResult> {
+export async function importStockItem(
+  item: StockItem,
+  templateId?: string,
+  category?: string,
+): Promise<StockImportResult> {
   return httpClient<StockImportResult>("/api/v1/stock/import", {
     method: "POST",
     body: {
+      template_id: templateId,
+      category,
       provider: item.provider,
       provider_id: item.provider_id,
       kind: item.kind,
@@ -303,8 +310,15 @@ export async function updateDraftThumbnailOption(
 }
 
 /** Una imagen normalizada del fondo; el diseño solo guarda su identificador. */
-export function uploadDraftThumbnailBackground(draftId: string, file: File): Promise<{asset: string}> {
+export function uploadDraftThumbnailBackground(
+  draftId: string,
+  file: File,
+): Promise<{ asset: string }> {
   const body = new FormData();
   body.append("file", file);
-  return httpClient(`/api/v1/drafts/${draftId}/thumbnail-background`, { method: "POST", body, timeoutMs: 30_000 });
+  return httpClient(`/api/v1/drafts/${draftId}/thumbnail-background`, {
+    method: "POST",
+    body,
+    timeoutMs: 30_000,
+  });
 }

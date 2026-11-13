@@ -1,0 +1,133 @@
+"""Pydantic schemas for the /api/v1/schedule router.
+
+Wire-shape for `ScheduleSlot`/`QueueEntry`, kept separate from
+`src.core.schedule.models` (the domain layer) so that layer stays free of
+FastAPI/response concerns and the HTTP shape can evolve independently — same
+separation already used by `library_schema.py` vs `asset_library.py`.
+"""
+
+from __future__ import annotations
+
+from typing import Literal
+
+from pydantic import BaseModel, Field, model_validator
+
+from src.core.schedule.models import QueueSource, QueueStatus
+
+
+# ── Slots ─────────────────────────────────────────────────────────────────────
+
+class ScheduleSlotCreateRequest(BaseModel):
+    platform: str = Field(..., description="'tiktok' | 'youtube' | 'facebook' | 'instagram'")
+    account_alias: str = Field(..., description="Alias en accounts.json, e.g. 'cuenta_1'")
+    days: list[int] = Field(default_factory=list, description="0=lunes..6=domingo (datetime.weekday())")
+    times: list[str] = Field(default_factory=list, description='["09:00", "21:00"], 24h, UTC')
+    enabled: bool = True
+    niche_filter: str | None = Field(
+        default=None, description="Matchea job_tracker's 'category'; None = cualquier nicho."
+    )
+    content_kind: Literal["video", "image", "carousel", "reel"] = "video"
+    category_id: str | None = None
+    timezone: str = Field("UTC", description="Zona IANA para contenido de imagen y horarios locales.")
+
+    @model_validator(mode="after")
+    def image_slot_has_category(self):
+        if self.content_kind != "video" and not self.category_id:
+            raise ValueError("Los slots de imagen requieren category_id")
+        if self.content_kind != "video" and self.platform not in {"facebook", "instagram"}:
+            raise ValueError("Los slots de imagen solo aceptan Facebook o Instagram")
+        return self
+
+
+class ScheduleSlotUpdateRequest(BaseModel):
+    """Update parcial — solo los campos provistos (no None) se modifican."""
+
+    platform: str | None = None
+    account_alias: str | None = None
+    days: list[int] | None = None
+    times: list[str] | None = None
+    enabled: bool | None = None
+    niche_filter: str | None = None
+    content_kind: Literal["video", "image", "carousel", "reel"] | None = None
+    category_id: str | None = None
+    timezone: str | None = None
+
+    @model_validator(mode="after")
+    def image_slot_has_category(self):
+        if self.content_kind and self.content_kind != "video" and not self.category_id:
+            raise ValueError("Los slots de imagen requieren category_id")
+        return self
+
+
+class ScheduleSlotResponse(BaseModel):
+    slot_id: str
+    platform: str
+    account_alias: str
+    days: list[int]
+    times: list[str]
+    enabled: bool
+    niche_filter: str | None
+    content_kind: Literal["video", "image", "carousel", "reel"] = "video"
+    category_id: str | None = None
+    timezone: str = "UTC"
+    created_at: str
+    updated_at: str
+
+
+class AssignVideoRequest(BaseModel):
+    """Asigna un video a una ocurrencia concreta (fecha+hora) de un horario.
+    `time` debe ser uno de `slot.times`."""
+
+    occurrence_date: str = Field(..., description="YYYY-MM-DD")
+    time: str = Field(..., description="HH:MM, debe estar en slot.times")
+    job_id: str
+
+
+# ── Queue ─────────────────────────────────────────────────────────────────────
+
+class QueueCreateRequest(BaseModel):
+    """Programación ad-hoc: encola un job sin pasar por un horario recurrente."""
+
+    job_id: str
+    platform: str
+    account_alias: str
+    scheduled_at: str | None = Field(
+        default=None, description="ISO 8601 UTC; None = publicar en el próximo tick."
+    )
+
+
+class PublishNowRequest(BaseModel):
+    job_id: str
+    platform: str
+    account_alias: str
+    # Archivo a subir; None = el que corresponde a la plataforma (ver engine.publish_entry).
+    format: Literal["16x9", "9x16"] | None = None
+    idempotency_key: str = Field(min_length=1, max_length=180)
+
+
+class QueueEntryResponse(BaseModel):
+    entry_id: str
+    job_id: str | None = None
+    platform: str
+    account_alias: str
+    format: str | None = None
+    slot_id: str | None
+    scheduled_at: str | None
+    source: QueueSource
+    status: QueueStatus
+    post_id: str | None
+    url: str | None
+    error: str | None
+    created_at: str
+    updated_at: str
+    processed_at: str | None
+    content_kind: Literal["video", "image", "carousel", "reel"] = "video"
+    content_id: str | None = None
+    delivery_id: str | None = None
+
+
+class QueueListResponse(BaseModel):
+    total: int
+    limit: int
+    offset: int
+    entries: list[QueueEntryResponse]

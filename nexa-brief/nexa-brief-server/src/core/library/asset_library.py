@@ -35,8 +35,9 @@ from pydantic import BaseModel, Field, model_validator
 from src.config.exceptions import AssetDownloadError, AssetNotFoundError
 from src.config.settings import settings
 from src.config.profile_layout import layout_for_settings
-from src.core.data import collection, documents, files
+from src.core.data import collection, coordination, documents, files
 from src.core.library.sound_library import SoundLibraryEntry
+from src.core.library.resource_metadata import ResourceMetadata, ResourceOrigin, resource_metadata, belongs_to
 from src.core.realtime.event_bus import get_event_bus
 from src.core.realtime.events import RealtimeEvent
 
@@ -49,7 +50,8 @@ def _now_iso() -> str:
 
 # ── Entry models ──────────────────────────────────────────────────────────────
 
-class ImageLibraryEntry(BaseModel):
+class ImageLibraryEntry(ResourceMetadata):
+    media_type: Literal["image"] = "image"
     video_id: str | None = None
     production_id: str | None = None
     production_name: str = ""
@@ -87,7 +89,8 @@ class ImageLibraryEntry(BaseModel):
 TranscriptionStatus = Literal["none", "pending", "running", "done", "failed"]
 
 
-class MusicLibraryEntry(BaseModel):
+class MusicLibraryEntry(ResourceMetadata):
+    media_type: Literal["music"] = "music"
     video_id: str | None = None
     production_id: str | None = None
     production_name: str = ""
@@ -130,7 +133,8 @@ class MusicLibraryEntry(BaseModel):
         return self
 
 
-class VideoLibraryEntry(BaseModel):
+class VideoLibraryEntry(ResourceMetadata):
+    media_type: Literal["video"] = "video"
     """Video de fondo (ej. motion-backdrop) — solo LIBRARY/URL/UPLOAD, no hay
     proveedor de stock de video integrado (a diferencia de imagen/música)."""
     video_id: str | None = None
@@ -254,6 +258,7 @@ async def register_image(
     fallback = meta.get("label") or (f"{provider}-{meta['image_id']}" if meta.get("image_id") else "")
     asset_id, key, original = _store_file("image", path, category, filename, fallback)
     entry = ImageLibraryEntry(
+        **resource_metadata(category, meta.get("template_id", "")),
         asset_id=asset_id,
         category=category,
         relative_path=key,
@@ -312,6 +317,7 @@ async def register_music(
     fallback = f"{track} - {artist}" if track and artist else track
     asset_id, key, original = _store_file("music", path, category, filename, fallback)
     entry = MusicLibraryEntry(
+        **resource_metadata(category, meta.get("template_id", "")),
         asset_id=asset_id,
         category=category,
         relative_path=key,
@@ -408,6 +414,7 @@ async def register_video(
 ) -> VideoLibraryEntry:
     asset_id, key, original = _store_file("video", path, category, filename, meta.get("label", ""))
     entry = VideoLibraryEntry(
+        **resource_metadata(category, meta.get("template_id", "")),
         asset_id=asset_id,
         category=category,
         relative_path=key,
@@ -435,6 +442,49 @@ async def register_video(
 
 def get_video_entry(asset_id: str) -> VideoLibraryEntry:
     return get_entry("video", asset_id)
+
+
+class DuplicateFilenameError(ValueError):
+    """Ya existe un archivo distinto con el mismo nombre en esta categoría."""
+
+
+async def register_uploaded_visual(
+    kind: Literal["image", "video"], path: Path, *, category: str, template_id: str,
+    filename: str, label: str, description: str, tags: str,
+) -> tuple[ImageLibraryEntry | VideoLibraryEntry, bool]:
+    """Registra una carga visual sin duplicados dentro de su categoría.
+
+    La coordinación pertenece al puerto de datos: cubre la consulta y la
+    inserción incluso con varios workers, sin depender del almacenamiento JSON.
+    """
+    safe_name = Path(filename).name
+    normalized = unicodedata.normalize("NFC", safe_name).casefold()
+    async with coordination(f"library-upload-{kind}"):
+        model = ImageLibraryEntry if kind == "image" else VideoLibraryEntry
+        matches = [model(**raw) for raw in _records(kind).list()
+                   if raw.get("original_filename")
+                   and unicodedata.normalize("NFC", Path(raw["original_filename"]).name).casefold() == normalized]
+        matches = [entry for entry in matches if belongs_to(entry, category)]
+        if matches:
+            digest = await asyncio.to_thread(hash_file, path)
+            for entry in matches:
+                old_path = _storage(kind).local_path(entry.relative_path)
+                if old_path.is_file() and await asyncio.to_thread(hash_file, old_path) == digest:
+                    existing = await attach_resource_origin(kind, entry.asset_id, category, template_id)
+                    return existing, False
+            raise DuplicateFilenameError(f"Ya existe un recurso con el nombre '{safe_name}' en esta categoría.")
+        probe = await probe_media(path)
+        shared = dict(category=category, source="upload", provider="user_upload", filename=safe_name,
+                      template_id=template_id, label=label, description=description, tags=tags,
+                      width=int(probe.get("width", 0)), height=int(probe.get("height", 0)))
+        if kind == "image":
+            width, height = shared["width"], shared["height"]
+            ratio = width / height if width and height else 0
+            orientation = "landscape" if ratio > 1.1 else "portrait" if ratio and ratio < 0.9 else "squarish" if ratio else None
+            entry = await register_image(path, **shared, orientation=orientation)
+        else:
+            entry = await register_video(path, **shared, duration_seconds=float(probe.get("duration_seconds", 0)))
+        return entry, True
 
 
 def list_videos(category: str | None = None) -> list[VideoLibraryEntry]:
@@ -544,6 +594,9 @@ async def register_template_config(
         texts=texts if isinstance(texts, dict) else {},
     )
     await collection("template_configs").upsert(entry.model_dump(), match=("job_id",))
+    for kind, ident in (("image", image_asset_id), ("music", music_asset_id), ("video", video_asset_id)):
+        if ident:
+            await attach_resource_origin(kind, ident, template_id=template_id)
     logger.info("asset_library_template_config_registered", job_id=job_id, template_id=template_id)
     return entry
 
@@ -584,12 +637,12 @@ _MODELS: dict[str, type[BaseModel]] = {
 # Campos que el usuario puede editar por PATCH. El resto (relative_path, hash,
 # usos, cachés…) lo mantiene el sistema y editarlo a mano rompería referencias.
 EDITABLE_FIELDS: dict[str, frozenset[str]] = {
-    "image": frozenset({"label", "description", "tags", "category", "photographer", "license_note"}),
+    "image": frozenset({"display_name", "label", "description", "tags", "category", "photographer", "license_note"}),
     "music": frozenset({
-        "track_name", "artist", "genre", "description", "tags", "language", "category", "license_note",
+        "display_name", "track_name", "artist", "genre", "description", "tags", "language", "category", "license_note",
     }),
-    "video": frozenset({"label", "description", "tags", "category", "license_note"}),
-    "sound": frozenset({"title", "description", "tags", "category", "recommended_uses", "approval_status"}),
+    "video": frozenset({"display_name", "label", "description", "tags", "category", "license_note"}),
+    "sound": frozenset({"display_name", "title", "description", "tags", "category", "recommended_uses", "approval_status"}),
 }
 
 _SEARCH_FIELDS: dict[str, tuple[str, ...]] = {
@@ -650,13 +703,29 @@ def _production_record(kind: str, asset_id: str) -> dict | None:
     return record if record and record.get("kind") == kind else None
 
 
-def _production_entry(kind: str, record: dict) -> LibraryEntry:
+def _production_metadata(record: dict, video: dict | None = None) -> dict:
+    video = video or {}
+    category = str(record.get("category_id") or video.get("category_id") or video.get("category") or "")
+    parts = Path(record["storage_key"]).parts
+    if not category and len(parts) > 2 and parts[0] in {"productions", "sandbox"}:
+        category = parts[1]
+    metadata = resource_metadata(category)
+    for field in ("category_id", "category_name", "template_id", "template_name", "resource_origins"):
+        if record.get(field):
+            metadata[field] = record[field]
+    return metadata
+
+
+def _production_entry(kind: str, record: dict, *, video: dict | None = None, details: dict | None = None) -> LibraryEntry:
     video_id = record["video_id"]
-    video = collection("content_videos").get(video_id) or {}
-    details = documents("content_video_details").get(video_id) or {}
+    if video is None:
+        video = collection("content_videos").get(video_id) or {}
+    if details is None:
+        details = documents("content_video_details").get(video_id) or {}
     title = str(details.get("title") or video_id)
     filename = Path(record["storage_key"]).name
-    data = {"asset_id": record["asset_id"], "relative_path": record["storage_key"],
+    data = {**_production_metadata(record, video),
+            "asset_id": record["asset_id"], "relative_path": record["storage_key"],
             "category": "production", "source": "production", "provider": "production",
             "original_filename": filename, "video_id": video_id,
             "production_id": video.get("production_id"), "production_name": title,
@@ -664,9 +733,12 @@ def _production_entry(kind: str, record: dict) -> LibraryEntry:
     data[{"image": "label", "video": "label", "music": "track_name", "sound": "title"}[kind]] = filename
     # Solo metadata auxiliar, nunca rutas, identidad ni titularidad de la producción.
     for field in ("usage_count", "last_used_at", "has_vision_cache", "has_lyrics_cache",
-                  "transcription_status", "transcription_error", "language", "label", "approval_status"):
+                  "transcription_status", "transcription_error", "language", "label", "approval_status",
+                  "category_id", "category_name", "template_id", "template_name", "resource_origins"):
         if field in record:
             data[field] = record[field]
+    metadata = record.get("library_metadata") or {}
+    data.update({key: value for key, value in metadata.items() if key in EDITABLE_FIELDS[kind]})
     return _MODELS[kind](**data)  # type: ignore[return-value]
 
 
@@ -704,16 +776,31 @@ def search_assets(kind: str, q: str | None = None, category: str | None = None) 
     cientos de assets, no millones, y el contrato del DataStore solo garantiza
     filtros por igualdad (ver core/ports/data_port.py)."""
     model = _MODELS[kind]
-    entries = [model(**d) for d in _records(kind).list({"category": category} if category else None)]
-    if layout_for_settings(settings).schema_version >= 2 and (not category or category == "production"):
+    entries = [model(**d) for d in _records(kind).list()]
+    if layout_for_settings(settings).schema_version >= 2:
         existing = {entry.asset_id for entry in entries}
+        # One metadata scan per request; never reread the whole resource section
+        # for every production asset. Filter ownership before loading details.
+        videos = {row["video_id"]: row for row in collection("content_videos").list()}
+        detail_cache: dict[str, dict] = {}
         for record in collection("content_resources").list(where={"kind": kind}):
-            if record.get("asset_id") not in existing and _records(kind).get(record.get("asset_id")) is None:
-                entries.append(_production_entry(kind, record))
+            if record.get("asset_id") in existing:
+                continue
+            video_id = record["video_id"]
+            video = videos.get(video_id, {})
+            if category and category != "production" and not belongs_to(
+                ResourceMetadata(**_production_metadata(record, video)), category
+            ):
+                continue
+            if video_id not in detail_cache:
+                detail_cache[video_id] = documents("content_video_details").get(video_id) or {}
+            entries.append(_production_entry(kind, record, video=video, details=detail_cache[video_id]))
+    if category:
+        entries = [entry for entry in entries if belongs_to(entry, category)]
     terms = _fold(q).split() if q else []
     if not terms:
         return entries  # type: ignore[return-value]
-    fields = (*_SEARCH_FIELDS[kind], "video_id", "production_id", "production_name")
+    fields = (*_SEARCH_FIELDS[kind], "display_name", "video_id", "production_id", "production_name")
 
     def matches(entry: BaseModel) -> bool:
         haystack = " ".join(_fold(str(getattr(entry, f, "") or "")) for f in fields)
@@ -722,24 +809,89 @@ def search_assets(kind: str, q: str | None = None, category: str | None = None) 
     return [e for e in entries if matches(e)]  # type: ignore[misc]
 
 
+async def attach_resource_origin(kind: str, asset_id: str, category: str = "", template_id: str = "") -> LibraryEntry:
+    """Add provenance with a conditional merge; concurrent uploads retain both origins."""
+    context = resource_metadata(category, template_id)
+    if not context:
+        return get_entry(kind, asset_id)
+    origin = ResourceOrigin(**{k: context[k] for k in ("category_id", "category_name", "template_id", "template_name")})
+    for _ in range(5):
+        current = get_entry(kind, asset_id)
+        records = _records(kind)
+        raw = records.get(asset_id)
+        if raw is None:
+            records = collection("content_resources")
+            raw = records.get(asset_id)
+        if raw is None:
+            raise AssetNotFoundError(f"Asset {asset_id} no longer exists")
+        origins = list(current.resource_origins)
+        if current.category_id and not origins:
+            origins.append(ResourceOrigin(**current.model_dump(include={"category_id", "category_name", "template_id", "template_name"})))
+        if origin in origins and current.category_id:
+            return current
+        if origin not in origins:
+            origins.append(origin)
+        patch = {"resource_origins": [o.model_dump() for o in origins], "media_type": kind}
+        if not current.category_id:
+            patch.update({k: context[k] for k in ("category_id", "category_name", "template_id", "template_name")})
+        updated = await records.update(asset_id, patch, only_if={"resource_origins": raw.get("resource_origins")})
+        if updated is not None:
+            await publish_asset_changed(kind, asset_id, action="updated")
+            return get_entry(kind, asset_id)
+    raise RuntimeError("Concurrent changes to resource provenance; retry the request")
+
+
+def page_music_groups(*, page: int = 1, page_size: int = 12,
+                      q: str | None = None, category: str | None = None) -> tuple[list[list[MusicLibraryEntry]], int]:
+    """Agrupa versiones por título y artista antes de paginar, sin fusionar IDs.
+
+    El orden se deriva del registro más reciente de cada grupo y es estable;
+    cada versión conserva su identidad, letra y metadatos. Un título vacío no
+    identifica una canción, por eso sus registros no se agrupan entre sí.
+    """
+    entries = search_assets("music", q=q, category=category)
+    entries.sort(key=lambda entry: (entry.added_at, entry.asset_id), reverse=True)
+    groups: dict[tuple[str, str], list[MusicLibraryEntry]] = {}
+    for entry in entries:
+        title = " ".join(_fold(entry.track_name).split())
+        artist = " ".join(_fold(entry.artist).split())
+        key = (title, artist) if title else ("", entry.asset_id)
+        groups.setdefault(key, []).append(entry)
+    values = list(groups.values())
+    start = (page - 1) * page_size
+    return values[start:start + page_size], len(values)
+
+
+def page_assets(kind: str, *, page: int = 1, page_size: int = 12,
+                q: str | None = None, category: str | None = None) -> tuple[list[LibraryEntry], int]:
+    """Página estable sobre los puertos del DataStore, sin acceder al almacenamiento concreto."""
+    entries = search_assets(kind, q=q, category=category)
+    entries.sort(key=lambda entry: (entry.added_at, entry.asset_id), reverse=True)
+    start = (page - 1) * page_size
+    return entries[start:start + page_size], len(entries)
+
+
 async def update_asset_metadata(kind: str, asset_id: str, patch: dict[str, Any]) -> LibraryEntry:
     """Aplica una edición del usuario. Ignora campos no editables (ver
     EDITABLE_FIELDS) en vez de fallar, así el front puede mandar el objeto
     entero. Cambiar la categoría mueve también el archivo a la carpeta nueva,
     para que la clave siga siendo "{categoría}/{archivo}"."""
     current = get_entry(kind, asset_id)
-    if current.source == "production" and _records(kind).get(asset_id) is None:
-        changes = {k: v for k, v in patch.items() if k in EDITABLE_FIELDS[kind] and v is not None}
-        # La aprobación solo cambia metadata y permite usar efectos en el motor;
-        # no se cambia el archivo ni se concede aprobación implícita.
-        if kind == "sound" and changes and set(changes) == {"approval_status"}:
-            updated = await collection("content_resources").update(asset_id, changes)
-            if updated is not None:
-                return _production_entry(kind, updated)
-        raise LinkedProductionAssetError("El recurso pertenece a una producción")
     changes = {k: v for k, v in patch.items() if k in EDITABLE_FIELDS[kind] and v is not None}
     if "tags" in changes:
         changes["tags"] = normalize_tags(changes["tags"])
+    if "category" in changes:
+        changes["category"] = str(changes["category"]).strip() or current.category
+    if current.source == "production" and _records(kind).get(asset_id) is None:
+        record = _production_record(kind, asset_id)
+        metadata = {**((record or {}).get("library_metadata") or {}), **changes}
+        patch_record: dict[str, Any] = {"library_metadata": metadata}
+        if "approval_status" in changes:
+            patch_record["approval_status"] = changes["approval_status"]
+        updated = await collection("content_resources").update(asset_id, patch_record)
+        if updated is None:
+            raise AssetNotFoundError("Recurso no encontrado")
+        return _production_entry(kind, updated)
     if "category" in changes:
         new_category = str(changes["category"]).strip()
         if not new_category:

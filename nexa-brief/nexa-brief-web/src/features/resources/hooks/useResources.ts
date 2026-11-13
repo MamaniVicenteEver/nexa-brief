@@ -6,6 +6,7 @@ import {
   type AssetPatch,
   deleteLibraryAsset,
   getLibraryCategories,
+  getLibraryPage,
   getLyrics,
   retranscribe,
   type UploadAssetInput,
@@ -19,6 +20,7 @@ import {
 } from "@/features/library/hooks/useLibraryAssets";
 import { useRealtimeEvent } from "@/features/realtime";
 import { type ResourceKind, toApiKind } from "../kinds";
+import { useResourceScope } from "../ResourceScope";
 
 interface LibraryAssetChangedEvent {
   kind: "images" | "music" | "videos" | "sounds";
@@ -44,11 +46,15 @@ export function useLibraryRealtimeSync() {
 }
 
 /** Listado con búsqueda (debounced) y filtro de categoría opcional. */
-export function useLibraryList(kind: ResourceKind, q = "", category = "", enabled = true) {
+export function useLibraryList(kind: ResourceKind, q = "", category?: string, enabled = true) {
+  const scope = useResourceScope();
   const apiKind = toApiKind(kind);
   useLibraryRealtimeSync();
   const debouncedQ = useDebouncedValue(q);
-  return useLibraryAssets(apiKind, enabled, { q: debouncedQ, category });
+  return useLibraryAssets(apiKind, enabled && (!scope.templateId || Boolean(scope.categoryId)), {
+    q: debouncedQ,
+    category: category ?? scope.categoryId ?? "",
+  });
 }
 
 export function useLibraryCategories(kind: ResourceKind) {
@@ -56,6 +62,28 @@ export function useLibraryCategories(kind: ResourceKind) {
   return useQuery({
     queryKey: ["library-categories", apiKind],
     queryFn: ({ signal }) => getLibraryCategories(apiKind, signal),
+  });
+}
+
+/** Páginas independientes y cancelables; reutiliza la invalidación de la librería. */
+export function useLibraryPage(
+  kind: ResourceKind,
+  q = "",
+  category?: string,
+  page = 1,
+  enabled = true,
+) {
+  const apiKind = toApiKind(kind);
+  const scope = useResourceScope();
+  // Una categoría elegida explícitamente (incluida «todas») prevalece sobre
+  // la categoría del editor; solo hereda el contexto cuando se omite.
+  const effectiveCategory = category ?? scope.categoryId ?? "";
+  useLibraryRealtimeSync();
+  return useQuery({
+    queryKey: [...libraryAssetsKey(apiKind), "page", { q, category: effectiveCategory, page }],
+    queryFn: ({ signal }) =>
+      getLibraryPage(apiKind, { q, category: effectiveCategory, page, pageSize: 12 }, signal),
+    enabled: enabled && (!scope.templateId || Boolean(scope.categoryId)),
   });
 }
 

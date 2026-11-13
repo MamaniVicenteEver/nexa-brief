@@ -1670,6 +1670,14 @@
       "pending": "Pendientes: {count}",
       "notes": "Notas conservadas del diseño",
       "demoHelp": "La acción traslada el diseño o episodio a su destino. Completa los textos y miniaturas desde la categoría después del traslado.",
+      "contentType": "Tipo de contenido",
+      "mainDemo": "Demo principal del diseño",
+      "derivedVideo": "Video derivado de un diseño existente",
+      "contentTypeHelp": "La demo principal validada se guarda en el repositorio. Los videos creados a partir del diseño se guardan en producciones del perfil.",
+      "destination": "Destino del traslado",
+      "repositoryDestination": "Demo principal · repositorio",
+      "profileDestination": "Video derivado · producciones del perfil",
+      "destinationAfterValidation": "Guarda y verifica la selección para confirmar la ruta de destino.",
       "save": "Guardar borrador",
       "validate": "Verificar archivos y rutas",
       "discard": "Descartar borrador",
@@ -2107,6 +2115,7 @@
     "skipBack": "Retroceder 5 segundos",
     "skipForward": "Avanzar 5 segundos",
     "fullscreen": "Pantalla completa",
+    "exitFullscreen": "Salir de pantalla completa",
     "unavailable": "Vista previa no disponible.",
     "loadError": "No se pudo cargar este formato del video.",
     "shortcutsHint": "Espacio · ← → · M · F",
@@ -2425,5 +2434,21 @@
         "failed": "La preparación necesita atención"
       }
     }
+  },
+  "catalog": {
+    "title": "Demos de plantillas",
+    "categories": "Categorías",
+    "all": "Todo",
+    "pageSize": "Mostrar",
+    "pagination": "Paginación",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "results": "{count} resultados",
+    "play": "Reproducir {title}",
+    "loading": "Cargando…",
+    "error": "No se pudo cargar el catálogo. Inténtalo de nuevo.",
+    "empty": "No hay demos en esta categoría.",
+    "information": "Información y herramientas",
+    "publicHint": "Tocá una miniatura para reproducir la demo con sonido."
   }
 }

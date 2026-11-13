@@ -438,6 +438,8 @@ LOGGED = {"status", "components", "voice", "transcribe", "outro", "preview", "ch
 PROVIDER_OF = {"transcribe": ("whisper", "large-v3")}   # voice anota cada pedido a Gemini desde narrate.py
 
 def main():
+    from edition_guard import reject_unsupported_edition
+    reject_unsupported_edition()
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sp = ap.add_subparsers(dest="cmd", required=True)
     p = sp.add_parser("new"); p.add_argument("design"); p.add_argument("id"); p.add_argument("--title", default=""); p.add_argument("--folder", default="", help="carpeta de categoría (nodetech, nodehistory…)"); p.add_argument("--force", action="store_true")
@@ -494,6 +496,11 @@ def main():
                      seconds=(datetime.datetime.now() - started).total_seconds())
 
 if __name__ == "__main__":
+    from edition_guard import reject_unsupported_edition
+    reject_unsupported_edition()
+    # Do not acquire a resource slot before rejecting a host-only command.
+    if os.environ.get("NEXA_EXPLAINER_PIPELINE_AGENT") == "1" and len(sys.argv) > 1 and sys.argv[1] in ("voice", "transcribe", "outro", "preview"):
+        sys.exit(f"{sys.argv[1]} corresponde al host en el pipeline; termina la fase para solicitarlo")
     from src.core.explainer.runtime import heavy_tool_slot
     # A foreground launcher waits for its child; only the actual tool worker owns the budget.
     launcher = len(sys.argv) > 1 and sys.argv[1] in {"voice", "sheet", "components"} and not os.environ.get("NEXA_KIT_JOB_FD")

@@ -33,12 +33,12 @@ let rendererPromise: Promise<ThumbnailRenderer | null> | null = null;
 
 function loadRenderer(attemptKey = 0): Promise<ThumbnailRenderer | null> {
   if (typeof window === "undefined") return Promise.resolve(null);
-  if (window.NexaDraftThumbnailRenderer?.version === 7)
+  if (window.NexaDraftThumbnailRenderer?.version === 11)
     return Promise.resolve(window.NexaDraftThumbnailRenderer);
   if (rendererPromise) return rendererPromise;
 
   rendererPromise = new Promise<ThumbnailRenderer | null>((resolve) => {
-    if (window.NexaDraftThumbnailRenderer && window.NexaDraftThumbnailRenderer.version !== 7) {
+    if (window.NexaDraftThumbnailRenderer && window.NexaDraftThumbnailRenderer.version !== 11) {
       document.querySelector('script[data-nexa-thumbnail-renderer="true"]')?.remove();
       delete window.NexaDraftThumbnailRenderer;
     }
@@ -52,7 +52,7 @@ function loadRenderer(attemptKey = 0): Promise<ThumbnailRenderer | null> {
     });
     script.addEventListener("error", () => finish(null), { once: true });
     if (!existing) {
-      script.src = resolveApiUrl("/api/v1/drafts/thumbnail-renderer.js?v=7");
+      script.src = resolveApiUrl("/api/v1/drafts/thumbnail-renderer.js?v=11");
       script.async = true;
       script.dataset.nexaThumbnailRenderer = "true";
       script.dataset.attempt = String(attemptKey);
@@ -97,10 +97,21 @@ export function DraftThumbnailArtwork({
   onRendererError?: () => void;
 }) {
   const [src, setSrc] = useState<string | null>(null);
-  const manifestKey = JSON.stringify(manifest);
+  // Text/design edits in the other option must not redraw this image.
+  const selected = manifest.options[option];
+  const editorial = selected.design?.style === "promo-editorial";
+  const maxWords =
+    option === "B"
+      ? Math.max(1, Math.min(5, manifest.options.A.text.trim().split(/\s+/).filter(Boolean).length))
+      : 5;
+  const manifestKey = JSON.stringify({
+    draftId: manifest.draftId,
+    options: {
+      [option]: editorial ? { ...selected, design: { ...selected.design, maxWords } } : selected,
+    },
+  });
   useEffect(() => {
     let current = true;
-    setSrc(null);
     void loadRenderer(retryKey).then(async (renderer) => {
       if (!current) return;
       if (!renderer) {
@@ -112,10 +123,13 @@ export function DraftThumbnailArtwork({
         const svg = renderer.renderSvgAsync
           ? await renderer.renderSvgAsync(data, option, 1280, 720, { resolveUrl: resolveApiUrl })
           : renderer.renderSvg(data, option, 1280, 720);
-        if (current) setSrc(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`);
+        const next = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+        const image = new Image();
+        image.src = next;
+        await image.decode();
+        if (current) setSrc(next);
       } catch {
         if (current) {
-          setSrc(null);
           onRendererError?.();
         }
       }

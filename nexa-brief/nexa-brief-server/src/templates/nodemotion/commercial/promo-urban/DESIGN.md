@@ -32,7 +32,13 @@ Los tokens complementarios de miniaturas se consultan en `../../design-tokens.js
 
 ## Composición y miniaturas
 
-A ocupa el centro con hasta cinco palabras en una o dos filas. B admite una frase más larga en hasta cuatro filas. Mantener la paleta en ambas. Fondo independiente de imagen propia o del medio existente, con recorte a sangre y encuadre ajustable. Sin artista; «LETRAS» siempre debajo de la última fila, alineada a su extremo derecho, con el color principal de la plantilla a opacidad completa, al 24,3% en A y al 30% en B, con el hueco al 25,2% del original en A y al 28% en B. NODEMOTION queda discreta en la esquina inferior derecha.
+Ambas opciones salen de escenas reales del video: Inter Tight 800, rojo #E4261C, naranja #F2681A, blanco #F4F4F2 y fondo #140102. La foto se trata con el grade `duoRed` del video como filtro SVG (#140102→rojo, contraste 1,3). El HUD es el del video: «NEXA BRIEF / SPORT GROUP» (`brand.tagTop`) con su raya naranja, los tres puntos, la serie (`brand.tagRight`), el año entre corchetes (`brand.year`) y el texto pequeño (`brand.blurb`). Lleva grano.
+
+**A (escena «PURA CALLE», segundo 2):** fondo oscuro #0B0B0B con el año (`brand.year`) gigante en contorno tenue. La toma aparece dos veces en recortes distintos: en duotono rojo arriba a la derecha y en B/N frío (`bwCold`) abajo al centro. La primera palabra va grande en blanco y el resto, menor, alineado a su derecha con una flecha naranja. Lleva el aro tenue, el rayado blanco y el texto pequeño a la izquierda.
+
+**B (composición «SIN EXCUSAS», segundo 19, con el fondo de «ACTITUD»):** toma en duotono rojo oscurecida (mínimo 55%) con viñeta. La primera palabra va gigante en naranja y el resto en blanco, alineado con su base, empezando dentro de la gigante y terminando fuera de ella, así que el ® naranja y el corredor caen sobre la foto. Debajo van el texto pequeño y el rayado. Usa las mismas palabras que A o menos.
+
+Titular por defecto: el primer rótulo de dos filas del guion, sin los marcadores ^ ~ * (por ejemplo «PURA CALLE»). Sin «LETRAS» ni artista.
 
 ![Miniaturas A y B de promo-urban](../../docs/previews/promo-urban.jpg)
 

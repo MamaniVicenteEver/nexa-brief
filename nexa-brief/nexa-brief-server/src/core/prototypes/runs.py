@@ -288,7 +288,10 @@ class PrototypeRunService:
             return (
                 f"Crea el prototipo {rec['template_id']} de la categoría {rec['category']} "
                 f"en esta carpeta. Modo: {rec['mode']}. Lee work/agent-context/BRIEF.md "
-                "y work/agent-context/COMPONENTES.md; usa las referencias en work/agent-context/references/. "
+                "y work/agent-context/COMPONENTES.md. Lee y aplica también "
+                "work/agent-context/PREPARAR-PRODUCCION.md para entregar archivos, rutas y catálogo "
+                "compatibles con la verificación técnica y el traslado sin IA. "
+                "Usa las referencias en work/agent-context/references/. "
                 "Trabaja solo con herramientas de lectura y escritura en esta carpeta. "
                 "Crea index.html y los archivos del prototipo; declara componentes en info.json según el contrato. "
                 f"En info.json conserva reference=referencias/{rec['category']}/{rec['idea_id']}, "
@@ -299,7 +302,10 @@ class PrototypeRunService:
                 "Conserva los recursos de referencia y no modifiques motores ni otros proyectos. "
                 "No puedes ejecutar comandos, delegar ni realizar pruebas de navegador o render. "
                 "Anota en work/results/validacion-pendiente.md qué comprobaciones quedan pendientes; "
-                "no afirmes que se hicieron. Si falta una referencia necesaria, explica el bloqueo."
+                "no afirmes que se hicieron. Deja también work/results/entrega-produccion.md "
+                "con el inventario y pendientes del contrato. No generes el paquete editorial para habilitar "
+                "el traslado; no valides, muevas ni grabes automáticamente. "
+                "Si falta una referencia necesaria, explica el bloqueo."
             )
         proto = (settings.templates_dir / "sandbox" / "PROTOTIPO.md").resolve()
         brief = (self.sandbox_dir / "referencias" / rec["category"] / rec["idea_id"] / "BRIEF.md").resolve()
@@ -417,6 +423,10 @@ class PrototypeRunService:
         refs.mkdir(parents=True)
         contract = _safe(settings.templates_dir, 'sandbox', '_proto', 'COMPONENTES.md')
         _safe(context, 'COMPONENTES.md').write_text(contract.read_text(encoding='utf-8'), encoding='utf-8')
+        production_contract = _safe(settings.templates_dir, 'sandbox', 'PREPARAR-PRODUCCION.md')
+        _safe(context, 'PREPARAR-PRODUCCION.md').write_text(
+            production_contract.read_text(encoding='utf-8'), encoding='utf-8'
+        )
         names = []
         for attachment in idea.files:
             source = _safe(idea.path, attachment.name)

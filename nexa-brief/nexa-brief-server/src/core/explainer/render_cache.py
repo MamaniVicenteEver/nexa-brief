@@ -8,12 +8,19 @@ from src.core.explainer.catalog import KIT_DIR, TEMPLATES_DIR, ExplainerVideo
 
 
 def render_signature(video: ExplainerVideo) -> str:
-    digest = hashlib.sha256(b"explainer-render-v1")
+    digest = hashlib.sha256(b"explainer-render-v2")
+    digest.update(f"{video.locale}:{video.revision or ''}".encode())
     roots = [KIT_DIR / "engine", KIT_DIR / "vendor", KIT_DIR / "designs/common",
              KIT_DIR / "designs" / video.design, video.path / "assets"]
     files = {p for root in roots if root.is_dir() for p in root.rglob("*") if p.is_file()}
     files.update({video.path / "index.html", KIT_DIR / "tools/kit.py",
                   TEMPLATES_DIR / "_tools/commercial/render_promo.py", TEMPLATES_DIR / "_tools/http_media.py"})
+    if video.edition_path is not None:
+        files.update(video.edition_path / name for name in (
+            "edition.json", "config.json", "config.publication.json", "storyboard.json",
+            "storyboard.publication.json", "lyrics.json", "song.mp3", "song-with-outro.mp3",
+            "publish.json", "publication.json",
+        ))
     for path in sorted(files):
         if path.is_file():
             stat = path.stat()

@@ -32,7 +32,7 @@ Los tokens complementarios de miniaturas se consultan en `../../design-tokens.js
 
 ## Composición y miniaturas
 
-A ocupa el centro con hasta cinco palabras en una o dos filas. B admite una frase más larga en hasta cuatro filas. Mantener la paleta en ambas. Fondo independiente de imagen propia o del medio existente, con recorte a sangre y encuadre ajustable. Sin artista; «LETRAS» siempre debajo de la última fila, alineada a su extremo derecho, con el color principal de la plantilla a opacidad completa, al 24,3% en A y al 30% en B, con el hueco al 25,2% del original en A y al 28% en B. NODEMOTION queda discreta en la esquina inferior derecha.
+A ocupa el centro con hasta cinco palabras en una o dos filas. B admite una frase más larga en hasta cuatro filas. Mantener la paleta en ambas. Fondo independiente de imagen propia o del medio existente, con recorte a sangre y encuadre ajustable. Sin artista; «LETRAS» siempre debajo de la última fila, alineada a su extremo derecho, con el color principal de la plantilla a opacidad completa, al 21,87% en A y al 34,5% en B, con el hueco al 25,2% del original en A y al 28% en B. NODEMOTION queda discreta en la esquina inferior derecha.
 
 ![Miniaturas A y B de lyrics-neon](../../docs/previews/lyrics-neon.jpg)
 
@@ -72,4 +72,8 @@ Transiciones y animaciones CSS registradas en el código:
 
 ### Revisión de Neón · contorno y rayas
 
-A: primera fila en Archivo Black con contorno y relleno transparente; última fila en Monoton, con sus bandas de tubo. B: todas las filas anteriores a la última en Archivo Black con contorno y sin relleno; última fila con relleno a rayas y huecos transparentes. «LETRAS» usa Archivo Black, mide el 24,3% del título en A y el 30% en B, con el color principal de la plantilla a opacidad completa con el hueco al 25,2% del original en A y al 28% en B y termina debajo del extremo derecho de REMIX o DE TI. NODEMOTION aumenta de 13 a 15.6 px y usa negrita 900 y refuerzo de trazo de 0.4 px.
+A: primera fila en Archivo Black con contorno y relleno transparente; última fila en Monoton, con sus bandas de tubo. B: todas las filas anteriores a la última en Archivo Black con contorno y sin relleno; última fila con relleno a rayas y huecos transparentes. «LETRAS» usa Archivo Black, mide el 21,87% del título en A y el 34,5% en B, con el color principal de la plantilla a opacidad completa con el hueco al 25,2% del original en A y al 28% en B y termina debajo del extremo derecho de REMIX o DE TI. NODEMOTION aumenta de 13 a 15.6 px y usa negrita 900 y refuerzo de trazo de 0.4 px.
+
+El fotograma de referencia del segundo 2 usa `neon.core` #FFE9CF, `neon.glow` #FF5A1F y `neon.deep` #E01400. Estos mismos valores se usan en las dos miniaturas; la captura aportada presenta un núcleo medido aproximadamente en #FDE7CD por su composición en pantalla.
+
+En la opción B, «LETRAS» baja un 10% de su propio tamaño, manteniendo su fuente, tamaño y color.

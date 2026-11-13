@@ -11,6 +11,9 @@ SANDBOX_SHARED_DIRS = frozenset({"_proto", "_engine", "_mapas", "_pizarra", "_av
 def is_public_showcase_engine_key(parts: tuple[str, ...]) -> bool:
     """Explicit shared showcase code only; never fall back to episode data."""
     from src.core.explainer.production_templates import registered_public_file
+    from src.core.explainer.engine_locations import public_engine_file
+    if public_engine_file(settings.templates_dir, parts) is not None:
+        return not is_private_content_key("/".join(parts))
     if registered_public_file(settings.templates_dir, parts):
         return not is_private_content_key('/'.join(parts))
     # The gallery's modules resolve assets relative to the episode root. This
@@ -106,13 +109,35 @@ def resolve_content_key(key: str) -> Path:
     if not parts or key.startswith("/") or "\\" in key or any(p in {".", ".."} or p.startswith(".") for p in key.split("/")):
         raise ValueError("Invalid content key")
     layout = layout_for_settings(settings)
-    if layout.schema_version >= 3 and parts[0] == 'sandbox' and len(parts) >= 4:
+    from src.core.explainer.engine_locations import public_engine_file
+    engine_parts = parts[1:] if parts[0] == 'bundled' else parts
+    relocated_engine = public_engine_file(settings.templates_dir, engine_parts)
+    if relocated_engine is not None:
+        parts = ('bundled', *relocated_engine.relative_to(settings.templates_dir).parts)
+    # Never shadow an actual profile-owned project with a compatibility alias.
+    # A symlink (including a dangling one) also prevents the alias; the normal
+    # resolver then rejects it instead of silently serving different content.
+    def project_exists(root: Path, category: str, project: str) -> bool:
+        category_dir = root / category
+        project_dir = category_dir / project
+        return category_dir.is_symlink() or project_dir.is_symlink() or project_dir.exists()
+
+    if (layout.schema_version >= 3 and parts[0] == 'productions' and len(parts) >= 4
+            and not project_exists(layout.productions_dir, parts[1], parts[2])):
+        from src.core.explainer.production_templates import legacy_production_file
+        alias = legacy_production_file(settings.templates_dir, parts[1:])
+        if alias is not None:
+            parts = ('bundled', *alias)
+    if (layout.schema_version >= 3 and parts[0] == 'sandbox' and len(parts) >= 4
+            and not project_exists(layout.sandbox_dir, parts[1], parts[2])):
         from src.core.explainer.production_templates import definitions
+        matches = []
         for design, directory in definitions(settings.templates_dir):
             marker = design['production_template']
             if parts[1:3] == (marker.get('origin_folder'), marker.get('project_id')):
-                parts = ('bundled', *marker['folder'].split('/'), *parts[3:])
-                break
+                matches.append(('bundled', *marker['folder'].split('/'), *parts[3:]))
+        if len(matches) == 1:
+            parts = matches[0]
     atlas_assets = ("bundled", "sandbox", "nodehistory", "atlas-en-movimiento", "assets")
     new_assets = ("bundled", "nodeatlas", "atlas-en-movimiento", "assets")
     old_engine = ("bundled", "sandbox", "nodehistory", "atlas-en-movimiento")

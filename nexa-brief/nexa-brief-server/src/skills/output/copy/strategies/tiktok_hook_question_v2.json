@@ -2,7 +2,7 @@
  "id": "tiktok_hook_question_v2",
  "platform": "tiktok",
  "name": "TikTok · Frase corta + pregunta corta (v2)",
- "description": "Corto, natural y puntual: una frase con la que alguien se identifica y una pregunta breve. v1 con límites más cortos.",
+ "description": "Corto, natural y puntual: una frase con la que alguien se identifica y una pregunta breve. v1 con límites más cortos. Calidad: usa solo hechos aportados; no inventes cifras, partidos, finales ni citas. Rechaza «una historia que continúa» y «un momento increíble»; sí, solo si consta: «Barça: 29 Ligas en 2026». Cifras con contexto y fecha, preferir datos verificados de los últimos 12 meses según la fecha recibida; si falta, omite y avisa. Sin emojis, «LETRAS» ni etiquetas ajenas; español natural cuando corresponda.",
  "fields": {
   "hook_statement": {
    "type": "text",

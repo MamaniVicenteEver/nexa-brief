@@ -107,7 +107,8 @@ def test_native_romantic_palette_and_actual_media_kind(tmp_path):
     colors={"serif":"#AAEECC","script":"#DD4477"}
     designs=thumbs._build_designs("lyrics-romantic", {"colors":colors})
     assert designs["A"]["palette"]["foreground"] == colors["script"]
-    assert designs["B"]["palette"]["foreground"] == colors["serif"]
+    assert designs["B"]["palette"]["foreground"] == colors["script"]
+    assert designs["A"]["palette"]["subtitle"] == designs["B"]["palette"]["subtitle"] == colors["serif"]
     assert designs["A"]["typography"]["display"] == "Great Vibes"
     assert designs["B"]["typography"]["weight"] == 500
     assert designs["B"]["typography"]["slant"] == "italic"
@@ -124,3 +125,31 @@ def test_manual_darkness_and_frame_time_survive_normalization(tmp_path):
     assert result["B"]["design"]["background"]["overlay"] == .65
     assert result["B"]["design"]["background"]["time"] == 32.5
     assert result["A"]["design"]["background"]["overlay"] == .2
+
+
+def test_image_and_video_can_be_selected_independently(tmp_path):
+    job=job_at(tmp_path)
+    image=tmp_path/"photo.jpg";image.write_bytes(b"image")
+    video=tmp_path/"bg.mp4";video.write_bytes(b"video")
+    job.artifacts.image_path=image
+    assert assets.background_source(job) == image
+    assert assets.background_source(job,"video") == video
+    assert set(assets.background_sources(job)) == {"image","video"}
+    manifest=thumbs.preview_manifest(job,DraftDetails(song_name="Song"))
+    options=manifest["options"]
+    options["A"]["design"]["background"].update(mediaSource="video")
+    updated=thumbs.preview_manifest(job,DraftDetails(song_name="Song"),options)
+    assert updated["options"]["A"]["design"]["background"]["mediaSource"] == "video"
+    assert manifest["options"]["A"]["design"]["background"]["mediaVersion"] == updated["options"]["A"]["design"]["background"]["mediaVersion"]
+
+
+def test_template_video_remains_available_after_using_a_custom_image(tmp_path):
+    job=job_at(tmp_path)
+    job.input.category_name="lyrics-impact"
+    image=tmp_path/"photo.jpg";image.write_bytes(b"image")
+    job.artifacts.image_path=image
+    (tmp_path/"config.json").write_text(json.dumps({"bg":{"type":"image","src":"photo.jpg"}}))
+    sources=assets.background_sources(job)
+    assert sources["image"] == image
+    assert sources["video"].name == "women-dancing.mp4"
+    assert assets.background_source(job) == image

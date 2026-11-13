@@ -27,7 +27,7 @@ export function YouTubeABPreparation({
     <section className="flex flex-col gap-3 rounded-xl border border-nb-line p-3">
       <h3 className="text-sm font-bold">{t("title")}</h3>
       <p className="text-[12px] text-nb-mute">{t("hint")}</p>
-      <label className="text-sm">
+      <label className="flex min-w-0 flex-col gap-1 text-sm">
         {t("mode")}
         <select
           value={mode}
@@ -35,7 +35,7 @@ export function YouTubeABPreparation({
             setMode(event.target.value);
             setCopied(false);
           }}
-          className="ml-2 rounded-lg border border-nb-line bg-transparent p-1"
+          className="min-w-0 w-full max-w-full rounded-lg border border-nb-line bg-transparent p-1"
         >
           <option value="title">{t("titles")}</option>
           <option value="thumbnail">{t("thumbnails")}</option>

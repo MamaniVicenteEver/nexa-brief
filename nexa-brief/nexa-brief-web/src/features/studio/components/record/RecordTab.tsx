@@ -10,10 +10,10 @@ import { allowedFormatsFor, formatFor } from "@/shared/components/publish/brand-
 import { isDraftRunning } from "../../hooks/useDraft";
 import { useDraftThumbnailEditor } from "../../hooks/useDraftThumbnailEditor";
 import { usePublishCategoryGroups } from "../../hooks/usePublishCategoryGroups";
+import { isRecordable } from "../../hooks/useRecordPrototype";
 import type { TemplateStudioController } from "../../hooks/useTemplateStudio";
-import type { RecorderEngine } from "../../types";
 import { DraftProgress } from "../DraftProgress";
-import { FieldShell, SegmentedControl } from "../FieldShell";
+import { FieldShell } from "../FieldShell";
 import { SongNotesField } from "../sandbox/SongNotesField";
 import { DetailsAccordion } from "./DetailsAccordion";
 import { IntroSongFields } from "./IntroSongFields";
@@ -38,6 +38,8 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
       : recorder.recordable;
   const original = studio.original;
   const [originalNotes, setOriginalNotes] = useState("");
+  const [dirtyArtistDraftId, setDirtyArtistDraftId] = useState<string | null>(null);
+  const artistDirty = !!selected && dirtyArtistDraftId === selected.draftId;
   const labels = { "16x9": tp("16x9"), "9x16": tp("9x16") };
   const recording = recorder.render.isPending || isDraftRunning(selected);
   const busy = recording || thumbnailEditor.isSaving || thumbnailEditor.isSelecting;
@@ -49,24 +51,32 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto p-3">
-        <FieldShell title={t("prototype")} hint={t("prototypeHint")}>
+        <FieldShell title={t("prototype")}>
           <PrototypePicker
             original={original.draft}
             prototypes={prototypes}
             choice={recorder.choice}
             onSelect={recorder.select}
-            disabled={thumbnailEditor.isSaving || thumbnailEditor.hasError}
+            disabled={thumbnailEditor.isSaving || thumbnailEditor.hasError || artistDirty}
           />
-          {prototypes.length === 0 && (
-            <button
-              type="button"
-              onClick={() => studio.setTab("sandbox")}
-              className="flex items-center gap-1.5 self-start text-[11.5px] font-semibold text-nb-mute hover:text-nb-ink"
-            >
-              <FlaskConical className="size-3.5" />
-              {t("goSandbox")}
-            </button>
-          )}
+          {prototypes.length === 0 &&
+            !(
+              original.draft &&
+              (isRecordable(original.draft) ||
+                (recorder.isOriginal && original.draft.status === "rendering"))
+            ) && (
+              <div className="flex flex-col gap-1.5">
+                <p className="text-[12px] text-nb-mute">{t("empty")}</p>
+                <button
+                  type="button"
+                  onClick={() => studio.setTab("sandbox")}
+                  className="flex items-center gap-1.5 self-start text-[11.5px] font-semibold text-nb-mute hover:text-nb-ink"
+                >
+                  <FlaskConical className="size-3.5" />
+                  {t("goSandbox")}
+                </button>
+              </div>
+            )}
         </FieldShell>
 
         {recorder.isOriginal && !selected?.details && (
@@ -101,27 +111,17 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
             draft={selected}
             details={selected.details}
             thumbnailEditor={thumbnailEditor}
+            onArtistDirtyChange={(dirty) => setDirtyArtistDraftId(dirty ? selected.draftId : null)}
           />
         )}
 
         {selected?.details && <DetailsAccordion details={selected.details} />}
 
-        <FieldShell
-          title={tr("engine")}
-          hint={recorder.engine ? tr(`engineHint.${recorder.engine}`) : undefined}
-        >
-          {recorder.engines.length > 1 && recorder.engine ? (
-            <SegmentedControl<RecorderEngine>
-              value={recorder.engine}
-              onChange={recorder.setEngine}
-              options={recorder.engines.map((e) => ({ value: e, label: tr(`engines.${e}`) }))}
-            />
-          ) : (
-            <p className="text-[12.5px] text-nb-ink-soft">
-              {recorder.engine ? tr(`engines.${recorder.engine}`) : "—"}
-            </p>
-          )}
-        </FieldShell>
+        {!recorder.hyperframesSupported && (
+          <p role="alert" className="text-[12px] text-nb-accent-coral">
+            {tr("hyperframesUnsupported")}
+          </p>
+        )}
 
         <FieldShell title={t("formats")} hint={t("formatsHint")}>
           <div className="flex gap-2">
@@ -203,13 +203,19 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
           (isDraftRunning(selected) ||
             selected.status === "rendered" ||
             selected.status === "failed") && <DraftProgress draft={selected} dirty={false} />}
+        {artistDirty && <p className="text-[11px] text-nb-mute">{t("saveArtistFirst")}</p>}
         {recorder.render.error && (
           <p className="text-[11.5px] text-nb-accent-coral">{recorder.render.error.message}</p>
         )}
         <button
           type="button"
           disabled={
-            !selected || busy || missingFormat || !recorder.ready || thumbnailEditor.hasError
+            !selected ||
+            busy ||
+            missingFormat ||
+            !recorder.ready ||
+            thumbnailEditor.hasError ||
+            artistDirty
           }
           onClick={async () => {
             if (!selected) return;

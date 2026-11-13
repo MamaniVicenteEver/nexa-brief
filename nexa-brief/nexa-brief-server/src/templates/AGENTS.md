@@ -1,10 +1,16 @@
+Para crear cualquier contenido empieza por el [índice](../skills/README.md),
+[CALIDAD.md](../skills/CALIDAD.md) (estándar obligatorio) y
+[ORQUESTACION.md](../skills/ORQUESTACION.md) (roles, delegación, terminado e informe).
+
 # AGENTS.md — Reglas para crear o modificar plantillas de video
 
-> **Perfiles v2/v3:** el árbol de producción y sandbox mostrado más abajo es
-> histórico para episodios. Prototipos, referencias y producciones del perfil
-> se guardan en `$NEXA_PROFILE_DIR/sandbox/` y `$NEXA_PROFILE_DIR/productions/`.
-> Los motores y definiciones compartidos permanecen en el repositorio. Verifica
-> el perfil activo antes de escribir; no copies proyectos privados al repositorio.
+> **Ubicación obligatoria (v2/v3):** las demos principales validadas viven en
+> `src/templates/<categoría>/<id>/` del repositorio; los episodios viven en
+> `$NEXA_PROFILE_DIR/productions/<categoría>/<id>/`. Todos los proyectos de
+> prueba, prototipos y referencias viven en `$NEXA_PROFILE_DIR/sandbox/`.
+> El `sandbox/` del repositorio solo contiene motores compartidos experimentales,
+> herramientas y documentación, sin proyectos históricos. Verifica el perfil activo.
+> Norma: [ubicación de demos, pruebas y episodios](../../docs/ubicacion-demos-pruebas-episodios.md).
 
 > Este archivo es para cualquier agente de IA (Codex, Claude, Cursor, Copilot, Gemini…)
 > o persona que vaya a **crear una plantilla nueva** o **modificar una existente** dentro de
@@ -61,7 +67,7 @@ modal, landing y Estudio). Por eso tiene que funcionar en los cuatro contextos.
 ## 3. Estructura obligatoria de una plantilla
 
 ```text
-src/templates/                         ← SOLO PRODUCCIÓN (lo que ya sabemos que funciona)
+src/templates/                         ← código compartido y demos principales validadas
 ├── AGENTS.md                          ← este archivo
 ├── README.md                          ← resumen del catálogo
 ├── templates.json                     ← catálogo: fuente de verdad (sección 4)
@@ -70,11 +76,11 @@ src/templates/                         ← SOLO PRODUCCIÓN (lo que ya sabemos q
 │   ├── commercial/<template-id>/      ← promos
 │   ├── image/<template-id>/           ← basadas en una imagen
 │   └── video/<template-id>/           ← basadas en un video
-├── nodetech/<video-id>/               ← videos del explainer-kit, una carpeta por categoría
-├── nodehistory/<video-id>/              (nodepolitics/, nodeeconomy/ se crean al primer video)
+├── nodetech/<demo-id>/                ← demos principales validadas, sin fecha en carpeta
+├── nodehistory/<demo-id>/             ← demos; nodeatlas/, nodeeconomy/, … según catálogo
 ├── _tools/                            ← motores, generadores y herramientas (sección 8)
 │   └── explainer-kit/                 ← motor de videos explicativos (Tech, History, Politics, Economy)
-└── sandbox/                           ← casa de pruebas: una carpeta por categoría (sandbox/AGENTS.md)
+└── sandbox/                           ← motores experimentales/herramientas/docs; sin proyectos
 ```
 
 > **Las carpetas `node*/` de videos y `_tools/explainer-kit/`** no son plantillas de este catálogo:
@@ -82,10 +88,11 @@ src/templates/                         ← SOLO PRODUCCIÓN (lo que ya sabemos q
 > (cómo producir un video) y el backend las lista por categoría (`niches.json` → `categories`,
 > campos `folder` y `designs`). Cada video es solo datos; el motor no se edita.
 
-> **`sandbox/`** es la casa de pruebas: `sandbox/AGENTS.md` es el índice y cada categoría tiene su
-> `AGENTS.md` con todo lo aprendido (prototipos de música en `sandbox/nodemotion/`, ideas de videos
-> en `sandbox/nodetech/`, `nodehistory/`, …). Las reglas de este archivo se aplican a un prototipo
-> recién cuando se **promueve** a producción.
+> **`sandbox/AGENTS.md`** contiene las instrucciones compartidas de pruebas.
+> Los prototipos de música, ideas de videos y referencias se crean físicamente en
+> `$NEXA_PROFILE_DIR/sandbox/`, nunca junto a esos documentos del repositorio.
+> Para trasladarlos usa **Preparar para producción → Pasar a producción**; las
+> demos validadas van al repositorio y los episodios al perfil. No copies motores.
 
 Cada plantilla:
 
@@ -319,7 +326,7 @@ al generar. Igual, después de regenerar SIEMPRE corré `optimize.py --check <id
 
 1. **Copiá la plantilla más parecida** como base (misma familia y mismo tipo de fondo),
    en vez de empezar de cero: así heredás el contrato de las secciones 5 y 6.
-2. Prototipala primero en `sandbox/nodemotion/<id>/` (ver `sandbox/nodemotion/AGENTS.md`) y después
+2. Prototipala primero en `$NEXA_PROFILE_DIR/sandbox/nodemotion/<id>/` (ver `sandbox/nodemotion/AGENTS.md`) y después
    creá la carpeta `nodemotion/<tipo>/<nuevo-id>/` con la estructura de la sección 3.
 3. Poné en `assets/` una canción, una letra (`lyrics.json` real, formato Whisper) y los
    medios por defecto. Registrá los créditos de stock en el `CREDITS.md` de la familia.
@@ -393,3 +400,8 @@ usuario que hay que actualizarlo.
   los tiempos de 16:9 y 9:16.
 - Cualquier cosa que no pudiste verificar, dicha explícitamente.
 - No hagas `git commit` ni `git push` salvo que el usuario lo pida.
+
+
+## Promos: instrucciones compartidas, sin copias por video
+
+Para Editorial, Sports, Dynamic, Kinetic, Trendy y Urban, usa [el flujo único de promos](../skills/nodemotion/promo/OPERAR.md). Los prompts versionados viven en `src/skills/nodemotion/promo/prompts/` del servidor y se resuelven con `promo.py prompt --id ID --stage ETAPA`; nunca crees `work/instrucciones/prompts/`, copias de esos Markdown, otro productor ni scripts de campaña para repetir el flujo. Cada proyecto conserva solo la referencia de versión y hashes, sus datos y evidencias. Las reglas específicas del diseño proceden de `templates/<template-id>.json` y `DESIGN.md`; no se copian al proyecto. `CLAUDE.md` incorpora este archivo mediante `@AGENTS.md`. Las recetas de crear o bifurcar una plantilla nueva no aplican a videos basados en una promo existente.

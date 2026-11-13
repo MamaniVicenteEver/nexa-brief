@@ -1,0 +1,131 @@
+"use client";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import type { Niche } from "@/features/create-video/types";
+import type { Template } from "@/features/templates/types";
+import { useJobsTrayStore } from "@/shared/store/jobs-tray-store";
+import { renderDraft } from "../api/studio-service";
+import type { Draft, RecorderEngine, RecordFormat } from "../types";
+import { backgroundVisibility, supportsBackgroundVisibility } from "../services/background-visibility";
+import { draftKey, draftsKey } from "./useDraft";
+
+/** Opción «Video original» en el selector (la plantilla tal cual). */
+export const ORIGINAL = "__original";
+
+export const ENGINE_ORDER: RecorderEngine[] = ["hyperframes", "remotion", "playwright"];
+
+/** Se puede grabar un prototipo preparado (o uno cuya grabación falló y se puede reintentar). */
+export function isRecordable(draft: Draft): boolean {
+  return draft.status === "prepared" || (draft.status === "failed" && draft.recoverable);
+}
+
+export function songTitle(draft: Draft, songs?: { assetId: string; title: string }[]): string {
+  return songs?.find((song) => song.assetId === draft.inputs?.musicAssetId)?.title?.trim() || draft.details?.songName?.trim() || "";
+}
+
+export function prototypeLabel(draft: Draft, fallback: string, songs?: { assetId: string; title: string }[]): string {
+  if (draft.original) return "Demo";
+  const name = draft.name?.trim() || "";
+  const song = songTitle(draft, songs);
+  return ((!name || /^prototipo\s+\d+$/i.test(name)) && song) || name || fallback;
+}
+
+/** Pestaña Grabar: qué grabar (el «Video original» o un prototipo preparado), motor (HyperFrames
+ * por defecto), formatos (16:9 por defecto) y en qué cuentas publicar. Al grabar, el trabajo
+ * aparece en «Videos en proceso». */
+export function useRecordPrototype(
+  template: Template,
+  niche: Niche | undefined,
+  prototypes: Draft[],
+  original: Draft | null,
+  open = true,
+) {
+  const queryClient = useQueryClient();
+  const addJobs = useJobsTrayStore((s) => s.addJobs);
+  const recordable = prototypes.filter(isRecordable);
+  const originalReady = original !== null && isRecordable(original);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  // Sin elegir: el primer prototipo preparado; si no hay ninguno, el original.
+  const choice =
+    selectedId && ((selectedId === ORIGINAL && (originalReady || original?.status === "rendering")) || prototypes.some((d) => d.draftId === selectedId && (isRecordable(d) || d.status === "rendering")))
+      ? selectedId
+      : (originalReady ? ORIGINAL : (recordable[0]?.draftId ?? ""));
+  const selected =
+    choice === ORIGINAL ? original : (prototypes.find((d) => d.draftId === choice) ?? null);
+
+  const engines = ENGINE_ORDER;
+  const engine = "hyperframes" as const;
+  const hyperframesSupported = niche?.supportedEngines.includes(engine) ?? false;
+  const canVertical = true;
+  const [vertical, setVertical] = useState(false);
+  const [desktop, setDesktop] = useState(true);
+  useEffect(() => {
+    if (!open) {
+      setVertical(false);
+      setDesktop(true);
+    }
+  }, [open]);
+  const formats: RecordFormat[] = [
+    ...(desktop ? ["16x9" as const] : []),
+    ...(vertical && canVertical ? ["9x16" as const] : []),
+  ];
+  const [accounts, setAccounts] = useState<string[]>([]);
+  const [accountFormats, setAccountFormats] = useState<Record<string, RecordFormat>>({});
+
+  const render = useMutation({
+    mutationFn: async (draft: Draft) => {
+      const result = await renderDraft(draft.draftId, {
+        recorderEngine: engine,
+        backgroundOpacity: !draft.original && supportsBackgroundVisibility(template.id) &&
+          (draft.inputs.templateInputs?.media?.background?.length || draft.inputs.imageAssetId || draft.inputs.videoAssetId)
+          ? (backgroundVisibility.get(draft.draftId) ?? 0.8) : undefined,
+        publishAccounts: accounts,
+        formats,
+        accountFormats,
+      });
+      return { draft, result };
+    },
+    onSuccess: ({ draft, result }) => {
+      setSelectedId(draft.original ? ORIGINAL : draft.draftId);
+      addJobs([
+        {
+          jobId: result.job_id,
+          category: template.nicheId,
+          label: `${template.displayName} · ${prototypeLabel(draft, template.displayName)}`,
+        },
+      ]);
+      queryClient.invalidateQueries({ queryKey: draftKey(draft.draftId) });
+      queryClient.invalidateQueries({ queryKey: draftsKey(template.id) });
+      queryClient.invalidateQueries({ queryKey: ["template-videos", template.id] });
+    },
+  });
+
+  return {
+    recordable,
+    choice,
+    isOriginal: choice === ORIGINAL,
+    selected,
+    /** El elegido está listo para grabar (preparado o reintentable). */
+    ready: selected !== null && isRecordable(selected) && hyperframesSupported && formats.length > 0,
+    select: setSelectedId,
+    engines,
+    defaultEngine: niche?.recorderEngine as RecorderEngine | undefined,
+    engine,
+    hyperframesSupported,
+    canVertical,
+    formats,
+    desktop,
+    setDesktop,
+    vertical: vertical && canVertical,
+    setVertical,
+    accounts,
+    setAccounts,
+    accountFormats,
+    setAccountFormat: (selector: string, format: RecordFormat) =>
+      setAccountFormats((prev) => ({ ...prev, [selector]: format })),
+    render,
+  };
+}
+
+export type RecordController = ReturnType<typeof useRecordPrototype>;

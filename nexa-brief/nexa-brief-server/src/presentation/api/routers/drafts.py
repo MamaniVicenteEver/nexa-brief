@@ -29,7 +29,7 @@ from starlette.responses import Response
 from src.config.niche_config import NicheConfig, find_niche_by_template_id, get_niche_config
 from src.core import draft_publishing, drafts, job_tracker, template_original
 from src.modules.copy_writer import copy_profile
-from src.core.drafts import Draft, DraftInputs, RenderOptions
+from src.core.drafts import Draft, DraftInputs, RenderOptions, effective_record_formats
 from src.core.job import DurationConfig, DurationMode, Job, JobPublishingConfig, JobStage, SongInfo
 from src.core.orchestrator import Orchestrator
 from src.presentation.api.file_streaming import serve_file_with_range
@@ -94,14 +94,14 @@ async def thumbnail_font(font_id: str) -> Response:
 
 
 @router.get("/drafts/{draft_id}/thumbnail-background", include_in_schema=False)
-async def thumbnail_background(draft_id: str, kind: str = Query("frame", pattern="^(frame|image|solid)$"), time: float = Query(12, ge=0, le=86400), asset: str = Query("", max_length=24)) -> Response:
+async def thumbnail_background(draft_id: str, kind: str = Query("frame", pattern="^(frame|image|solid)$"), time: float = Query(12, ge=0, le=86400), asset: str = Query("", max_length=24), source: str = Query("auto", pattern="^(auto|image|video)$")) -> Response:
     from src.core.draft_thumbnail_assets import background_file
     draft = await drafts.get(draft_id)
     job = drafts.load_job(draft_id) if draft else None
     if job is None:
         raise HTTPException(status_code=404, detail="Prototipo no disponible")
     try:
-        path = await background_file(job, {"kind": kind, "time": time, "asset": asset})
+        path = await background_file(job, {"kind": kind, "time": time, "asset": asset, "mediaSource": source})
     except ValueError as error:
         raise HTTPException(status_code=422, detail=str(error)) from error
     if path is None:
@@ -153,8 +153,16 @@ async def _validate_render_options(niche_cfg: NicheConfig, options: RenderOption
     ))
     if options.formats is not None and not options.formats:
         raise HTTPException(status_code=400, detail="Elegí al menos un formato")
-    if options.formats and "16x9" not in options.formats:
-        engine = options.recorder_engine or niche_cfg.recorder_engine
+    formats = effective_record_formats(options)
+    for selector in options.publish_accounts:
+        selected_format = options.account_formats.get(selector)
+        if selected_format is not None and (selected_format not in formats or
+                (selector.startswith("youtube:") and selected_format != "16x9")):
+            raise HTTPException(status_code=400, detail=f"El formato elegido para {selector} no está disponible")
+    engine = options.recorder_engine or niche_cfg.recorder_engine
+    if "9x16" in formats and engine == "remotion":
+        raise HTTPException(status_code=400, detail="Remotion solo graba en Desktop 16:9")
+    if "16x9" not in formats:
         if engine == "remotion":
             raise HTTPException(status_code=400, detail="Remotion solo graba en Desktop 16:9")
         if any(account.startswith("youtube:") for account in options.publish_accounts):
@@ -163,7 +171,7 @@ async def _validate_render_options(niche_cfg: NicheConfig, options: RenderOption
             from src.adapters.recorder.infrastructure.hyperframes_adapter import _resolve_composition_dir
             if _resolve_composition_dir(niche_cfg) is not None:
                 raise HTTPException(status_code=400, detail="Esta composición requiere Desktop 16:9")
-    if options.formats and "9x16" in options.formats and not niche_cfg.has_reels_format():
+    if "9x16" in formats and not niche_cfg.has_reels_format():
         raise HTTPException(status_code=400, detail="Esta plantilla no graba en 9:16")
 
 
@@ -180,6 +188,8 @@ async def _start_render(draft: Draft, job: Job, options: RenderOptions) -> str:
     niche_cfg = get_niche_config(draft.niche_id)
     job = drafts.load_job(draft.draft_id) or job
     job = drafts.apply_render_options(job, options, draft.details)
+    from src.core.library.lyric_appearance import prepare_render_appearance
+    job = prepare_render_appearance(job, draft.template_id, options.background_opacity)
     # Un reintento tras un fallo reusa el registro existente (mismo job_id).
     if job_tracker.get(job.job_id) is None:
         await job_tracker.create(job, niche_cfg)
@@ -238,7 +248,15 @@ async def _preview_then_maybe_render(draft: Draft, job: Job) -> None:
     if draft.original:
         await _prepare_original(current, result)
         return
-    await _start_render(current, result, draft.auto_render)
+    started = await drafts.start_prepare(draft.draft_id)
+    if started is None:
+        return
+    await drafts.run_prepare(started, result)
+    prepared = await drafts.get(draft.draft_id)
+    # A failed AI call leaves a recoverable preview and must never trigger recording.
+    if prepared is None or prepared.status != "prepared" or prepared.errors or prepared.details is None:
+        return
+    await _start_render(prepared, result, draft.auto_render)
 
 
 @router.post("/drafts", response_model=DraftResponse, status_code=202)
@@ -386,6 +404,9 @@ async def delete_draft(draft_id: str) -> DraftResponse:
     draft = await drafts.get(draft_id)
     if draft is None:
         raise HTTPException(status_code=404, detail=f"Draft '{draft_id}' not found")
+    from src.core.promo_prompts import TEMPLATES
+    if draft.original and draft.template_id in TEMPLATES:
+        raise HTTPException(status_code=409, detail="La demo original no se puede eliminar")
     if drafts.is_running(draft_id):
         raise HTTPException(status_code=409, detail=f"Draft '{draft_id}' is still {draft.status}")
     deleted = await drafts.delete(draft_id)
@@ -531,8 +552,12 @@ async def get_draft_preview_file(draft_id: str, file_path: str, request: Request
     """Sirve el index.html del draft (con `inject_preview_scripts`, así el
     modal usa ?controls=1&volume= igual que el showcase) y los assets que
     referencia. Misma protección de path que /templates/{id}/showcase."""
-    if await drafts.get(draft_id) is None:
+    draft = await drafts.get(draft_id)
+    if draft is None:
         raise HTTPException(status_code=404, detail=f"Draft '{draft_id}' not found")
+    from src.core.promos.readiness import is_archived_draft
+    if is_archived_draft(draft):
+        raise HTTPException(status_code=404, detail="Draft preview not available")
     job = drafts.load_job(draft_id)
     if job is None or job.artifacts.output_dir is None:
         raise HTTPException(status_code=404, detail="Draft output not ready yet")
@@ -556,6 +581,12 @@ async def get_draft_preview_file(draft_id: str, file_path: str, request: Request
         return Response(content=content, media_type="text/html; charset=utf-8", headers=no_cache)
     if path.suffix.lower() == ".json":
         content = preview_config_json(path.read_text(encoding="utf-8"), request)
+        if draft.template_id == "lyrics-impact" and job.artifacts.config_json_path and path == Path(job.artifacts.config_json_path).resolve():
+            import json
+            from src.core.library.lyric_appearance import ensure_intro_title
+            config = json.loads(content)
+            if ensure_intro_title(config, job, draft.template_id):
+                content = json.dumps(config, ensure_ascii=False)
         return Response(content=content, media_type="application/json", headers=no_cache)
     path = media_for_request(path, request)
     media_type = mimetypes.guess_type(str(path))[0] or "application/octet-stream"

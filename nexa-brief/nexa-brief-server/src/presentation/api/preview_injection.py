@@ -273,6 +273,36 @@ def inject_preview_scripts(content: str, query_params: Mapping[str, str]) -> str
           });
       };
 
+      // La vista temporal no modifica los archivos que se usan al grabar.
+      // CSS permite aplicar el ajuste aunque setupBg reemplace la imagen por un
+      // video posteriormente, sin observar ni intervenir el árbol animado.
+      const backgroundStyle = document.createElement("style");
+      backgroundStyle.textContent = `
+        html[data-nexa-live-background] #bgMedia {
+          opacity: var(--nexa-live-background-opacity) !important;
+          filter: none !important;
+        }
+        html[data-nexa-live-background] body.outroActive #bgMedia {
+          opacity: calc(var(--nexa-live-background-opacity) * var(--nexa-live-outro-factor)) !important;
+        }
+        html[data-nexa-live-background] :is(#darkTint, #warmTint, #coldTint) { opacity: 0.25 !important; }
+        html[data-nexa-live-background] #vignette { opacity: 0.35 !important; }
+      `;
+      document.head.appendChild(backgroundStyle);
+      const backgroundOutroFactors = {"lyrics-impact": 1, "lyrics-romantic": 0.5, "lyrics-suave": 0.12, "lyrics-triste": 0.1};
+      window.addEventListener("message", (event) => {
+        if (event.source !== window.parent || event.data?.type !== "nexa-template-background-visibility") return;
+        if (event.data.enabled === false) {
+          document.documentElement.removeAttribute("data-nexa-live-background");
+          return;
+        }
+        const { value, templateId } = event.data;
+        if (!Object.hasOwn(backgroundOutroFactors, templateId) || typeof value !== "number" || !Number.isFinite(value)) return;
+        document.documentElement.style.setProperty("--nexa-live-background-opacity", String(Math.max(0, Math.min(1, value))));
+        document.documentElement.style.setProperty("--nexa-live-outro-factor", String(backgroundOutroFactors[templateId]));
+        document.documentElement.setAttribute("data-nexa-live-background", "");
+      });
+
       window.addEventListener("message", (event) => {
         if (event.data?.type === "nexa-template-reset") {
           resetPreview();

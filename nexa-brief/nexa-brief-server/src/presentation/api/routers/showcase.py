@@ -194,6 +194,14 @@ def file(design_id: str, path: str, request: Request, service: ShowcaseService =
                                  if_range=request.headers.get("if-range"), cache_control="private, no-cache")
 
 
+class PassToProductionRequest(BaseModel):
+    category: str | None = None
+    shared_categories: list[str] = Field(default_factory=list)
+
+
 @router.post("/{design_id}/promote", response_model=Design, dependencies=[Depends(require_internal)])
-def promote(design_id: str, service: ShowcaseService = Depends(get_showcase_service)):
-    return _call(service.promote, design_id)
+def promote(design_id: str, body: PassToProductionRequest | None = None,
+            service: ShowcaseService = Depends(get_showcase_service)):
+    if body is None:
+        return _call(service.promote, design_id)
+    return _call(service.promote, design_id, body.category, body.shared_categories)

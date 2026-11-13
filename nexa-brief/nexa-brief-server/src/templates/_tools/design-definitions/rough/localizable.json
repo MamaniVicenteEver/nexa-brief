@@ -1,0 +1,1037 @@
+{
+  "schema": "nexa.localizable/1",
+  "design_id": "rough",
+  "limit_policy": "Editorial character budgets for both aspects, audited against the actual components and catalog; not inferred from names. Numeric panel codes, bits, addresses, enums and media are preserved. Existing source text may exceed a budget: only changed strings are rejected.",
+  "components": {
+    "common.punch": {
+      "source": "designs/common/text.js",
+      "fields": {
+        "text": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        },
+        "style": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        }
+      }
+    },
+    "common.tag": {
+      "source": "designs/common/text.js",
+      "fields": {
+        "text": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        },
+        "pos": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        }
+      }
+    },
+    "common.flash": {
+      "source": "designs/common/text.js",
+      "fields": {}
+    },
+    "common.endcard": {
+      "source": "designs/common/text.js",
+      "fields": {
+        "line": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        },
+        "brand": {
+          "type": "label",
+          "max_chars": 40,
+          "translate": true
+        },
+        "cta": {
+          "type": "label",
+          "max_chars": 40,
+          "translate": true
+        }
+      }
+    },
+    "common.lyric": {
+      "source": "designs/common/text.js",
+      "fields": {
+        "text": {
+          "type": "narration",
+          "max_chars": 240,
+          "translate": true
+        },
+        "accent.*": {
+          "type": "substring:text",
+          "max_chars": 48,
+          "translate": true
+        }
+      },
+      "notes": "An empty text uses narration in the current time window; accent cites that narration. No literal text is invented."
+    },
+    "common.logo": {
+      "source": "designs/common/logo.js",
+      "fields": {
+        "name": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        },
+        "src": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        }
+      }
+    },
+    "common.clip": {
+      "source": "designs/common/clip.js",
+      "fields": {
+        "caption": {
+          "type": "title",
+          "max_chars": 140,
+          "translate": true
+        },
+        "sub": {
+          "type": "label",
+          "max_chars": 160,
+          "translate": true
+        },
+        "accentWords.*": {
+          "type": "substring:caption",
+          "max_chars": 70,
+          "translate": true
+        },
+        "logoName": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        },
+        "src": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "layout": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "tone": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "textColor": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "textSide": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "textIn": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "logo": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "logoPos": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        }
+      }
+    },
+    "common.tabloid": {
+      "source": "designs/common/tabloid.js",
+      "fields": {
+        "text": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        },
+        "accent": {
+          "type": "substring:text",
+          "max_chars": 60,
+          "translate": true
+        },
+        "bullet": {
+          "type": "label",
+          "max_chars": 50,
+          "translate": true
+        },
+        "beforeLabel": {
+          "type": "label",
+          "max_chars": 40,
+          "translate": true
+        },
+        "afterLabel": {
+          "type": "label",
+          "max_chars": 40,
+          "translate": true
+        },
+        "strap": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        },
+        "seal": {
+          "type": "label",
+          "max_chars": 40,
+          "translate": true
+        },
+        "tapeText": {
+          "type": "label",
+          "max_chars": 70,
+          "translate": true
+        },
+        "logoName": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        },
+        "src": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "srcAfter": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "video": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "poster": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "imageSide": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "mode": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "palette": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "textIn": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "accentIn": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "bulletIn": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "logo": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "logoPos": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        }
+      }
+    },
+    "common.question": {
+      "source": "designs/common/question.js",
+      "fields": {
+        "text": {
+          "type": "question",
+          "max_chars": 140,
+          "translate": true
+        }
+      }
+    },
+    "rough.title": {
+      "source": "designs/rough/components/shapes.js",
+      "fields": {
+        "text": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        },
+        "textPortrait": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        },
+        "kicker": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        },
+        "sub": {
+          "type": "label",
+          "max_chars": 160,
+          "translate": true
+        }
+      }
+    },
+    "rough.icon": {
+      "source": "designs/rough/components/shapes.js",
+      "fields": {
+        "tag": {
+          "type": "label",
+          "max_chars": 70,
+          "translate": true
+        },
+        "caption": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        },
+        "icon": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "color": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        }
+      }
+    },
+    "rough.photo": {
+      "source": "designs/rough/components/shapes.js",
+      "fields": {
+        "caption": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        },
+        "sub": {
+          "type": "label",
+          "max_chars": 160,
+          "translate": true
+        },
+        "logoName": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        },
+        "src": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "tone": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "logo": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "logoPos": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        }
+      }
+    },
+    "rough.annotate": {
+      "source": "designs/rough/components/shapes.js",
+      "fields": {
+        "note": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        },
+        "kind": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        }
+      }
+    },
+    "rough.introv1": {
+      "source": "designs/rough/components/intros.js",
+      "fields": {
+        "text": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        },
+        "textPortrait": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        },
+        "highlight": {
+          "type": "substring:text",
+          "max_chars": 60,
+          "translate": true
+        },
+        "kicker": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        },
+        "sub": {
+          "type": "label",
+          "max_chars": 160,
+          "translate": true
+        }
+      }
+    },
+    "rough.introv2": {
+      "source": "designs/rough/components/intros.js",
+      "fields": {
+        "text": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        },
+        "textPortrait": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        },
+        "highlight": {
+          "type": "substring:text",
+          "max_chars": 60,
+          "translate": true
+        },
+        "kicker": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        },
+        "sub": {
+          "type": "label",
+          "max_chars": 160,
+          "translate": true
+        },
+        "logoName": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        },
+        "src": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "video": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "poster": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "logo": {
+          "type": "media",
+          "max_chars": 0,
+          "translate": false
+        },
+        "logoPos": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "focus": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        }
+      }
+    },
+    "rough.flow": {
+      "source": "designs/rough/components/ui.js",
+      "fields": {
+        "nodes.*.label": {
+          "type": "label",
+          "max_chars": 40,
+          "translate": true
+        },
+        "nodes.*.icon": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "title": {
+          "type": "title",
+          "max_chars": 80,
+          "translate": true
+        }
+      }
+    },
+    "rough.compare": {
+      "source": "designs/rough/components/ui.js",
+      "fields": {
+        "small.label": {
+          "type": "label",
+          "max_chars": 60,
+          "translate": true
+        },
+        "small.value": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        },
+        "big.label": {
+          "type": "label",
+          "max_chars": 60,
+          "translate": true
+        },
+        "big.value": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        }
+      }
+    },
+    "rough.stack": {
+      "source": "designs/rough/components/ui.js",
+      "fields": {
+        "items.*.label": {
+          "type": "label",
+          "max_chars": 60,
+          "translate": true
+        },
+        "title": {
+          "type": "title",
+          "max_chars": 80,
+          "translate": true
+        }
+      }
+    },
+    "rough.dsky": {
+      "source": "designs/rough/components/ui.js",
+      "fields": {
+        "code": {
+          "type": "label",
+          "max_chars": 5,
+          "translate": false
+        },
+        "verb": {
+          "type": "label",
+          "max_chars": 2,
+          "translate": false
+        },
+        "noun": {
+          "type": "label",
+          "max_chars": 2,
+          "translate": false
+        }
+      }
+    },
+    "rough.rope": {
+      "source": "designs/rough/components/ui.js",
+      "fields": {
+        "bits": {
+          "type": "label",
+          "max_chars": 8,
+          "translate": false
+        },
+        "caption": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        }
+      }
+    },
+    "rough.gauge": {
+      "source": "designs/rough/components/ui.js",
+      "fields": {
+        "unit": {
+          "type": "label",
+          "max_chars": 32,
+          "translate": true
+        },
+        "label": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        }
+      }
+    },
+    "rough.descent": {
+      "source": "designs/rough/components/ui.js",
+      "fields": {
+        "hazard": {
+          "type": "label",
+          "max_chars": 60,
+          "translate": true
+        },
+        "target": {
+          "type": "label",
+          "max_chars": 60,
+          "translate": true
+        },
+        "mode": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        }
+      }
+    },
+    "rough.tally": {
+      "source": "designs/rough/components/ui.js",
+      "fields": {
+        "label": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        },
+        "icon": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        }
+      }
+    },
+    "rough.choice": {
+      "source": "designs/rough/components/ui.js",
+      "fields": {
+        "options.*": {
+          "type": "label",
+          "max_chars": 45,
+          "translate": true
+        },
+        "question": {
+          "type": "question",
+          "max_chars": 100,
+          "translate": true
+        }
+      }
+    },
+    "rough.timeline": {
+      "source": "designs/rough/components/ui.js",
+      "fields": {
+        "items.*.year": {
+          "type": "label",
+          "max_chars": 24,
+          "translate": true
+        },
+        "items.*.label": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        }
+      }
+    },
+    "rough.load": {
+      "source": "designs/rough/components/extra.js",
+      "fields": {
+        "tasks.*": {
+          "type": "label",
+          "max_chars": 32,
+          "translate": true
+        },
+        "extra.*": {
+          "type": "label",
+          "max_chars": 32,
+          "translate": true
+        },
+        "overflowLabel": {
+          "type": "label",
+          "max_chars": 32,
+          "translate": true
+        },
+        "title": {
+          "type": "title",
+          "max_chars": 80,
+          "translate": true
+        }
+      }
+    },
+    "rough.note": {
+      "source": "designs/rough/components/extra.js",
+      "fields": {
+        "title": {
+          "type": "title",
+          "max_chars": 120,
+          "translate": true
+        },
+        "note": {
+          "type": "label",
+          "max_chars": 120,
+          "translate": true
+        },
+        "caption": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        }
+      }
+    },
+    "rough.network": {
+      "source": "designs/rough/components/extra.js",
+      "fields": {
+        "center": {
+          "type": "label",
+          "max_chars": 24,
+          "translate": true
+        },
+        "labels.*": {
+          "type": "label",
+          "max_chars": 24,
+          "translate": true
+        }
+      }
+    },
+    "rough.browser": {
+      "source": "designs/rough/components/extra.js",
+      "fields": {
+        "url": {
+          "type": "label",
+          "max_chars": 120,
+          "translate": false
+        },
+        "title": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        },
+        "link": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        },
+        "caption": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        }
+      }
+    },
+    "rough.counter": {
+      "source": "designs/rough/components/extra.js",
+      "fields": {
+        "label": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        },
+        "unit": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        },
+        "prefix": {
+          "type": "label",
+          "max_chars": 12,
+          "translate": true
+        },
+        "suffix": {
+          "type": "label",
+          "max_chars": 20,
+          "translate": true
+        }
+      }
+    },
+    "rough.notemark": {
+      "source": "designs/rough/components/notemark.js",
+      "fields": {
+        "title": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        },
+        "marks.*": {
+          "type": "label",
+          "max_chars": 60,
+          "translate": true
+        },
+        "marks.*.text": {
+          "type": "label",
+          "max_chars": 60,
+          "translate": true
+        },
+        "note": {
+          "type": "label",
+          "max_chars": 240,
+          "translate": true
+        },
+        "seed": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "style": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "side": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        }
+      },
+      "notes": "marks accepts strings or {text, at}; translate only strings/text, preserve at. A future host aligns any @phrase. seed is deterministic data."
+    },
+    "rough.outrov1": {
+      "source": "designs/rough/components/outrov1.js",
+      "fields": {
+        "thanks": {
+          "type": "label",
+          "max_chars": 60,
+          "translate": true
+        },
+        "channel": {
+          "type": "label",
+          "max_chars": 40,
+          "translate": false
+        },
+        "cta": {
+          "type": "label",
+          "max_chars": 40,
+          "translate": true
+        },
+        "support": {
+          "type": "label",
+          "max_chars": 180,
+          "translate": true
+        },
+        "handle": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": false
+        }
+      }
+    },
+    "rough.outro": {
+      "source": "designs/rough/components/outro.js",
+      "fields": {
+        "thanks": {
+          "type": "label",
+          "max_chars": 60,
+          "translate": true
+        },
+        "channel": {
+          "type": "label",
+          "max_chars": 40,
+          "translate": false
+        },
+        "cta": {
+          "type": "label",
+          "max_chars": 40,
+          "translate": true
+        },
+        "support": {
+          "type": "label",
+          "max_chars": 180,
+          "translate": true
+        },
+        "handle": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": false
+        }
+      }
+    },
+    "rough.chatRedaction": {
+      "source": "episode:assets/components/registro-chat.js",
+      "fields": {
+        "title": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        }
+      }
+    },
+    "rough.legalWarrant": {
+      "source": "episode:assets/components/escenas-datos.js",
+      "fields": {
+        "title": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        }
+      }
+    },
+    "rough.retentionCalendar": {
+      "source": "episode:assets/components/registro-chat.js",
+      "fields": {
+        "title": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        }
+      }
+    },
+    "rough.temporaryChat": {
+      "source": "episode:assets/components/escenas-datos.js",
+      "fields": {
+        "title": {
+          "type": "title",
+          "max_chars": 100,
+          "translate": true
+        }
+      }
+    },
+    "rough.layoffMail": {
+      "source": "component-library/sources/rough/rough-layoff-mail.js",
+      "fields": {
+        "time": {
+          "type": "label",
+          "max_chars": 32,
+          "translate": true
+        },
+        "from": {
+          "type": "label",
+          "max_chars": 40,
+          "translate": true
+        },
+        "subject": {
+          "type": "label",
+          "max_chars": 60,
+          "translate": true
+        },
+        "stamp": {
+          "type": "label",
+          "max_chars": 40,
+          "translate": true
+        },
+        "label": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        },
+        "badge": {
+          "type": "label",
+          "max_chars": 24,
+          "translate": true
+        },
+        "note": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        }
+      },
+      "notes": "Text appears on a phone; subject is wrapped to at most three lines. Keep it concise and preserve dates and quantities."
+    },
+    "rough.careerLadder": {
+      "source": "component-library/sources/rough/rough-career-ladder.js",
+      "fields": {
+        "rungs.*": {
+          "type": "label",
+          "max_chars": 35,
+          "translate": true
+        },
+        "title": {
+          "type": "title",
+          "max_chars": 80,
+          "translate": true
+        },
+        "who": {
+          "type": "label",
+          "max_chars": 60,
+          "translate": true
+        },
+        "note": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        }
+      },
+      "notes": "Preserve the order and meaning of the steps. dropAt is a protected animation time."
+    },
+    "rough.codeReview": {
+      "source": "component-library/sources/rough/rough-code-review.js",
+      "fields": {
+        "mode": {
+          "type": "enum",
+          "max_chars": 0,
+          "translate": false
+        },
+        "header": {
+          "type": "label",
+          "max_chars": 45,
+          "translate": true
+        },
+        "lines.*": {
+          "type": "label",
+          "max_chars": 42,
+          "translate": true
+        },
+        "who": {
+          "type": "label",
+          "max_chars": 80,
+          "translate": true
+        },
+        "note": {
+          "type": "label",
+          "max_chars": 100,
+          "translate": true
+        }
+      },
+      "notes": "Code is only visual, never executable. Keep punctuation, operators, keywords, line order and intent. Adapt comments and meaningful identifiers when appropriate; preserve historical source verbatim."
+    }
+  },
+  "script": {
+    "title": {
+      "type": "title",
+      "max_chars": 160
+    },
+    "kicker": {
+      "type": "label",
+      "max_chars": 100
+    },
+    "subtitle": {
+      "type": "label",
+      "max_chars": 160
+    },
+    "voice_direction": {
+      "type": "narration",
+      "max_chars": 1400
+    },
+    "segments.*.text": {
+      "type": "narration",
+      "max_chars": 2400
+    },
+    "segments.*.chapter": {
+      "type": "title",
+      "max_chars": 160
+    },
+    "segments.*.delivery_note": {
+      "type": "narration",
+      "max_chars": 1400
+    }
+  },
+  "storyboard": {
+    "title": {
+      "type": "title",
+      "max_chars": 160
+    }
+  }
+}

@@ -83,3 +83,7 @@ Note: `"color_calibration".existing_tone` must be one of "cool", "neutral",
    are not authoring CSS here, only flagging fit/mismatch for the step that
    does.
 5. Output is pure, parseable JSON, nothing else.
+
+## Calidad
+
+Describe only what is visible; never infer identities, historical facts, figures, outcomes or quotations. Avoid generic suggested text such as «UNA IDEA» or «EN MOVIMIENTO»; use a specific label such as «DARTMOUTH · 1956» only if visibly supported. No emojis, «LETRAS» or unrelated labels. Respect the exact output schema; do not invent credits or licenses.

@@ -68,3 +68,39 @@ El panel de fondo empieza cerrado. El tipo del archivo real decide si aparecen s
 La revisión de segundos detectó que el clip de Neón dura 9,267 s. Antes, 12 s y 24 s devolvían el primer cuadro por estar fuera del clip. Ahora se calcula el instante del bucle con la duración real y se renueva la clave de caché de fotogramas; FFprobe y FFmpeg se cierran también al cancelar o agotar el tiempo.
 
 Verificación adicional: el video real de Neón produce contenido diferente al pedir 12 s y 24 s. Se regeneraron las 33 parejas documentales sin desbordamientos y las cuatro portadas afectadas. Una captura secuencial de cuatro parejas terminó en 8,58 s; GNU time informó un pico de 198808 KB para la ejecución. El chequeo global de TypeScript sigue limitado por el error previo en `ExplainerCategoryWindow.tsx:148`; no informa errores en los archivos cambiados.
+
+
+## Edición en navegador · renderer 8 / huella 11
+
+30 pruebas de backend verificadas (29 en la suite completa y la prueba adicional de recuperación del video de Impacto), y 12 de interfaz correctas. La suite de interfaz verifica caducidad/CRUD/límites, restauración tras reabrir, ausencia de escrituras durante la edición, sincronización explícita y reintento tras error, selección de imagen/video, conservación de la imagen anterior durante el nuevo render y ausencia de redibujado de A al cambiar B.
+
+Prueba en Chromium del renderer real: 3 peticiones iniciales para la imagen y las fuentes; después de 20 cambios de texto y oscurecimiento siguieron siendo 3 (cero adicionales). La generación de los 20 SVG tomó 170 ms en esta máquina; esta cifra no incluye la rasterización ni promete ese tiempo en otros equipos. Las imágenes conservan la capa negra uniforme del 20% y los colores del medio.
+
+Carta de Amor usa rosa en A y B; LETRAS B pasa a 34,5% (+15%) y A adopta la serif del rótulo B. Neón replica los tres colores, el grosor y los factores de brillo de la intro, en vez de una aproximación de halo. Se añaden medio alternativo y revisión estable de medios al contrato. Los videos de las plantillas no cambian.
+
+
+## Encuadre y rótulos · renderer 9 / huella 12
+
+En el fondo 16:9, `preserveAspectRatio` llenaba exactamente el lienzo y no dejaba margen horizontal. Ahora izquierda y derecha amplían el fondo al 120% y lo desplazan al borde correspondiente; centro conserva el encuadre completo. Una prueba real en Chromium midió píxeles diferentes para las tres posiciones. El cambio se genera localmente y conserva la caché del medio.
+
+Carta de Amor usa `colors.serif` #F2E7DA para LETRAS en A y B. Neón reduce LETRAS de A un 10% relativo: 24,3% × 0,9 = 21,87% del título. La captura del usuario en el segundo 2 y `components/intro.js` confirman núcleo crema #FFE9CF y halo #FF5A1F / #E01400; las dos opciones mantienen esos valores originales. Se revisaron visualmente ambas parejas.
+
+Verificación local: 30 pruebas de backend y 11 de interfaz correctas; las dos capturas y portadas se regeneraron.
+
+## Neón B y preparación automática · renderer 10 / huella 13
+
+«LETRAS» de Neón B baja un 10% de su propio tamaño; no cambia su cuerpo ni su color. Las pruebas simuladas cubren la selección A/B, valores predeterminados, preparación previa, formatos y errores. El flujo no se ha probado mediante una transcripción, grabación o publicación real.
+
+## Cinco plantillas de letras · huella 14
+
+Hilo Rojo, Manifiesto, Collage Callejero, Escenas Mixtas y Grunge Rojo: parejas A/B y portadas regeneradas con el renderer compartido, colores y fuentes de cada plantilla. Mixtas y Grunge recuperan un fotograma de su lista de medios; sin imagen o video se conserva el color de fondo propio. Las cinco parejas se comprobaron dentro de la zona segura.
+
+## Resto de plantillas de letras · huella 15
+
+Se revisaron las 14 parejas A/B restantes (incluidas las de Fase de pruebas) contra tipografías, pesos, paletas y medios originales. Oswald 700 se toma de la fuente con licencia incluida en el repositorio. Se actualizaron las parejas y portadas sin modificar los videos. Las pruebas comprueban las 14 fuentes y colores, paletas anidadas y medios originales.
+
+## Piloto de Promo Editorial · renderer 11 / huella 16
+
+Solo la primera promoción se rediseña para aprobación. A: título corto sobre el medio completo. B: papel con pliegues deterministas, imagen a sangre, filetes y masa de tinta; un solo título cambia de negro a blanco al atravesar el corte. Archivo 900 extendida al 112%, paleta original, dos filas como máximo. B no supera la cantidad de palabras de A y no aparece «LETRAS».
+
+Ocho composiciones con títulos de una a cinco palabras y una palabra larga dentro del área segura. JPEG finales mediante `_capture_svg`: A 196862 bytes, B 104163 bytes, ambos 1280 × 720. Validación local de capturas: 5,51 s, pico de 157176 KB; Chromium cerrado al finalizar. Cuarenta y cinco pruebas de backend y nueve de interfaz aprobadas; Biome correcto. Las 64 salidas de otras plantillas comparadas con el renderer previo son idénticas. Sin grabar ni publicar videos.

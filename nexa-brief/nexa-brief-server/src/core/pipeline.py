@@ -168,7 +168,8 @@ async def run(
         return job
 
     # ── Cargar configuración del nicho ────────────────────────────────────────
-    niche_cfg = restrict_formats(get_niche_config(job.input.category_name), job.input.formats)
+    from src.core.library.background_source import with_selected_background
+    niche_cfg = with_selected_background(restrict_formats(get_niche_config(job.input.category_name), job.input.formats), job)
     if layout.schema_version >= 2:
         from src.core.content_registry import update_video_details
         song = job.input.song_info

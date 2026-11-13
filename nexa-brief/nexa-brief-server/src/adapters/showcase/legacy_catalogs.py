@@ -98,7 +98,13 @@ def _catalog_base(adapter, root: Path, folder: str, declaration: dict) -> tuple[
     base = declaration.get("base")
     if base is None:
         return root, folder
-    if not isinstance(base, str) or not base.startswith("sandbox/"):
+    if not isinstance(base, str):
+        return None
+    from src.core.explainer.engine_locations import public_engine_file
+    registered = public_engine_file(adapter.templates, (*base.split('/'), 'components.json'))
+    if registered is not None:
+        return adapter.templates, registered.parent.relative_to(adapter.templates).as_posix()
+    if not base.startswith("sandbox/"):
         return None
     shared_path = base.removeprefix("sandbox/")
     parts = shared_path.split("/")
@@ -110,6 +116,14 @@ def _catalog_base(adapter, root: Path, folder: str, declaration: dict) -> tuple[
 
 
 def _source_url(adapter, root: Path, path: str) -> str | None:
+    from src.core.explainer.engine_locations import public_engine_file
+    relative = ('sandbox/' + path) if root.resolve() == (adapter.templates / 'sandbox').resolve() else path
+    if root.resolve() in {adapter.templates.resolve(), (adapter.templates / 'sandbox').resolve()}:
+        registered = public_engine_file(adapter.templates, tuple(relative.split('/')))
+        if registered is not None:
+            if _inside(adapter.templates, registered.relative_to(adapter.templates).as_posix()) is None or not registered.is_file():
+                return None
+            return f"{_PREFIX}/bundled/" + '/'.join(quote(p, safe='') for p in registered.relative_to(adapter.templates).parts)
     shared_root = adapter.templates / "sandbox"
     # Existing explainer resolver exposes these engine namespaces as shared.
     parts = path.split("/")
@@ -124,11 +138,10 @@ def _source_url(adapter, root: Path, path: str) -> str | None:
 
 def atlas_cache_ready(adapter) -> bool:
     """Require the real Atlas renderer's shared assets; never synthesize map data."""
-    root = adapter.templates / "sandbox"
-    files = ("nodehistory/_atlas/cache/vector/world.pmtiles", "nodehistory/_atlas/cache/sprites/light.json",
-             "nodehistory/_atlas/cache/sprites/light.png")
-    dirs = ("nodehistory/_atlas/cache/fonts", "nodehistory/_atlas/cache/gibs-bluemarble",
-            "nodehistory/_atlas/cache/terrain-land")
+    from src.core.explainer.engine_locations import engine_root
+    root = engine_root(adapter.templates, 'nodehistory/_atlas')
+    files = ("cache/vector/world.pmtiles", "cache/sprites/light.json", "cache/sprites/light.png")
+    dirs = ("cache/fonts", "cache/gibs-bluemarble", "cache/terrain-land")
     for relative in files:
         path = _inside(root, relative)
         try:

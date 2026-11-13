@@ -166,3 +166,12 @@ Para preparar el último fotograma de CARTA y los diez diseños solicitados:
   --design grunge --design imperio --design memorias --design pelicula \
   --design periodico --design pop
 ```
+
+## Comprobación de instrucciones de agentes
+
+Desde la raíz del servidor ejecuta `python3 scripts/check_agent_docs.py`; para incluir
+el perfil activo usa `python3 scripts/check_agent_docs.py --profile "$NEXA_PROFILE_DIR"`.
+Comprueba el inventario, los enlaces Markdown locales, las rutas del índice, las
+referencias estáticas inequívocas a documentos Markdown, los bloques comunes y los
+punteros CLAUDE. Los ejemplos en bloques de código, variables, rutas de trabajo que se
+crean al producir y expresiones dinámicas requieren revisión manual; no se verifican.

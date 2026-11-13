@@ -1,0 +1,805 @@
+{
+  "asOf": "2026-11-09",
+  "sources": [
+    {
+      "id": "r-fr-elysee",
+      "url": "https://www.elysee.fr/emmanuel-macron",
+      "title": "Emmanuel Macron — Mandat en cours",
+      "publisher": "Présidence de la République française",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2023-01-02",
+      "period": "mandato actual"
+    },
+    {
+      "id": "r-fr-constitution",
+      "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000019241002/2026-05-03",
+      "title": "Article 6 — Constitution du 4 octobre 1958",
+      "publisher": "Légifrance",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "texto vigente consultado en 2026"
+    },
+    {
+      "id": "r-fr-insee-regional",
+      "url": "https://www.insee.fr/fr/statistiques/8621934",
+      "title": "Auvergne-Rhône-Alpes : PIB le plus élevé de province",
+      "publisher": "Insee",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2025-08-26",
+      "period": "PIB 2023; estructura del valor añadido 2022"
+    },
+    {
+      "id": "r-fr-insee-idf",
+      "url": "https://www.insee.fr/fr/statistiques/4481962",
+      "title": "L'essentiel sur… l'Île-de-France",
+      "publisher": "Insee",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2026-10-20",
+      "period": "PIB regional y empleo sectorial 2024"
+    },
+    {
+      "id": "r-in-pmindia",
+      "url": "https://www.pmindia.gov.in/en/pms-profile/",
+      "title": "Know the PM",
+      "publisher": "Prime Minister's Office, Government of India",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "perfil actual; juramento 2024-06-09"
+    },
+    {
+      "id": "r-in-constitution",
+      "url": "https://www.legislative.gov.in/static/uploads/2025/08/7af1daa22d65f9d04c00ae9b9aa5a799.pdf",
+      "title": "The Constitution of India — Second Diglot Edition, Article 75(3)",
+      "publisher": "Ministry of Law & Justice, Government of India",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2024-02-17",
+      "notes": "Artículo 75(3), página PDF 116, página impresa 34; el índice web usa página 115 cero-basada."
+    },
+    {
+      "id": "r-in-maharashtra",
+      "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2138139",
+      "title": "Union Home Minister inaugurates MACCIA headquarters in Mumbai — Release 2138139",
+      "publisher": "Press Information Bureau / Ministry of Home Affairs, Government of India",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2025-06-20",
+      "period": "declaración oficial de 2025-06-20",
+      "notes": "Contenido leído directamente; párrafos sobre Mumbai y Maharashtra."
+    },
+    {
+      "id": "r-in-tamilnadu",
+      "url": "https://labour.tn.gov.in/pdf/policy_note_lwsd_e_pn_2025_26.pdf",
+      "title": "Labour Welfare and Skill Development Department — Policy Note 2025–2026",
+      "publisher": "Government of Tamil Nadu",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "2025–2026",
+      "notes": "Página impresa 5, página PDF 8, declara el segundo lugar económico de Tamil Nadu."
+    },
+    {
+      "id": "r-in-chennai",
+      "url": "https://www.india.gov.in/explore-india/odop/details/engineering-and-auto-components",
+      "title": "Engineering and Auto Components — Chennai, Tamil Nadu",
+      "publisher": "National Portal of India",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "perfil industrial actual"
+    },
+    {
+      "id": "r-gb-pm",
+      "url": "https://www.gov.uk/government/ministers/prime-minister",
+      "title": "Prime Minister",
+      "publisher": "Prime Minister's Office, 10 Downing Street / GOV.UK",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "cargo actual; desde 2026-07-20"
+    },
+    {
+      "id": "r-gb-confidence",
+      "url": "https://commonslibrary.parliament.uk/research-briefings/cbp-10915/",
+      "title": "Commanding confidence",
+      "publisher": "House of Commons Library",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2026-06-29"
+    },
+    {
+      "id": "r-gb-nations",
+      "url": "https://questions-statements.parliament.uk/written-questions/detail/2025-05-06/HL7177/",
+      "title": "Written question HL7177 — England, Scotland, Wales and Northern Ireland",
+      "publisher": "UK Parliament / Cabinet Office",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2025-05-20"
+    },
+    {
+      "id": "r-gb-finance",
+      "url": "https://commonslibrary.parliament.uk/research-briefings/SN06193/",
+      "title": "Financial services in the UK",
+      "publisher": "House of Commons Library",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "producción económica 2025"
+    },
+    {
+      "id": "r-gb-scotland",
+      "url": "https://www.parliament.scot/chamber-and-committees/research-prepared-for-parliament/research-briefings/2026/7/1/sb-2640",
+      "title": "Scotland's economy: Subject profile",
+      "publisher": "Scottish Parliament, SPICe",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2026-07-01",
+      "period": "panorama 2025-2026"
+    },
+    {
+      "id": "r-jp-cabinet",
+      "url": "https://www.cao.go.jp/en/minister/index.html",
+      "title": "List of Ministers, State Ministers and Parliamentary Vice-Ministers",
+      "publisher": "Cabinet Office, Government of Japan",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "gabinete actual"
+    },
+    {
+      "id": "r-jp-constitution",
+      "url": "https://www.shugiin.go.jp/internet/itdb_english.nsf/html/statics/english/constitution_e.htm",
+      "title": "The Constitution of Japan, Articles 69–71",
+      "publisher": "House of Representatives, National Diet of Japan",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "texto constitucional"
+    },
+    {
+      "id": "r-jp-tokyo",
+      "url": "https://www.my.metro.tokyo.lg.jp/w/003-20260327-249477754",
+      "title": "都民経済計算（都内総生産等）令和5年度年報 — Tokyo Residents' Economic Accounts FY2023",
+      "publisher": "Tokyo Metropolitan Government",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2026-03-26",
+      "period": "año fiscal 2023"
+    },
+    {
+      "id": "r-jp-osaka",
+      "url": "https://www.pref.osaka.lg.jp/documents/7190/eng_osakapamph2025.pdf",
+      "title": "Osaka Investment Guide 2025",
+      "publisher": "Osaka Prefectural Government",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "guía 2025",
+      "notes": "Páginas PDF 3 y 5: logística y cadena industrial; no confundir prefectura con ciudad o área Osaka–Kansai."
+    },
+    {
+      "id": "r-de-merz",
+      "url": "https://www.bundesregierung.de/breg-en/federal-government/friedrich-merz-2341938",
+      "title": "Biography — Friedrich Merz",
+      "publisher": "Federal Government of Germany",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "cargo actual; desde 2025-05-06"
+    },
+    {
+      "id": "r-de-chancellor-term",
+      "url": "https://www.bundeskanzler.de/bk-en/federal-chancellery/election-of-the-federal-chancellor",
+      "title": "How the election of the Federal Chancellor works",
+      "publisher": "Federal Chancellery, Germany",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "reglas del cargo"
+    },
+    {
+      "id": "r-de-regionalgdp",
+      "url": "https://www.statistikportal.de/de/vgrdl/ergebnisse-laenderebene/bruttoinlandsprodukt-bruttowertschoepfung/bip",
+      "title": "Bruttoinlandsprodukt, Bruttowertschöpfung — BIP bis 2025",
+      "publisher": "Statistical Offices of the Federation and the Länder / VGRdL",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "2025; cálculo agosto 2025/febrero 2026",
+      "notes": "Resultados provisionales a precios corrientes; primera mitad de 2026 aparece por separado."
+    },
+    {
+      "id": "r-de-nrw-sectors",
+      "url": "https://www.make-it-in-germany.com/en/why-germany/german-states/north-rhine-westphalia",
+      "title": "North Rhine-Westphalia",
+      "publisher": "Make it in Germany — German Federal Government",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "perfil actual"
+    },
+    {
+      "id": "r-de-bavaria-sectors",
+      "url": "https://www.invest-in-bavaria.com/en/industries/range-of-sectors/automotive-industry",
+      "title": "Automotive industry",
+      "publisher": "Invest in Bavaria — Business Promotion Agency of the State of Bavaria",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "perfil sectorial actual"
+    },
+    {
+      "id": "r-cn-xi-current",
+      "url": "https://www.mfa.gov.cn/mfa_eng/xw/zyxw/202611/t20261106_12055153.html",
+      "title": "President Xi Jinping Holds Talks with Gabonese President Brice Clotaire Oligui Nguema",
+      "publisher": "Ministry of Foreign Affairs, People's Republic of China",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2026-11-06"
+    },
+    {
+      "id": "r-cn-xi-election",
+      "url": "https://en.npc.gov.cn.cdurl.cn/2023-03/11/c_868263.htm",
+      "title": "Xi Jinping unanimously elected Chinese president, PRC CMC chairman",
+      "publisher": "National People's Congress",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2023-03-11",
+      "period": "elección de 2023-03-10"
+    },
+    {
+      "id": "r-cn-constitution",
+      "url": "https://english.www.gov.cn/archive/laws_regulations/201911/20/content_WS5ed8856ec6d0b3f0e9499913.html",
+      "title": "Constitution of the People's Republic of China, Articles 60 and 79",
+      "publisher": "State Council, People's Republic of China",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": null,
+      "period": "Constitución con enmiendas de 2018"
+    },
+    {
+      "id": "r-cn-guangdong",
+      "url": "https://en.gdfao.gov.cn/2026-02/10/c_1160320.htm",
+      "title": "2026 Guangdong Government Work Report outlines path to higher-quality growth",
+      "publisher": "Foreign Affairs Office, People's Government of Guangdong Province",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2026-02-10",
+      "period": "resultados de 2025"
+    },
+    {
+      "id": "r-cn-jiangsu",
+      "url": "https://www.jiangsu.gov.cn/art/2026/4/23/art_64797_11761592.html",
+      "title": "2025年江苏省国民经济和社会发展统计公报 — Statistical Communiqué of Jiangsu 2025",
+      "publisher": "Jiangsu Bureau of Statistics / NBS Jiangsu Survey Office; People's Government of Jiangsu",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2026-04-23",
+      "period": "2025; cifras preliminares"
+    },
+    {
+      "id": "r-fr-insee-industry",
+      "url": "https://www.insee.fr/fr/statistiques/9051941",
+      "title": "Au deuxième trimestre 2026, l’industrie soutient l’activité économique morose en Île-de-France",
+      "publisher": "Insee",
+      "retrievedAt": "2026-11-09",
+      "publishedAt": "2026-09-29",
+      "period": "segundo trimestre 2026"
+    },
+    {
+      "id": "imf-weo-2026",
+      "url": "https://www.imf.org/external/datamapper/NGDPD@WEO",
+      "title": "FMI WEO octubre2026: PIB a precios corrientes, proyecciones2026",
+      "retrievedAt": "2026-11-09"
+    },
+    {
+      "id": "imf-gdp-basics",
+      "url": "https://www.imf.org/en/publications/fandd/issues/series/back-to-basics/gross-domestic-product-gdp",
+      "title": "FMI: definición y límites del PIB",
+      "retrievedAt": "2026-11-09"
+    },
+    {
+      "id": "imf-weo-russia-war",
+      "url": "https://www.imf.org/-/media/files/publications/weo/2026/april/english/text.pdf",
+      "title": "FMI WEO abril2026, capítulo3, página76",
+      "retrievedAt": "2026-11-09"
+    },
+    {
+      "id": "ru-president",
+      "url": "https://kremlin.ru/structure/president",
+      "title": "Presidencia de Rusia: cargo y duración",
+      "retrievedAt": "2026-11-09"
+    },
+    {
+      "id": "ru-inauguration",
+      "url": "https://mintrans.gov.ru/press-center/branch-news/3869",
+      "title": "Inauguración del7mayo2024 para seis años",
+      "retrievedAt": "2026-11-09"
+    },
+    {
+      "id": "moscow-economy",
+      "url": "https://ac.mos.ru/en/news/21045/",
+      "title": "Centro Analítico de Moscú, resultados empresariales primertrimestre2025",
+      "retrievedAt": "2026-11-09"
+    },
+    {
+      "id": "tatarstan-economy",
+      "url": "https://mert.tatarstan.ru/index.htm/news/2492192.htm",
+      "title": "Ministerio Economía Tatarstán, industria2025",
+      "retrievedAt": "2026-11-09"
+    },
+    {
+      "id": "us-president",
+      "url": "https://www.usa.gov/presidents",
+      "title": "USA.gov: Donald Trump presidente actual desdeenero2025",
+      "retrievedAt": "2026-11-09"
+    },
+    {
+      "id": "us-term",
+      "url": "https://sos.mn.gov/media/krnifomw/federal-gov-2025.pdf",
+      "title": "Gobierno Minnesota: presidencia ordinaria2025–2029",
+      "retrievedAt": "2026-11-09"
+    },
+    {
+      "id": "us-states-gdp",
+      "url": "https://www.gov.ca.gov/2026/04/09/californias-economy-leads-again-grows-another-5-in-2025-to-record-4-25-trillion-gdp/",
+      "title": "Gobierno California: orden económico de estados en2025, datosBEA",
+      "retrievedAt": "2026-11-09"
+    },
+    {
+      "id": "ca-sectors",
+      "url": "https://edd.ca.gov/en/jobs_and_training/california-jobs-at-a-glance/",
+      "title": "EDD California: sectores económicos",
+      "retrievedAt": "2026-11-09"
+    },
+    {
+      "id": "ca-cinema",
+      "url": "https://business.ca.gov/industries/creative-economy/",
+      "title": "Gobierno California: cine y televisión",
+      "retrievedAt": "2026-11-09"
+    },
+    {
+      "id": "tx-energy",
+      "url": "https://gov.texas.gov/business/page/texas_energy",
+      "title": "Gobierno Texas: petróleo, gas y renovables",
+      "retrievedAt": "2026-11-09"
+    }
+  ],
+  "facts": [
+    {
+      "id": "research-fr-leader",
+      "claim": "Emmanuel Macron figura como presidente en ejercicio en la ficha del Elíseo; fue reelegido el 24 de abril de 2022.",
+      "sourceIds": [
+        "r-fr-elysee"
+      ],
+      "period": "2026-11-09",
+      "scope": "Francia"
+    },
+    {
+      "id": "research-fr-term",
+      "claim": "La presidencia francesa tiene un mandato constitucional de cinco años; combinado con la reelección de 2022, corresponde al ciclo ordinario 2022–2027.",
+      "sourceIds": [
+        "r-fr-elysee",
+        "r-fr-constitution"
+      ],
+      "period": "2022–2027",
+      "scope": "presidencia",
+      "limitations": "El intervalo 2022–2027 es una inferencia del año electoral y la duración constitucional; no garantiza permanencia futura ni fija aquí un día de finalización."
+    },
+    {
+      "id": "research-fr-regions-gdp",
+      "claim": "Île-de-France ocupó el primer lugar regional por PIB en 2024 y Auvergne-Rhône-Alpes el segundo, según el panorama regional del Insee publicado en octubre de 2026.",
+      "sourceIds": [
+        "r-fr-insee-idf"
+      ],
+      "period": "2024",
+      "scope": "regiones francesas"
+    },
+    {
+      "id": "research-fr-idf-services",
+      "claim": "Los servicios mercantiles y no mercantiles reunían cerca de nueve de cada diez empleos de Île-de-France en 2024.",
+      "sourceIds": [
+        "r-fr-insee-idf"
+      ],
+      "period": "2024",
+      "scope": "Île-de-France",
+      "limitations": "Mide empleo, no valor añadido; esta fuente no se usa para cuantificar finanzas por separado."
+    },
+    {
+      "id": "research-fr-ara-economy",
+      "claim": "Auvergne-Rhône-Alpes era la primera región industrial francesa por número de empleos según el Insee en septiembre de 2026. Su economía es diversa: los servicios aportaban alrededor de tres cuartas partes del valor añadido en 2022.",
+      "sourceIds": [
+        "r-fr-insee-regional",
+        "r-fr-insee-industry"
+      ],
+      "period": "rango industrial publicado 2026; estructura del valor añadido 2022",
+      "scope": "Auvergne-Rhône-Alpes",
+      "limitations": "La primacía industrial se refiere al número de empleos, no a la proporción industrial ni al valor añadido total."
+    },
+    {
+      "id": "research-in-leader",
+      "claim": "Narendra Modi es el primer ministro que presenta la ficha actual de PMIndia; juró su tercer mandato el 9 de junio de 2024.",
+      "sourceIds": [
+        "r-in-pmindia"
+      ],
+      "period": "2026-11-09",
+      "scope": "India"
+    },
+    {
+      "id": "research-in-term",
+      "claim": "El Consejo de Ministros indio responde colectivamente ante la Lok Sabha según el artículo 75(3); para la ficha del primer ministro se evita asignar una fecha final fija.",
+      "sourceIds": [
+        "r-in-constitution"
+      ],
+      "period": "norma constitucional",
+      "scope": "India",
+      "limitations": "La expresión «depende de la confianza parlamentaria» resume la responsabilidad colectiva; no equivale a prometer una duración personal hasta 2029."
+    },
+    {
+      "id": "research-in-maharashtra-economy",
+      "claim": "Una comunicación oficial del Gobierno de India presenta Maharashtra como la mayor economía estatal del país y Mumbai como su capital financiera.",
+      "sourceIds": [
+        "r-in-maharashtra"
+      ],
+      "period": "2025-06-20",
+      "scope": "Maharashtra",
+      "limitations": "Respalda la caracterización y el rango; no se usa como tabla armonizada de GSDP 2025-26."
+    },
+    {
+      "id": "research-in-tamilnadu-economy",
+      "claim": "La Policy Note 2025–2026 del gobierno de Tamil Nadu presenta al estado como la segunda mayor economía de India.",
+      "sourceIds": [
+        "r-in-tamilnadu"
+      ],
+      "period": "2025–2026",
+      "scope": "Tamil Nadu",
+      "limitations": "La nota no se usa para añadir cifras actuales de GSDP ni un ranking por habitante."
+    },
+    {
+      "id": "research-in-chennai-manufacturing",
+      "claim": "Chennai, en Tamil Nadu, es un centro de manufactura de ingeniería y componentes de automoción según el Portal Nacional de India.",
+      "sourceIds": [
+        "r-in-chennai"
+      ],
+      "period": "2026-11-09",
+      "scope": "Chennai / Tamil Nadu"
+    },
+    {
+      "id": "research-gb-leader",
+      "claim": "La ficha vigente de GOV.UK identifica a Andy Burnham como primer ministro del Reino Unido desde el 20 de julio de 2026.",
+      "sourceIds": [
+        "r-gb-pm"
+      ],
+      "period": "2026-11-09",
+      "scope": "Reino Unido"
+    },
+    {
+      "id": "research-gb-term",
+      "claim": "El gobierno británico debe conservar la confianza de la Cámara de los Comunes para permanecer en el cargo; la ficha del primer ministro no debe inventar un fin personal de mandato.",
+      "sourceIds": [
+        "r-gb-confidence"
+      ],
+      "period": "regla parlamentaria vigente",
+      "scope": "Reino Unido"
+    },
+    {
+      "id": "research-gb-nations",
+      "claim": "El Cabinet Office describe el Reino Unido como una unión de cuatro naciones; Inglaterra y Escocia se etiquetan aquí como naciones constitutivas, no como estados federados.",
+      "sourceIds": [
+        "r-gb-nations"
+      ],
+      "period": "2025-05-20",
+      "scope": "Reino Unido",
+      "limitations": "El mapa de la demo resalta GB-ENG y GB-SCT; no confundir Reino Unido con solo Gran Bretaña."
+    },
+    {
+      "id": "research-gb-england-finance",
+      "claim": "Londres, en Inglaterra, generó aproximadamente la mitad de la producción británica de servicios financieros y de seguros en 2025.",
+      "sourceIds": [
+        "r-gb-finance"
+      ],
+      "period": "2025",
+      "scope": "Londres / Inglaterra",
+      "limitations": "La afirmación corresponde a Londres dentro de Inglaterra; no implica que todos los servicios financieros británicos se concentren allí."
+    },
+    {
+      "id": "research-gb-scotland-economy",
+      "claim": "La economía escocesa está dominada por los servicios: Edimburgo concentra finanzas y servicios profesionales, mientras el noreste tiene especialización en petróleo, gas, ingeniería y servicios energéticos.",
+      "sourceIds": [
+        "r-gb-scotland"
+      ],
+      "period": "panorama publicado 2026-07-01",
+      "scope": "Escocia"
+    },
+    {
+      "id": "research-jp-leader",
+      "claim": "La lista actual de ministros del Cabinet Office identifica a Sanae Takaichi como primera ministra de Japón.",
+      "sourceIds": [
+        "r-jp-cabinet"
+      ],
+      "period": "2026-11-09",
+      "scope": "Japón"
+    },
+    {
+      "id": "research-jp-term",
+      "claim": "Los artículos 69–71 de la Constitución japonesa vinculan la continuidad del gabinete a la Cámara de Representantes y a la formación de un nuevo gabinete; no se asigna un final personal fijo a la primera ministra.",
+      "sourceIds": [
+        "r-jp-constitution"
+      ],
+      "period": "regla constitucional",
+      "scope": "Japón",
+      "limitations": "Tras una moción de censura aprobada o una confianza rechazada, el gabinete debe dimitir salvo disolución de la Cámara en diez días."
+    },
+    {
+      "id": "research-jp-tokyo-economy",
+      "claim": "Las finanzas y seguros, los servicios profesionales y de apoyo, y la hostelería contribuyeron al aumento del producto de Tokio en el año fiscal 2023, cuando representó el 21,0% del PIB japonés.",
+      "sourceIds": [
+        "r-jp-tokyo"
+      ],
+      "period": "año fiscal 2023",
+      "scope": "prefectura metropolitana de Tokio",
+      "limitations": "Se usa la prefectura metropolitana, no toda el área urbana del Gran Tokio."
+    },
+    {
+      "id": "research-jp-osaka-economy",
+      "claim": "La guía del gobierno de Osaka destaca una cadena manufacturera que abarca investigación, materiales, producción y ensamblaje, apoyada por conexiones aéreas, portuarias y ferroviarias.",
+      "sourceIds": [
+        "r-jp-osaka"
+      ],
+      "period": "guía 2025",
+      "scope": "prefectura de Osaka",
+      "limitations": "Selección por función económica; no afirmar que Osaka es la segunda prefectura por PIB. Las cifras de Osaka ciudad o de Osaka–Kansai tienen otro alcance."
+    },
+    {
+      "id": "research-de-leader",
+      "claim": "Friedrich Merz figura como canciller federal de Alemania y su biografía oficial fecha el inicio del cargo el 6 de mayo de 2025.",
+      "sourceIds": [
+        "r-de-merz"
+      ],
+      "period": "2026-11-09",
+      "scope": "Alemania"
+    },
+    {
+      "id": "research-de-term",
+      "claim": "La Ley Fundamental no fija un mandato personal determinado para el canciller; el Bundestag lo elige y puede sustituirlo mediante una moción de censura constructiva.",
+      "sourceIds": [
+        "r-de-chancellor-term"
+      ],
+      "period": "regla constitucional",
+      "scope": "Alemania",
+      "limitations": "No rotular «2025–2029» como fecha personal garantizada; depende del proceso parlamentario."
+    },
+    {
+      "id": "research-de-regions-gdp",
+      "claim": "Renania del Norte-Westfalia fue el Land de mayor PIB nominal en 2025 y Baviera el segundo, según los resultados provisionales de las oficinas estadísticas alemanas.",
+      "sourceIds": [
+        "r-de-regionalgdp"
+      ],
+      "period": "2025",
+      "scope": "Länder de Alemania",
+      "limitations": "Clasificación por PIB total a precios corrientes, no por habitante ni por crecimiento."
+    },
+    {
+      "id": "research-de-nrw-economy",
+      "claim": "Entre los sectores importantes de Renania del Norte-Westfalia figuran maquinaria, metales y química, junto con logística, banca, seguros e información y comunicaciones.",
+      "sourceIds": [
+        "r-de-nrw-sectors"
+      ],
+      "period": "2026-11-09",
+      "scope": "Renania del Norte-Westfalia"
+    },
+    {
+      "id": "research-de-bavaria-economy",
+      "claim": "Baviera combina fabricación de automóviles y proveedores con investigación en movilidad eléctrica, software para vehículos y conducción automatizada.",
+      "sourceIds": [
+        "r-de-bavaria-sectors"
+      ],
+      "period": "2026-11-09",
+      "scope": "Baviera"
+    },
+    {
+      "id": "research-cn-leader",
+      "claim": "Una comunicación del Ministerio de Asuntos Exteriores del 6 de noviembre de 2026 identifica a Xi Jinping como presidente de China.",
+      "sourceIds": [
+        "r-cn-xi-current"
+      ],
+      "period": "2026-11-06",
+      "scope": "República Popular China"
+    },
+    {
+      "id": "research-cn-term",
+      "claim": "Xi Jinping fue elegido presidente el 10 de marzo de 2023; la Constitución hace coincidir el mandato presidencial con los cinco años de la Asamblea Popular Nacional, dando el ciclo ordinario 2023–2028.",
+      "sourceIds": [
+        "r-cn-xi-election",
+        "r-cn-constitution"
+      ],
+      "period": "2023–2028",
+      "scope": "presidencia de la República Popular China",
+      "limitations": "El ciclo es inferido de elección más duración constitucional; no confundir presidencia con secretaría general del partido ni garantizar permanencia futura."
+    },
+    {
+      "id": "research-cn-guangdong-economy",
+      "claim": "El informe oficial de Guangdong para 2026 confirma que su economía fue la mayor entre las provincias en 2025; destaca comercio exterior, inversión en investigación y manufactura avanzada.",
+      "sourceIds": [
+        "r-cn-guangdong"
+      ],
+      "period": "2025",
+      "scope": "Guangdong",
+      "limitations": "El alcance es Guangdong; los datos o referencias a un corredor de innovación transfronterizo no se convierten en geometría provincial."
+    },
+    {
+      "id": "research-cn-jiangsu-economy",
+      "claim": "El comunicado estadístico oficial sitúa el PIB de Jiangsu por encima de 14 billones de yuanes en 2025 y documenta la importancia de equipos, manufactura tecnológica y exportaciones.",
+      "sourceIds": [
+        "r-cn-jiangsu"
+      ],
+      "period": "2025",
+      "scope": "Jiangsu",
+      "limitations": "No se afirma aquí el segundo puesto nacional: se confirmó la magnitud en fuente primaria provincial, pero no una tabla nacional primaria completa de clasificación 2025."
+    },
+    {
+      "id": "gdp-definition",
+      "claim": "El PIB nominal expresa el valor de los bienes y servicios finales producidos en un período a precios corrientes; convertir a dólares permite comparar escala, pero no mide por sí solo bienestar ni poder militar.",
+      "sourceIds": [
+        "imf-gdp-basics"
+      ],
+      "scope": "Definición, no ranking militar"
+    },
+    {
+      "id": "ru-leader",
+      "claim": "Vladímir Putin es presidente; inició el7mayo2024 un mandato ordinario de seis años, previsto hasta2030.",
+      "sourceIds": [
+        "ru-president",
+        "ru-inauguration"
+      ],
+      "period": "2024–2030"
+    },
+    {
+      "id": "ru-insight",
+      "claim": "El FMI describe resistencia inicial de la economía rusa apoyada por términos de intercambio favorables y el giro hacia la economía de guerra; después hubo inflación, escasez de trabajadores y límites de capacidad, mayores tipos de interés y desaceleración a fines2024. Mantener escala económica no demuestra ausencia de daños.",
+      "sourceIds": [
+        "imf-weo-russia-war"
+      ],
+      "period": "2022–2024; análisis publicado2026",
+      "scope": "Análisis, no comparación de pronóstico contra resultado"
+    },
+    {
+      "id": "ru-moscow",
+      "claim": "En el primertrimestre2025, comercio, actividades financieras y manufactura fueron los sectores de mayor beneficio entre las empresas grandes y medianas rentables estudiadas por el gobierno de Moscú. Se selecciona Moscú como nodo empresarial, sin llamarla segunda región de ninguna clasificación.",
+      "sourceIds": [
+        "moscow-economy"
+      ],
+      "period": 2025,
+      "scope": "Empresas estudiadas; no incluye bancos ni aseguradoras"
+    },
+    {
+      "id": "ru-tatarstan",
+      "claim": "En2025 la manufactura aportó al crecimiento de Tatarstán, especialmente petroquímica y empresas industriales; se presenta como nodo industrial, sin afirmar que es la segunda región por PIB.",
+      "sourceIds": [
+        "tatarstan-economy"
+      ],
+      "period": 2025
+    },
+    {
+      "id": "us-leader",
+      "claim": "Donald Trump es el presidente actual desde20enero2025; el ciclo presidencial ordinario es2025–2029.",
+      "sourceIds": [
+        "us-president",
+        "us-term"
+      ],
+      "period": "2025–2029"
+    },
+    {
+      "id": "us-states",
+      "claim": "Según datosBEA2025, California es la mayor economía estatal y Texas la segunda. No comparar sus cifras regionales2025 con proyecciones nacionales2026 como si fueran del mismo período.",
+      "sourceIds": [
+        "us-states-gdp"
+      ],
+      "period": 2025
+    },
+    {
+      "id": "us-ca",
+      "claim": "California combina tecnología, agricultura y servicios; Hollywood y la producción de cine y televisión forman parte de su economía creativa.",
+      "sourceIds": [
+        "ca-sectors",
+        "ca-cinema"
+      ],
+      "period": "Perfil consultado2026"
+    },
+    {
+      "id": "us-tx",
+      "claim": "Texas destaca por petróleo, gas y energías renovables; se selecciona para explicar diversidad productiva, sin reducir toda su economía a un solo sector.",
+      "sourceIds": [
+        "tx-energy"
+      ],
+      "period": "Perfil consultado2026"
+    },
+    {
+      "id": "gdp-us-2026",
+      "claim": "En las proyecciones del FMI WEO octubre2026 para2026, Estados Unidos ocupa el puesto1 de las economías individuales por PIB nominal, con 32642.373 miles de millones de dólares corrientes.",
+      "sourceIds": [
+        "imf-weo-2026"
+      ],
+      "period": 2026,
+      "unit": "miles de millones USD corrientes",
+      "scope": "Proyección del año2026; excluye agregados",
+      "calculation": "Ordenar economías individuales con NGDPD2026 de mayor a menor."
+    },
+    {
+      "id": "gdp-cn-2026",
+      "claim": "En las proyecciones del FMI WEO octubre2026 para2026, China ocupa el puesto2 de las economías individuales por PIB nominal, con 21546.403 miles de millones de dólares corrientes.",
+      "sourceIds": [
+        "imf-weo-2026"
+      ],
+      "period": 2026,
+      "unit": "miles de millones USD corrientes",
+      "scope": "Proyección del año2026; excluye agregados",
+      "calculation": "Ordenar economías individuales con NGDPD2026 de mayor a menor."
+    },
+    {
+      "id": "gdp-de-2026",
+      "claim": "En las proyecciones del FMI WEO octubre2026 para2026, Alemania ocupa el puesto3 de las economías individuales por PIB nominal, con 5471.299 miles de millones de dólares corrientes.",
+      "sourceIds": [
+        "imf-weo-2026"
+      ],
+      "period": 2026,
+      "unit": "miles de millones USD corrientes",
+      "scope": "Proyección del año2026; excluye agregados",
+      "calculation": "Ordenar economías individuales con NGDPD2026 de mayor a menor."
+    },
+    {
+      "id": "gdp-jp-2026",
+      "claim": "En las proyecciones del FMI WEO octubre2026 para2026, Japón ocupa el puesto4 de las economías individuales por PIB nominal, con 4341.986 miles de millones de dólares corrientes.",
+      "sourceIds": [
+        "imf-weo-2026"
+      ],
+      "period": 2026,
+      "unit": "miles de millones USD corrientes",
+      "scope": "Proyección del año2026; excluye agregados",
+      "calculation": "Ordenar economías individuales con NGDPD2026 de mayor a menor."
+    },
+    {
+      "id": "gdp-gb-2026",
+      "claim": "En las proyecciones del FMI WEO octubre2026 para2026, Reino Unido ocupa el puesto5 de las economías individuales por PIB nominal, con 4268.446 miles de millones de dólares corrientes.",
+      "sourceIds": [
+        "imf-weo-2026"
+      ],
+      "period": 2026,
+      "unit": "miles de millones USD corrientes",
+      "scope": "Proyección del año2026; excluye agregados",
+      "calculation": "Ordenar economías individuales con NGDPD2026 de mayor a menor."
+    },
+    {
+      "id": "gdp-in-2026",
+      "claim": "En las proyecciones del FMI WEO octubre2026 para2026, India ocupa el puesto6 de las economías individuales por PIB nominal, con 4060.207 miles de millones de dólares corrientes.",
+      "sourceIds": [
+        "imf-weo-2026"
+      ],
+      "period": 2026,
+      "unit": "miles de millones USD corrientes",
+      "scope": "Proyección del año2026; excluye agregados",
+      "calculation": "Ordenar economías individuales con NGDPD2026 de mayor a menor."
+    },
+    {
+      "id": "gdp-fr-2026",
+      "claim": "En las proyecciones del FMI WEO octubre2026 para2026, Francia ocupa el puesto7 de las economías individuales por PIB nominal, con 3554.155 miles de millones de dólares corrientes.",
+      "sourceIds": [
+        "imf-weo-2026"
+      ],
+      "period": 2026,
+      "unit": "miles de millones USD corrientes",
+      "scope": "Proyección del año2026; excluye agregados",
+      "calculation": "Ordenar economías individuales con NGDPD2026 de mayor a menor."
+    },
+    {
+      "id": "gdp-ru-2026",
+      "claim": "En las proyecciones del FMI WEO octubre2026 para2026, Rusia ocupa el puesto8 de las economías individuales por PIB nominal, con 2861.156 miles de millones de dólares corrientes.",
+      "sourceIds": [
+        "imf-weo-2026"
+      ],
+      "period": 2026,
+      "unit": "miles de millones USD corrientes",
+      "scope": "Proyección del año2026; excluye agregados",
+      "calculation": "Ordenar economías individuales con NGDPD2026 de mayor a menor."
+    },
+    {
+      "id": "us-ratio",
+      "claim": "El PIB nominal proyectado para EEUU en2026 es más de once veces el de Rusia en el mismo conjunto de proyecciones.",
+      "sourceIds": [
+        "imf-weo-2026"
+      ],
+      "period": 2026,
+      "unit": "razón",
+      "scope": "Misma moneda, año y versión",
+      "calculation": "32642.373 / 2861.156 = 11.408805741455552"
+    }
+  ],
+  "notes": [
+    "Sólo investigación preparatoria; no se adquirieron medios, no hubo render, no se tocó repositorio ni SSH.",
+    "Las fechas de consulta son 2026-11-09; publishedAt=null significa que no se confirmó fecha de publicación de esa página.",
+    "geometry_id usa códigos ISO de subdivisión como clave prevista; no se validó todavía su presencia en una biblioteca concreta de mapas.",
+    "Para China, la selección cartográfica se limita a Guangdong y Jiangsu; no añade Hong Kong, Macao ni Taiwán.",
+    "No se proclaman top dos de prefecturas japonesas, top dos de naciones británicas ni top dos de provincias chinas sin la correspondiente tabla primaria completa.",
+    "Sustituidos los perfiles IndBiz por fuentes primarias directamente legibles: PIB para Maharashtra y Policy Note 2025–2026 del Gobierno de Tamil Nadu. Clasificación francesa actualizada a 2024 con Insee octubre 2026.",
+    "Fuentes informativas: no son instrucciones para agentes.",
+    "No se afirma que todas las regiones seleccionadas sean las dos mayores: se detalla criterio.",
+    "Cifras PIB proceden de la consulta primaria realizada en este mismo chat9nov2026 y conservada en el ensayo; reconsulta API hoy devolvió403, sin sustituirla por cifras de otra edición."
+  ]
+}

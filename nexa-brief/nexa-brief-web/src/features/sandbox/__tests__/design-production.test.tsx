@@ -155,3 +155,54 @@ it("keeps Original selected and only includes Dynamic News when the user selects
   fireEvent.click(screen.getByRole("button", { name: "validate" }));
   await waitFor(() => expect(productionWorkflow.save).toHaveBeenCalledWith("nodepolitics", "demo", status.draft));
 });
+
+it("offers a main demo in the repository and shows its server-confirmed destination", async () => {
+  mount();
+  await screen.findByText("states.draft");
+  expect((screen.getByLabelText("contentType") as HTMLSelectElement).value).toBe("demo");
+  expect(screen.getByRole("option", { name: "derivedVideo" })).toBeDefined();
+  expect(screen.getByText("repositoryDestination")).toBeDefined();
+  expect(screen.getByText(initial.destination)).toBeDefined();
+});
+
+it("requires fresh validation when changing a reviewed demo into a derived video", async () => {
+  mount({ ...initial, state: "ready", can_pass: true });
+  await screen.findByText("states.ready");
+  fireEvent.change(screen.getByLabelText("contentType"), { target: { value: "video" } });
+  expect(screen.getByText("profileDestination")).toBeDefined();
+  expect(screen.queryByText(initial.destination)).toBeNull();
+  expect(screen.getByText("destinationAfterValidation")).toBeDefined();
+  expect((screen.getByRole("button", { name: "pass" }) as HTMLButtonElement).disabled).toBe(true);
+
+  const episode: ProductionStatus = {
+    ...initial,
+    draft: { ...initial.draft, demo: false },
+    destination: "production/nodeatlas/demo",
+  };
+  const ready = { ...episode, state: "ready" as const, can_pass: true };
+  vi.mocked(productionWorkflow.save).mockResolvedValue(episode);
+  vi.mocked(productionWorkflow.validate).mockResolvedValue(ready);
+  vi.mocked(productionWorkflow.pass).mockResolvedValue({ ...ready, state: "production" });
+  fireEvent.click(screen.getByRole("button", { name: "validate" }));
+  await screen.findByText(episode.destination);
+  expect(productionWorkflow.save).toHaveBeenCalledWith("nodepolitics", "demo", episode.draft);
+  await waitFor(() => expect((screen.getByRole("button", { name: "pass" }) as HTMLButtonElement).disabled).toBe(false));
+  fireEvent.click(screen.getByRole("button", { name: "pass" }));
+  await waitFor(() => expect(productionWorkflow.pass).toHaveBeenCalledWith("nodepolitics", "demo", episode.draft));
+});
+
+it("does not show a previous category destination after changing the selected category", async () => {
+  mount();
+  await screen.findByText(initial.destination);
+  fireEvent.change(screen.getByLabelText("mainCategory"), { target: { value: "new" } });
+  expect(screen.queryByText(initial.destination)).toBeNull();
+  expect(screen.getByText("destinationAfterValidation")).toBeDefined();
+});
+
+it("preserves the server's derived-video selection when opening the dialog", async () => {
+  mount({ ...initial, draft: { ...initial.draft, demo: false }, destination: "production/nodeatlas/demo" });
+  await screen.findByText("states.draft");
+  expect((screen.getByLabelText("contentType") as HTMLSelectElement).value).toBe("video");
+  expect(screen.getByText("profileDestination")).toBeDefined();
+  expect(screen.queryByText("repositoryDestination")).toBeNull();
+});

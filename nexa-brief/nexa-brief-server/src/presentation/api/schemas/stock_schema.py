@@ -22,6 +22,7 @@ class StockProviderStatus(BaseModel):
 
 
 class StockImportRequest(BaseModel):
+    template_id: str = ""
     """Lo mismo que trae un resultado de búsqueda: la UI reenvía el ítem elegido."""
 
     provider: str

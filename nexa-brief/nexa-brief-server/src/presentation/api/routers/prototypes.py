@@ -82,7 +82,11 @@ async def get_prototype_instructions() -> PlainTextResponse:
     path = settings.templates_dir / "sandbox" / "PROTOTIPO.md"
     if not path.is_file():
         raise HTTPException(status_code=404, detail="PROTOTIPO.md no está disponible.")
-    return PlainTextResponse(path.read_text(encoding="utf-8"), media_type="text/markdown")
+    contract = settings.templates_dir / "sandbox" / "PREPARAR-PRODUCCION.md"
+    if not contract.is_file():
+        raise HTTPException(status_code=503, detail="Contrato de entrega para producción no disponible.")
+    content = path.read_text(encoding="utf-8") + "\n\n---\n\n" + contract.read_text(encoding="utf-8")
+    return PlainTextResponse(content, media_type="text/markdown")
 
 
 @router.get("/agent/prototipo/{category}/{slug}", response_class=PlainTextResponse)

@@ -25,3 +25,7 @@ Devuelve SOLO un objeto JSON con esta forma:
 {"segments": [{"id": "s01", "tone": "<tono>", "intensity": <0..1>, "text": "<texto>"}, ...]}
 con 5 a 7 segmentos. "tone" debe ser uno de: intriga, suspenso, tensión, tensión creciente, aceleración,
 clímax, peso, silencio, revelación, cierre, complicidad. Números siempre en palabras.
+
+## Calidad
+
+Usa solo la acción y personajes descritos; no inventes desenlaces alternativos ni citas. Evita «una batalla épica» y «la historia continúa»; sí: «Wick queda de pie» si corresponde a la escena. Español natural, sin emojis, «LETRAS» ni etiquetas ajenas. Conserva las palabras ancla y el JSON.

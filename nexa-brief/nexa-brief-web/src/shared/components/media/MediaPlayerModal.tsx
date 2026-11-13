@@ -5,6 +5,7 @@ import {
   Loader2,
   Maximize2,
   Menu,
+  Minimize2,
   Pause,
   Play,
   RotateCcw,
@@ -29,6 +30,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/shared/components/ui/dialog";
+import styles from "./MediaPlayerModal.module.css";
 
 export type MediaViewport = "mobile" | "desktop";
 
@@ -58,6 +60,8 @@ interface MediaPlayerModalProps {
   defaultViewport?: MediaViewport;
   /** Acciones extra en la barra superior (ej. "Publicar" en Biblioteca). */
   actions?: ReactNode;
+  leftControls?: ReactNode;
+  stageContent?: ReactNode;
   /** Panel lateral opcional (el Estudio en /plantillas). Con él aparece un
    * botón ☰ junto a la X que lo abre/cierra dentro del modal y el escenario se
    * achica. Sin él, el modal queda igual (Biblioteca, landing). */
@@ -74,6 +78,8 @@ interface MediaPlayerModalProps {
   /** Arte temporal en el escenario (p. ej. la vista grande de una miniatura). */
   stagePreview?: ReactNode;
   onCloseStagePreview?: () => void;
+  /** Efecto temporal, solo para el fondo del prototipo abierto. */
+  backgroundVisibility?: { value: number; templateId: string };
 }
 
 interface StageHandle {
@@ -93,6 +99,7 @@ interface StageProps {
   onMutedChange?: (muted: boolean) => void;
   /** El contenido ya arrancó (para quitar la portada de carga). */
   onStarted?: () => void;
+  backgroundVisibility?: { value: number; templateId: string };
 }
 
 /** Añade ?estilo=<id> (antes del #fragmento) para que la plantilla pinte con ese estilo. */
@@ -138,6 +145,7 @@ const IframeStage = forwardRef<StageHandle, StageProps & { url: string; title: s
       onPlayingChange,
       onMutedChange,
       onStarted,
+      backgroundVisibility,
     },
     ref,
   ) {
@@ -146,8 +154,8 @@ const IframeStage = forwardRef<StageHandle, StageProps & { url: string; title: s
 
     const post = (message: Record<string, unknown>) => postToFrame(frameRef.current, message);
     // Estado actual para reenviarlo cuando el reproductor del iframe avisa que está listo.
-    const latest = useRef({ playing, volume, muted });
-    latest.current = { playing, volume, muted };
+    const latest = useRef({ playing, volume, muted, backgroundVisibility });
+    latest.current = { playing, volume, muted, backgroundVisibility };
 
     useImperativeHandle(ref, () => ({
       seek: (time) => post({ type: "nexa-template-seek", time }),
@@ -163,12 +171,39 @@ const IframeStage = forwardRef<StageHandle, StageProps & { url: string; title: s
       postToFrame(frameRef.current, { type: "nexa-template-playback", playing });
     }, [playing]);
 
+    const backgroundValue = backgroundVisibility?.value;
+    const backgroundTemplateId = backgroundVisibility?.templateId;
+    useEffect(() => {
+      if (backgroundValue !== undefined && backgroundTemplateId) {
+        postToFrame(frameRef.current, {
+          type: "nexa-template-background-visibility",
+          value: backgroundValue,
+          templateId: backgroundTemplateId,
+        });
+      } else {
+        postToFrame(frameRef.current, {
+          type: "nexa-template-background-visibility",
+          enabled: false,
+        });
+      }
+    }, [backgroundValue, backgroundTemplateId]);
+
     useEffect(() => {
       const handleMessage = (event: MessageEvent) => {
         if (event.source !== frameRef.current?.contentWindow) return;
         if (event.data?.type === "nexa-template-ready") {
           // El reproductor se carga después del evento load: lo que se mandó antes se perdió.
-          const { playing: wantPlaying, volume: vol, muted: mute } = latest.current;
+          const {
+            playing: wantPlaying,
+            volume: vol,
+            muted: mute,
+            backgroundVisibility: visibility,
+          } = latest.current;
+          if (visibility)
+            postToFrame(frameRef.current, {
+              type: "nexa-template-background-visibility",
+              ...visibility,
+            });
           postToFrame(frameRef.current, { type: "nexa-template-volume", volume: vol, muted: mute });
           postToFrame(frameRef.current, { type: "nexa-template-playback", playing: wantPlaying });
         }
@@ -197,6 +232,8 @@ const IframeStage = forwardRef<StageHandle, StageProps & { url: string; title: s
         onLoad={() => {
           post({ type: "nexa-template-volume", volume, muted });
           post({ type: "nexa-template-playback", playing });
+          if (backgroundVisibility)
+            post({ type: "nexa-template-background-visibility", ...backgroundVisibility });
         }}
         className="size-full border-0 bg-black"
       />
@@ -298,6 +335,8 @@ export function MediaPlayerModal({
   defaultVolume = 0.6,
   defaultViewport = "desktop",
   actions,
+  leftControls,
+  stageContent,
   sidebar,
   sidebarToggleLabel = "Panel",
   defaultSidebarOpen = true,
@@ -306,28 +345,75 @@ export function MediaPlayerModal({
   styleOptions,
   defaultStyle,
   extraParams,
+  backgroundVisibility,
 }: MediaPlayerModalProps) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (!open) setExpanded(false);
+  }, [open]);
+
+  useEffect(() => {
+    const syncFullscreen = () =>
+      setExpanded(Boolean(dialogRef.current && document.fullscreenElement === dialogRef.current));
+    document.addEventListener("fullscreenchange", syncFullscreen);
+    return () => document.removeEventListener("fullscreenchange", syncFullscreen);
+  }, []);
+
+  const toggleExpanded = async () => {
+    if (expanded) {
+      if (document.fullscreenElement === dialogRef.current) {
+        await document.exitFullscreen().catch(() => {});
+      }
+      setExpanded(false);
+      return;
+    }
+    setExpanded(true);
+    // En móvil usamos el viewport de la página: también funciona en iOS y
+    // mantiene la X, los formatos y la reproducción dentro de la misma vista.
+    if (!window.matchMedia("(max-width: 767px)").matches) {
+      try {
+        await dialogRef.current?.requestFullscreen?.();
+      } catch {
+        // La vista expandida sigue disponible si el navegador rechaza fullscreen.
+      }
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent
+        ref={dialogRef}
+        onEscapeKeyDown={(event) => {
+          if (!expanded) return;
+          event.preventDefault();
+          void toggleExpanded();
+        }}
         className={cn(
-          "w-[min(94vw,1440px)] !max-w-[min(94vw,1440px)] gap-2 rounded-[24px] bg-black p-2 text-white ring-white/10",
+          styles.dialog,
+          expanded && styles.expanded,
+          "w-[min(94vw,1440px)] max-w-[min(94vw,1440px)] sm:max-w-[min(94vw,1440px)] gap-2 rounded-[24px] bg-black p-2 text-white ring-white/10",
           // Con sidebar el modal ocupa casi toda la pantalla: el panel scrollea
           // por dentro y en móvil todo el modal scrollea.
           sidebar !== undefined &&
-            "w-[min(98vw,1760px)] !max-w-[min(98vw,1760px)] max-h-[96vh] overflow-y-auto md:overflow-hidden",
+            "w-[min(98vw,1760px)] max-w-[min(98vw,1760px)] sm:max-w-[min(98vw,1760px)] max-h-[96vh] overflow-y-auto md:overflow-hidden",
         )}
       >
         <DialogTitle className="sr-only">{title}</DialogTitle>
         <DialogDescription className="sr-only">{description ?? title}</DialogDescription>
         {/* Montado solo con el modal abierto: el estado se reinicia en cada apertura. */}
         <PlayerBody
+          expanded={expanded}
+          onToggleExpanded={toggleExpanded}
           title={title}
           source={source}
           defaultVolume={defaultVolume}
           defaultViewport={defaultViewport}
           actions={actions}
+          leftControls={leftControls}
+          stageContent={stageContent}
           sidebar={sidebar}
           sidebarToggleLabel={sidebarToggleLabel}
           defaultSidebarOpen={defaultSidebarOpen}
@@ -336,6 +422,7 @@ export function MediaPlayerModal({
           styleOptions={styleOptions}
           defaultStyle={defaultStyle}
           extraParams={extraParams}
+          backgroundVisibility={backgroundVisibility}
         />
       </DialogContent>
     </Dialog>
@@ -343,11 +430,15 @@ export function MediaPlayerModal({
 }
 
 function PlayerBody({
+  expanded,
+  onToggleExpanded,
   title,
   source,
   defaultVolume,
   defaultViewport,
   actions,
+  leftControls,
+  stageContent,
   sidebar,
   sidebarToggleLabel,
   defaultSidebarOpen,
@@ -356,12 +447,17 @@ function PlayerBody({
   styleOptions,
   defaultStyle,
   extraParams,
+  backgroundVisibility,
 }: {
+  expanded: boolean;
+  onToggleExpanded: () => Promise<void>;
   title: string;
   source: MediaSource | null;
   defaultVolume: number;
   defaultViewport: MediaViewport;
   actions?: ReactNode;
+  leftControls?: ReactNode;
+  stageContent?: ReactNode;
   sidebar?: ReactNode;
   sidebarToggleLabel: string;
   defaultSidebarOpen: boolean;
@@ -370,10 +466,10 @@ function PlayerBody({
   styleOptions?: { id: string; name: string; idea?: string }[];
   defaultStyle?: string | null;
   extraParams?: Record<string, string | number>;
+  backgroundVisibility?: { value: number; templateId: string };
 }) {
   const t = useTranslations("mediaPlayer");
   const stageRef = useRef<StageHandle>(null);
-  const stageBoxRef = useRef<HTMLDivElement>(null);
   const hasStagePreview = stagePreview !== undefined && stagePreview !== null;
 
   const hasMobile = source?.kind === "iframe" || Boolean(source?.mobileUrl);
@@ -381,7 +477,10 @@ function PlayerBody({
   const [chosenStyle, setChosenStyle] = useState("");
   useEffect(() => setChosenStyle(""), [source?.kind === "iframe" ? source.url : "", defaultStyle]);
   const [viewport, setViewport] = useState<MediaViewport>(
-    defaultViewport === "mobile"
+    (typeof window !== "undefined" &&
+      window.matchMedia("(max-width: 767px)").matches &&
+      hasMobile) ||
+      defaultViewport === "mobile"
       ? hasMobile
         ? "mobile"
         : "desktop"
@@ -489,14 +588,6 @@ function PlayerBody({
     setMuted(true);
   };
 
-  const toggleFullscreen = () => {
-    if (document.fullscreenElement) {
-      void document.exitFullscreen();
-      return;
-    }
-    void stageBoxRef.current?.requestFullscreen?.();
-  };
-
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const tag = (event.target as HTMLElement).tagName;
     if (tag === "INPUT" || tag === "SELECT" || tag === "TEXTAREA") return;
@@ -507,7 +598,7 @@ function PlayerBody({
       ArrowLeft: () => seek(time - 5),
       ArrowRight: () => seek(time + 5),
       m: toggleMute,
-      f: toggleFullscreen,
+      f: () => void onToggleExpanded(),
     };
     const handler = handlers[event.key];
     if (!handler) return;
@@ -524,6 +615,7 @@ function PlayerBody({
     onPlayingChange: handlePlayingChange,
     onMutedChange: handleMutedChange,
     onStarted: handleStarted,
+    backgroundVisibility,
   };
 
   const viewportButton = (mode: MediaViewport, label: string, enabled: boolean) => (
@@ -549,11 +641,21 @@ function PlayerBody({
 
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: atajos de teclado del reproductor (espacio, flechas, m, f)
-    <div className="flex flex-col gap-2 outline-none" onKeyDown={handleKeyDown}>
-      <div className="flex flex-wrap items-center justify-between gap-3 px-2 pt-1 pr-10">
+    <div
+      className={cn("flex flex-col gap-2 outline-none", styles.player)}
+      data-sidebar-open={hasSidebar && sidebarOpen}
+      onKeyDown={handleKeyDown}
+    >
+      <div
+        className={cn(
+          "flex flex-wrap items-center justify-between gap-3 px-2 pt-1 pr-10",
+          styles.toolbar,
+        )}
+      >
         <div className="flex min-w-0 items-center gap-2">
           {viewportButton("mobile", t("viewMobile"), hasMobile)}
           {viewportButton("desktop", t("viewDesktop"), hasDesktop)}
+          {leftControls}
           {styleOptions && styleOptions.length > 0 && source?.kind === "iframe" && (
             <select
               aria-label="Estilo visual"
@@ -617,11 +719,12 @@ function PlayerBody({
           )}
           <button
             type="button"
-            aria-label={t("fullscreen")}
-            onClick={toggleFullscreen}
+            aria-label={expanded ? t("exitFullscreen") : t("fullscreen")}
+            aria-pressed={expanded}
+            onClick={() => void onToggleExpanded()}
             className="flex size-7 items-center justify-center rounded-full bg-white/10 text-white/85 transition-colors hover:bg-white/20 hover:text-white"
           >
-            <Maximize2 className="size-3.5" />
+            {expanded ? <Minimize2 className="size-3.5" /> : <Maximize2 className="size-3.5" />}
           </button>
           {actions}
           {hasSidebar && (
@@ -643,67 +746,85 @@ function PlayerBody({
         </div>
       </div>
 
-      <div className={cn(hasSidebar && "flex flex-col gap-2 md:flex-row md:items-stretch")}>
-        <div className={cn(hasSidebar && "flex min-w-0 flex-1 flex-col gap-2")}>
-          {canPlay ? (
+      <div
+        className={cn(
+          styles.layout,
+          hasSidebar && "flex flex-col gap-2 md:flex-row md:items-stretch",
+        )}
+      >
+        <div className={cn(styles.main, hasSidebar && "flex min-w-0 flex-1 flex-col gap-2")}>
+          {stageContent ? (
+            <div className="flex aspect-video items-center justify-center rounded-[18px] bg-black p-6">
+              {stageContent}
+            </div>
+          ) : canPlay ? (
             <div
-              ref={stageBoxRef}
               className={cn(
+                styles.stage,
                 "relative mx-auto w-full max-w-full max-h-[74vh] overflow-hidden rounded-[18px] transition-colors duration-500 motion-reduce:transition-none",
                 viewport === "mobile" ? "bg-[#4b515c]" : "bg-black",
               )}
-              style={{ aspectRatio: "16 / 9", containerType: "size" }}
+              style={{ containerType: "size" }}
             >
               <div
+                data-media-frame={viewport}
                 data-phone-frame={viewport === "mobile" ? "true" : undefined}
                 className={cn(
+                  styles.mediaFrame,
                   "absolute top-1/2 left-1/2 box-border -translate-x-1/2 -translate-y-1/2 bg-black transition-[width,height,padding,border-radius,box-shadow] duration-500 ease-in-out motion-reduce:transition-none",
-                  viewport === "mobile" && "rounded-[24px] p-[6px] shadow-[0_5px_22px_rgba(0,0,0,0.48),0_0_0_1px_#808691]",
+                  viewport === "mobile" &&
+                    "rounded-[24px] p-[6px] shadow-[0_5px_22px_rgba(0,0,0,0.48),0_0_0_1px_#808691]",
                 )}
-                style={{
-                  width: viewport === "mobile" ? "min(calc(100% - 12px), calc(56.25cqh + 1.875px))" : "100%",
-                  height: viewport === "mobile" ? "calc(100% - 6px)" : "100%",
-                }}
               >
-                <div className={cn("relative size-full overflow-hidden bg-black", viewport === "mobile" && "rounded-[18px]")}>
-              {source.kind === "iframe" ? (
-                <>
-                  <IframeStage
-                    // La plantilla decide su cámara y su diseño al cargar según la proporción: al cambiar de formato se recarga.
-                    key={viewport}
-                    ref={stageRef}
-                    url={withParams(source.url, (chosenStyle || defaultStyle) && styleOptions?.length ? { estilo: chosenStyle || defaultStyle || "", ...extraParams } : extraParams)}
-                    title={title}
-                    {...stageProps}
-                  />
-                  {!started && (
-                    <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black">
-                      {source.poster && (
-                        // biome-ignore lint/performance/noImgElement: portada servida por la API, sin optimizar
-                        <img
-                          src={source.poster}
-                          alt=""
-                          className="absolute inset-0 size-full object-cover"
-                        />
-                      )}
-                      {playing && (
-                        <Loader2 className="relative size-8 animate-spin text-white/85 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]" />
-                      )}
-                    </div>
+                <div
+                  className={cn(
+                    "relative size-full overflow-hidden bg-black",
+                    viewport === "mobile" && "rounded-[18px]",
                   )}
-                </>
-              ) : (
-                videoUrl && (
-                  <VideoStage
-                    key={videoUrl}
-                    ref={stageRef}
-                    url={videoUrl}
-                    startAt={resumeAt}
-                    errorLabel={t("loadError")}
-                    {...stageProps}
-                  />
-                )
-              )}
+                >
+                  {source.kind === "iframe" ? (
+                    <>
+                      <IframeStage
+                        // La plantilla decide su cámara y su diseño al cargar según la proporción: al cambiar de formato se recarga.
+                        key={viewport}
+                        ref={stageRef}
+                        url={withParams(
+                          source.url,
+                          (chosenStyle || defaultStyle) && styleOptions?.length
+                            ? { estilo: chosenStyle || defaultStyle || "", ...extraParams }
+                            : extraParams,
+                        )}
+                        title={title}
+                        {...stageProps}
+                      />
+                      {!started && (
+                        <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black">
+                          {source.poster && (
+                            // biome-ignore lint/performance/noImgElement: portada servida por la API, sin optimizar
+                            <img
+                              src={source.poster}
+                              alt=""
+                              className="absolute inset-0 size-full object-cover"
+                            />
+                          )}
+                          {playing && (
+                            <Loader2 className="relative size-8 animate-spin text-white/85 drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]" />
+                          )}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    videoUrl && (
+                      <VideoStage
+                        key={videoUrl}
+                        ref={stageRef}
+                        url={videoUrl}
+                        startAt={resumeAt}
+                        errorLabel={t("loadError")}
+                        {...stageProps}
+                      />
+                    )
+                  )}
                 </div>
               </div>
               {hasStagePreview && (
@@ -725,7 +846,7 @@ function PlayerBody({
           )}
 
           {canPlay && (
-            <div className="space-y-2 px-2 pb-1">
+            <div className={cn("space-y-2 px-2 pb-1", styles.footer)}>
               <div className="flex items-center gap-2 text-[10px] font-semibold text-white/65">
                 <span className="w-10 text-right tabular-nums">{formatTime(time)}</span>
                 <input
@@ -780,7 +901,7 @@ function PlayerBody({
             {/* En escritorio el contenido va en una capa absoluta: el panel toma la altura
                 del reproductor y scrollea por dentro, en vez de estirar todo el modal
                 cuando el contenido es largo (textos de publicación, formularios). */}
-            <div className="flex min-h-0 flex-1 flex-col md:absolute md:inset-0">{sidebar}</div>
+            <div className="flex min-h-0 min-w-0 max-w-full flex-1 flex-col overflow-hidden md:absolute md:inset-0">{sidebar}</div>
           </aside>
         )}
       </div>

@@ -311,6 +311,7 @@
       "runtime_assets": [
         "assets/women-dancing.mp4",
         "components/intro.js",
+        "components/background-sequence.js",
         "components/outro.js"
       ],
       "category_id": "lyrics",
@@ -332,8 +333,9 @@
         "media": [
           {
             "slot": "background",
-            "kind": "image",
-            "count": 1,
+            "kind": "image|video",
+            "min": 1,
+            "max": 20,
             "orientation": "portrait",
             "target": "source",
             "label": "Fondo",
@@ -380,7 +382,7 @@
         "media": [
           {
             "slot": "background",
-            "kind": "image",
+            "kind": "image|video",
             "count": 1,
             "orientation": "portrait",
             "target": "source",
@@ -533,7 +535,7 @@
         "media": [
           {
             "slot": "background",
-            "kind": "image",
+            "kind": "image|video",
             "count": 1,
             "orientation": "portrait",
             "target": "source",
@@ -577,7 +579,7 @@
         "media": [
           {
             "slot": "background",
-            "kind": "image",
+            "kind": "image|video",
             "count": 1,
             "orientation": "portrait",
             "target": "source",

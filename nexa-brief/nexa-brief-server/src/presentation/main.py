@@ -11,8 +11,9 @@ from src.core.ports.agent_port import AgentIsolationUnavailableError
 
 from src.config.logging_config import setup_logging
 from src.config.settings import settings
-from src.presentation.api.routers import sound_design
+from src.presentation.api.routers import sound_design, promos
 from src.presentation.api.routers import (
+    catalog,
     categories,
     content,
     history,
@@ -59,6 +60,7 @@ async def lifespan(app: FastAPI):
     # Marcar runs que quedaron sin proceso al reiniciar y reactivar la cola persistida.
     await prototypes.get_prototype_run_service().recover_interrupted()
     await sandbox.get_preparation_service().recover()
+    await promos.service.recover()
 
     # Reparar el índice derivado y dejar publicaciones interrumpidas en
     # conciliación; una entrega ambigua nunca se reenvía automáticamente.
@@ -119,6 +121,8 @@ async def lifespan(app: FastAPI):
     except asyncio.CancelledError:
         pass
     await preparation_producer.shutdown()
+    if explainer.get_edition_service.cache_info().currsize:
+        await explainer.get_edition_service().shutdown()
     leader_task.cancel()
     try:
         await leader_task
@@ -236,6 +240,7 @@ app.include_router(realtime.router, prefix="/api/v1")
 app.include_router(stats.router, prefix="/api/v1")
 app.include_router(stock.router, prefix="/api/v1")
 app.include_router(drafts.router, prefix="/api/v1")
+app.include_router(promos.router, prefix="/api/v1")
 app.include_router(media_plans.router, prefix="/api/v1")
 app.include_router(explainer.router, prefix="/api/v1")
 app.include_router(sandbox.router, prefix="/api/v1")
@@ -244,6 +249,7 @@ app.include_router(image_posts.router, prefix="/api/v1")
 app.include_router(publications.router, prefix="/api/v1")
 app.include_router(sound_design.router, prefix="/api/v1")
 app.include_router(categories.router, prefix="/api/v1")
+app.include_router(catalog.router, prefix="/api/v1")
 app.include_router(voice.router, prefix="/api/v1")
 # YouTube OAuth 2.0 server-side flow
 app.include_router(youtube_oauth.router)

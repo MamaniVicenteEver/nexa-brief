@@ -13,6 +13,8 @@ from src.core.explainer.publishing import PublishPackage
 class ExplainerJobResponse(BaseModel):
     job_id: str
     video_id: str
+    locale: str = "es-419"
+    revision: str | None = None
     state: str
     category_path: str
     duration: str
@@ -224,6 +226,8 @@ class SandboxInfoResponse(BaseModel):
 
 
 class RecordExplainerRequest(BaseModel):
+    locale: str = "es-419"
+    revision: str | None = None
     duration: str = Field(
         "10",
         pattern="^(10|20|full)$",

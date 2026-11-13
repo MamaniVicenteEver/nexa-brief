@@ -1,35 +1,15 @@
-# Orquestación · quién hace qué al producir un video explicativo
+# Addendum de orquestación para explicativos
 
-> **Diseño imperio:** leer [imperio-production.md](imperio-production.md) antes de planificar: video visible 8–16 s, fotografía 6–12 s y sonido de biblioteca en una capa sobre la voz continua. Es una política específica del estilo; los mapas/rótulos no son medios documentales y las demás familias conservan sus reglas.
+Aplica primero [ORQUESTACION.md](../../../../skills/ORQUESTACION.md) y [CALIDAD.md](../../../../skills/CALIDAD.md). Este addendum conserva la operación específica del kit.
 
-> Para **cualquier IA** (Claude Code, Codex, otra) que reciba un pedido como
-> *"quiero un video de este tipo en tech, hacé todo el estudio, delegá en DeepSeek, que dure 9 a 14 min,
-> solo preparación"*. Leé esto primero: dice por dónde empezar, qué delegar, qué queda anotado y qué
-> NO hacer. El pipeline paso a paso está en `../AGENTS.md`; esto es la capa de arriba (equipo y costos).
+## Selección de actualidad y ejecución
 
-## 1. Por dónde empezar (siempre igual)
-
-1. **Entender el pedido** y completarlo con estos valores por defecto (el humano manda si dice otra cosa):
-
-   | campo | por defecto |
-   |---|---|
-   | categoría / diseño | tecnología → `node_tech` / `rough` (PROTOTIPO) · historia → `node_history` / `binary` u otro de NodeHistory |
-   | duración | `--minutes 12` si pide "9 a 14 min" (`lengths.json`: el guion declara `target_minutes`) |
-   | grabar | **NO**. "Solo preparación" = pasos 1–9, sin `kit.py render` ni grabación desde la app |
-   | publicar | **nunca** desde un agente |
-   | commits | **nunca** (el humano decide cuándo) |
-
-2. **Elegir el tema con datos de hoy** si el humano no lo dio: buscá en la web lo que pasó en los
-   últimos 30 días en el área (noticias de medios reconocidos + datos de fuentes primarias). Anotá 2–3
-   candidatos con por qué cada uno, elegí uno y dejalo escrito en `PLAN.md §1` (y en el reporte).
-3. **Lanzar la producción** por el backend (así queda en la app, con log, estado y registro de uso):
-   - Web: NodeTech → Crear video → agente **Codex** → duración → (sin grabar).
-   - API (desde el servidor): `POST /api/v1/explainer/productions` con `category_path`, `design`, `topic`,
-     `description`, `agent: "codex"`, `minutes`, `auto_record: false` y, si lo escribiste vos, el `brief`.
-   - Terminal (sin backend): ver `../FLUJO.md §3` (`codex exec …` con el pedido estándar).
-4. **Supervisar**: el log de la producción (`data/explainer/logs/<id>.log`), `kit.py status <id>`, las
-   hojas `work/sheet-*.png` y `work/components/*.png`. Lo que no está bien se corrige (o se retoma).
-5. **Cerrar**: `kit.py usage <id>` → `usage.json` y el reporte de `AGENTS.md §6` + lo de §5 de esta guía.
+Si el humano no dio tema, busca novedades de los últimos 30 días en el área,
+con fuentes primarias y medios reconocidos; registra dos o tres candidatos,
+el motivo de la elección y los descartados en `PLAN.md` y en el informe.
+El backend permite iniciar una producción en la aplicación o mediante
+`POST /api/v1/explainer/productions`; para solo preparación usa `auto_record: false`.
+Supervisa el log, `kit.py status <id>` y las hojas de revisión del episodio.
 
 ## 2. El equipo (fuente: `src/skills/models/roles.json`)
 
@@ -112,14 +92,6 @@ anotalo a mano en el reporte si hace falta.
   derecha (9:16: foto arriba). La miniatura B es la captura de esa apertura: elegí una foto potente del
   objeto del tema, con fondo oscuro o limpio.
 - **Duración 9–14 min**: capítulos con mini-arco y re-gancho cada 2–3 min (`storytelling.md §7`).
-
-## 6. Reporte final (además de AGENTS.md §6)
-
-1. Tema elegido y por qué (y los candidatos descartados).
-2. Qué se delegó, a qué modelo, cuántas vueltas y qué se aceptó o se rehízo.
-3. `usage.json`: tokens por proveedor y las iteraciones de cada paso.
-4. Estado: listo para grabar (sin grabar) + lo que el humano tiene que mirar o decidir.
-
 
 ## Preferencia editorial del usuario · 2026-11-09
 

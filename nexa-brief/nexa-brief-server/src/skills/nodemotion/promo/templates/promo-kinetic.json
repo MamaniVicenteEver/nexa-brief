@@ -1,0 +1,497 @@
+{
+  "template_id": "promo-kinetic",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [],
+    "texts": [
+      {
+        "key": "brand.tag",
+        "label": "Marca",
+        "max": 20,
+        "default": "NEXA"
+      }
+    ],
+    "brief": true
+  },
+  "default_brand": {
+    "tag": "NEXA"
+  },
+  "default_media": [],
+  "default_scenes": [
+    {
+      "type": "fromCenter",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "stretchChars",
+      "color": "red",
+      "max_text_lines": 1
+    },
+    {
+      "type": "ripple",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "cascade",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "marker",
+      "color": "red",
+      "max_text_lines": 1
+    },
+    {
+      "type": "ripple",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "gradient",
+      "color": "yellow",
+      "max_text_lines": 1
+    },
+    {
+      "type": "rotating",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "sliced",
+      "color": "green",
+      "max_text_lines": 1
+    },
+    {
+      "type": "cascade",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "dynamicScale",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "marker",
+      "color": "orange",
+      "max_text_lines": 1
+    },
+    {
+      "type": "bigBlock",
+      "color": "white",
+      "block": "red",
+      "max_text_lines": 1
+    },
+    {
+      "type": "growing",
+      "color": "teal",
+      "max_text_lines": 1
+    },
+    {
+      "type": "breakDown",
+      "color": "red",
+      "max_text_lines": 1
+    },
+    {
+      "type": "pushUp",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "gradient",
+      "color": "grad",
+      "max_text_lines": 1
+    },
+    {
+      "type": "squeeze",
+      "color": "green",
+      "max_text_lines": 1
+    },
+    {
+      "type": "perspective",
+      "color": "red",
+      "max_text_lines": 1
+    },
+    {
+      "type": "bigBlock",
+      "color": "white",
+      "block": "orange",
+      "max_text_lines": 1
+    },
+    {
+      "type": "constructor_",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "starway",
+      "color": "teal",
+      "max_text_lines": 1
+    },
+    {
+      "type": "sliced",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "waving",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "squeeze",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "blink",
+      "color": "red",
+      "max_text_lines": 1
+    },
+    {
+      "type": "typing",
+      "color": "white",
+      "max_text_lines": 1
+    },
+    {
+      "type": "verticalWord",
+      "color": "red",
+      "max_text_lines": 1
+    },
+    {
+      "type": "typing",
+      "color": "white",
+      "max_text_lines": 1
+    }
+  ],
+  "default_duration_seconds": 54.23,
+  "target_duration_seconds": {
+    "min": 60,
+    "max": 120
+  },
+  "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+  "thumbnail": {
+    "title": "primer segmento no vacío: une lines o usa text, elimina # ^ ~ * y usa máximo cinco palabras; si no existe, título del draft",
+    "A": "titular repetido sobre bloque naranja",
+    "B": "titular entre paréntesis con ecos; ambas tipográficas, sin foto",
+    "common": "A y B parten del mismo título por defecto; fondo configurable cuando la composición lo usa. Revisar ambas en pequeño. El HUD de miniatura usa NEXA por defecto, independientemente de brand.tag; revisar y editar la opción en el draft."
+  },
+  "media_slot_order": {
+    "clips": [],
+    "photos": []
+  },
+  "scene_cycle": [
+    {
+      "scene": 1,
+      "type": "fromCenter",
+      "shows": "animación tipográfica fromCenter de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 2,
+      "type": "stretchChars",
+      "shows": "animación tipográfica stretchChars de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 3,
+      "type": "ripple",
+      "shows": "animación tipográfica ripple de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 4,
+      "type": "cascade",
+      "shows": "animación tipográfica cascade de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 5,
+      "type": "marker",
+      "shows": "animación tipográfica marker de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 6,
+      "type": "ripple",
+      "shows": "animación tipográfica ripple de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 7,
+      "type": "gradient",
+      "shows": "animación tipográfica gradient de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 8,
+      "type": "rotating",
+      "shows": "animación tipográfica rotating de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 9,
+      "type": "sliced",
+      "shows": "animación tipográfica sliced de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 10,
+      "type": "cascade",
+      "shows": "animación tipográfica cascade de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 11,
+      "type": "dynamicScale",
+      "shows": "animación tipográfica dynamicScale de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 12,
+      "type": "marker",
+      "shows": "animación tipográfica marker de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 13,
+      "type": "bigBlock",
+      "shows": "animación tipográfica bigBlock de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 14,
+      "type": "growing",
+      "shows": "animación tipográfica growing de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 15,
+      "type": "breakDown",
+      "shows": "animación tipográfica breakDown de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 16,
+      "type": "pushUp",
+      "shows": "animación tipográfica pushUp de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 17,
+      "type": "gradient",
+      "shows": "animación tipográfica gradient de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 18,
+      "type": "squeeze",
+      "shows": "animación tipográfica squeeze de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 19,
+      "type": "perspective",
+      "shows": "animación tipográfica perspective de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 20,
+      "type": "bigBlock",
+      "shows": "animación tipográfica bigBlock de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 21,
+      "type": "constructor_",
+      "shows": "animación tipográfica constructor_ de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 22,
+      "type": "starway",
+      "shows": "animación tipográfica starway de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 23,
+      "type": "sliced",
+      "shows": "animación tipográfica sliced de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 24,
+      "type": "waving",
+      "shows": "animación tipográfica waving de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 25,
+      "type": "squeeze",
+      "shows": "animación tipográfica squeeze de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 26,
+      "type": "blink",
+      "shows": "animación tipográfica blink de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 27,
+      "type": "typing",
+      "shows": "animación tipográfica typing de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 28,
+      "type": "verticalWord",
+      "shows": "animación tipográfica verticalWord de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 29,
+      "type": "typing",
+      "shows": "animación tipográfica typing de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    }
+  ],
+  "rhythm": {
+    "recommended_seconds_per_segment": {
+      "min": 1.4,
+      "max": 2.4
+    },
+    "typical_duration_seconds": {
+      "min": 60,
+      "max": 120
+    },
+    "note": "Un segmento por escena; el ciclo se repite. La duración original del ejemplo está en default_duration_seconds; elegir ciclos completos que quepan en el rango y revisar el pulso."
+  },
+  "brand_texts": {
+    "brand.tag": "identidad breve en el indicador de pantalla"
+  },
+  "inputs_note": "Copia literal del catálogo: las etiquetas y ejemplos históricos deportivos no limitan los temas. Interpretar los campos según brand_texts y scene_cycle.",
+  "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+  "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos."
+}

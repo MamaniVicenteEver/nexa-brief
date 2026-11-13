@@ -1,13 +1,13 @@
 {
   "id": "atlas-cinematico",
   "name": "Atlas Cinemático",
-  "category": "nodehistory",
-  "state": "prueba",
+  "category": "nodeatlas",
+  "state": "produccion",
   "family": "atlas-cinematico",
   "engine_id": "nodehistory/_atlas",
   "description": "Mapas cinematográficos y visualización geográfica.",
   "revision": "62f6f08ff102c2df2fede72da59b33b029c7824091e1f5967147454b90d258be",
-  "preview_url": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/showcase/index.html?only=atlas.highlight&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
+  "preview_url": "/api/v1/explainer/files/bundled/nodeatlas/atlas-cinematico/_atlas/showcase/index.html?only=atlas.highlight&bg=white&autoplay=1&loop=1&bare=1&aspect=9x16",
   "episodes": [],
   "source_type": "legacy_catalog",
   "legacy_revisions": [
@@ -19,5 +19,24 @@
     "family": "fa7e25565f27c7146f13b99c606fc1abe08de59f865d68719059d81aef5ea476"
   },
   "definition_source": "legacy",
-  "schema_version": 1
+  "schema_version": 1,
+  "category_path": "node_atlas",
+  "production_template": {
+    "folder": "nodeatlas/atlas-economias-demo",
+    "demo": true,
+    "origin_folder": "nodeatlas",
+    "project_id": "atlas-economias-demo-20261109",
+    "title": "DEMO · Las ocho mayores economías",
+    "preview_url": "/api/v1/explainer/files/bundled/nodeatlas/atlas-economias-demo/index.html",
+    "aliases": [
+      "atlas-economias-demo-20261109"
+    ],
+    "legacy_production_folders": [
+      "nodeatlas/atlas-economias-demo-20261109"
+    ]
+  },
+  "engine_root": "nodeatlas/atlas-cinematico/_atlas",
+  "legacy_engine_roots": [
+    "sandbox/nodehistory/_atlas"
+  ]
 }

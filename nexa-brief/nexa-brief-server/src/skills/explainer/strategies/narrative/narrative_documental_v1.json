@@ -5,7 +5,8 @@
   "description": "Un momento icónico contado como historia: gancho, contexto, subidas y bajadas, clímax y cierre con moraleja.",
   "status": "active",
   "acts": [
-    {"id": "gancho", "name": "Gancho", "weight": "apertura", "intensity": "alta", "function": "Fecha/lugar + algo imposible o una pregunta; presenta al protagonista.", "rules": ["Frases cortas y un número."]},
+    {"id": "gancho", "name": "Gancho", "weight": "apertura", "intensity": "alta", "function": "Fecha/lugar + algo imposible o una pregunta; presenta al protagonista.", "rules": ["Calidad: usa solo hechos investigados; no inventes cifras, resultados ni citas. Fecha y contextualiza cifras, priorizando los últimos 12 meses según la fecha recibida. Sin emojis ni etiquetas ajenas. Evita «la historia continúa» y «un hecho increíble»; sí, si consta: «Dartmouth, 1956: propuesta de investigación».",
+        "Frases cortas y un número."]},
     {"id": "contexto", "name": "Contexto", "weight": "corto", "intensity": "media", "function": "Qué estaba en juego y cómo funcionaba.", "rules": ["Una idea por oración; comparar con algo cotidiano."]},
     {"id": "subida_1", "name": "Subida 1", "weight": "medio", "intensity": "alta", "function": "El problema se hace enorme.", "rules": ["Cifras concretas."]},
     {"id": "bajada_1", "name": "Bajada 1", "weight": "corto", "intensity": "media", "function": "Obstáculo, duda, el tiempo se acaba.", "rules": ["Frases más lentas."]},

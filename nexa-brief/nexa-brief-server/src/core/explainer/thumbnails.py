@@ -55,7 +55,9 @@ def thumbnail_file(video: ExplainerVideo, option: Option | None = None, orientat
     if orientation not in ("16x9", "9x16"):
         raise ThumbnailError(f"orientación inválida: {orientation}")
     suffix = "-9x16" if orientation == "9x16" else ""
-    return preview_directory(video.path) / f"thumbnail-{option or chosen_option(video)}{suffix}.jpg"
+    root = getattr(video, "edition_path", None) or preview_directory(video.path)
+    from src.core.explainer.editions.io import safe
+    return safe(root, f"thumbnail-{option or chosen_option(video)}{suffix}.jpg")
 
 
 def _capture_digest(video: ExplainerVideo, spec: dict) -> str:
@@ -114,7 +116,7 @@ def _spec_design(video: ExplainerVideo, spec: dict) -> str:
 
 def _legacy_atlas_specs(video: ExplainerVideo, publish: dict) -> dict[str, dict]:
     """Renderiza variantes antiguas de Atlas como miniaturas sin cambiar la apertura."""
-    if video.design != "atlas-en-movimiento" and not video.design.startswith("sandbox-"):
+    if video.design not in {"atlas-en-movimiento", "mapas-satelitales"} and not video.design.startswith("sandbox-"):
         return {}
     variants = publish.get("thumbnail_variants")
     if not isinstance(variants, list):
@@ -129,7 +131,7 @@ def _legacy_atlas_specs(video: ExplainerVideo, publish: dict) -> dict[str, dict]
             pass
 
     specs: dict[str, dict] = {}
-    kicker = _kicker(video) or "ATLAS EN MOVIMIENTO"
+    kicker = _kicker(video) or ("MAPAS SATELITALES" if video.design == "mapas-satelitales" else "ATLAS EN MOVIMIENTO")
     for variant in variants:
         if not isinstance(variant, dict):
             continue
@@ -166,7 +168,7 @@ def _legacy_atlas_specs(video: ExplainerVideo, publish: dict) -> dict[str, dict]
 
 def _atlas_package_specs(video: ExplainerVideo, package: PublishPackage) -> dict[str, dict]:
     """Adapta el paquete A/B/C al diseño Atlas legado sin tocar su apertura nativa."""
-    if video.design != "atlas-en-movimiento" and not video.design.startswith("sandbox-"):
+    if video.design not in {"atlas-en-movimiento", "mapas-satelitales"} and not video.design.startswith("sandbox-"):
         return {}
     thumb = package.thumbnail
     variants = [
@@ -196,12 +198,14 @@ def _atlas_package_specs(video: ExplainerVideo, package: PublishPackage) -> dict
 
 def intro_specs(video: ExplainerVideo) -> dict[str, dict]:
     """{opción: {component, params}} de las miniaturas que este video puede tener."""
-    package = load_package(video.path)
+    package = _package(video)
     if package is not None:
         atlas_specs = _atlas_package_specs(video, package)
         if atlas_specs:
             return atlas_specs
         return opening_specs(package, video.path, video.design)
+    if getattr(video, "edition_path", None) is not None:
+        return {}  # a missing native package must never borrow ES text
     catalog = kit_catalog()
     v1, v2 = catalog.get(f"{video.design}.introv1"), catalog.get(f"{video.design}.introv2")
     publish = read_publish(video.path)
@@ -218,17 +222,17 @@ def intro_specs(video: ExplainerVideo) -> dict[str, dict]:
 
 
 def chosen_option(video: ExplainerVideo) -> Option:
-    package = load_package(video.path)
+    package = _package(video)
     if package is not None:
         return CHOSEN_TO_OPTION[package.thumbnail.chosen]  # type: ignore[return-value]
-    chosen = read_publish(video.path).get("thumbnail_option")
-    if chosen in {"B", "C"} and (chosen == "B" or video.design == "atlas-en-movimiento" or video.design.startswith("sandbox-")):
+    chosen = read_publish(video.path).get("thumbnail_option") if getattr(video, "edition_path", None) is None else None
+    if chosen in {"B", "C"} and (chosen == "B" or video.design in {"atlas-en-movimiento", "mapas-satelitales"} or video.design.startswith("sandbox-")):
         return chosen
     return "A"
 
 
 def _validate_c(video: ExplainerVideo) -> None:
-    package = load_package(video.path)
+    package = _package(video)
     if package is not None:
         try:
             validate_tabloid_photo(package, video.path)
@@ -242,11 +246,15 @@ def choose(video: ExplainerVideo, option: Option) -> None:
         _validate_c(video)
     if option not in intro_specs(video):
         raise ThumbnailError(f"{video.video_id}: la miniatura {option} no está disponible")
-    package = load_package(video.path)
+    package = _package(video)
     if package is not None:
         if OPTION_TO_CHOSEN[option] == package.thumbnail.chosen:
             return
         updated = package.model_copy(update={"thumbnail": package.thumbnail.model_copy(update={"chosen": OPTION_TO_CHOSEN[option]})})
+        if getattr(video, "edition_path", None) is not None:
+            from src.core.explainer.editions.packaging import apply_package
+            apply_package(video, getattr(video, "edition_path", None), updated)
+            return
         save_package(video.path, updated, strategies_for_review(video))
         service.build(video)   # la elegida abre el video: beat 0, guion, manifest, portada y renders viejos
         return
@@ -260,7 +268,7 @@ async def render(
     only_missing: bool = False,
 ) -> dict[str, Path]:
     """Captura las miniaturas pedidas (las que el video puede tener) → {opción: archivo}."""
-    async with AsyncFileLock(preview_directory(video.path) / ".thumbnails.lock"):
+    async with AsyncFileLock((getattr(video, "edition_path", None) or preview_directory(video.path)) / ".thumbnails.lock"):
         if "C" in options:
             _validate_c(video)
         specs = intro_specs(video)
@@ -321,3 +329,10 @@ async def ensure(video: ExplainerVideo, option: Option) -> Path:
     if not path.exists():
         raise ThumbnailError(f"{video.video_id}: la miniatura {option} no está disponible")
     return path
+
+
+def _package(video):
+    if getattr(video, "edition_path", None) is not None:
+        from src.core.explainer.editions.packaging import load_native
+        return load_native(getattr(video, "edition_path", None))
+    return load_package(video.path)

@@ -3,6 +3,11 @@ name: nexa-content-batch
 description: Prepara o agenda varios videos de Nexa Brief desde un chat, con categorías, diseños y duraciones independientes. Usa la cola persistente del servidor; deja los resultados en Preparación y los pedidos visibles en Programación.
 ---
 
+Antes: [CALIDAD.md](../../CALIDAD.md) (manda) y, si orquestas, [ORQUESTACION.md](../../ORQUESTACION.md).
+Al delegar: [PLANTILLA-BRIEF.md](../../PLANTILLA-BRIEF.md). Al entregar: [PLANTILLA-INFORME.md](../../PLANTILLA-INFORME.md) como `INFORME.md`.
+
+## Específico de esta skill
+
 # Preparación por lotes
 
 Ejecuta en alfred-server, desde el directorio nexa-brief-server. Lee las instrucciones AGENTS.md del servidor. Para crear contenido con diseños existentes, el productor aplica ../produce/SKILL.md. Este flujo administra pedidos; no escribe guiones directamente ni crea otra cola por fuera del backend.

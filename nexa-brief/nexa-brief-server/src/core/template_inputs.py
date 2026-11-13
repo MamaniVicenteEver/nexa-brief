@@ -13,13 +13,19 @@ Ver docs/investigaciones/estudio-creacion-interactiva-2026-09.md §3.
 
 from __future__ import annotations
 
+from typing import Annotated, Literal
+
 from pydantic import BaseModel, Field
 
 
 class TemplateInputs(BaseModel):
     # slot declarado en `inputs.media[].slot` → asset_ids de la librería, en orden.
     media: dict[str, list[str]] = Field(default_factory=dict)
+    # Tipo de cada asset, en el mismo orden, para restaurar correctamente una selección mixta.
+    media_kinds: dict[str, list[Literal["image", "video"]]] = Field(default_factory=dict)
     # clave declarada en `inputs.texts[].key` (notación con puntos, ej. "brand.tag") → valor.
     texts: dict[str, str] = Field(default_factory=dict)
     # descripción libre de lo que el usuario quiere (la usa el director de medios / config mapper).
     brief: str | None = None
+    # Visibilidad del fondo seleccionado: 0 transparente, 1 visible.
+    media_opacity: dict[str, Annotated[float, Field(ge=0, le=1, allow_inf_nan=False)]] = Field(default_factory=dict)

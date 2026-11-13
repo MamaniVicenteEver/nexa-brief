@@ -1,0 +1,2234 @@
+{
+  "schema_version": 1,
+  "orchestration_sha256": "578da2739f0d7105db49bae7664240ad6b50f168cadfec08c90c37c6a8f158ef",
+  "source_hashes": {
+    "assets/script.json": "a4ac921850837c16f5ec734a54bf14087c0e845c5aba4965288aa04dfc162b7f",
+    "assets/episode-data.json": "3ae85c9b797fb7a3a28fa2e661e0bd56772e7bd4f3d050f0b87626b5c2bfb6c4",
+    "research.json": "29bd20247255ada8be46c381d2a5f36e0cf065d5a6e908309c741bf882262af1",
+    "assets/lyrics.json": "9d0e33a1f0e7803cc86d5832f09f8e5c5adedad9e3105efd3d46db368e01b048",
+    "assets/song.mp3": "471180911838ed5a6d581bbfe1ce37fb1ceb4c39ee15b839719a096732800039",
+    "assets/regions.json": "c7c1486fb40394f140bb5b0e21fae04664d91c3c824f35e20635974126f36d64",
+    "assets/config.json": "ce549ad43ce65927ce358e28383a613f397f73ea749e9f7909cf0bb633fc4bcc",
+    "work/results/test/transcript-raw.json": "1e78be7d49f57d420c6bf02a29b0d45fb7001c46bb4aabd47304d59b422e2a48",
+    "assets/media/credits.json": "0a356ab1e25a0daae8093b60d6d4cff66599f35edeb57ce5ec19a82fb4c2bef5",
+    "assets/media/regional-california.jpg": "2412177a07ced42d5011093bef3beb76629aa6bdee79cb95635a32dc99e38e4e",
+    "assets/media/regional-texas.jpg": "a8def3a28d1e730d6ff4a7057827f82759ab7cdfd5bca3508d858e938d827321",
+    "assets/media/regional-guangdong.jpg": "e671887301be64be05f8a8d9e0dfc224b691db0a65e9c985e448436325aaa3d3",
+    "assets/media/regional-jiangsu.jpg": "9fc9ac2eb09b3ec972a5b6d61521571820bebbc620f909d4fe0f2ce1769bcc16",
+    "assets/media/regional-north-rhine-westphalia.jpg": "b55ed887860a649992f214562d94c462487a98d22a0ae085bc9ddc0c468e76f6",
+    "assets/media/regional-bavaria.jpg": "5a25e194d7546909afaa8dd80a90afe7aa8285c1ab76cd73d26f9e872bb35f79",
+    "assets/media/regional-tokyo.jpg": "44461631d9fc67d093b1a17c68348c714e20a7ddbeaf4ceff12f3e5e834ea424",
+    "assets/media/regional-osaka.jpg": "a392d8befcf2b9a6815bf13b7b704ff7698ca948bb1eef3486e4b1bb8c7d9b9a",
+    "assets/media/regional-england.jpg": "277ee54fb58c8ac8760cba6250232c136eecc797221f11ef9b9fad6058ee244e",
+    "assets/media/regional-scotland.jpg": "9e7dadebdd6f7ac21a8bc81090d803ba50d0d6595b0517deca73317ffa978bd2",
+    "assets/media/regional-maharashtra.jpg": "4ac1239e1e3716152ed7911f93391a89c18c50ebabd87b8d3d44f6278085536b",
+    "assets/media/regional-tamil-nadu.jpg": "6b0e8de3a85a7eac33bb5c5b9d4f0dc59e068c97498df122fe69c136cb25c292",
+    "assets/media/regional-ile-de-france.jpg": "163c305668ca371ade65795777f1a1aad8ce587f252e98ba0679380747379c01",
+    "assets/media/regional-auvergne-rhone-alpes.jpg": "ec3701b3f9554df021aacb6f2ea0041194050a280fe6b5b72e325c880725dd18",
+    "assets/media/regional-moscow.jpg": "46ee091d7eb280d7f5c4084ed6e10aa5416bc3668d3be265ef3e32e2221c86c1",
+    "assets/media/regional-tatarstan.jpg": "dc50b066b82f9857d8b08e5dba0804c602b2360207cb2c868663afea0548f6f5"
+  },
+  "entries": [
+    {
+      "intent": "country_identity",
+      "component": "atlas.flagFill",
+      "timeAnchor": {
+        "segment_id": "02-ru-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 20.35
+      },
+      "location": {
+        "country": "RU",
+        "region": null,
+        "coordinates": [
+          98,
+          61
+        ]
+      },
+      "media": "media/flag-ru.svg",
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "persistent": true,
+          "opacity": {
+            "intro": 0.94,
+            "country": 0.12,
+            "insight": 0.12,
+            "region": 0.04
+          }
+        }
+      },
+      "reason": "Identidad nacional clara al entrar y tenue durante el análisis regional."
+    },
+    {
+      "intent": "leader_context",
+      "component": "atlas.persistentPortrait",
+      "timeAnchor": {
+        "segment_id": "02-ru-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 5.82,
+        "resolved_seconds": 26.17
+      },
+      "location": {
+        "country": "RU",
+        "region": null,
+        "coordinates": [
+          98,
+          61
+        ]
+      },
+      "media": "media/portrait-ru.jpg",
+      "ref": {
+        "fact_ids": [
+          "ru-leader"
+        ],
+        "source_ids": [
+          "ru-inauguration",
+          "ru-president"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "hud",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "x": 0.2,
+          "y": 0.66,
+          "photo_scale": 1.3,
+          "text_scale": 1.2
+        }
+      },
+      "reason": "El retrato permanece mientras se explica el país y sus regiones; no atribuye el PIB a una persona."
+    },
+    {
+      "intent": "locate_small_region",
+      "component": "atlas.ring",
+      "timeAnchor": {
+        "segment_id": "04-ru-moscow",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 48.39
+      },
+      "location": {
+        "country": "RU",
+        "region": "moscow",
+        "coordinates": [
+          37.39934,
+          55.46158
+        ]
+      },
+      "media": null,
+      "ref": {
+        "fact_ids": [
+          "ru-moscow"
+        ],
+        "source_ids": [
+          "moscow-economy"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "at": [
+            37.39934,
+            55.46158
+          ]
+        }
+      },
+      "reason": "Localiza una región pequeña sin ampliar su geometría ni acercar la cámara."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.panel",
+      "timeAnchor": {
+        "segment_id": "04-ru-moscow",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 48.39
+      },
+      "location": {
+        "country": "RU",
+        "region": "moscow",
+        "coordinates": [
+          37.39934,
+          55.46158
+        ]
+      },
+      "media": "media/regional-moscow.jpg",
+      "ref": {
+        "fact_ids": [
+          "ru-moscow"
+        ],
+        "source_ids": [
+          "moscow-economy"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "locate_small_region",
+      "component": "atlas.ring",
+      "timeAnchor": {
+        "segment_id": "05-ru-tatarstan",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 62.61
+      },
+      "location": {
+        "country": "RU",
+        "region": "tatarstan",
+        "coordinates": [
+          50.72148,
+          55.32831
+        ]
+      },
+      "media": null,
+      "ref": {
+        "fact_ids": [
+          "ru-tatarstan"
+        ],
+        "source_ids": [
+          "tatarstan-economy"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "at": [
+            50.72148,
+            55.32831
+          ]
+        }
+      },
+      "reason": "Localiza una región pequeña sin ampliar su geometría ni acercar la cámara."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.polePhoto",
+      "timeAnchor": {
+        "segment_id": "05-ru-tatarstan",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 62.61
+      },
+      "location": {
+        "country": "RU",
+        "region": "tatarstan",
+        "coordinates": [
+          50.72148,
+          55.32831
+        ]
+      },
+      "media": "media/regional-tatarstan.jpg",
+      "ref": {
+        "fact_ids": [
+          "ru-tatarstan"
+        ],
+        "source_ids": [
+          "tatarstan-economy"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "country_transition",
+      "component": "atlas.arrowCurved",
+      "timeAnchor": {
+        "segment_id": "06-fr-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.95,
+        "resolved_seconds": 79.54
+      },
+      "location": {
+        "country": null,
+        "region": null,
+        "coordinates": null,
+        "route": {
+          "from": [
+            50.72148,
+            55.32831
+          ],
+          "to": [
+            2.09048,
+            48.67734
+          ]
+        }
+      },
+      "media": null,
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "camera": "both_endpoints_overview"
+        }
+      },
+      "reason": "Itinerario visual entre capítulos; no representa comercio ni magnitudes económicas."
+    },
+    {
+      "intent": "country_identity",
+      "component": "atlas.flagFill",
+      "timeAnchor": {
+        "segment_id": "06-fr-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 3.44,
+        "resolved_seconds": 82.03
+      },
+      "location": {
+        "country": "FR",
+        "region": null,
+        "coordinates": [
+          2.7,
+          46.5
+        ]
+      },
+      "media": "media/flag-fr.svg",
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "persistent": true,
+          "opacity": {
+            "intro": 0.94,
+            "country": 0.12,
+            "insight": 0.12,
+            "region": 0.04
+          }
+        }
+      },
+      "reason": "Identidad nacional clara al entrar y tenue durante el análisis regional."
+    },
+    {
+      "intent": "leader_context",
+      "component": "atlas.persistentPortrait",
+      "timeAnchor": {
+        "segment_id": "06-fr-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 8.54,
+        "resolved_seconds": 87.13
+      },
+      "location": {
+        "country": "FR",
+        "region": null,
+        "coordinates": [
+          2.7,
+          46.5
+        ]
+      },
+      "media": "media/portrait-fr.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-fr-leader",
+          "research-fr-term"
+        ],
+        "source_ids": [
+          "r-fr-constitution",
+          "r-fr-elysee"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "hud",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "x": 0.2,
+          "y": 0.66,
+          "photo_scale": 1.3,
+          "text_scale": 1.2
+        }
+      },
+      "reason": "El retrato permanece mientras se explica el país y sus regiones; no atribuye el PIB a una persona."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.panel",
+      "timeAnchor": {
+        "segment_id": "08-fr-ile-de-france",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 98.29
+      },
+      "location": {
+        "country": "FR",
+        "region": "ile-de-france",
+        "coordinates": [
+          2.09048,
+          48.67734
+        ]
+      },
+      "media": "media/regional-ile-de-france.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-fr-regions-gdp",
+          "research-fr-idf-services"
+        ],
+        "source_ids": [
+          "r-fr-insee-idf"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.hexPhoto",
+      "timeAnchor": {
+        "segment_id": "09-fr-auvergne-rhone-alpes",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 105.29
+      },
+      "location": {
+        "country": "FR",
+        "region": "auvergne-rhone-alpes",
+        "coordinates": [
+          4.84626,
+          45.45778
+        ]
+      },
+      "media": "media/regional-auvergne-rhone-alpes.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-fr-regions-gdp",
+          "research-fr-ara-economy"
+        ],
+        "source_ids": [
+          "r-fr-insee-idf",
+          "r-fr-insee-industry",
+          "r-fr-insee-regional"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "country_transition",
+      "component": "atlas.arrowCurved",
+      "timeAnchor": {
+        "segment_id": "10-in-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.95,
+        "resolved_seconds": 121.2
+      },
+      "location": {
+        "country": null,
+        "region": null,
+        "coordinates": null,
+        "route": {
+          "from": [
+            4.84626,
+            45.45778
+          ],
+          "to": [
+            75.43674,
+            18.8201
+          ]
+        }
+      },
+      "media": null,
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "camera": "both_endpoints_overview"
+        }
+      },
+      "reason": "Itinerario visual entre capítulos; no representa comercio ni magnitudes económicas."
+    },
+    {
+      "intent": "country_identity",
+      "component": "atlas.flagFill",
+      "timeAnchor": {
+        "segment_id": "10-in-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 3.58,
+        "resolved_seconds": 123.83
+      },
+      "location": {
+        "country": "IN",
+        "region": null,
+        "coordinates": [
+          80,
+          22
+        ]
+      },
+      "media": "media/flag-in.svg",
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "persistent": true,
+          "opacity": {
+            "intro": 0.94,
+            "country": 0.12,
+            "insight": 0.12,
+            "region": 0.04
+          }
+        }
+      },
+      "reason": "Identidad nacional clara al entrar y tenue durante el análisis regional."
+    },
+    {
+      "intent": "leader_context",
+      "component": "atlas.persistentPortrait",
+      "timeAnchor": {
+        "segment_id": "10-in-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 8.66,
+        "resolved_seconds": 128.91
+      },
+      "location": {
+        "country": "IN",
+        "region": null,
+        "coordinates": [
+          80,
+          22
+        ]
+      },
+      "media": "media/portrait-in.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-in-leader",
+          "research-in-term"
+        ],
+        "source_ids": [
+          "r-in-constitution",
+          "r-in-pmindia"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "hud",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "x": 0.2,
+          "y": 0.66,
+          "photo_scale": 1.3,
+          "text_scale": 1.2
+        }
+      },
+      "reason": "El retrato permanece mientras se explica el país y sus regiones; no atribuye el PIB a una persona."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.panel",
+      "timeAnchor": {
+        "segment_id": "12-in-maharashtra",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 144.85
+      },
+      "location": {
+        "country": "IN",
+        "region": "maharashtra",
+        "coordinates": [
+          75.43674,
+          18.8201
+        ]
+      },
+      "media": "media/regional-maharashtra.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-in-maharashtra-economy"
+        ],
+        "source_ids": [
+          "r-in-maharashtra"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.polePhoto",
+      "timeAnchor": {
+        "segment_id": "13-in-tamil-nadu",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 151.25
+      },
+      "location": {
+        "country": "IN",
+        "region": "tamil-nadu",
+        "coordinates": [
+          78.3604,
+          10.80349
+        ]
+      },
+      "media": "media/regional-tamil-nadu.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-in-tamilnadu-economy",
+          "research-in-chennai-manufacturing"
+        ],
+        "source_ids": [
+          "r-in-chennai",
+          "r-in-tamilnadu"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "country_transition",
+      "component": "atlas.arrowCurved",
+      "timeAnchor": {
+        "segment_id": "14-gb-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.95,
+        "resolved_seconds": 160.45999999999998
+      },
+      "location": {
+        "country": null,
+        "region": null,
+        "coordinates": null,
+        "route": {
+          "from": [
+            78.3604,
+            10.80349
+          ],
+          "to": [
+            -1.59888,
+            52.86521
+          ]
+        }
+      },
+      "media": null,
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "camera": "both_endpoints_overview"
+        }
+      },
+      "reason": "Itinerario visual entre capítulos; no representa comercio ni magnitudes económicas."
+    },
+    {
+      "intent": "country_identity",
+      "component": "atlas.flagFill",
+      "timeAnchor": {
+        "segment_id": "14-gb-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 3.52,
+        "resolved_seconds": 163.03
+      },
+      "location": {
+        "country": "GB",
+        "region": null,
+        "coordinates": [
+          -3,
+          55.6
+        ]
+      },
+      "media": "media/flag-gb.svg",
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "persistent": true,
+          "opacity": {
+            "intro": 0.94,
+            "country": 0.12,
+            "insight": 0.12,
+            "region": 0.04
+          }
+        }
+      },
+      "reason": "Identidad nacional clara al entrar y tenue durante el análisis regional."
+    },
+    {
+      "intent": "leader_context",
+      "component": "atlas.persistentPortrait",
+      "timeAnchor": {
+        "segment_id": "14-gb-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 8.8,
+        "resolved_seconds": 168.31
+      },
+      "location": {
+        "country": "GB",
+        "region": null,
+        "coordinates": [
+          -3,
+          55.6
+        ]
+      },
+      "media": "media/portrait-gb.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-gb-leader",
+          "research-gb-term"
+        ],
+        "source_ids": [
+          "r-gb-confidence",
+          "r-gb-pm"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "hud",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "x": 0.2,
+          "y": 0.66,
+          "photo_scale": 1.3,
+          "text_scale": 1.2
+        }
+      },
+      "reason": "El retrato permanece mientras se explica el país y sus regiones; no atribuye el PIB a una persona."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.panel",
+      "timeAnchor": {
+        "segment_id": "16-gb-england",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 177.69
+      },
+      "location": {
+        "country": "GB",
+        "region": "england",
+        "coordinates": [
+          -1.59888,
+          52.86521
+        ]
+      },
+      "media": "media/regional-england.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-gb-nations",
+          "research-gb-england-finance"
+        ],
+        "source_ids": [
+          "r-gb-finance",
+          "r-gb-nations"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.hexPhoto",
+      "timeAnchor": {
+        "segment_id": "17-gb-scotland",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 186.61
+      },
+      "location": {
+        "country": "GB",
+        "region": "scotland",
+        "coordinates": [
+          -3.91606,
+          56.6528
+        ]
+      },
+      "media": "media/regional-scotland.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-gb-nations",
+          "research-gb-scotland-economy"
+        ],
+        "source_ids": [
+          "r-gb-nations",
+          "r-gb-scotland"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "country_transition",
+      "component": "atlas.arrowCurved",
+      "timeAnchor": {
+        "segment_id": "18-jp-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.95,
+        "resolved_seconds": 203.16
+      },
+      "location": {
+        "country": null,
+        "region": null,
+        "coordinates": null,
+        "route": {
+          "from": [
+            -3.91606,
+            56.6528
+          ],
+          "to": [
+            139.48188,
+            35.67493
+          ]
+        }
+      },
+      "media": null,
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "camera": "both_endpoints_overview"
+        }
+      },
+      "reason": "Itinerario visual entre capítulos; no representa comercio ni magnitudes económicas."
+    },
+    {
+      "intent": "country_identity",
+      "component": "atlas.flagFill",
+      "timeAnchor": {
+        "segment_id": "18-jp-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 4.1,
+        "resolved_seconds": 206.31
+      },
+      "location": {
+        "country": "JP",
+        "region": null,
+        "coordinates": [
+          138,
+          35.7
+        ]
+      },
+      "media": "media/flag-jp.svg",
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "persistent": true,
+          "opacity": {
+            "intro": 0.94,
+            "country": 0.12,
+            "insight": 0.12,
+            "region": 0.04
+          }
+        }
+      },
+      "reason": "Identidad nacional clara al entrar y tenue durante el análisis regional."
+    },
+    {
+      "intent": "leader_context",
+      "component": "atlas.persistentPortrait",
+      "timeAnchor": {
+        "segment_id": "18-jp-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 9.32,
+        "resolved_seconds": 211.53
+      },
+      "location": {
+        "country": "JP",
+        "region": null,
+        "coordinates": [
+          138,
+          35.7
+        ]
+      },
+      "media": "media/portrait-jp.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-jp-leader",
+          "research-jp-term"
+        ],
+        "source_ids": [
+          "r-jp-cabinet",
+          "r-jp-constitution"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "hud",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "x": 0.2,
+          "y": 0.66,
+          "photo_scale": 1.3,
+          "text_scale": 1.2
+        }
+      },
+      "reason": "El retrato permanece mientras se explica el país y sus regiones; no atribuye el PIB a una persona."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.panel",
+      "timeAnchor": {
+        "segment_id": "20-jp-tokyo",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 218.83
+      },
+      "location": {
+        "country": "JP",
+        "region": "tokyo",
+        "coordinates": [
+          139.48188,
+          35.67493
+        ]
+      },
+      "media": "media/regional-tokyo.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-jp-tokyo-economy"
+        ],
+        "source_ids": [
+          "r-jp-tokyo"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "locate_small_region",
+      "component": "atlas.ring",
+      "timeAnchor": {
+        "segment_id": "21-jp-osaka",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 227.41
+      },
+      "location": {
+        "country": "JP",
+        "region": "osaka",
+        "coordinates": [
+          135.53285,
+          34.63426
+        ]
+      },
+      "media": null,
+      "ref": {
+        "fact_ids": [
+          "research-jp-osaka-economy"
+        ],
+        "source_ids": [
+          "r-jp-osaka"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "at": [
+            135.53285,
+            34.63426
+          ]
+        }
+      },
+      "reason": "Localiza una región pequeña sin ampliar su geometría ni acercar la cámara."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.polePhoto",
+      "timeAnchor": {
+        "segment_id": "21-jp-osaka",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 227.41
+      },
+      "location": {
+        "country": "JP",
+        "region": "osaka",
+        "coordinates": [
+          135.53285,
+          34.63426
+        ]
+      },
+      "media": "media/regional-osaka.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-jp-osaka-economy"
+        ],
+        "source_ids": [
+          "r-jp-osaka"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "country_transition",
+      "component": "atlas.arrowCurved",
+      "timeAnchor": {
+        "segment_id": "22-de-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.95,
+        "resolved_seconds": 244.78
+      },
+      "location": {
+        "country": null,
+        "region": null,
+        "coordinates": null,
+        "route": {
+          "from": [
+            135.53285,
+            34.63426
+          ],
+          "to": [
+            7.55751,
+            51.42987
+          ]
+        }
+      },
+      "media": null,
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "camera": "both_endpoints_overview"
+        }
+      },
+      "reason": "Itinerario visual entre capítulos; no representa comercio ni magnitudes económicas."
+    },
+    {
+      "intent": "country_identity",
+      "component": "atlas.flagFill",
+      "timeAnchor": {
+        "segment_id": "22-de-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 3.72,
+        "resolved_seconds": 247.55
+      },
+      "location": {
+        "country": "DE",
+        "region": null,
+        "coordinates": [
+          10,
+          51
+        ]
+      },
+      "media": "media/flag-de.svg",
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "persistent": true,
+          "opacity": {
+            "intro": 0.94,
+            "country": 0.12,
+            "insight": 0.12,
+            "region": 0.04
+          }
+        }
+      },
+      "reason": "Identidad nacional clara al entrar y tenue durante el análisis regional."
+    },
+    {
+      "intent": "leader_context",
+      "component": "atlas.persistentPortrait",
+      "timeAnchor": {
+        "segment_id": "22-de-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 8.7,
+        "resolved_seconds": 252.53
+      },
+      "location": {
+        "country": "DE",
+        "region": null,
+        "coordinates": [
+          10,
+          51
+        ]
+      },
+      "media": "media/portrait-de.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-de-leader",
+          "research-de-term"
+        ],
+        "source_ids": [
+          "r-de-chancellor-term",
+          "r-de-merz"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "hud",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "x": 0.2,
+          "y": 0.66,
+          "photo_scale": 1.3,
+          "text_scale": 1.2
+        }
+      },
+      "reason": "El retrato permanece mientras se explica el país y sus regiones; no atribuye el PIB a una persona."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.panel",
+      "timeAnchor": {
+        "segment_id": "24-de-nrw",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 262.91
+      },
+      "location": {
+        "country": "DE",
+        "region": "north-rhine-westphalia",
+        "coordinates": [
+          7.55751,
+          51.42987
+        ]
+      },
+      "media": "media/regional-north-rhine-westphalia.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-de-regions-gdp",
+          "research-de-nrw-economy"
+        ],
+        "source_ids": [
+          "r-de-nrw-sectors",
+          "r-de-regionalgdp"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.hexPhoto",
+      "timeAnchor": {
+        "segment_id": "25-de-bavaria",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 273.83
+      },
+      "location": {
+        "country": "DE",
+        "region": "bavaria",
+        "coordinates": [
+          12.04285,
+          48.91808
+        ]
+      },
+      "media": "media/regional-bavaria.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-de-regions-gdp",
+          "research-de-bavaria-economy"
+        ],
+        "source_ids": [
+          "r-de-bavaria-sectors",
+          "r-de-regionalgdp"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "country_transition",
+      "component": "atlas.arrowCurved",
+      "timeAnchor": {
+        "segment_id": "26-cn-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.95,
+        "resolved_seconds": 285.28
+      },
+      "location": {
+        "country": null,
+        "region": null,
+        "coordinates": null,
+        "route": {
+          "from": [
+            12.04285,
+            48.91808
+          ],
+          "to": [
+            112.30456,
+            22.87905
+          ]
+        }
+      },
+      "media": null,
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "camera": "both_endpoints_overview"
+        }
+      },
+      "reason": "Itinerario visual entre capítulos; no representa comercio ni magnitudes económicas."
+    },
+    {
+      "intent": "country_identity",
+      "component": "atlas.flagFill",
+      "timeAnchor": {
+        "segment_id": "26-cn-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 3.56,
+        "resolved_seconds": 287.89
+      },
+      "location": {
+        "country": "CN",
+        "region": null,
+        "coordinates": [
+          104,
+          37.5
+        ]
+      },
+      "media": "media/flag-cn.svg",
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "persistent": true,
+          "opacity": {
+            "intro": 0.94,
+            "country": 0.12,
+            "insight": 0.12,
+            "region": 0.04
+          }
+        }
+      },
+      "reason": "Identidad nacional clara al entrar y tenue durante el análisis regional."
+    },
+    {
+      "intent": "leader_context",
+      "component": "atlas.persistentPortrait",
+      "timeAnchor": {
+        "segment_id": "26-cn-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 9.46,
+        "resolved_seconds": 293.79
+      },
+      "location": {
+        "country": "CN",
+        "region": null,
+        "coordinates": [
+          104,
+          37.5
+        ]
+      },
+      "media": "media/portrait-cn.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-cn-leader",
+          "research-cn-term"
+        ],
+        "source_ids": [
+          "r-cn-constitution",
+          "r-cn-xi-current",
+          "r-cn-xi-election"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "hud",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "x": 0.2,
+          "y": 0.66,
+          "photo_scale": 1.3,
+          "text_scale": 1.2
+        }
+      },
+      "reason": "El retrato permanece mientras se explica el país y sus regiones; no atribuye el PIB a una persona."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.panel",
+      "timeAnchor": {
+        "segment_id": "28-cn-guangdong",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 303.27
+      },
+      "location": {
+        "country": "CN",
+        "region": "guangdong",
+        "coordinates": [
+          112.30456,
+          22.87905
+        ]
+      },
+      "media": "media/regional-guangdong.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-cn-guangdong-economy"
+        ],
+        "source_ids": [
+          "r-cn-guangdong"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "locate_small_region",
+      "component": "atlas.ring",
+      "timeAnchor": {
+        "segment_id": "29-cn-jiangsu",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 309.95
+      },
+      "location": {
+        "country": "CN",
+        "region": "jiangsu",
+        "coordinates": [
+          119.94998,
+          32.93572
+        ]
+      },
+      "media": null,
+      "ref": {
+        "fact_ids": [
+          "research-cn-jiangsu-economy"
+        ],
+        "source_ids": [
+          "r-cn-jiangsu"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "at": [
+            119.94998,
+            32.93572
+          ]
+        }
+      },
+      "reason": "Localiza una región pequeña sin ampliar su geometría ni acercar la cámara."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.polePhoto",
+      "timeAnchor": {
+        "segment_id": "29-cn-jiangsu",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 309.95
+      },
+      "location": {
+        "country": "CN",
+        "region": "jiangsu",
+        "coordinates": [
+          119.94998,
+          32.93572
+        ]
+      },
+      "media": "media/regional-jiangsu.jpg",
+      "ref": {
+        "fact_ids": [
+          "research-cn-jiangsu-economy"
+        ],
+        "source_ids": [
+          "r-cn-jiangsu"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "country_transition",
+      "component": "atlas.arrowCurved",
+      "timeAnchor": {
+        "segment_id": "30-us-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.95,
+        "resolved_seconds": 320.47999999999996
+      },
+      "location": {
+        "country": null,
+        "region": null,
+        "coordinates": null,
+        "route": {
+          "from": [
+            119.94998,
+            32.93572
+          ],
+          "to": [
+            -119.98369,
+            37.26058
+          ]
+        }
+      },
+      "media": null,
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "camera": "both_endpoints_overview"
+        }
+      },
+      "reason": "Itinerario visual entre capítulos; no representa comercio ni magnitudes económicas."
+    },
+    {
+      "intent": "country_identity",
+      "component": "atlas.flagFill",
+      "timeAnchor": {
+        "segment_id": "30-us-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 4.0,
+        "resolved_seconds": 323.53
+      },
+      "location": {
+        "country": "US",
+        "region": null,
+        "coordinates": [
+          -120,
+          43
+        ]
+      },
+      "media": "media/flag-us.svg",
+      "ref": {
+        "fact_ids": [],
+        "source_ids": [],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "persistent": true,
+          "opacity": {
+            "intro": 0.94,
+            "country": 0.12,
+            "insight": 0.12,
+            "region": 0.04
+          }
+        }
+      },
+      "reason": "Identidad nacional clara al entrar y tenue durante el análisis regional."
+    },
+    {
+      "intent": "leader_context",
+      "component": "atlas.persistentPortrait",
+      "timeAnchor": {
+        "segment_id": "30-us-country",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 9.34,
+        "resolved_seconds": 328.87
+      },
+      "location": {
+        "country": "US",
+        "region": null,
+        "coordinates": [
+          -120,
+          43
+        ]
+      },
+      "media": "media/portrait-us.jpg",
+      "ref": {
+        "fact_ids": [
+          "us-leader"
+        ],
+        "source_ids": [
+          "us-president",
+          "us-term"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "hud",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "x": 0.2,
+          "y": 0.66,
+          "photo_scale": 1.3,
+          "text_scale": 1.2
+        }
+      },
+      "reason": "El retrato permanece mientras se explica el país y sus regiones; no atribuye el PIB a una persona."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.panel",
+      "timeAnchor": {
+        "segment_id": "32-us-california",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 343.99
+      },
+      "location": {
+        "country": "US",
+        "region": "california",
+        "coordinates": [
+          -119.98369,
+          37.26058
+        ]
+      },
+      "media": "media/regional-california.jpg",
+      "ref": {
+        "fact_ids": [
+          "us-states",
+          "us-ca"
+        ],
+        "source_ids": [
+          "ca-cinema",
+          "ca-sectors",
+          "us-states-gdp"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "regional_context",
+      "component": "atlas.hexPhoto",
+      "timeAnchor": {
+        "segment_id": "33-us-texas",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 356.45
+      },
+      "location": {
+        "country": "US",
+        "region": "texas",
+        "coordinates": [
+          -99.6343,
+          31.15579
+        ]
+      },
+      "media": "media/regional-texas.jpg",
+      "ref": {
+        "fact_ids": [
+          "us-states",
+          "us-tx"
+        ],
+        "source_ids": [
+          "tx-energy",
+          "us-states-gdp"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "screen": [
+            0.46,
+            0.43
+          ],
+          "camera": "held_country_frame"
+        }
+      },
+      "reason": "Foto documental vinculada al estado rojo; panel para contexto y foto circular/hexagonal para el segundo polo regional."
+    },
+    {
+      "intent": "closing",
+      "component": "atlas.outrov2",
+      "timeAnchor": {
+        "segment_id": "34-outro",
+        "edge": "start",
+        "quote": null,
+        "offset_seconds": 0.0,
+        "resolved_seconds": 362.07
+      },
+      "location": {
+        "country": null,
+        "region": null,
+        "coordinates": null
+      },
+      "media": null,
+      "ref": {
+        "fact_ids": [
+          "us-ratio",
+          "gdp-us-2026",
+          "gdp-definition"
+        ],
+        "source_ids": [
+          "imf-gdp-basics",
+          "imf-weo-2026"
+        ],
+        "data_ref": null
+      },
+      "layout": {
+        "target": "layers",
+        "formats": [
+          "16:9",
+          "9:16"
+        ],
+        "avoid": [
+          "captions",
+          "portrait",
+          "GDP",
+          "mandate"
+        ],
+        "placement": {
+          "camera": "globe_below_title",
+          "end": 385.52
+        }
+      },
+      "reason": "Cierre Atlas del catálogo: Tierra 3D giratoria bajo el título, visible hasta terminar el audio."
+    }
+  ],
+  "not_selected": {
+    "atlas.flow": "No hay flujos cuantificados en este guion.",
+    "atlas.arrowBidirectional": "El itinerario tiene un único sentido; no se afirma intercambio.",
+    "atlas.bars": "Los paneles regionales ya rotulan cada punto; una segunda etiqueta duplicaría la información."
+  }
+}

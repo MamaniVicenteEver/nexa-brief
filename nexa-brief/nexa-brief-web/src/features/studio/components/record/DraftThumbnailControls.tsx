@@ -14,7 +14,14 @@ export function DraftThumbnailControls({
   const t = useTranslations("studio.thumbnails");
   const design = editor.options[editor.editingOption].design ?? {};
   const bg = (design.background ?? {}) as Record<string, unknown>;
-  const sourceKind = String(bg.sourceKind ?? "none");
+  const primaryKind = String(bg.sourceKind ?? "none");
+  const sourceKind =
+    bg.mediaSource === "image" || bg.mediaSource === "video" ? bg.mediaSource : primaryKind;
+  const sources = Array.isArray(bg.availableSources)
+    ? bg.availableSources
+    : primaryKind === "none"
+      ? []
+      : [primaryKind];
   const kind = bg.kind === "frame" && sourceKind === "none" ? "solid" : String(bg.kind ?? "frame");
   const [time, setTime] = useState(String(bg.time ?? 12));
   // biome-ignore lint/correctness/useExhaustiveDependencies: switching options also discards an unfinished time input.
@@ -25,7 +32,11 @@ export function DraftThumbnailControls({
     time !== "" && Number.isFinite(Number(time)) && Number(time) >= 0 && Number(time) <= 86400;
   const update = (patch: Record<string, unknown>) =>
     editor.setDesign({
-      background: { ...bg, ...patch, ...("overlay" in patch ? { overlayMode: "manual" } : {}) },
+      background: {
+        ...bg,
+        ...patch,
+        ...("overlay" in patch ? { overlayMode: "manual" } : {}),
+      },
     });
   // Esperar a que termine de escribir evita extraer un fotograma por cada dígito.
   useEffect(() => {
@@ -39,7 +50,10 @@ export function DraftThumbnailControls({
     )
       return;
     const timer = setTimeout(
-      () => editor.setDesign({ background: { ...bg, kind: "frame", time: Number(time) } }),
+      () =>
+        editor.setDesign({
+          background: { ...bg, kind: "frame", time: Number(time) },
+        }),
       700,
     );
     return () => clearTimeout(timer);
@@ -57,13 +71,19 @@ export function DraftThumbnailControls({
       >
         <select
           aria-label={t("background")}
-          value={kind}
-          onChange={(event) => update({ kind: event.target.value })}
+          value={kind === "frame" ? `source-${sourceKind}` : kind}
+          onChange={(event) => {
+            const value = event.target.value;
+            update(
+              value.startsWith("source-")
+                ? { kind: "frame", mediaSource: value.slice(7) }
+                : { kind: value },
+            );
+          }}
           className={inputClass}
         >
-          {sourceKind !== "none" && (
-            <option value="frame">{t(sourceKind === "video" ? "frame" : "templateImage")}</option>
-          )}
+          {sources.includes("image") && <option value="source-image">{t("templateImage")}</option>}
+          {sources.includes("video") && <option value="source-video">{t("videoFrame")}</option>}
           {bg.asset ? <option value="image">{t("image")}</option> : null}
           <option value="solid">{t("solid")}</option>
         </select>
@@ -126,7 +146,6 @@ export function DraftThumbnailControls({
                 {Math.round(Number(bg.overlay ?? 0.2) * 100)}%
               </output>
             </label>
-            <p className="text-[10px] text-nb-mute">{t("originalColors")}</p>
             <label className="flex items-center justify-between gap-2 text-nb-mute">
               {t("position")}
               <select
@@ -141,9 +160,6 @@ export function DraftThumbnailControls({
             </label>
           </>
         )}
-        <p className="text-nb-mute">
-          {t("letterSubtitle", { percent: editor.editingOption === "A" ? 24.3 : 30 })}
-        </p>
       </fieldset>
     </details>
   );

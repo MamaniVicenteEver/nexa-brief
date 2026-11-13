@@ -1,3 +1,7 @@
+Para crear cualquier contenido empieza por el [índice](../../../skills/README.md),
+[CALIDAD.md](../../../skills/CALIDAD.md) (estándar obligatorio) y
+[ORQUESTACION.md](../../../skills/ORQUESTACION.md) (roles, delegación, terminado e informe).
+
 # Plantilla NOTICIERO · este episodio es el DEMO de referencia
 
 Para producir videos nuevos con este estilo (voz fija Charon/aceleración, estilo visual `original` por defecto) lee `src/templates/sandbox/nodehistory/_atlas/noticiero/AGENTE.md`. Este episodio no se copia: se crea uno nuevo con `noticiero/tools/nuevo.py`.
@@ -6,7 +10,7 @@ Para producir videos nuevos con este estilo (voz fija Charon/aceleración, estil
 
 Motor compartido: `nodehistory/_atlas`; no copiarlo por video.
 Estilos: `original` y `dynamic-news` (Dynamic News). Elegir por `estilo` en escena/config o URL de vista previa.
-Entrada rápida: `_atlas/noticiero/QUICK.md` del código compartido.
+Entrada rápida: `src/templates/sandbox/nodehistory/_atlas/noticiero/QUICK.md` del código compartido.
 Consultar `/api/v1/showcase/designs/resumen-geopolitico-demo/styles` para obtener el design_id canónico,
 luego `/production-guide?estilo=dynamic-news` y solo los contratos de las piezas elegidas.
 Escena: camera y layers para geografía; hud para rótulos, alertas y datos.

@@ -46,7 +46,10 @@ function useRowHeight() {
   return { ref, height };
 }
 
-export function TemplatesCarousel() {
+// Kept for the migration review; see docs/catalogo-modular.md before removing.
+export { CatalogCarousel as TemplatesCarousel } from "@/features/catalog/components/CatalogCarousel";
+
+export function LegacyTemplatesCarousel() {
   const t = useTranslations("templatesRow");
   const tCard = useTranslations("templates");
   const { data: templates, isLoading } = useTemplates();

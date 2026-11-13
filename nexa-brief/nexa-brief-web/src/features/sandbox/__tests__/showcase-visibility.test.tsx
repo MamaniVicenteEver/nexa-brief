@@ -101,6 +101,9 @@ it("no ofrece cambiar la visibilidad de los diseños que ya estaban registrados"
   setup(<QueryState />);
   await waitFor(() => expect(screen.queryByText("Cargando")).toBeNull());
   expect(screen.queryByRole("button")).toBeNull();
+  expect(screen.getByRole("link", { name: "open" }).getAttribute("href")).toBe(
+    "/showcase?design=sandbox-fixture",
+  );
   expect(vi.mocked(httpClient).mock.calls.every(([, options]) => options?.method !== "PUT")).toBe(
     true,
   );

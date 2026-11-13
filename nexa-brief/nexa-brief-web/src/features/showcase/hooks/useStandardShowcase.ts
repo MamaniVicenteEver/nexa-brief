@@ -18,7 +18,14 @@ export function useStandardShowcase(id: string, estilo?: string, format = "16x9"
   const promote = useMutation({
     mutationFn: repository.promote,
     onSuccess: async () => {
-      await client.invalidateQueries({ queryKey: ["showcase-standard"] });
+      await Promise.all([
+        ["showcase-standard"],
+        ["templates", "catalog"],
+        ["categories"],
+        ["explainer-videos"],
+        ["explainer-sandbox"],
+        ["sandbox-showcase-visibility"],
+      ].map((queryKey) => client.invalidateQueries({ queryKey })));
     },
   });
   return { designs, catalog, promote };

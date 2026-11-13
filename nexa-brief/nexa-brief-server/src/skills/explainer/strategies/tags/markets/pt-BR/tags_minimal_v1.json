@@ -1,0 +1,32 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "tags_minimal_v1",
+  "piece": "tags",
+  "locale": "pt-BR",
+  "status": "draft",
+  "intent": "Usar termos de busca específicos e poucas hashtags, respeitando a quantidade de cada plataforma.",
+  "templates": {
+    "tag": "{termo que o público realmente pesquisa}",
+    "hashtag": "#{assunto específico}"
+  },
+  "examples": [
+    "privacidade no ChatGPT",
+    "histórico de conversas",
+    "retenção de dados OpenAI",
+    "#IA",
+    "#Privacidade",
+    "#NodeTech"
+  ],
+  "conventions": [
+    "Mantenha as marcas; inclua variantes de busca úteis, sem empilhar palavras.",
+    "Respeite contagens e limites universais de caracteres.",
+    "Não acrescente LGPD ou instituições brasileiras se o vídeo não trata delas."
+  ],
+  "sounds_false": [
+    "#fyp #viral em qualquer assunto.",
+    "Uma palavra do espanhol copiada como se fosse busca brasileira."
+  ],
+  "overrides": {
+    "name": "Busca específica e hashtags sem excesso"
+  }
+}

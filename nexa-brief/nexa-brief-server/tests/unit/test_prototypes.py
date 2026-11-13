@@ -83,6 +83,7 @@ def test_compose_brief_lists_files_metadata_and_same_category_templates(tmp_path
     monkeypatch.setattr(briefs, "_video_metadata", lambda _: "duración 4.0 s; resolución 640×360")
 
     result = briefs.compose_brief("nodehistory", idea.slug, templates_dir=tmp_path, today=date(2026, 10, 25))
+    assert "PREPARAR-PRODUCCION.md" in result and "sin IA editorial ni traslado automático" in result
 
     assert "# Brief de la idea «Reloj del calendario»" in result
     assert "Mostrar cómo cambia la fecha en pantalla." in result
@@ -108,6 +109,9 @@ def _prepare_api(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
     templates = tmp_path / "templates"
     (templates / "sandbox").mkdir(parents=True)
     (templates / "sandbox" / "PROTOTIPO.md").write_text("# PROTOTIPO", encoding="utf-8")
+    (templates / "sandbox" / "PREPARAR-PRODUCCION.md").write_text(
+        "# Contrato de entrega: Pasar a producción sin IA", encoding="utf-8"
+    )
     monkeypatch.setattr(settings, "templates_dir", templates)
     monkeypatch.setattr(settings, "public_base_url", "https://nexa.example")
     monkeypatch.setattr(settings, "app_env", "production")
@@ -120,7 +124,9 @@ def test_prototype_routes_protect_writes_and_serve_signed_brief(tmp_path: Path, 
     templates = _prepare_api(monkeypatch, tmp_path)
     idea = ideas.create_idea("otros", "Idea de prueba", "Notas de API.", [], templates_dir=templates)
     client = TestClient(app)
-    assert client.get("/api/v1/agent/prototipo").status_code == 200
+    instructions = client.get("/api/v1/agent/prototipo")
+    assert instructions.status_code == 200
+    assert "# PROTOTIPO" in instructions.text and "Pasar a producción sin IA" in instructions.text
     assert (
         client.get("/api/v1/agent/prototipo", follow_redirects=True).headers["content-type"].startswith("text/markdown")
     )
@@ -160,3 +166,11 @@ def test_create_idea_route_requires_internal_header_and_accepts_multipart(tmp_pa
     assert saved == templates / "sandbox" / "referencias" / "otros" / "idea-api"
     assert (saved / "NOTAS.md").read_text(encoding="utf-8") == "# Idea API\n\nUn apunte.\n"
     assert (saved / "image.png").read_bytes() == b"PNG"
+
+
+def test_prototype_instructions_refuse_incomplete_delivery_contract(tmp_path: Path, monkeypatch) -> None:
+    templates = _prepare_api(monkeypatch, tmp_path)
+    (templates / "sandbox/PREPARAR-PRODUCCION.md").unlink()
+    response = TestClient(app).get("/api/v1/agent/prototipo")
+    assert response.status_code == 503
+    assert "Contrato de entrega" in response.json()["detail"]

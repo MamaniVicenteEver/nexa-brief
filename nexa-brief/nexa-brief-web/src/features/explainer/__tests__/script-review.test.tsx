@@ -1,4 +1,5 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { isPreparedVideo, isRenderedVideo } from "@/features/templates/lib/preparation-items";
 import { ExplainerVideoCard } from "../components/ExplainerVideoCard";
@@ -41,12 +42,18 @@ describe("script review before voice", () => {
     expect(isRenderedVideo({ ...draft, scriptReviewRequired: false })).toBe(true);
   });
   it("shows the new script without an iframe, audio, video or media player", () => {
-    const view = render(<ExplainerVideoCard video={draft} />);
+    const client = new QueryClient();
+    const view = render(
+      <QueryClientProvider client={client}>
+        <ExplainerVideoCard video={draft} />
+      </QueryClientProvider>,
+    );
     fireEvent.click(screen.getByRole("button", { name: /card.openPreview/ }));
     expect(screen.getByRole("dialog")).toBeTruthy();
     expect(screen.getByText(draft.scriptText!)).toBeTruthy();
     expect(document.querySelector("iframe, audio, video")).toBeNull();
     view.unmount();
+    client.clear();
     expect(document.querySelector("[role=dialog]")).toBeNull();
   });
 });

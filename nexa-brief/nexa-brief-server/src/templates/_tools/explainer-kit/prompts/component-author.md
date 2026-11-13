@@ -239,3 +239,7 @@ forma se arme: `B.fadeIO(lt, b.dur, 0.6, 0.45, (p.morph ?? 1) * 0.5)`. Incluí `
 - [ ] Ningún texto se pisa con otro ni con un trazo (calculá sus cajas).
 
 Respondé SOLO con el bloque ```js``` (sin explicación antes ni después).
+
+## Calidad
+
+Los textos de ejemplo deben estar vinculados al tema y datos recibidos: evita «UNA IDEA» y «EN MOVIMIENTO»; sí, si consta: «DARTMOUTH · 1956». No inventes cifras ni citas; incluye contexto y fecha de cualquier cifra. Español natural, sin emojis, «LETRAS» ni etiquetas ajenas. Mantén intacto el contrato de salida JS.

@@ -3,6 +3,11 @@ name: vida-produce
 description: Producir o adaptar episodios JSON de Vida en Escena con el motor existente, voces disponibles, acciones y cámara del catálogo. Usar para montaje de episodios; una capacidad nueva requiere ampliar el motor según VIDA.md.
 ---
 
+Antes: [CALIDAD.md](../../../../skills/CALIDAD.md) (manda) y, si orquestas, [ORQUESTACION.md](../../../../skills/ORQUESTACION.md).
+Al delegar: [PLANTILLA-BRIEF.md](../../../../skills/PLANTILLA-BRIEF.md). Al entregar: [PLANTILLA-INFORME.md](../../../../skills/PLANTILLA-INFORME.md) como `INFORME.md`.
+
+## Específico de esta skill
+
 # Producir un episodio Vida
 
 ## Entrada breve para crear y ampliar
