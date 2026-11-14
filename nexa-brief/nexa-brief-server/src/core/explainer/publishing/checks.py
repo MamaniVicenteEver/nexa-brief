@@ -57,6 +57,19 @@ def _shared_words(a: str, b: str, min_length: int) -> set[str]:
     return norm(a) & norm(b)
 
 
+def _promised_factual_text(field: str, text: str, credits: list[str]) -> str:
+    """Las URLs y atribuciones musicales verificadas no son cifras del relato."""
+    if field == "pinned_comment":
+        canonical_music = re.compile(
+            r"Música: .+ — .+ — CC[ -]BY[ -](?:3\.0|4\.0); https?://[^\s;]+; "
+            r"https?://creativecommons\.org/licenses/by/(?:3\.0|4\.0)/?; recortada y con fundidos\."
+        )
+        declared = set(credits)
+        text = "\n".join(line for line in text.splitlines()
+                         if not (line in declared and canonical_music.fullmatch(line)))
+    return re.sub(r"https?://[^\s<>]+", "", text, flags=re.IGNORECASE)
+
+
 def _video_numbers(video_dir: Path) -> set[str]:
     """Cifras que el video dice: guion (palabras o dígitos) + transcripción de Whisper."""
     assets = video_dir / "assets"
@@ -333,7 +346,8 @@ def check_package(
         evidence = (_bullet_evidence_numbers(video_dir, package.sources)
                     if field == "thumbnail.tabloid.bullet" and thumb_policy and thumb_policy.require_bullet
                     else said)
-        missing = sorted(digit_numbers(text) - evidence)
+        factual_text = _promised_factual_text(field, text, package.credits)
+        missing = sorted(digit_numbers(factual_text) - evidence)
         if missing:
             error(field, f"cifras que el video no dice: {missing}")
 

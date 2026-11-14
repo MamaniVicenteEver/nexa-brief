@@ -30,6 +30,16 @@ La aprobación exige calidad técnica aprobada, draft preparado y revisión vige
 
 Cuando una preparación falle por un problema temporal o después de corregir una fuente o un medio en el host, usa **Reintentar preparación** en la sesión. Reutiliza los datos y la investigación de la revisión, sin volver a pedir el guion. Los cambios creativos se solicitan por el chat; el reintento no aprueba ni graba.
 
+Para conservar parámetros editoriales de una campaña al reconstruir o reintentar,
+guarda `config-overrides.json` en su proyecto de contenido (por ejemplo,
+`ID_SESION-rREVISION/`). Admite únicamente `intro`, `outro` y `palette`, con
+propiedades ya disponibles en la plantilla: textos de hasta 100 caracteres,
+booleanos, cierre `v1`/`v2`, `minSec` entre 1,5 y 12 y colores `#RRGGBB`.
+Por ejemplo: `{"intro":{"title":"ALTURA"},"outro":{"version":"v2"}}`.
+`build` valida y combina estos datos con la configuración compartida; `prepare`
+los sincroniza después de guardar los detalles musicales. No modifica motores,
+medios ni rutas. Verifica después el config y las capturas del preview efectivo.
+
 ## Agentes y consumo
 
 `--provider auto` consulta la disponibilidad local y selecciona el proveedor recomendado. La configuración compartida `src/skills/models/roles.json` define por defecto Codex `gpt-6.1-terra`, esfuerzo `high`, y la alternativa Claude `claude-sonnet-5-5`, esfuerzo `medium`. También se puede elegir explícitamente `--provider codex` o `--provider claude`. No se cambia de proveedor para justificar texto deficiente. La disponibilidad corresponde al ejecutor aislado y la sesión local; no prueba saldo ni cuota. Si el proveedor no informa la cuota, figura `unknown`. El diagnóstico específico de un host, incluida una certificación de aislamiento pendiente, se documenta por separado y no modifica esta política.

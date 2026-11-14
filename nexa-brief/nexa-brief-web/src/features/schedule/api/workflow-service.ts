@@ -7,6 +7,7 @@ export interface WorkflowTarget {
 }
 export interface ScheduleWorkflow {
   workflow_id: string;
+  resume_supported?: boolean;
   video_id: string;
   production_id?: string | null;
   category_path: string;

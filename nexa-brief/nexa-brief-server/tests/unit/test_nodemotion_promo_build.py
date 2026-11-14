@@ -65,6 +65,49 @@ def test_build_reuses_assets_and_covers_all_scenes(sample):
     assert run(sample)['duration_seconds'] == 90
 
 
+@pytest.mark.parametrize('template,color', [('promo-breaking','red'),('promo-pulse','green')])
+def test_campaign_parameters_survive_rebuild_without_changing_template_or_resources(sample,template,color):
+    _,target=sample
+    contract=read(SERVER/'src/skills/nodemotion/promo/templates'/f'{template}.json')
+    brief=read(target/'brief.json');brief.update(template=template,texts={})
+    write(target/'brief.json',brief)
+    scenes=contract['default_scenes']
+    segments=[{'id':i+1,'start':i*90/len(scenes),'end':(i+1)*90/len(scenes),
+               'text':'CAMPAÑA','lines':['CAMPAÑA']} for i in range(len(scenes))]
+    write(target/'assets/lyrics.json',{'metadata':{'kind':'guion','audio_duration_sec':90},'segments':segments})
+    kinds={entry['id']:entry['type'] for entry in contract['default_media']}
+    write(target/'media-plan.json',{'items':[{'scene':i+1,'slot':slot,'kind':kinds[slot],
+          'asset_id':kinds[slot],'query':'q'} for i,scene in enumerate(scenes) for slot in scene.get('media',[])]})
+    template_path=SERVER/'src/templates/nodemotion/commercial'/template/'assets/config.json'
+    original=template_path.read_bytes()
+    write(target/'config-overrides.json',{'intro':{'title':'CAMPAÑA','sub':'MARCA'},
+          'outro':{'version':'v2'},'palette':{color:'#AA44FF'}})
+    for _ in range(2):
+        run(sample)
+        cfg=module.active_config(read(target/'assets/config.json'))
+        assert cfg['intro']['title']=='CAMPAÑA' and cfg['intro']['sub']=='MARCA'
+        assert cfg['outro']['version']=='v2' and cfg['palette'][color]=='#AA44FF'
+        assert cfg['audio']['src']=='song.mp3' and cfg['lyricsUrl']=='lyrics.json'
+        assert all((target/'assets'/item['src']).is_file() for item in cfg['media'])
+    assert template_path.read_bytes()==original
+
+
+@pytest.mark.parametrize('changes', [
+    {'audio':{'src':'https://example.org/song.mp3'}},
+    {'palette':{'unknown':'#FFFFFF'}}, {'palette':{'green':'url(https://example.org)'}},
+    {'intro':{'enabled':'false'}}, {'intro':{'title':['bad']}},
+    {'outro':{'version':'v3'}}, {'outro':{'minSec':True}}, {'outro':{'minSec':float('nan')}},
+    {'outro':{'artist':'song metadata'}}, {'intro':[]},
+])
+def test_campaign_parameters_reject_runtime_paths_and_invalid_values(changes):
+    cfg={'intro':{'enabled':True,'title':'','sub':''},
+         'outro':{'enabled':True,'version':'v1','minSec':3.5},'palette':{'green':'#2BF51A'}}
+    before=json.loads(json.dumps(cfg))
+    with pytest.raises(ValueError,match='config-overrides'):
+        module.apply_config_overrides(cfg,changes)
+    assert cfg==before
+
+
 def test_build_rejects_gap_and_does_not_write_config(sample):
     _, target = sample
     lyrics = read(target / 'assets/lyrics.json')

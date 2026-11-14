@@ -4,7 +4,7 @@
 
 ## Alcance y límites
 
-**Último parche pendiente de aplicación:** la comprobación antigua de cifras trata el «0» de la URL de licencia y el «90» del nombre de montaje como cifras que debería decir la voz. El crédito público correcto se conserva. El parche `atribucion-cifras.patch` está preparado y pasó seis pruebas aisladas; no se aplicó porque hay cuatro producciones activas dependientes de la API y editar ese backend la recarga. Se solicitó autorización para esa recarga o esperar su final.
+**Parche final aplicado y validado (2026-11-14, 13:34 UTC):** después de comprobar dos veces los estados, la propiedad de tareas y la ausencia de procesos de captura o grabación, se aplicó únicamente el diff preparado de `publishing/checks.py`. Las URLs y la atribución musical canónica declarada en `credits` dejan de contarse como cifras narradas; los números del dato y las preguntas continúan sujetos a revisión. Las seis regresiones ya importan el backend normal desde `tests/unit/test_publishing_music_credits.py` y pasan. El episodio real con el crédito público obtiene **0 errores y 0 avisos** de publicación. La API está saludable tras la recarga automática. El seguimiento deja de ser necesario y se retira al cerrar esta validación.
 
 Se mejoraron el generador de guiones, el diseño compartido, sus contratos y el cierre de audio. El ejemplo de 1914 recibió aperturas, paletas históricas y música. **Su narración ya grabada no se reescribió ni se regeneró**: la nueva escritura cinematográfica se aplica a las siguientes generaciones, conservando el locutor del diseño.
 
@@ -45,7 +45,10 @@ En el ejemplo se reutiliza **Undaunted**, Kevin MacLeod, CC BY 4.0, con ficha y 
 - Helper musical: 6 pruebas completas aprobadas tras añadir crédito público; 30 mezclas sintéticas repetidas sin truncación tras la corrección, con comprobación de señal hasta el final de los cues.
 - `kit.py check guerra-1914-julio`: **OK**. Conserva avisos de dirección sobre planos largos, repeticiones y variedad visual del episodio previo; no se presenta como una nueva auditoría editorial completa.
 - `kit.py manifest`: **listo**, 384,03 s, 62 beats; segunda ejecución reutiliza la mezcla válida.
-- `publishing check`: pasó con **0 errores y 0 avisos** antes de incorporar la atribución pública. Tras incorporarla conserva **un falso positivo de cifras musicales (0/90)**; el parche pendiente lo corrige. No se presenta la validación final como aprobada hasta aplicarlo.
+- `publishing build` y `publishing check`: **0 errores y 0 avisos** con el backend corregido y el crédito público incluido. `build` conservó `preserve_opening: true` y no cambió la apertura. Como no existe `render/poster.jpg`, se omitió exclusivamente la captura automática de esa portada mediante un adaptador temporal en memoria, sin modificar el servicio ni generar medios. Las miniaturas A/B/C existentes se conservaron.
+- Seis regresiones de atribución musical: **6 aprobadas** sobre el módulo instalado. Cubren crédito canónico, URLs y bloqueo de cifras falsas en el dato, preguntas y líneas musicales no declaradas. La suite de publicación anterior al parche tenía 111 aprobadas y un fallo previo en `test_api_lists_the_package_and_its_issues_only_for_v2_videos`; no se volvió a ejecutar esa suite completa ni se modificó ese asunto ajeno.
+- Comparación por SHA-256: **26 archivos protegidos sin cambios**, incluidos configuración, storyboard, guion, voz, mezcla seleccionada y archivos de miniaturas. Primer beat B `imperio.introv2` en t=0, duración 8 s; música seleccionada `assets/music-design/69950f957295b84bad89/song-with-outro.mp3`. Comentario fijado de **322/420 caracteres**, con Kevin MacLeod, enlaces de fuente y licencia, adaptación y dos preguntas intactas.
+- Evidencias finales: `work/results/imperio-credit-review/final-validation.json`, `build-final-results.json` y comparación `episode-before-final.json` / `episode-after-final.json` del servidor. `/health`: `status=ok`; worker actual de la API 849771, bajo el supervisor Uvicorn 10408.
 - Se revisaron visualmente seis miniaturas reales A/B/C en 16:9 y 9:16. Se generaron los seis posters afectados, sin una cola permanente ni un motor por tarjeta. También se revisaron paletas de Alemania actual, Alemania de 1914 y Francia en los dos formatos, con movimiento y sin errores de navegador.
 - Revisión técnica independiente: `docs/investigaciones/imperio-cinematico-revision-2026-11-14.md` en el servidor.
 
@@ -60,7 +63,7 @@ En el ejemplo se reutiliza **Undaunted**, Kevin MacLeod, CC BY 4.0, con ficha y 
 
 ## Recursos y consumo
 
-Los trabajos ajenos del servidor se conservaron. No se reiniciaron servicios ni se modificó Python del backend fuera de `src/templates/`; el único parche que requiere esa recarga queda separado y revisable. Los navegadores y procesos de prueba propios se cerraron.
+Los trabajos ajenos del servidor se conservaron. Se esperó a su finalización antes de modificar el único módulo de backend autorizado; Uvicorn lo recargó automáticamente en la ventana libre y la API respondió saludable después. No se cancelaron tareas ni se alteraron sus estados. Los comandos y procesos de validación propios finalizaron; no se abrieron navegadores ni se regeneraron TTS, MP4, audio, miniaturas o portada en esta pasada final.
 
 Medición final de capturas: 5.151 MiB disponibles, sin navegadores propios abiertos; otras producciones continuaron activas.
 

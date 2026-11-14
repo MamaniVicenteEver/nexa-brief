@@ -239,7 +239,7 @@ export function WorkflowDetails({
           </div>
         )}
         <div className="flex flex-wrap gap-3 border-t border-nb-line pt-4">
-          {w.production_id && w.state === "attention" && (
+          {w.resume_supported && w.production_id && w.state === "attention" && (
             <button
               type="button"
               disabled={busy}

@@ -8,6 +8,37 @@ from src.core.promo_prompts import TEMPLATES
 from src.core.template_config import active_config
 
 
+def apply_config_overrides(config, changes):
+    """Aplica parámetros editoriales sin permitir cambiar medios ni rutas."""
+    fields={'intro':{'enabled','title','sub'},
+            'outro':{'enabled','version','minSec','title','cta'}}
+    if not isinstance(changes,dict) or set(changes)-{'intro','outro','palette'}:
+        raise ValueError('config-overrides: solo se admiten intro, outro y palette')
+    result=copy.deepcopy(config)
+    for group,values in changes.items():
+        base=config.get(group)
+        if not isinstance(values,dict) or not isinstance(base,dict):
+            raise ValueError('config-overrides: sección no admitida o inválida')
+        allowed=set(base) if group=='palette' else fields[group] & set(base)
+        if set(values)-allowed:
+            raise ValueError('config-overrides: propiedad no admitida por la plantilla')
+        for key,value in values.items():
+            if group=='palette':
+                valid=isinstance(value,str) and re.fullmatch(r'#[0-9a-fA-F]{6}',value)
+            elif key=='enabled':
+                valid=type(value) is bool
+            elif key=='version':
+                valid=value in ('v1','v2')
+            elif key=='minSec':
+                valid=type(value) in (int,float) and 1.5 <= value <= 12
+            else:
+                valid=isinstance(value,str) and len(value)<=100
+            if not valid:
+                raise ValueError(f'config-overrides: valor inválido en {group}.{key}')
+        result[group].update(copy.deepcopy(values))
+    return result
+
+
 def build(root: Path, target: Path, read_json, write_json, validate):
     brief = read_json(target / 'brief.json')
     validate('brief', brief)
@@ -116,6 +147,11 @@ def build(root: Path, target: Path, read_json, write_json, validate):
     config['lyricsUrl'] = 'lyrics.json'
     if brief['texts']:
         config.setdefault('brand', {}).update({key.removeprefix('brand.'): value for key, value in brief['texts'].items()})
+    overrides=target/'config-overrides.json'
+    if overrides.exists() or overrides.is_symlink():
+        if overrides.is_symlink() or not overrides.is_file():
+            raise ValueError('config-overrides debe ser un archivo del proyecto, sin enlaces')
+        config=apply_config_overrides(config,read_json(overrides))
     config['media'] = [refs[entry['id']] for entry in contract['default_media'] if entry['id'] in refs]
     config['scenes'] = copy.deepcopy(scenes)
     assets = target / 'assets'
