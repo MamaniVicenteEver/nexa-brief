@@ -23,6 +23,7 @@ from src.core.explainer.producer import build_agent_prompt
 from tests.unit.test_explainer_production import BRIEF, _FakeAI, _producer
 
 AMARILLISTA = "narrative_amarillista_v1"
+CURRENT_AMARILLISTA = "narrative_amarillista_v2"
 KIT_TOOLS = Path(__file__).resolve().parents[2] / "src" / "templates" / "_tools" / "explainer-kit" / "tools"
 
 
@@ -54,10 +55,11 @@ def test_every_narrative_json_is_valid():
         assert repo.load(narrative_id).id == narrative_id
 
 
-def test_amarillista_is_the_default_everywhere():
+def test_defaults_preserve_amarillista_except_cinematic_nodeatlas():
     service = narrative.get_service()
     for category in ("node_tech", "node_history", "node_politics", "_default"):
-        assert service.default_id(category) == AMARILLISTA
+        assert service.default_id(category) == CURRENT_AMARILLISTA
+    assert service.default_id("node_atlas") == "narrative_cinematica_v1"
     story = service.resolve("node_tech")
     assert story is not None and story.title is not None and story.title.default_level == "negro"
 
@@ -126,8 +128,10 @@ def test_checks_must_name_existing_acts(broken_copy):
 
 def test_broken_folder_falls_back_to_legacy_and_list_skips_bad_files(broken_copy):
     root, service = broken_copy
-    (root / f"{AMARILLISTA}.json").write_text("{roto", encoding="utf-8")
-    assert [s.id for s in service.list()] == [DOCUMENTAL_ID]
+    default = service.default_id("node_tech")
+    valid_before = {s.id for s in service.list()}
+    (root / f"{default}.json").write_text("{roto", encoding="utf-8")
+    assert {s.id for s in service.list()} == valid_before - {default}
     assert service.resolve("node_tech") is None          # default roto: comportamiento de siempre
     shutil.rmtree(root)
     assert service.list() == [] and service.resolve("node_tech") is None
@@ -184,8 +188,8 @@ async def test_brief_uses_default_narrative_and_title_level():
     ai = _FakeAI(BRIEF)
     brief = await generate_brief(ai, category_path="node_tech", topic="La IA y los despidos")
     payload = json.loads(ai.prompts[0][1])
-    assert brief.narrative_id == AMARILLISTA and brief.title_level == "negro"
-    assert payload["narrativa"]["id"] == AMARILLISTA
+    assert brief.narrative_id == CURRENT_AMARILLISTA and brief.title_level == "negro"
+    assert payload["narrativa"]["id"] == CURRENT_AMARILLISTA
     assert len(payload["narrativa"]["retention"]) == 5
     documental = _FakeAI(BRIEF)
     brief = await generate_brief(documental, category_path="node_tech", topic="Apolo", narrative_id=DOCUMENTAL_ID)
@@ -207,16 +211,16 @@ async def test_production_records_narrative_in_the_video(tmp_path: Path):
         brief=ExplainerBrief.model_validate(BRIEF), title_level="medio",
     )
     await producer.wait(rec["production_id"])
-    assert rec["narrative_id"] == AMARILLISTA and rec["title_level"] == "medio"
+    assert rec["narrative_id"] == CURRENT_AMARILLISTA and rec["title_level"] == "medio"
     video = videos / rec["video_id"]
     config = json.loads((video / "assets" / "config.json").read_text())
     active = config["configs"][0] if "configs" in config else config
-    assert active["narrative_id"] == AMARILLISTA and active["title_level"] == "medio"
-    assert json.loads((video / "manifest.json").read_text())["narrative_label"] == "Amarillista"
-    assert json.loads((video / "publish.json").read_text())["strategies_used"]["narrative"] == AMARILLISTA
+    assert active["narrative_id"] == CURRENT_AMARILLISTA and active["title_level"] == "medio"
+    assert json.loads((video / "manifest.json").read_text())["narrative_label"] == narrative.get_service().get(CURRENT_AMARILLISTA).label
+    assert json.loads((video / "publish.json").read_text())["strategies_used"]["narrative"] == CURRENT_AMARILLISTA
     assert "NARRATIVA DEL GUION" in agent.runs[0]["prompt"]
     assert "common.tabloid" in agent.runs[0]["prompt"]
-    assert AMARILLISTA in (video / "BRIEF.md").read_text()
+    assert CURRENT_AMARILLISTA in (video / "BRIEF.md").read_text()
 
 
 def test_legacy_record_without_narrative_keeps_the_old_prompt(tmp_path: Path):
@@ -286,7 +290,7 @@ async def test_route_options_list_narratives_with_default(api_client):
     r = await api_client.get("/api/v1/explainer/options?category=node_tech")
     assert r.status_code == 200
     data = r.json()
-    assert data["default_narrative"] == AMARILLISTA
+    assert data["default_narrative"] == CURRENT_AMARILLISTA
     amarillista = next(n for n in data["narratives"] if n["id"] == AMARILLISTA)
     assert amarillista["default_title_level"] == "negro"
     assert {lvl["id"] for lvl in amarillista["title_levels"]} == {"basico", "medio", "alto", "negro"}

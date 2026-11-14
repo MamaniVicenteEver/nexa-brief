@@ -21,14 +21,24 @@ KIT = pathlib.Path(__file__).resolve().parents[1]
 
 async def read():
     from playwright.async_api import async_playwright
-    srv = shoot.serve(KIT.parent)
-    async with async_playwright() as p:
-        b = await p.chromium.launch(executable_path=CHROMIUM); pg = await b.new_page()
-        await pg.goto(f"http://127.0.0.1:{srv.server_port}/explainer-kit/showcase/stage.html?list=1", wait_until="domcontentloaded", timeout=120000)
-        await pg.wait_for_function("window.__catalog", timeout=60000)
-        data = await pg.evaluate("({ comps: window.__catalog, icons: Object.keys(Kit.binary.ICONS), sketches: Object.keys(Kit.rough.SKETCHES) })")
-        await b.close()
-    srv.shutdown()
+    # ProfileContentMixin resuelve claves desde templates/, también en perfiles v3.
+    srv = shoot.serve(shoot.SANDBOX)
+    try:
+        async with async_playwright() as p:
+            b = await p.chromium.launch(executable_path=CHROMIUM)
+            try:
+                pg = await b.new_page()
+                base = KIT.relative_to(shoot.SANDBOX).as_posix()
+                await pg.goto(f"http://127.0.0.1:{srv.server_port}/{base}/showcase/stage.html?list=1", wait_until="domcontentloaded", timeout=120000)
+                await pg.wait_for_function("window.__catalog", timeout=60000)
+                # El catálogo documenta comunes optativos sin habilitarlos en diseños.
+                await pg.add_script_tag(url=f"http://127.0.0.1:{srv.server_port}/{base}/designs/common/capas.js")
+                data = await pg.evaluate("({ comps: Kit.catalog(), icons: Object.keys(Kit.binary.ICONS), sketches: Object.keys(Kit.rough.SKETCHES) })")
+            finally:
+                await b.close()
+    finally:
+        srv.shutdown()
+        srv.server_close()
     return data
 
 def md(data):
@@ -104,6 +114,9 @@ def main():
     (KIT / "CATALOG.md").write_text(md(data))
     for d in sorted(p.parent.name for p in (KIT / "designs").glob("*/design.json")):
         (KIT / "designs" / d / "QUICK.md").write_text(quick(data, d))
+    from sync_rough_sketches import sync
+    sketch_count = sync()
+    print(f"✓ Showcase: {sketch_count} bocetos sincronizados")
     print(f"✓ CATALOG.md: {len(data['comps'])} componentes, {len(data['icons'])} iconos, {len(data['sketches'])} bocetos")
 
 if __name__ == "__main__":

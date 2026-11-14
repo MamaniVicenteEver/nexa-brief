@@ -136,3 +136,16 @@ referencias fuera del perfil, demos principales todavía en `productions/` y
 registros de demos cuyo motor continúa en pruebas. No corrige ni borra por
 inferencia. Repite la auditoría después de un traslado y en las comprobaciones
 del repositorio para detectar regresiones.
+
+
+## Marcadores heredados
+
+`manifest.demo: true` se usó también para muestras que reutilizan el guion de un
+video. No demuestra por sí solo que un episodio privado sea la demo principal.
+La declaración técnica explícita (`info.is_new_design`) y el registro
+`production_template` identifican el papel; el selector revisado del flujo decide
+los traslados nuevos. Antes de conciliar muestras antiguas se cotejan identidad,
+medios, rutas, versiones y registros; una colisión no autoriza sobrescribir.
+La auditoría distingue estos casos como advertencias de clasificación y conserva
+los bloqueos para demos principales explícitas fuera del repositorio. Las
+referencias vacías con `.gitkeep` y guías no son proyectos privados.

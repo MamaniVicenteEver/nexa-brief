@@ -1,0 +1,50 @@
+{
+  "activeId": "neon",
+  "configs": [
+    {
+      "id": "neon",
+      "palette": {
+        "lime": "#FF4FA3",
+        "ink": "#16121F",
+        "paper": "#F1ECE4"
+      },
+      "layouts": {
+        "giant": {
+          "weight": 3,
+          "bgs": [
+            "lime"
+          ]
+        },
+        "marquee": {
+          "weight": 2
+        },
+        "circle": {
+          "weight": 1,
+          "bgs": [
+            "media"
+          ]
+        },
+        "build": {
+          "weight": 1
+        }
+      },
+      "look": {
+        "doodles": 1.6,
+        "tilt": 0.5
+      },
+      "anim": {
+        "textIn": "stamp"
+      },
+      "intro": {
+        "title": "Mi canción",
+        "artist": "Artista"
+      },
+      "outro": {
+        "version": "v2",
+        "title": "Gracias",
+        "sub": "Sígueme",
+        "feats": "@artista"
+      }
+    }
+  ]
+}

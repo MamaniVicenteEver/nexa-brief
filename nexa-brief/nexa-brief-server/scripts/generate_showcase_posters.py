@@ -69,8 +69,32 @@ def has_visible_content(image: Image.Image) -> bool:
 
 
 def component_visible_until(entry, target: str, allow_last_visible: bool) -> float | None:
-    """Use the noticiero HUD's declared exit before it disappears over the globe."""
-    if not allow_last_visible or '/resumen-geopolitico-demo/showcase' not in target:
+    """Choose an explicit visible instant when a preview fades before its end."""
+    if not allow_last_visible:
+        return None
+    parts = urlsplit(target)
+    query = dict(parse_qsl(parts.query, keep_blank_values=True))
+    if parts.path.endswith('/explainer-kit/showcase/stage.html'):
+        # These components define a fade inside the beat; seek to the start of
+        # that exit, when the entrance animation has already finished.
+        try:
+            duration = float(query.get('dur', '7'))
+        except ValueError:
+            return None
+        if not math.isfinite(duration) or duration <= 0:
+            return None
+        name = getattr(entry, 'id', None) or query.get('c')
+        fade = {'common.punch': .3, 'common.tag': .3, 'common.endcard': .6}
+        if name in fade:
+            return max(0., duration - fade[name])
+        if name == 'common.flash':
+            # A flash decays from the beginning, so its peak represents it.
+            return min(.05, duration / 4)
+        if name == 'common.clip' and 'p' not in query:
+            # The portrait sample's subject leaves the 16:9 crop near its end.
+            return max(0., min(5., duration - 1 / 30))
+        return None
+    if '/resumen-geopolitico-demo/showcase' not in parts.path:
         return None
     example = getattr(entry, 'example', None)
     value = example.get('out') if isinstance(example, dict) else None
@@ -196,6 +220,12 @@ async def capture(browser, path: Path, target: str, port: int, frame_position: s
               const t = position === 'first' ? 0 : position === 'last' ?
                 (Number.isFinite(visibleUntil) ? Math.min(last, Math.max(0, visibleUntil)) : last) : p.total / 2;
               await p.seek(t);
+              // Tabloid prepares its text layers asynchronously on first render.
+              // Re-render after they exist so the poster includes the headline.
+              if (window.__tabloidFontReady) {
+                await window.__tabloidFontReady;
+                await p.seek(t);
+              }
               if (p.pause) p.pause();
               return {time: t, last};
             }''', {'position': frame_position, 'visibleUntil': visible_until}), timeout=30)
@@ -213,7 +243,9 @@ async def capture(browser, path: Path, target: str, port: int, frame_position: s
         await verify_capture_gpu(preview, gpu)
         png = await page.screenshot(type='png', timeout=90000)
         image = Image.open(io.BytesIO(png)).convert('RGB')
-        if not has_visible_content(image):
+        is_flash = (dict(parse_qsl(urlsplit(target).query)).get('c') == 'common.flash'
+                    and max(ImageStat.Stat(image).mean) >= 25)
+        if not has_visible_content(image) and not is_flash:
             if cara_gallery:
                 raise RuntimeError('La captura del canvas de Cara a Cara quedó vacía')
             if frame_position == 'last' and allow_last_visible:
@@ -290,6 +322,8 @@ async def generate(args) -> int:
             styles = [None, *[row['id'] for row in service.styles(design.id)['styles']]]
         for estilo in styles:
             for entry in service.catalog(design.id, estilo).entries:
+                if getattr(args, "resource", None) == "sketch" and not (isinstance(entry.data, dict) and entry.data.get("resource_type") == "sketch"):
+                    continue
                 if component_ids and entry.id not in component_ids:
                     continue
                 if entry.id in component_ids:
@@ -422,6 +456,7 @@ def main() -> int:
     parser.add_argument('--estilo', action='append', help='ID del estilo; repetible.')
     parser.add_argument('--all-styles', action='store_true', help='Preparar también todos los estilos declarados, secuencialmente.')
     parser.add_argument('--component', action='append', help='ID exacto del componente; requiere --design y reemplaza su captura.')
+    parser.add_argument('--resource', choices=('sketch',), help='Limitar la generación a bocetos del catálogo.')
     parser.add_argument('--all', action='store_true', help='Todos los diseños (no solo mapas).')
     parser.add_argument('--miniaturas', action='store_true', help='Solo componentes de miniatura V1, V2 y V3.')
     parser.add_argument('--only-missing', action='store_true', help='Conservar las imágenes existentes; capturar solo las que faltan, sin invalidarlas por cambios de rutas.')

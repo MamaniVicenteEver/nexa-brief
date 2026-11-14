@@ -210,3 +210,17 @@ def test_showcase_adapter_completes_registered_engine_via_same_workflow(migratio
     assert moved['promotable'] is False
     assert not source.exists()
     assert (service.templates/'nodeatlas/news/_atlas/atlas.js').is_file()
+
+
+@pytest.mark.asyncio
+async def test_legacy_composed_catalog_keeps_helper_and_preset_entries(migration):
+    service, source, contract = migration
+    (source/'components.json').write_text('{"comps":[{"name":"atlas.title"}]}')
+    directory=service.templates/'_tools/design-definitions/atlas-cinematico'
+    design, catalog=contract('atlas-cinematico')
+    for name in ('proto.intro', 'map.transition.fade-in'):
+        catalog['entries'].append({'id':name, 'name':name, 'summary':'Existing reusable piece', 'preview_kind':'json'})
+    (directory/'catalog.json').write_text(json.dumps(catalog))
+    result=await service.pass_to_production('atlas-cinematico', apply=True)
+    assert result['components']==3
+    assert [e['id'] for e in contract('atlas-cinematico')[1]['entries']]==['atlas.title','proto.intro','map.transition.fade-in']

@@ -377,3 +377,33 @@ async def planner_produce_item(item_id: str, body: PlannerProduceRequest) -> dic
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     await planner.link_production(item_id, rec["production_id"])
     return {"item_id": item_id, "production_id": rec["production_id"], "video_id": rec["video_id"]}
+
+
+# Explicit user-selected stages; independent from recurring category automation.
+from src.core.schedule.workflows import (  # noqa: E402
+    WorkflowRequest, WorkflowPatch, create_workflow, list_workflows, update_workflow,
+)
+
+
+@router.get("/workflows")
+async def get_workflows() -> list[dict]:
+    return list_workflows()
+
+
+@router.post("/workflows", status_code=201)
+async def post_workflow(body: WorkflowRequest) -> dict:
+    from src.presentation.api.routers.explainer import get_producer
+    try:
+        return await create_workflow(body, get_producer())
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@router.patch("/workflows/{workflow_id}")
+async def patch_workflow(workflow_id: str, body: WorkflowPatch) -> dict:
+    try:
+        return await update_workflow(workflow_id, body)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Programación no encontrada") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc

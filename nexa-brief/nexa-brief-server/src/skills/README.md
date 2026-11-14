@@ -13,6 +13,7 @@ Punto de entrada de **cualquier agente** (Claude Code, Codex, otro) al que le pi
 | Una edición de un video existente para otro idioma o mercado, conservando su investigación y componentes | `editions/SKILL.md` | Web y agente utilizan la misma API privada; preflight, creación, seguimiento y recuperación con checkpoints |
 | Varios videos o preparación programada | `explainer/batch/SKILL.md` | Cola persistente, máximo cinco productores |
 | Una promo o video animado corto de texto sobre un tema, sin narración (equipo, marca, lugar, evento, producto o causa) | `nodemotion/promo/SKILL.md` | Contratos por plantilla en `nodemotion/promo/templates/` |
+| Un video con el estilo Imperio (mapa histórico, sol/rayos y archivo documental; distinto de Atlas en Movimiento) | `explainer/produce/SKILL.md` y `../templates/_tools/explainer-kit/guides/imperio-production.md` | Identidad cinematográfica, aperturas A/B/C, paletas históricas y plan musical compartidos |
 | Un video con Atlas Cinemático (mapas 3D) | `../templates/nodeatlas/atlas-cinematico/_atlas/SKILL.md` | Episodio en producción del perfil |
 | Un video con Atlas en Movimiento | `../templates/nodeatlas/atlas-en-movimiento/SKILL.md` | Un único motor compartido |
 | Una plantilla o diseño **nuevo**, o una réplica de un video de referencia | `../templates/sandbox/PROTOTIPO.md` | Coste alto: estudio y motor |

@@ -28,6 +28,7 @@ function isExample(entry: ShowcaseEntry) {
 }
 
 function entryTitle(entry: ShowcaseEntry) {
+  if (entryType(entry) === "sketch") return entry.name;
   return isExample(entry) ? entry.label : entry.name;
 }
 
@@ -44,6 +45,11 @@ export function StandardShowcaseCatalog({
   const [activeId, setActiveId] = useState<string | null>(null);
   const [modalFormat, setModalFormat] = useState(format);
   const [copied, setCopied] = useState("");
+  const [pagination, setPagination] = useState({ key: "", count: 32 });
+  const pageKey = `${design.id}\0${entries.map((entry) => entry.id).join("\0")}`;
+  const visibleCount = pagination.key === pageKey ? pagination.count : 32;
+  const containsSketches = entries.some((entry) => entryType(entry) === "sketch");
+  const shown = containsSketches ? entries.slice(0, visibleCount) : entries;
   const baseActive = entries.find((entry) => entry.id === activeId);
   const appearanceQuery = useQuery({
     queryKey: ["showcase-standard", "entry", design.id, activeId, styleControls.value, modalFormat],
@@ -58,17 +64,21 @@ export function StandardShowcaseCatalog({
   return (
     <>
       {entries.length ? (
+        <>
         <section
           aria-label="Componentes"
           className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
         >
-          {entries.map((entry) => (
+          {shown.map((entry) => (
             <ComponentCardView
               key={entry.id}
               name={entryTitle(entry)}
+              subtitle={entryType(entry) === "sketch" ? entry.label : undefined}
               summary={entry.summary}
               tags={[
-                entryType(entry) === "sprite"
+                entryType(entry) === "sketch"
+                  ? "Boceto"
+                  : entryType(entry) === "sprite"
                   ? "Sprite"
                   : isExample(entry)
                     ? "Ejemplo"
@@ -93,6 +103,14 @@ export function StandardShowcaseCatalog({
             />
           ))}
         </section>
+        {shown.length < entries.length && (
+          <div className="flex justify-center pt-4">
+            <button type="button" onClick={() => setPagination({ key: pageKey, count: visibleCount + 32 })} className="rounded-full border border-nb-line bg-nb-surface px-4 py-2 text-sm">
+              Mostrar más ({shown.length} de {entries.length})
+            </button>
+          </div>
+        )}
+        </>
       ) : (
         <p role="status" className="p-8 text-center text-sm text-nb-ink-soft">
           No hay entradas para estos filtros.
@@ -143,7 +161,9 @@ export function StandardShowcaseCatalog({
                 <div>
                   <p className="text-xs text-nb-ink-soft">
                     {design.name} ·{" "}
-                    {entryType(active) === "sprite"
+                    {entryType(active) === "sketch"
+                      ? "Boceto"
+                      : entryType(active) === "sprite"
                       ? "Sprite"
                       : isExample(active)
                         ? "Ejemplo"

@@ -8,6 +8,7 @@
   const targetParams = {
     ...camera,
     country: C.mapParams.country,
+    flagColors: C.mapParams.flagColors,
     target: { type: "array", default: "Taiwan", doc: "País o punto [longitud, latitud] del destino; nunca píxeles." },
     region: { type: "object", default: null, doc: "Territorio: nombre de país, lista de países, {poly:[[lon,lat]…],within:'País'} o {dots:[[lon,lat]…]}. Vacío = el país de target." },
     label: { type: "string", default: "TAIWÁN", doc: "Nombre mostrado en la chapa del país o la ciudad." },
@@ -25,7 +26,7 @@
   function targetPiece(name, summary, parts, kind, example) {
     const raw = p => {
       p = { ...Object.fromEntries(Object.entries(targetParams).map(([k,s])=>[k,s.default])), ...p };
-      return ({ ...defaults(campaign), ...pick(p, Object.keys(camera)), country: p.country, sunAt: p.origin, hatch: [], enter: 0,
+      return ({ ...defaults(campaign), ...pick(p, Object.keys(camera)), country: p.country, flagColors: p.flagColors, sunAt: p.origin, hatch: [], enter: 0,
       parts, stamp: parts.includes("dates"), cameras: [], targets: [{ at: p.target, region: p.region ?? (typeof p.target === "string" ? p.target : null), label: p.label, year: p.year,
         flag: "f1", time: p.time, kind, from: p.origin, bow: p.bow, size: p.size, hold: p.hold, side: p.side === "auto" ? undefined : p.side }],
       f1: p.flag, travel: p.travel, hold: p.hold, beam: p.beam });
@@ -37,7 +38,7 @@
       'imperio.arrow': ['target','time','origin','bow','travel','beam'],
       'imperio.territory': ['target','region','time'],
     }[name];
-    const params = pick(targetParams, [...Object.keys(camera), 'country', ...fields]);
+    const params = pick(targetParams, [...Object.keys(camera), 'country', 'flagColors', ...fields]);
     K.register({ name, summary, tags: ["imperio", "pieza", ...parts], layer: "main", opaque: true, post: 0.6,
       params, example: { from: [132, 32, 55, 0], to: [132, 32, 55, 0], time: 0.5, ...(fields.includes("hold") ? {hold:8} : {}), ...example },
       mapCam: (p, st) => campaign.mapCam(raw(p), st), mapLook: p => campaign.mapLook(raw(p)), mapWarm: (p, ctx) => campaign.mapWarm(raw(p), ctx),
@@ -66,8 +67,8 @@
 
   const map = K.registry.get("imperio.map");
   for (const [name, summary, settings, example] of [
-    ["sun", "Sol carmesí que late sobre el país o las coordenadas elegidas; comparte el sol y los colores de bandera de imperio.map.", { sun: true, rays: 0, ships: 0, compass: false }, { country: "Japan", sunSize: 5 }],
-    ["rays", "Abanico de rayos sobre el mar: rumbo, apertura, cantidad, longitud y entrada por voz. Mismo efecto de la apertura original.", { sun: false, rays: 28, ships: 0, compass: false }, { country: "Japan", rays: 28, rayFloor: 0.02, raysAt: 0.2 }],
+    ["sun", "Marca circular que late sobre el país o coordenadas elegidas, con su paleta nacional o histórica explícita; comparte el dibujo de imperio.map.", { sun: true, rays: 0, ships: 0, compass: false }, { country: "Japan", sunSize: 5 }],
+    ["rays", "Abanico geográfico con los colores del país foco: rumbo, apertura, cantidad, longitud y entrada por voz. Sin país reconocido usa una paleta neutra.", { sun: false, rays: 28, ships: 0, compass: false }, { country: "Japan", rays: 28, rayFloor: 0.02, raysAt: 0.2 }],
     ["ships", "Barcos pequeños que avanzan sobre las rutas del abanico. Reutiliza los barcos del mapa; la ruta conserva sus coordenadas geográficas.", { sun: false, rays: 12, rayAlpha: 0, ships: 5, compass: false }, { country: "Japan", ships: 5, rayLen: 0.35, raysAt: 0.1 }],
     ["compass", "Rosa de los vientos de línea fina que acompaña el giro del mapa; es la del archivo original.", { sun: false, rays: 0, ships: 0, compass: true }, { country: "Japan" }],
   ]) {

@@ -29,7 +29,8 @@
     ease: { type: "enum", options: ["auto", "out", "in", "inOut", "linear", "expo"], default: "expo", doc: "Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados)." },
   };
   const mapParams = {
-    country: { type: "string", default: "Japan", doc: "País foco: pone el sol y el rayado." },
+    country: { type: "string", default: "", doc: "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés." },
+    flagColors: { type: "string", default: "auto", doc: "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera." },
     hatch: { type: "array", default: null, doc: "Países ya ocupados (rayado fijo). Va acumulando de plano en plano." },
     sunAt: { type: "array", default: null, doc: "[lon, lat] del sol (vacío = centro del país foco)." },
     sunSize: { type: "number", default: 1.15, min: 0.2, max: 6, doc: "Radio del sol en grados de mapa." },
@@ -125,7 +126,7 @@
     if (img && img.width) {
       const ar = (img.naturalWidth || img.width) / (img.naturalHeight || img.height || 1), h = R * 2, w = h * ar;
       G.drawImage(img, -w / 2, -h / 2, w, h);
-    } else { G.fillStyle = col(PAL.crim, 1); G.fillRect(-R, -R, R * 2, R * 2); }
+    } else { G.fillStyle = COL.ship; G.fillRect(-R, -R, R * 2, R * 2); }
     const gl = G.createLinearGradient(-R, -R, R, R); gl.addColorStop(0, col(PAL.white, 0.22)); gl.addColorStop(0.5, col(PAL.white, 0)); gl.addColorStop(1, col(PAL.ink, 0.2));
     G.fillStyle = gl; G.fillRect(-R, -R, R * 2, R * 2); G.restore();
     G.lineWidth = u * 0.14; G.strokeStyle = col(PAL.ink, 0.55); G.beginPath(); G.arc(0, 0, R + u * 0.55, 0, 7); G.stroke();
@@ -226,6 +227,7 @@
         return 0.8 + i * 1.4;
       };
       const sunPt = p.sunAt || (p.country ? IM.point(p.country) : null);
+      const sunFlag = IM.flagFor(p.country, p.flagColors);
       const T = (p.targets || []).map((x, i) => {
         const t = parseTarget(x), arrive = Math.max(0.2, when(t.time, i)), trav = Math.min(p.travel, Math.max(0.3, arrive - 0.05));
         return { ...t, i, arrive, depart: Math.max(0, arrive - trav), trav, keep: t.hold ?? p.hold, img: t.flag && p[t.flag] ? ctx.img(p[t.flag]) : null };
@@ -346,7 +348,7 @@
             drawArrow(G, st, origin, [target[0] - dx / dist * stop, target[1] - dy / dist * stop], tg.bow ?? 0.16, s,
               { w0: u * 0.7 * p.beam, w1: u * (portrait ? 3.1 : 2.8) * p.beam, head: u * (portrait ? 7.6 : 6.9) * p.beam, alpha: life });
           });
-          if (sun && parts.has("sun")) IM.sun(G, sun[0], sun[1], clamp(p.sunSize * V.pxPerDeg, u * 2.6, u * 12), t, { flag: null });
+          if (sun && parts.has("sun")) IM.sun(G, sun[0], sun[1], clamp(p.sunSize * V.pxPerDeg, u * 2.6, u * 12), t, { flag: sunFlag });
           /* banderas / ciudades con su rótulo (entran con rebote y se retiran) */
           const safeB = st.caption.y - u * 1.6;
           if (parts.has("badges")) T.forEach(tg => {
@@ -425,14 +427,17 @@
       const st = ctx.stage, { W, H, u, portrait } = st;
       const pcv = IM.canvas(Math.round(W * 0.5), Math.round(H * 0.5)), pcg = pcv.getContext("2d");   /* video B/N a media resolución */
       const gq = lt => p.grayDur > 0 ? prog(lt, 0, p.grayDur, "inOut") : 1;
+      let clipVideo = null;
       const clipTime = lt => {
-        const raw = p.start + lt * p.rate, v = ctx.clip(p.video, 0), d = v && isFinite(v.duration) ? v.duration : 0;
+        // Leer metadatos no debe solicitar otro seek a cero en el mismo cuadro.
+        const raw = p.start + lt * p.rate, d = clipVideo && isFinite(clipVideo.duration) ? clipVideo.duration : 0;
         if (!p.loop || d <= 0.5) return raw;
         const span = Math.max(0.5, d - p.start - 0.1); return p.start + ((lt * p.rate) % span);
       };
       const layer = (G, info, lt) => {
         const pq = prog(lt, p.videoAt, p.videoDur, "inOut") * p.strength, sq = prog(lt, p.videoAt + 0.25, 1.2, "inOut") * p.smoke;
         const v = pq > 0.005 ? ctx.clip(p.video, clipTime(lt)) : null;
+        if (v) clipVideo = v;
         if (v && v.videoWidth) {
           const iw = v.videoWidth, ih = v.videoHeight, z = 1.1 - 0.06 * clamp(lt / Math.max(4, ctx.beat.dur)), ar = W / H;
           let sw = iw, sh = iw / ar; if (sh > ih) { sh = ih; sw = ih * ar; } sw /= z; sh /= z;
@@ -442,7 +447,7 @@
         }
         IM.smoke(G, st, ctx.beat.t0 + lt, sq, portrait ? 0.42 : 0.55);
       };
-      const sc = IM.mapScene(ctx, { ...p, sun: true, flag: "none" }, { gray: gq, under: layer });
+      const sc = IM.mapScene(ctx, { ...p, sun: true, flag: p.flagColors ?? "auto" }, { gray: gq, under: layer });
       return {
         render(lt, b, t) {
           const pq = prog(lt, p.videoAt, p.videoDur, "inOut") * p.strength;
@@ -455,7 +460,7 @@
             G.fillText(p.caption, u * (portrait ? 6 : 5), st.caption.y - u * (portrait ? 5 : 3)); G.restore();
           });
         },
-        dispose() { sc.dispose(); pcv.width = pcv.height = 1; },
+        dispose() { clipVideo = null; sc.dispose(); pcv.width = pcv.height = 1; },
       };
     },
   });

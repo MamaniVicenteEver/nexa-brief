@@ -19,7 +19,7 @@ from src.presentation.api.schemas.image_posts_schema import (
     PlanUpdateRequest, ReconcileRequest, RenderRequest, ReviewRequest,
 )
 from src.presentation.api.image_post_access import (
-    ImageSession, require_account_access, require_category_access, require_image_session,
+    ImageSession, require_account_access, require_category_access, require_image_session, require_publication_access,
 )
 from src.presentation.api.security import require_internal
 
@@ -90,11 +90,7 @@ def _post_json(record: PublicationRecord) -> dict[str, Any]:
 
 
 def _authorize_record(identity: ImageSession, record: PublicationRecord) -> None:
-    require_category_access(identity, record.editorial.category_id)
-    for delivery in record.deliveries:
-        require_account_access(
-            identity, record.editorial.category_id, delivery.platform, delivery.account_alias
-        )
+    require_publication_access(identity, record)
 
 
 def _authorize_delivery(identity: ImageSession, record: PublicationRecord, delivery: Any) -> None:

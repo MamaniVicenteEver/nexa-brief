@@ -447,6 +447,11 @@ class JsonPublicationRepository:
                 self._write_index_entry(data, path)
                 return data
 
+    def library_records(self) -> list[dict[str, Any]]:
+        """Local read projection source; no cursor truncation or media inspection."""
+        return [record for row in self._read_index()
+                if (record := self.get(row["publication_id"])) is not None]
+
     def list(
         self, filters: Mapping[str, Any] | None = None, *, sort: str = "desc",
         limit: int = 24, cursor: str | None = None,

@@ -28,7 +28,11 @@ def fit_main_scenes(beats, duration, minimums, layers, *, max_shift=MAX_CUE_SHIF
     for i in range(len(mins) - 1, -1, -1):
         upper[i] = min(upper[i], upper[i + 1] - mins[i])
     if any(lo > hi + .0001 for lo, hi in zip(lower, upper)):
-        raise ValueError(f"No se cumple minDur dentro de ±{max_shift}s de las anclas; requiere edición del montaje")
+        short = [f"escena {index} ({beat['use']}): {targets[i + 1] - targets[i]:.2f}s disponibles, mínimo {mins[i]:.2f}s"
+                 for i, (index, beat) in enumerate(rows)
+                 if targets[i + 1] - targets[i] + .001 < mins[i]]
+        detail = "; ".join(short[:5]) or "duraciones incompatibles entre escenas consecutivas"
+        raise ValueError(f"No se cumple minDur dentro de ±{max_shift}s de las anclas; requiere edición del montaje: {detail}")
     fitted, warnings = [0.], []
     for i, (index, beat) in enumerate(rows[1:], 1):
         value = round(min(upper[i], max(targets[i], lower[i], fitted[-1] + mins[i - 1])), 3)

@@ -1,5 +1,6 @@
 import type { JobListItem } from "@/features/create-video/types";
 import type { ExplainerJob, Production } from "@/features/explainer/types";
+import type { ScheduleWorkflow } from "../api/workflow-service";
 import type { QueueEntry, SavedPlanItem } from "../types";
 
 export type AgendaKind = "plan" | "preparation" | "render" | "publication";
@@ -27,6 +28,8 @@ export interface AgendaEvent {
   recording?: ExplainerJob;
   publication?: QueueEntry;
   error: string | null;
+  workflow?: ScheduleWorkflow;
+  workflowStage?: "render" | "publication";
 }
 
 const ACTIVE = new Set([
@@ -54,6 +57,7 @@ export function planInstant(item: SavedPlanItem): string | null {
 }
 
 export function buildAgenda(input: {
+  workflows?: ScheduleWorkflow[];
   plans: SavedPlanItem[];
   productions: Production[];
   recordings: ExplainerJob[];
@@ -71,6 +75,9 @@ export function buildAgenda(input: {
   const jobs = new Map(input.jobs.map((j) => [j.jobId, j]));
   const events: AgendaEvent[] = input.plans.map((plan) => {
     const production = plan.productionId ? productions.get(plan.productionId) : undefined;
+    const workflow = plan.productionId
+      ? input.workflows?.find((w) => w.production_id === plan.productionId)
+      : undefined;
     const at = planInstant(plan);
     return {
       id: `plan:${plan.itemId}`,
@@ -78,7 +85,13 @@ export function buildAgenda(input: {
       title: plan.topic,
       category: plan.categoryPath,
       at,
-      status: productionStatus(production?.state ?? plan.productionState, at, now),
+      status:
+        workflow?.state === "cancelled"
+          ? "cancelled"
+          : workflow?.state === "attention"
+            ? "failed"
+            : productionStatus(production?.state ?? plan.productionState, at, now),
+      workflow,
       phase: production?.phase ?? null,
       videoId: production?.videoId ?? plan.videoId,
       plan,
@@ -89,13 +102,20 @@ export function buildAgenda(input: {
   });
   for (const production of input.productions) {
     if (linked.has(production.productionId)) continue;
+    const workflow = input.workflows?.find((w) => w.production_id === production.productionId);
     events.push({
+      workflow,
       id: `production:${production.productionId}`,
       kind: "preparation",
       title: production.topic,
       category: production.categoryPath,
       at: production.createdAt || null,
-      status: productionStatus(production.state, null, now),
+      status:
+        workflow?.state === "cancelled"
+          ? "cancelled"
+          : workflow?.state === "attention"
+            ? "failed"
+            : productionStatus(production.state, null, now),
       phase: production.phase,
       videoId: production.videoId,
       production,
@@ -103,7 +123,9 @@ export function buildAgenda(input: {
       error: production.error,
     });
   }
+  const workflowRecordings = new Set(input.workflows?.map((w) => w.record_job_id).filter(Boolean));
   for (const recording of input.recordings) {
+    if (workflowRecordings.has(recording.jobId)) continue;
     events.push({
       id: `render:${recording.jobId}`,
       kind: "render",
@@ -149,6 +171,66 @@ export function buildAgenda(input: {
       recording,
       error: publication.error,
     });
+  }
+  for (const workflow of input.workflows ?? []) {
+    const common = {
+      title: workflow.topic,
+      category: workflow.category_path,
+      videoId: workflow.video_id,
+      workflow,
+      error: workflow.error ?? null,
+    };
+    if (workflow.record_at) {
+      const recording = workflow.record_job_id ? recordings.get(workflow.record_job_id) : undefined;
+      const state = workflow.record_state;
+      const status: AgendaStatus =
+        workflow.state === "cancelled"
+          ? "cancelled"
+          : workflow.state === "attention" && state !== "done"
+            ? "failed"
+            : ["failed", "interrupted"].includes(state)
+              ? "failed"
+              : state === "done"
+                ? "done"
+                : recording?.state === "queued"
+                  ? "queued"
+                  : ["dispatching", "recording"].includes(state)
+                    ? "active"
+                    : "scheduled";
+      events.push({
+        ...common,
+        id: `workflow-render:${workflow.workflow_id}`,
+        kind: "render",
+        at: workflow.record_at,
+        status,
+        phase: state,
+        recording,
+        workflowStage: "render",
+      });
+    }
+    // Once handed to the publication queue it has a row per account there.
+    if (workflow.publish_at && !workflow.queue_entry_ids?.length) {
+      const state = workflow.publish_state;
+      const status: AgendaStatus =
+        workflow.state === "cancelled"
+          ? "cancelled"
+          : workflow.state === "attention" || state === "failed"
+            ? "failed"
+            : state === "published"
+              ? "done"
+              : state === "publishing"
+                ? "active"
+                : "planned";
+      events.push({
+        ...common,
+        id: `workflow-publication:${workflow.workflow_id}`,
+        kind: "publication",
+        at: workflow.publish_at,
+        status,
+        phase: state,
+        workflowStage: "publication",
+      });
+    }
   }
   return events.sort((a, b) => {
     // Work without a start date stays visible after dated events.

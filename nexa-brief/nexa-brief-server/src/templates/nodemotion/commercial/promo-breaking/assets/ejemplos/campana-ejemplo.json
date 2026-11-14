@@ -1,0 +1,75 @@
+{
+  "activeId": "festival",
+  "configs": [
+    {
+      "id": "festival",
+      "palette": {
+        "red": "#FF5A00",
+        "deep": "#5A1A00",
+        "ink": "#0B0B0B",
+        "white": "#FFF8F0"
+      },
+      "brand": {
+        "name": "FESTIVAL SUR",
+        "tag": "EDICIÓN 2027",
+        "cta": "ENTRADAS YA",
+        "url": "@festivalsur",
+        "live": "HOY"
+      },
+      "anim": {
+        "textIn": "type",
+        "speed": 1.2,
+        "intensity": 0.8
+      },
+      "outro": {
+        "version": "v2",
+        "title": "FESTIVAL SUR",
+        "cta": "@festivalsur · Edición 2027"
+      },
+      "transition": {
+        "weights": {
+          "stripes": 1,
+          "panels": 2,
+          "cut": 1
+        }
+      },
+      "scenes": [
+        {
+          "type": "intro",
+          "media": [
+            "towers"
+          ]
+        },
+        {
+          "type": "stacked",
+          "media": [
+            "crowd"
+          ],
+          "trans": "stripes",
+          "arrows": false
+        },
+        {
+          "type": "repeat",
+          "media": [
+            "steps"
+          ],
+          "rows": 4,
+          "speed": 1.5
+        },
+        {
+          "type": "stat",
+          "media": [
+            "market"
+          ],
+          "countSec": 1.6
+        },
+        {
+          "type": "outro",
+          "media": [
+            "skyline"
+          ]
+        }
+      ]
+    }
+  ]
+}

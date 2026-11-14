@@ -1,0 +1,670 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Promo de noticiero «Breaking»: foto en blanco y negro con tinte rojo, letras gigantes, titular Poppins extra negrita con tramo en contorno, subrayado rojo, filas repetidas, cifras, franja de directo y transiciones de franjas y bloque rojo. — metadata, la plantilla no la usa.",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap",
+        "display": "Poppins",
+        "label": "Poppins"
+      },
+      "palette": {
+        "red": "#F2070F",
+        "deep": "#6E0006",
+        "ink": "#0A0A0A",
+        "white": "#FFFFFF"
+      },
+      "brand": {
+        "name": "NEXA BRIEF",
+        "tag": "NOTICIAS DEL MUNDO",
+        "cta": "SUSCRÍBETE",
+        "url": "@NEXABRIEF",
+        "live": "EN VIVO"
+      },
+      "grades": {
+        "mono": {
+          "type": "duo",
+          "dark": "#060606",
+          "light": "#EDEDED",
+          "contrast": 1.3
+        },
+        "red": {
+          "type": "duo",
+          "dark": "#240000",
+          "light": "#FF4136",
+          "contrast": 1.35
+        }
+      },
+      "look": {
+        "tint": 0.85,
+        "giantOpacity": 0.6,
+        "decor": 1,
+        "vignette": 0.55
+      },
+      "anim": {
+        "textIn": "rise",
+        "speed": 1,
+        "intensity": 1
+      },
+      "intro": {
+        "enabled": true,
+        "title": "",
+        "sub": ""
+      },
+      "outro": {
+        "enabled": true,
+        "version": "v1",
+        "minSec": 3.5,
+        "title": "",
+        "cta": ""
+      },
+      "transition": {
+        "overlapSec": 0.5,
+        "duration": 0.45,
+        "weights": {
+          "stripes": 2,
+          "redBlock": 2,
+          "panels": 1,
+          "squash": 1,
+          "zoomCut": 1,
+          "cut": 2
+        }
+      },
+      "hud": {
+        "enabled": false
+      },
+      "texture": {
+        "grain": 0.05
+      },
+      "render": {
+        "kbVideo": false
+      },
+      "scenes": [
+        {
+          "type": "intro",
+          "media": [
+            "towers"
+          ]
+        },
+        {
+          "type": "stacked",
+          "media": [
+            "crowd"
+          ],
+          "trans": "stripes"
+        },
+        {
+          "type": "repeat",
+          "media": [
+            "steps"
+          ],
+          "trans": "redBlock"
+        },
+        {
+          "type": "word",
+          "media": [
+            "press"
+          ],
+          "trans": "redBlock"
+        },
+        {
+          "type": "word",
+          "media": [
+            "skyline"
+          ],
+          "trans": "squash",
+          "textIn": "squash"
+        },
+        {
+          "type": "flash",
+          "media": [
+            "doctor"
+          ],
+          "trans": "cut"
+        },
+        {
+          "type": "flash",
+          "media": [
+            "market"
+          ],
+          "trans": "cut",
+          "grade": "mono"
+        },
+        {
+          "type": "word",
+          "media": [
+            "stadium"
+          ],
+          "trans": "zoomCut",
+          "grade": "red",
+          "tint": "none"
+        },
+        {
+          "type": "ticker",
+          "media": [
+            "street"
+          ],
+          "trans": "panels"
+        },
+        {
+          "type": "stat",
+          "media": [
+            "crash"
+          ],
+          "trans": "stripes"
+        },
+        {
+          "type": "split",
+          "media": [
+            "capitol",
+            "crowd",
+            "street"
+          ],
+          "trans": "redBlock"
+        },
+        {
+          "type": "word",
+          "media": [
+            "aerial"
+          ],
+          "trans": "squash",
+          "align": "left",
+          "textIn": "type"
+        },
+        {
+          "type": "stacked",
+          "media": [
+            "towers"
+          ],
+          "trans": "stripes"
+        },
+        {
+          "type": "repeat",
+          "media": [
+            "sirens"
+          ],
+          "trans": "redBlock",
+          "rows": 6
+        },
+        {
+          "type": "flash",
+          "media": [
+            "globe"
+          ],
+          "trans": "cut"
+        },
+        {
+          "type": "flash",
+          "media": [
+            "doctor"
+          ],
+          "trans": "cut",
+          "grade": "mono"
+        },
+        {
+          "type": "flash",
+          "media": [
+            "market"
+          ],
+          "trans": "cut"
+        },
+        {
+          "type": "word",
+          "media": [
+            "crowd"
+          ],
+          "trans": "zoomCut"
+        },
+        {
+          "type": "ticker",
+          "media": [
+            "highway"
+          ],
+          "trans": "panels"
+        },
+        {
+          "type": "stat",
+          "media": [
+            "press"
+          ],
+          "trans": "stripes"
+        },
+        {
+          "type": "word",
+          "media": [
+            "sirens"
+          ],
+          "trans": "squash",
+          "grade": "red",
+          "tint": "none",
+          "textIn": "pop"
+        },
+        {
+          "type": "split",
+          "media": [
+            "street",
+            "skyline",
+            "steps"
+          ],
+          "trans": "redBlock"
+        },
+        {
+          "type": "stacked",
+          "media": [
+            "crash"
+          ],
+          "trans": "stripes"
+        },
+        {
+          "type": "repeat",
+          "media": [
+            "aerial"
+          ],
+          "trans": "redBlock"
+        },
+        {
+          "type": "word",
+          "media": [
+            "globe"
+          ],
+          "trans": "zoomCut"
+        },
+        {
+          "type": "flash",
+          "media": [
+            "skyline"
+          ],
+          "trans": "cut"
+        },
+        {
+          "type": "flash",
+          "media": [
+            "steps"
+          ],
+          "trans": "cut",
+          "grade": "mono"
+        },
+        {
+          "type": "flash",
+          "media": [
+            "towers"
+          ],
+          "trans": "cut"
+        },
+        {
+          "type": "ticker",
+          "media": [
+            "capitol"
+          ],
+          "trans": "panels"
+        },
+        {
+          "type": "stat",
+          "media": [
+            "crowd"
+          ],
+          "trans": "stripes"
+        },
+        {
+          "type": "word",
+          "media": [
+            "highway"
+          ],
+          "trans": "squash",
+          "textIn": "squash"
+        },
+        {
+          "type": "split",
+          "media": [
+            "globe",
+            "aerial",
+            "market"
+          ],
+          "trans": "redBlock",
+          "panels": 3
+        },
+        {
+          "type": "stacked",
+          "media": [
+            "press"
+          ],
+          "trans": "stripes"
+        },
+        {
+          "type": "repeat",
+          "media": [
+            "crash"
+          ],
+          "trans": "redBlock"
+        },
+        {
+          "type": "word",
+          "media": [
+            "street"
+          ],
+          "trans": "zoomCut",
+          "grade": "red",
+          "tint": "none"
+        },
+        {
+          "type": "flash",
+          "media": [
+            "capitol"
+          ],
+          "trans": "cut"
+        },
+        {
+          "type": "flash",
+          "media": [
+            "doctor"
+          ],
+          "trans": "cut",
+          "grade": "mono"
+        },
+        {
+          "type": "word",
+          "media": [
+            "towers"
+          ],
+          "trans": "squash",
+          "align": "left"
+        },
+        {
+          "type": "ticker",
+          "media": [
+            "sirens"
+          ],
+          "trans": "panels"
+        },
+        {
+          "type": "stat",
+          "media": [
+            "market"
+          ],
+          "trans": "stripes"
+        },
+        {
+          "type": "word",
+          "media": [
+            "globe"
+          ],
+          "trans": "stripes"
+        },
+        {
+          "type": "repeat",
+          "media": [
+            "steps"
+          ],
+          "trans": "redBlock",
+          "rows": 7
+        },
+        {
+          "type": "word",
+          "media": [
+            "skyline"
+          ],
+          "trans": "squash",
+          "textIn": "type"
+        },
+        {
+          "type": "outro",
+          "media": [
+            "towers"
+          ],
+          "trans": "stripes"
+        }
+      ],
+      "media": [
+        {
+          "id": "towers",
+          "type": "video",
+          "src": "assets/media/towers.mp4",
+          "poster": "assets/media/towers-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/towers.mono.mp4",
+              "poster": "assets/media/graded/towers-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/towers.red.mp4",
+              "poster": "assets/media/graded/towers-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "skyline",
+          "type": "video",
+          "src": "assets/media/skyline.mp4",
+          "poster": "assets/media/skyline-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/skyline.mono.mp4",
+              "poster": "assets/media/graded/skyline-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/skyline.red.mp4",
+              "poster": "assets/media/graded/skyline-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "crowd",
+          "type": "video",
+          "src": "assets/media/crowd.mp4",
+          "poster": "assets/media/crowd-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/crowd.mono.mp4",
+              "poster": "assets/media/graded/crowd-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/crowd.red.mp4",
+              "poster": "assets/media/graded/crowd-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "steps",
+          "type": "video",
+          "src": "assets/media/steps.mp4",
+          "poster": "assets/media/steps-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/steps.mono.mp4",
+              "poster": "assets/media/graded/steps-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/steps.red.mp4",
+              "poster": "assets/media/graded/steps-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "press",
+          "type": "video",
+          "src": "assets/media/press.mp4",
+          "poster": "assets/media/press-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/press.mono.mp4",
+              "poster": "assets/media/graded/press-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/press.red.mp4",
+              "poster": "assets/media/graded/press-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "market",
+          "type": "video",
+          "src": "assets/media/market.mp4",
+          "poster": "assets/media/market-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/market.mono.mp4",
+              "poster": "assets/media/graded/market-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/market.red.mp4",
+              "poster": "assets/media/graded/market-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "crash",
+          "type": "video",
+          "src": "assets/media/crash.mp4",
+          "poster": "assets/media/crash-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/crash.mono.mp4",
+              "poster": "assets/media/graded/crash-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/crash.red.mp4",
+              "poster": "assets/media/graded/crash-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "street",
+          "type": "video",
+          "src": "assets/media/street.mp4",
+          "poster": "assets/media/street-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/street.mono.mp4",
+              "poster": "assets/media/graded/street-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/street.red.mp4",
+              "poster": "assets/media/graded/street-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "doctor",
+          "type": "video",
+          "src": "assets/media/doctor.mp4",
+          "poster": "assets/media/doctor-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/doctor.mono.mp4",
+              "poster": "assets/media/graded/doctor-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/doctor.red.mp4",
+              "poster": "assets/media/graded/doctor-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "capitol",
+          "type": "video",
+          "src": "assets/media/capitol.mp4",
+          "poster": "assets/media/capitol-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/capitol.mono.mp4",
+              "poster": "assets/media/graded/capitol-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/capitol.red.mp4",
+              "poster": "assets/media/graded/capitol-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "aerial",
+          "type": "video",
+          "src": "assets/media/aerial.mp4",
+          "poster": "assets/media/aerial-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/aerial.mono.mp4",
+              "poster": "assets/media/graded/aerial-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/aerial.red.mp4",
+              "poster": "assets/media/graded/aerial-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "highway",
+          "type": "video",
+          "src": "assets/media/highway.mp4",
+          "poster": "assets/media/highway-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/highway.mono.mp4",
+              "poster": "assets/media/graded/highway-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/highway.red.mp4",
+              "poster": "assets/media/graded/highway-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "globe",
+          "type": "video",
+          "src": "assets/media/globe.mp4",
+          "poster": "assets/media/globe-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/globe.mono.mp4",
+              "poster": "assets/media/graded/globe-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/globe.red.mp4",
+              "poster": "assets/media/graded/globe-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "sirens",
+          "type": "video",
+          "src": "assets/media/sirens.mp4",
+          "poster": "assets/media/sirens-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/sirens.mono.mp4",
+              "poster": "assets/media/graded/sirens-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/sirens.red.mp4",
+              "poster": "assets/media/graded/sirens-1.red.jpg"
+            }
+          }
+        },
+        {
+          "id": "stadium",
+          "type": "video",
+          "src": "assets/media/stadium.mp4",
+          "poster": "assets/media/stadium-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/stadium.mono.mp4",
+              "poster": "assets/media/graded/stadium-1.mono.jpg"
+            },
+            "red": {
+              "src": "assets/media/graded/stadium.red.mp4",
+              "poster": "assets/media/graded/stadium-1.red.jpg"
+            }
+          }
+        }
+      ],
+      "debug": {
+        "enabled": false
+      },
+      "seed": 19
+    }
+  ]
+}

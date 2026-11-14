@@ -1,0 +1,565 @@
+{
+  "title": "Promo Pulse — Motivación",
+  "about": "promo deportiva de alto impacto: metraje cinematográfico sobre negro, palabra condensada en itálica crema, palabra gigante en contorno verde neón, video enmarcado, texto calado, medidores verdes y transiciones con zoom y barrido.",
+  "out": "nodemotion/commercial/promo-pulse",
+  "js": "../../../nodemotion/commercial/promo-pulse/player.js",
+  "duration": 100.0,
+  "fontLoads": [
+    "italic 400 100px Anton",
+    "600 100px Montserrat",
+    "700 100px Montserrat",
+    "italic 700 100px Montserrat"
+  ],
+  "css": "  :root { --fD: \"Anton\"; --fL: \"Montserrat\"; }\n  .dp { font-family: var(--fD), sans-serif; font-weight: 400; font-style: italic; text-transform: uppercase; }\n  .lb { font-family: var(--fL), sans-serif; font-weight: 600; }\n  .tg { font-family: var(--fL), sans-serif; font-weight: 700; font-style: italic; }\n  .bn { font-family: var(--fL), sans-serif; font-weight: 700; }\n  .num { font-variant-numeric: tabular-nums; }\n",
+  "config": {
+    "id": "default",
+    "description": "Promo deportiva «Pulse»: metraje cinematográfico sobre negro, palabra condensada en itálica crema, palabra gigante en contorno verde neón, video enmarcado, texto calado con el video, medidores y esquinas verdes, cifras y bandas que corren. — metadata, la plantilla no la usa.",
+    "audio": {
+      "src": "assets/song.mp3"
+    },
+    "lyricsUrl": "assets/lyrics.json",
+    "fonts": {
+      "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:ital,wght@0,600;0,700;1,700&display=swap",
+      "display": "Anton",
+      "label": "Montserrat"
+    },
+    "palette": {
+      "green": "#2BF51A",
+      "cream": "#E3DDCB",
+      "ink": "#0B0C0B"
+    },
+    "brand": {
+      "name": "NEXA BRIEF",
+      "url": "@nexabrief",
+      "cta": "SUSCRÍBETE",
+      "corner": "NEXA BRIEF",
+      "footer": "Diseño y animación · NEXA BRIEF"
+    },
+    "grades": {
+      "cine": {
+        "type": "css",
+        "saturate": 0.7,
+        "contrast": 1.12,
+        "brightness": 0.86
+      },
+      "dim": {
+        "type": "css",
+        "saturate": 0.55,
+        "contrast": 1.05,
+        "brightness": 0.42
+      }
+    },
+    "look": {
+      "giantOpacity": 0.9,
+      "vignette": 0.6,
+      "accents": 1,
+      "frameShadow": 0.6
+    },
+    "anim": {
+      "textIn": "slam",
+      "speed": 1,
+      "intensity": 1
+    },
+    "intro": {
+      "enabled": true,
+      "title": "",
+      "sub": ""
+    },
+    "outro": {
+      "enabled": true,
+      "version": "v1",
+      "minSec": 3.5,
+      "title": "",
+      "cta": ""
+    },
+    "transition": {
+      "overlapSec": 0.45,
+      "duration": 0.4,
+      "weights": {
+        "zoomBlur": 3,
+        "whip": 2,
+        "greenFlash": 1,
+        "panels": 1,
+        "cut": 2
+      }
+    },
+    "hud": {
+      "enabled": true
+    },
+    "texture": {
+      "grain": 0.06
+    },
+    "render": {
+      "kbVideo": false
+    },
+    "scenes": [
+      {
+        "type": "intro",
+        "media": [
+          "bag"
+        ]
+      },
+      {
+        "type": "full",
+        "media": [
+          "stride"
+        ],
+        "trans": "zoomBlur",
+        "pos": "center"
+      },
+      {
+        "type": "framed",
+        "media": [
+          "fighter"
+        ],
+        "trans": "whip"
+      },
+      {
+        "type": "badge",
+        "media": [
+          "moto"
+        ],
+        "trans": "greenFlash"
+      },
+      {
+        "type": "full",
+        "media": [
+          "boxing"
+        ],
+        "trans": "zoomBlur",
+        "pos": "br"
+      },
+      {
+        "type": "full",
+        "media": [
+          "pushup"
+        ],
+        "trans": "cut",
+        "brackets": true
+      },
+      {
+        "type": "knockout",
+        "media": [
+          "dancer"
+        ],
+        "trans": "zoomBlur"
+      },
+      {
+        "type": "split3",
+        "media": [
+          "moto",
+          "bmx",
+          "kart"
+        ],
+        "trans": "panels"
+      },
+      {
+        "type": "framed",
+        "media": [
+          "hoop"
+        ],
+        "trans": "whip",
+        "side": "right",
+        "textPos": "left"
+      },
+      {
+        "type": "full",
+        "media": [
+          "runners"
+        ],
+        "trans": "zoomBlur",
+        "pos": "l",
+        "brackets": true
+      },
+      {
+        "type": "knockout",
+        "media": [
+          "soccer"
+        ],
+        "trans": "greenFlash"
+      },
+      {
+        "type": "full",
+        "media": [
+          "kart"
+        ],
+        "trans": "cut",
+        "pos": "br"
+      },
+      {
+        "type": "framed",
+        "media": [
+          "ridge"
+        ],
+        "trans": "zoomBlur"
+      },
+      {
+        "type": "marquee",
+        "media": [
+          "skater"
+        ],
+        "trans": "whip"
+      },
+      {
+        "type": "counter",
+        "media": [
+          "ropes"
+        ],
+        "trans": "panels"
+      },
+      {
+        "type": "full",
+        "media": [
+          "ropes"
+        ],
+        "trans": "zoomBlur",
+        "pos": "center"
+      },
+      {
+        "type": "badge",
+        "media": [
+          "bmx"
+        ],
+        "trans": "greenFlash"
+      },
+      {
+        "type": "full",
+        "media": [
+          "bmx"
+        ],
+        "trans": "cut"
+      },
+      {
+        "type": "framed",
+        "media": [
+          "dancer"
+        ],
+        "trans": "whip"
+      },
+      {
+        "type": "knockout",
+        "media": [
+          "skate"
+        ],
+        "trans": "zoomBlur"
+      },
+      {
+        "type": "split3",
+        "media": [
+          "runners",
+          "sprint",
+          "stride"
+        ],
+        "trans": "panels"
+      },
+      {
+        "type": "full",
+        "media": [
+          "fighter"
+        ],
+        "trans": "zoomBlur",
+        "pos": "br"
+      },
+      {
+        "type": "full",
+        "media": [
+          "bag"
+        ],
+        "trans": "cut",
+        "pos": "center",
+        "textIn": "cut"
+      },
+      {
+        "type": "framed",
+        "media": [
+          "hoop"
+        ],
+        "trans": "zoomBlur",
+        "frame": 0.9
+      },
+      {
+        "type": "full",
+        "media": [
+          "stride"
+        ],
+        "trans": "whip",
+        "pos": "r"
+      },
+      {
+        "type": "marquee",
+        "media": [
+          "moto"
+        ],
+        "trans": "whip",
+        "rows": 5
+      },
+      {
+        "type": "framed",
+        "media": [
+          "soccer"
+        ],
+        "trans": "zoomBlur"
+      },
+      {
+        "type": "counter",
+        "media": [
+          "sprint"
+        ],
+        "trans": "panels",
+        "side": "left"
+      },
+      {
+        "type": "full",
+        "media": [
+          "kart"
+        ],
+        "trans": "cut",
+        "pos": "l",
+        "brackets": true
+      },
+      {
+        "type": "badge",
+        "media": [
+          "boxing"
+        ],
+        "trans": "greenFlash"
+      },
+      {
+        "type": "knockout",
+        "media": [
+          "pushup"
+        ],
+        "trans": "zoomBlur"
+      },
+      {
+        "type": "full",
+        "media": [
+          "skater"
+        ],
+        "trans": "whip",
+        "pos": "br"
+      },
+      {
+        "type": "framed",
+        "media": [
+          "hoop"
+        ],
+        "trans": "zoomBlur",
+        "side": "left",
+        "textPos": "right"
+      },
+      {
+        "type": "split3",
+        "media": [
+          "bmx",
+          "moto",
+          "kart"
+        ],
+        "trans": "panels"
+      },
+      {
+        "type": "full",
+        "media": [
+          "ridge"
+        ],
+        "trans": "zoomBlur",
+        "pos": "center",
+        "textIn": "rise"
+      },
+      {
+        "type": "knockout",
+        "media": [
+          "dancer"
+        ],
+        "trans": "greenFlash"
+      },
+      {
+        "type": "full",
+        "media": [
+          "sprint"
+        ],
+        "trans": "cut"
+      },
+      {
+        "type": "marquee",
+        "media": [
+          "basket"
+        ],
+        "trans": "whip"
+      },
+      {
+        "type": "framed",
+        "media": [
+          "basket"
+        ],
+        "trans": "zoomBlur"
+      },
+      {
+        "type": "counter",
+        "media": [
+          "stride"
+        ],
+        "trans": "panels"
+      },
+      {
+        "type": "full",
+        "media": [
+          "boxing"
+        ],
+        "trans": "cut",
+        "pos": "br",
+        "brackets": true
+      },
+      {
+        "type": "badge",
+        "media": [
+          "skate"
+        ],
+        "trans": "greenFlash"
+      },
+      {
+        "type": "knockout",
+        "media": [
+          "runners"
+        ],
+        "trans": "zoomBlur"
+      },
+      {
+        "type": "full",
+        "media": [
+          "fighter"
+        ],
+        "trans": "whip",
+        "pos": "l"
+      },
+      {
+        "type": "framed",
+        "media": [
+          "ropes"
+        ],
+        "trans": "zoomBlur"
+      },
+      {
+        "type": "outro",
+        "media": [
+          "dancer"
+        ],
+        "trans": "zoomBlur"
+      }
+    ],
+    "media": [
+      {
+        "id": "fighter",
+        "type": "video",
+        "src": "assets/media/fighter.mp4",
+        "poster": "assets/media/fighter-1.jpg"
+      },
+      {
+        "id": "bag",
+        "type": "video",
+        "src": "assets/media/bag.mp4",
+        "poster": "assets/media/bag-1.jpg"
+      },
+      {
+        "id": "pushup",
+        "type": "video",
+        "src": "assets/media/pushup.mp4",
+        "poster": "assets/media/pushup-1.jpg"
+      },
+      {
+        "id": "bmx",
+        "type": "video",
+        "src": "assets/media/bmx.mp4",
+        "poster": "assets/media/bmx-1.jpg"
+      },
+      {
+        "id": "moto",
+        "type": "video",
+        "src": "assets/media/moto.mp4",
+        "poster": "assets/media/moto-1.jpg"
+      },
+      {
+        "id": "ridge",
+        "type": "video",
+        "src": "assets/media/ridge.mp4",
+        "poster": "assets/media/ridge-1.jpg"
+      },
+      {
+        "id": "kart",
+        "type": "video",
+        "src": "assets/media/kart.mp4",
+        "poster": "assets/media/kart-1.jpg"
+      },
+      {
+        "id": "runners",
+        "type": "video",
+        "src": "assets/media/runners.mp4",
+        "poster": "assets/media/runners-1.jpg"
+      },
+      {
+        "id": "skater",
+        "type": "video",
+        "src": "assets/media/skater.mp4",
+        "poster": "assets/media/skater-1.jpg"
+      },
+      {
+        "id": "dancer",
+        "type": "video",
+        "src": "assets/media/dancer.mp4",
+        "poster": "assets/media/dancer-1.jpg"
+      },
+      {
+        "id": "stride",
+        "type": "video",
+        "src": "assets/media/stride.mp4",
+        "poster": "assets/media/stride-1.jpg"
+      },
+      {
+        "id": "hoop",
+        "type": "video",
+        "src": "assets/media/hoop.mp4",
+        "poster": "assets/media/hoop-1.jpg"
+      },
+      {
+        "id": "basket",
+        "type": "video",
+        "src": "assets/media/basket.mp4",
+        "poster": "assets/media/basket-1.jpg"
+      },
+      {
+        "id": "sprint",
+        "type": "video",
+        "src": "assets/media/sprint.mp4",
+        "poster": "assets/media/sprint-1.jpg"
+      },
+      {
+        "id": "boxing",
+        "type": "video",
+        "src": "assets/media/boxing.mp4",
+        "poster": "assets/media/boxing-1.jpg"
+      },
+      {
+        "id": "skate",
+        "type": "video",
+        "src": "assets/media/skate.mp4",
+        "poster": "assets/media/skate-1.jpg"
+      },
+      {
+        "id": "ropes",
+        "type": "video",
+        "src": "assets/media/ropes.mp4",
+        "poster": "assets/media/ropes-1.jpg"
+      },
+      {
+        "id": "soccer",
+        "type": "video",
+        "src": "assets/media/soccer.mp4",
+        "poster": "assets/media/soccer-1.jpg"
+      }
+    ],
+    "debug": {
+      "enabled": false
+    },
+    "seed": 23
+  }
+}

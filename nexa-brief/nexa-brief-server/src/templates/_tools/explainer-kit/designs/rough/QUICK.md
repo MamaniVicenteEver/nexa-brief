@@ -54,6 +54,20 @@ Al delegar: [PLANTILLA-BRIEF.md](../../../../../skills/PLANTILLA-BRIEF.md). Al e
   `{"use": "rough.counter", "params": {"from": 0, "to": 6000000000, "label": "PERSONAS EN INTERNET", "unit": "y contando…", "dur": 2.5}}`
 - **`rough.notemark`** — Hoja manuscrita con conceptos destacados por separado en el margen o como sellos. Parámetros: title, marks, note, style(marker|stamps), side(auto|left|right), seed, arrowLen, stagger
   `{"use": "rough.notemark", "params": {"title": "ACCESO AUTORIZADO", "marks": ["seguridad", "soporte", "asuntos legales"]}}`
+- **`rough.careerLadder`** — La escalera de una carrera dibujada a mano, con un rótulo por peldaño. Parámetros: rungs, dropAt, title, who, note
+  `{"use": "rough.careerLadder", "params": {"rungs": ["PRIMER EMPLEO", "SEMI-SENIOR", "SENIOR", "LÍDER"], "dropAt": 1.8, "title": "LA CARRERA", "who": "22–25 AÑOS", "note": ""}}`
+- **`rough.codeReview`** — Un editor de código dibujado a mano: las líneas se escriben solas, rápido, en gris (las escribe la máquina). Parámetros: mode, header, lines, who, bad, reviewAt, note
+  `{"use": "rough.codeReview", "params": {"mode": "review", "header": "pedido.js", "who": "IA ESCRIBIENDO…", "bad": 2, "reviewAt": 2.2, "note": "revisado por una persona"}}`
+- **`rough.layoffMail`** — Un teléfono dibujado a mano se enciende de madrugada: llega una notificación con remitente y asunto, el teléfono vibra y en `stampAt` cae un sello lima (PUESTO ELIMINADO). Parámetros: time, from, subject, stamp, stampAt, label, badge, note
+  `{"use": "rough.layoffMail", "params": {"time": "6:04", "from": "RECURSOS HUMANOS", "subject": "Tu puesto ha sido eliminado", "stamp": "PUESTO ELIMINADO", "stampAt": 2, "label": "MIÉRCOLES 28 OCT", "badge": "×250"}}`
+- **`rough.legalWarrant`** — Dibuja un documento con firma y revela un sello con la balanza de la justicia; representa órdenes y solicitudes legales. Parámetros: title
+  `{"use": "rough.legalWarrant", "params": {"title": "ORDEN JUDICIAL"}}`
+- **`rough.temporaryChat`** — Dibuja un teléfono con mensajes y revela un reloj en color de acento; representa chats temporales y plazos de retención. Parámetros: title
+  `{"use": "rough.temporaryChat", "params": {"title": "CHAT TEMPORAL"}}`
+- **`rough.chatRedaction`** — Dibuja una conversación y revela tres barras de censura en secuencia; representa datos ocultados o desidentificados. Parámetros: title
+  `{"use": "rough.chatRedaction", "params": {"title": "DATOS OCULTOS"}}`
+- **`rough.retentionCalendar`** — Dibuja un calendario de siete columnas, destaca una fecha y revela una carpeta; representa plazos de conservación de datos. Parámetros: title
+  `{"use": "rough.retentionCalendar", "params": {"title": "TIEMPO DE RETENCIÓN"}}`
 - **`rough.outrov1`** — Cierre v1 para NODETECH: gracias, marca, LIKE plano que se activa y desaparece, y suscripción rough con campana y flecha corregida. Parámetros: thanks, channel, cta, support, handle, likeAt, subscribeAt, bellAt, supportAt
   `{"use": "rough.outrov1", "params": {"thanks": "GRACIAS POR VER", "channel": "NODETECH", "cta": "SUSCRÍBETE", "support": "Tu apoyo hace posible que sigamos trayendo nuevas tecnologías, ideas y curiosidades."}}`
 - **`rough.outro`** — Cierre v1 para NODETECH: gracias, marca, LIKE plano que se activa y desaparece, y suscripción rough con campana y flecha corregida. Parámetros: thanks, channel, cta, support, handle, likeAt, subscribeAt, bellAt, supportAt

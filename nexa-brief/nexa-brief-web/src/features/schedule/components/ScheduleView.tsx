@@ -4,6 +4,7 @@ import {
   Activity,
   ArrowRight,
   CalendarDays,
+  CalendarPlus,
   ChevronLeft,
   ChevronRight,
   CircleAlert,
@@ -38,6 +39,7 @@ import { AgendaPhase, AgendaStatusBadge } from "./AgendaStatus";
 import { CategoryAutomationSection } from "./CategoryAutomationSection";
 import { PlannerSection } from "./PlannerSection";
 import { ScheduleSlotsSection } from "./ScheduleSlotsSection";
+import { WorkflowDialog } from "./WorkflowDialog";
 
 const ZONE = "America/La_Paz";
 const PAGE_SIZE = 8;
@@ -151,6 +153,8 @@ function AgendaRow({
 
 export function ScheduleView() {
   const t = useTranslations("schedule.dashboard");
+  const tw = useTranslations("schedule.workflow");
+  const [workflowOpen, setWorkflowOpen] = useState(false);
   const locale = useLocale();
   const overview = useScheduleOverview();
   const [kind, setKind] = useState<AgendaKind | "all">("all");
@@ -249,6 +253,7 @@ export function ScheduleView() {
       data-schedule-workspace
       className="mx-auto w-full max-w-[1440px] px-4 pt-24 pb-10 sm:px-6 lg:px-8"
     >
+      {workflowOpen && <WorkflowDialog onClose={() => setWorkflowOpen(false)} />}
       <header className="flex flex-col justify-between gap-5 sm:flex-row sm:items-center">
         <div>
           <p className="text-[10px] font-bold tracking-[.16em] text-nb-green-dark uppercase">
@@ -260,6 +265,14 @@ export function ScheduleView() {
           <p className="mt-1 text-[13px] text-stone-600">{t("description")}</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setWorkflowOpen(true)}
+            className="nb-btn-pill inline-flex items-center gap-2 px-4 py-2.5 text-xs font-semibold"
+          >
+            <CalendarPlus size={15} />
+            {tw("title")}
+          </button>
           <button
             type="button"
             onClick={() => setPanel("settings")}

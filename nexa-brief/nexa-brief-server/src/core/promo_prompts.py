@@ -1,4 +1,4 @@
-"""Prompts compartidos y versionados para las seis promos NodeMotion."""
+"""Prompts compartidos y versionados para las promos NodeMotion."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ from pathlib import Path
 SKILL = Path(__file__).resolve().parents[1] / "skills/nodemotion/promo"
 PROMPTS = SKILL / "prompts"
 STAGES = ("base", "investigar", "escribir", "revisar", "medios", "ritmo", "contexto", "publicar", "miniaturas")
-TEMPLATES = frozenset(f"promo-{name}" for name in ("editorial", "dynamic", "kinetic", "sports", "trendy", "urban"))
+TEMPLATES = frozenset(f"promo-{name}" for name in ("editorial", "dynamic", "kinetic", "sports", "trendy", "urban", "breaking", "pulse"))
 
 
 def reference(version: str | None = None) -> dict:

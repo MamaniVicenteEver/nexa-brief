@@ -87,11 +87,17 @@
       const { W, H, u, portrait } = ctx.stage, photo = Boolean(p.src || p.video || p.poster), side = !portrait && p.imageSide === "left" ? "left" : "right";
       const coverAdjusted = portrait && new URLSearchParams(location.search).get("coverSafe") === "1";
       const brand = p.palette !== "alert", config = ctx.C || K.design?.defaults || {}, colors = config.palette || {};
-      const bg = brand ? (colors.bg || BLACK) : BLACK;
+      const imperial = brand && config.family === "imperio", red = imperial ? "#b3122f" : RED;
+      const bg = imperial ? "#0f1a24" : brand ? (colors.bg || BLACK) : BLACK;
+      // Los paquetes antiguos también conservan una palabra carmesí visible.
+      if (imperial && (!upper(p.accent) || !upper(p.text).includes(upper(p.accent)))) {
+        const titleWords = upper(p.text).split(/\s+/).filter(Boolean);
+        p.accent = [...titleWords].reverse().find(word => word.length >= 4) || titleWords.at(-1) || "";
+      }
       const choices = [colors.ink, colors.accent, colors.paperHi, colors.nightInk, colors.accentInk, colors.paper, colors.night, colors.bg2, ...Object.values(colors)].filter(Boolean);
       const readable = choices.filter(color => contrast(color,bg) >= 4.5);
-      const ink = brand ? (readable[0] || (contrast("#080808",bg) > contrast("#ffffff",bg) ? "#080808" : "#ffffff")) : YELLOW;
-      const highlight = brand ? (contrast(colors.accent,bg) >= 4.5 ? colors.accent : ink) : "white";
+      const ink = imperial ? "#f6f6f8" : brand ? (readable[0] || (contrast("#080808",bg) > contrast("#ffffff",bg) ? "#080808" : "#ffffff")) : YELLOW;
+      const highlight = imperial ? "#ffffff" : brand ? (contrast(colors.accent,bg) >= 4.5 ? colors.accent : ink) : "white";
       const configuredFont = config.fonts?.main || "Inter";
       const family = brand ? (config.family === "collage" && configuredFont === "Cormorant Garamond" ? "Cinzel" : configuredFont) : "Anton";
       const weight = brand ? (LOCAL_FONTS[family] || 700) : 400;
@@ -132,7 +138,7 @@
             const img2 = K.el("img", null, { position: "absolute", inset: "0", width: "100%", height: "100%", objectFit: "cover", clipPath: "inset(0 0 0 50%)", filter: p.srcAfter ? "contrast(1.15)" : "grayscale(1) contrast(1.45) brightness(.8)" }, frame); img2.src = p.srcAfter || p.poster || p.src; img2.alt = "";
           }
           if (!p.srcAfter) K.el("div", null, { position: "absolute", inset: "0 0 0 50%", background: brand ? (colors.accent || ink) : "rgba(225,6,0,.42)", opacity: brand ? ".25" : "1", mixBlendMode: "multiply" }, frame);
-          K.el("div", null, { position: "absolute", top: "0", bottom: "0", left: "50%", width: `${Math.max(3,u*.35)}px`, background: brand ? highlight : YELLOW }, frame);
+          K.el("div", null, { position: "absolute", top: "0", bottom: "0", left: "50%", width: `${Math.max(3,u*.35)}px`, background: brand ? (imperial ? red : highlight) : YELLOW }, frame);
         }
         const fade = brand ? (portrait ? `linear-gradient(0deg,${bg},transparent 45%)` : `linear-gradient(${side === "left" ? "270deg" : "90deg"},${bg} 0%,${bg} 12%,transparent 48%)`) :
           (portrait ? "linear-gradient(0deg,rgba(0,0,0,.8),transparent 45%)" : side === "left" ? "linear-gradient(270deg,#000 0%,rgba(0,0,0,.94) 27%,transparent 65%)" : "linear-gradient(90deg,#000 0%,rgba(0,0,0,.94) 27%,transparent 65%)");
@@ -247,11 +253,11 @@
             }
             paint("title",i,b,() => {
               font(l.fs); c.save(); c.translate(b.x,0); c.scale(rowScale,1);
-              c.lineJoin="round"; c.lineWidth=Math.max(2,l.fs*.04); c.strokeStyle=brand ? bg : BLACK; c.shadowColor=brand ? bg : RED; c.shadowOffsetX=l.fs*.025; c.shadowOffsetY=l.fs*.025;
+              c.lineJoin="round"; c.lineWidth=Math.max(2,l.fs*.04); c.strokeStyle=brand ? bg : BLACK; c.shadowColor=brand ? bg : red; c.shadowOffsetX=l.fs*.025; c.shadowOffsetY=l.fs*.025;
               c.strokeText(l.text,localX,baseline); c.fillStyle=ink; c.fillText(l.text,localX,baseline); c.restore();
             });
             if (ab) paint("accent",i,ab,() => {
-              if (!brand) { c.fillStyle=RED; c.fillRect(ab.x,ab.y,ab.w,ab.h); }
+              if (!brand || imperial) { c.fillStyle=red; c.fillRect(ab.x,ab.y,ab.w,ab.h); }
               font(l.fs); c.save(); c.translate(b.x,0); c.scale(rowScale,1);
               const pre=l.text.slice(0,at), marked=l.text.slice(at,at+accent.length), mx=localX+c.measureText(pre).width;
               c.lineJoin="round"; c.lineWidth=Math.max(2,l.fs*.04); c.strokeStyle=brand ? bg : BLACK;
@@ -269,7 +275,7 @@
         const positions=(w,h)=>[[W-margin-w,margin],[W-margin-w,H-margin-h],[margin,margin],[margin,H-margin-h],[W-margin-w,(H-h)/2],[margin,(H-h)/2]];
         // At 160 px wide, secondary text uses at least 14 px of font size.
         const secondary=Math.max(W*14/160, portrait ? H*.034 : H*.085);
-        if (p.strap) optional("strap",p.strap,secondary,(w,h)=>[[margin,margin],[W-margin-w,margin]],(b,m,pad)=>label(b,m,pad,RED,"white",secondary));
+        if (p.strap) optional("strap",p.strap,secondary,(w,h)=>[[margin,margin],[W-margin-w,margin]],(b,m,pad)=>label(b,m,pad,red,"white",secondary));
         if (p.bullet && !portrait && !photo && best) {
           // Use the remaining strip below the full-width headline for the number and its label.
           const parts=upper(p.bullet).split(/\s+/), number=parts.shift(), caption=parts.join(" ");
@@ -280,16 +286,18 @@
           if (canPlace(b) && h >= Math.max(nm.asc+nm.desc,cm.asc+cm.desc)+gap*2 && textW <= b.w-gap*2) {
             put(b);
             paint("bullet",0,b,() => { const x=b.x+(b.w-textW)/2;
-            c.fillStyle=RED;
+            c.fillStyle=red;
             if (brand) c.fillRect(x-gap,b.y+(h-nm.asc-nm.desc)/2-gap,nm.width+gap*2,nm.asc+nm.desc+gap*2);
-            else { c.fillRect(b.x,b.y,b.w,b.h); c.strokeStyle=YELLOW; c.lineWidth=3; c.strokeRect(b.x+2,b.y+2,b.w-4,b.h-4); }
+            else { c.fillRect(b.x,b.y,b.w,b.h); c.strokeStyle=imperial ? "#f6f6f8" : YELLOW; c.lineWidth=3; c.strokeRect(b.x+2,b.y+2,b.w-4,b.h-4); }
             c.fillStyle="white"; font(large); c.fillText(number,x+nm.left,b.y+(h-nm.asc-nm.desc)/2+nm.asc);
             if (caption) { font(small); c.fillStyle=brand ? ink : "white"; c.fillText(caption,x+nm.width+gap*3+cm.left,b.y+(h-cm.asc-cm.desc)/2+cm.asc); } });
           } else layout.warnings.push("bullet omitido: no hay espacio seguro o legible.");
         } else if (p.bullet) {
           const parts=upper(p.bullet).split(/\s+/), number=parts.shift(), caption=parts.join(" ");
           let scale=Number.isFinite(p.bulletScale) ? Math.max(.5,Math.min(1.5,p.bulletScale)) : 1;
-          if (portrait && photo && scale !== 1 && validFocus) {
+          // En Imperio móvil el dato ocupa una columna lateral segura, sin tapar la cara.
+          if (imperial && portrait && photo) scale=Math.min(scale,.7);
+          if (portrait && photo && scale !== 1 && validFocus && !imperial) {
             const f=layout.boxes.find(b=>b.type==="focus");
             const available=f.y-margin-gap;
             const baseLarge=Math.max(W*.095,H*.16), baseSmall=Math.max(W*(brand ? 9 : 14)/160,H*.055);
@@ -304,7 +312,7 @@
           for (const [x,y] of candidates) {
             const b=box(x,y,w,h,"bullet",{text:upper(p.bullet)});
             if (!canPlace(b)) continue;
-            put(b); placed=true; paint("bullet",0,b,() => { c.fillStyle=RED; c.fillRect(x,y,w,h); c.strokeStyle=YELLOW; c.lineWidth=3; c.strokeRect(x+2,y+2,w-4,h-4);
+            put(b); placed=true; paint("bullet",0,b,() => { c.fillStyle=red; c.fillRect(x,y,w,h); c.strokeStyle=imperial ? "#f6f6f8" : YELLOW; c.lineWidth=3; c.strokeRect(x+2,y+2,w-4,h-4);
             font(large); c.fillStyle="white"; c.fillText(number,x+(w-nm.width)/2+nm.left,y+pad+nm.asc);
             if(caption) { font(small); c.fillText(caption,x+(w-cm.width)/2+cm.left,y+pad*2+nm.asc+nm.desc+cm.asc); } });
             break;
@@ -313,13 +321,13 @@
         }
         if (p.seal) {
           if (photo && !validFocus) layout.warnings.push("seal omitido: focus [x,y,r] obligatorio con foto.");
-          else optional("seal",p.seal,secondary,positions,(b,m,pad)=>label(b,m,pad,RED,"white",secondary));
+          else optional("seal",p.seal,secondary,positions,(b,m,pad)=>label(b,m,pad,red,"white",secondary));
         }
-        if (p.tapeText) optional("tape",p.tapeText,secondary,positions,(b,m,pad)=>{label(b,m,pad,YELLOW,BLACK,secondary); c.strokeStyle=RED; c.lineWidth=3; c.strokeRect(b.x+2,b.y+2,b.w-4,b.h-4);});
+        if (p.tapeText) optional("tape",p.tapeText,secondary,positions,(b,m,pad)=>{label(b,m,pad,YELLOW,BLACK,secondary); c.strokeStyle=red; c.lineWidth=3; c.strokeRect(b.x+2,b.y+2,b.w-4,b.h-4);});
         if (photo && p.mode === "split") for (const [name,text,half] of [["beforeLabel",p.beforeLabel,0],["afterLabel",p.afterLabel,1]]) {
           if (!text) continue;
           const x=photoBox.x+photoBox.w*(half*.5)+margin;
-          optional(name,text,secondary,(w,h)=>[[x,margin],[x,photoBox.h-h-margin]],(b,m,pad)=>label(b,m,pad,brand ? ink : RED,brand ? bg : "white",secondary));
+          optional(name,text,secondary,(w,h)=>[[x,margin],[x,photoBox.h-h-margin]],(b,m,pad)=>label(b,m,pad,brand ? ink : red,brand ? bg : "white",secondary));
         }
         if (p.marker && photo) {
           if (!validFocus) layout.warnings.push("marker omitido: focus [x,y,r] obligatorio con foto.");
@@ -331,7 +339,7 @@
             const parts=[box(x,y,w,f.y-y,"marker"),box(x,f.y+f.h,w,y+h-f.y-f.h,"marker"),box(x,f.y,f.x-x,f.h,"marker"),box(f.x+f.w,f.y,x+w-f.x-f.w,f.h,"marker")];
             const arrow=box(cx-d*1.5,y-d*5,d*3,d*5,"marker");
             if([...parts,arrow].every(canPlace)) {
-              parts.forEach(put); put(arrow); c.strokeStyle=RED; c.fillStyle=RED; c.lineWidth=d;
+              parts.forEach(put); put(arrow); c.strokeStyle=red; c.fillStyle=red; c.lineWidth=d;
               c.beginPath(); c.ellipse(cx,cy,rx,ry,0,0,Math.PI*2); c.stroke();
               c.beginPath(); c.moveTo(cx,arrow.y); c.lineTo(cx,arrow.y+arrow.h-d); c.stroke();
               c.beginPath(); c.moveTo(cx,arrow.y+arrow.h); c.lineTo(cx-d*1.5,arrow.y+arrow.h-d*2); c.lineTo(cx+d*1.5,arrow.y+arrow.h-d*2); c.closePath(); c.fill();

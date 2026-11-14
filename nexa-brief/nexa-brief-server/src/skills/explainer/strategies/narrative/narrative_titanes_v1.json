@@ -1,0 +1,154 @@
+{
+  "id": "narrative_titanes_v1",
+  "label": "Titán",
+  "name": "TITANES · historias de dinero y poder",
+  "description": "Personas, apuestas y consecuencias: del golpe inicial al legado del titán.",
+  "status": "active",
+  "acts": [
+    {
+      "id": "golpe",
+      "name": "El golpe",
+      "weight": "apertura",
+      "intensity": "maxima",
+      "function": "Contrasta la cumbre con la caída y abre la pregunta central.",
+      "rules": [
+        "Cada bloque une protagonista, decisión con riesgo, conflicto y consecuencia."
+      ]
+    },
+    {
+      "id": "origen",
+      "name": "El origen",
+      "weight": "corto",
+      "intensity": "media",
+      "function": "Quién apostó, contra qué y con qué recursos.",
+      "rules": [
+        "Cada bloque une protagonista, decisión con riesgo, conflicto y consecuencia."
+      ]
+    },
+    {
+      "id": "ascenso",
+      "name": "El ascenso",
+      "weight": "medio",
+      "intensity": "alta",
+      "function": "Las apuestas que construyeron el poder.",
+      "rules": [
+        "Cada bloque une protagonista, decisión con riesgo, conflicto y consecuencia."
+      ]
+    },
+    {
+      "id": "trono",
+      "name": "El trono",
+      "weight": "medio",
+      "intensity": "alta",
+      "function": "Apogeo, escala, dominio y promesa a quienes estaban dentro.",
+      "rules": [
+        "Cada bloque une protagonista, decisión con riesgo, conflicto y consecuencia."
+      ]
+    },
+    {
+      "id": "grieta",
+      "name": "La grieta",
+      "weight": "medio",
+      "intensity": "alta",
+      "function": "Cambian las reglas: rival y decisión equivocada o tardía.",
+      "rules": [
+        "Cada bloque une protagonista, decisión con riesgo, conflicto y consecuencia."
+      ]
+    },
+    {
+      "id": "caida",
+      "name": "La caída o metamorfosis",
+      "weight": "medio",
+      "intensity": "maxima",
+      "function": "Consecuencias concretas y quién pagó el precio.",
+      "rules": [
+        "Cada bloque une protagonista, decisión con riesgo, conflicto y consecuencia."
+      ]
+    },
+    {
+      "id": "legado",
+      "name": "Lo que queda",
+      "weight": "corto",
+      "intensity": "media",
+      "function": "Compara el presente con el pasado.",
+      "rules": [
+        "Cada bloque une protagonista, decisión con riesgo, conflicto y consecuencia."
+      ]
+    },
+    {
+      "id": "cierre",
+      "name": "El cierre",
+      "weight": "cierre",
+      "intensity": "media",
+      "function": "Deja una idea memorable y una pregunta al espectador.",
+      "rules": [
+        "Cada bloque une protagonista, decisión con riesgo, conflicto y consecuencia."
+      ]
+    },
+    {
+      "id": "outro",
+      "name": "Outro",
+      "weight": "cierre",
+      "intensity": "baja",
+      "spoken": false,
+      "function": "Cierre del canal; no va en el guion."
+    }
+  ],
+  "hook": {
+    "rules": [
+      "Abre con el contraste entre cumbre y caída y la pregunta central.",
+      "Una fecha o cifra entra si mueve la historia."
+    ],
+    "prohibited": [
+      "Cifras o citas inventadas",
+      "Acusaciones sin sustento y atribución",
+      "Relleno y «en este video veremos»"
+    ]
+  },
+  "retention": [
+    {
+      "id": "regancho",
+      "name": "Reenganche",
+      "act": "todo_video",
+      "how": "Cada 2–3 minutos abre una pregunta, presenta un dato que contradice lo anterior o anticipa una caída.",
+      "example": "Resuelve una decisión y abre la pregunta por su consecuencia."
+    }
+  ],
+  "question": {
+    "act": "cierre",
+    "screen_max_words": 7,
+    "tone": "cercano",
+    "delivery_note": "Baja la voz y deja respirar la idea final.",
+    "do": [
+      "Una pregunta concreta ligada al relato."
+    ],
+    "dont": [
+      "Pregunta genérica o afirmación sin sustento."
+    ]
+  },
+  "checks": {
+    "opening_intensity": "alta",
+    "required_acts": [
+      "golpe",
+      "origen",
+      "ascenso",
+      "trono",
+      "grieta",
+      "caida",
+      "legado",
+      "cierre"
+    ],
+    "order": [
+      "golpe",
+      "origen",
+      "ascenso",
+      "trono",
+      "grieta",
+      "caida",
+      "legado",
+      "cierre"
+    ],
+    "question_on_screen": true,
+    "pinned_repeats_question": true
+  }
+}

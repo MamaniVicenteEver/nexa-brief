@@ -116,6 +116,8 @@ export const PROMO_IDS = new Set([
 	"promo-kinetic",
 	"promo-trendy",
 	"promo-urban",
+	"promo-breaking",
+	"promo-pulse",
 ]);
 export const promoSessionsKey = (id: string) => ["promo-sessions", id] as const;
 export const promoSessionKey = (id: string) => ["promo-session", id] as const;

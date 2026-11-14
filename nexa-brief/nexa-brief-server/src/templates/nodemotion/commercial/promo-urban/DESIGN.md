@@ -58,6 +58,27 @@ Transiciones y animaciones CSS registradas en el código:
 
 El timeline de JavaScript define los tiempos y las curvas. Usar las funciones de escena y `render/frame`, con el audio como reloj; no convertirlas en animaciones CSS independientes.
 
+### Outro compartido
+
+`components/outroV2.js` es una segunda opción con la misma API y parámetros; se elige con `"outro": {"version": "v2"}` en el JSON o con `?outro=v2` en la URL del showcase. Sin indicarlo se usa `outro.js`.
+
+`components/outro.js` (global `NexaPromoUrbanOutro`) es la implementación única del
+cierre: negro `#050505` con grano y el HUD de la promo, blanco `#F4F4F2`, naranja
+`#F2681A`, Inter Tight (`.ub` 800 / `.sm` 500). No necesita fotos. Reserva por defecto
+los últimos **3,5 segundos dentro de la duración de la música** (recorta o elimina las
+escenas que caen en ese tramo), con entrada animada y lectura sostenida hasta el último
+fotograma. API: `defaults`, `options(config)`, `timeline(scenes, duration, config, builders)`
+y `render(sc, X, palette, config, tools)`; `urban.js` lo importa (URL canónica
+`/api/v1/templates/promo-urban/showcase/components/outro.js` en previews,
+`./components/outro.js` en local) y, si no carga, conserva la escena `logo` como final.
+
+El caso activo del JSON puede definir `outro` (`enabled`, `sec`, `type`, `title`, `sub`,
+`cta`, `channel`, `support`, `url`); si se omite, usa los valores del componente. No
+copies sus valores por defecto a cada video. `enabled: false` conserva el final del
+guion; los textos admiten cadenas vacías. Modificar el cierre requiere editar solo el
+componente; modificar su conexión requiere editar `urban.js` y regenerar únicamente
+`promo-urban`. El diseño actual es provisional.
+
 ## Receta para replicar
 
 1. Cargar el config activo y los medios relativos; mantener paleta y familias tipográficas anteriores.

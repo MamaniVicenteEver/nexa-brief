@@ -66,6 +66,33 @@ def family_of(video: pathlib.Path) -> str:
     return json.loads((KIT / "designs" / design / "design.json").read_text())["family"]
 
 
+def promoted_names(video: pathlib.Path, file: pathlib.Path, text: str) -> set[str]:
+    """Allow an unchanged historical episode copy of a promoted component.
+
+    Only documentation strings may differ. A later code change must be
+    reconciled, since the episode's file still overrides the shared registry.
+    """
+    raw = json.loads((video / "assets/config.json").read_text(encoding="utf-8"))
+    design = (raw["configs"][0] if "configs" in raw else raw).get("design", "binary")
+    if not isinstance(design, str) or not re.fullmatch(r"[A-Za-z0-9_-]+", design):
+        return set()
+    definition = KIT / "designs" / design / "design.json"
+    if not definition.is_file():
+        return set()
+    rel = f"designs/{design}/components/{file.name}"
+    if rel not in json.loads(definition.read_text(encoding="utf-8")).get("scripts", []):
+        return set()
+    shared = KIT / rel
+    if not shared.is_file():
+        return set()
+    # Metadata describes a component but does not alter its implementation.
+    pattern = re.compile(r"\b(summary|doc)\s*:\s*(\"(?:\\.|[^\"\\])*\"|'(?:\\.|[^'\\])*')")
+    canonical = lambda s: pattern.sub(lambda m: m.group(1) + ':""', s)
+    if canonical(text) != canonical(shared.read_text(encoding="utf-8")):
+        return set()
+    return set(NAME_RE.findall(re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.S)))
+
+
 def lint(js: str, family: str, kit_names: set[str]) -> tuple[list[str], list[str]]:
     errors, warnings = [], []
     code = re.sub(r"/\*.*?\*/|//[^\n]*", "", js, flags=re.S)        # sin comentarios
@@ -234,7 +261,11 @@ def main() -> int:
     for f in files:
         text = f.read_text(encoding="utf-8")
         syntax = subprocess.run(["node", "--check", str(f)], capture_output=True, text=True)
-        errs, warns = lint(text, family, kit_names)
+        promoted = promoted_names(video, f, text)
+        errs, warns = lint(text, family, kit_names - promoted)
+        if promoted:
+            warns.append("copia local de componentes ya incorporados al diseño: " + ", ".join(sorted(promoted))
+                         + "; reconciliar al actualizar el motor")
         if syntax.returncode:
             errs.insert(0, "error de sintaxis: " + syntax.stderr.strip()[-400:])
         found = NAME_RE.findall(re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.S))

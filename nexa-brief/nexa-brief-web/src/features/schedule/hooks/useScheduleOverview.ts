@@ -4,11 +4,20 @@ import { getExplainerJobs, getProductions } from "@/features/explainer/api/expla
 import { getJobs } from "@/features/library/api/jobs-list-service";
 import { useRealtimeEvent } from "@/features/realtime";
 import { getCategoryAutomations, getPlanItems, getQueueEntries } from "../api/schedule-service";
+import { getWorkflows } from "../api/workflow-service";
 import { buildAgenda } from "../lib/agenda";
 
 /** Read-only monitoring. Polls also while idle to discover work submitted from another chat. */
 export function useScheduleOverview() {
   const client = useQueryClient();
+  const workflows = useQuery({
+    queryKey: ["scheduleWorkflows"],
+    queryFn: ({ signal }) => getWorkflows(signal),
+    refetchInterval: (q) =>
+      q.state.data?.some((w) => ["preparing", "recording", "publishing"].includes(w.state))
+        ? 5_000
+        : 15_000,
+  });
   const plans = useQuery({
     queryKey: ["plannerItems", "all"],
     queryFn: ({ signal }) => getPlanItems(undefined, signal),
@@ -56,15 +65,16 @@ export function useScheduleOverview() {
   const events = useMemo(
     () =>
       buildAgenda({
+        workflows: workflows.data ?? [],
         plans: plans.data ?? [],
         productions: productions.data ?? [],
         recordings: recordings.data ?? [],
         publications: publications.data ?? [],
         jobs: jobs.data ?? [],
       }),
-    [plans.data, productions.data, recordings.data, publications.data, jobs.data],
+    [workflows.data, plans.data, productions.data, recordings.data, publications.data, jobs.data],
   );
-  const queries = [plans, productions, recordings, publications, categories, jobs];
+  const queries = [workflows, plans, productions, recordings, publications, categories, jobs];
   return {
     events,
     jobs: jobs.data ?? [],

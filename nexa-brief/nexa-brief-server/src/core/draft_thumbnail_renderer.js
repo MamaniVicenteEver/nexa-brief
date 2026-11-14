@@ -650,6 +650,188 @@
     const gap = (titleSize * .88 - titleSize * .3 * .35 - bottom) * .28 * gapScale;
     return {offset: bottom + gap + subtitleSize * .35, gap};
   }
+  function breakingMarks(text) {
+    // Igual que el video (kit.js): tramo central de la palabra más larga en contorno.
+    const out = [...text].map(ch => ({ch, o: false}));
+    const words = text.split(" ");
+    let best = 0, bestOff = 0, off = 0;
+    words.forEach((w, i) => { if (w.length > words[best].length) { best = i; bestOff = off; } off += w.length + 1; });
+    const n = words[best].length;
+    if (n >= 4) { const a = bestOff + Math.floor(n * .3), b = a + Math.max(1, Math.round(n * .28)); for (let i = a; i < b && i < out.length; i++) out[i].o = true; }
+    const runs = [];
+    for (const c of out) { const last = runs[runs.length - 1]; if (last && last.o === c.o) last.t += c.ch; else runs.push({t: c.ch, o: c.o}); }
+    return runs;
+  }
+  function breakingDecor(r, white) {
+    let svg = "";
+    for (let i = 0; i < 5; i++) {
+      const x = 90 + r() * 1100, y = 70 + r() * 580, kind = r();
+      svg += kind < .5 ? `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(45)" stroke="${white}" stroke-width="2.4"><line x1="-9" x2="9"/><line y1="-9" y2="9"/></g>`
+        : `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="10" height="10" fill="none" stroke="${white}" stroke-width="2" transform="rotate(45 ${(x + 5).toFixed(1)} ${(y + 5).toFixed(1)})"/>`;
+    }
+    for (let i = 0; i < 2; i++) { const y = 150 + r() * 420, w = 380 + r() * 420, left = r() < .5; svg += `<rect x="${left ? 0 : 1280 - w}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="1.4" fill="${white}" opacity=".45"/>`; }
+    return svg;
+  }
+  function renderBreakingSvg(selected, design, key, w, h, assets) {
+    const {palette: p, typography: t, background: b} = design;
+    const red = p.accent, ink = p.background, white = p.foreground, deep = p.deep;
+    let title = String(selected.text || "Noticias").trim().slice(0, 200).split(/\s+/u).filter(Boolean).slice(0, Math.floor(design.maxWords)).join(" ") || "Noticias";
+    if (t.transform !== "none") title = title.toLocaleUpperCase("es");
+    const id = `nm-breaking-${key.toLowerCase()}`;
+    const photo = b.kind === "solid" ? "" : safeData(assets?.backgroundData, "image");
+    const font = `font-family="${escapeXml(t.display)}" font-weight="${t.weight}"`;
+    const anchor = `${b.x < .34 ? "xMin" : b.x > .66 ? "xMax" : "xMid"}${b.y < .34 ? "YMin" : b.y > .66 ? "YMax" : "YMid"}`;
+    const kicker = design.kicker.toLocaleUpperCase("es");
+    const r = dynamicRandom(key === "A" ? 5101 : 6203);
+    const typo = {...t, tracking: 0};
+    const longest = title.split(" ").reduce((a, c) => c.length > a.length ? c : a, "");
+    const chunk = longest.length <= 5 ? longest : longest.slice(Math.floor(longest.length * .25), Math.floor(longest.length * .25) + 4);
+    // Grades del video: «mono» (duotono #060606→#EDEDED) y «red» (#240000→#FF4136).
+    const defs = `<style>${fontCss(assets?.fonts)}</style>${trendyDuo(id, "mono", "#060606", "#EDEDED", 1.3)}${trendyDuo(id, "red", "#240000", "#FF4136", 1.35)}<radialGradient id="${id}-tint" cx="0" cy="0" r="1.15"><stop offset="0" stop-color="${red}" stop-opacity=".85"/><stop offset=".45" stop-color="${deep}" stop-opacity=".45"/><stop offset=".8" stop-color="${deep}" stop-opacity="0"/></radialGradient><radialGradient id="${id}-vig" cx=".5" cy=".5" r=".75"><stop offset=".4" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".6"/></radialGradient>`;
+    const runs = (text, size, x, y, color, sw) => {
+      const spans = breakingMarks(text).map(run => run.o ? `<tspan fill="none" stroke="${color}" stroke-width="${sw}" stroke-linejoin="round">${escapeXml(run.t)}</tspan>` : `<tspan fill="${color}">${escapeXml(run.t)}</tspan>`).join("");
+      return `<text data-role="title" ${font} font-size="${size}" x="${x}" y="${y}" text-anchor="middle">${spans}</text>`;
+    };
+    let body, copy;
+    if (key === "A") {
+      // Escena intro / «word»: foto B/N, letras gigantes claras, titular con tramo en contorno, subrayado rojo y subtítulo espaciado.
+      const image = photo ? `<image href="${photo}" width="1280" height="720" preserveAspectRatio="${anchor} slice" filter="url(#${id}-mono)"/>` : "";
+      let gs = 900; const gw0 = measure(chunk, typo, gs); if (gw0 > 1500) gs *= 1500 / gw0;
+      const giant = `<text ${font} font-size="${gs}" fill="${white}" opacity=".6" x="${640 - measure(chunk, typo, gs) / 2}" y="${360 + gs * .36}">${escapeXml(chunk)}</text>`;
+      let size = 150; const tw0 = measure(title, typo, size); if (tw0 > 900) size *= 900 / tw0;
+      const tw = measure(title, typo, size), y = 360 + size * .3;
+      const kfs = Math.min(size * .26, 34), kls = kfs * .42, kw = measure(kicker, typo, kfs) + kls * Math.max(0, kicker.length - 1);
+      copy = runs(title, size, 640, y, white, Math.max(2, size * .024)) + `<rect x="${640 - tw * .31}" y="${y + size * .14}" width="${tw * .62}" height="${Math.max(5, size * .055)}" fill="${red}"/>`
+        + (kicker ? `<text ${font} font-size="${kfs}" letter-spacing="${kls}" fill="${white}" x="${640 - kw / 2}" y="${y + size * .14 + kfs * 1.9}">${escapeXml(kicker)}</text>` : "");
+      body = `${image}${giant}<rect width="1280" height="720" fill="url(#${id}-vig)"/><rect width="1280" height="720" fill="url(#${id}-tint)" style="mix-blend-mode:hard-light"/>${breakingDecor(r, white)}`;
+    } else {
+      // Escena «repeat»: foto en rojo, filas espaciadas repetidas y el titular grande al centro sobre una banda negra.
+      const image = photo ? `<image href="${photo}" width="1280" height="720" preserveAspectRatio="${anchor} slice" filter="url(#${id}-red)"/><rect width="1280" height="720" fill="${red}" opacity=".35" style="mix-blend-mode:multiply"/>` : `<rect width="1280" height="720" fill="${red}"/>`;
+      const rowText = title, rfs0 = 62, rls = rfs0 * .28;
+      let rfs = rfs0; const rw0 = measure(rowText, typo, rfs) + rls * (rowText.length - 1); if (rw0 > 1150) rfs *= 1150 / rw0;
+      const rw = measure(rowText, typo, rfs) + rfs * .28 * (rowText.length - 1);
+      let rows = "";
+      for (const [i, y] of [[0, 92], [1, 182], [4, 590], [5, 680]]) {
+        rows += `<text ${font} font-size="${rfs}" letter-spacing="${rfs * .28}" x="${640 - rw / 2 + (i % 2 ? 30 : -30)}" y="${y}" ${i % 2 ? `fill="none" stroke="${white}" stroke-width="1.6"` : `fill="${white}"`} opacity=".85">${escapeXml(rowText)}</text>`; }
+      let size = 170; const tw0 = measure(title, typo, size); if (tw0 > 1100) size *= 1100 / tw0;
+      const tw = measure(title, typo, size);
+      copy = `<rect x="0" y="${360 - size * .62}" width="1280" height="${size * 1.18}" fill="${ink}" opacity=".88"/>` + runs(title, size, 640, 360 + size * .34, white, Math.max(2, size * .022))
+        + `<rect x="${640 - tw * .31}" y="${360 + size * .46}" width="${tw * .62}" height="${Math.max(6, size * .05)}" fill="${white}"/>`
+        + (kicker ? `<text ${font} font-size="22" letter-spacing="8" fill="${white}" x="640" y="${360 + size * .46 + 48}" text-anchor="middle">${escapeXml(kicker)}</text>` : "");
+      body = `${image}${rows}<rect width="1280" height="720" fill="url(#${id}-vig)"/>`;
+    }
+    const brand = `<text data-role="brand" x="1236" y="696" text-anchor="end" ${font} font-size="13" letter-spacing="2" fill="${white}" opacity=".4">NODEMOTION</text>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 1280 720" role="img" aria-label="${escapeXml(title)}"><defs>${defs}</defs><rect width="1280" height="720" fill="${ink}"/><g data-role="layout">${body}</g>${copy}<g>${brand}</g></svg>`;
+  }
+  function renderPulseSvg(selected, design, key, w, h, assets) {
+    const {palette: p, typography: t, background: b} = design;
+    const green = p.accent, ink = p.background, cream = p.foreground;
+    let title = String(selected.text || "Deporte").trim().slice(0, 200).split(/\s+/u).filter(Boolean).slice(0, Math.floor(design.maxWords)).join(" ") || "Deporte";
+    if (t.transform !== "none") title = title.toLocaleUpperCase("es");
+    const id = `nm-pulse-${key.toLowerCase()}`;
+    const photo = b.kind === "solid" ? "" : safeData(assets?.backgroundData, "image");
+    const font = `font-family="${escapeXml(t.display)}" font-weight="${t.weight}"`;
+    const anchor = `${b.x < .34 ? "xMin" : b.x > .66 ? "xMax" : "xMid"}${b.y < .34 ? "YMin" : b.y > .66 ? "YMax" : "YMid"}`;
+    const typo = {...t, tracking: 0};
+    const kicker = design.kicker;
+    const longest = title.split(" ").reduce((a, c) => c.length > a.length ? c : a, "");
+    // Grade «cine» del video: saturación .7, contraste 1.12, brillo .86. Itálica sintética = sesgo de 10°.
+    const k = 1.12 * .86, c0 = (-.06 * .86).toFixed(3);
+    const defs = `<style>${fontCss(assets?.fonts)}</style><filter id="${id}-cine" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values=".7"/><feComponentTransfer><feFuncR type="linear" slope="${k}" intercept="${c0}"/><feFuncG type="linear" slope="${k}" intercept="${c0}"/><feFuncB type="linear" slope="${k}" intercept="${c0}"/></feComponentTransfer></filter><radialGradient id="${id}-vig" cx=".5" cy=".5" r=".75"><stop offset=".35" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".7"/></radialGradient><filter id="${id}-lift" color-interpolation-filters="sRGB"><feComponentTransfer><feFuncR type="linear" slope="1.9" intercept=".05"/><feFuncG type="linear" slope="1.9" intercept=".05"/><feFuncB type="linear" slope="1.9" intercept=".05"/></feComponentTransfer></filter><filter id="${id}-shadow" x="-10%" y="-10%" width="120%" height="130%"><feDropShadow dx="0" dy="14" stdDeviation="22" flood-color="#000" flood-opacity=".6"/></filter>`;
+    const skew = (x, y, svg) => `<g transform="translate(${x} ${y}) skewX(-10) translate(${-x} ${-y})">${svg}</g>`;
+    let body, copy, extra = "";
+    if (key === "A") {
+      // Escena intro / «framed»: video enmarcado, palabra gigante en contorno verde detrás y titular crema encima.
+      let gs = 640; const gw0 = measure(longest, typo, gs); if (gw0 > 1700) gs *= 1700 / gw0;
+      const gw = measure(longest, typo, gs);
+      const giant = skew(640, 360, `<text ${font} font-size="${gs}" fill="none" stroke="${green}" stroke-width="3" opacity=".9" x="${640 - gw / 2}" y="${360 + gs * .36}">${escapeXml(longest)}</text>`);
+      const fr = {x: 250, y: 150, w: 780, h: 440};
+      const media = photo ? `<svg x="${fr.x}" y="${fr.y}" width="${fr.w}" height="${fr.h}" viewBox="0 0 1280 720" preserveAspectRatio="xMidYMid slice"><image href="${photo}" width="1280" height="720" preserveAspectRatio="${anchor} slice" filter="url(#${id}-cine)"/></svg>` : `<rect x="${fr.x}" y="${fr.y}" width="${fr.w}" height="${fr.h}" fill="#1B1D1B"/>`;
+      body = `${giant}<g filter="url(#${id}-shadow)">${media}</g><rect x="${fr.x + 18}" y="${fr.y + 18}" width="26" height="18" fill="${green}"/>`;
+      let size = 230; const tw0 = measure(title, typo, size); if (tw0 > 700) size *= 700 / tw0;
+      const tw = measure(title, typo, size);
+      copy = skew(640, 360, `<text data-role="title" ${font} font-size="${size}" fill="${cream}" x="${640 - tw / 2}" y="${360 + size * .36}">${escapeXml(title)}</text>`);
+      if (kicker) extra = `<text ${font} font-size="26" letter-spacing="1" fill="${cream}" x="${fr.x + 28}" y="${fr.y + fr.h - 26}">${escapeXml(kicker)}</text>`;
+    } else {
+      // Escena «knockout»: la foto se ve dentro de la palabra, con el fondo oscuro de la misma toma, medidor verde y frase.
+      let size = 400; const tw0 = measure(longest, typo, size); if (tw0 > 1150) size *= 1150 / tw0;
+      const tw = measure(longest, typo, size), y = 360 + size * .36;
+      const clip = `<clipPath id="${id}-clip"><text ${font} font-size="${size}" x="${640 - tw / 2}" y="${y}" transform="translate(640 360) skewX(-10) translate(-640 -360)">${escapeXml(longest)}</text></clipPath>`;
+      const image = photo ? `<image href="${photo}" width="1280" height="720" preserveAspectRatio="${anchor} slice" filter="url(#${id}-cine)"/>` : `<rect width="1280" height="720" fill="#3A3D38"/>`;
+      body = `<defs>${clip}</defs>${photo ? image : ""}<rect width="1280" height="720" fill="#000" opacity=".66"/><g clip-path="url(#${id}-clip)"><g filter="url(#${id}-lift)">${image}</g><rect width="1280" height="720" fill="${cream}" opacity="${photo ? .16 : .9}"/></g><text ${font} font-size="${size}" x="${640 - tw / 2}" y="${y}" transform="translate(640 360) skewX(-10) translate(-640 -360)" fill="none" stroke="${cream}" stroke-width="2.5">${escapeXml(longest)}</text>`;
+      const mx = 640 - tw * .25, my = y + 30;
+      let meter = ""; for (let i = 0; i < 10; i++) meter += `<rect x="${mx + i * (tw * .5 / 10)}" y="${my}" width="${tw * .5 / 10 - 4}" height="7" fill="${green}"/>`;
+      copy = `<g data-role="title">${meter}</g>`;
+      if (kicker) extra = `<text ${font} font-size="30" letter-spacing="1" fill="${cream}" x="640" y="${my + 46}" text-anchor="middle">${escapeXml(kicker)}</text>`;
+      if (title !== longest) extra += skew(640, 110, `<text ${font} font-size="64" fill="${cream}" x="640" y="130" text-anchor="middle">${escapeXml(title)}</text>`);
+    }
+    const corner = design.vertical ? `<text ${font} font-size="15" letter-spacing="2" fill="${cream}" x="1240" y="40" text-anchor="end">${escapeXml(design.vertical.toLocaleUpperCase("es"))}</text>` : "";
+    const brand = `<text data-role="brand" x="1236" y="696" text-anchor="end" ${font} font-size="14" letter-spacing="2" fill="${cream}" opacity=".4">NODEMOTION</text>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 1280 720" role="img" aria-label="${escapeXml(title)}"><defs>${defs}</defs><rect width="1280" height="720" fill="${ink}"/><g data-role="layout">${body}</g>${copy}<g>${extra}<rect width="1280" height="720" fill="url(#${id}-vig)" opacity=".7"/>${corner}${brand}</g></svg>`;
+  }
+  function rasgadoTear(r, x0, x1, y, amp, steps) {
+    // Borde rasgado: puntos irregulares con algún diente más profundo (igual que kit.tearPath del video).
+    const pts = [];
+    for (let i = 0; i <= steps; i++) pts.push([x0 + (x1 - x0) * i / steps, y + amp * (.25 + r() * .75) + (r() < .12 ? amp * .6 : 0)]);
+    return pts;
+  }
+  function rasgadoBand(r, top, y, h, color, ampF = .3) {
+    // Franja de papel con reborde de fibra blanca: top=true cuelga desde arriba, top=false sube desde abajo.
+    const edge = rasgadoTear(r, -20, 1300, 0, h * ampF, 60);
+    const path = off => top ? `M-20 ${y - 2} L1300 ${y - 2} ${edge.slice().reverse().map(([x, e]) => `L${x.toFixed(1)} ${(y + h - e + off).toFixed(1)}`).join(" ")} Z`
+      : `M-20 ${y + h + 2} ${edge.map(([x, e]) => `L${x.toFixed(1)} ${(y + e - off).toFixed(1)}`).join(" ")} L1300 ${y + h + 2} Z`;
+    return `<path d="${path(4)}" fill="#F4F2EC"/><path d="${path(0)}" fill="${color}"/>`;
+  }
+  function rasgadoDoodle(kind, x, y, s, color) {
+    const p = kind === "x" ? `M${x - s} ${y - s}L${x + s} ${y + s}M${x + s} ${y - s}L${x - s} ${y + s}` : `M${x - s} ${y + s * .7}L${x} ${y - s}L${x + s} ${y + s * .6}Z`;
+    return `<path d="${p}" fill="none" stroke="${color}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" filter="url(#rs-marker)"/>`;
+  }
+  function renderRasgadoSvg(selected, design, key, w, h, assets) {
+    const {palette: p, typography: t, background: b} = design;
+    const lime = p.accent, ink = p.foreground, paper = p.background;
+    let title = String(selected.text || "Música").trim().slice(0, 200);
+    if (key === "A") title = title.split(/\s+/u).slice(0, 5).join(" ");
+    title = title.toLocaleUpperCase("es");
+    const photo = b.kind === "solid" ? "" : safeData(assets?.backgroundData, "image");
+    const font = `font-family="${escapeXml(t.display)}" font-weight="${t.weight}"`;
+    const typo = {...t, tracking: 0};
+    const anchor = `${b.x < .34 ? "xMin" : b.x > .66 ? "xMax" : "xMid"}${b.y < .34 ? "YMin" : b.y > .66 ? "YMax" : "YMid"}`;
+    const r = dynamicRandom(key === "A" ? 3301 : 4409);
+    const defs = `<style>${fontCss(assets?.fonts)}</style><filter id="rs-marker"><feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="1" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3"/></filter><filter id="rs-brush" x="-5%" y="-30%" width="110%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".04 .9" numOctaves="2" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="18"/></filter><filter id="rs-fiber" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7"/><feColorMatrix type="saturate" values="0"/></filter>${trendyDuo("rs", "mono", "#141414", "#EDEDED", 1.3)}`;
+    // Reparte en renglones equilibrados y ajusta el tamaño al ancho disponible.
+    const fitLines = (text, maxW, maxH, maxLines) => {
+      const words = text.split(" "), best = {lines: [text], size: 1};
+      for (let n = 1; n <= Math.min(maxLines, words.length); n++) {
+        const lines = []; let acc = [], total = text.length;
+        for (const wd of words) { acc.push(wd); if (acc.join(" ").length >= total / n && lines.length < n - 1) { lines.push(acc.join(" ")); acc = []; } }
+        if (acc.length) lines.push(acc.join(" "));
+        const size = Math.min(maxH / lines.length / .95, ...lines.map(l => maxW / Math.max(1, measure(l, typo, 100)) * 100));
+        if (size > best.size) Object.assign(best, {lines, size});
+      }
+      return best;
+    };
+    let body, copy;
+    if (key === "A") {
+      // Escena «giant»/«build»: hoja gris con jirones lima y carbón, título condensado enorme e inclinado y LETRAS en pincelada lima.
+      const f = fitLines(title, 1000, 470, 2);
+      const lh = f.size * .95, top = 330 - (f.lines.length - 1) * lh / 2;
+      const lines = f.lines.map((l, i) => `<text ${font} font-size="${f.size.toFixed(1)}" fill="${ink}" x="640" y="${(top + i * lh + f.size * .36).toFixed(1)}" text-anchor="middle">${escapeXml(l)}</text>`).join("");
+      copy = `<g data-role="title" transform="rotate(-3 640 330) skewX(2)">${lines}</g>`;
+      const ly = top + (f.lines.length - 1) * lh + f.size * .62 + 26;
+      copy += `<rect x="520" y="${ly - 30}" width="240" height="58" fill="${lime}" filter="url(#rs-brush)"/><text data-role="subtitle" ${font} font-size="44" letter-spacing="6" fill="${ink}" x="640" y="${ly + 14}" text-anchor="middle">LETRAS</text>`;
+      body = `<rect width="1280" height="720" fill="${paper}"/><rect width="1280" height="720" filter="url(#rs-fiber)" opacity=".12" style="mix-blend-mode:multiply"/>${rasgadoBand(r, true, -10, 120, lime)}${rasgadoBand(r, false, 610, 120, ink)}${rasgadoDoodle("x", 130, 190, 24, lime)}${rasgadoDoodle("tri", 1150, 520, 22, ink)}`;
+    } else {
+      // Escena con fondo «media»: foto B/N con acento lima, tira de papel rasgado inclinada con la frase y LETRAS en lima.
+      const image = photo ? `<image href="${photo}" width="1280" height="720" preserveAspectRatio="${anchor} slice" filter="url(#rs-mono)"/><radialGradient id="rs-lime" cx=".3" cy=".35" r=".6"><stop offset="0" stop-color="${lime}" stop-opacity=".9"/><stop offset="1" stop-color="${lime}" stop-opacity="0"/></radialGradient><rect width="1280" height="720" fill="url(#rs-lime)" style="mix-blend-mode:color"/><rect width="1280" height="720" fill="#000" opacity=".35"/>` : "";
+      const f = fitLines(title, 1000, 250, 3);
+      const lh = f.size * 1.02, sh = f.lines.length * lh + 90, sy = 360 - sh / 2;
+      const lines = f.lines.map((l, i) => `<text ${font} font-size="${f.size.toFixed(1)}" fill="${ink}" x="640" y="${(sy + 50 + i * lh + f.size * .78).toFixed(1)}" text-anchor="middle">${escapeXml(l)}</text>`).join("");
+      copy = `<g data-role="title" transform="rotate(-4 640 360)">${rasgadoBand(r, false, sy, sh, paper, .1)}${lines}</g><text data-role="subtitle" ${font} font-size="34" letter-spacing="10" fill="${lime}" x="640" y="${Math.min(690, sy + sh + 70)}" text-anchor="middle">LETRAS</text>`;
+      body = `<rect width="1280" height="720" fill="${ink}"/>${image}${rasgadoBand(r, true, -10, 110, lime)}${rasgadoDoodle("x", 1140, 170, 26, lime)}${rasgadoDoodle("tri", 150, 580, 22, lime)}`;
+    }
+    const brand = `<text data-role="brand" x="1236" y="700" text-anchor="end" font-family="Arial, sans-serif" font-size="14" font-weight="900" letter-spacing="2" fill="${key === "A" ? paper : ink}" opacity=".5">NODEMOTION</text>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 1280 720" role="img" aria-label="${escapeXml(title)}"><defs>${defs}</defs><g data-role="layout">${body}</g>${copy}${brand}</svg>`;
+  }
   function renderSvg(manifest, option, width, height, assets) {
     const w = Math.round(number(width, 1280, 320, 1920));
     const h = Math.round(number(height, 720, 180, 1920));
@@ -662,6 +844,9 @@
     if (design.style === "promo-urban") return renderUrbanSvg(selected, design, key, w, h, assets);
     if (design.style === "promo-sports") return renderSportsSvg(selected, design, key, w, h, assets);
     if (design.style === "promo-kinetic") return renderKineticSvg(selected, design, key, w, h, assets);
+    if (design.style === "promo-breaking") return renderBreakingSvg(selected, design, key, w, h, assets);
+    if (design.style === "promo-pulse") return renderPulseSvg(selected, design, key, w, h, assets);
+    if (design.style === "lyrics-rasgado") return renderRasgadoSvg(selected, design, key, w, h, assets);
     const { palette: p, typography: t, background: b } = design;
     let title = String(selected.text || "Música").trim().slice(0, 200);
     if (key === "A") title = title.split(/\s+/).slice(0, 5).join(" ");

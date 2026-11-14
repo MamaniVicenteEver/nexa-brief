@@ -7,6 +7,32 @@
    config.scenes[i] = { type, media, flyer, side, shape, rows }. */
 const P = C.palette;
 const BR = C.brand || {};
+/* visible desde t (seg. de escena): pista discreta de visibility */
+const show = (X, el, t) => { if (t > 0.001) X.T(el, "visibility", "hidden", true).set(t, "visible"); };
+
+// Los previews consultan el componente canónico; el render usa su copia actual local.
+const outroModule = new URL(/^\/api\/v1\/(drafts|templates)\//.test(location.pathname)
+  ? "/api/v1/templates/promo-dynamic/showcase/components/outro.js"
+  : "./components/outro.js", document.baseURI);
+outroModule.searchParams.set("v", String(Date.now()));
+try { await import(outroModule.href); }
+catch (error) { console.warn("[promo-dynamic] No se pudo cargar el cierre compartido", error); }
+
+const outroV2Module = new URL(/^\/api\/v1\/(drafts|templates)\//.test(location.pathname)
+  ? "/api/v1/templates/promo-dynamic/showcase/components/outroV2.js"
+  : "./components/outroV2.js", document.baseURI);
+outroV2Module.searchParams.set("v", String(Date.now()));
+try { await import(outroV2Module.href); }
+catch (error) { console.warn("[promo-dynamic] No se pudo cargar el cierre compartido V2", error); }
+
+const outroApi = () => { const v1 = window.NexaPromoDynamicOutro, v2 = window.NexaPromoDynamicOutroV2;
+  const want = (QS.get("outro") || C.outro?.version || "").toString().toLowerCase() === "v2";
+  return want && v2 ? v2 : v1 || v2; };
+
+function makeTimeline(segments, duration) {
+  const scenes = buildTimeline(segments, duration);
+  return outroApi()?.timeline(scenes, duration, C.outro, B) || scenes;
+}
 
 /* ---- HUD ---- */
 function hudDecor(X, L) {
@@ -250,3 +276,11 @@ B.logo = (sc, X) => {
     else X.T(o.el, "transform", "translateY(0px)").to(tf, 0.3, `translateY(${0.5 * H - (0.63 * H + fu * 1.05)}px)`, EASE_IO);
   });
 };
+
+/* Cierre compartido (components/outro.js). Herramientas: motor (div, tx, fit,
+   textW, measure, blurPass, mbox, asStill, kenBurns, mediaSpec, curvas) y
+   firmas de la promo (base+HUD, jag, cut, flyer, bgWord, mainWord, mainPlate). */
+B.outro = (sc, X) => outroApi()
+  ? outroApi().render(sc, X, P, C.outro, { div, tx, fit, textW, measure, show, base, hudDecor, jag, cut,
+      flyer, bgWord, mainWord, mainPlate, blurPass, mbox, asStill, kenBurns, mediaSpec, EASE_OUT, EASE_IN, EASE_IO, brand: BR })
+  : B.logo(sc, X);

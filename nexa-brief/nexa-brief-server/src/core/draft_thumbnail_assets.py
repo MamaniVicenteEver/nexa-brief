@@ -90,7 +90,7 @@ def background_sources(job: Job) -> dict[str, Path]:
                 add(_resolve_medium(spec.get("src"), roots))
         # Las plantillas por escenas declaran sus clips originales en `media`.
         media = config.get("media")
-        if tid in {"lyrics-mixtas", "lyrics-grunge", "lyrics-lluvia-gris", "lyrics-memoria", "lyrics-ceniza", "lyrics-vacio", "promo-editorial", "promo-dynamic", "promo-trendy", "promo-urban", "promo-sports"} and isinstance(media, list):
+        if tid in {"lyrics-mixtas", "lyrics-grunge", "lyrics-lluvia-gris", "lyrics-memoria", "lyrics-ceniza", "lyrics-vacio", "promo-editorial", "promo-dynamic", "promo-trendy", "promo-urban", "promo-sports", "promo-breaking", "promo-pulse"} and isinstance(media, list):
             # El plano nocturno conserva mejor el contraste del texto fino de Lluvia Gris.
             preferred = "street-rain" if tid == "lyrics-lluvia-gris" else None
             candidates = sorted(media, key=lambda item: 0 if isinstance(item, dict) and item.get("id") == preferred else 1)

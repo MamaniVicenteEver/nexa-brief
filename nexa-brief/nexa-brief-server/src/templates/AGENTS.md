@@ -312,6 +312,8 @@ Todos los comandos se corren desde `nexa-brief-server/`.
 | Plantillas | Generador (editar acá) |
 |---|---|
 | `promo-dynamic`, `promo-editorial`, `promo-kinetic`, `promo-sports`, `promo-trendy`, `promo-urban` | `_tools/commercial/build/` (`<nombre>.js` + `promo-<nombre>.spec.json`) |
+| `promo-breaking`, `promo-pulse` | `_tools/commercial/build/promo-<nombre>.spec.json` + `player.js` y `components/` de la propia plantilla (ver su `DESIGN.md`) |
+| `lyrics-rasgado` | `_tools/lyrics-rasgado/build/lyrics-rasgado.spec.json` + `player.js` y `components/` de la propia plantilla (ver su `DESIGN.md`) |
 | `lyrics-grunge`, `lyrics-mixtas` | `_tools/lyrics-grunge/build/`, `_tools/lyrics-mixtas/build/` (se arman con el mismo `build.py`) |
 | `lyrics-lluvia-gris`, `lyrics-memoria`, `lyrics-ceniza`, `lyrics-vacio` | `_tools/lyrics-sad/build/` (`sad-common.js` + `<nombre>.js`; ver `_tools/lyrics-sad/README.md`) |
 

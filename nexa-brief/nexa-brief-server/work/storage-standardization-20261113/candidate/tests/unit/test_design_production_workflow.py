@@ -555,3 +555,18 @@ async def test_kit_engine_suffix_must_match_the_shared_design(workflow):
     (definition/'design.json').write_text(json.dumps(design))
     status=repository.inspect('nodehistory','map-demo')
     assert 'Falta el catálogo de componentes aislados del diseño principal' in status['issues']
+
+
+@pytest.mark.asyncio
+async def test_completed_shared_demo_inspection_uses_its_registered_catalog(workflow):
+    repository, source, templates, draft, _ = _legacy_maps_fixture(workflow, principal=True)
+    project = source.name
+    await repository.save('nodehistory', project, draft)
+    await repository._validate('nodehistory', project)
+    assert repository.inspect('nodehistory', project)['can_pass']
+    result = await repository.move('nodehistory', project, {'category': 'node_atlas', 'shared_categories': ['node_politics']})
+    assert result['state'] == 'production'
+    after = repository.inspect('nodehistory', project)
+    assert after['issues'] == []
+    assert after['component_count'] == 1
+    assert after['design_id'] == 'mapas-satelitales'

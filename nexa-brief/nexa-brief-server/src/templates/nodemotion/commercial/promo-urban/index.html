@@ -1587,6 +1587,32 @@ async function boot() {
 const P = C.palette;
 const BR = C.brand || {};
 const RED = "duoRed", BW = "bwCold";   /* keys de C.grades */
+/* visible desde t (seg. de escena): pista discreta de visibility */
+const show = (X, el, t) => { if (t > 0.001) X.T(el, "visibility", "hidden", true).set(t, "visible"); };
+
+// Los previews consultan el componente canónico; el render usa su copia actual local.
+const outroModule = new URL(/^\/api\/v1\/(drafts|templates)\//.test(location.pathname)
+  ? "/api/v1/templates/promo-urban/showcase/components/outro.js"
+  : "./components/outro.js", document.baseURI);
+outroModule.searchParams.set("v", String(Date.now()));
+try { await import(outroModule.href); }
+catch (error) { console.warn("[promo-urban] No se pudo cargar el cierre compartido", error); }
+
+const outroV2Module = new URL(/^\/api\/v1\/(drafts|templates)\//.test(location.pathname)
+  ? "/api/v1/templates/promo-urban/showcase/components/outroV2.js"
+  : "./components/outroV2.js", document.baseURI);
+outroV2Module.searchParams.set("v", String(Date.now()));
+try { await import(outroV2Module.href); }
+catch (error) { console.warn("[promo-urban] No se pudo cargar el cierre compartido V2", error); }
+
+const outroApi = () => { const v1 = window.NexaPromoUrbanOutro, v2 = window.NexaPromoUrbanOutroV2;
+  const want = (QS.get("outro") || C.outro?.version || "").toString().toLowerCase() === "v2";
+  return want && v2 ? v2 : v1 || v2; };
+
+function makeTimeline(segments, duration) {
+  const scenes = buildTimeline(segments, duration);
+  return outroApi()?.timeline(scenes, duration, C.outro, B) || scenes;
+}
 
 /* ---- piezas gráficas ---- */
 const style = s => s.startsWith("^") ? { t: s.slice(1), color: P.orange } : s.startsWith("~") ? { t: s.slice(1), stroke: true } : { t: s };
@@ -1876,6 +1902,16 @@ B.logo = (sc, X) => {
   tinyText(L, BR.blurb || "", 0.52 * W, 0.84 * H, u);
   done();
 };
+
+/* Cierre compartido (components/outro.js). Herramientas: motor (div, tx, fit,
+   textW, measure, svg, mbox, kenBurns, mediaSpec, asStill, curvas) y firmas de
+   la promo (base+chrome+blocks, style, typeLine, stair, panel, hatch, arrow,
+   runner, tinyText, bigYear, ringR, grades RED/BW, brand). */
+B.outro = (sc, X) => outroApi()
+  ? outroApi().render(sc, X, P, C.outro, { div, tx, fit, textW, measure, show, svg, base, chrome, blocks,
+      style, typeLine, stair, panel, hatch, arrow, runner, tinyText, bigYear, ringR, mbox, kenBurns, mediaSpec, asStill,
+      EASE_OUT, EASE_IN, EASE_IO, EASE_BACK, RED, BW, brand: BR })
+  : B.logo(sc, X);
 
 boot();
 </script>

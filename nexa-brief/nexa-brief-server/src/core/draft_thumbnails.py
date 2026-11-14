@@ -143,9 +143,12 @@ _THEMES: dict[str, dict[str, str]] = {
     "promo-dynamic": {"layout": "dynamic", "font": "condensed", "accent": "neon", "background": "ink", "pattern_a": "rings", "pattern_b": "stripes", "badge": "PROMO", "sub_badge": "DYNAMIC"},
     "promo-urban": {"layout": "urban", "font": "condensed", "accent": "orange", "background": "black", "pattern_a": "stripes", "pattern_b": "dots", "badge": "PROMO", "sub_badge": "URBAN"},
     "promo-sports": {"layout": "sports", "font": "condensed", "accent": "yellow", "background": "dark", "pattern_a": "stripes", "pattern_b": "grid", "badge": "PROMO", "sub_badge": "SPORTS"},
+    "promo-breaking": {"layout": "breaking", "font": "sans", "accent": "red", "background": "ink", "pattern_a": "none", "pattern_b": "none", "badge": "PROMO", "sub_badge": "BREAKING"},
+    "promo-pulse": {"layout": "pulse", "font": "condensed", "accent": "green", "background": "ink", "pattern_a": "none", "pattern_b": "none", "badge": "PROMO", "sub_badge": "PULSE"},
     "lyrics-manifiesto": {"layout": "manifesto", "font": "sans", "accent": "ink", "background": "paper", "pattern_a": "paper", "pattern_b": "grid", "badge": "NODEMOTION", "sub_badge": "LETRA"},
     "lyrics-caution": {"layout": "caution", "font": "condensed", "accent": "primary", "background": "dark", "pattern_a": "stripes", "pattern_b": "dots", "badge": "NODEMOTION", "sub_badge": "LETRA"},
     "lyrics-mixtas": {"layout": "mixtas", "font": "condensed", "accent": "lime", "background": "black", "pattern_a": "dots", "pattern_b": "stripes", "badge": "NODEMOTION", "sub_badge": "LETRA"},
+    "lyrics-rasgado": {"layout": "rasgado", "font": "condensed", "accent": "lime", "background": "paper", "pattern_a": "none", "pattern_b": "none", "badge": "NODEMOTION", "sub_badge": "LETRA"},
 }
 
 _FALLBACK_PALETTES: dict[str, dict[str, str]] = {
@@ -155,11 +158,14 @@ _FALLBACK_PALETTES: dict[str, dict[str, str]] = {
     "promo-dynamic": {"neon": "#C9FF1F", "ink": "#1E1E1E"},
     "promo-urban": {"black": "#050505", "white": "#F4F4F2", "orange": "#F2681A", "red": "#E4261C", "redDark": "#140102"},
     "promo-sports": {"yellow": "#EBE609", "dark": "#050607", "white": "#F3F3F1", "ink": "#0B0B0B"},
+    "promo-breaking": {"red": "#F2070F", "deep": "#6E0006", "ink": "#0A0A0A", "white": "#FFFFFF"},
+    "promo-pulse": {"green": "#2BF51A", "cream": "#E3DDCB", "ink": "#0B0C0B"},
     "lyrics-expediente": {"paper": "#EFE6CF", "ink": "#14110C", "red": "#E0503E"},
     "lyrics-resaltado": {"paper": "#F1E6C8", "ink": "#241A0E", "marker": "#FFE066"},
     "lyrics-manifiesto": {"paper": "#F4F2EE", "ink": "#0A0A0A"},
     "lyrics-caution": {"primary": "#C80202", "dark": "#000000", "light": "#FFFFFF"},
     "lyrics-mixtas": {"lime": "#BEFF0A", "red": "#B70004", "orange": "#F16F05", "white": "#FFFFFF", "paper": "#F4F4F2", "black": "#0B0B0C", "ink": "#111111"},
+    "lyrics-rasgado": {"lime": "#90DE66", "ink": "#262626", "paper": "#DEDEE4"},
 }
 
 
@@ -282,6 +288,18 @@ def _default_options(job: Job, details: DraftDetails, raw: dict[str, Any] | None
                 # Rótulos reales del HUD del video: esquina, serie, año y texto pequeño.
                 design.update(corner=str(brand.get("tagTop") or "")[:60], tagline=" ".join(str(brand.get("tagRight") or "").split())[:40],
                               year=" ".join(str(brand.get("year") or "").split())[:12], blurb=str(brand.get("blurb") or "")[:180])
+        return {"A": {"text": text, "design": designs["A"]}, "B": {"text": text, "design": designs["B"]}}
+    if _template_id(job) in ("promo-breaking", "promo-pulse"):
+        # Titular = renglón 1 del primer segmento (la intro); placa = su renglón 2 o el subtítulo de marca.
+        config = _active_config(raw if raw is not None else _read_config(job))
+        brand = config.get("brand") if isinstance(config.get("brand"), dict) else {}
+        segments = (job.artifacts.lyrics_json or {}).get("segments", [])
+        first = next((item["lines"] for item in segments if isinstance(item, dict) and isinstance(item.get("lines"), list)
+                      and item["lines"] and str(item["lines"][0]).strip()), [])
+        text = " ".join(_clean_copy(str(first[0]).replace("~", "") if first else title).split()[:5])
+        kicker = " ".join(str((first[1] if len(first) > 1 else "") or brand.get("tag") or brand.get("url") or "").split())[:40]
+        for design in designs.values():
+            design.update(kicker=kicker, tagline="", side="right", vertical=" ".join(str(brand.get("corner") or "").split())[:24])
         return {"A": {"text": text, "design": designs["A"]}, "B": {"text": text, "design": designs["B"]}}
     if _template_id(job) in ("promo-sports", "promo-kinetic"):
         # Sports y Kinetic no tienen un rótulo de dos filas útil: el titular es su primer rótulo («DEPORTE»).

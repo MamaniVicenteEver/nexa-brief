@@ -63,7 +63,8 @@ async def stable_moment(page, t: float) -> float:
 async def capture(out: pathlib.Path, design: str, component: str, params: dict, t: float, orientation: str) -> list[str]:
     from playwright.async_api import async_playwright
     width, height = (1280, 720) if orientation == "16x9" else (1080, 1920)
-    if orientation == "9x16" and component != "common.tabloid":
+    # Imperio ya tiene aperturas móviles nativas: A conserva el mundo y B su foto.
+    if orientation == "9x16" and component != "common.tabloid" and design != "imperio":
         # A dedicated cover layout preserves the selected wording and photograph
         # while keeping them readable inside feed/profile crops. The opening is unchanged.
         title = params.get("textPortrait") or params.get("text") or params.get("title")
@@ -124,7 +125,7 @@ async def capture(out: pathlib.Path, design: str, component: str, params: dict, 
     print(f"· cuadro elegido: {chosen:.2f} s (pedido {t:.2f} s)")
     out.parent.mkdir(parents=True, exist_ok=True)
     image = Image.open(io.BytesIO(png)).convert("RGB")
-    if orientation == "9x16" and component != "common.tabloid":
+    if orientation == "9x16" and component != "common.tabloid" and design != "imperio":
         # Other design intros do not have a cover-specific layout. Preserve every
         # element within the centered square instead of letting a feed crop cut it.
         from PIL import ImageOps

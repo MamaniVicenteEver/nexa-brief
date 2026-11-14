@@ -1,20 +1,6 @@
-/* =============================================================================
-   imperio · intros (el gancho: lo primero que se ve en YouTube)
-   introv1 = "golpe": el SOL carmesí cae sobre el país foco (de 3× a su tamaño, con
-             sacudida), los rayos estallan en 360° y el titular condensado blanco entra
-             palabra por palabra con estela; '^x^' va sobre una franja carmesí. Impacto
-             (burstAt): los rayos se abren hasta los bordes, destello claro y sacudida.
-   introv2 = "pregunta + revelación": la pregunta se escribe carácter a carácter como el
-             título en idioma original de la referencia (escala + fantasma); en stampAt
-             la pregunta sube y se achica, el sol SALE desde abajo detrás del centro con su
-             abanico de rayos y la respuesta SUBE con el degradé del título condensado.
-   Fondos propios (neutros, sirven para cualquier tema):
-     atlas   el atlas en color sobre `country` (o el mundo), zoom lento
-     archivo el atlas en gris con humo oscuro desde arriba
-     papel   océano liso del atlas con relieve tenue, sin tierra (lo más limpio)
-   + image (foto en B/N fundida) / component / none del contrato común (designs/common/hook.js).
-   Utilidades compartidas con outro.js en Kit.imperio.hook. Todo es función pura de lt.
-   ========================================================================== */
+/* Imperio: A = titular sobre el mundo completo; B = titular y fotografía.
+   El carmesí es editorial. Las banderas se reservan para las piezas geográficas.
+   Mapa vectorial cacheado por instancia, sin teselas ni temporizadores propios. */
 (function () {
   "use strict";
   const K = Kit, IM = Kit.imperio, { clamp, lerp, prog, ease } = K;
@@ -52,6 +38,33 @@
     for (const h of hits) { const d = lt - h; if (d >= 0 && d < 0.45) { const e = Math.exp(-d * 9) * amp; x += Math.sin(d * 71) * e; y += Math.cos(d * 53) * e * 0.7; } }
     return [x, y];
   }
+
+  /* Mundo completo sin hornear el atlas: una imagen vectorial cacheada por tamaño.
+     Usa la misma geografía y paleta de Imperio, también en la vista ligera del showcase. */
+  function worldBackground(ctx) {
+    const { W, H, portrait } = ctx.stage, world = IM.world(), image = document.createElement("canvas");
+    image.width = Math.max(1, Math.round(W)); image.height = Math.max(1, Math.round(H));
+    const g = image.getContext("2d");
+    g.fillStyle = IM.COL.ocean; g.fillRect(0, 0, W, H);
+    if (world.ok) {
+      const y0 = H * (portrait ? 0.28 : 0.08), y1 = H * (portrait ? 0.66 : 0.92);
+      const projection = d3.geoNaturalEarth1().fitExtent([[W * 0.025, y0], [W * 0.975, y1]], { type: "Sphere" });
+      const path = d3.geoPath(projection, g);
+      g.beginPath(); path(world.land); g.fillStyle = IM.COL.land; g.fill();
+      g.beginPath(); path(world.fc); g.strokeStyle = IM.COL.coast; g.lineWidth = Math.max(0.65, W / 1500); g.stroke();
+    }
+    return {
+      render(lt, beat) {
+        const G = ctx.g.main, zoom = lerp(1.14, 1, prog(lt, 0, Math.min(2.2, beat.dur * 0.5), "out"));
+        G.save(); G.translate(W / 2, H / 2); G.scale(zoom, zoom); G.drawImage(image, -W / 2, -H / 2, W, H); G.restore();
+        // El mapa se atenúa al finalizar la despedida, sin ocultar los textos.
+        const dim = 0.04 + 0.16 * prog(lt, beat.dur * 0.48, beat.dur * 0.36, "inOut");
+        G.save(); G.fillStyle = `rgba(10,12,14,${dim})`; G.fillRect(0, 0, W, H); G.restore();
+      },
+      dispose() { image.width = image.height = 1; },
+    };
+  }
+
 
   /* ------------------------------------------------------------ fondos propios */
   const atlasBase = p => p.country ? IM.countryCam(p.country, 3.2, 0) : { lon: 30, lat: 32, span: 110, rot: 0 };
@@ -97,50 +110,39 @@
     const BG = K.hook.bg(ctx, p, { auto: "atlas", presets: pr, tone: () => IM.bw(ctx, p.src) });
     return { ...BG, mode: BG.mode, render: BG.render, dispose() { BG.dispose(); free(); } };
   }
-  IM.hook = { words, layout, kicker, shake, presets, scrim, background, PRESETS, mapLook, mapWarm, COL: { WHITE, CRIMSON, INK } };
+  IM.hook = { words, layout, kicker, shake, presets, scrim, background, worldBackground, PRESETS, mapLook, mapWarm, COL: { WHITE, CRIMSON, INK } };
 
   /* ============================================================ introv1 · golpe */
   K.register({
-    name: "imperio.introv1", tags: ["intro", "gancho", "apertura", "título", "impacto", "sol"], layer: "main", post: 0.6, opaque: true,
-    summary: "GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
+    name: "imperio.introv1", tags: ["intro", "gancho", "apertura", "título", "mapa mundial"], layer: "main", post: 0.6, opaque: true,
+    summary: "Apertura A de solo texto sobre el mapa del mundo completo, como el cierre v1, sin sol, rayos ni bandera. Titular blanco y palabra clave sobre carmesí; entrada por palabras. Foto/componente opcionales mediante bg explícito.",
     example: { text: "EL IMPERIO QUE\nMIRÓ AL ^SUR^", kicker: "Tokio · 1940", sub: "la doctrina que llevó a la guerra del Pacífico", country: "Japan" },
     params: {
       text: { type: "string", required: true, doc: "Titular gancho (2–7 palabras). '\\n' = renglón; '^x^' = palabras sobre franja carmesí." },
       kicker: { type: "string", default: "", doc: "Rótulo chico arriba (lugar · fecha)." },
       sub: { type: "string", default: "", doc: "Línea chica en itálica debajo del titular." },
-      country: { type: "string", default: "", doc: "País foco del fondo atlas/archivo (rayado, el sol cae sobre él). Vacío = mundo y sol al centro." },
-      sunAt: { type: "number", default: 0.15, doc: "Segundo en que cae el sol." },
+      country: { type: "string", default: "", doc: "Contexto del episodio; la apertura A mantiene el mundo completo sin bandera ni rayado." },
+      sunAt: { type: "number", default: 0.15, doc: "Tiempo heredado de entrada; conservado por compatibilidad. La apertura A no dibuja un sol." },
       wordAt: { type: "number", default: 0.7, doc: "Segundo de la primera palabra." },
       stagger: { type: "number", default: 0.2, min: 0.06, doc: "Segundos entre palabras." },
-      burstAt: { type: "number", default: 2.6, doc: "Impacto: los rayos llegan a los bordes (acepta '@palabra'; −1 = sin impacto)." },
+      burstAt: { type: "number", default: 2.6, doc: "Impacto tipográfico suave (acepta '@palabra'; −1 = sin impacto), sin rayos ni bandera." },
       ...K.hook.bgParams(PRESETS),
       dim: { type: "number", default: 0.35, min: 0, max: 1, doc: "Oscurecido del fondo foto/componente." },
     },
-    mapLook, mapWarm,
+    mapLook: () => ({ hatch: [] }),
+    mapWarm: p => !p.bg || ["auto", "atlas"].includes(p.bg) ? [] : mapWarm(p),
     create(ctx, p) {
-      const st = ctx.stage, { W, H, u, portrait } = st, BG = background(ctx, p);
+      const st = ctx.stage, { W, H, u, portrait } = st, BG = !p.bg || ["auto", "atlas"].includes(p.bg) ? worldBackground(ctx) : background(ctx, p);
       const L = layout(words(p.text), W * (portrait ? 0.86 : 0.7), portrait ? H * 0.085 : H * 0.17);
       const blockH = L.lh * L.lines.length, cy = H * (portrait ? 0.56 : 0.58), top = cy - blockH / 2;
-      const sp = p.country ? IM.point(p.country) : null;
       return {
         dispose() { BG.dispose(); },
         render(lt, b, t) {
           const G = ctx.g.main;
           BG.render(lt, b, t);
-          /* sol: posición en el atlas si hay país, si no arriba al centro */
-          let sx = W / 2, sy = H * (portrait ? 0.3 : 0.3);
-          if (sp && (BG.mode === "atlas" || BG.mode === "archivo")) {
-            const base = IM.countryCam(p.country, 3.2, 0), q = clamp(lt / Math.max(3, b.dur)), V = IM.view(st, IM.zoomCam(base, 1 + 0.18 * q, 2 * q));
-            [sx, sy] = V.pt(sp[0], sp[1]);
-          }
-          scrim(G, st, 1);
-          const sq = prog(lt, p.sunAt, 0.42, "expoOut"), R = u * (portrait ? 7 : 6.5), burst = p.burstAt >= 0 ? prog(lt, p.burstAt, 0.7, "out") : 0;
-          const [hx, hy] = shake(lt, [p.sunAt + 0.38, ...(p.burstAt >= 0 ? [p.burstAt] : [])], u * 1.2);
+          scrim(G, st, 0.8);
+          const [hx, hy] = shake(lt, p.burstAt >= 0 ? [p.burstAt] : [], u * 0.25);
           G.save(); G.translate(hx, hy);
-          if (sq > 0) {
-            IM.rays(G, sx, sy, { n: 32, rot: lt * 0.05, dir: Math.PI / 2, focus: 0.15, len: Math.max(W, H) * (0.28 + 0.75 * burst), r0: R * 1.02, grow: prog(lt, p.sunAt + 0.3, 0.8, "out"), t: lt, alpha: 0.8, colors: IM.flagFor(p.country)?.rays });
-            IM.sun(G, sx, sy, R * (1 + 2 * (1 - sq)), t, { alpha: clamp(sq * 3), flag: IM.flagFor(p.country) });
-          }
           /* titular palabra por palabra */
           let k = 0;
           G.font = IM.wordFont(L.fs); G.letterSpacing = L.fs * 0.01 + "px"; G.textBaseline = "alphabetic"; G.textAlign = "left";
@@ -165,69 +167,103 @@
             G.save(); G.globalAlpha = a; G.font = `italic 500 ${fs}px Montserrat`; G.letterSpacing = fs * 0.08 + "px"; G.textAlign = "center"; G.textBaseline = "top";
             G.shadowColor = "rgba(8,10,12,.85)"; G.shadowBlur = fs * 0.6; G.fillStyle = "rgba(246,246,248,.92)"; G.fillText(p.sub, W / 2, top + blockH + u * 2, W * 0.9); G.restore();
           }
-          /* destello claro del impacto */
-          if (burst > 0 && burst < 1) { const a = Math.sin(Math.PI * Math.min(1, burst * 1.6)) * 0.4; ctx.g.top.save(); ctx.g.top.fillStyle = `rgba(255,248,240,${a})`; ctx.g.top.fillRect(0, 0, W, H); ctx.g.top.restore(); }
+
         },
       };
     },
   });
-  /* ============================================================ introv2 · pregunta + revelación */
+  /* ============================================================ introv2 · texto + foto */
+  function photoWords(text, highlight) {
+    let lines = words(text);
+    if (!lines.some(line => line.some(word => word.acc))) {
+      const all = lines.flat(), phrase = String(highlight || "").toUpperCase().trim().split(/\s+/).filter(Boolean);
+      const start = phrase.length ? all.findIndex((word, i) => phrase.every((part, j) => all[i + j]?.w === part)) : -1;
+      if (start >= 0) phrase.forEach((_, j) => { all[start + j].acc = true; });
+      else {
+        const chosen = [...all].reverse().find(word => word.w.length >= 4) || all[all.length - 1];
+        if (chosen) chosen.acc = true;
+      }
+    }
+    if (lines.length === 1 && lines[0].length > 2) {
+      const all = lines[0], rows = Math.min(3, Math.ceil(all.length / 2.6)), widths = all.map(word => IM.measure(word.w, IM.wordFont(100), 1));
+      // Pocas palabras: balancear por la anchura real de las letras, nunca estirarlas.
+      const memo = new Map();
+      const split = (from, count) => {
+        const key = `${from}:${count}`;
+        if (memo.has(key)) return memo.get(key);
+        if (count === 1) return { score: widths.slice(from).reduce((a, b) => a + b + 22, 0) ** 2, lines: [all.slice(from)] };
+        let best;
+        for (let end = from + 1; end <= all.length - count + 1; end++) {
+          // Una frase marcada se conserva junta si cabe en una sola fila.
+          if (all[end - 1]?.acc && all[end]?.acc) continue;
+          const next = split(end, count - 1), width = widths.slice(from, end).reduce((a, b) => a + b + 22, 0), score = width ** 2 + next.score;
+          if (!best || score < best.score) best = { score, lines: [all.slice(from, end), ...next.lines] };
+        }
+        const result = best || { score: Infinity, lines: [all.slice(from)] };
+        memo.set(key, result); return result;
+      };
+      lines = split(0, rows).lines;
+    }
+    return lines;
+  }
   K.register({
-    name: "imperio.introv2", tags: ["intro", "gancho", "apertura", "pregunta", "revelación", "sol naciente"], layer: "main", post: 0.6, opaque: true,
-    summary: "GANCHO pregunta + revelación: la pregunta se escribe carácter a carácter como el título en idioma original de la referencia (cada letra entra con escala y fantasma); en stampAt la pregunta sube y se achica, el SOL carmesí sale desde abajo detrás del centro con su abanico de rayos y la RESPUESTA sube en condensada blanca con degradé. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
-    example: { text: "¿POR QUÉ UN IMPERIO\nMIRÓ HACIA EL SUR?", kicker: "Pacífico · 1940", stamp: "PETRÓLEO", stampAt: 2.6, country: "Japan", bg: "archivo" },
+    name: "imperio.introv2", tags: ["intro", "gancho", "apertura", "foto", "titular"], layer: "main", post: 0.6, opaque: true,
+    summary: "Apertura B de texto e imagen: fotografía grande, titular blanco en campo oscuro y palabra clave sobre carmesí. En móvil la foto ocupa arriba y el titular abajo; en escritorio se distribuyen a ambos lados. Sin bandera ni rayos; foco y lado configurables.",
+    example: { text: "LA NOCHE QUE\n^PARTIÓ BERLÍN^", kicker: "Berlín · 1961", src: "mauerbau.jpg", country: "Germany", imageSide: "right" },
     params: {
-      text: { type: "string", required: true, doc: "Pregunta gancho ('\\n' = renglón)." },
+      text: { type: "string", required: true, doc: "Titular gancho; '\\n' separa renglones y '^x^' destaca la palabra clave en carmesí." },
+      highlight: { type: "string", default: "", doc: "Palabra o frase del titular que se destaca; si falta se conserva el marcado ^x^ o la última palabra sustantiva." },
       kicker: { type: "string", default: "", doc: "Rótulo chico arriba." },
-      stamp: { type: "string", default: "", doc: "Respuesta (1–3 palabras) que sube con el sol (vacío = sin revelación)." },
+      stamp: { type: "string", default: "", doc: "Revelación secundaria opcional, dentro del campo de texto." },
       stampAt: { type: "number", default: 2.6, doc: "Segundo de la revelación (acepta '@palabra')." },
-      typeAt: { type: "number", default: 0.35, doc: "Segundo en que empieza a escribirse la pregunta." },
-      cps: { type: "number", default: 18, min: 4, doc: "Caracteres por segundo." },
-      country: { type: "string", default: "", doc: "País foco del fondo atlas/archivo." },
+      typeAt: { type: "number", default: 0.35, doc: "Segundo de entrada del titular." },
+      cps: { type: "number", default: 18, min: 4, doc: "Velocidad de entrada del titular, conservada del contrato anterior." },
+      country: { type: "string", default: "", doc: "País del episodio; no altera los colores de esta apertura editorial." },
       ...K.hook.bgParams(PRESETS),
-      dim: { type: "number", default: 0.35, min: 0, max: 1, doc: "Oscurecido del fondo foto/componente." },
+      src: { type: "image", required: true, default: "", doc: "Fotografía documental real del tema. Obligatoria en la apertura B; evitar documentos llenos de texto o fotos de sujetos ajenos." },
+      imageSide: { type: "enum", options: ["auto", "left", "right"], default: "right", doc: "Lado de la fotografía en escritorio; en móvil aparece siempre arriba." },
+      dim: { type: "number", default: 0.2, min: 0, max: 1, doc: "Oscurecido suave de la fotografía sin perder al sujeto." },
     },
-    mapLook, mapWarm,
+    mapLook: () => ({ hatch: [] }), mapWarm: () => [],
     create(ctx, p) {
-      const st = ctx.stage, { W, H, u, portrait } = st, BG = background(ctx, p);
-      const Q = IM.wordLayout(p.text, W * (portrait ? 0.86 : 0.66), portrait ? H * 0.07 : H * 0.13);
-      const A = p.stamp ? IM.wordLayout(p.stamp, W * (portrait ? 0.8 : 0.5), portrait ? H * 0.11 : H * 0.22) : null;
-      /* posiciones de cada carácter de la pregunta (se miden una vez) */
-      const font = IM.wordFont(Q.fs), qTop = H * (portrait ? 0.44 : 0.5) - Q.h / 2, chars = [];
-      Q.lines.forEach((ln, li) => {
-        const lw = IM.measure(ln, font, Q.fs * 0.01), arr = Array.from(ln); let x = W / 2 - lw / 2;
-        arr.forEach(c => { const cw = IM.measure(c, font, Q.fs * 0.01); chars.push({ c, x, y: qTop + Q.lh * (li + 0.86), w: cw }); x += cw; });
-      });
+      const st = ctx.stage, { W, H, u, portrait } = st, photoLeft = !portrait && p.imageSide === "left";
+      const BG = p.src ? null : worldBackground(ctx);
+      const frame = portrait ? { x: 0, y: 0, w: W, h: H * 0.60 } : { x: photoLeft ? 0 : W * 0.43, y: 0, w: W * 0.57, h: H };
+      const cx = portrait ? W / 2 : W * (photoLeft ? 0.74 : 0.26), cy = H * (portrait ? 0.73 : 0.52);
+      const L = layout(photoWords(p.text, p.highlight), W * (portrait ? 0.88 : 0.45), H * (portrait ? 0.077 : 0.16));
+      const top = cy - L.lh * L.lines.length / 2;
       return {
-        dispose() { BG.dispose(); },
+        dispose() { BG?.dispose(); },
         render(lt, b, t) {
           const G = ctx.g.main;
-          BG.render(lt, b, t); scrim(G, st, 1);
-          const rq = A ? prog(lt, p.stampAt, 0.7, "inOut") : 0, ty = -H * (portrait ? 0.2 : 0.27) * rq, sc = 1 - 0.42 * rq, ox = W / 2, oy = H * 0.45;
-          const [hx, hy] = shake(lt, A ? [p.stampAt + 0.55] : [], u * 1);
-          kicker(G, p.kicker, W / 2, qTop + ty - u * (portrait ? 5 : 4.5) * sc, u * (portrait ? 2.4 : 1.8), prog(lt, 0.05, 0.4));
-          /* pregunta carácter a carácter (a 24 cuadros/s) */
-          const nf = (Math.floor(lt * 24) / 24 - p.typeAt) * p.cps;
-          G.save(); G.translate(ox, oy + ty); G.scale(sc, sc); G.translate(-ox, -oy);
-          G.font = font; G.letterSpacing = Q.fs * 0.01 + "px"; G.textBaseline = "alphabetic"; G.textAlign = "left";
-          G.shadowColor = "rgba(8,10,12,.6)"; G.shadowBlur = Q.fs * 0.1;
-          chars.forEach((ch, i) => {
-            const q = clamp((nf - i) / 3); if (q <= 0) return;
-            const e = ease.out(q), s = 1 + 0.3 * (1 - e);
-            G.save(); G.translate(ch.x + ch.w / 2, ch.y - Q.fs * 0.4); G.scale(s, s); G.translate(-(ch.x + ch.w / 2), -(ch.y - Q.fs * 0.4));
-            if (q < 1) { G.globalAlpha = 0.25 * (1 - e); G.fillStyle = WHITE; G.fillText(ch.c, ch.x, ch.y + Q.fs * 0.08); }
-            G.globalAlpha = e * (1 - 0.25 * rq); G.fillStyle = WHITE; G.fillText(ch.c, ch.x, ch.y); G.restore();
+          G.save(); G.fillStyle = INK; G.fillRect(0, 0, W, H); G.restore();
+          const img = ctx.img(p.src);
+          if (img) {
+            G.save(); G.globalAlpha = prog(lt, 0, 0.38); G.filter = "saturate(.78) contrast(1.08)";
+            K.hook.cover(G, img, frame.x, frame.y, frame.w, frame.h, p.focus || [0.5, 0.5], 1.015 + 0.045 * clamp(lt / Math.max(3, b.dur)));
+            G.restore();
+            const fade = portrait ? G.createLinearGradient(0, H * .35, 0, H * .61) : photoLeft ? G.createLinearGradient(W * .27, 0, W * .57, 0) : G.createLinearGradient(W * .43, 0, W * .73, 0);
+            fade.addColorStop(0, photoLeft ? "rgba(15,26,36,0)" : portrait ? "rgba(15,26,36,0)" : INK);
+            fade.addColorStop(1, photoLeft || portrait ? INK : "rgba(15,26,36,0)");
+            G.save(); G.fillStyle = fade; G.fillRect(frame.x, frame.y, frame.w, frame.h); G.fillStyle = `rgba(10,12,14,${clamp(p.dim) * .6})`; G.fillRect(frame.x, frame.y, frame.w, frame.h); G.restore();
+          } else if (BG) { BG.render(lt, b, t); scrim(G, st, 1); }
+          kicker(G, p.kicker, cx, top - u * (portrait ? 5 : 4), u * (portrait ? 2.2 : 1.6), prog(lt, 0.05, .35));
+          G.save(); G.font = IM.wordFont(L.fs); G.letterSpacing = L.fs * .01 + "px"; G.textBaseline = "alphabetic"; G.textAlign = "left";
+          let k = 0;
+          L.lines.forEach((line, li) => {
+            const x = cx - line.w / 2, y = top + L.lh * (li + .86);
+            line.ws.forEach(word => {
+              const q = prog(lt, p.typeAt + k++ * Math.min(.13, 2 / p.cps), .38, "out");
+              if (q <= 0) return;
+              G.save(); G.globalAlpha = q; G.translate(0, (1 - q) * L.fs * .16);
+              if (word.acc) { const pad = L.fs * .10; G.fillStyle = CRIMSON; G.fillRect(x + word.x - pad, y - L.fs * .86, word.w + pad * 2, L.fs * 1.0); }
+              G.shadowColor = "rgba(8,10,12,.4)"; G.shadowBlur = u * .6; G.fillStyle = WHITE; G.fillText(word.s, x + word.x, y); G.restore();
+            });
           });
           G.restore();
-          /* revelación: el sol sale desde abajo con su abanico y la respuesta sube */
-          if (A && lt >= p.stampAt) {
-            const cy = H * (portrait ? 0.56 : 0.6), sq = prog(lt, p.stampAt, 0.9, "out"), R = u * (portrait ? 9 : 8.5);
-            const sy = lerp(H + R * 2, cy - A.h * 0.12, sq);
-            G.save(); G.translate(hx, hy);
-            IM.rays(G, W / 2, sy, { n: 30, rot: lt * 0.04, dir: Math.PI / 2, focus: 0.1, len: Math.max(W, H) * 0.75, r0: R, grow: prog(lt, p.stampAt + 0.4, 0.9, "out"), t: lt, alpha: 0.78, colors: IM.flagFor(p.country)?.rays });
-            IM.sun(G, W / 2, sy, R, t, { flag: IM.flagFor(p.country) });
-            IM.word(G, st, { layout: A, x: W / 2, y: cy + A.h * 0.12, at: p.stampAt + 0.45 }, lt);
-            G.restore();
+          if (p.stamp) {
+            const fs = u * (portrait ? 3.0 : 2.3), y = Math.min(H * .94, top + L.lines.length * L.lh + u * 3);
+            G.save(); G.globalAlpha = prog(lt, p.stampAt, .45); G.font = `800 ${fs}px Montserrat`; G.fillStyle = WHITE; G.textAlign = "center"; G.textBaseline = "top"; G.fillText(String(p.stamp).toUpperCase(), cx, y, W * (portrait ? .86 : .45)); G.restore();
           }
         },
       };

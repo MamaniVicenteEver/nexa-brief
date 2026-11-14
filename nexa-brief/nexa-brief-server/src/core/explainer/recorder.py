@@ -287,6 +287,7 @@ class RecordJob:
     locale: str = "es-419"
     revision: str | None = None
     title: str = ""
+    publication_hold: bool = False
 
     @property
     def seconds(self) -> int | None:
@@ -342,6 +343,7 @@ class ExplainerRecorder:
         formats: list[str] | tuple[str, ...] | None = None,
         account_formats: dict[str, list[str] | tuple[str, ...]] | None = None,
         thumbnail: str | None = None,
+        publication_hold: bool = False,
     ) -> RecordJob:
         # un canal (account_selector) o varios (account_selectors), sin repetir
         selectors = list(dict.fromkeys([*(account_selectors or []), *([account_selector] if account_selector else [])]))
@@ -414,6 +416,7 @@ class ExplainerRecorder:
             locale=video.locale,
             revision=video.revision,
             title=video.youtube_title or video.title,
+            publication_hold=publication_hold,
         )
         self._jobs[job.job_id] = job
         task = asyncio.create_task(self._run(job, video))
@@ -610,6 +613,7 @@ class ExplainerRecorder:
         job.scheduled_job_id = await self._register_for_scheduling(
             video, out_dir, job.formats, job.render_seconds, thumbnail, recording_id=recording_id,
             format_paths=format_paths if profile_layout.schema_version >= 3 else None,
+            publication_hold=job.publication_hold,
         )
 
         if not job.publish:
@@ -731,6 +735,7 @@ class ExplainerRecorder:
         thumbnail: Path | None = None,
         recording_id: str | None = None,
         format_paths: dict[str, Path] | None = None,
+        publication_hold: bool = False,
     ) -> str:
         """Registra la grabación completa como job empaquetado en job_tracker.
 
@@ -781,6 +786,8 @@ class ExplainerRecorder:
         publication_fields = ({"publication_hold": True,
                                "publication_hold_reason": str(manifest.get("publication_hold_reason") or "manual_hold")[:120]}
                               if manifest.get("publication_hold") is True else {})
+        if publication_hold:
+            publication_fields = {"publication_hold": True, "publication_hold_reason": "Explicit stage schedule; selected channels only"}
         if video.edition_path is not None:
             # Category schedules have no market/channel binding. Only the
             # accounts explicitly chosen for this native recording may upload it.

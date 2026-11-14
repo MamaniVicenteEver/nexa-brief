@@ -15,6 +15,30 @@ const L1 = X => U(X.lines[1]?.text || "");
 /* Ancho optativo de lectura; sin la opción se conserva la composición original. */
 const readingWidth = (sc, fallback) => Number.isFinite(sc.slot.textWidth) ? Math.min(0.9, Math.max(0.3, sc.slot.textWidth)) : fallback;
 
+// Los previews consultan el componente canónico; el render usa su copia actual local.
+const outroModule = new URL(/^\/api\/v1\/(drafts|templates)\//.test(location.pathname)
+  ? "/api/v1/templates/promo-editorial/showcase/components/outro.js"
+  : "./components/outro.js", document.baseURI);
+outroModule.searchParams.set("v", String(Date.now()));
+try { await import(outroModule.href); }
+catch (error) { console.warn("[promo-editorial] No se pudo cargar el cierre compartido", error); }
+
+const outroV2Module = new URL(/^\/api\/v1\/(drafts|templates)\//.test(location.pathname)
+  ? "/api/v1/templates/promo-editorial/showcase/components/outroV2.js"
+  : "./components/outroV2.js", document.baseURI);
+outroV2Module.searchParams.set("v", String(Date.now()));
+try { await import(outroV2Module.href); }
+catch (error) { console.warn("[promo-editorial] No se pudo cargar el cierre compartido V2", error); }
+
+const outroApi = () => { const v1 = window.NexaPromoEditorialOutro, v2 = window.NexaPromoEditorialOutroV2;
+  const want = (QS.get("outro") || C.outro?.version || "").toString().toLowerCase() === "v2";
+  return want && v2 ? v2 : v1 || v2; };
+
+function makeTimeline(segments, duration) {
+  const scenes = buildTimeline(segments, duration);
+  return outroApi()?.timeline(scenes, duration, C.outro, B) || scenes;
+}
+
 /* ---- papel arrugado: gradientes + motas, generado una vez ---- */
 const PAPER = (() => {
   const cv = doc.createElement("canvas"); cv.width = 640; cv.height = 360;
@@ -255,3 +279,7 @@ B.logo = (sc, X) => {
   X.T(t.el, "opacity", "0").to(rt(X), 0.4, "1", EASE_OUT);
   if (X.lines[1]) { const s = tx(L, U(X.lines[1].text), { cls: "gx", fs: BR.logo ? 10 * u : 16 * u, x: W / 2, y: (BR.logo ? 0.6 * H + 22 * u : 0.47 * H + 48 * u), color: P.paper, ls: 0.3 }); X.T(s.el, "opacity", "0").to(Math.max(0.3, X.lines[1].rt), 0.4, "0.85", EASE_OUT); }
 };
+
+B.outro = (sc, X) => outroApi()
+  ? outroApi().render(sc, X, P, C.outro, { div, tx, fit, textW, base, rule, wipe, sliceIn, show })
+  : B.logo(sc, X);

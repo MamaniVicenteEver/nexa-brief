@@ -24,7 +24,7 @@
     },
     "sun": {
       "type": "boolean",
-      "description": "Círculo carmesí que late sobre el país foco.",
+      "description": "Marca circular que late con la paleta del país foco.",
       "default": true
     },
     "sunAt": {
@@ -89,7 +89,7 @@
     },
     "flag": {
       "type": "string",
-      "description": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+      "description": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
       "default": "auto"
     },
     "from": {
@@ -158,7 +158,7 @@
       "type": "number",
       "minimum": 0,
       "maximum": 1,
-      "description": "Opacidad de los rayos carmesí.",
+      "description": "Opacidad de los rayos de la paleta elegida.",
       "default": 0.56
     },
     "rayLen": {

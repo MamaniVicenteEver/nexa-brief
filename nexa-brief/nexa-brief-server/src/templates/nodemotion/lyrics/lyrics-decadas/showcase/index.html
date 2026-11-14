@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Décadas · componentes</title>
+<!-- Galería de componentes de lyrics-decadas. Muestra SOLO el componente pedido:
+     ?only=<nombre> (ver components.json)  ?aspect=16:9|9:16  ?p=<JSON de parámetros>
+     ?bg=<#hex> fondo de las escenas oscuras  ?t=<s> congela  ?loop=0 no repite. Sin audio. -->
+<style>
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #111; }
+  #frame { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); overflow: hidden; }
+</style>
+<link rel="stylesheet" href="../components/decadas.css">
+<script src="../components/core.js"></script>
+<script src="../components/escenas.js"></script>
+<script src="../components/transiciones.js"></script>
+<script src="../components/intro.js"></script>
+<script src="../components/outro-v1.js"></script>
+<script src="../components/outro-v2.js"></script>
+<script>window.__DECADAS_NO_BOOT = true;</script>
+<script src="../player.js"></script>
+</head>
+<body>
+<div id="frame"><div id="stage"></div></div>
+<script>
+(async function () {
+  "use strict";
+  const DC = window.Decadas, K = DC.core, R = DC.registry, P = DC.player;
+  const q = new URLSearchParams(location.search);
+  const only = q.get("only") || "decadas.titulo";
+  let p = {}; try { p = JSON.parse(q.get("p") || "{}") || {}; } catch (e) { console.warn("p inválido"); }
+  let raw = null;
+  try { const r = await fetch("../assets/config.json"); if (r.ok) { const db = await r.json(); raw = (db.configs || [db]).find(c => c.id === db.activeId) || (db.configs || [db])[0]; } } catch (e) {}
+  const C = P.validate(raw || P.DEFAULTS);
+  const rel = s => (s && !/^(https?:|\/|data:)/.test(s) ? "../" + s : s);
+  for (const k in C.fonts) C.fonts[k].src = rel(C.fonts[k].src);
+  C.media = C.media.map(m => ({ ...m, src: rel(m.src) }));
+  if (typeof p.title === "string" && only === "decadas.intro") C.intro.title = p.title;
+  if (typeof p.artist === "string" && only === "decadas.intro") C.intro.artist = p.artist;
+  for (const k of ["title", "sub", "feats", "brand", "line"]) if (typeof p[k] === "string" && only.startsWith("decadas.outro")) C.outro[k] = p[k];
+  if (only === "decadas.fotos") C.components.photos = true;
+  P.setColors(C, q.get("bg"));
+  const [, photos] = await Promise.all([P.loadFonts(C), P.loadPhotos(C)]);
+  K.measureCache.clear();
+  const [aw, ah] = (q.get("aspect") || "9:16").split(":").map(Number);
+  const frame = document.getElementById("frame"), stage = document.getElementById("stage");
+  const sc0 = Math.min(innerWidth / aw, innerHeight / ah);
+  const W = Math.round(aw * sc0), H = Math.round(ah * sc0);
+  frame.style.width = W + "px"; frame.style.height = H + "px";
+  const ctx = P.makeCtx(C, W, H, photos);
+  const text = p.text || "1980 - 1990";
+  const words = text.split(/\s+/).map((w, i) => ({ text: w, t: 0.1 + i * 0.25, d: 0.3 }));
+  const lyric = type => ({ kind: "scene", type, text, words, keyword: { text: p.keyword || text.split(/\s+/)[0], t: 0.05, d: 0.9 }, t0: 0, t1: p.duration ?? 2.2, transition: p.transition || "cut", seed: Number(p.seed ?? 7) });
+  const specs = {
+    "decadas.intro": () => ({ kind: "intro", t0: 0, t1: p.duration ?? 3.4, seed: 7 }),
+    "decadas.outrov1": () => ({ kind: "outro", id: "decadas.outrov1", t0: 0, t1: p.duration ?? 3.6, seed: 7 }),
+    "decadas.outrov2": () => ({ kind: "outro", id: "decadas.outrov2", t0: 0, t1: p.duration ?? 3.6, seed: 7 }),
+    "decadas.escena": () => lyric(R.scenes[p.scene] ? p.scene : "titulo"),
+    "decadas.transiciones": () => ({ ...lyric("titulo"), transition: R.transitions[p.type] ? p.type : "blueWipe" }),
+    "decadas.fotos": () => lyric("foto"),
+    "decadas.etiquetas": () => lyric("titulo"),
+    "decadas.firma": () => lyric("letras"),
+    "decadas.fragmentos": () => lyric("contador")
+  };
+  if (!specs[only]) console.warn(`componente desconocido: ${only}`);
+  if (!C.intro.title && only === "decadas.intro") C.intro.title = "Décadas";
+  const sc = (specs[only] || specs["decadas.escena"])();
+  const b = P.buildScene(sc, ctx);
+  stage.appendChild(b.root);
+  const L = sc.t1 - sc.t0, loop = q.get("loop") !== "0";
+  const frozen = q.has("t") ? parseFloat(q.get("t")) || 0 : null;
+  let t0 = null;
+  const draw = t => b.update(Math.min(t, L));
+  function tick(now) { if (t0 === null) t0 = now; let t = (now - t0) / 1000; if (loop) t = t % (L + 0.8); draw(t); requestAnimationFrame(tick); }
+  window.__decadasShowcase = { only, spec: sc, seek: draw };
+  if (frozen != null) draw(frozen); else requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

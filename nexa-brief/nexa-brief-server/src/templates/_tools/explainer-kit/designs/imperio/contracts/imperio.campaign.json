@@ -7,8 +7,13 @@
   "properties": {
     "country": {
       "type": "string",
-      "description": "País foco: pone el sol y el rayado.",
-      "default": "Japan"
+      "description": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+      "default": ""
+    },
+    "flagColors": {
+      "type": "string",
+      "description": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
+      "default": "auto"
     },
     "hatch": {
       "anyOf": [

@@ -1,0 +1,4514 @@
+[
+  {
+    "name": "escena-completa",
+    "valid": true,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "defaults",
+    "valid": true,
+    "duration": 6,
+    "params": {
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo"
+        }
+      ]
+    }
+  },
+  {
+    "name": "ancla-opcional-solo-pose-activa",
+    "valid": true,
+    "duration": 6,
+    "params": {
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "jefe:solapa",
+          "a": "jefe:cabeza",
+          "tipo": "linea"
+        }
+      ]
+    }
+  },
+  {
+    "name": "sin-elenco",
+    "valid": true,
+    "duration": 6,
+    "params": {
+      "elenco": [],
+      "textos": [
+        {
+          "texto": "TEXTO DE PRUEBA"
+        }
+      ]
+    }
+  },
+  {
+    "name": "asset-inexistente",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "fantasma",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "asset-no-aprobado",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "rechazado",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "pose-inexistente",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "no-existe",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "ancla-inexistente",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:inexistente",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "ancla-falta-en-pose-futura",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:solapa",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "zona-no-declarada",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F",
+              "sombrero": "#FF0000"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "animacion-incompatible",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "girar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "clave-desconocida",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      },
+      "inventado": true
+    }
+  },
+  {
+    "name": "clave-anidada-desconocida",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            },
+            "blur": 99
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "ruta-en-asset",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "../personaje.png",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "url-en-texto",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "https://example.org/x.png",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "html-en-texto",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "<script>alert(1)</script>",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "color-invalido",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "red",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "numero-fuera-de-rango",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 1.2,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "escala-fuera-limite-asset",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 4,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "evento-fuera-beat",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 6.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "transicion-fuera-beat",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 5.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "id-duplicado",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        },
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "evento-id-inexistente",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "otro",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "evento-pose-inexistente",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "otra"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "evento-zona-inexistente",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "sombrero",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "evento-anim-incompatible",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        },
+        {
+          "en": 1,
+          "id": "jefe",
+          "accion": "anim",
+          "valor": "girar"
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "evento-valor-invalido",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.2,
+            "y": 0.3,
+            "dur": 1,
+            "codigo": "alert(1)"
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "evento-ancla-textual-no-resuelta",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": "@poder",
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "formato-id-inexistente",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            },
+            "otro": {
+              "x": 0.2
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "formato-escala-fuera-limite",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 4
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "formato-clave-invalida",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        },
+        "4x3": {
+          "elenco": {}
+        }
+      }
+    }
+  },
+  {
+    "name": "conexion-id-inexistente",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "otro:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "entrada-fuera-beat",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 7
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "camara-intensidad-invalida",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.5
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "duracion-ausente",
+    "valid": false,
+    "duration": null,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "duracion-booleana",
+    "valid": false,
+    "duration": true,
+    "params": {
+      "fondo": {
+        "preset": "foco",
+        "color": "#0B1220",
+        "acento": "#1F6BFF",
+        "grano": 0.15
+      },
+      "camara": {
+        "mov": "acercar",
+        "intensidad": 0.04
+      },
+      "elenco": [
+        {
+          "id": "jefe",
+          "asset": "ejecutivo",
+          "pose": "original",
+          "x": 0.55,
+          "y": 0.9,
+          "escala": 1,
+          "profundidad": 0.2,
+          "estilo": {
+            "brillo": "#66D1FF",
+            "sombra": true,
+            "halo": 0.3,
+            "zonas": {
+              "corbata": "#E3262F"
+            }
+          },
+          "entrada": {
+            "anim": "entrar-sube",
+            "dur": 0.6
+          },
+          "anim": "respirar"
+        },
+        {
+          "id": "mano-1",
+          "asset": "mano",
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 1,
+          "profundidad": 0.1,
+          "anim": "flotar"
+        }
+      ],
+      "conexiones": [
+        {
+          "de": "mano-1:dedo-1",
+          "a": "jefe:mano-izq",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-2",
+          "a": "jefe:cabeza",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        },
+        {
+          "de": "mano-1:dedo-3",
+          "a": "jefe:mano-der",
+          "tipo": "hilo",
+          "color": "#EFE9DF"
+        }
+      ],
+      "eventos": [
+        {
+          "en": 1.5,
+          "id": "jefe",
+          "accion": "mover",
+          "valor": {
+            "x": 0.65,
+            "y": 0.9,
+            "dur": 1
+          }
+        },
+        {
+          "en": 2.4,
+          "id": "jefe",
+          "accion": "pose",
+          "valor": "pose-2"
+        },
+        {
+          "en": 3,
+          "id": "jefe",
+          "accion": "color",
+          "valor": {
+            "zona": "corbata",
+            "color": "#E9B23B",
+            "dur": 0.7
+          }
+        },
+        {
+          "en": 4,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": true
+        },
+        {
+          "en": 4.8,
+          "id": "jefe",
+          "accion": "silueta",
+          "valor": false
+        }
+      ],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER",
+          "pos": "arriba",
+          "estilo": "titulo"
+        }
+      ],
+      "formato": {
+        "9x16": {
+          "elenco": {
+            "jefe": {
+              "x": 0.5,
+              "y": 0.9,
+              "escala": 1
+            },
+            "mano-1": {
+              "x": 0.5,
+              "y": 0.05,
+              "escala": 0.8
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "texto-salto-unicode",
+    "valid": true,
+    "duration": 6,
+    "params": {
+      "elenco": [],
+      "textos": [
+        {
+          "texto": "HILOS DE PODER"
+        }
+      ]
+    }
+  },
+  {
+    "name": "texto-dos-lineas",
+    "valid": true,
+    "duration": 6,
+    "params": {
+      "elenco": [],
+      "textos": [
+        {
+          "texto": "HILOS\nDE PODER"
+        }
+      ]
+    }
+  },
+  {
+    "name": "url-tras-salto",
+    "valid": false,
+    "duration": 6,
+    "params": {
+      "elenco": [],
+      "textos": [
+        {
+          "texto": "HILOS\nhttps://ejemplo.test/a.png"
+        }
+      ]
+    }
+  }
+]

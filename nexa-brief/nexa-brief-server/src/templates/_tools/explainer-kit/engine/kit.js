@@ -326,6 +326,13 @@
     SB.minDur = C.minDur; SB.overlay = C.overlay;
     const beats = resolveBeats(SB, words, total);
 
+    /* Medios anidados de componentes optativos: terminar su validación y decodificación
+       antes del primer cuadro, tanto en vista previa como en captura/seek. */
+    for (const use of new Set(beats.map(b => b.use))) {
+      const def = registry.get(use);
+      if (def?.prepare) await def.prepare(beats.filter(b => b.use === use));
+    }
+
     /* En la reproducción en vivo se esperan solo las imágenes visibles al abrir.
        Las demás se precargan después del primer cuadro; las capturas mantienen la carga completa. */
     const wait = (pr, ms) => Promise.race([pr, new Promise(r => setTimeout(r, ms))]);

@@ -173,7 +173,7 @@ def test_reject_and_select_media_preserve_library_file(tmp_path, monkeypatch):
     (folder/'resource.json').write_text('{"id":"asset"}')
     (folder/'source.mp4').write_bytes(b'original')
     (tmp_path/'project').mkdir()
-    (tmp_path/'project/media-plan.json').write_text('{"items":[{"slot":"stadium","asset_id":"asset"}]}')
+    (tmp_path/'project/media-plan.json').write_text('{"items":[{"scene":1,"slot":"stadium","kind":"video","asset_id":"asset"}]}')
     promo.reject_video(SimpleNamespace(asset='asset',reason='marca'))
     promo.select_media(SimpleNamespace(id='demo',slot='stadium',query='nueva consulta'))
     assert json.loads((folder/'resource.json').read_text())['approved'] is False
@@ -218,9 +218,14 @@ def test_prepare_adds_credits_once_and_reuses_prepared_draft(tmp_path, monkeypat
     write(target/'draft.json',{'draft_id':'draft1'})
     write(target/'music.json',{'asset_id':'music'})
     write(target/'media-plan.json',{'items':[{'kind':'image','asset_id':'photo'}]})
-    write(tmp_path/'resources/images/photo/resource.json',{'attribution':'Autora · Pexels'})
-    write(tmp_path/'resources/music/music/resource.json',{'attribution':'Kevin · CC BY 4.0'})
-    draft={'status':'prepared','errors':[],'details':{'research':'Fuentes'}}; calls=[]
+    write(tmp_path/'resources/images/photo/resource.json',{'author':'Autora','license':'Pexels License',
+          'source_url':'https://example.org/photo','license_url':'https://www.pexels.com/license/',
+          'attribution':'Autora · Pexels'})
+    write(tmp_path/'resources/music/music/resource.json',{'author':'Kevin','license':'CC BY 4.0',
+          'source_url':'https://example.org/music','license_url':'https://creativecommons.org/licenses/by/4.0/',
+          'attribution':'Kevin · CC BY 4.0'})
+    draft={'status':'prepared','errors':[],'details':{'research':'Fuentes',
+           'copies':{p:{'description':'Texto editorial'} for p in ('youtube','facebook','instagram','tiktok')}}}; calls=[]
     def call(_target,method,path,payload=None):
         calls.append((method,path))
         if method=='PUT': draft['details']=payload
@@ -284,7 +289,7 @@ def test_check_detects_unused_and_rejected_media(tmp_path, monkeypatch):
         def chromium(self):return self
         def launch(self,**kwargs):return Browser()
     monkeypatch.setattr(pw,'sync_playwright',lambda:Driver())
-    monkeypatch.setattr(preview_check,'contact_times',lambda segments:(1,))
+    monkeypatch.setattr(preview_check,'contact_times',lambda segments,*,full=False:(1,))
     result=preview_check.evaluate(target,tmp_path,lambda p:json.loads(p.read_text()),write,call)
     assert not result['ready']
     assert any('solo 1 medios' in error for error in result['errors'])

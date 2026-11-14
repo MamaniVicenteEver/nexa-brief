@@ -46,6 +46,48 @@ Titular por defecto: el primer rótulo del guion (por ejemplo «DESDE EL CENTRO�
 
 ## Movimiento, transiciones y componentes
 
+### Outro compartido
+
+`components/outroV2.js` es una segunda opción con la misma API y parámetros; se elige con `"outro": {"version": "v2"}` en el JSON o con `?outro=v2` en la URL del showcase. Sin indicarlo se usa `outro.js`.
+
+`components/outro.js` (global `NexaPromoKineticOutro`) es la implementación única del
+cierre, con la misma API que el de Editorial: `defaults`, `options`, `timeline`,
+`render`. Reserva por defecto los últimos **3,5 segundos dentro de la duración de la
+música** (recorta la escena que cruza ese punto y descarta las posteriores), con
+entrada animada y lectura sostenida hasta el último fotograma. El cierre actual es
+**provisional**: carbón con grano y HUD (`base`), Montserrat 900 en hueso, subtítulo
+y dirección en amarillo, llamada sobre bloque rojo y JetBrains Mono para el apoyo.
+
+El caso activo del JSON puede definir `outro`; si se omite, usa los valores del
+componente. No copies sus valores por defecto a cada video. Ejemplo:
+
+```json
+{
+  "outro": {
+    "sec": 3.5,
+    "title": "Gracias",
+    "sub": "Por ver",
+    "cta": "Suscríbete",
+    "channel": "NodeMotion",
+    "support": "Tu apoyo hace posible que sigamos trayendo más contenido.",
+    "url": "youtube.com/@nodemotion"
+  }
+}
+```
+
+`enabled: false` conserva el final del guion. `type` permite elegir otro tipo ya
+registrado en el motor (por ejemplo `typing`); un tipo desconocido usa `outro`. Los
+textos admiten cadenas vacías. Si el módulo no carga, `B.outro` dibuja `B.typing`
+(la escena final del guion). `render(sc, X, P, C.outro, tools)` recibe en `tools`:
+`div`, `tx`, `fit`, `textW`, `measure`, `base`, `rowsOf`, `show`, `hideAt`, `exit`,
+`safeZoom`, `portrait`, `mid`, `U`, `COL`, `GRAD`, `EASE_OUT`, `EASE_IN`, `EASE_IO`.
+
+Las vistas de plantilla y drafts cargan el componente canónico
+(`/api/v1/templates/promo-kinetic/showcase/components/outro.js`) con una URL nueva por
+apertura; en local se usa `./components/outro.js`. Modificar el cierre requiere
+editar solo este componente; modificar su conexión requiere editar `kinetic.js` y
+regenerar únicamente `promo-kinetic`.
+
 Tipografía Montserrat pesada sobre gris carbón, rojo y amarillo. Filas de texto y cambios de escala con salidas sincronizadas a la escena. Usa JetBrains Mono para información auxiliar del video.
 
 Funciones disponibles en el motor (nombres reales para localizar el comportamiento):

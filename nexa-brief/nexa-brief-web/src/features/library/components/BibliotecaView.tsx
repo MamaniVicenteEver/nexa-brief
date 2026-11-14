@@ -3,440 +3,317 @@
 import { Plus, Search, SlidersHorizontal, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
-import { useExplainerRecordings } from "@/features/explainer/hooks/useExplainer";
-import { ACTIVE_JOB_STATES, type ExplainerJob } from "@/features/explainer/types";
-import { type QueueEntry, useQueueEntries } from "@/features/schedule";
+import { useEffect, useState } from "react";
+import { useDebouncedValue } from "@/features/library/hooks/useLibraryAssets";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { useCategoryLabels } from "../hooks/useCategoryLabels";
-import { useJobs } from "../hooks/useJobs";
-import { deriveStatus, type LibraryStatus, type LibraryVideo } from "../library-status";
+import type { LibraryMedia, LibrarySort, LibraryTab } from "../domain/biblioteca";
+import { useBiblioteca } from "../hooks/useBiblioteca";
+import { BibliotecaPagination } from "./BibliotecaPagination";
 import { ExplainerRecordingCard } from "./ExplainerRecordingCard";
 import { ImageLibrary } from "./ImageLibrary";
 import { VideoCard } from "./VideoCard";
 
-type Tab = "todos" | "pendientes" | "publicados" | "proceso" | "fallidos";
-type Sort = "newest" | "oldest" | "longest" | "title";
-type LibraryItem =
-  | {
-      kind: "video";
-      key: string;
-      status: LibraryStatus;
-      category: string;
-      categoryLabel: string;
-      title: string;
-      updatedAt: string;
-      durationSeconds: number | null;
-      video: LibraryVideo;
-    }
-  | {
-      kind: "recording";
-      key: string;
-      status: "processing" | "failed";
-      category: string;
-      categoryLabel: string;
-      title: string;
-      updatedAt: string;
-      durationSeconds: null;
-      recording: ExplainerJob;
-    };
-
-const PAGE_SIZE = 24;
-
-const TAB_STATUSES: Record<Tab, LibraryStatus[] | null> = {
-  todos: null,
-  pendientes: ["ready", "scheduled"],
-  publicados: ["published"],
-  proceso: ["processing"],
-  fallidos: ["failed"],
-};
-
-const TAB_ORDER: Tab[] = ["todos", "pendientes", "publicados", "proceso", "fallidos"];
-const SORTS: Sort[] = ["newest", "oldest", "longest", "title"];
-
-function groupByJob(entries: QueueEntry[] | undefined, statuses: QueueEntry["status"][]) {
-  const map = new Map<string, QueueEntry[]>();
-  for (const entry of entries ?? []) {
-    if (!statuses.includes(entry.status)) continue;
-    const list = map.get(entry.jobId) ?? [];
-    list.push(entry);
-    map.set(entry.jobId, list);
-  }
-  return map;
-}
+const TABS: { id: LibraryTab; key: string }[] = [
+  { id: "all", key: "todos" },
+  { id: "pending", key: "pendientes" },
+  { id: "published", key: "publicados" },
+  { id: "processing", key: "proceso" },
+  { id: "failed", key: "fallidos" },
+];
+const SORTS: LibrarySort[] = ["newest", "oldest", "longest", "title"];
 
 export function BibliotecaView() {
   const t = useTranslations("library");
-  const { data: jobs, isLoading, isError } = useJobs();
-  const { data: recordingJobs, isLoading: recordingsLoading } = useExplainerRecordings();
-  const { data: queueEntries } = useQueueEntries({ limit: 200 });
-  const categoryLabel = useCategoryLabels();
-  const libraryLoading = isLoading || recordingsLoading;
-
-  // `?tab=pendientes` (ej. desde el dashboard) abre directo esa pestaña.
-  const tabParam = useSearchParams().get("tab");
-  const [activeTab, setActiveTab] = useState<Tab>(
-    TAB_ORDER.includes(tabParam as Tab) ? (tabParam as Tab) : "todos",
+  const params = useSearchParams();
+  const [media, setMedia] = useState<LibraryMedia>("videos");
+  const [status, setStatus] = useState<LibraryTab>(
+    TABS.find((tab) => tab.key === params.get("tab"))?.id ?? "all",
   );
-  const [category, setCategory] = useState("");
   const [query, setQuery] = useState("");
-  const [sort, setSort] = useState<Sort>("newest");
+  const q = useDebouncedValue(query);
+  const [category, setCategory] = useState("");
+  const [sort, setSort] = useState<LibrarySort>("newest");
   const [page, setPage] = useState(1);
-  const [mediaType, setMediaType] = useState<"videos" | "images">("videos");
-
-  const videos = useMemo<LibraryVideo[]>(() => {
-    const published = groupByJob(queueEntries, ["published"]);
-    const scheduled = groupByJob(queueEntries, ["queued", "publishing"]);
-    return (jobs ?? []).map((job) => {
-      const jobPublished = published.get(job.jobId) ?? [];
-      const jobScheduled = scheduled.get(job.jobId) ?? [];
-      return {
-        job,
-        published: jobPublished,
-        scheduled: jobScheduled,
-        status: deriveStatus(job, jobPublished, jobScheduled),
-        categoryLabel: categoryLabel(job.category),
-      };
-    });
-  }, [jobs, queueEntries, categoryLabel]);
-
-  const items = useMemo<LibraryItem[]>(() => {
-    const videoItems: LibraryItem[] = videos.map((video) => ({
-      kind: "video",
-      key: video.job.jobId,
-      status: video.status,
-      category: video.job.category,
-      categoryLabel: video.categoryLabel,
-      title: video.job.title,
-      updatedAt: video.job.updatedAt,
-      durationSeconds: video.job.durationSeconds,
-      video,
-    }));
-    const recordingItems: LibraryItem[] = (recordingJobs ?? [])
-      .filter((job) => job.state !== "done")
-      .map((recording) => ({
-        kind: "recording",
-        key: recording.jobId,
-        status: ACTIVE_JOB_STATES.includes(recording.state) ? "processing" : "failed",
-        category: recording.categoryPath,
-        categoryLabel: categoryLabel(recording.categoryPath),
-        title: recording.title || recording.videoId,
-        updatedAt: recording.startedAt || "",
-        durationSeconds: null,
-        recording,
-      }));
-    return [...videoItems, ...recordingItems];
-  }, [videos, recordingJobs, categoryLabel]);
-
-  // Búsqueda + categoría se aplican antes de las pestañas, así los contadores
-  // de cada pestaña reflejan lo que el usuario está filtrando.
-  const searched = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    return items.filter((item) => {
-      if (category && item.category !== category) return false;
-      if (!q) return true;
-      return [item.title, item.categoryLabel, item.category, item.key].some((field) =>
-        field.toLowerCase().includes(q),
-      );
-    });
-  }, [items, category, query]);
-
-  const categories = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const item of items) counts.set(item.category, (counts.get(item.category) ?? 0) + 1);
-    return Array.from(counts, ([id, count]) => ({ id, count, label: categoryLabel(id) })).sort(
-      (a, b) => a.label.localeCompare(b.label),
-    );
-  }, [items, categoryLabel]);
-
-  const tabCounts = useMemo(() => {
-    const counts = {} as Record<Tab, number>;
-    for (const tab of TAB_ORDER) {
-      const statuses = TAB_STATUSES[tab];
-      counts[tab] = statuses
-        ? searched.filter((v) => statuses.includes(v.status)).length
-        : searched.length;
-    }
-    return counts;
-  }, [searched]);
-
-  const activeList = useMemo(() => {
-    const statuses = TAB_STATUSES[activeTab];
-    const list = statuses ? searched.filter((v) => statuses.includes(v.status)) : [...searched];
-    const byDate = (item: LibraryItem) => new Date(item.updatedAt).getTime() || 0;
-    const compare: Record<Sort, (a: LibraryItem, b: LibraryItem) => number> = {
-      newest: (a, b) => byDate(b) - byDate(a),
-      oldest: (a, b) => byDate(a) - byDate(b),
-      longest: (a, b) => (b.durationSeconds ?? -1) - (a.durationSeconds ?? -1),
-      title: (a, b) => a.title.localeCompare(b.title),
-    };
-    return list.sort(compare[sort]);
-  }, [searched, activeTab, sort]);
-
-  const totalPages = Math.max(1, Math.ceil(activeList.length / PAGE_SIZE));
-  const currentPage = Math.min(page, totalPages);
-  const pageItems = activeList.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
-  const filtersActive = category !== "" || query.trim() !== "";
-
-  const resetPage =
-    <T,>(setter: (value: T) => void) =>
-    (value: T) => {
-      setter(value);
-      setPage(1);
-    };
-  const selectTab = resetPage(setActiveTab);
-  const selectCategory = resetPage(setCategory);
-  const changeQuery = resetPage(setQuery);
-
+  const library = useBiblioteca({ media, q, category, status, sort, page });
+  const data = library.data;
+  const busy = library.isFetching || query !== q;
+  const filtersActive = Boolean(query.trim() || category);
+  useEffect(() => {
+    if (data && data.page !== page) setPage(data.page);
+  }, [data, page]);
   function clearFilters() {
-    setCategory("");
     setQuery("");
+    setCategory("");
     setPage(1);
   }
-
+  function selectMedia(next: LibraryMedia) {
+    setMedia(next);
+    setSort("newest");
+    setStatus("all");
+    setQuery("");
+    setCategory("");
+    setPage(1);
+  }
+  const categoryName = (id: string, label: string) =>
+    id === "uncategorized" ? t("uncategorized") : label;
   return (
-    <div className="mx-auto max-w-[1280px] px-4 pt-22 pb-25 sm:px-10">
-      <header className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-nb-sans text-[clamp(22px,2.6vw,30px)] font-extrabold tracking-[-0.02em] text-nb-ink">
-            {t("title")}
-          </h1>
-          <p className="mt-1 max-w-[560px] text-[13.5px] text-nb-mute">{t("subtitle")}</p>
+    <div className="mx-auto w-full max-w-[1440px] px-4 pt-22 pb-16 sm:px-6 lg:px-8">
+      <header className="flex items-center justify-between gap-4 sm:gap-6">
+        <h1 className="shrink-0 font-nb-sans text-[clamp(22px,2.6vw,30px)] font-extrabold tracking-[-0.02em] text-nb-ink">
+          {t("title")}
+        </h1>
+        <p className="min-w-0 max-w-[650px] text-right text-xs text-nb-mute sm:text-[13.5px]">
+          {t("subtitle")}
+        </p>
+      </header>
+      <div className="relative mt-5 flex flex-nowrap items-center gap-3 overflow-x-auto pb-2">
+        <fieldset className="inline-flex shrink-0 gap-1.5">
+          <legend className="sr-only">{t("mediaType.label")}</legend>
+          {(["videos", "images"] as const).map((type) => (
+            <button
+              key={type}
+              type="button"
+              aria-pressed={media === type}
+              onClick={() => selectMedia(type)}
+              className={cn(
+                "rounded-full border px-4 py-2 text-xs font-semibold transition-colors",
+                media === type
+                  ? "border-nb-ink bg-nb-ink text-nb-surface"
+                  : "border-nb-line bg-nb-surface text-nb-ink-soft hover:bg-nb-bg-2",
+              )}
+            >
+              {t(`mediaType.${type}`)}
+            </button>
+          ))}
+        </fieldset>
+        <div className="relative ml-auto min-w-56 flex-1">
+          <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-nb-mute" />
+          <input
+            type="search"
+            value={query}
+            maxLength={200}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setPage(1);
+            }}
+            placeholder={t("filters.searchPlaceholder")}
+            aria-label={t("filters.searchPlaceholder")}
+            className="w-full rounded-xl border border-nb-line bg-nb-surface py-2.5 pr-10 pl-10 text-[13.5px] text-nb-ink outline-none placeholder:text-nb-mute focus:border-nb-green-dark focus:ring-3 focus:ring-nb-green/30"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => {
+                setQuery("");
+                setPage(1);
+              }}
+              aria-label={t("clearSearch")}
+              className="absolute top-1/2 right-3 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-nb-mute hover:bg-nb-bg-2"
+            >
+              <X className="size-3.5" />
+            </button>
+          )}
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <fieldset className="inline-flex rounded-full border border-nb-line bg-nb-surface p-1">
-            <legend className="sr-only">{t("mediaType.label")}</legend>
-            {(["videos", "images"] as const).map((type) => (
+        <label className="flex shrink-0 items-center gap-2 rounded-xl border border-nb-line bg-nb-surface px-3 py-2 text-nb-mute">
+          <SlidersHorizontal className="size-3.5" aria-hidden="true" />
+          <span className="sr-only">{t("filters.sortLabel")}</span>
+          <select
+            value={sort}
+            onChange={(event) => {
+              setSort(event.target.value as LibrarySort);
+              setPage(1);
+            }}
+            className="max-w-40 cursor-pointer bg-transparent text-[13px] text-nb-ink outline-none"
+          >
+            {SORTS.filter((value) => media === "videos" || value !== "longest").map((value) => (
+              <option key={value} value={value}>
+                {t(`filters.sort.${value}`)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <Link
+          href="/crear-video"
+          className="nb-btn-pill inline-flex shrink-0 items-center gap-1.5 px-4.5 py-2.5 text-[13px] font-semibold whitespace-nowrap"
+        >
+          <Plus className="size-4" />
+          {t("createVideo")}
+        </Link>
+      </div>
+      <section className="mt-4 min-w-0" aria-busy={busy}>
+        <fieldset
+          className="flex min-w-0 items-center gap-2 overflow-x-auto pb-2"
+          aria-label={t("filters.categoryLabel")}
+        >
+          <span className="mr-1 shrink-0 text-[11px] font-semibold tracking-[0.05em] text-nb-mute uppercase">
+            {t("filters.categoryLabel")}
+          </span>
+          <CategoryChip
+            label={t("filters.allCategories")}
+            count={data?.categories.reduce((sum, c) => sum + c.count, 0) ?? 0}
+            active={!category}
+            onClick={() => {
+              setCategory("");
+              setPage(1);
+            }}
+          />
+          {data?.categories.map((c) => (
+            <CategoryChip
+              key={c.id}
+              label={categoryName(c.id, c.label)}
+              count={c.count}
+              active={category === c.id}
+              onClick={() => {
+                setCategory(category === c.id ? "" : c.id);
+                setPage(1);
+              }}
+            />
+          ))}
+          {category && !data?.categories.some((c) => c.id === category) && (
+            <button
+              type="button"
+              onClick={() => {
+                setCategory("");
+                setPage(1);
+              }}
+              className="shrink-0 text-xs underline"
+            >
+              {t("filters.clearFilters")}
+            </button>
+          )}
+        </fieldset>
+        <div className="mt-4 flex flex-wrap items-end justify-between gap-3 border-b border-nb-line">
+          <fieldset
+            className="flex min-w-0 max-w-full items-center gap-1 overflow-x-auto"
+            aria-label={t("statusLabel")}
+          >
+            {TABS.map((tab) => (
               <button
-                key={type}
+                key={tab.id}
                 type="button"
-                aria-pressed={mediaType === type}
-                onClick={() => setMediaType(type)}
+                aria-pressed={status === tab.id}
+                aria-label={`${t(`tabs.${tab.key}`)} ${data?.statusCounts[tab.id] ?? "–"}`}
+                onClick={() => {
+                  setStatus(tab.id);
+                  setPage(1);
+                }}
                 className={cn(
-                  "rounded-full px-4 py-2 text-[13px] font-semibold transition-colors",
-                  mediaType === type ? "bg-nb-ink text-white" : "text-nb-mute hover:text-nb-ink",
+                  "flex shrink-0 items-center gap-2 border-b-2 px-3 py-3 text-[13px] font-semibold transition-colors",
+                  status === tab.id
+                    ? "border-nb-ink text-nb-ink"
+                    : "border-transparent text-nb-mute hover:text-nb-ink",
                 )}
               >
-                {t(`mediaType.${type}`)}
+                {t(`tabs.${tab.key}`)}
+                <span
+                  className={cn(
+                    "rounded-full px-2 py-0.5 text-[11px] tabular-nums",
+                    status === tab.id ? "bg-nb-ink text-nb-surface" : "bg-nb-bg-2 text-nb-ink-soft",
+                  )}
+                >
+                  {data?.statusCounts[tab.id] ?? "–"}
+                </span>
               </button>
             ))}
           </fieldset>
-          <Link
-            href="/crear-video"
-            className="nb-btn-pill inline-flex items-center gap-1.5 px-4.5 py-2.5 text-[13px] font-semibold"
-          >
-            <Plus className="size-4" />
-            {t("createVideo")}
-          </Link>
-        </div>
-      </header>
-
-      {mediaType === "images" ? (
-        <ImageLibrary />
-      ) : (
-        <>
-          {/* Toolbar: búsqueda + orden */}
-          <div className="mt-7 flex flex-wrap items-center gap-3">
-            <div className="relative min-w-[240px] flex-1">
-              <Search className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-nb-mute" />
-              <input
-                type="search"
-                value={query}
-                onChange={(e) => changeQuery(e.target.value)}
-                placeholder={t("filters.searchPlaceholder")}
-                aria-label={t("filters.searchPlaceholder")}
-                className="w-full rounded-full border border-nb-line bg-nb-surface py-2.5 pr-10 pl-10 text-[13.5px] text-nb-ink outline-none placeholder:text-nb-mute focus:border-nb-green-dark focus:ring-3 focus:ring-nb-green/30"
-              />
-              {query && (
-                <button
-                  type="button"
-                  onClick={() => changeQuery("")}
-                  aria-label={t("filters.clearFilters")}
-                  className="absolute top-1/2 right-3 flex size-6 -translate-y-1/2 items-center justify-center rounded-full text-nb-mute hover:bg-nb-bg-2 hover:text-nb-ink"
-                >
-                  <X className="size-3.5" />
-                </button>
-              )}
-            </div>
-            <label className="flex items-center gap-2 rounded-full border border-nb-line bg-nb-surface py-1 pr-1.5 pl-3.5 text-[12.5px] font-semibold text-nb-mute">
-              <SlidersHorizontal className="size-3.5" />
-              <span className="sr-only sm:not-sr-only">{t("filters.sortLabel")}</span>
-              <select
-                value={sort}
-                onChange={(e) => setSort(e.target.value as Sort)}
-                className="cursor-pointer rounded-full bg-transparent py-1.5 pr-1 text-[13px] text-nb-ink outline-none"
-              >
-                {SORTS.map((s) => (
-                  <option key={s} value={s}>
-                    {t(`filters.sort.${s}`)}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-
-          {/* Categorías */}
-          {categories.length > 0 && (
-            <div className="mt-4 flex flex-wrap items-center gap-2">
-              <span className="mr-1 text-[11px] font-semibold tracking-[0.05em] text-nb-mute uppercase">
-                {t("filters.categoryLabel")}
+          <div className="flex items-center gap-3 pb-3 text-xs text-nb-mute">
+            {data && (
+              <span>
+                {media === "videos"
+                  ? t("resultsCount", { count: data.total })
+                  : t("images.count", { count: data.total })}
               </span>
-              <CategoryChip
-                label={t("filters.allCategories")}
-                count={items.length}
-                active={category === ""}
-                onClick={() => selectCategory("")}
-              />
-              {categories.map((c) => (
-                <CategoryChip
-                  key={c.id}
-                  label={c.label}
-                  count={c.count}
-                  active={category === c.id}
-                  onClick={() => selectCategory(category === c.id ? "" : c.id)}
-                />
+            )}
+            {filtersActive && (
+              <button
+                type="button"
+                onClick={clearFilters}
+                className="inline-flex items-center gap-1 font-semibold text-nb-ink-soft"
+              >
+                <X className="size-3.5" />
+                {t("filters.clearFilters")}
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="mt-6">
+          {library.isLoading ? (
+            <CardGrid>
+              {Array.from({ length: 8 }, (_, i) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: static placeholders
+                <SkeletonCard key={`skeleton-${i}`} />
               ))}
-            </div>
-          )}
-
-          {/* Pestañas de estado */}
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-b border-nb-line">
-            <div
-              role="tablist"
-              className="-mb-px flex gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {TAB_ORDER.map((tab) => (
-                <button
-                  key={tab}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeTab === tab}
-                  onClick={() => selectTab(tab)}
-                  className={cn(
-                    "flex shrink-0 items-center gap-2 border-b-2 border-transparent px-3.5 py-2.5 text-[13.5px] font-semibold whitespace-nowrap text-nb-mute transition-colors hover:text-nb-ink",
-                    activeTab === tab && "border-nb-ink text-nb-ink",
-                  )}
-                >
-                  {t(`tabs.${tab}`)}
-                  <span
-                    className={cn(
-                      "min-w-6 rounded-full px-1.5 py-0.5 text-center text-[11px] tabular-nums",
-                      activeTab === tab
-                        ? "bg-nb-ink text-[#fafaf7]"
-                        : "bg-nb-bg-2 text-nb-ink-soft",
-                      tab === "pendientes" &&
-                        tabCounts[tab] > 0 &&
-                        activeTab !== tab &&
-                        "bg-nb-accent-gold text-nb-ink",
-                    )}
-                  >
-                    {libraryLoading ? "–" : tabCounts[tab]}
-                  </span>
-                </button>
-              ))}
-            </div>
-            <div className="flex items-center gap-3 pb-2 text-[12.5px] text-nb-mute">
-              {!libraryLoading && <span>{t("resultsCount", { count: activeList.length })}</span>}
-              {filtersActive && (
+            </CardGrid>
+          ) : library.isError ? (
+            <EmptyState
+              message={t("loadError")}
+              action={
                 <button
                   type="button"
-                  onClick={clearFilters}
-                  className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-semibold text-nb-ink-soft hover:bg-nb-bg-2 hover:text-nb-ink"
+                  onClick={() => void library.refetch()}
+                  className="nb-btn-secondary rounded-full px-4 py-2 text-sm"
                 >
-                  <X className="size-3.5" />
-                  {t("filters.clearFilters")}
+                  {t("retry")}
                 </button>
+              }
+            />
+          ) : !data?.items.length ? (
+            <EmptyState
+              message={t(
+                filtersActive || status !== "all"
+                  ? "emptyFiltered"
+                  : media === "images"
+                    ? "images.empty"
+                    : "emptyLibrary",
               )}
-            </div>
-          </div>
-
-          <div className="mt-6">
-            {libraryLoading ? (
-              <CardGrid>
-                {Array.from({ length: 8 }, (_, i) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: skeletons estáticos sin identidad
-                  <SkeletonCard key={i} />
-                ))}
-              </CardGrid>
-            ) : isError ? (
-              <EmptyState message={t("loadError")} />
-            ) : items.length === 0 ? (
-              <EmptyState
-                message={t("emptyLibrary")}
-                action={
-                  <Link
-                    href="/crear-video"
-                    className="nb-btn-pill px-4.5 py-2.5 text-[13px] font-semibold"
+              action={
+                filtersActive && (
+                  <button
+                    type="button"
+                    onClick={clearFilters}
+                    className="nb-btn-secondary rounded-full px-4 py-2 text-sm"
                   >
-                    {t("createVideo")}
-                  </Link>
-                }
-              />
-            ) : pageItems.length === 0 ? (
-              <EmptyState
-                message={t("emptyState")}
-                action={
-                  filtersActive && (
-                    <button
-                      type="button"
-                      onClick={clearFilters}
-                      className="nb-btn-secondary rounded-full px-4.5 py-2.5 text-[13px] font-semibold"
-                    >
-                      {t("filters.clearFilters")}
-                    </button>
-                  )
-                }
-              />
-            ) : (
-              <CardGrid>
-                {pageItems.map((item) =>
-                  item.kind === "video" ? (
-                    <VideoCard key={item.key} video={item.video} />
-                  ) : (
-                    <ExplainerRecordingCard
-                      key={item.key}
-                      job={item.recording}
-                      categoryLabel={item.categoryLabel}
-                    />
-                  ),
-                )}
-              </CardGrid>
-            )}
-
-            {totalPages > 1 && (
-              <div className="mt-8 flex items-center justify-center gap-4">
-                <button
-                  type="button"
-                  disabled={currentPage === 1}
-                  onClick={() => setPage(currentPage - 1)}
-                  className="rounded-full border border-nb-line px-4 py-2 text-[12.5px] font-semibold text-nb-ink-soft transition-colors hover:bg-nb-bg-2 hover:text-nb-ink disabled:pointer-events-none disabled:opacity-40"
-                >
-                  {t("pagination.previous")}
-                </button>
-                <span className="text-[12.5px] text-nb-mute">
-                  {t("pagination.pageOf", { page: currentPage, total: totalPages })}
-                </span>
-                <button
-                  type="button"
-                  disabled={currentPage === totalPages}
-                  onClick={() => setPage(currentPage + 1)}
-                  className="rounded-full border border-nb-line px-4 py-2 text-[12.5px] font-semibold text-nb-ink-soft transition-colors hover:bg-nb-bg-2 hover:text-nb-ink disabled:pointer-events-none disabled:opacity-40"
-                >
-                  {t("pagination.next")}
-                </button>
-              </div>
-            )}
-          </div>
-        </>
-      )}
+                    {t("filters.clearFilters")}
+                  </button>
+                )
+              }
+            />
+          ) : media === "images" ? (
+            <ImageLibrary items={data.items.filter((item) => item.kind === "image")} />
+          ) : (
+            <CardGrid>
+              {data.items.map((item) =>
+                item.kind === "video" ? (
+                  <VideoCard key={item.id} video={item.video} />
+                ) : item.kind === "recording" ? (
+                  <ExplainerRecordingCard
+                    key={item.id}
+                    job={item.recording}
+                    categoryLabel={categoryName(item.categoryId, item.categoryLabel)}
+                  />
+                ) : null,
+              )}
+            </CardGrid>
+          )}
+        </div>
+        {data && !library.isError && data.total > 0 && (
+          <BibliotecaPagination
+            page={data.page}
+            total={data.total}
+            pageSize={data.pageSize}
+            disabled={busy}
+            onChange={setPage}
+          />
+        )}
+      </section>
     </div>
   );
 }
 
 function CardGrid({ children }: { children: React.ReactNode }) {
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,272px),1fr))] gap-5">
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {children}
     </div>
   );
@@ -457,10 +334,11 @@ function CategoryChip({
     <button
       type="button"
       aria-pressed={active}
+      aria-label={`${label} ${count}`}
       onClick={onClick}
       title={label}
       className={cn(
-        "inline-flex max-w-[260px] items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12.5px] font-semibold transition-colors",
+        "inline-flex max-w-[260px] shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-[12.5px] font-semibold transition-colors",
         active
           ? "border-nb-ink bg-nb-ink text-[#fafaf7]"
           : "border-nb-line bg-nb-surface text-nb-ink-soft hover:border-nb-ink/40 hover:text-nb-ink",

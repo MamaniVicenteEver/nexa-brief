@@ -2,6 +2,8 @@ import type { ShowcaseCatalog, ShowcaseEntry } from "../api/standard-showcase-re
 
 export const entryTypeLabels = {
   component: "Componentes",
+  sketch: "Bocetos",
+  example: "Ejemplos",
   sprite: "Sprites",
   character: "Personajes",
   set: "Escenarios",
@@ -66,6 +68,10 @@ const familyLabels: Record<string, string> = {
 };
 
 export function entryType(entry: ShowcaseEntry): EntryType {
+  if (entry.data && typeof entry.data === "object") {
+    if ("resource_type" in entry.data && entry.data.resource_type === "sketch") return "sketch";
+    if ("example_variant" in entry.data) return "example";
+  }
   // Older catalogues predate section; their stable sprite IDs still identify them.
   if (entry.section === "sprites" || entry.id.startsWith("sprite-")) return "sprite";
   return entry.section === "workflows" ? "workflow" : entry.kind;

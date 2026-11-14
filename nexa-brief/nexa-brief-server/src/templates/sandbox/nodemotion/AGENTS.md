@@ -4,6 +4,15 @@ Para crear cualquier contenido empieza por el [índice](../../../skills/README.m
 
 # AGENTS.md — NodeMotion: prototipos de plantillas de música
 
+## Entrada breve para un chat directo
+
+Para replicar una referencia entregada por el usuario, usa las guías breves:
+[`REPLICA-LETRAS.md`](REPLICA-LETRAS.md) o [`REPLICA-PROMO.md`](REPLICA-PROMO.md),
+y su [contrato común](REPLICA-COMUN.md). El propio chat hace el trabajo; no
+delegues en agentes internos si el usuario pide trabajo directo. Las recetas
+históricas de abajo sirven como consulta técnica, no como instrucción de copiar
+un diseño, usar rutas antiguas ni trasladar a producción manualmente.
+
 > Para cualquier agente de IA o persona que vaya a **prototipar una plantilla nueva de música**
 > (video de letras, promo comercial, fondo de imagen o de video) en `sandbox/nodemotion/<id>/`
 > y, cuando el usuario lo pida, **promoverla a producción**.

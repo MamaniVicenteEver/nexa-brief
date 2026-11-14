@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "design_id": "imperio",
-  "revision": "d7a060517dab8e7ba45503b913d71447a498f7988b393a11834c8e535db989a2",
+  "revision": "463b6f4c08bfe358ba0e97fcfc96d3141a27567a41621c311bd118124fb51cd5",
   "entries": [
     {
       "id": "common.flash",
@@ -159,7 +159,7 @@
         "sun": {
           "type": "bool",
           "default": true,
-          "doc": "Círculo carmesí que late sobre el país foco.",
+          "doc": "Marca circular que late con la paleta del país foco.",
           "required": false,
           "options": null,
           "min": null,
@@ -222,7 +222,7 @@
         "flag": {
           "type": "string",
           "default": "auto",
-          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
           "required": false,
           "options": null,
           "min": null,
@@ -319,7 +319,7 @@
         "rayAlpha": {
           "type": "number",
           "default": 0.56,
-          "doc": "Opacidad de los rayos carmesí.",
+          "doc": "Opacidad de los rayos de la paleta elegida.",
           "required": false,
           "options": null,
           "min": 0,
@@ -523,7 +523,7 @@
         "sun": {
           "type": "bool",
           "default": true,
-          "doc": "Círculo carmesí que late sobre el país foco.",
+          "doc": "Marca circular que late con la paleta del país foco.",
           "required": false,
           "options": null,
           "min": null,
@@ -586,7 +586,7 @@
         "flag": {
           "type": "string",
           "default": "auto",
-          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
           "required": false,
           "options": null,
           "min": null,
@@ -683,7 +683,7 @@
         "rayAlpha": {
           "type": "number",
           "default": 0.82,
-          "doc": "Opacidad de los rayos carmesí.",
+          "doc": "Opacidad de los rayos de la paleta elegida.",
           "required": false,
           "options": null,
           "min": 0,
@@ -824,7 +824,7 @@
         "sun": {
           "type": "bool",
           "default": true,
-          "doc": "Círculo carmesí que late sobre el país foco.",
+          "doc": "Marca circular que late con la paleta del país foco.",
           "required": false,
           "options": null,
           "min": null,
@@ -887,7 +887,7 @@
         "flag": {
           "type": "string",
           "default": "auto",
-          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
           "required": false,
           "options": null,
           "min": null,
@@ -1107,7 +1107,7 @@
         "sun": {
           "type": "bool",
           "default": true,
-          "doc": "Círculo carmesí que late sobre el país foco.",
+          "doc": "Marca circular que late con la paleta del país foco.",
           "required": false,
           "options": null,
           "min": null,
@@ -1170,7 +1170,7 @@
         "flag": {
           "type": "string",
           "default": "auto",
-          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
           "required": false,
           "options": null,
           "min": null,
@@ -1267,7 +1267,7 @@
         "rayAlpha": {
           "type": "number",
           "default": 0.56,
-          "doc": "Opacidad de los rayos carmesí.",
+          "doc": "Opacidad de los rayos de la paleta elegida.",
           "required": false,
           "options": null,
           "min": 0,
@@ -1642,14 +1642,13 @@
       "name": "imperio.introv1",
       "label": "imperio.introv1",
       "kind": "component",
-      "summary": "GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
+      "summary": "Apertura A de solo texto sobre el mapa del mundo completo, como el cierre v1, sin sol, rayos ni bandera. Titular blanco y palabra clave sobre carmesí; entrada por palabras. Foto/componente opcionales mediante bg explícito.",
       "tags": [
         "intro",
         "gancho",
         "apertura",
         "título",
-        "impacto",
-        "sol"
+        "mapa mundial"
       ],
       "params": {
         "text": {
@@ -1682,7 +1681,7 @@
         "country": {
           "type": "string",
           "default": "",
-          "doc": "País foco del fondo atlas/archivo (rayado, el sol cae sobre él). Vacío = mundo y sol al centro.",
+          "doc": "Contexto del episodio; la apertura A mantiene el mundo completo sin bandera ni rayado.",
           "required": false,
           "options": null,
           "min": null,
@@ -1691,7 +1690,7 @@
         "sunAt": {
           "type": "number",
           "default": 0.15,
-          "doc": "Segundo en que cae el sol.",
+          "doc": "Tiempo heredado de entrada; conservado por compatibilidad. La apertura A no dibuja un sol.",
           "required": false,
           "options": null,
           "min": null,
@@ -1718,7 +1717,7 @@
         "burstAt": {
           "type": "number",
           "default": 2.6,
-          "doc": "Impacto: los rayos llegan a los bordes (acepta '@palabra'; −1 = sin impacto).",
+          "doc": "Impacto tipográfico suave (acepta '@palabra'; −1 = sin impacto), sin rayos ni bandera.",
           "required": false,
           "options": null,
           "min": null,
@@ -1807,21 +1806,29 @@
       "name": "imperio.introv2",
       "label": "imperio.introv2",
       "kind": "component",
-      "summary": "GANCHO pregunta + revelación: la pregunta se escribe carácter a carácter como el título en idioma original de la referencia (cada letra entra con escala y fantasma); en stampAt la pregunta sube y se achica, el SOL carmesí sale desde abajo detrás del centro con su abanico de rayos y la RESPUESTA sube en condensada blanca con degradé. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
+      "summary": "Apertura B de texto e imagen: fotografía grande, titular blanco en campo oscuro y palabra clave sobre carmesí. En móvil la foto ocupa arriba y el titular abajo; en escritorio se distribuyen a ambos lados. Sin bandera ni rayos; foco y lado configurables.",
       "tags": [
         "intro",
         "gancho",
         "apertura",
-        "pregunta",
-        "revelación",
-        "sol naciente"
+        "foto",
+        "titular"
       ],
       "params": {
         "text": {
           "type": "string",
           "default": null,
-          "doc": "Pregunta gancho ('\\n' = renglón).",
+          "doc": "Titular gancho; '\\n' separa renglones y '^x^' destaca la palabra clave en carmesí.",
           "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "highlight": {
+          "type": "string",
+          "default": "",
+          "doc": "Palabra o frase del titular que se destaca; si falta se conserva el marcado ^x^ o la última palabra sustantiva.",
+          "required": false,
           "options": null,
           "min": null,
           "max": null
@@ -1838,7 +1845,7 @@
         "stamp": {
           "type": "string",
           "default": "",
-          "doc": "Respuesta (1–3 palabras) que sube con el sol (vacío = sin revelación).",
+          "doc": "Revelación secundaria opcional, dentro del campo de texto.",
           "required": false,
           "options": null,
           "min": null,
@@ -1856,7 +1863,7 @@
         "typeAt": {
           "type": "number",
           "default": 0.35,
-          "doc": "Segundo en que empieza a escribirse la pregunta.",
+          "doc": "Segundo de entrada del titular.",
           "required": false,
           "options": null,
           "min": null,
@@ -1865,7 +1872,7 @@
         "cps": {
           "type": "number",
           "default": 18,
-          "doc": "Caracteres por segundo.",
+          "doc": "Velocidad de entrada del titular, conservada del contrato anterior.",
           "required": false,
           "options": null,
           "min": 4,
@@ -1874,7 +1881,7 @@
         "country": {
           "type": "string",
           "default": "",
-          "doc": "País foco del fondo atlas/archivo.",
+          "doc": "País del episodio; no altera los colores de esta apertura editorial.",
           "required": false,
           "options": null,
           "min": null,
@@ -1900,8 +1907,8 @@
         "src": {
           "type": "image",
           "default": "",
-          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
-          "required": false,
+          "doc": "Fotografía documental real del tema. Obligatoria en la apertura B; evitar documentos llenos de texto o fotos de sujetos ajenos.",
+          "required": true,
           "options": null,
           "min": null,
           "max": null
@@ -1938,21 +1945,33 @@
         },
         "dim": {
           "type": "number",
-          "default": 0.35,
-          "doc": "Oscurecido del fondo foto/componente.",
+          "default": 0.2,
+          "doc": "Oscurecido suave de la fotografía sin perder al sujeto.",
           "required": false,
           "options": null,
           "min": 0,
           "max": 1
+        },
+        "imageSide": {
+          "type": "enum",
+          "default": "right",
+          "doc": "Lado de la fotografía en escritorio; en móvil aparece siempre arriba.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
         }
       },
       "example": {
-        "text": "¿POR QUÉ UN IMPERIO\nMIRÓ HACIA EL SUR?",
-        "kicker": "Pacífico · 1940",
-        "stamp": "PETRÓLEO",
-        "stampAt": 2.6,
-        "country": "Japan",
-        "bg": "archivo"
+        "text": "LA NOCHE QUE\n^PARTIÓ BERLÍN^",
+        "kicker": "Berlín · 1961",
+        "src": "mauerbau.jpg",
+        "country": "Germany",
+        "imageSide": "right"
       },
       "preview_kind": "iframe",
       "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=imperio&c=imperio.introv2",
@@ -2417,8 +2436,17 @@
       "params": {
         "country": {
           "type": "string",
-          "default": "Japan",
-          "doc": "País foco: pone el sol y el rayado.",
+          "default": "",
+          "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flagColors": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
           "required": false,
           "options": null,
           "min": null,
@@ -2944,8 +2972,17 @@
         },
         "country": {
           "type": "string",
-          "default": "Japan",
-          "doc": "País foco: pone el sol y el rayado.",
+          "default": "",
+          "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flagColors": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
           "required": false,
           "options": null,
           "min": null,
@@ -3300,8 +3337,17 @@
         },
         "country": {
           "type": "string",
-          "default": "Japan",
-          "doc": "País foco: pone el sol y el rayado.",
+          "default": "",
+          "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flagColors": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
           "required": false,
           "options": null,
           "min": null,
@@ -3473,8 +3519,17 @@
         },
         "country": {
           "type": "string",
-          "default": "Japan",
-          "doc": "País foco: pone el sol y el rayado.",
+          "default": "",
+          "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flagColors": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
           "required": false,
           "options": null,
           "min": null,
@@ -3627,8 +3682,17 @@
         },
         "country": {
           "type": "string",
-          "default": "Japan",
-          "doc": "País foco: pone el sol y el rayado.",
+          "default": "",
+          "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flagColors": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
           "required": false,
           "options": null,
           "min": null,
@@ -3777,8 +3841,17 @@
         },
         "country": {
           "type": "string",
-          "default": "Japan",
-          "doc": "País foco: pone el sol y el rayado.",
+          "default": "",
+          "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flagColors": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
           "required": false,
           "options": null,
           "min": null,
@@ -3935,8 +4008,17 @@
         },
         "country": {
           "type": "string",
-          "default": "Japan",
-          "doc": "País foco: pone el sol y el rayado.",
+          "default": "",
+          "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "flagColors": {
+          "type": "string",
+          "default": "auto",
+          "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
           "required": false,
           "options": null,
           "min": null,
@@ -4141,7 +4223,7 @@
       "name": "imperio.sun",
       "label": "imperio.sun",
       "kind": "component",
-      "summary": "Sol carmesí que late sobre el país o las coordenadas elegidas; comparte el sol y los colores de bandera de imperio.map.",
+      "summary": "Marca circular que late sobre el país o coordenadas elegidas, con su paleta nacional o histórica explícita; comparte el dibujo de imperio.map.",
       "tags": [
         "imperio",
         "pieza",
@@ -4169,7 +4251,7 @@
         "sun": {
           "type": "bool",
           "default": true,
-          "doc": "Círculo carmesí que late sobre el país foco.",
+          "doc": "Marca circular que late con la paleta del país foco.",
           "required": false,
           "options": null,
           "min": null,
@@ -4232,7 +4314,7 @@
         "flag": {
           "type": "string",
           "default": "auto",
-          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
           "required": false,
           "options": null,
           "min": null,
@@ -4329,7 +4411,7 @@
         "rayAlpha": {
           "type": "number",
           "default": 0.82,
-          "doc": "Opacidad de los rayos carmesí.",
+          "doc": "Opacidad de los rayos de la paleta elegida.",
           "required": false,
           "options": null,
           "min": 0,
@@ -4418,7 +4500,7 @@
       "name": "imperio.rays",
       "label": "imperio.rays",
       "kind": "component",
-      "summary": "Abanico de rayos sobre el mar: rumbo, apertura, cantidad, longitud y entrada por voz. Mismo efecto de la apertura original.",
+      "summary": "Abanico geográfico con los colores del país foco: rumbo, apertura, cantidad, longitud y entrada por voz. Sin país reconocido usa una paleta neutra.",
       "tags": [
         "imperio",
         "pieza",
@@ -4446,7 +4528,7 @@
         "sun": {
           "type": "bool",
           "default": false,
-          "doc": "Círculo carmesí que late sobre el país foco.",
+          "doc": "Marca circular que late con la paleta del país foco.",
           "required": false,
           "options": null,
           "min": null,
@@ -4509,7 +4591,7 @@
         "flag": {
           "type": "string",
           "default": "auto",
-          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
           "required": false,
           "options": null,
           "min": null,
@@ -4606,7 +4688,7 @@
         "rayAlpha": {
           "type": "number",
           "default": 0.82,
-          "doc": "Opacidad de los rayos carmesí.",
+          "doc": "Opacidad de los rayos de la paleta elegida.",
           "required": false,
           "options": null,
           "min": 0,
@@ -4725,7 +4807,7 @@
         "sun": {
           "type": "bool",
           "default": false,
-          "doc": "Círculo carmesí que late sobre el país foco.",
+          "doc": "Marca circular que late con la paleta del país foco.",
           "required": false,
           "options": null,
           "min": null,
@@ -4788,7 +4870,7 @@
         "flag": {
           "type": "string",
           "default": "auto",
-          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
           "required": false,
           "options": null,
           "min": null,
@@ -4885,7 +4967,7 @@
         "rayAlpha": {
           "type": "number",
           "default": 0,
-          "doc": "Opacidad de los rayos carmesí.",
+          "doc": "Opacidad de los rayos de la paleta elegida.",
           "required": false,
           "options": null,
           "min": 0,
@@ -5004,7 +5086,7 @@
         "sun": {
           "type": "bool",
           "default": false,
-          "doc": "Círculo carmesí que late sobre el país foco.",
+          "doc": "Marca circular que late con la paleta del país foco.",
           "required": false,
           "options": null,
           "min": null,
@@ -5067,7 +5149,7 @@
         "flag": {
           "type": "string",
           "default": "auto",
-          "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+          "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
           "required": false,
           "options": null,
           "min": null,
@@ -5164,7 +5246,7 @@
         "rayAlpha": {
           "type": "number",
           "default": 0.82,
-          "doc": "Opacidad de los rayos carmesí.",
+          "doc": "Opacidad de los rayos de la paleta elegida.",
           "required": false,
           "options": null,
           "min": 0,

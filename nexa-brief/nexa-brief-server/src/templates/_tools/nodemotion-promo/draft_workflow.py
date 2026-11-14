@@ -140,11 +140,10 @@ def create(root,target,project_id,read_json,write_json, state_name='draft.json')
     return result
 
 def sync_scene_config(target, ident, read_json):
-    """Apply the validated build's scene data to this draft's generated config.
+    """Conserva las escenas y la identidad editorial del build en su preview.
 
-    The API maps library media and texts, but does not accept scene overrides.
-    Keep its resolved media, audio and runtime paths; only replace scene data.
-    This host operation never changes the shared template or another draft.
+    La API resuelve medios, audio y rutas; la promo conserva su introducción,
+    cierre y paleta, incluso después de preparar los detalles de la música.
     """
     from src.core import drafts
     job=drafts.load_job(ident)
@@ -168,6 +167,8 @@ def sync_scene_config(target, ident, read_json):
     if any(slot not in media_ids for scene in scenes for slot in scene.get('media',[])):
         raise ValueError('el preview no contiene los medios de las escenas')
     effective['scenes']=copy.deepcopy(scenes)
+    editorial={key:copy.deepcopy(desired[key]) for key in ('intro','outro','palette') if key in desired}
+    effective.update(editorial)
     tagline=desired.get('brand',{}).get('tagline')
     if tagline is not None:
         effective.setdefault('brand',{})['tagline']=tagline
@@ -180,8 +181,9 @@ def sync_scene_config(target, ident, read_json):
         os.replace(temporary,path)
     finally:
         temporary.unlink(missing_ok=True)
-    if active_config(read_json(path))['scenes']!=scenes:
-        raise ValueError('las escenas del preview no coinciden con el build')
+    saved=active_config(read_json(path))
+    if saved['scenes']!=scenes or any(saved.get(key)!=value for key,value in editorial.items()):
+        raise ValueError('la configuración editorial del preview no coincide con el build')
 
 
 def bind_prompt_reference(target, ident):
@@ -224,6 +226,10 @@ def prepare(target,read_json, ident=None):
     details=apply_credits(details, resource_fichas, music_edited=bool(music.get('ready_file')))
     if details != original_details:
         d=call(target,'PUT',f'/drafts/{ident}/details',details)
+    # Guardar detalles puede sustituir la intro por el título de la canción.
+    # Restaurar el build antes de comprobar o capturar las miniaturas.
+    if (target/'assets/config.json').is_file():
+        sync_scene_config(target, ident, read_json)
     missing=[]
     for option in ('A','B'):
         try: call(target,'GET',f'/drafts/{ident}/thumbnails/{option}')

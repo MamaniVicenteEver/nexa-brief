@@ -44,11 +44,46 @@ def _local_time(value, beat, words):
     raise ValueError(f"tiempo local no resoluble {value!r}")
 
 
+def check_openings(config, beats, policy, errors, proto=None):
+    """B/C de Imperio siempre cuentan con texto e imagen, también fuera de la apertura elegida."""
+    required = set((policy.get("openings") or {}).get("image_required", []))
+    if not required:
+        return
+    for beat in beats:
+        if beat.get("skip") or beat["use"] not in required:
+            continue
+        params = beat["b"].get("params") or {}
+        if not str(params.get("src") or "").strip():
+            errors.append(f"imperio beat #{beat['i']} {beat['use']}: requiere fotografía en src (texto + imagen)")
+        if not str(params.get("text") or "").strip():
+            errors.append(f"imperio beat #{beat['i']} {beat['use']}: requiere titular en text")
+    if proto is None:
+        return
+    root = Path(proto).resolve()
+    path = root / "publish.json"
+    if not path.exists():
+        return
+    try:
+        package = json.loads(path.read_text(encoding="utf-8"))
+        thumbs = package.get("thumbnail")
+        if not isinstance(thumbs, dict):  # Paquetes legacy se validan con su contrato histórico.
+            return
+        photo = thumbs.get("with_image") or {}
+        tabloid = thumbs.get("tabloid")
+        for option, image in (("B", photo.get("image")), ("C", tabloid.get("image") if isinstance(tabloid, dict) else photo.get("image"))):
+            source = (root / "assets/media" / str(image or "")).resolve()
+            if not image or not source.is_relative_to(root / "assets/media") or not source.is_file():
+                errors.append(f"imperio miniatura {option}: requiere una imagen real existente en assets/media")
+    except (ValueError, TypeError, OSError) as exc:
+        errors.append(f"imperio aperturas: {exc}")
+
+
 def check(config, beats, catalog, words, total, errors, proto=None):
     """Return actual allocated windows and append scoped errors, without mutations."""
     policy = policy_for(config)
     if policy is None:
         return None
+    check_openings(config, beats, policy, errors, proto)
     rules = policy["media"]
     end = min(float(total), float((config.get("outro") or {}).get("start", total)))
     main = sorted((b for b in beats if not b.get("skip") and b.get("layer", "main") == "main"),
@@ -73,7 +108,7 @@ def check(config, beats, catalog, words, total, errors, proto=None):
         params = beat["b"].get("params") or {}
         spec = catalog.get(beat["use"], {}).get("params", {})
         # campaign declares aliases v1/p1 even when they are only used by a plate.
-        plates = params.get("plates") if beat["use"] == "imperio.campaign" else None
+        plates = (params.get("plates") or []) if beat["use"] == "imperio.campaign" else None
         if plates is not None:
             nested = []
             for slot, plate in enumerate(plates):

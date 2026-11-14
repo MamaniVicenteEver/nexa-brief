@@ -82,3 +82,4 @@ class QueueEntry(BaseModel):
     content_id: str | None = None
     delivery_id: str | None = None
     idempotency_key: str | None = None
+    privacy: Literal["private", "unlisted", "public"] | None = None

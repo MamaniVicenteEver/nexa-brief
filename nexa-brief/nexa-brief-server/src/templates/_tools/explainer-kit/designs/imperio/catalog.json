@@ -266,7 +266,7 @@
     },
     {
       "name": "imperio.introv1",
-      "summary": "GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida",
+      "summary": "Apertura A de solo texto sobre el mapa del mundo completo, como el cierre v1, sin sol, rayos ni bandera",
       "layer": "main",
       "inputs": "contracts/imperio.introv1.json",
       "example": {
@@ -281,18 +281,17 @@
     },
     {
       "name": "imperio.introv2",
-      "summary": "GANCHO pregunta + revelación: la pregunta se escribe carácter a carácter como el título en idioma original de la referencia (cada letra entra con escala y fantasma); en stampAt la pregunta sube y se achica, el SOL carmesí sale desde abajo detrás del centro con su abanico de rayos y la RESPUESTA sube en condensada blanca con degradé",
+      "summary": "Apertura B de texto e imagen: fotografía grande, titular blanco en campo oscuro y palabra clave sobre carmesí",
       "layer": "main",
       "inputs": "contracts/imperio.introv2.json",
       "example": {
         "use": "imperio.introv2",
         "params": {
-          "text": "¿POR QUÉ UN IMPERIO\nMIRÓ HACIA EL SUR?",
-          "kicker": "Pacífico · 1940",
-          "stamp": "PETRÓLEO",
-          "stampAt": 2.6,
-          "country": "Japan",
-          "bg": "archivo"
+          "text": "LA NOCHE QUE\n^PARTIÓ BERLÍN^",
+          "kicker": "Berlín · 1961",
+          "src": "mauerbau.jpg",
+          "country": "Germany",
+          "imageSide": "right"
         }
       }
     },
@@ -611,7 +610,7 @@
     },
     {
       "name": "imperio.sun",
-      "summary": "Sol carmesí que late sobre el país o las coordenadas elegidas; comparte el sol y los colores de bandera de imperio.map.",
+      "summary": "Marca circular que late sobre el país o coordenadas elegidas, con su paleta nacional o histórica explícita; comparte el dibujo de imperio.map.",
       "layer": "main",
       "inputs": "contracts/imperio.sun.json",
       "example": {
@@ -637,7 +636,7 @@
     },
     {
       "name": "imperio.rays",
-      "summary": "Abanico de rayos sobre el mar: rumbo, apertura, cantidad, longitud y entrada por voz",
+      "summary": "Abanico geográfico con los colores del país foco: rumbo, apertura, cantidad, longitud y entrada por voz",
       "layer": "main",
       "inputs": "contracts/imperio.rays.json",
       "example": {

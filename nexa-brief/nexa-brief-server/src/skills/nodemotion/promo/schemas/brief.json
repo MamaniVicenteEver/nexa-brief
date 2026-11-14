@@ -3,8 +3,20 @@
   "$id": "https://nexa-brief.local/schemas/nodemotion-promo/brief.json",
   "type": "object",
   "properties": {
-    "allow_trademarks": {"type": "boolean", "default": false},
-    "media_priority": {"type": "array", "items": {"type": "string"}, "default": ["commons", "stock"]},
+    "allow_trademarks": {
+      "type": "boolean",
+      "default": false
+    },
+    "media_priority": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [
+        "commons",
+        "stock"
+      ]
+    },
     "template": {
       "enum": [
         "promo-editorial",
@@ -12,7 +24,9 @@
         "promo-kinetic",
         "promo-sports",
         "promo-trendy",
-        "promo-urban"
+        "promo-urban",
+        "promo-breaking",
+        "promo-pulse"
       ]
     },
     "topic": {

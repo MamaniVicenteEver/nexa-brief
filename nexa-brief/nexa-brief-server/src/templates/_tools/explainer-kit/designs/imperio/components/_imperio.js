@@ -43,7 +43,7 @@
   const D2R = Math.PI / 180, UPD = 1000 * D2R;           /* unidades Mercator por grado (escala 1000) */
 
   /* ---------------------------------------------------------------- color */
-  const hex = h => { const s = h.replace("#", ""); return [0, 2, 4].map(i => parseInt(s.slice(i, i + 2), 16)); };
+  const hex = h => { const raw = h.replace("#", ""), s = raw.length === 3 ? [...raw].map(c => c + c).join("") : raw; return [0, 2, 4].map(i => parseInt(s.slice(i, i + 2), 16)); };
   /** mezcla un color hex hacia su gris (g = 0..1) y lo oscurece/aclara (k multiplicador) */
   IM.tone = (h, g = 0, k = 1, a = 1) => {
     const [r, gg, b] = hex(h), l = r * 0.3 + gg * 0.59 + b * 0.11;
@@ -675,12 +675,24 @@
    * Bandera para el sol/rayos. flag = "auto" (la del país) | "none"/"classic" (carmesí) | "#c1,#c2,…" (franjas propias).
    * Devuelve null para el clásico; si no: { kind, colors, rays (sin los casi blancos) }.
    */
+  // Sin país reconocido, una marca neutra evita atribuir por accidente la identidad de Japón.
+  const NEUTRAL_FLAG = { kind: "h", colors: ["#354b58", "#8298a3"], rays: ["#354b58", "#8298a3"] };
+  const FLAG_NAMES = new Map(Object.keys(FLAGS).map(name => [K.norm(name), name]));
+  for (const [alias, name] of Object.entries({ ...ALIAS, ...FLAG_ALIAS,
+    DE: "Germany", JP: "Japan", GB: "United Kingdom", UK: "United Kingdom", FR: "France", IT: "Italy",
+    ES: "Spain", RU: "Russia", UA: "Ukraine", AT: "Austria", BE: "Belgium", US: "United States of America" })) FLAG_NAMES.set(K.norm(alias), name);
   IM.flagFor = (country, flag = "auto") => {
-    if (flag === "none" || flag === "classic") return null;
+    const mode = K.norm(String(flag || "auto"));
+    if (mode === "none" || mode === "classic") return null;
+    if (mode === "neutral") return NEUTRAL_FLAG;
     let F = null;
-    if (flag && flag !== "auto") F = { h: String(flag).split(",").map(x => x.trim()).filter(Boolean) };
-    else if (country) { const n = FLAG_ALIAS[country] || IM.feature?.(country)?.properties?.name || country; F = FLAGS[n] || null; }
-    if (!F || F.classic) return null;
+    if (mode !== "auto") {
+      const colors = String(flag).split(",").map(x => x.trim());
+      if (!colors.length || !colors.every(c => /^#(?:[a-f0-9]{3}|[a-f0-9]{6})$/i.test(c))) return NEUTRAL_FLAG;
+      F = { h: colors };
+    } else if (country) F = FLAGS[FLAG_NAMES.get(K.norm(country))] || null;
+    if (F?.classic) return null; // Solo Japón o una elección clásica explícita usa el carmesí original.
+    if (!F) return NEUTRAL_FLAG;
     const kind = F.h ? "h" : F.v ? "v" : "ring", colors = F.h || F.v || F.ring;
     const uniq = [...new Set(colors)], strong = uniq.filter(c => lum(c) < 0.9);
     return { kind, colors, rays: strong.length ? strong : uniq };

@@ -35,31 +35,6 @@
     G.restore();
   }
 
-  /* Mundo completo sin hornear el atlas: una imagen vectorial cacheada por tamaño.
-     Usa la misma geografía y paleta de Imperio, también en la vista ligera del showcase. */
-  function worldBackground(ctx) {
-    const { W, H, portrait } = ctx.stage, world = IM.world(), image = document.createElement("canvas");
-    image.width = Math.max(1, Math.round(W)); image.height = Math.max(1, Math.round(H));
-    const g = image.getContext("2d");
-    g.fillStyle = IM.COL.ocean; g.fillRect(0, 0, W, H);
-    if (world.ok) {
-      const y0 = H * (portrait ? 0.28 : 0.08), y1 = H * (portrait ? 0.66 : 0.92);
-      const projection = d3.geoNaturalEarth1().fitExtent([[W * 0.025, y0], [W * 0.975, y1]], { type: "Sphere" });
-      const path = d3.geoPath(projection, g);
-      g.beginPath(); path(world.land); g.fillStyle = IM.COL.land; g.fill();
-      g.beginPath(); path(world.fc); g.strokeStyle = IM.COL.coast; g.lineWidth = Math.max(0.65, W / 1500); g.stroke();
-    }
-    return {
-      render(lt, beat) {
-        const G = ctx.g.main, zoom = lerp(1.14, 1, prog(lt, 0, Math.min(2.2, beat.dur * 0.5), "out"));
-        G.save(); G.translate(W / 2, H / 2); G.scale(zoom, zoom); G.drawImage(image, -W / 2, -H / 2, W, H); G.restore();
-        // El mapa se atenúa al finalizar la despedida, sin ocultar los textos.
-        const dim = 0.04 + 0.16 * prog(lt, beat.dur * 0.48, beat.dur * 0.36, "inOut");
-        G.save(); G.fillStyle = `rgba(10,12,14,${dim})`; G.fillRect(0, 0, W, H); G.restore();
-      },
-      dispose() { image.width = image.height = 1; },
-    };
-  }
 
   const outro = {
     name: "imperio.outro", tags: ["cierre", "canal", "like", "suscribirse", "sol"], layer: "main", post: 0, opaque: true,
@@ -79,7 +54,7 @@
         BG = style.worldBackdrop && p.bg === "dark" ? {
           render() { const G = ctx.g.main; G.save(); G.fillStyle = "#0d0d0d"; G.fillRect(0, 0, W, H); G.restore(); },
           dispose() {},
-        } : style.worldBackdrop && (!p.bg || ["auto", "atlas", "world"].includes(p.bg)) ? worldBackground(ctx) : HK.background(ctx, p);
+        } : style.worldBackdrop && (!p.bg || ["auto", "atlas", "world"].includes(p.bg)) ? HK.worldBackground(ctx) : HK.background(ctx, p);
       const name = IM.wordLayout(p.channel, W * (portrait ? 0.84 : 0.6), portrait ? H * 0.09 : H * 0.17, style.textWeight);
       const thanksY = H * (portrait ? 0.17 : 0.12), nameY = H * (portrait ? 0.29 : 0.33);
       /* V2: botones y campana en una fila en móvil; V1 conserva su composición. */

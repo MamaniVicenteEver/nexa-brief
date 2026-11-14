@@ -214,6 +214,11 @@ def cmd_library(a):
         print(f"{item['name']} · {item['summary']}\n  params: {params}\n  hoja: {sheet}\n  origen: {item['video']} · JS: {item['source']}")
 
 def cmd_check(a):
+    # También acepta un beat/storyboard JSON aislado para comprobar common.capas
+    # sin crear un video ni ejecutar las fases editoriales de una producción.
+    source = pathlib.Path(a.id)
+    if source.is_file() and source.suffix.lower() == ".json":
+        sys.exit(run([PY, TOOLS / "capas.py", "scene-check", source]).returncode)
     sys.exit(run([PY, TOOLS / "check_storyboard.py", vdir(a.id)]).returncode)
 
 def cmd_sheet(a):
@@ -237,6 +242,11 @@ def cmd_manifest(a):
         result = refresh_manifest(d, a.id)
         print(f"✓ manifest.json · Cara a Cara · {result['status']}")
         return
+    # El host ejecuta planes declarativos; el agente aislado no ejecuta CLI de audio.
+    from cinematic_audio import apply_declared_plan
+    music_result = apply_declared_plan(d)
+    if music_result:
+        print("✓ música de fondo · " + ("reutilizada" if music_result.get("reused") else "mezclada") + " · voz y efectos originales conservados")
     component_library.refresh(d)
     M = jload(d / "manifest.json", {}) or {}
     cfg = jload(A / "config.json", {}); C = cfg["configs"][0] if "configs" in cfg else cfg

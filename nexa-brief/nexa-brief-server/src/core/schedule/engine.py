@@ -200,6 +200,8 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
         # Retrying/recovering this queue entry must consult the original
         # service job, including when the HTTP response was lost after a click.
         extra_kwargs["idempotency_key"] = entry.idempotency_key or f"schedule:{entry.entry_id}"
+    if entry.privacy is not None:
+        extra_kwargs["privacy"] = entry.privacy
     # miniatura propia (explainer: la intro elegida; NodeMotion: el final de la intro); solo YouTube por API
     # (si el video se grabó sin ella, se saca ahora del final de su intro; thumbnails.set: solo JPEG/PNG)
     if entry.platform == "youtube":

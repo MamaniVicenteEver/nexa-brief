@@ -335,7 +335,7 @@ async def get_template_showcase_file(template_id: str, file_path: str, request: 
             path = candidate
     allowed_suffixes = {
         ".html", ".json", ".mp3", ".mp4", ".webm", ".mov", ".jpg", ".jpeg",
-        ".png", ".webp", ".svg", ".js", ".woff", ".woff2", ".ttf",
+        ".png", ".webp", ".svg", ".js", ".css", ".woff", ".woff2", ".ttf",
     }
     if (
         not path.is_relative_to(template_root)

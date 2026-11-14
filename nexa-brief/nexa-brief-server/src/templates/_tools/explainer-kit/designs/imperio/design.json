@@ -2,7 +2,7 @@
   "id": "imperio",
   "family": "imperio",
   "name": "NODEPOLITICS",
-  "tagline": "Atlas histórico: el sol carmesí del imperio sobre su país, rayos que se expanden sobre el mar, título en su idioma original y archivo en blanco y negro fundido con el mapa",
+  "tagline": "Atlas cinematográfico: decisiones, tensión y consecuencias humanas sobre mapas; paletas nacionales por país y archivo documental.",
   "topics": [
     "política",
     "geopolítica",
@@ -157,5 +157,44 @@
       "imperio.compass": "#304653",
       "imperio.word": "#304653"
     }
+  },
+  "editorial": {
+    "id": "imperio-narrador-cinematico-v1",
+    "version": 1,
+    "identity": "Un testigo cercano que reconstruye decisiones sobre el mapa: grave, curioso, preciso y con tensión contenida. Tiene criterio y sensibilidad por el coste humano; habla a una sola persona.",
+    "voice": "Conservar la voz del diseño (Charon) y su español latinoamericano. La personalidad nace de las palabras, las pausas y la intención; no cambiar locutor ni imitar personas reales.",
+    "script_rules": [
+      "Abrir con una acción concreta o su consecuencia verificable y una pregunta dramática. Fecha y lugar entran cuando orientan la escena; no comenzar por rutina con año, efeméride o biografía.",
+      "Construir cada secuencia con situación visible, decisión, obstáculo y consecuencia. El siguiente bloque cambia lo que está en juego; no encadenar una lista de hechos o fechas.",
+      "Alternar frases breves en el peligro con frases más amplias al explicar. Usar presente escénico cuando ayude, con tiempos coherentes. Las pausas dramáticas no cortan ni ralentizan artificialmente la voz.",
+      "La identidad se mantiene en cada video. Permitir un aparte breve cuando una decisión lo merezca: «Fíjate en esa orden» o «Aquí se les acaba el margen». Variar la formulación; no convertirlo en muletilla, chiste sobre víctimas o autopresentación.",
+      "El narrador puede mostrar asombro, duda razonada o una observación humana sin atribuir pensamientos, diálogos, sonidos históricos ni intenciones que las fuentes no documenten.",
+      "Evitar voz de manual escolar, biografías cronológicas, «en este video veremos», moralejas prefabricadas y cadenas repetidas de «pero». El dramatismo procede de decisiones y consecuencias documentadas.",
+      "No reducir una guerra a un solo disparo ni una catástrofe a una sola persona. Mostrar los eslabones de la escalada. Un gancho abre una pregunta cuya respuesta llega con pruebas.",
+      "Antes de TTS, leer el guion en voz alta y revisar cada segmento: qué veo, qué decisión avanza, qué cambia, dónde respira el narrador. Guardar voice_direction y delivery_note sin incluir instrucciones escénicas dentro del texto hablado."
+    ],
+    "openings": [
+      "A / imperio.introv1: solo letras sobre el mapa mundial completo y legible, como el outro. Sin bandera, sol ni rayos detrás del titular.",
+      "B / imperio.introv2: texto grande y fotografía real relevante, sujeto reconocible y palabra clave roja. Ajustar focus y lado de imagen en ambos formatos.",
+      "C / common.tabloid (tercera apertura, no introv3): SIEMPRE texto e imagen real potente. Titular crema sobre tinta oscura, palabra clave carmesí; el rojo editorial no depende de la bandera del país.",
+      "Elegir imágenes que se entiendan a 320 px: rostro, acción u objeto claros. Un cartel lleno de letras no es la imagen principal si hay un sujeto documental pertinente. Registrar image_review y crédito."
+    ],
+    "geography": [
+      "Paleta nacional según el país del plano: map/sun/rays usan flag; campaign/footage/country usan flagColors. auto usa colores actuales; una época histórica exige paleta explícita verificada y SVG real de esa época.",
+      "No usar flag:none/classic como solución genérica: conserva intencionalmente el carmesí japonés. Usar neutral cuando no corresponda una identidad nacional o falte una paleta verificada.",
+      "Separar el rojo editorial (palabra clave, marcador, impacto) de los colores nacionales (bandera, sol y rayos). Ningún efecto convierte colores decorativos en una bandera auténtica.",
+      "Cada giro utiliza una pieza que lo explica: city para el lugar, arrow para avance/orden, country/flag para actores, territory para control, date para plazo, campaign para la cadena de decisiones. Añadir piezas compartidas con contrato y demo solo si falta una función; nunca duplicar motor por episodio."
+    ],
+    "sound": [
+      "Dirigir música por actos: intriga, escalada, clímax y coste humano. Usar pistas de biblioteca con licencia, a nivel bajo con ducking, entradas y salidas de 2–3 s y silencios deliberados. La música acompaña varios tramos, no queda relegada al outro.",
+      "Reservar efectos breves para una marca, llegada, orden, giro o impacto narrado. Los ambientes de una foto/clip cubren toda su ventana; los golpes puntuales siguen el instante de la acción. No añadir whoosh a todas las piezas.",
+      "Conservar voz limpia en audio.narrationSrc. Mezclar voz + stem SFX + stem musical una sola vez; nunca reutilizar como voz una mezcla anterior. Registrar planes, recursos, licencias, créditos y escucha de palabras inteligibles.",
+      "En fase storyboard, el agente aislado declara work/music-plan.json con este esquema: {\"version\":1,\"cues\":[{\"music_asset_id\":\"auto\",\"mood\":\"cinematic\",\"start\":0,\"source_in\":0,\"duration\":20,\"gain_db\":-24,\"fade_in\":2,\"fade_out\":3,\"purpose\":\"intriga\"}]}. Los segundos salen de lyrics.json. auto resuelve una pista instrumental con licencia del perfil. El host ejecuta el plan al crear manifest y bloquea con un error claro si no hay recurso válido; el agente no ejecuta CLI ni descarga. Cambiar mood a tension, suspense, drama, epic o reflective según la escena."
+    ],
+    "review": [
+      "Revisar aperturas A/B/C a 320 px y ambos formatos; B/C requieren foto real reconocible y acento rojo.",
+      "Muestrear planos de Alemania y otros países: los colores nacionales no deben volver al rojo/blanco japonés por un valor forzado.",
+      "Escuchar transiciones y puntos clave con música/SFX: voz inteligible, sin clipping ni huecos añadidos; conservar pruebas y consumo conocido."
+    ]
   }
 }

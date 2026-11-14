@@ -57,8 +57,13 @@ class RegisteredEngineProduction:
         component_file = root / 'components.json'
         if component_file.is_file():
             payload = json.loads(component_file.read_text())
-            names = {r['name'] for r in payload.get('components', [])}
-            if names != {r['name'] for r in rows}:
+            native = payload.get('components', payload.get('comps', []))
+            names = {r['name'] for r in native}
+            catalog_names = {r['name'] for r in rows}
+            # Legacy registries compose native pieces with Proto and explicit
+            # presets. Keep those contracts; never invent duplicate native rows.
+            matches = names == catalog_names if 'components' in payload else names <= catalog_names
+            if not names or not matches:
                 raise ValueError('Showcase no contiene exactamente los componentes del motor')
         return root, rows
 

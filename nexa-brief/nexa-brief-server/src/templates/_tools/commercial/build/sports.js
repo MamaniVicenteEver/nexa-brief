@@ -9,6 +9,30 @@ const BR = C.brand || {};
 const YEL = "duoYel", CINE = "cine";   /* keys de C.grades */
 const STONE = noiseTile(160, 120);
 
+// Los previews consultan el componente canónico; el render usa su copia actual local.
+const outroModule = new URL(/^\/api\/v1\/(drafts|templates)\//.test(location.pathname)
+  ? "/api/v1/templates/promo-sports/showcase/components/outro.js"
+  : "./components/outro.js", document.baseURI);
+outroModule.searchParams.set("v", String(Date.now()));
+try { await import(outroModule.href); }
+catch (error) { console.warn("[promo-sports] No se pudo cargar el cierre compartido", error); }
+
+const outroV2Module = new URL(/^\/api\/v1\/(drafts|templates)\//.test(location.pathname)
+  ? "/api/v1/templates/promo-sports/showcase/components/outroV2.js"
+  : "./components/outroV2.js", document.baseURI);
+outroV2Module.searchParams.set("v", String(Date.now()));
+try { await import(outroV2Module.href); }
+catch (error) { console.warn("[promo-sports] No se pudo cargar el cierre compartido V2", error); }
+
+const outroApi = () => { const v1 = window.NexaPromoSportsOutro, v2 = window.NexaPromoSportsOutroV2;
+  const want = (QS.get("outro") || C.outro?.version || "").toString().toLowerCase() === "v2";
+  return want && v2 ? v2 : v1 || v2; };
+
+function makeTimeline(segments, duration) {
+  const scenes = buildTimeline(segments, duration);
+  return outroApi()?.timeline(scenes, duration, C.outro, B) || scenes;
+}
+
 /* ---- piezas ---- */
 function footage(X, L, k, o = {}) {
   const { W, H } = X;
@@ -272,3 +296,15 @@ B.end = (sc, X) => {
   }
   dust(X, L, 6);
 };
+
+/* Cierre compartido (components/outro.js). Herramientas: motor (div, tx, fit,
+   textW, measure, blurPass, mbox, kenBurns, asStill, mediaSpec, curvas), show
+   equivalente al de Editorial y piezas firma de Sports (base, footage, dust,
+   outlineBig, word, scramble, frameBox, STONE, claves de grade). */
+const show = (X, el, t) => { if (t > 0.001) X.T(el, "visibility", "hidden", true).set(t, "visible"); };
+B.outro = (sc, X) => outroApi()
+  ? outroApi().render(sc, X, P, C.outro, {
+      div, tx, fit, textW, measure, show, blurPass, mbox, kenBurns, asStill, mediaSpec,
+      base, footage, dust, outlineBig, word, scramble, frameBox,
+      STONE, YEL, CINE, EASE_OUT, EASE_IN, EASE_IO, EASE_BACK })
+  : B.end(sc, X);

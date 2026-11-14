@@ -512,6 +512,108 @@
       "weightB": 900,
       "slant": "normal",
       "style": "motion"
+    },
+    "lyrics-trazo": {
+      "display": "Permanent Marker",
+      "displayB": "Permanent Marker",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "trazo",
+      "roles": {
+        "background": "paper",
+        "foreground": "ink",
+        "accent": "ink",
+        "subtitle": "ink"
+      },
+      "fallback": {
+        "background": "#050505",
+        "foreground": "#FFFFFF",
+        "accent": "#FFFFFF"
+      }
+    },
+    "lyrics-decadas": {
+      "display": "Archivo Condensed",
+      "displayB": "Archivo Condensed",
+      "weight": 800,
+      "weightB": 800,
+      "slant": "normal",
+      "style": "decadas",
+      "roles": {
+        "background": "dark",
+        "foreground": "white",
+        "accent": "blue",
+        "subtitle": "blue"
+      },
+      "rolesB": {
+        "foreground": "blue"
+      },
+      "fallback": {
+        "background": "#190F06",
+        "foreground": "#F4F4F2",
+        "accent": "#0080FD"
+      }
+    },
+    "promo-breaking": {
+      "display": "Poppins",
+      "displayB": "Poppins",
+      "weight": 800,
+      "weightB": 800,
+      "slant": "normal",
+      "style": "promo-breaking",
+      "roles": {
+        "background": "ink",
+        "foreground": "white",
+        "accent": "red"
+      }
+    },
+    "promo-pulse": {
+      "display": "Anton",
+      "displayB": "Anton",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "promo-pulse",
+      "roles": {
+        "background": "ink",
+        "foreground": "cream",
+        "accent": "green"
+      }
+    },
+    "lyrics-rasgado": {
+      "display": "Anton",
+      "displayB": "Archivo",
+      "weight": 400,
+      "weightB": 900,
+      "slant": "normal",
+      "style": "lyrics-rasgado",
+      "roles": {
+        "background": "paper",
+        "foreground": "ink",
+        "accent": "lime"
+      }
+    },
+    "lyrics-grunge-rojo": {
+      "display": "Anton",
+      "displayB": "Anton",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "grunge-rojo",
+      "roles": {
+        "background": "black",
+        "foreground": "white",
+        "accent": "red",
+        "subtitle": "red"
+      },
+      "rolesB": {
+        "foreground": "red"
+      },
+      "fallback": {
+        "background": "#070707",
+        "foreground": "#F1F1EF",
+        "accent": "#E8292E"
+      }
     }
   }
 }

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trazo · componentes</title>
+<!-- Galería de componentes de lyrics-trazo. Muestra SOLO el componente pedido:
+     ?only=<nombre>  (ver components.json)   ?aspect=16:9|9:16   ?p=<JSON de parámetros>
+     ?bg=<#hex> fondo   ?t=<s> congela   ?loop=0 no repite.  Sin audio: reloj propio en bucle. -->
+<style>
+  html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #111; }
+  #frame { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); overflow: hidden; }
+  #stage { position: absolute; }
+</style>
+<link rel="stylesheet" href="../components/trazo.css">
+<script src="../components/core.js"></script>
+<script src="../components/escenas.js"></script>
+<script src="../components/transiciones.js"></script>
+<script src="../components/garabatos.js"></script>
+<script src="../components/intro.js"></script>
+<script src="../components/outro-v1.js"></script>
+<script src="../components/outro-v2.js"></script>
+<script>window.__TRAZO_NO_BOOT = true;</script>
+<script src="../player.js"></script>
+</head>
+<body>
+<div id="frame"><div id="stage"><div id="ink"></div></div></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs id="tz-defs"></defs></svg>
+<script>
+(async function () {
+  "use strict";
+  const T = window.Trazo, K = T.core, R = T.registry, P = T.player;
+  const q = new URLSearchParams(location.search);
+  const only = q.get("only") || "trazo.palabra";
+  let p = {}; try { p = JSON.parse(q.get("p") || "{}") || {}; } catch (e) { console.warn("p inválido"); }
+  /* config: la de la demo si existe, si no los valores por defecto */
+  let raw = null;
+  try { const r = await fetch("../assets/config.json"); if (r.ok) { const db = await r.json(); raw = (db.configs || [db]).find(c => c.id === db.activeId) || (db.configs || [db])[0]; } } catch (e) {}
+  const C = P.validate(raw || P.DEFAULTS);
+  for (const k in C.fonts) if (C.fonts[k].src && !/^(https?:|\/)/.test(C.fonts[k].src)) C.fonts[k].src = "../" + C.fonts[k].src;
+  await P.loadFonts(C);
+  K.measureCache.clear();
+  const rs = document.documentElement.style;
+  rs.setProperty("--ink", C.colors.ink); rs.setProperty("--paper", q.get("bg") || C.colors.paper);
+  rs.setProperty("--ink-inv", C.colors.inkInverted); rs.setProperty("--paper-inv", C.colors.paperInverted);
+  const defs = document.getElementById("tz-defs");
+  for (let i = 0; i < 3; i++) defs.insertAdjacentHTML("beforeend", `<filter id="tz-ink-${i}" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="${C.seed + i * 3}" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="${C.motion.wobble}" xChannelSelector="R" yChannelSelector="G"/></filter>`);
+
+  /* marco con la proporción pedida, ajustado a la ventana */
+  const [aw, ah] = (q.get("aspect") || "9:16").split(":").map(Number);
+  const frame = document.getElementById("frame"), stage = document.getElementById("stage"), ink = document.getElementById("ink");
+  const scale = Math.min(innerWidth / aw, innerHeight / ah);
+  const W = Math.round(aw * scale), H = Math.round(ah * scale);
+  frame.style.width = W + "px"; frame.style.height = H + "px";
+  const ctx = { W, H, u: Math.min(W, H) / 100, C, fonts: C.fonts };
+  const styleOf = id => C.styles[id] || C.styles[Object.keys(C.styles)[0]];
+
+  /* una escena de demostración por componente; p sobrescribe los campos */
+  const seed = Number(p.seed ?? 7);
+  const specs = {
+    "trazo.intro": () => { if (p.title) C.intro.title = p.title; if (p.artist) C.intro.artist = p.artist; if (!C.intro.title) C.intro.title = "Título de la canción"; return { kind: "intro", t0: 0, t1: p.duration ?? 3.2, seed }; },
+    "trazo.outrov1": () => { Object.assign(C.outro, pick(p, ["title", "sub", "feats"])); return { kind: "outro", id: "trazo.outrov1", t0: 0, t1: p.duration ?? 3.4, seed }; },
+    "trazo.outrov2": () => { Object.assign(C.outro, pick(p, ["title", "sub", "feats"])); return { kind: "outro", id: "trazo.outrov2", t0: 0, t1: p.duration ?? 3.4, seed }; },
+    "trazo.palabra": () => ({ kind: "word", text: p.text || "jungle", t0: 0, t1: p.duration ?? 1.2, seed, style: styleOf(p.style || "bubble"), styleId: p.style || "bubble",
+      layout: p.layout || "stack", inverted: !!p.inverted, hatch: !!p.hatch, doodle: p.doodle || null, motion: p.motion || "punch", transition: p.transition || "cut" }),
+    "trazo.rafaga": () => {
+      const text = p.text || "rumble", chars = [...text], n = Math.round((p.duration ?? 1.6) / C.burst.stepSec), r = K.rng(seed), ids = Object.keys(C.styles);
+      const steps = Array.from({ length: n }, (_, k) => ({ letter: k % 3 !== 0, text: k % 3 === 0 ? text : chars[(k - Math.ceil(k / 3)) % chars.length], style: styleOf(r.pick(ids)), layout: "line", inverted: k % 2 === 1, hatch: r() < 0.25 }));
+      return { kind: "burst", text, t0: 0, t1: n * C.burst.stepSec, stepSec: C.burst.stepSec, steps, seed };
+    },
+    "trazo.interludios": () => ({ kind: "interlude", type: R.interludes[p.type] ? p.type : "sun", t0: 0, t1: p.duration ?? 2, seed }),
+    "trazo.garabatos": () => ({ kind: "word", text: p.text || "hear", t0: 0, t1: p.duration ?? 1.2, seed, style: styleOf(p.style || "marker-caps"), layout: "line", inverted: false, hatch: false, doodle: R.doodles[p.doodle] ? p.doodle : "rays", motion: "none", transition: "cut" }),
+    "trazo.inversion": () => ({ kind: "word", text: p.text || "never", t0: 0, t1: p.duration ?? 1, seed, style: styleOf(p.style || "tall"), layout: "line", inverted: true, hatch: false, doodle: null, motion: "punch", transition: "flash" }),
+    "trazo.trama": () => ({ kind: "word", text: p.text || "witness", t0: 0, t1: p.duration ?? 1.2, seed, style: styleOf(p.style || "bubble"), layout: "vertical", inverted: false, hatch: true, doodle: null, motion: "drift", transition: "cut" })
+  };
+  function pick(o, keys) { const r = {}; for (const k of keys) if (typeof o[k] === "string") r[k] = o[k]; return r; }
+  if (!specs[only]) { console.warn(`componente desconocido: ${only}`); }
+  const sc = (specs[only] || specs["trazo.palabra"])();
+  const build = sc.kind === "intro" ? R.intro(sc, ctx) : sc.kind === "outro" ? R.outros[sc.id](sc, ctx) : sc.kind === "interlude" ? R.interludes[sc.type](sc, ctx) : R.scenes[sc.kind](sc, ctx);
+  ink.appendChild(build.root);
+  const L = sc.t1 - sc.t0, hold = 0.8, loop = q.get("loop") !== "0";
+  const frozen = q.has("t") ? parseFloat(q.get("t")) || 0 : null;
+  let t0 = null;
+  function draw(t) {
+    const lt = Math.min(t, L);
+    const step = Math.floor(t * C.motion.boilFps);
+    const st = build.update(lt, { boilStep: step, t }) || {};
+    stage.classList.toggle("inv", !!st.inv);
+    ink.style.filter = C.motion.wobble > 0 ? `url(#tz-ink-${step % 3})` : "";
+  }
+  function tick(now) {
+    if (t0 === null) t0 = now;
+    let t = (now - t0) / 1000;
+    if (loop) t = t % (L + hold);
+    draw(t);
+    requestAnimationFrame(tick);
+  }
+  window.__trazoShowcase = { only, spec: sc, seek: draw };
+  if (frozen != null) draw(frozen); else requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>

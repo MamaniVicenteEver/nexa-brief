@@ -100,7 +100,7 @@ Para Mapas Satelitales (Documentary/Dynamic) y Atlas en Movimiento, consulta `do
 Descubre estilos con `/api/v1/showcase/designs/<id>/styles` y lee la guía corta `/production-guide?estilo=<id>`.
 Consulta solo los contratos de las piezas elegidas con `?estilo=<id>&format=9x16`; no leer motores para
 cada video. El creador acepta `estilo` y prepara el contexto privado del estilo elegido.
-Mapas: `src/templates/sandbox/nodehistory/_mapas/QUICK.md`. Atlas conserva su generador y catálogo.
+Mapas: `src/templates/nodeatlas/mapas-satelitales/_mapas/QUICK.md`. Atlas conserva su generador y catálogo.
 
 ## Entrega de prototipos para pasar a producción
 

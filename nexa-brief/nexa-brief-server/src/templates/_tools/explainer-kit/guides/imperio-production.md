@@ -88,3 +88,54 @@ promover a producción ni publicar sin que el usuario lo pida.
 La validación central también comprueba `soundDesign.supportWindows` (asset_id, start, duration) contra las ventanas visuales reales y los cues del archivo `planUrl`. Rechaza ambientes cortos, huecos, prolongaciones fuera del apoyo y planes sin asignaciones. Unir fragmentos solapados para una sola ventana es válido. Las plantillas sin efectos no necesitan asignaciones.
 
 Nivel vigente de ambientes del diseño Imperio: ×1,155 de la base inicial (el +10 % anterior y un +5 % adicional, no 5 dB). Aplicarlo una sola vez al plan base. Voz y ventanas de apoyo sin cambios.
+
+
+## Identidad cinematográfica permanente (pedido 2026-11-14)
+
+La fuente reutilizable es `designs/imperio/design.json → editorial`, con ID
+`imperio-narrador-cinematico-v1`. `tools/components.mjs build` incorpora sus reglas
+completas a QUICK.md; el host copia esa hoja al contexto privado del agente en cada
+producción. No copiar prompts editables por video ni cambiar de voz para darle personalidad.
+La narrativa `narrative_cinematica_v1` es el valor por defecto de NodeAtlas; una
+selección explícita del usuario conserva prioridad y los videos existentes no se reescriben.
+
+- Abrir dentro de una acción o consecuencia comprobable; introducir la fecha al orientar
+  la escena. Guion por decisiones, obstáculos y consecuencias, con respiraciones reales.
+- Narrador grave, cercano, curioso y preciso. Permitir apartes breves y variados cuando
+  la escena los justifique; no presentaciones, muletillas, humor sobre víctimas ni pensamientos inventados.
+- Cada punto clave tiene una pieza pertinente: plazo → date; lugar → city; decisión o avance
+  → arrow/campaign; actores → country/flag; control → territory. El texto acompaña la acción.
+  Si falta una función, desarrollarla una sola vez en el motor compartido con contrato, demo y revisión.
+
+### Aperturas A/B/C
+
+A (`imperio.introv1`): letras sobre el mapa mundial completo como el outro, sin bandera,
+sol ni rayos. B (`imperio.introv2`): texto + foto real con palabra clave roja. C es
+`common.tabloid`, la tercera apertura; no existe un `imperio.introv3` distinto. **C siempre
+lleva texto e imagen**, con tinta oscura, crema y carmesí editorial. Elegir un sujeto
+reconocible a 320 px y revisar los dos formatos; evitar como imagen principal carteles
+abarrotados de letras cuando hay una fotografía pertinente. El checker bloquea B/C sin foto.
+
+### Paleta geográfica
+
+`imperio.map/sun/rays/archive` aceptan `flag`; `campaign/footage/country` usan
+`flagColors` para distinguirlo del archivo SVG de bandera. `auto` toma la paleta actual;
+una época distinta requiere lista hex explícita a partir de una bandera histórica verificada.
+Por ejemplo, el episodio de 1914 usa los colores del SVG de su Imperio alemán, no los de
+la Alemania actual. Los SVG reales siguen siendo la fuente de la bandera, no un disco decorativo.
+`neutral` evita sugerir una nacionalidad; `none/classic` solicita deliberadamente el carmesí
+japonés original y no debe usarse como fallback genérico. País desconocido → paleta neutra.
+El rojo de un titular o una marca editorial permanece aunque cambien los colores nacionales.
+
+### Música y golpes de dirección
+
+Reutilizar música de biblioteca con licencia y créditos, repartida por varios actos:
+intriga, presión, clímax y consecuencia; conservar huecos dramáticos. Ducking y nivel bajo
+para oír todas las palabras; fundidos de 2–3 s y cierre musical limpio. Planificar aparte
+los golpes puntuales sincronizados a una marca/orden/impacto; la regla de cobertura completa
+se aplica a ambientes de apoyo, no obliga a alargar un golpe durante toda una fotografía.
+La voz limpia permanece en `audio.narrationSrc`, el stem SFX y el musical se conservan
+separados y cada mezcla parte de esas fuentes, nunca del master anterior. Escuchar puntos
+clave y transiciones, medir picos y duración y registrar planes/licencias antes de dar por terminada la revisión.
+
+El agente aislado declara `work/music-plan.json` (version 1, cues con music_asset_id, mood, start, source_in, duration, gain_db, fade_in, fade_out y purpose). `music_asset_id: auto` solicita selección local determinista de pista instrumental con licencia comprobada; la selección resuelta queda en el reporte. El host lo aplica al ejecutar `kit.py manifest`; repetir el mismo plan valida hashes y reutiliza el resultado. Para uso manual, `tools/cinematic_audio.py <episodio> --profile <perfil-activo> --plan <plan.json> --apply`. Un recurso insuficiente o sin licencia bloquea la mezcla. No se ejecuta desde el agente aislado.

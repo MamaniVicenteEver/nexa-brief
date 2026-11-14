@@ -61,14 +61,42 @@
     await load("./imperio-isolated.js");
     if (!window.__imperioShowcase) throw new Error("No se pudo preparar la vista aislada de Imperio.");
   }
-  const fam = D.family, name = QS.get("c") || fam + ".title", def = Kit.registry.get(name);
+  const fam = D.family, requestedName = QS.get("c") || fam + ".title";
+  let name = requestedName, variantParams = null;
+  if (D.id === "rough" && /^rough\.example-[a-z0-9-]+$/.test(requestedName)) {
+    // A card is an example of an existing component, not another engine
+    // registration. Resolve its contract from the same catalog used by the UI.
+    try {
+      const response = await fetch(`/api/v1/showcase/designs/rough/catalog/${encodeURIComponent(requestedName)}`);
+      if (!response.ok) throw new Error("No se pudo cargar el ejemplo");
+      const entry = await response.json();
+      if (entry.id !== requestedName || !entry.data?.example_variant ||
+          !Kit.registry.has(entry.data.native_name) || !entry.example ||
+          typeof entry.example !== "object" || Array.isArray(entry.example)) {
+        throw new Error("Contrato de ejemplo inválido");
+      }
+      name = entry.data.native_name;
+      variantParams = entry.example;
+    } catch (error) {
+      console.error("[showcase]", error);
+      window.parent.postMessage({ type: "nexa-animation-error" }, location.origin);
+      return;
+    }
+  }
+  const def = Kit.registry.get(name);
   if (QS.has("gallery") && !def) {
     window.parent.postMessage({ type: "nexa-animation-error" }, location.origin);
     return;
   }
-  const params = QS.get("p") ? JSON.parse(QS.get("p")) : JSON.parse(JSON.stringify(def?.example || {}));
+  const params = QS.get("p") ? JSON.parse(QS.get("p")) : JSON.parse(JSON.stringify(variantParams || def?.example || {}));
   if (QS.has("gallery") && !QS.has("p")) {
-    if (name === "common.clip") params.src = "samples/demo.mp4";
+    if (name === "common.clip") {
+      params.src = "samples/demo.mp4";
+      // The sample is portrait: keep its subject in the 16:9 crop and keep the
+      // caption on the opposite side so both remain visible in the gallery.
+      params.focus = [0.5, 0.78];
+      params.textSide = "right";
+    }
     if (name === "imperio.footage") params.video = "samples/imperio-archive.mp4";
     if (name === "rough.introv2") params.video = "samples/demo.mp4";
   }
@@ -111,10 +139,10 @@
   });
   // Este componente construye su texto al terminar de cargar su fuente local.
   if (isolated && window.__tabloidFontReady) await window.__tabloidFontReady;
-  if (isolated && name === "common.logo") {
+  if (QS.has("gallery") && name === "common.logo") {
     const note = document.createElement("p");
     note.textContent = "Componente obsoleto. El logo se añade dentro de una foto o video.";
-    note.style.cssText = "position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:12%;text-align:center;color:#253848;font:600 18px/1.5 sans-serif";
+    note.style.cssText = "position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:12%;text-align:center;background:#121314;color:#ededea;font:600 18px/1.5 sans-serif";
     document.getElementById("stage").appendChild(note);
   }
   if (QS.has("gallery")) requestAnimationFrame(() => window.parent.postMessage({ type: "nexa-animation-ready" }, location.origin));

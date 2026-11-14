@@ -59,6 +59,42 @@ Transiciones y animaciones CSS registradas en el código:
 
 El timeline de JavaScript define los tiempos y las curvas. Usar las funciones de escena y `render/frame`, con el audio como reloj; no convertirlas en animaciones CSS independientes.
 
+### Outro compartido
+
+`components/outroV2.js` es una segunda opción con la misma API y parámetros; se elige con `"outro": {"version": "v2"}` en el JSON o con `?outro=v2` en la URL del showcase. Sin indicarlo se usa `outro.js`.
+
+`components/outro.js` es la implementación única del cierre (`NexaPromoTrendyOutro`):
+azul noche `#000012`/`#0B0B24`, lima `#A6EB35`, papel `#F2EFE6`, Montserrat 900
+cursiva, aro y marcas ×/+ de la promo. No necesita fotos. Reserva por defecto los
+últimos **3,5 segundos dentro de la duración de la música**, con entrada animada y
+lectura sostenida hasta el último fotograma. Versión provisional: el diseño
+definitivo se hará sobre este mismo contrato.
+
+El caso activo del JSON puede definir `outro`; si se omite, usa los valores del
+componente. No copies sus valores por defecto a cada video: así los próximos
+ajustes del componente se heredan. Ejemplo de personalización:
+
+```json
+{
+  "outro": {
+    "sec": 3.5,
+    "title": "Gracias",
+    "sub": "Por ver",
+    "cta": "Suscríbete",
+    "channel": "NodeMotion",
+    "support": "Tu apoyo hace posible que sigamos trayendo más contenido.",
+    "url": "youtube.com/@nodemotion"
+  }
+}
+```
+
+`enabled: false` conserva el final del guion (escena `end`). `type` permite elegir
+otro tipo ya registrado en el motor (por ejemplo `end`); un tipo desconocido usa
+`outro`. Si el componente no carga, se usa la escena `end`. Los textos admiten
+cadenas vacías. Las vistas de plantilla y drafts cargan el componente canónico
+(`/api/v1/templates/promo-trendy/showcase/components/outro.js`) con una URL nueva
+por apertura; el render local usa `./components/outro.js`.
+
 ## Receta para replicar
 
 1. Cargar el config activo y los medios relativos; mantener paleta y familias tipográficas anteriores.

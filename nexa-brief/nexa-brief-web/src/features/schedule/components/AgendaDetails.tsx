@@ -19,8 +19,9 @@ import { useCancelQueueEntryMutation } from "../hooks/useCancelQueueEntryMutatio
 import { useDeletePlanItemMutation, useProducePlanItemMutation } from "../hooks/usePlanner";
 import type { AgendaEvent } from "../lib/agenda";
 import { AgendaPhase, AgendaStatusBadge } from "./AgendaStatus";
+import { WorkflowDetails } from "./WorkflowDetails";
 
-export function AgendaDetails({
+function LegacyAgendaDetails({
   event,
   events,
   zone,
@@ -277,5 +278,28 @@ export function AgendaDetails({
         </p>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AgendaDetails(props: Parameters<typeof LegacyAgendaDetails>[0]) {
+  const recording =
+    props.event.recording ??
+    props.events.find((event) => event.videoId === props.event.videoId && event.recording)
+      ?.recording;
+  return props.event.workflow ? (
+    <WorkflowDetails
+      workflow={{
+        ...props.event.workflow,
+        record_state: recording?.state === "queued" ? "queued" : props.event.workflow.record_state,
+        state:
+          recording?.state === "queued" && props.event.workflow.state === "recording"
+            ? "queued"
+            : props.event.workflow.state,
+        record_started_at: recording ? recording.startedAt : props.event.workflow.record_started_at,
+      }}
+      onClose={props.onClose}
+    />
+  ) : (
+    <LegacyAgendaDetails {...props} />
   );
 }

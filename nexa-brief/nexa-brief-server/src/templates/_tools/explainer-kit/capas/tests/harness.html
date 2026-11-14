@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es"><meta charset="utf-8"><title>QA de capas</title>
+<style>html,body,#stage{margin:0;width:100%;height:100%;overflow:hidden;background:#06080C}#stage{position:absolute;inset:0}</style>
+<div id="stage"></div>
+<script src="../../engine/kit.js"></script>
+<script src="../runtime/capas.js"></script>
+<script src="../../designs/common/capas.js"></script>
+<script>
+window.qaReady = (async () => {
+  const get = async file => (await fetch(file)).json();
+  const [catalog, sceneSchema, catalogSchema, scene] = await Promise.all([
+    get('fixtures/catalog.json'), get('../schema/escena.schema.json'), get('../schema/catalog.schema.json'), get('fixtures/scene.json')]);
+  Kit.capas.configure({ catalog, sceneSchema, catalogSchema, baseURL: new URL('fixtures/', location.href).href });
+  /* Tres profundidades para comprobar paralaje sin depender de imágenes definitivas. */
+  scene.elenco.push({id:'fondo-1',asset:'ejecutivo',x:.22,y:.87,escala:.7,profundidad:1,espejo:true,estilo:{silueta:true,halo:0,sombra:true,brillo:'#1F6BFF'}});
+  scene.camara = {mov:'paneo-der', intensidad:.06};
+  scene.elenco[1].y = .18; scene.elenco[1].escala = .28;
+  scene.formato['9x16'].elenco['jefe'].escala = .75;
+  scene.formato['9x16'].elenco['mano-1'] = {x:.43,y:.28,escala:.38};
+  scene.formato['9x16'].elenco['fondo-1'] = {x:.22,y:.86,escala:.55};
+  scene.eventos[0].valor.x = .5;
+  scene.eventos.push({en:5,id:'jefe',accion:'escala',valor:{valor:.8,dur:.7}});
+  if (new URLSearchParams(location.search).has('invalid')) scene.elenco[0].asset = 'asset-inexistente';
+  window.qa = {draw:[], instance:null, scene};
+  const create = Kit.capas.create;
+  Kit.capas.create = (...args) => {
+    const instance = create(...args), render = instance.render.bind(instance);
+    qa.instance = instance;
+    instance.render = (...args) => {const start=performance.now(); render(...args); qa.draw.push(performance.now()-start);};
+    return instance;
+  };
+  await Kit.boot({root:document.getElementById('stage'),total:6,dpr:1,
+    config:{family:'capas',palette:{bg:'#06080C',ink:'#EFE9DF',accent:'#1F6BFF'},captions:{enabled:false},outro:{enabled:false}},
+    lyrics:{metadata:{duration:6},segments:[]},storyboard:{beats:[{use:'common.capas',t:0,offset:0,dur:6,params:new URLSearchParams(location.search).has('primitive') ? 'texto' : scene}]}});
+  return true;
+})();
+</script></html>

@@ -14,7 +14,9 @@ def test_only_shared_engines_tools_and_docs_are_allowed_in_repository_sandbox(tm
 
 def test_repository_references_must_be_in_profile(tmp_path):
     templates=tmp_path/'templates'
-    (templates/'sandbox/referencias/nodehistory/test').mkdir(parents=True)
+    data=templates/'sandbox/referencias/nodehistory/test'
+    data.mkdir(parents=True)
+    (data/'reference.mp4').write_bytes(b'original reference')
     assert audit_layout(templates)[0]['kind']=='references_in_repository'
 
 
@@ -39,6 +41,10 @@ def test_correct_principal_and_private_episode_pass_audit(tmp_path):
     episode.write_text(json.dumps({'demo':False}))
     assert audit_layout(templates,profile)==[]
     episode.write_text(json.dumps({'demo':True}))
+    findings=audit_layout(templates,profile)
+    assert findings[0]['kind']=='legacy_demo_role_unclassified'
+    assert findings[0]['severity']=='warning'
+    (episode.parent/'info.json').write_text('{"is_new_design":true}')
     assert audit_layout(templates,profile)[0]['kind']=='principal_demo_in_profile'
 
 
@@ -50,3 +56,15 @@ def test_project_symlinks_are_reported_without_traversal(tmp_path):
     outside.mkdir()
     (category/'escape').symlink_to(outside)
     assert audit_layout(templates)[0]['kind']=='symbolic_project'
+
+
+
+def test_empty_reference_scaffold_and_docs_are_not_private_projects(tmp_path):
+    templates=tmp_path/'templates'
+    refs=templates/'sandbox/referencias/nodehistory'
+    refs.mkdir(parents=True)
+    (refs/'.gitkeep').write_text('')
+    (refs/'README.md').write_text('Put private references in the active profile.')
+    assert audit_layout(templates)==[]
+    (refs/'original.mov').write_bytes(b'original')
+    assert audit_layout(templates)[0]['kind']=='references_in_repository'

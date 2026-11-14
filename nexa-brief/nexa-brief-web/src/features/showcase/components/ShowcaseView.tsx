@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from "@/shared/components/ui/dialog";
 import { Input } from "@/shared/components/ui/input";
-import { safeShowcaseUrl } from "../api/standard-showcase-repository";
+import { safeShowcaseUrl, type ShowcaseDesign } from "../api/standard-showcase-repository";
 import { useStandardShowcase } from "../hooks/useStandardShowcase";
 import { catalogFilters, entryType, entryTypeLabels } from "../lib/catalog-filters";
 import { ShowcaseStyleContext, ShowcaseStyleControlsContext, type ShowcaseStyles } from "../lib/showcase-style";
@@ -24,6 +24,16 @@ import { LegacyShowcaseView } from "./LegacyShowcaseView";
 import { StandardShowcaseCatalog } from "./StandardShowcaseCatalog";
 
 type Section = "produccion" | "prueba" | "library" | "samples";
+
+function displayDesignId(design: ShowcaseDesign): string {
+  // This promoted demo retains its original internal ID; keep its public name
+  // stable even if its associated episodes are added or reordered.
+  if (design.id === "sandbox-a476d9552a6cf43f01c78eb8") return "resumen-geopolitico-demo";
+  if (design.family === "sandbox") {
+    return design.episodes?.[0]?.id ?? design.name;
+  }
+  return design.id;
+}
 
 export function ShowcaseView() {
   const [section, setSection] = useState<Section>("produccion");
@@ -93,7 +103,11 @@ export function ShowcaseView() {
       .catch(() => undefined);
     return () => controller.abort();
   }, [designId]);
-  const all = catalog.data?.entries ?? [];
+  // PROTOTIPO exposes reusable components and sketches; its old scene examples
+  // remain available in the catalog but do not add duplicate cards or filters.
+  const all = (catalog.data?.entries ?? []).filter(
+    (entry) => design?.id !== "rough" || entryType(entry) !== "example",
+  );
   const types = Object.entries(entryTypeLabels)
     .map(([id, label]) => ({
       id,
@@ -219,7 +233,7 @@ export function ShowcaseView() {
                 >
                   <span className="block truncate text-xs font-semibold">{item.name}</span>
                   <span className="mt-1 block truncate text-[11px] opacity-65">
-                    {item.family === "sandbox" ? item.episodes?.[0]?.id ?? item.name : item.id} · {item.category.replace(/^node_?/, "Node ")}
+                    {displayDesignId(item)} · {item.category.replace(/^node_?/, "Node ")}
                   </span>
                 </button>
               ))}
@@ -249,7 +263,7 @@ export function ShowcaseView() {
                   <span className="font-normal text-nb-ink-soft">· {design.description}</span>
                 </h2>
                 <p className="mt-1 text-xs text-nb-ink-soft">
-                  {design.state === "produccion" ? "Producción" : "Sandbox"} · {design.family === "sandbox" ? design.episodes?.[0]?.id ?? design.name : design.id} · {design.category.replace(/^node_?/, "Node ")} ·{" "}
+                  {design.state === "produccion" ? "Producción" : "Sandbox"} · {displayDesignId(design)} · {design.category.replace(/^node_?/, "Node ")} ·{" "}
                   {all.length} entradas disponibles
                 </p>
                 {design.category_path && (

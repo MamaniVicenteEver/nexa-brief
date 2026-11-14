@@ -4,7 +4,7 @@
   "max_tokens": 4000000,
   "style_policies": {
     "imperio": {
-      "version": 1,
+      "version": 2,
       "guide": "guides/imperio-production.md",
       "media": {
         "video_seconds": [
@@ -30,7 +30,18 @@
         "narration_gain_multiplier": 1.0,
         "background_matches_support_window": true,
         "require_support_mapping": true,
-        "window_tolerance_seconds": 0.01
+        "window_tolerance_seconds": 0.01,
+        "music_direction": "multiple acts with deliberate silence, low-level ducking and licensed library tracks"
+      },
+      "editorial_identity": "imperio-narrador-cinematico-v1",
+      "openings": {
+        "image_required": [
+          "imperio.introv2",
+          "common.tabloid"
+        ],
+        "text_required": true,
+        "keyword_accent": "red",
+        "text_only_background": "full_world_no_flag"
       }
     }
   }

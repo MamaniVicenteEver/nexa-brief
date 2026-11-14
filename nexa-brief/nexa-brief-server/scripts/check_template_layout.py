@@ -6,5 +6,7 @@ from src.core.explainer.layout_audit import audit_layout
 
 if __name__ == '__main__':
     findings = audit_layout(settings.templates_dir, layout_for_settings(settings).root)
-    print(json.dumps({'findings':findings, 'count':len(findings)}, ensure_ascii=False, indent=2))
-    raise SystemExit(1 if findings else 0)
+    errors = [f for f in findings if f.get('severity', 'error') == 'error']
+    warnings = [f for f in findings if f.get('severity') == 'warning']
+    print(json.dumps({'findings':findings, 'count':len(findings), 'errors':len(errors), 'warnings':len(warnings)}, ensure_ascii=False, indent=2))
+    raise SystemExit(1 if errors else 0)

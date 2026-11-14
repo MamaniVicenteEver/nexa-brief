@@ -51,7 +51,7 @@ function mapScheduleSlot(dto: ScheduleSlotDto): ScheduleSlot {
   };
 }
 
-interface QueueEntryDto {
+export interface QueueEntryDto {
   entry_id: string;
   job_id: string;
   platform: string;
@@ -69,7 +69,7 @@ interface QueueEntryDto {
   processed_at: string | null;
 }
 
-function mapQueueEntry(dto: QueueEntryDto): QueueEntry {
+export function mapQueueEntry(dto: QueueEntryDto): QueueEntry {
   return {
     entryId: dto.entry_id,
     jobId: dto.job_id,

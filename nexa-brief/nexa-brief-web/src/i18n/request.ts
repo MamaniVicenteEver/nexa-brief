@@ -8,6 +8,7 @@ import { routing } from "./routing";
  * sumarlo a FEATURE_NAMESPACES. */
 const FEATURE_NAMESPACES = [
   "resources",
+  "library",
   "studio",
   "createFlow",
   "legal",

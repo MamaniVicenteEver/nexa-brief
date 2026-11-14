@@ -179,7 +179,10 @@ def promote(
         assert html is not None
         html = html.replace("../../../_tools/explainer-kit/", "/api/v1/explainer/files/_tools/explainer-kit/")
         html = html.replace("../../_proto/", "/api/v1/explainer/files/sandbox/_proto/")
-        html = html.replace("../_mapas/", "/api/v1/explainer/files/sandbox/nodehistory/_mapas/")
+        from src.core.explainer.engine_locations import engine_root
+        templates = templates_dir or settings.templates_dir
+        engine = engine_root(templates, "nodehistory/_mapas").relative_to(templates).as_posix()
+        html = html.replace("../_mapas/", "/api/v1/explainer/files/bundled/" + engine + "/")
     else:
         manifest = json.loads(original_manifest)
         if html is not None:

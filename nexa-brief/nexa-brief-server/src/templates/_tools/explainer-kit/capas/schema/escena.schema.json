@@ -1,0 +1,596 @@
+{
+  "type": "object",
+  "properties": {
+    "fondo": {
+      "type": "object",
+      "properties": {
+        "preset": {
+          "enum": [
+            "foco",
+            "degradado",
+            "horizonte",
+            "ciudad",
+            "sala",
+            "rayos",
+            "liso"
+          ]
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "acento": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "grano": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "vineta": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "camara": {
+      "type": "object",
+      "properties": {
+        "mov": {
+          "enum": [
+            "acercar",
+            "alejar",
+            "paneo-izq",
+            "paneo-der",
+            "fijo",
+            "temblor"
+          ]
+        },
+        "intensidad": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.2
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "elenco": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/actor"
+      },
+      "minItems": 0,
+      "maxItems": 100
+    },
+    "conexiones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "de": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*:[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "a": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*:[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "tipo": {
+            "enum": [
+              "hilo",
+              "linea",
+              "cadena"
+            ]
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          }
+        },
+        "required": [
+          "de",
+          "a",
+          "tipo"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 300
+    },
+    "eventos": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 3600
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "accion": {
+                "const": "pose"
+              },
+              "valor": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              }
+            },
+            "required": [
+              "en",
+              "id",
+              "accion",
+              "valor"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 3600
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "accion": {
+                "const": "mover"
+              },
+              "valor": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "y": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "dur": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 3600
+                  }
+                },
+                "required": [
+                  "x",
+                  "y",
+                  "dur"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "en",
+              "id",
+              "accion",
+              "valor"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 3600
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "accion": {
+                "const": "escala"
+              },
+              "valor": {
+                "type": "object",
+                "properties": {
+                  "valor": {
+                    "type": "number",
+                    "minimum": 0.05,
+                    "maximum": 5
+                  },
+                  "dur": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 3600
+                  }
+                },
+                "required": [
+                  "valor",
+                  "dur"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "en",
+              "id",
+              "accion",
+              "valor"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 3600
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "accion": {
+                "const": "color"
+              },
+              "valor": {
+                "type": "object",
+                "properties": {
+                  "zona": {
+                    "type": "string",
+                    "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+                  },
+                  "color": {
+                    "type": "string",
+                    "pattern": "^#[0-9a-fA-F]{6}$"
+                  },
+                  "dur": {
+                    "type": "number",
+                    "exclusiveMinimum": 0,
+                    "maximum": 3600
+                  }
+                },
+                "required": [
+                  "zona",
+                  "color",
+                  "dur"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "en",
+              "id",
+              "accion",
+              "valor"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 3600
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "accion": {
+                "const": "silueta"
+              },
+              "valor": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "en",
+              "id",
+              "accion",
+              "valor"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 3600
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "accion": {
+                "const": "salir"
+              },
+              "valor": {
+                "enum": [
+                  "salir-cae",
+                  "salir-funde"
+                ]
+              }
+            },
+            "required": [
+              "en",
+              "id",
+              "accion",
+              "valor"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "en": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 3600
+              },
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+              },
+              "accion": {
+                "const": "anim"
+              },
+              "valor": {
+                "enum": [
+                  "entrar-sube",
+                  "entrar-cae",
+                  "entrar-desliza",
+                  "salir-cae",
+                  "salir-funde",
+                  "respirar",
+                  "flotar",
+                  "temblar",
+                  "girar",
+                  "caer",
+                  "latir"
+                ]
+              }
+            },
+            "required": [
+              "en",
+              "id",
+              "accion",
+              "valor"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 1000
+    },
+    "textos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "texto": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240,
+            "pattern": "^(?![\\s\\S]*(?:[<>]|://|\\\\|\\.\\./|/))[\\s\\S]*$"
+          },
+          "pos": {
+            "enum": [
+              "arriba",
+              "centro",
+              "abajo"
+            ]
+          },
+          "estilo": {
+            "enum": [
+              "titulo",
+              "subtitulo",
+              "etiqueta"
+            ]
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          }
+        },
+        "required": [
+          "texto"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 6
+    },
+    "formato": {
+      "type": "object",
+      "patternProperties": {
+        "^(16x9|9x16)$": {
+          "type": "object",
+          "properties": {
+            "elenco": {
+              "type": "object",
+              "patternProperties": {
+                "^[a-z0-9]+(-[a-z0-9]+)*$": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "escala": {
+                      "type": "number",
+                      "minimum": 0.05,
+                      "maximum": 5
+                    },
+                    "profundidad": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "espejo": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [],
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "elenco"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "elenco"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/capas/escena.schema.json",
+  "title": "Parámetros common.capas v1",
+  "$defs": {
+    "actor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "asset": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "pose": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "x": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "y": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "escala": {
+          "type": "number",
+          "minimum": 0.05,
+          "maximum": 5
+        },
+        "profundidad": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "espejo": {
+          "type": "boolean"
+        },
+        "estilo": {
+          "$ref": "#/$defs/estilo"
+        },
+        "entrada": {
+          "type": "object",
+          "properties": {
+            "anim": {
+              "enum": [
+                "entrar-sube",
+                "entrar-cae",
+                "entrar-desliza"
+              ]
+            },
+            "dur": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 3600
+            }
+          },
+          "required": [
+            "anim",
+            "dur"
+          ],
+          "additionalProperties": false
+        },
+        "anim": {
+          "enum": [
+            "entrar-sube",
+            "entrar-cae",
+            "entrar-desliza",
+            "salir-cae",
+            "salir-funde",
+            "respirar",
+            "flotar",
+            "temblar",
+            "girar",
+            "caer",
+            "latir"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "asset"
+      ],
+      "additionalProperties": false
+    },
+    "estilo": {
+      "type": "object",
+      "properties": {
+        "silueta": {
+          "type": "boolean"
+        },
+        "brillo": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "sombra": {
+          "type": "boolean"
+        },
+        "halo": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "zonas": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9]+(-[a-z0-9]+)*$": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    }
+  }
+}

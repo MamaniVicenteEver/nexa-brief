@@ -1,0 +1,11 @@
+# Bocetos de PROTOTIPO en Showcase
+
+Los bocetos son recursos del diccionario compartido `Kit.rough.SKETCHES`. No son componentes nuevos ni código de un episodio. Sus fichas muestran una vista con `rough.icon` y se identifican con `data.resource_type = "sketch"`. El nombre visible y de catálogo sigue `rough.sketch.NOMBRE`, por ejemplo `rough.sketch.understand`. La clave que acepta el motor sigue en `data.sketch_id`: para ese boceto es `understand`, usado como `{"use":"rough.icon","params":{"icon":"understand"}}`. El mismo boceto también se puede usar en `rough.flow` (en `nodes[].icon`) o `rough.tally` (en `icon`). El identificador interno de Showcase se conserva para que sigan funcionando las vistas y capturas anteriores. Las fichas de ejemplos siguen identificándose con `data.example_variant` y no deben confundirse con recursos individuales.
+
+Para añadir o modificar un boceto compartido:
+
+1. Editar el diccionario y ejecutar el generador normal del kit (`.venv/bin/python src/templates/_tools/explainer-kit/tools/catalog.py`, desde `nexa-brief-server`). Este obtiene los nombres del registro vivo y sincroniza las fichas y las opciones de los componentes. `tools/sync_rough_sketches.py` puede volver a sincronizar un catálogo ya actualizado; conserva los componentes y ejemplos independientes. Añadir nombre en español y categoría a `_GROUPS` del sincronizador cuando corresponda; los bocetos nuevos sin traducción permanecen disponibles en `otros`.
+2. Generar las imágenes faltantes desde el perfil activo: `.venv/bin/python scripts/generate_showcase_posters.py --design rough --resource sketch --only-missing --frame last --allow-last-visible`. Este comando no reemplaza capturas existentes.
+3. Si cambia un boceto existente, reemplazar su captura explícitamente: `.venv/bin/python scripts/generate_showcase_posters.py --design rough --component rough.example-sketch-NOMBRE --frame last --allow-last-visible`, sustituyendo `NOMBRE` por su ID normalizado en minúsculas. Revisar el resultado visualmente. La sincronización del catálogo no regenera automáticamente miniaturas existentes.
+
+Los bocetos no dependen de red para su dibujo; el diseño puede declarar otros recursos externos, como fuentes. No copiar componentes a los episodios para crear variantes: los datos de la escena eligen el boceto y los parámetros del componente.

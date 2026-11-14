@@ -109,3 +109,11 @@ def require_account_access(
     allowed = accounts[category_id]
     if not isinstance(allowed, list) or f"{platform}:{account_alias}" not in allowed:
         raise HTTPException(status_code=403, detail="No tienes permiso sobre esta cuenta.")
+
+
+def require_publication_access(identity: ImageSession, record) -> None:
+    """Shared category + account policy for editor details and library projections."""
+    require_category_access(identity, record.editorial.category_id)
+    for delivery in record.deliveries:
+        require_account_access(identity, record.editorial.category_id,
+                               delivery.platform, delivery.account_alias)

@@ -43,6 +43,42 @@ Titular por defecto: el primer rótulo del guion sin # ^ ~ * (por ejemplo «DEPO
 
 ## Movimiento, transiciones y componentes
 
+### Outro compartido
+
+`components/outroV2.js` es una segunda opción con la misma API y parámetros; se elige con `"outro": {"version": "v2"}` en el JSON o con `?outro=v2` en la URL del showcase. Sin indicarlo se usa `outro.js`.
+
+`components/outro.js` (global `NexaPromoSportsOutro`) es la implementación única del
+cierre, con la misma API que Editorial: `defaults`, `options`, `timeline`, `render`.
+Usa la paleta de Sports (fondo `#050607`, amarillo `#EBE609`, blanco `#F3F3F1`, tinta
+`#0B0B0B`) y la clase `.sp` (Roboto 900 itálica en mayúsculas). El diseño actual es
+**provisional**. Reserva por defecto los últimos **3,5 segundos dentro de la duración
+de la música** (recorta la escena `end` del guion), con entrada animada y lectura
+sostenida hasta el último fotograma.
+
+El caso activo del JSON puede definir `outro`; si se omite, usa los valores del
+componente. No copies sus valores por defecto a cada video. Ejemplo:
+
+```json
+{
+  "outro": {
+    "sec": 3.5,
+    "title": "Gracias",
+    "sub": "Por ver",
+    "cta": "Suscríbete",
+    "channel": "NodeMotion",
+    "support": "Tu apoyo hace posible que sigamos trayendo más contenido.",
+    "url": "youtube.com/@nodemotion"
+  }
+}
+```
+
+`enabled: false` conserva el final del guion. `type` permite elegir otro tipo ya
+registrado en el motor (por ejemplo `end`); un tipo desconocido usa `outro`. Los
+textos admiten cadenas vacías. Si el componente no carga, `B.outro` cae en `B.end`.
+Las vistas de plantilla y drafts cargan el componente canónico
+(`/api/v1/templates/promo-sports/showcase/components/outro.js`) con una URL nueva por
+apertura; en local se usa `./components/outro.js`.
+
 Roboto negra e inclinada, amarillo sobre negro. Metraje deportivo, polvo, contornos gigantes y marcos. Aparición de palabras, scramble y diagonales de energía.
 
 Funciones disponibles en el motor (nombres reales para localizar el comportamiento):

@@ -33,14 +33,15 @@ test('las piezas delegan al renderizador original y conservan las coordenadas y 
   const campaign=stub('campaign'),map=stub('map');registered.set('imperio.map',map);
   const Kit={registry:registered,register:d=>registered.set(d.name,d),prog:()=>1,imperio:{campaign:{definition:campaign,
     camParams:Object.fromEntries(['from','to','zoom','tilt','ease'].map(k=>[k,campaign.params[k]])),
-    mapParams:{country:campaign.params.country},dateStamp:(...args)=>calls.push({name:'date',args}),archiveCaption:(...args)=>calls.push({name:'caption',args})}}};
+    mapParams:{country:campaign.params.country,flagColors:campaign.params.flagColors},dateStamp:(...args)=>calls.push({name:'date',args}),archiveCaption:(...args)=>calls.push({name:'caption',args})}}};
   vm.runInNewContext(fs.readFileSync(new URL('components/elements.js',root),'utf8'),{Kit});
   const def=registered.get('imperio.country'),p=Object.fromEntries(Object.entries(def.params).map(([k,s])=>[k,s.default]));
-  Object.assign(p,{country:'France',target:[2.35,48.86],region:'France',label:'FRANCIA',flag:'assets/flags/francia.svg',from:[2,47,30,0],to:[2,47,30,0],time:1.25});
+  Object.assign(p,{country:'France',flagColors:{rays:['#0055a4','#ffffff','#ef4135']},target:[2.35,48.86],region:'France',label:'FRANCIA',flag:'assets/flags/francia.svg',from:[2,47,30,0],to:[2,47,30,0],time:1.25});
   def.create({},p);
   const call=calls.pop();assert.equal(call.name,'campaign');
   assert.deepEqual(Array.from(call.p.targets[0].at),[2.35,48.86]);
   assert.equal(call.p.targets[0].region,'France');assert.equal(call.p.targets[0].time,1.25);
+  assert.deepEqual(call.p.flagColors,p.flagColors);
   assert.equal(call.p.f1,'assets/flags/francia.svg');assert.equal(call.p.country,'France');
   assert.deepEqual(Array.from(call.p.parts),['territories','badges','dates']);
   const date=registered.get('imperio.date');date.create({g:{main:{}},stage:{}},{text:'1940–41',at:0,size:1}).render(2);

@@ -20,6 +20,7 @@ COLLECTIONS: dict[str, tuple[str, str | None]] = {
     "history_events": ("jobs/history_events.json", "event_id"),
     "notifications": ("notifications/notifications.json", "notification_id"),
     "schedule_slots": ("schedule/slots.json", "slot_id"),
+    "schedule_workflows": ("schedule/workflows.json", "workflow_id"),
     "queue_entries": ("schedule/queue.json", "entry_id"),
     "image_assets": ("library/images.json", "asset_id"),
     "music_assets": ("library/music.json", "asset_id"),

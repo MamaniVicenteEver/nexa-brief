@@ -131,6 +131,7 @@ export function useImagePostActions() {
     await Promise.all([
       queryClient.invalidateQueries({ queryKey: IMAGE_POSTS_QUERY_KEY }),
       queryClient.invalidateQueries({ queryKey: PUBLICATIONS_QUERY_KEY }),
+      queryClient.invalidateQueries({ queryKey: ["jobs", "biblioteca"] }),
       ...(postId
         ? [
             queryClient.invalidateQueries({

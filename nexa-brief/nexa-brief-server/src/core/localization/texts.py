@@ -61,6 +61,8 @@ _SMALL.update(cien=100, ciento=100, cem=100, cento=100, doscientos=200, duzentos
               quinientos=500, quinhentos=500, seiscientos=600, seiscentos=600,
               setecientos=700, setecentos=700, ochocientos=800, oitocentos=800,
               novecientos=900, novecentos=900)
+_SMALL.update(doscientas=200, trescientas=300, cuatrocientas=400, quinientas=500,
+              seiscientas=600, setecientas=700, ochocientas=800, novecientas=900)
 # Ordinals used in dates ("May thirteenth", "primeiro de maio", "primero de mayo").
 _ORDINALS = {w: i + 1 for i, w in enumerate(
     "first second third fourth fifth sixth seventh eighth ninth tenth eleventh twelfth thirteenth fourteenth "
@@ -106,6 +108,9 @@ def numbers(text: str, locale: str) -> set[Decimal]:
     text = normalized(text)
     if locale.startswith("en"):
         text = _en_years(text)
+    # "por ciento" is a unit, not an additional quantity of 100.
+    text = re.sub(r"\bpor\s+(?:ciento|cento)\b", " percent ", text)
+    text = re.sub(r"\bmedi[oa]\s+(millon(?:es)?|milhao|milhoes)\b", r"0.5 \1", text)
     # Decimal narration is natural in each market, and must remain a factual value.
     digit_words = {w: n for w, n in _SMALL.items() if n < 10}
     decimal_words = "|".join(map(re.escape, digit_words))
@@ -114,6 +119,11 @@ def numbers(text: str, locale: str) -> set[Decimal]:
         return str(digit_words[match[1]]) + "." + "".join(str(digit_words[w]) for w in tail)
     text = re.sub(r"\b(" + decimal_words + r")\s+(?:point|punto|coma|virgula)\s+((?:" + decimal_words + r")(?:[ -]+(?:" + decimal_words + r"))*)\b",
                   spoken_decimal, text)
+    def spoken_integer_decimal(match):
+        return str(_SMALL[match[1]]) + "." + "".join(str(digit_words[w]) for w in match[2].replace("-", " ").split())
+    text = re.sub(r"\b(" + "|".join(map(re.escape, (w for w, n in _SMALL.items() if 10 <= n < 100)))
+                  + r")\s+(?:point|punto|coma|virgula)\s+((?:" + decimal_words
+                  + r")(?:[ -]+(?:" + decimal_words + r"))*)\b", spoken_integer_decimal, text)
     # Normalize decimal/group separators before tokenizing cardinal phrases.
     def numeric(match):
         value = match[0]

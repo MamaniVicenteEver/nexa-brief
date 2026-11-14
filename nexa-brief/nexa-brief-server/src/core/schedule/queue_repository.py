@@ -99,6 +99,7 @@ async def create(
     content_kind: str = "video",
     content_id: str | None = None,
     delivery_id: str | None = None,
+    privacy: str | None = None,
 ) -> QueueEntry:
     """Crea una entry de cola nueva (ad-hoc, inmediata, o auto-fill de un slot).
 
@@ -126,6 +127,7 @@ async def create(
         content_kind=content_kind,
         content_id=content_id,
         delivery_id=delivery_id,
+        privacy=privacy,
     )
     if delivery_id:
         async with coordination("queue_claim"):

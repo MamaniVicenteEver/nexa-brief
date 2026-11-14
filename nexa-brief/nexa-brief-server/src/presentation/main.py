@@ -18,6 +18,7 @@ from src.presentation.api.routers import (
     content,
     history,
     library,
+    biblioteca,
     niches,
     notifications,
     publisher,
@@ -113,8 +114,18 @@ async def lifespan(app: FastAPI):
     preparation_producer = explainer.get_producer()
     preparation_worker = asyncio.create_task(worker_loop(preparation_producer))
 
+    from src.core.schedule.workflows import workflow_loop
+    from src.adapters.publishing.factory import get_publisher_facade
+    workflow_worker = asyncio.create_task(workflow_loop(
+        preparation_producer, explainer.get_recorder(), get_publisher_facade))
+
     yield
 
+    workflow_worker.cancel()
+    try:
+        await workflow_worker
+    except asyncio.CancelledError:
+        pass
     preparation_worker.cancel()
     try:
         await preparation_worker
@@ -232,6 +243,7 @@ app.include_router(niches.router, prefix="/api/v1")
 # Publisher router is always registered; auth is managed via accounts.json
 app.include_router(publisher.router, prefix="/api/v1")
 app.include_router(library.router, prefix="/api/v1")
+app.include_router(biblioteca.router, prefix="/api/v1")
 app.include_router(templates.router, prefix="/api/v1")
 app.include_router(history.router, prefix="/api/v1")
 app.include_router(notifications.router, prefix="/api/v1")

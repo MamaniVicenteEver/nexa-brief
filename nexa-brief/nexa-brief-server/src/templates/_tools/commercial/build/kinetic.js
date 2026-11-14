@@ -20,6 +20,30 @@ const safeZoom = (X, s, fs, ls, wanted) => portrait(X)
   : wanted;
 const GRAD = ["#F2C81E", "#F08A1A", "#E3401E", "#C02B8E", "#5A3FD6", "#2F5FE0", "#B8B7B0"];
 
+// Los previews consultan el componente canónico; el render usa su copia actual local.
+const outroModule = new URL(/^\/api\/v1\/(drafts|templates)\//.test(location.pathname)
+  ? "/api/v1/templates/promo-kinetic/showcase/components/outro.js"
+  : "./components/outro.js", document.baseURI);
+outroModule.searchParams.set("v", String(Date.now()));
+try { await import(outroModule.href); }
+catch (error) { console.warn("[promo-kinetic] No se pudo cargar el cierre compartido", error); }
+
+const outroV2Module = new URL(/^\/api\/v1\/(drafts|templates)\//.test(location.pathname)
+  ? "/api/v1/templates/promo-kinetic/showcase/components/outroV2.js"
+  : "./components/outroV2.js", document.baseURI);
+outroV2Module.searchParams.set("v", String(Date.now()));
+try { await import(outroV2Module.href); }
+catch (error) { console.warn("[promo-kinetic] No se pudo cargar el cierre compartido V2", error); }
+
+const outroApi = () => { const v1 = window.NexaPromoKineticOutro, v2 = window.NexaPromoKineticOutroV2;
+  const want = (QS.get("outro") || C.outro?.version || "").toString().toLowerCase() === "v2";
+  return want && v2 ? v2 : v1 || v2; };
+
+function makeTimeline(segments, duration) {
+  const scenes = buildTimeline(segments, duration);
+  return outroApi()?.timeline(scenes, duration, C.outro, B) || scenes;
+}
+
 /* ---- fondo: carbón + grano + rayas de película + HUD de esquinas ---- */
 const HAIRS = (() => {
   const cv = doc.createElement("canvas"); cv.width = 1280; cv.height = 720;
@@ -333,3 +357,10 @@ B.note = (sc, X) => {
   ls.forEach((l, i) => { const t = tx(G, U(l.text), { cls: "ki", fs, x: W / 2, y: H / 2 + (i - mid(ls.length)) * fs * 1.2, color: P.orange, ls: 0.02, split: "chars" }); t.chars.forEach((c, k) => show(X, c, Math.max(0.02, l.rt) + k * 0.02)); });
   exit(X, G, "fade");
 };
+
+/* cierre compartido (components/outro.js); sin módulo, la escena final del guion (typing) */
+B.outro = (sc, X) => outroApi()
+  ? outroApi().render(sc, X, P, C.outro, {
+      div, tx, fit, textW, measure, base, rowsOf, show, hideAt, exit, safeZoom, portrait,
+      mid, U, COL, GRAD, EASE_OUT, EASE_IN, EASE_IO })
+  : B.typing(sc, X);

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "imperio.introv1",
-  "description": "GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
+  "description": "Apertura A de solo texto sobre el mapa del mundo completo, como el cierre v1, sin sol, rayos ni bandera. Titular blanco y palabra clave sobre carmesí; entrada por palabras. Foto/componente opcionales mediante bg explícito.",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -29,7 +29,7 @@
     },
     "country": {
       "type": "string",
-      "description": "País foco del fondo atlas/archivo (rayado, el sol cae sobre él). Vacío = mundo y sol al centro.",
+      "description": "Contexto del episodio; la apertura A mantiene el mundo completo sin bandera ni rayado.",
       "default": ""
     },
     "sunAt": {
@@ -41,7 +41,7 @@
           "type": "null"
         }
       ],
-      "description": "Segundo en que cae el sol.",
+      "description": "Tiempo heredado de entrada; conservado por compatibilidad. La apertura A no dibuja un sol.",
       "default": 0.15
     },
     "wordAt": {
@@ -73,7 +73,7 @@
           "pattern": "^@.+"
         }
       ],
-      "description": "Impacto: los rayos llegan a los bordes (acepta '@palabra'; −1 = sin impacto).",
+      "description": "Impacto tipográfico suave (acepta '@palabra'; −1 = sin impacto), sin rayos ni bandera.",
       "default": 2.6
     },
     "bg": {

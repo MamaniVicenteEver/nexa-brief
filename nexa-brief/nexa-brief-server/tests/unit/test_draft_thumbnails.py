@@ -24,8 +24,11 @@ TEMPLATE_DIRS = {
     "promo-dynamic": ("commercial", "promo_video_dynamic"),
     "promo-urban": ("commercial", "promo_video_urban"),
     "promo-sports": ("commercial", "promo_video_sports"),
+    "promo-breaking": ("commercial", "promo_video_breaking"),
+    "promo-pulse": ("commercial", "promo_video_pulse"),
     "lyrics-manifiesto": ("lyrics", "lyrics_video_manifiesto"),
     "lyrics-caution": ("lyrics", "lyrics_video_caution"),
+    "lyrics-rasgado": ("lyrics", "lyrics_video_rasgado"),
 }
 EXPECTED_LAYOUT = {
     "promo-editorial": "editorial",
@@ -34,8 +37,11 @@ EXPECTED_LAYOUT = {
     "promo-dynamic": "dynamic",
     "promo-urban": "urban",
     "promo-sports": "sports",
+    "promo-breaking": "breaking",
+    "promo-pulse": "pulse",
     "lyrics-manifiesto": "manifesto",
     "lyrics-caution": "caution",
+    "lyrics-rasgado": "rasgado",
 }
 
 

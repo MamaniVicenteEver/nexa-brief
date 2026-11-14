@@ -21,6 +21,7 @@ export function ComponentCard({ item, format, preview, onOpen }: CardProps) {
 
 export function ComponentCardView({
   name,
+  subtitle,
   summary,
   tags,
   available = true,
@@ -29,6 +30,7 @@ export function ComponentCardView({
   onOpen,
 }: {
   name: string;
+  subtitle?: string;
   summary?: string;
   tags?: string[];
   available?: boolean;
@@ -73,9 +75,12 @@ export function ComponentCardView({
         {preview}
       </div>
       <div className="space-y-2 border-t border-nb-line p-4">
-        <h2 id={titleId} className="break-words font-mono text-xs font-semibold">
-          {name}
-        </h2>
+        <div className="flex min-w-0 items-baseline justify-between gap-1">
+          <h2 id={titleId} className={`min-w-0 break-words font-mono font-semibold ${subtitle ? "text-[11px] tracking-tight" : "text-xs"}`}>
+            {name}
+          </h2>
+          {subtitle && <p className="min-w-0 text-right text-[11px] font-medium tracking-tight">{subtitle}</p>}
+        </div>
         <p className="text-sm leading-relaxed text-nb-ink-soft">
           {summary || "Sin descripción disponible."}
         </p>

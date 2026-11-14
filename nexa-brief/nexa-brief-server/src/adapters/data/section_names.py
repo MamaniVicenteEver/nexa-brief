@@ -13,7 +13,7 @@ COLLECTION_SECTIONS = {
     "execution_logs": "logs", "publication_index": "publicaciones",
     "channel_publications": "publicaciones", "published_videos": "publicaciones",
     "notifications": "notifications", "schedule_slots": "schedule", "queue_entries": "schedule",
-    "content_plan": "schedule", "channels": "channels", "channel_categories": "channels",
+    "schedule_workflows": "schedule", "content_plan": "schedule", "channels": "channels", "channel_categories": "channels",
 }
 DOCUMENT_SECTIONS = {
     "media_aliases": "resources",

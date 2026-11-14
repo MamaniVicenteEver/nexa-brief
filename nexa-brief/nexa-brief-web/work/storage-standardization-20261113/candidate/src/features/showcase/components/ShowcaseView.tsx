@@ -57,20 +57,23 @@ export function ShowcaseView() {
     if (autoSectionResolved.current) return;
     const params = new URLSearchParams(window.location.search);
     const target = params.get("design");
-    if (!target || params.has("section")) {
+    if (!target) {
       autoSectionResolved.current = true;
       return;
     }
     const requested = base.designs.data?.designs.find((value) => value.id === target);
     if (requested) {
       autoSectionResolved.current = true;
-      setSection(requested.state === "produccion" ? "produccion" : "prueba");
+      const resolved = requested.state === "produccion" ? "produccion" : "prueba";
+      setSection(resolved);
+      params.set("section", resolved);
+      window.history.replaceState(null, "", `${window.location.pathname}?${params}`);
     }
   }, [base.designs.data]);
   const designs = base.designs.data?.designs ?? [];
   const filtered = designs.filter((design) => design.state === section);
   const design = filtered.find((value) => value.id === chosen) ?? filtered[0];
-  const activePromotionCategory = promotionCategory || promotionCategories.find((node) => node.id.replaceAll("_", "") === design?.category)?.path || promotionCategories[0]?.path || "";
+  const activePromotionCategory = promotionCategory || design?.category_path || promotionCategories.find((node) => node.id.replaceAll("_", "") === design?.category)?.path || promotionCategories[0]?.path || "";
   const { catalog, promote } = useStandardShowcase(design?.id ?? "", estilo, format);
   const designId = design?.id ?? "";
   useEffect(() => {
@@ -290,7 +293,11 @@ export function ShowcaseView() {
                     variant="outline"
                     size="sm"
                     disabled={!design.promotable || promote.isPending}
-                    onClick={() => setPromotionOpen(true)}
+                    onClick={() => {
+                      setPromotionCategory(design.category_path ?? activePromotionCategory);
+                      setPromotionShared(design.shared_categories ?? []);
+                      setPromotionOpen(true);
+                    }}
                   >
                     {promote.isPending ? "Pasando a producción…" : "Pasar a producción"}
                   </Button>
@@ -342,6 +349,10 @@ export function ShowcaseView() {
                                 setPromotionOpen(false);
                                 setChosen(design.id);
                                 setSection("produccion");
+                                const params = new URLSearchParams(window.location.search);
+                                params.set("design", design.id);
+                                params.set("section", "produccion");
+                                window.history.replaceState(null, "", `${window.location.pathname}?${params}`);
                                 setPromotionMessage(`Diseño ${design.name} pasado a producción.`);
                               },
                             })

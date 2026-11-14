@@ -1,0 +1,201 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "lyricsFilter": {
+        "dropPatterns": [
+          "(?i)audio ?jungle",
+          "(?i)envato",
+          "(?i)oriel",
+          "(?i)subt[ií]tulos",
+          "(?i)amara\\.org"
+        ],
+        "maxWordSec": 3
+      },
+      "seed": 29,
+      "colors": {
+        "red": "#E8292E",
+        "white": "#F1F1EF",
+        "black": "#070707",
+        "paper": "#BDBDBA",
+        "paperLight": "#D6D6D2",
+        "chalk": "#F5F5F2"
+      },
+      "fonts": {
+        "condensed": {
+          "family": "Anton",
+          "src": "assets/fonts/Anton-Regular.woff2",
+          "weight": 400,
+          "stretch": 100,
+          "tracking": 0
+        },
+        "thin": {
+          "family": "Oswald",
+          "src": "assets/fonts/Oswald.woff2",
+          "variable": "wght",
+          "weight": 300,
+          "stretch": 100,
+          "tracking": 0.3
+        },
+        "wide": {
+          "family": "Archivo",
+          "src": "assets/fonts/Archivo.woff2",
+          "variable": "wdth",
+          "weight": 900,
+          "stretch": 125,
+          "tracking": 0.02
+        }
+      },
+      "media": [
+        {
+          "type": "video",
+          "src": "assets/media/tunnel-dance.bw.mp4",
+          "poster": "assets/media/tunnel-dance-1.bw.jpg"
+        },
+        {
+          "type": "video",
+          "src": "assets/media/street-dance.bw.mp4",
+          "poster": "assets/media/street-dance-1.bw.jpg"
+        },
+        {
+          "type": "video",
+          "src": "assets/media/hoodie.bw.mp4",
+          "poster": "assets/media/hoodie-1.bw.jpg"
+        },
+        {
+          "type": "video",
+          "src": "assets/media/crowd.bw.mp4",
+          "poster": "assets/media/crowd-1.bw.jpg"
+        },
+        {
+          "type": "video",
+          "src": "assets/media/breakdance.bw.mp4",
+          "poster": "assets/media/breakdance-1.bw.jpg"
+        },
+        {
+          "type": "video",
+          "src": "assets/media/night-hoodie.bw.mp4",
+          "poster": "assets/media/night-hoodie-1.bw.jpg"
+        }
+      ],
+      "components": {
+        "intro": true,
+        "outro": "grunge.outrov1",
+        "paper": true,
+        "doodles": true,
+        "fog": true,
+        "grain": true,
+        "distress": true,
+        "recap": true
+      },
+      "intro": {
+        "title": "Roll up 20",
+        "artist": "Pista de demostración",
+        "minSec": 1.6
+      },
+      "outro": {
+        "title": "Gracias",
+        "sub": "por ver",
+        "feats": "Suscríbete · NodeMotion",
+        "leadSec": 0.4,
+        "minSec": 3,
+        "maxSec": 6
+      },
+      "timing": {
+        "leadSec": 0.05,
+        "maxWords": 4,
+        "maxChars": 22,
+        "wordGapSec": 0.5,
+        "gapSec": 1.2,
+        "holdSec": 0.5
+      },
+      "scenes": {
+        "deck": {
+          "linea": 3,
+          "espaciada": 1.2,
+          "gigante": 1.4,
+          "hud": 0.8,
+          "pila": 1,
+          "marco": 0.8,
+          "eco": 0.9,
+          "ancho": 1,
+          "dupla": 1,
+          "flecha": 0.8,
+          "rojo": 1
+        },
+        "cooldown": 2
+      },
+      "variants": {
+        "redChance": 0.55,
+        "doodleChance": 0.35,
+        "stripChance": 0.35,
+        "footageChance": 0.9,
+        "doodles": {
+          "circle": 2,
+          "strike": 1.2,
+          "underline": 1,
+          "arrow": 1,
+          "crown": 0.6,
+          "bolt": 0.6,
+          "slash": 0.8
+        }
+      },
+      "transitions": {
+        "sec": 0.18,
+        "deck": {
+          "cut": 4,
+          "tear": 1,
+          "glitch": 1.4,
+          "flash": 1,
+          "redflash": 0.6,
+          "blur": 1
+        }
+      },
+      "motion": {
+        "enterSec": 0.14,
+        "smear": 0.9,
+        "doodleSec": 0.3,
+        "videoRate": 1,
+        "grain": 0.6,
+        "distress": 0.5
+      },
+      "interludes": {
+        "minSec": 0.8,
+        "maxSec": 3,
+        "deck": {
+          "metraje": 1.4,
+          "franjas": 1,
+          "rejilla": 1
+        }
+      },
+      "recap": {
+        "minGapSec": 4,
+        "stepSec": 1.7,
+        "interludeEvery": 3
+      },
+      "overrides": [
+        {
+          "match": "snapped",
+          "scene": "gigante"
+        },
+        {
+          "match": "map",
+          "scene": "ancho"
+        },
+        {
+          "match": "selfish",
+          "scene": "rojo"
+        }
+      ],
+      "debug": {
+        "enabled": false
+      },
+      "description": "Grunge rojo: metraje urbano B/N, papel rasgado, letra condensada blanca y roja con estela, tiza y pincel. Demo: canción de lyrics-grunge."
+    }
+  ]
+}

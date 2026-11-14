@@ -51,6 +51,7 @@ import threading
 import time
 from pathlib import Path
 from typing import TYPE_CHECKING
+from urllib.parse import urlsplit
 
 import structlog
 from playwright.async_api import async_playwright
@@ -114,12 +115,18 @@ def _find_free_port() -> int:
 
 
 @contextlib.contextmanager
-def _serve_directory(directory: Path):
+def _serve_directory(directory: Path, *, shared_assets: dict[str, Path] | None = None):
     """Levanta un servidor HTTP efímero sobre *directory* en un hilo daemon.
     Yields la base_url ("http://127.0.0.1:{port}"). Se apaga al salir del bloque.
     """
     port = _find_free_port()
-    handler = functools.partial(_QuietStaticHandler, directory=str(directory))
+    class Handler(_QuietStaticHandler):
+        def translate_path(self, path):
+            # Solo las rutas declaradas por el grabador acceden al componente canónico.
+            shared = (shared_assets or {}).get(urlsplit(path).path)
+            return str(shared) if shared is not None else super().translate_path(path)
+
+    handler = functools.partial(Handler, directory=str(directory))
     httpd = http.server.ThreadingHTTPServer(("127.0.0.1", port), handler)
     thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     thread.start()
@@ -154,8 +161,16 @@ class PlaywrightFFmpegAdapter(RecorderPort):
         output_dir.mkdir(parents=True, exist_ok=True)
         # Serve original assets, but write captures and incomplete videos into a
         # private workspace so failure never replaces previous deliverables.
+        shared = {}
+        if getattr(getattr(niche_cfg, "template", None), "template_id", None) == "promo-editorial":
+            from src.config.template_manifest import get_template_paths
+            template = get_template_paths("promo-editorial").get("index_html")
+            if template is not None:
+                component = template.parent / "components/outro.js"
+                if component.is_file():
+                    shared = {"/components/outro.js": component, "/assets/components/outro.js": component}
         with render_workspace(output_dir, "playwright") as workspace:
-            with _serve_directory(html_path.parent) as base_url:
+            with _serve_directory(html_path.parent, **({"shared_assets": shared} if shared else {})) as base_url:
                 page_url = f"{base_url}/{html_path.name}"
                 result = await self._record_all_formats(
                     page_url, audio_path, workspace, duration_seconds, niche_cfg

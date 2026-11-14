@@ -1,0 +1,1244 @@
+{
+  "template_id": "promo-breaking",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 15,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "ciudad, multitudes, edificios, pantallas de datos, prensa; se muestran en blanco y negro"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.name",
+        "label": "Marca",
+        "max": 30,
+        "default": "NEXA BRIEF"
+      },
+      {
+        "key": "brand.tag",
+        "label": "Subtítulo de la marca",
+        "max": 40,
+        "default": "NOTICIAS DEL MUNDO"
+      },
+      {
+        "key": "brand.cta",
+        "label": "Llamada (caja roja del cierre)",
+        "max": 24,
+        "default": "SUSCRÍBETE"
+      },
+      {
+        "key": "brand.url",
+        "label": "Dirección o usuario",
+        "max": 40,
+        "default": "@NEXABRIEF"
+      },
+      {
+        "key": "brand.live",
+        "label": "Rótulo de directo",
+        "max": 16,
+        "default": "EN VIVO"
+      }
+    ],
+    "brief": true
+  },
+  "default_brand": {
+    "name": "NEXA BRIEF",
+    "tag": "NOTICIAS DEL MUNDO",
+    "cta": "SUSCRÍBETE",
+    "url": "@NEXABRIEF",
+    "live": "EN VIVO"
+  },
+  "default_media": [
+    {
+      "id": "towers",
+      "type": "video"
+    },
+    {
+      "id": "skyline",
+      "type": "video"
+    },
+    {
+      "id": "crowd",
+      "type": "video"
+    },
+    {
+      "id": "steps",
+      "type": "video"
+    },
+    {
+      "id": "press",
+      "type": "video"
+    },
+    {
+      "id": "market",
+      "type": "video"
+    },
+    {
+      "id": "crash",
+      "type": "video"
+    },
+    {
+      "id": "street",
+      "type": "video"
+    },
+    {
+      "id": "doctor",
+      "type": "video"
+    },
+    {
+      "id": "capitol",
+      "type": "video"
+    },
+    {
+      "id": "aerial",
+      "type": "video"
+    },
+    {
+      "id": "highway",
+      "type": "video"
+    },
+    {
+      "id": "globe",
+      "type": "video"
+    },
+    {
+      "id": "sirens",
+      "type": "video"
+    },
+    {
+      "id": "stadium",
+      "type": "video"
+    }
+  ],
+  "default_scenes": [
+    {
+      "type": "intro",
+      "media": [
+        "towers"
+      ],
+      "max_text_lines": 2
+    },
+    {
+      "type": "stacked",
+      "media": [
+        "crowd"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    },
+    {
+      "type": "repeat",
+      "media": [
+        "steps"
+      ],
+      "trans": "redBlock",
+      "max_text_lines": 2
+    },
+    {
+      "type": "word",
+      "media": [
+        "press"
+      ],
+      "trans": "redBlock",
+      "max_text_lines": 2
+    },
+    {
+      "type": "word",
+      "media": [
+        "skyline"
+      ],
+      "trans": "squash",
+      "textIn": "squash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "flash",
+      "media": [
+        "doctor"
+      ],
+      "trans": "cut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "flash",
+      "media": [
+        "market"
+      ],
+      "trans": "cut",
+      "grade": "mono",
+      "max_text_lines": 2
+    },
+    {
+      "type": "word",
+      "media": [
+        "stadium"
+      ],
+      "trans": "zoomCut",
+      "grade": "red",
+      "tint": "none",
+      "max_text_lines": 2
+    },
+    {
+      "type": "ticker",
+      "media": [
+        "street"
+      ],
+      "trans": "panels",
+      "max_text_lines": 2
+    },
+    {
+      "type": "stat",
+      "media": [
+        "crash"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    },
+    {
+      "type": "split",
+      "media": [
+        "capitol",
+        "crowd",
+        "street"
+      ],
+      "trans": "redBlock",
+      "max_text_lines": 2
+    },
+    {
+      "type": "word",
+      "media": [
+        "aerial"
+      ],
+      "trans": "squash",
+      "align": "left",
+      "textIn": "type",
+      "max_text_lines": 2
+    },
+    {
+      "type": "stacked",
+      "media": [
+        "towers"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    },
+    {
+      "type": "repeat",
+      "media": [
+        "sirens"
+      ],
+      "trans": "redBlock",
+      "rows": 6,
+      "max_text_lines": 2
+    },
+    {
+      "type": "flash",
+      "media": [
+        "globe"
+      ],
+      "trans": "cut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "flash",
+      "media": [
+        "doctor"
+      ],
+      "trans": "cut",
+      "grade": "mono",
+      "max_text_lines": 2
+    },
+    {
+      "type": "flash",
+      "media": [
+        "market"
+      ],
+      "trans": "cut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "word",
+      "media": [
+        "crowd"
+      ],
+      "trans": "zoomCut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "ticker",
+      "media": [
+        "highway"
+      ],
+      "trans": "panels",
+      "max_text_lines": 2
+    },
+    {
+      "type": "stat",
+      "media": [
+        "press"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    },
+    {
+      "type": "word",
+      "media": [
+        "sirens"
+      ],
+      "trans": "squash",
+      "grade": "red",
+      "tint": "none",
+      "textIn": "pop",
+      "max_text_lines": 2
+    },
+    {
+      "type": "split",
+      "media": [
+        "street",
+        "skyline",
+        "steps"
+      ],
+      "trans": "redBlock",
+      "max_text_lines": 2
+    },
+    {
+      "type": "stacked",
+      "media": [
+        "crash"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    },
+    {
+      "type": "repeat",
+      "media": [
+        "aerial"
+      ],
+      "trans": "redBlock",
+      "max_text_lines": 2
+    },
+    {
+      "type": "word",
+      "media": [
+        "globe"
+      ],
+      "trans": "zoomCut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "flash",
+      "media": [
+        "skyline"
+      ],
+      "trans": "cut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "flash",
+      "media": [
+        "steps"
+      ],
+      "trans": "cut",
+      "grade": "mono",
+      "max_text_lines": 2
+    },
+    {
+      "type": "flash",
+      "media": [
+        "towers"
+      ],
+      "trans": "cut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "ticker",
+      "media": [
+        "capitol"
+      ],
+      "trans": "panels",
+      "max_text_lines": 2
+    },
+    {
+      "type": "stat",
+      "media": [
+        "crowd"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    },
+    {
+      "type": "word",
+      "media": [
+        "highway"
+      ],
+      "trans": "squash",
+      "textIn": "squash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "split",
+      "media": [
+        "globe",
+        "aerial",
+        "market"
+      ],
+      "trans": "redBlock",
+      "panels": 3,
+      "max_text_lines": 2
+    },
+    {
+      "type": "stacked",
+      "media": [
+        "press"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    },
+    {
+      "type": "repeat",
+      "media": [
+        "crash"
+      ],
+      "trans": "redBlock",
+      "max_text_lines": 2
+    },
+    {
+      "type": "word",
+      "media": [
+        "street"
+      ],
+      "trans": "zoomCut",
+      "grade": "red",
+      "tint": "none",
+      "max_text_lines": 2
+    },
+    {
+      "type": "flash",
+      "media": [
+        "capitol"
+      ],
+      "trans": "cut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "flash",
+      "media": [
+        "doctor"
+      ],
+      "trans": "cut",
+      "grade": "mono",
+      "max_text_lines": 2
+    },
+    {
+      "type": "word",
+      "media": [
+        "towers"
+      ],
+      "trans": "squash",
+      "align": "left",
+      "max_text_lines": 2
+    },
+    {
+      "type": "ticker",
+      "media": [
+        "sirens"
+      ],
+      "trans": "panels",
+      "max_text_lines": 2
+    },
+    {
+      "type": "stat",
+      "media": [
+        "market"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    },
+    {
+      "type": "word",
+      "media": [
+        "globe"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    },
+    {
+      "type": "repeat",
+      "media": [
+        "steps"
+      ],
+      "trans": "redBlock",
+      "rows": 7,
+      "max_text_lines": 2
+    },
+    {
+      "type": "word",
+      "media": [
+        "skyline"
+      ],
+      "trans": "squash",
+      "textIn": "type",
+      "max_text_lines": 2
+    },
+    {
+      "type": "outro",
+      "media": [
+        "towers"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    }
+  ],
+  "default_duration_seconds": 100.0,
+  "target_duration_seconds": {
+    "min": 60,
+    "max": 120
+  },
+  "script": "Whisper: segments, un segmento por escena, renglones en lines (renglón 1 = palabra principal, renglón 2 = complemento). La primera escena es la intro y la última el outro.",
+  "thumbnail": {
+    "title": "renglón 1 del primer segmento (máximo cinco palabras); si no existe, título del draft",
+    "extra": [
+      "brand.name",
+      "brand.tag"
+    ],
+    "A": "titular con tramo en contorno, subrayado rojo y subtítulo espaciado sobre foto B/N con tinte rojo y letras gigantes",
+    "B": "palabra en sílabas apiladas arriba a la izquierda y titular grande abajo con subrayado, sobre foto B/N",
+    "common": "A y B parten del mismo título; fondo configurable (fotograma, imagen o color). Ver MINIATURAS.md."
+  },
+  "media_slot_order": {
+    "clips": [
+      "towers",
+      "skyline",
+      "crowd",
+      "steps",
+      "press",
+      "market",
+      "crash",
+      "street",
+      "doctor",
+      "capitol",
+      "aerial",
+      "highway",
+      "globe",
+      "sirens",
+      "stadium"
+    ]
+  },
+  "scene_cycle": [
+    {
+      "scene": 1,
+      "type": "intro",
+      "shows": "intro: titular del renglón 1 y subtítulo del renglón 2",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "towers",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 2,
+      "type": "stacked",
+      "shows": "sílabas apiladas del renglón 1 y titular grande del renglón 2",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "crowd",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 3,
+      "type": "repeat",
+      "shows": "renglones repetidos en filas sobre foto roja",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "steps",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 4,
+      "type": "word",
+      "shows": "palabra con tramo en contorno, subrayado y subtítulo opcional",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "press",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 5,
+      "type": "word",
+      "shows": "palabra con tramo en contorno, subrayado y subtítulo opcional",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "skyline",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 6,
+      "type": "flash",
+      "shows": "palabra gigante de corte rápido",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "doctor",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 7,
+      "type": "flash",
+      "shows": "palabra gigante de corte rápido",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "market",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 8,
+      "type": "word",
+      "shows": "palabra con tramo en contorno, subrayado y subtítulo opcional",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "stadium",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 9,
+      "type": "ticker",
+      "shows": "titular + franja de directo con el renglón 2 corriendo",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "street",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 10,
+      "type": "stat",
+      "shows": "cifra que cuenta (renglón 1) + rótulo (renglón 2)",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "crash",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 11,
+      "type": "split",
+      "shows": "columnas de medios + titular",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "capitol",
+          "kind": "video"
+        },
+        {
+          "slot": "crowd",
+          "kind": "video"
+        },
+        {
+          "slot": "street",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 12,
+      "type": "word",
+      "shows": "palabra con tramo en contorno, subrayado y subtítulo opcional",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "aerial",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 13,
+      "type": "stacked",
+      "shows": "sílabas apiladas del renglón 1 y titular grande del renglón 2",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "towers",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 14,
+      "type": "repeat",
+      "shows": "renglones repetidos en filas sobre foto roja",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "sirens",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 15,
+      "type": "flash",
+      "shows": "palabra gigante de corte rápido",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "globe",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 16,
+      "type": "flash",
+      "shows": "palabra gigante de corte rápido",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "doctor",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 17,
+      "type": "flash",
+      "shows": "palabra gigante de corte rápido",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "market",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 18,
+      "type": "word",
+      "shows": "palabra con tramo en contorno, subrayado y subtítulo opcional",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "crowd",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 19,
+      "type": "ticker",
+      "shows": "titular + franja de directo con el renglón 2 corriendo",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "highway",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 20,
+      "type": "stat",
+      "shows": "cifra que cuenta (renglón 1) + rótulo (renglón 2)",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "press",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 21,
+      "type": "word",
+      "shows": "palabra con tramo en contorno, subrayado y subtítulo opcional",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "sirens",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 22,
+      "type": "split",
+      "shows": "columnas de medios + titular",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "street",
+          "kind": "video"
+        },
+        {
+          "slot": "skyline",
+          "kind": "video"
+        },
+        {
+          "slot": "steps",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 23,
+      "type": "stacked",
+      "shows": "sílabas apiladas del renglón 1 y titular grande del renglón 2",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "crash",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 24,
+      "type": "repeat",
+      "shows": "renglones repetidos en filas sobre foto roja",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "aerial",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 25,
+      "type": "word",
+      "shows": "palabra con tramo en contorno, subrayado y subtítulo opcional",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "globe",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 26,
+      "type": "flash",
+      "shows": "palabra gigante de corte rápido",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "skyline",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 27,
+      "type": "flash",
+      "shows": "palabra gigante de corte rápido",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "steps",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 28,
+      "type": "flash",
+      "shows": "palabra gigante de corte rápido",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "towers",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 29,
+      "type": "ticker",
+      "shows": "titular + franja de directo con el renglón 2 corriendo",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "capitol",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 30,
+      "type": "stat",
+      "shows": "cifra que cuenta (renglón 1) + rótulo (renglón 2)",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "crowd",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 31,
+      "type": "word",
+      "shows": "palabra con tramo en contorno, subrayado y subtítulo opcional",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "highway",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 32,
+      "type": "split",
+      "shows": "columnas de medios + titular",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "globe",
+          "kind": "video"
+        },
+        {
+          "slot": "aerial",
+          "kind": "video"
+        },
+        {
+          "slot": "market",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 33,
+      "type": "stacked",
+      "shows": "sílabas apiladas del renglón 1 y titular grande del renglón 2",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "press",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 34,
+      "type": "repeat",
+      "shows": "renglones repetidos en filas sobre foto roja",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "crash",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 35,
+      "type": "word",
+      "shows": "palabra con tramo en contorno, subrayado y subtítulo opcional",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "street",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 36,
+      "type": "flash",
+      "shows": "palabra gigante de corte rápido",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "capitol",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 37,
+      "type": "flash",
+      "shows": "palabra gigante de corte rápido",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "doctor",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 38,
+      "type": "word",
+      "shows": "palabra con tramo en contorno, subrayado y subtítulo opcional",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "towers",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 39,
+      "type": "ticker",
+      "shows": "titular + franja de directo con el renglón 2 corriendo",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "sirens",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 40,
+      "type": "stat",
+      "shows": "cifra que cuenta (renglón 1) + rótulo (renglón 2)",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "market",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 41,
+      "type": "word",
+      "shows": "palabra con tramo en contorno, subrayado y subtítulo opcional",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "globe",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 42,
+      "type": "repeat",
+      "shows": "renglones repetidos en filas sobre foto roja",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "steps",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 43,
+      "type": "word",
+      "shows": "palabra con tramo en contorno, subrayado y subtítulo opcional",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "skyline",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 44,
+      "type": "outro",
+      "shows": "cierre con marca y llamada (Outro v1/v2)",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "towers",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    }
+  ],
+  "rhythm": {
+    "recommended_seconds_per_segment": {
+      "min": 1.4,
+      "max": 2.4
+    },
+    "typical_duration_seconds": {
+      "min": 60,
+      "max": 120
+    },
+    "note": "Un ciclo = 44 segmentos (≈ 100 s en el ejemplo). La primera escena es la intro y la última el outro elegido."
+  },
+  "brand_texts": {
+    "brand.name": "marca del cierre y del rótulo de directo",
+    "brand.tag": "subtítulo espaciado de la intro si el guion no trae renglón 2",
+    "brand.cta": "texto de la caja roja del cierre (vacío = sin caja)",
+    "brand.url": "dirección del cierre si el último segmento no trae renglón 2",
+    "brand.live": "rótulo de la franja de directo (ticker)"
+  },
+  "design_limitations": "Escenas stat requieren una cifra al inicio del renglón 1; si no la hay se dibujan como word. ticker usa el renglón 2 como texto que corre.",
+  "scene_cycle_note": "Las longitudes recomendadas no garantizan legibilidad: revisar ambos formatos.",
+  "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base."
+}

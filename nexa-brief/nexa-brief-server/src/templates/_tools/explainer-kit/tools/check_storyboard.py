@@ -25,8 +25,23 @@ import media_relevance  # noqa: E402
 import visual_support  # noqa: E402
 import component_library  # noqa: E402
 import style_media_policy  # noqa: E402
+import capas as capas_tool  # noqa: E402
 
 LOCAL_CATALOG = "assets/components/catalog.json"
+
+
+def unpublished_local_components(proto, design, storyboard):
+    """Find used episode components absent from the design's Showcase catalog."""
+    if not isinstance(design, str) or not re.fullmatch(r"[A-Za-z0-9_-]+", design):
+        return []
+    local = pathlib.Path(proto) / LOCAL_CATALOG
+    shared = KIT.parent / "design-definitions" / design / "catalog.json"
+    if not local.is_file() or not shared.is_file():
+        return []
+    local_names = {row.get("name") for row in json.loads(local.read_text(encoding="utf-8")).get("comps", [])}
+    published = {row.get("id") for row in json.loads(shared.read_text(encoding="utf-8")).get("entries", [])}
+    used = {beat.get("use") for beat in storyboard.get("beats", []) if isinstance(beat, dict)}
+    return sorted(name for name in (local_names & used) - published if isinstance(name, str))
 
 def opaque_logo_png(path):
     """Un PNG de marca necesita píxeles transparentes para no formar un rectángulo."""
@@ -380,6 +395,10 @@ def main(proto):
     words = [{"t": w["word"].strip(), "s": w["start"], "n": norm(w["word"])} for s in lyr["segments"] for w in s.get("words", []) if w["word"].strip()]
     total = lyr.get("metadata", {}).get("duration") or (words[-1]["s"] + 3)
     errs, warns, beats, cur = [], [], [], 0
+    missing_showcase = unpublished_local_components(proto, C.get("design"), sb)
+    if missing_showcase:
+        warns.append("componentes del video ausentes en Showcase: " + ", ".join(missing_showcase)
+                     + "; revisar e integrar al diseño compartido antes de reutilizarlos")
     for i, b in enumerate(sb["beats"]):
         t0 = b.get("t"); wi = -1
         if t0 is None:
@@ -425,6 +444,15 @@ def main(proto):
     # clips de video: que el clip alcance para todo el beat (start + duración × rate) y cuántos hay
     clips = [x for x in beats if x["use"] == "common.clip"]
     playback_beats = resolved_video_beats(C, beats, total) if C.get("quality_policy_version", 1) >= 3 else beats
+    # Capas valida referencias anidadas usando la duración efectiva, antes de aceptar
+    # el storyboard. Un ID/pose/ancla/zona/animación inexistente siempre es un error.
+    effective_beats = {x["i"]: x for x in playback_beats}
+    capas_beats = [effective_beats.get(x["i"], x) for x in beats if x["use"] == "common.capas"]
+    if capas_beats:
+        capas_catalog = capas_tool.load_catalog()
+        for x in capas_beats:
+            errs.extend(f"#{x['i']} common.capas: {message}" for message in capas_tool.validate_scene(
+                x["b"].get("params") or {}, capas_catalog, x["t1"] - x["t0"]))
     videos = [x for x in playback_beats if any(s.get("type") == "video" and (x["b"].get("params") or {}).get(k) for k, s in (cat.get(x["use"], {}).get("params") or {}).items())]
     for x in videos:
         p = x["b"].get("params") or {}

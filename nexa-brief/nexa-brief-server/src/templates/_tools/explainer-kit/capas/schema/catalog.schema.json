@@ -1,0 +1,455 @@
+{
+  "type": "object",
+  "properties": {
+    "contract": {
+      "const": "nexa.capas.catalog/1"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "updated": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"
+    },
+    "animations": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "entrar-sube",
+          "entrar-cae",
+          "entrar-desliza",
+          "salir-cae",
+          "salir-funde",
+          "respirar",
+          "flotar",
+          "temblar",
+          "girar",
+          "caer",
+          "latir"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 11,
+      "uniqueItems": true
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/asset"
+      },
+      "minItems": 0,
+      "maxItems": 10000
+    }
+  },
+  "required": [
+    "contract",
+    "version",
+    "updated",
+    "animations",
+    "assets"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/capas/catalog.schema.json",
+  "title": "Biblioteca de capas v1",
+  "$defs": {
+    "asset": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "type": {
+          "enum": [
+            "personaje",
+            "grupo",
+            "mano",
+            "objeto",
+            "fondo",
+            "decorado"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "status": {
+          "enum": [
+            "aprobado",
+            "con-defectos",
+            "descartado"
+          ]
+        },
+        "review": {
+          "type": "object",
+          "properties": {
+            "by": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "date": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "sheet": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^(?!/)(?!.*(?:\\.\\.|\\\\|://))[a-zA-Z0-9_./-]+$"
+            },
+            "notes": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "by",
+            "date",
+            "sheet",
+            "notes"
+          ],
+          "additionalProperties": false
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "resource_id": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+            },
+            "original": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "origin": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "license": {
+              "type": "string",
+              "minLength": 1
+            },
+            "author": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "notes": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "resource_id",
+            "original",
+            "origin",
+            "license",
+            "author",
+            "url",
+            "notes"
+          ],
+          "additionalProperties": false
+        },
+        "master": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "resource_id": {
+                  "type": "string",
+                  "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+                },
+                "file": {
+                  "type": "string",
+                  "pattern": "^(?!/)(?!.*(?:\\.\\.|\\\\|://))[a-zA-Z0-9_./-]+$"
+                }
+              },
+              "required": [
+                "resource_id",
+                "file"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "canvas": {
+          "type": "object",
+          "properties": {
+            "w": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 16384
+            },
+            "h": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 16384
+            }
+          },
+          "required": [
+            "w",
+            "h"
+          ],
+          "additionalProperties": false
+        },
+        "pivot": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 16384
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "height_ref": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 16384
+        },
+        "poses": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9]+(-[a-z0-9]+)*$": {
+              "$ref": "#/$defs/pose"
+            }
+          },
+          "additionalProperties": false
+        },
+        "default_pose": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "minItems": 0,
+          "maxItems": 100,
+          "uniqueItems": true
+        },
+        "color_zones": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9]+(-[a-z0-9]+)*$": {
+              "type": "object",
+              "properties": {
+                "default": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$"
+                },
+                "doc": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "default",
+                "doc"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "animations": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "entrar-sube",
+              "entrar-cae",
+              "entrar-desliza",
+              "salir-cae",
+              "salir-funde",
+              "respirar",
+              "flotar",
+              "temblar",
+              "girar",
+              "caer",
+              "latir"
+            ]
+          },
+          "minItems": 0,
+          "maxItems": 11,
+          "uniqueItems": true
+        },
+        "defaults": {
+          "type": "object",
+          "properties": {
+            "scale": {
+              "type": "number",
+              "minimum": 0.05,
+              "maximum": 5
+            },
+            "rim": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            },
+            "shadow": {
+              "type": "boolean"
+            },
+            "glow": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "scale",
+            "rim",
+            "shadow",
+            "glow"
+          ],
+          "additionalProperties": false
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "scale": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0.05,
+                "maximum": 5
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "required": [
+            "scale"
+          ],
+          "additionalProperties": false
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0,
+          "maxItems": 100
+        }
+      },
+      "required": [
+        "id",
+        "version",
+        "type",
+        "name",
+        "description",
+        "tags",
+        "status",
+        "review",
+        "source",
+        "master",
+        "canvas",
+        "pivot",
+        "height_ref",
+        "poses",
+        "default_pose",
+        "anchors",
+        "color_zones",
+        "animations",
+        "defaults",
+        "limits",
+        "limitations"
+      ],
+      "additionalProperties": false
+    },
+    "pose": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string",
+          "pattern": "^(?!/)(?!.*(?:\\.\\.|\\\\|://))[a-zA-Z0-9_./-]+$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "anchors": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9]+(-[a-z0-9]+)*$": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 16384
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          },
+          "additionalProperties": false
+        },
+        "masks": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9]+(-[a-z0-9]+)*$": {
+              "type": "string",
+              "pattern": "^(?!/)(?!.*(?:\\.\\.|\\\\|://))[a-zA-Z0-9_./-]+$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "notes": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "file",
+        "sha256",
+        "anchors",
+        "masks"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

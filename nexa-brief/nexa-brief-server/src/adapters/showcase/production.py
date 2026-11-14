@@ -261,6 +261,13 @@ class FilesystemDesignProduction:
             info.get('is_new_design') is True or manifest.get('demo') is True)
         info = {**info, 'is_new_design': principal}
         shared = self._shared_contract(folder, project, info) if not moved else None
+        if moved and manifest.get('design'):
+            registered = self.showcase._definition(manifest['design'])
+            marker = (registered[0].get('production_template') or {}) if registered else {}
+            if registered and source.is_relative_to(settings.templates_dir) and marker.get('folder') == source.relative_to(settings.templates_dir).as_posix():
+                shared = (manifest['design'], *registered)
+                if not info.get('visual_styles') and registered[0].get('visual_styles'):
+                    info = {**info, 'visual_styles': registered[0]['visual_styles']}
         info = self._review_info(folder, project, info) if not moved else info
         ident = shared[0] if shared else manifest.get('design') or design_id(folder, project)
         from src.core.categories import explainer_folders
@@ -273,7 +280,7 @@ class FilesystemDesignProduction:
         styles = self._styles(info)
         draft = {**draft, 'poster_styles': draft.get('poster_styles') or
                  ([styles['default']] if styles.get('default') else [])}
-        issues = self._issues(source, info, draft, shared)
+        issues = self._issues(source, info, draft, shared, already_production=moved)
         state = record.get("state", "draft")
         if state in {'queued', 'validating'} and not task_is_owned('design-validation', design_id(folder, project)):
             state = 'failed'
@@ -313,7 +320,7 @@ class FilesystemDesignProduction:
                 raise ProductionError("Esta categoría no admite diseños de video")
         return get_category(values[0].split("/", 1)[0]).folder
 
-    def _issues(self, source, info, draft, shared=None):
+    def _issues(self, source, info, draft, shared=None, *, already_production=False):
         issues = []
         if info.get("is_new_design") is not True and not (source / "manifest.json").is_file():
             from src.core.explainer.promote import plan_promotion, PromoteError
@@ -334,7 +341,7 @@ class FilesystemDesignProduction:
             issues.append('Selecciona estilos existentes sin repetirlos')
         if not (source / 'index.html').is_file():
             issues.append('Falta index.html')
-        if shared and shared[1].get('production_template'):
+        if shared and shared[1].get('production_template') and not already_production:
             issues.append('Este diseño ya tiene una demo principal en producción')
         if info.get('is_new_design') is True and not isinstance(info.get('catalog'), dict) and not shared:
             issues.append('Falta el catálogo de componentes aislados del diseño principal')

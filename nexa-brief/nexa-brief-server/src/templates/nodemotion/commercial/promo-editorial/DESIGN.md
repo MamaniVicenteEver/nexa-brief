@@ -44,6 +44,45 @@ Placa: el nombre sale de `brand.name` y la frase de `brand.left` + «vs» + `bra
 
 ## Movimiento, transiciones y componentes
 
+### Outro compartido
+
+`components/outroV2.js` es una segunda opción con la misma API y parámetros; se elige con `"outro": {"version": "v2"}` en el JSON o con `?outro=v2` en la URL del showcase. Sin indicarlo se usa `outro.js`.
+
+`components/outro.js` es la implementación única del cierre: papel `#ECECEA`, tinta
+`#050505`, blanco `#FBFBFB`, Archivo, filetes y barridos de bloques. No necesita fotos.
+Reserva por defecto los últimos **3,5 segundos dentro de la duración de la música**,
+con entrada animada y lectura sostenida hasta el último fotograma.
+
+El caso activo del JSON puede definir `outro`; si se omite, usa los valores del
+componente. No copies sus valores por defecto a cada video: así los próximos
+ajustes del componente se heredan. Ejemplo de personalización:
+
+```json
+{
+  "outro": {
+    "sec": 3.5,
+    "title": "Gracias",
+    "sub": "Por ver",
+    "cta": "Suscríbete",
+    "channel": "NodeMotion",
+    "support": "Tu apoyo hace posible que sigamos trayendo más contenido.",
+    "url": "youtube.com/@nodemotion"
+  }
+}
+```
+
+`enabled: false` conserva el final del guion. `type` permite elegir otro tipo ya
+registrado en el motor (por ejemplo `logo`); un tipo desconocido usa `outro`.
+Los colores y la fuente proceden del diseño activo. Los textos admiten cadenas
+vacías. El soporte usa varias líneas cuando lo requiere el formato vertical.
+
+Las vistas de plantilla y drafts cargan el componente canónico con una URL nueva
+por apertura para evitar cachés antiguas. Navegador sirve el archivo canónico al
+grabar Editorial; HyperFrames toma la plantilla y el componente actuales al iniciar
+su trabajo. Los recursos `components` también se declaran para uso local.
+Modificar el cierre requiere editar solo este componente; modificar su conexión
+requiere editar `editorial.js` y regenerar únicamente `promo-editorial`.
+
 Composición editorial de papel, blanco y negro con Archivo variable. Filetes, contornos, cortes de texto, placas y medios a sangre. Barridos y entradas por secciones.
 
 Funciones disponibles en el motor (nombres reales para localizar el comportamiento):

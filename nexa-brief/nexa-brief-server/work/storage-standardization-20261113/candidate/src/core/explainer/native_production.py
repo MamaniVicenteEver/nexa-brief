@@ -242,8 +242,10 @@ def scaffold(rec, root):
             f'<script src="{prefix}_tools/explainer-kit/vendor/geo/{lib}"></script>'
             for lib in libs
         ] + scripts
+        from src.core.explainer.engine_locations import engine_root
+        engine_relative = engine_root(settings.templates_dir, 'nodehistory/_mapas').relative_to(settings.templates_dir).as_posix()
         scripts += [
-            f'<script src="{prefix}sandbox/nodehistory/_mapas/{name}.js"></script>'
+            f'<script src="{prefix}bundled/{engine_relative}/{name}.js"></script>'
             for name in ["geo", "camera", "flags", "layers", "mapas"]
         ]
     elif is_news(rec['design']):

@@ -4,7 +4,14 @@ from src.core.explainer.native_production import scaffold, prompt
 from src.presentation.api.schemas.explainer_schema import ProductionRequest
 
 
-def test_production_request_accepts_estilo_and_scaffold_reuses_engines(tmp_path):
+def test_production_request_accepts_estilo_and_scaffold_reuses_engines(tmp_path, monkeypatch):
+    import json
+    from src.config.settings import settings
+    templates=tmp_path/"templates"
+    definition=templates/"_tools/design-definitions/mapas-satelitales/design.json"
+    definition.parent.mkdir(parents=True)
+    definition.write_text(json.dumps({"engine_id":"nodehistory/_mapas", "engine_root":"nodeatlas/shared-map/_mapas"}))
+    monkeypatch.setattr(settings, "templates_dir", templates)
     from src.core.explainer.batches import PreparationItem
 
     batch_item = PreparationItem(category_path="node_history", design="mapas-satelitales",
@@ -33,7 +40,7 @@ def test_production_request_accepts_estilo_and_scaffold_reuses_engines(tmp_path)
         json.loads((root / "assets/config.json").read_text())["configs"][0]["estilo"]
         == "documentary"
     )
-    assert "sandbox/nodehistory/_mapas/mapas.js" in (root / "index.html").read_text()
+    assert "/api/v1/explainer/files/bundled/nodeatlas/shared-map/_mapas/mapas.js" in (root / "index.html").read_text()
     assert not (root / "engine").exists()
     assert json.loads((root / "manifest.json").read_text())["native_scene"] is True
 

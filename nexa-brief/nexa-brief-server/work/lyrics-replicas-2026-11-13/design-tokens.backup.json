@@ -1,0 +1,517 @@
+{
+  "version": 1,
+  "templates": {
+    "promo-dynamic": {
+      "display": "Archivo",
+      "displayB": "Archivo",
+      "weight": 900,
+      "weightB": 900,
+      "slant": "normal",
+      "style": "promo-dynamic",
+      "roles": {
+        "background": "neon",
+        "foreground": "ink",
+        "accent": "neon"
+      }
+    },
+    "promo-editorial": {
+      "display": "Archivo",
+      "displayB": "Archivo",
+      "weight": 900,
+      "weightB": 900,
+      "slant": "normal",
+      "style": "promo-editorial",
+      "roles": {
+        "background": "paper",
+        "foreground": "black",
+        "accent": "white"
+      }
+    },
+    "promo-kinetic": {
+      "display": "Montserrat",
+      "displayB": "Montserrat",
+      "weight": 900,
+      "weightB": 900,
+      "slant": "normal",
+      "style": "promo-kinetic",
+      "roles": {
+        "background": "bg",
+        "foreground": "white",
+        "accent": "orange"
+      }
+    },
+    "promo-sports": {
+      "display": "Roboto",
+      "displayB": "Roboto",
+      "weight": 900,
+      "weightB": 900,
+      "slant": "italic",
+      "style": "promo-sports",
+      "roles": {
+        "background": "dark",
+        "foreground": "white",
+        "accent": "yellow"
+      },
+      "rolesA": {
+        "subtitle": "white"
+      },
+      "rolesB": {
+        "subtitle": "white"
+      }
+    },
+    "promo-trendy": {
+      "display": "Montserrat",
+      "displayB": "Montserrat",
+      "weight": 900,
+      "weightB": 900,
+      "slant": "italic",
+      "style": "promo-trendy",
+      "roles": {
+        "background": "limedark",
+        "foreground": "ink",
+        "accent": "lime"
+      },
+      "rolesA": {
+        "subtitle": "paper"
+      },
+      "rolesB": {
+        "subtitle": "paper"
+      }
+    },
+    "promo-urban": {
+      "display": "Inter Tight",
+      "displayB": "Inter Tight",
+      "weight": 800,
+      "weightB": 800,
+      "slant": "normal",
+      "style": "promo-urban",
+      "roles": {
+        "background": "reddark",
+        "foreground": "white",
+        "accent": "orange"
+      },
+      "rolesA": {
+        "subtitle": "red"
+      },
+      "rolesB": {
+        "subtitle": "red"
+      }
+    },
+    "lyrics-amor-impredecible": {
+      "display": "Bodoni Moda",
+      "displayB": "Bodoni Moda",
+      "weight": 800,
+      "weightB": 800,
+      "slant": "normal",
+      "style": "romantic",
+      "fallback": {
+        "background": "#010101",
+        "foreground": "#FFFDF8",
+        "accent": "#DF1633"
+      }
+    },
+    "lyrics-calado": {
+      "display": "Anton",
+      "displayB": "Anton",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "cutout",
+      "roles": {
+        "foreground": "ink"
+      },
+      "fallback": {
+        "background": "#0C0A09",
+        "foreground": "#F4EFE6",
+        "accent": "#FF7A1A"
+      }
+    },
+    "lyrics-caution": {
+      "display": "Anton",
+      "displayB": "Anton",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "caution",
+      "roles": {
+        "background": "dark",
+        "foreground": "light",
+        "accent": "primary",
+        "subtitle": "primary"
+      }
+    },
+    "lyrics-ceniza": {
+      "display": "Playfair Display",
+      "displayB": "Playfair Display",
+      "weight": 700,
+      "weightB": 700,
+      "slant": "normal",
+      "style": "ash",
+      "fallback": {
+        "background": "#0E0C0B",
+        "foreground": "#E6E1DA",
+        "accent": "#D9602F"
+      },
+      "roles": {
+        "background": "charcoal",
+        "foreground": "bone",
+        "accent": "ember",
+        "subtitle": "embertext"
+      }
+    },
+    "lyrics-collage": {
+      "display": "Anton",
+      "displayB": "Anton",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "collage",
+      "fallback": {
+        "background": "#17130F",
+        "foreground": "#E7DFC7",
+        "accent": "#B81F19"
+      },
+      "roles": {
+        "background": "ink",
+        "foreground": "paperwhite",
+        "accent": "red",
+        "subtitle": "paperwhite"
+      }
+    },
+    "lyrics-cristal": {
+      "display": "Big Shoulders Display",
+      "displayB": "Big Shoulders Display",
+      "weight": 900,
+      "weightB": 900,
+      "slant": "normal",
+      "style": "glass",
+      "fallback": {
+        "background": "#07040F",
+        "foreground": "#FFFFFF",
+        "accent": "#35E0FF"
+      },
+      "roles": {
+        "background": "night",
+        "foreground": "text",
+        "accent": "cool",
+        "subtitle": "cool"
+      }
+    },
+    "lyrics-expediente": {
+      "display": "Special Elite",
+      "displayB": "Special Elite",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "archive",
+      "fallback": {
+        "background": "#181411",
+        "foreground": "#D8C8A6",
+        "accent": "#A0211C"
+      },
+      "roles": {
+        "background": "ink",
+        "foreground": "paper",
+        "accent": "red",
+        "subtitle": "red"
+      }
+    },
+    "lyrics-grunge": {
+      "display": "Anton",
+      "displayB": "Anton",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "grunge",
+      "roles": {
+        "background": "black",
+        "foreground": "white",
+        "accent": "red",
+        "subtitle": "red"
+      }
+    },
+    "lyrics-impact": {
+      "display": "Anton",
+      "displayB": "Anton",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "impact",
+      "roles": {
+        "foreground": "ink",
+        "accent": "ink"
+      },
+      "fallback": {
+        "background": "#050505",
+        "foreground": "#D2222A",
+        "accent": "#D2222A"
+      }
+    },
+    "lyrics-latido": {
+      "display": "Cormorant Garamond",
+      "displayB": "Cormorant Garamond",
+      "weight": 700,
+      "weightB": 700,
+      "slant": "italic",
+      "style": "romantic",
+      "fallback": {
+        "background": "#080205",
+        "foreground": "#FFD9DE",
+        "accent": "#FF2B4A"
+      }
+    },
+    "lyrics-lluvia-gris": {
+      "display": "Cormorant Garamond",
+      "displayB": "Cormorant Garamond",
+      "weight": 500,
+      "weightB": 500,
+      "slant": "italic",
+      "style": "rain",
+      "fallback": {
+        "background": "#0B0F12",
+        "foreground": "#DCE2E6",
+        "accent": "#8A98A3"
+      },
+      "roles": {
+        "background": "night",
+        "foreground": "pale",
+        "accent": "steel"
+      }
+    },
+    "lyrics-manifiesto": {
+      "display": "Archivo",
+      "displayB": "Archivo",
+      "weight": 900,
+      "weightB": 900,
+      "slant": "normal",
+      "style": "manifesto"
+    },
+    "lyrics-memoria": {
+      "display": "Special Elite",
+      "displayB": "Special Elite",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "memory",
+      "fallback": {
+        "background": "#1A1410",
+        "foreground": "#EADFC8",
+        "accent": "#B9877A"
+      },
+      "roles": {
+        "background": "dark",
+        "foreground": "cream",
+        "accent": "rose",
+        "subtitle": "rose"
+      }
+    },
+    "lyrics-mirada": {
+      "display": "Fredoka",
+      "displayB": "Fredoka",
+      "weight": 700,
+      "weightB": 700,
+      "slant": "normal",
+      "style": "warm",
+      "fallback": {
+        "background": "#0A0807",
+        "foreground": "#EDE2CF",
+        "accent": "#B39A7C"
+      },
+      "roles": {
+        "background": "night",
+        "foreground": "cream",
+        "accent": "tan"
+      }
+    },
+    "lyrics-mixtas": {
+      "display": "Archivo",
+      "displayB": "Archivo",
+      "weight": 900,
+      "weightB": 900,
+      "slant": "normal",
+      "style": "mixed",
+      "roles": {
+        "background": "black",
+        "foreground": "white",
+        "accent": "lime",
+        "subtitle": "lime"
+      }
+    },
+    "lyrics-neon": {
+      "display": "Monoton",
+      "displayB": "Archivo Black",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "neon",
+      "fallback": {
+        "background": "#080605",
+        "foreground": "#FFE9CF",
+        "accent": "#FF5A1F"
+      },
+      "roles": {
+        "foreground": "core",
+        "accent": "glow"
+      }
+    },
+    "lyrics-night-journey": {
+      "display": "Noto Serif Display",
+      "displayB": "Noto Serif Display",
+      "weight": 800,
+      "weightB": 800,
+      "slant": "normal",
+      "style": "night",
+      "fallback": {
+        "background": "#0B2B4F",
+        "foreground": "#FFF3DC",
+        "accent": "#F0955A"
+      },
+      "roles": {
+        "background": "night",
+        "foreground": "texttop",
+        "accent": "textbottom",
+        "subtitle": "textbottom"
+      }
+    },
+    "lyrics-resaltado": {
+      "display": "Lora",
+      "displayB": "Lora",
+      "weight": 700,
+      "weightB": 700,
+      "slant": "normal",
+      "style": "highlight",
+      "fallback": {
+        "background": "#F1E6C8",
+        "foreground": "#241A0E",
+        "accent": "#FFE066"
+      },
+      "roles": {
+        "background": "paper",
+        "foreground": "ink",
+        "accent": "marker",
+        "subtitle": "ink"
+      }
+    },
+    "lyrics-romantic": {
+      "display": "Great Vibes",
+      "displayB": "Playfair Display",
+      "weight": 400,
+      "weightB": 500,
+      "slant": "normal",
+      "style": "romantic",
+      "fallback": {
+        "background": "#130B12",
+        "foreground": "#F2E7DA",
+        "accent": "#D89A9E"
+      },
+      "roles": {
+        "foreground": "serif",
+        "accent": "script"
+      },
+      "slantB": "italic",
+      "rolesA": {
+        "foreground": "script",
+        "subtitle": "serif"
+      },
+      "rolesB": {
+        "foreground": "script",
+        "subtitle": "serif"
+      }
+    },
+    "lyrics-stylish-kinetic": {
+      "display": "Lilita One",
+      "displayB": "Lilita One",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "playful",
+      "fallback": {
+        "background": "#E31D40",
+        "foreground": "#FFFFFF",
+        "accent": "#F3C10A"
+      },
+      "roles": {
+        "background": "bg",
+        "foreground": "ink",
+        "accent": "accent",
+        "subtitle": "accent"
+      }
+    },
+    "lyrics-suave": {
+      "display": "Anton",
+      "displayB": "Anton",
+      "weight": 400,
+      "weightB": 400,
+      "slant": "normal",
+      "style": "soft",
+      "fallback": {
+        "background": "#0A0A0B",
+        "foreground": "#EFEFF0",
+        "accent": "#D6262C"
+      }
+    },
+    "lyrics-triste": {
+      "display": "Oswald",
+      "displayB": "Oswald",
+      "weight": 700,
+      "weightB": 700,
+      "slant": "normal",
+      "style": "sad",
+      "fallback": {
+        "background": "#07090C",
+        "foreground": "#C9D6E2",
+        "accent": "#7FA6C4"
+      }
+    },
+    "lyrics-vacio": {
+      "display": "Big Shoulders Display",
+      "displayB": "Big Shoulders Display",
+      "weight": 800,
+      "weightB": 800,
+      "slant": "normal",
+      "style": "empty",
+      "fallback": {
+        "background": "#08090A",
+        "foreground": "#ECEDEE",
+        "accent": "#8F969A"
+      },
+      "roles": {
+        "background": "black",
+        "foreground": "white",
+        "accent": "fog"
+      }
+    },
+    "01-image-bg": {
+      "display": "Arial Black",
+      "displayB": "Arial Black",
+      "weight": 900,
+      "weightB": 900,
+      "slant": "normal",
+      "style": "minimal"
+    },
+    "living-landscape": {
+      "display": "Shippori Mincho",
+      "displayB": "Shippori Mincho",
+      "weight": 700,
+      "weightB": 700,
+      "slant": "normal",
+      "style": "landscape"
+    },
+    "subject-spotlight": {
+      "display": "Montserrat",
+      "displayB": "Montserrat",
+      "weight": 800,
+      "weightB": 800,
+      "slant": "normal",
+      "style": "spotlight"
+    },
+    "motion-backdrop": {
+      "display": "Arial Black",
+      "displayB": "Arial Black",
+      "weight": 900,
+      "weightB": 900,
+      "slant": "normal",
+      "style": "motion"
+    }
+  }
+}

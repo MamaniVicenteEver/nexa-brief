@@ -53,6 +53,10 @@ class SectionPublicationRepository(JsonPublicationRepository):
             raise RuntimeError('Invalid publication idempotency section')
         return ledger
 
+    def library_records(self) -> list[dict[str, Any]]:
+        """One section read for the whole local projection, avoiding N+1 reads."""
+        return [self._dump(record) for record in self._records(self._section.read()).values()]
+
     def get(self, publication_id: str) -> dict[str, Any] | None:
         if not _SAFE_ID.fullmatch(publication_id):
             return None

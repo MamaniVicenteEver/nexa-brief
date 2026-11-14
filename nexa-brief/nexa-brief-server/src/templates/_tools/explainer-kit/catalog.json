@@ -5178,6 +5178,362 @@
    }
   },
   {
+   "name": "rough.careerLadder",
+   "summary": "La escalera de una carrera dibujada a mano, con un rótulo por peldaño. Al pie, una persona espera. En `dropAt` el primer peldaño se pinta de lima, se tacha y cae: queda el hueco y el segundo escalón lejos. Con `dropAt: -1` la escalera queda entera (la escalera sigue ahí).",
+   "tags": [
+    "carrera",
+    "escalera",
+    "empleo",
+    "jóvenes",
+    "primer trabajo"
+   ],
+   "layer": "main",
+   "params": {
+    "rungs": {
+     "type": "array",
+     "default": [
+      "PRIMER EMPLEO",
+      "SEMI-SENIOR",
+      "SENIOR",
+      "LÍDER"
+     ],
+     "doc": "Rótulos de los peldaños, de abajo hacia arriba (3–5).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dropAt": {
+     "type": "number",
+     "default": 1.8,
+     "doc": "Segundo del beat en que cae el primer peldaño; -1 = no cae.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "title": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo arriba (mono); vacío = nada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "who": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo manuscrito junto a la persona del pie; vacío = sin rótulo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota manuscrita al pie; vacío = nada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "rungs": [
+     "PRIMER EMPLEO",
+     "SEMI-SENIOR",
+     "SENIOR",
+     "LÍDER"
+    ],
+    "dropAt": 1.8,
+    "title": "LA CARRERA",
+    "who": "22–25 AÑOS",
+    "note": ""
+   }
+  },
+  {
+   "name": "rough.codeReview",
+   "summary": "Un editor de código dibujado a mano: las líneas se escriben solas, rápido, en gris (las escribe la máquina). En modo `review` una persona revisa: en `reviewAt` tacha en lima la línea mala y firma con un ✓ lima. En modo `ai` solo escribe la máquina, con cursor y rótulo de quién teclea.",
+   "tags": [
+    "código",
+    "editor",
+    "ia",
+    "revisión",
+    "programador"
+   ],
+   "layer": "main",
+   "params": {
+    "mode": {
+     "type": "string",
+     "default": "review",
+     "doc": "ai = solo escribe la máquina · review = además una persona tacha y aprueba.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "header": {
+     "type": "string",
+     "default": "pedido.js",
+     "doc": "Nombre del archivo en la barra del editor (mono).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "lines": {
+     "type": "array",
+     "default": [
+      "function cobrar(pedido) {",
+      "  const total = sumar(pedido)",
+      "  if (total < 0) borrar()",
+      "  return enviar(total)",
+      "}"
+     ],
+     "doc": "Líneas de código (hasta 6, ~26 caracteres).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "who": {
+     "type": "string",
+     "default": "IA ESCRIBIENDO…",
+     "doc": "Rótulo arriba del editor (quién escribe); vacío = nada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "bad": {
+     "type": "number",
+     "default": 2,
+     "doc": "Índice de la línea que la persona tacha en modo review; -1 = ninguna.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "reviewAt": {
+     "type": "number",
+     "default": 2.2,
+     "doc": "Segundo del beat en que llegan las marcas humanas (modo review).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota manuscrita al pie (modo review sale en lima junto al ✓); vacío = nada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "mode": "review",
+    "header": "pedido.js",
+    "who": "IA ESCRIBIENDO…",
+    "bad": 2,
+    "reviewAt": 2.2,
+    "note": "revisado por una persona"
+   }
+  },
+  {
+   "name": "rough.layoffMail",
+   "summary": "Un teléfono dibujado a mano se enciende de madrugada: llega una notificación con remitente y asunto, el teléfono vibra y en `stampAt` cae un sello lima (PUESTO ELIMINADO). Para el momento en que alguien se entera de un despido por correo o mensaje.",
+   "tags": [
+    "despido",
+    "correo",
+    "teléfono",
+    "notificación",
+    "trabajo"
+   ],
+   "layer": "main",
+   "params": {
+    "time": {
+     "type": "string",
+     "default": "6:04",
+     "doc": "Hora grande en la pantalla bloqueada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "from": {
+     "type": "string",
+     "default": "RECURSOS HUMANOS",
+     "doc": "Remitente de la notificación (mono).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "subject": {
+     "type": "string",
+     "default": "Tu puesto ha sido eliminado",
+     "doc": "Asunto del correo (hasta 3 renglones).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stamp": {
+     "type": "string",
+     "default": "PUESTO ELIMINADO",
+     "doc": "Texto del sello lima; vacío = sin sello.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "stampAt": {
+     "type": "number",
+     "default": 2,
+     "doc": "Segundo del beat en que cae el sello.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "label": {
+     "type": "string",
+     "default": "",
+     "doc": "Etiqueta de contexto arriba (fecha, empresa).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "badge": {
+     "type": "string",
+     "default": "",
+     "doc": "Cifra manuscrita al costado del teléfono (p. ej. ×250); vacío = nada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "note": {
+     "type": "string",
+     "default": "",
+     "doc": "Nota manuscrita al pie; vacío = nada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "time": "6:04",
+    "from": "RECURSOS HUMANOS",
+    "subject": "Tu puesto ha sido eliminado",
+    "stamp": "PUESTO ELIMINADO",
+    "stampAt": 2,
+    "label": "MIÉRCOLES 28 OCT",
+    "badge": "×250"
+   }
+  },
+  {
+   "name": "rough.legalWarrant",
+   "summary": "Dibuja un documento con firma y revela un sello con la balanza de la justicia; representa órdenes y solicitudes legales.",
+   "tags": [
+    "justicia",
+    "orden"
+   ],
+   "layer": "main",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": "",
+     "doc": "Título superior opcional; una cadena vacía lo oculta.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "title": "ORDEN JUDICIAL"
+   }
+  },
+  {
+   "name": "rough.temporaryChat",
+   "summary": "Dibuja un teléfono con mensajes y revela un reloj en color de acento; representa chats temporales y plazos de retención.",
+   "tags": [
+    "chat",
+    "retención",
+    "tiempo"
+   ],
+   "layer": "main",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": "",
+     "doc": "Título superior opcional; una cadena vacía lo oculta.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "title": "CHAT TEMPORAL"
+   }
+  },
+  {
+   "name": "rough.chatRedaction",
+   "summary": "Dibuja una conversación y revela tres barras de censura en secuencia; representa datos ocultados o desidentificados.",
+   "tags": [
+    "chat",
+    "desidentificación"
+   ],
+   "layer": "main",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": "",
+     "doc": "Título superior opcional; una cadena vacía lo oculta.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "title": "DATOS OCULTOS"
+   }
+  },
+  {
+   "name": "rough.retentionCalendar",
+   "summary": "Dibuja un calendario de siete columnas, destaca una fecha y revela una carpeta; representa plazos de conservación de datos.",
+   "tags": [
+    "retención",
+    "archivo",
+    "tiempo"
+   ],
+   "layer": "main",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": "",
+     "doc": "Título superior opcional; una cadena vacía lo oculta.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "title": "TIEMPO DE RETENCIÓN"
+   }
+  },
+  {
    "name": "rough.outrov1",
    "summary": "Cierre v1 para NODETECH: gracias, marca, LIKE plano que se activa y desaparece, y suscripción rough con campana y flecha corregida.",
    "tags": [
@@ -22883,7 +23239,7 @@
     "sun": {
      "type": "bool",
      "default": true,
-     "doc": "Círculo carmesí que late sobre el país foco.",
+     "doc": "Marca circular que late con la paleta del país foco.",
      "required": false,
      "options": null,
      "min": null,
@@ -22946,7 +23302,7 @@
     "flag": {
      "type": "string",
      "default": "auto",
-     "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+     "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
      "required": false,
      "options": null,
      "min": null,
@@ -23043,7 +23399,7 @@
     "rayAlpha": {
      "type": "number",
      "default": 0.56,
-     "doc": "Opacidad de los rayos carmesí.",
+     "doc": "Opacidad de los rayos de la paleta elegida.",
      "required": false,
      "options": null,
      "min": 0,
@@ -23240,7 +23596,7 @@
     "sun": {
      "type": "bool",
      "default": true,
-     "doc": "Círculo carmesí que late sobre el país foco.",
+     "doc": "Marca circular que late con la paleta del país foco.",
      "required": false,
      "options": null,
      "min": null,
@@ -23303,7 +23659,7 @@
     "flag": {
      "type": "string",
      "default": "auto",
-     "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+     "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
      "required": false,
      "options": null,
      "min": null,
@@ -23400,7 +23756,7 @@
     "rayAlpha": {
      "type": "number",
      "default": 0.82,
-     "doc": "Opacidad de los rayos carmesí.",
+     "doc": "Opacidad de los rayos de la paleta elegida.",
      "required": false,
      "options": null,
      "min": 0,
@@ -23534,7 +23890,7 @@
     "sun": {
      "type": "bool",
      "default": true,
-     "doc": "Círculo carmesí que late sobre el país foco.",
+     "doc": "Marca circular que late con la paleta del país foco.",
      "required": false,
      "options": null,
      "min": null,
@@ -23597,7 +23953,7 @@
     "flag": {
      "type": "string",
      "default": "auto",
-     "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+     "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
      "required": false,
      "options": null,
      "min": null,
@@ -23810,7 +24166,7 @@
     "sun": {
      "type": "bool",
      "default": true,
-     "doc": "Círculo carmesí que late sobre el país foco.",
+     "doc": "Marca circular que late con la paleta del país foco.",
      "required": false,
      "options": null,
      "min": null,
@@ -23873,7 +24229,7 @@
     "flag": {
      "type": "string",
      "default": "auto",
-     "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+     "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
      "required": false,
      "options": null,
      "min": null,
@@ -23970,7 +24326,7 @@
     "rayAlpha": {
      "type": "number",
      "default": 0.56,
-     "doc": "Opacidad de los rayos carmesí.",
+     "doc": "Opacidad de los rayos de la paleta elegida.",
      "required": false,
      "options": null,
      "min": 0,
@@ -24323,14 +24679,13 @@
   },
   {
    "name": "imperio.introv1",
-   "summary": "GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
+   "summary": "Apertura A de solo texto sobre el mapa del mundo completo, como el cierre v1, sin sol, rayos ni bandera. Titular blanco y palabra clave sobre carmesí; entrada por palabras. Foto/componente opcionales mediante bg explícito.",
    "tags": [
     "intro",
     "gancho",
     "apertura",
     "título",
-    "impacto",
-    "sol"
+    "mapa mundial"
    ],
    "layer": "main",
    "params": {
@@ -24364,7 +24719,7 @@
     "country": {
      "type": "string",
      "default": "",
-     "doc": "País foco del fondo atlas/archivo (rayado, el sol cae sobre él). Vacío = mundo y sol al centro.",
+     "doc": "Contexto del episodio; la apertura A mantiene el mundo completo sin bandera ni rayado.",
      "required": false,
      "options": null,
      "min": null,
@@ -24373,7 +24728,7 @@
     "sunAt": {
      "type": "number",
      "default": 0.15,
-     "doc": "Segundo en que cae el sol.",
+     "doc": "Tiempo heredado de entrada; conservado por compatibilidad. La apertura A no dibuja un sol.",
      "required": false,
      "options": null,
      "min": null,
@@ -24400,7 +24755,7 @@
     "burstAt": {
      "type": "number",
      "default": 2.6,
-     "doc": "Impacto: los rayos llegan a los bordes (acepta '@palabra'; −1 = sin impacto).",
+     "doc": "Impacto tipográfico suave (acepta '@palabra'; −1 = sin impacto), sin rayos ni bandera.",
      "required": false,
      "options": null,
      "min": null,
@@ -24481,22 +24836,30 @@
   },
   {
    "name": "imperio.introv2",
-   "summary": "GANCHO pregunta + revelación: la pregunta se escribe carácter a carácter como el título en idioma original de la referencia (cada letra entra con escala y fantasma); en stampAt la pregunta sube y se achica, el SOL carmesí sale desde abajo detrás del centro con su abanico de rayos y la RESPUESTA sube en condensada blanca con degradé. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).",
+   "summary": "Apertura B de texto e imagen: fotografía grande, titular blanco en campo oscuro y palabra clave sobre carmesí. En móvil la foto ocupa arriba y el titular abajo; en escritorio se distribuyen a ambos lados. Sin bandera ni rayos; foco y lado configurables.",
    "tags": [
     "intro",
     "gancho",
     "apertura",
-    "pregunta",
-    "revelación",
-    "sol naciente"
+    "foto",
+    "titular"
    ],
    "layer": "main",
    "params": {
     "text": {
      "type": "string",
      "default": null,
-     "doc": "Pregunta gancho ('\\n' = renglón).",
+     "doc": "Titular gancho; '\\n' separa renglones y '^x^' destaca la palabra clave en carmesí.",
      "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "highlight": {
+     "type": "string",
+     "default": "",
+     "doc": "Palabra o frase del titular que se destaca; si falta se conserva el marcado ^x^ o la última palabra sustantiva.",
+     "required": false,
      "options": null,
      "min": null,
      "max": null
@@ -24513,7 +24876,7 @@
     "stamp": {
      "type": "string",
      "default": "",
-     "doc": "Respuesta (1–3 palabras) que sube con el sol (vacío = sin revelación).",
+     "doc": "Revelación secundaria opcional, dentro del campo de texto.",
      "required": false,
      "options": null,
      "min": null,
@@ -24531,7 +24894,7 @@
     "typeAt": {
      "type": "number",
      "default": 0.35,
-     "doc": "Segundo en que empieza a escribirse la pregunta.",
+     "doc": "Segundo de entrada del titular.",
      "required": false,
      "options": null,
      "min": null,
@@ -24540,7 +24903,7 @@
     "cps": {
      "type": "number",
      "default": 18,
-     "doc": "Caracteres por segundo.",
+     "doc": "Velocidad de entrada del titular, conservada del contrato anterior.",
      "required": false,
      "options": null,
      "min": 4,
@@ -24549,7 +24912,7 @@
     "country": {
      "type": "string",
      "default": "",
-     "doc": "País foco del fondo atlas/archivo.",
+     "doc": "País del episodio; no altera los colores de esta apertura editorial.",
      "required": false,
      "options": null,
      "min": null,
@@ -24575,8 +24938,8 @@
     "src": {
      "type": "image",
      "default": "",
-     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
-     "required": false,
+     "doc": "Fotografía documental real del tema. Obligatoria en la apertura B; evitar documentos llenos de texto o fotos de sujetos ajenos.",
+     "required": true,
      "options": null,
      "min": null,
      "max": null
@@ -24613,21 +24976,33 @@
     },
     "dim": {
      "type": "number",
-     "default": 0.35,
-     "doc": "Oscurecido del fondo foto/componente.",
+     "default": 0.2,
+     "doc": "Oscurecido suave de la fotografía sin perder al sujeto.",
      "required": false,
      "options": null,
      "min": 0,
      "max": 1
+    },
+    "imageSide": {
+     "type": "enum",
+     "default": "right",
+     "doc": "Lado de la fotografía en escritorio; en móvil aparece siempre arriba.",
+     "required": false,
+     "options": [
+      "auto",
+      "left",
+      "right"
+     ],
+     "min": null,
+     "max": null
     }
    },
    "example": {
-    "text": "¿POR QUÉ UN IMPERIO\nMIRÓ HACIA EL SUR?",
-    "kicker": "Pacífico · 1940",
-    "stamp": "PETRÓLEO",
-    "stampAt": 2.6,
-    "country": "Japan",
-    "bg": "archivo"
+    "text": "LA NOCHE QUE\n^PARTIÓ BERLÍN^",
+    "kicker": "Berlín · 1961",
+    "src": "mauerbau.jpg",
+    "country": "Germany",
+    "imageSide": "right"
    }
   },
   {
@@ -25071,8 +25446,17 @@
    "params": {
     "country": {
      "type": "string",
-     "default": "Japan",
-     "doc": "País foco: pone el sol y el rayado.",
+     "default": "",
+     "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "flagColors": {
+     "type": "string",
+     "default": "auto",
+     "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
      "required": false,
      "options": null,
      "min": null,
@@ -25591,8 +25975,17 @@
     },
     "country": {
      "type": "string",
-     "default": "Japan",
-     "doc": "País foco: pone el sol y el rayado.",
+     "default": "",
+     "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "flagColors": {
+     "type": "string",
+     "default": "auto",
+     "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
      "required": false,
      "options": null,
      "min": null,
@@ -25940,8 +26333,17 @@
     },
     "country": {
      "type": "string",
-     "default": "Japan",
-     "doc": "País foco: pone el sol y el rayado.",
+     "default": "",
+     "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "flagColors": {
+     "type": "string",
+     "default": "auto",
+     "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
      "required": false,
      "options": null,
      "min": null,
@@ -26106,8 +26508,17 @@
     },
     "country": {
      "type": "string",
-     "default": "Japan",
-     "doc": "País foco: pone el sol y el rayado.",
+     "default": "",
+     "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "flagColors": {
+     "type": "string",
+     "default": "auto",
+     "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
      "required": false,
      "options": null,
      "min": null,
@@ -26253,8 +26664,17 @@
     },
     "country": {
      "type": "string",
-     "default": "Japan",
-     "doc": "País foco: pone el sol y el rayado.",
+     "default": "",
+     "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "flagColors": {
+     "type": "string",
+     "default": "auto",
+     "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
      "required": false,
      "options": null,
      "min": null,
@@ -26396,8 +26816,17 @@
     },
     "country": {
      "type": "string",
-     "default": "Japan",
-     "doc": "País foco: pone el sol y el rayado.",
+     "default": "",
+     "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "flagColors": {
+     "type": "string",
+     "default": "auto",
+     "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
      "required": false,
      "options": null,
      "min": null,
@@ -26547,8 +26976,17 @@
     },
     "country": {
      "type": "string",
-     "default": "Japan",
-     "doc": "País foco: pone el sol y el rayado.",
+     "default": "",
+     "doc": "País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "flagColors": {
+     "type": "string",
+     "default": "auto",
+     "doc": "Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera.",
      "required": false,
      "options": null,
      "min": null,
@@ -26731,7 +27169,7 @@
   },
   {
    "name": "imperio.sun",
-   "summary": "Sol carmesí que late sobre el país o las coordenadas elegidas; comparte el sol y los colores de bandera de imperio.map.",
+   "summary": "Marca circular que late sobre el país o coordenadas elegidas, con su paleta nacional o histórica explícita; comparte el dibujo de imperio.map.",
    "tags": [
     "imperio",
     "pieza",
@@ -26760,7 +27198,7 @@
     "sun": {
      "type": "bool",
      "default": true,
-     "doc": "Círculo carmesí que late sobre el país foco.",
+     "doc": "Marca circular que late con la paleta del país foco.",
      "required": false,
      "options": null,
      "min": null,
@@ -26823,7 +27261,7 @@
     "flag": {
      "type": "string",
      "default": "auto",
-     "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+     "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
      "required": false,
      "options": null,
      "min": null,
@@ -26920,7 +27358,7 @@
     "rayAlpha": {
      "type": "number",
      "default": 0.82,
-     "doc": "Opacidad de los rayos carmesí.",
+     "doc": "Opacidad de los rayos de la paleta elegida.",
      "required": false,
      "options": null,
      "min": 0,
@@ -27001,7 +27439,7 @@
   },
   {
    "name": "imperio.rays",
-   "summary": "Abanico de rayos sobre el mar: rumbo, apertura, cantidad, longitud y entrada por voz. Mismo efecto de la apertura original.",
+   "summary": "Abanico geográfico con los colores del país foco: rumbo, apertura, cantidad, longitud y entrada por voz. Sin país reconocido usa una paleta neutra.",
    "tags": [
     "imperio",
     "pieza",
@@ -27030,7 +27468,7 @@
     "sun": {
      "type": "bool",
      "default": false,
-     "doc": "Círculo carmesí que late sobre el país foco.",
+     "doc": "Marca circular que late con la paleta del país foco.",
      "required": false,
      "options": null,
      "min": null,
@@ -27093,7 +27531,7 @@
     "flag": {
      "type": "string",
      "default": "auto",
-     "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+     "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
      "required": false,
      "options": null,
      "min": null,
@@ -27190,7 +27628,7 @@
     "rayAlpha": {
      "type": "number",
      "default": 0.82,
-     "doc": "Opacidad de los rayos carmesí.",
+     "doc": "Opacidad de los rayos de la paleta elegida.",
      "required": false,
      "options": null,
      "min": 0,
@@ -27302,7 +27740,7 @@
     "sun": {
      "type": "bool",
      "default": false,
-     "doc": "Círculo carmesí que late sobre el país foco.",
+     "doc": "Marca circular que late con la paleta del país foco.",
      "required": false,
      "options": null,
      "min": null,
@@ -27365,7 +27803,7 @@
     "flag": {
      "type": "string",
      "default": "auto",
-     "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+     "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
      "required": false,
      "options": null,
      "min": null,
@@ -27462,7 +27900,7 @@
     "rayAlpha": {
      "type": "number",
      "default": 0,
-     "doc": "Opacidad de los rayos carmesí.",
+     "doc": "Opacidad de los rayos de la paleta elegida.",
      "required": false,
      "options": null,
      "min": 0,
@@ -27574,7 +28012,7 @@
     "sun": {
      "type": "bool",
      "default": false,
-     "doc": "Círculo carmesí que late sobre el país foco.",
+     "doc": "Marca circular que late con la paleta del país foco.",
      "required": false,
      "options": null,
      "min": null,
@@ -27637,7 +28075,7 @@
     "flag": {
      "type": "string",
      "default": "auto",
-     "doc": "Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'.",
+     "doc": "Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'.",
      "required": false,
      "options": null,
      "min": null,
@@ -27734,7 +28172,7 @@
     "rayAlpha": {
      "type": "number",
      "default": 0.82,
-     "doc": "Opacidad de los rayos carmesí.",
+     "doc": "Opacidad de los rayos de la paleta elegida.",
      "required": false,
      "options": null,
      "min": 0,
@@ -28544,6 +28982,104 @@
     "cta": "Suscríbete",
     "support": "Apoya el canal y comparte la historia",
     "handle": "youtube.com/@nodehistory"
+   }
+  },
+  {
+   "name": "common.capas",
+   "summary": "Escena de la biblioteca compartida: personajes, poses, zonas teñidas, conexiones y cámara. Solo admite IDs aprobados; valida antes de dibujar.",
+   "tags": [
+    "capas",
+    "personajes",
+    "poses",
+    "anclas",
+    "hilos",
+    "paralaje"
+   ],
+   "layer": "main",
+   "params": {
+    "fondo": {
+     "type": "object",
+     "default": null,
+     "doc": "{preset: foco/degradado/horizonte/ciudad/sala/rayos/liso, color:#RRGGBB, acento:#RRGGBB, grano:0..1}.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "camara": {
+     "type": "object",
+     "default": null,
+     "doc": "{mov: acercar/alejar/paneo-izq/paneo-der/fijo/temblor, intensidad:0..0.2}.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "elenco": {
+     "type": "array",
+     "default": null,
+     "doc": "Actores {id,asset,pose?,x?,y?,escala?,profundidad?,espejo?,estilo?,entrada?,anim?}. Posición 0..1 del pivote; escala 1=60% de la altura.",
+     "required": true,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "conexiones": {
+     "type": "array",
+     "default": null,
+     "doc": "{de:id:ancla,a:id:ancla,tipo:hilo/linea/cadena,color:#RRGGBB}. Permanecen todo el beat y siguen las poses y transformaciones.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "eventos": {
+     "type": "array",
+     "default": null,
+     "doc": "{en:segundos,id,accion:pose/mover/escala/color/silueta/salir/anim,valor}. mover={x,y,dur}; escala={valor,dur}; color={zona,color,dur}. Sin anclas @ anidadas.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "textos": {
+     "type": "array",
+     "default": null,
+     "doc": "{texto,pos:arriba/centro/abajo,estilo:titulo/subtitulo/etiqueta,color?:#RRGGBB}. Texto plano, ajustado a la zona segura.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "formato": {
+     "type": "object",
+     "default": null,
+     "doc": "{16x9:{elenco:{id:{x?,y?,escala?,profundidad?,espejo?}}},9x16:{elenco:{…}}}. Reencuadre por formato.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "fondo": {
+     "preset": "foco",
+     "color": "#0B1220",
+     "acento": "#1F6BFF",
+     "grano": 0.15
+    },
+    "camara": {
+     "mov": "acercar",
+     "intensidad": 0.04
+    },
+    "elenco": [],
+    "textos": [
+     {
+      "texto": "BIBLIOTECA DE CAPAS",
+      "pos": "arriba",
+      "estilo": "titulo"
+     }
+    ]
    }
   }
  ],

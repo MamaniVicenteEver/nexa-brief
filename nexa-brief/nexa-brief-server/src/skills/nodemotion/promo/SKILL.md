@@ -36,12 +36,14 @@ comprobación humana, incluso cuando `check` indique que pasó la parte técnica
 | Sports | acción intensa de cualquier tema | estética asociada al deporte |
 | Trendy | evento, producto o lugar con montaje de imágenes | mosaico requiere seis medios |
 | Urban | evento o marca con tono callejero | corredores y símbolos ® fijos |
+| Breaking | actualidad, noticia, lanzamiento o anuncio con tono de noticiero | `stat` necesita cifra al inicio; metraje en B/N con tinte rojo |
+| Pulse | deporte, entrenamiento, motivación o evento con energía | `counter` necesita número entero; `knockout` pide palabras cortas |
 
 Para buscar en Wikimedia Commons, combiná nombres concretos con categorías: equipos `Category:Association football clubs` y la categoría propia del club; lugares `Category:Cities` y la del lugar; marcas/productos `Category:Companies` y la del producto; eventos `Category:Festivals` y la edición concreta. Verificá cada ficha y sus derechos adicionales. Un logo como gráfico independiente requiere autorización del dueño y `allow_trademarks: true`; usá material propio autorizado registrado en `resources/`. Esa bandera no crea derechos ni incorpora automáticamente el logo al config. Si no hay cifras deportivas, buscá datos geográficos, históricos o de producto adecuados al tema con dos fuentes independientes, una primaria, fecha del dato y de consulta. No inventes cifras ni oposiciones para llenar campos.
 
 ## Herramientas técnicas y proyectos anteriores
 
-La CLI implementa `build` para las seis promos, integración de drafts,
+La CLI implementa `build` para las ocho promos, integración de drafts,
 preparación y capturas de comprobación sin grabar ni publicar. La secuencia que
 el servicio genera puede diferir del config local: revisá el preview real.
 `check` necesita además revisión humana de las capturas; no certifica derechos

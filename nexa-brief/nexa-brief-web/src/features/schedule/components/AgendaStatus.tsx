@@ -29,6 +29,7 @@ const PHASES = new Set([
 
 export function AgendaStatusBadge({ event }: { event: AgendaEvent }) {
   const t = useTranslations("schedule.dashboard");
+  const tw = useTranslations("schedule.workflow");
   return (
     <span
       className={cn(
@@ -42,7 +43,9 @@ export function AgendaStatusBadge({ event }: { event: AgendaEvent }) {
           event.status === "active" && "motion-safe:animate-pulse",
         )}
       />
-      {t(`statuses.${event.status}`)}
+      {event.workflowStage === "publication" && event.workflow?.publish_state === "pending_channels"
+        ? tw("states.pending_channels")
+        : t(`statuses.${event.status}`)}
     </span>
   );
 }

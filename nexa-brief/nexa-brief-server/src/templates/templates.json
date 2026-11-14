@@ -298,6 +298,86 @@
         "brief": true
       }
     },
+    "lyrics-grunge-rojo": {
+      "folder": "nodemotion/lyrics/lyrics-grunge-rojo",
+      "display_name": "Grunge Rojo",
+      "description": "Grunge de rap con metraje urbano en blanco y negro duro: papel gris rasgado, letra condensada blanca y roja que entra con estela, palabras gigantes con eco rojo, frases repetidas en filas, bloques anchos sobre papel, iconos de reproductor, tiza blanca y pincel rojo (círculos, tachones, flechas, coronas), glitch y destellos; en los silencios largos repasa frases ya cantadas — para rap, trap y drill.",
+      "native_orientation": "any",
+      "index_html": "nodemotion/lyrics/lyrics-grunge-rojo/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-grunge-rojo/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": null,
+      "remotion_component": null,
+      "runtime_assets": [
+        "player.js",
+        "components",
+        "assets/fonts",
+        "assets/media"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 45,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "grunge",
+        "kinetic"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "videos",
+            "kind": "video",
+            "min": 0,
+            "max": 6,
+            "target": "media",
+            "label": "Videos (opcional)",
+            "hint": "Metraje urbano: calle, baile, multitud, retrato; mejor en blanco y negro o de alto contraste. Si no subes nada, se usan los de la plantilla."
+          }
+        ],
+        "texts": [
+          {
+            "key": "intro.title",
+            "label": "Título en la intro",
+            "max": 40,
+            "default": ""
+          },
+          {
+            "key": "intro.artist",
+            "label": "Artista en la intro",
+            "max": 40,
+            "default": ""
+          },
+          {
+            "key": "outro.title",
+            "label": "Título del cierre",
+            "max": 24,
+            "default": "Gracias"
+          },
+          {
+            "key": "outro.sub",
+            "label": "Subtítulo del cierre",
+            "max": 24,
+            "default": "por ver"
+          },
+          {
+            "key": "outro.feats",
+            "label": "Línea final del cierre",
+            "max": 40,
+            "default": "Suscríbete · NodeMotion"
+          }
+        ],
+        "brief": false
+      }
+    },
     "lyrics-impact": {
       "folder": "nodemotion/lyrics/lyrics-impact",
       "display_name": "Letras de Impacto",
@@ -785,6 +865,84 @@
         "brief": true
       }
     },
+    "lyrics-rasgado": {
+      "folder": "nodemotion/lyrics/lyrics-rasgado",
+      "display_name": "Rasgado",
+      "description": "Lyric video de tipografía cinética sobre hojas de papel rasgado gris, lima y carbón: condensada alta, extendida negra y fina en contorno, cada palabra al tiempo de la voz, garabatos de marcador, pincelada lima y medio en B/N con acento lima. Para rap, trap, rock y himnos con energía.",
+      "native_orientation": "any",
+      "index_html": "nodemotion/lyrics/lyrics-rasgado/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-rasgado/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": null,
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media",
+        "components"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 27,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "urbano",
+        "kinetic"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "target": "media",
+            "label": "Videos",
+            "hint": "energía, público, escenario, calle de noche; se muestran en blanco y negro con acento lima"
+          }
+        ],
+        "texts": [
+          {
+            "key": "intro.title",
+            "label": "Título de la canción",
+            "max": 40,
+            "default": "Like A Rapper"
+          },
+          {
+            "key": "intro.artist",
+            "label": "Artista",
+            "max": 40,
+            "default": "donnieozone"
+          },
+          {
+            "key": "outro.title",
+            "label": "Título del cierre",
+            "max": 30,
+            "default": "Gracias"
+          },
+          {
+            "key": "outro.sub",
+            "label": "Subtítulo del cierre",
+            "max": 40,
+            "default": "por escuchar"
+          },
+          {
+            "key": "outro.feats",
+            "label": "Créditos del cierre",
+            "max": 60,
+            "default": "Suscríbete · NodeMotion"
+          }
+        ],
+        "brief": true
+      }
+    },
     "promo-editorial": {
       "folder": "nodemotion/commercial/promo-editorial",
       "display_name": "Promo Editorial",
@@ -796,7 +954,8 @@
       "config_prompt": null,
       "remotion_component": null,
       "runtime_assets": [
-        "assets/media"
+        "assets/media",
+        "components"
       ],
       "category_id": "commercial",
       "sort_order": 27,
@@ -1180,6 +1339,164 @@
         "brief": true
       }
     },
+    "promo-breaking": {
+      "folder": "nodemotion/commercial/promo-breaking",
+      "display_name": "Promo Breaking",
+      "description": "Promo de noticiero: fotos y clips en blanco y negro con tinte rojo, letras gigantes, titulares Poppins con tramo en contorno y subrayado rojo, sílabas apiladas, filas repetidas, franja de directo, cifras que cuentan y transiciones de franjas y bloque rojo.",
+      "native_orientation": "16:9",
+      "index_html": "nodemotion/commercial/promo-breaking/index.html",
+      "config_json": "nodemotion/commercial/promo-breaking/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": null,
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media",
+        "components"
+      ],
+      "category_id": "commercial",
+      "sort_order": 33,
+      "status": "ready",
+      "tags": [
+        "commercial",
+        "promo",
+        "brand-video",
+        "news"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "optional"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 15,
+            "orientation": "landscape",
+            "target": "media",
+            "label": "Videos",
+            "hint": "ciudad, multitudes, edificios, pantallas de datos, prensa; se muestran en blanco y negro"
+          }
+        ],
+        "texts": [
+          {
+            "key": "brand.name",
+            "label": "Marca",
+            "max": 30,
+            "default": "NEXA BRIEF"
+          },
+          {
+            "key": "brand.tag",
+            "label": "Subtítulo de la marca",
+            "max": 40,
+            "default": "NOTICIAS DEL MUNDO"
+          },
+          {
+            "key": "brand.cta",
+            "label": "Llamada (caja roja del cierre)",
+            "max": 24,
+            "default": "SUSCRÍBETE"
+          },
+          {
+            "key": "brand.url",
+            "label": "Dirección o usuario",
+            "max": 40,
+            "default": "@NEXABRIEF"
+          },
+          {
+            "key": "brand.live",
+            "label": "Rótulo de directo",
+            "max": 16,
+            "default": "EN VIVO"
+          }
+        ],
+        "brief": true
+      }
+    },
+    "promo-pulse": {
+      "folder": "nodemotion/commercial/promo-pulse",
+      "display_name": "Promo Pulse",
+      "description": "Promo deportiva de alto impacto: metraje cinematográfico sobre negro, palabra condensada en itálica crema, palabra gigante en contorno verde neón, video enmarcado, texto calado con el video, medidores y esquinas verdes, cifras y bandas que corren.",
+      "native_orientation": "16:9",
+      "index_html": "nodemotion/commercial/promo-pulse/index.html",
+      "config_json": "nodemotion/commercial/promo-pulse/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": null,
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media",
+        "components"
+      ],
+      "category_id": "commercial",
+      "sort_order": 34,
+      "status": "ready",
+      "tags": [
+        "commercial",
+        "promo",
+        "brand-video",
+        "sports"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "optional"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 18,
+            "orientation": "landscape",
+            "target": "media",
+            "label": "Videos",
+            "hint": "acción en movimiento, entrenamiento, velocidad; se gradan cinematográficos"
+          }
+        ],
+        "texts": [
+          {
+            "key": "brand.name",
+            "label": "Marca",
+            "max": 30,
+            "default": "NEXA BRIEF"
+          },
+          {
+            "key": "brand.url",
+            "label": "Dirección o usuario",
+            "max": 40,
+            "default": "@nexabrief"
+          },
+          {
+            "key": "brand.cta",
+            "label": "Llamada (caja verde del cierre v2)",
+            "max": 24,
+            "default": "SUSCRÍBETE"
+          },
+          {
+            "key": "brand.corner",
+            "label": "Rótulo de esquina",
+            "max": 30,
+            "default": "NEXA BRIEF"
+          },
+          {
+            "key": "brand.footer",
+            "label": "Pie",
+            "max": 60,
+            "default": "Diseño y animación · NEXA BRIEF"
+          }
+        ],
+        "brief": true
+      }
+    },
     "lyrics-stylish-kinetic": {
       "folder": "nodemotion/lyrics/lyrics-stylish-kinetic",
       "display_name": "Stylish Kinetic",
@@ -1244,6 +1561,173 @@
         },
         "media": [],
         "texts": [],
+        "brief": false
+      }
+    },
+    "lyrics-trazo": {
+      "folder": "nodemotion/lyrics/lyrics-trazo",
+      "display_name": "Trazo",
+      "description": "Rotulación a mano palabra por palabra en blanco y negro: cada palabra cantada aparece dibujada en otro estilo (marcador, burbuja, tiza, pincel, firma, garabato, trama), con temblor de línea, inversiones a papel blanco, rayos y destellos dibujados, ráfagas letra a letra en las palabras sostenidas e interludios de impactos, grietas y garabatos en los silencios — para rap, rock, drill y pop con energía.",
+      "native_orientation": "any",
+      "index_html": "nodemotion/lyrics/lyrics-trazo/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": null,
+      "remotion_component": null,
+      "runtime_assets": [
+        "player.js",
+        "components",
+        "assets/fonts"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 43,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "kinetic",
+        "hand-lettering"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [],
+        "texts": [
+          {
+            "key": "intro.title",
+            "label": "Título en la intro",
+            "max": 40,
+            "default": ""
+          },
+          {
+            "key": "intro.artist",
+            "label": "Artista en la intro",
+            "max": 40,
+            "default": ""
+          },
+          {
+            "key": "outro.title",
+            "label": "Título del cierre",
+            "max": 24,
+            "default": "Gracias"
+          },
+          {
+            "key": "outro.sub",
+            "label": "Subtítulo del cierre",
+            "max": 24,
+            "default": "por ver"
+          },
+          {
+            "key": "outro.feats",
+            "label": "Línea final del cierre",
+            "max": 40,
+            "default": "Suscríbete · NodeMotion"
+          }
+        ],
+        "brief": false
+      }
+    },
+    "lyrics-decadas": {
+      "folder": "nodemotion/lyrics/lyrics-decadas",
+      "display_name": "Décadas",
+      "description": "Tipografía editorial condensada gigante con azul eléctrico sobre negro cálido y celeste: letras enormes una a una rellenas con fotos en semitono, firmas que se trazan, etiquetas que parpadean, barridos azules, textos que ruedan como un contador, créditos tecleados y cierre con firma — para indie, pop alternativo y baladas con estética de documental.",
+      "native_orientation": "any",
+      "index_html": "nodemotion/lyrics/lyrics-decadas/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": null,
+      "remotion_component": null,
+      "runtime_assets": [
+        "player.js",
+        "components",
+        "assets/fonts",
+        "assets/media"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 44,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "editorial",
+        "kinetic"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "fotos",
+            "kind": "image",
+            "min": 0,
+            "max": 8,
+            "target": "media",
+            "label": "Fotos (opcional)",
+            "hint": "Retratos o calle; se convierten a semitono en blanco y negro. Si no subes nada, se usan las fotos de la plantilla."
+          }
+        ],
+        "texts": [
+          {
+            "key": "intro.title",
+            "label": "Título en la intro",
+            "max": 40,
+            "default": ""
+          },
+          {
+            "key": "intro.artist",
+            "label": "Artista en la intro",
+            "max": 40,
+            "default": ""
+          },
+          {
+            "key": "outro.title",
+            "label": "Título del cierre",
+            "max": 24,
+            "default": "Gracias"
+          },
+          {
+            "key": "outro.sub",
+            "label": "Subtítulo del cierre",
+            "max": 24,
+            "default": "por ver"
+          },
+          {
+            "key": "outro.feats",
+            "label": "Línea final del cierre",
+            "max": 40,
+            "default": "Suscríbete · NodeMotion"
+          },
+          {
+            "key": "texts.label",
+            "label": "Rótulo vertical",
+            "max": 24,
+            "default": ""
+          },
+          {
+            "key": "texts.credit",
+            "label": "Crédito (pie tecleado)",
+            "max": 40,
+            "default": ""
+          },
+          {
+            "key": "outro.brand",
+            "label": "Firma del cierre",
+            "max": 24,
+            "default": "NodeMotion"
+          }
+        ],
         "brief": false
       }
     },

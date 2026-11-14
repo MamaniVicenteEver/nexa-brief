@@ -6,6 +6,7 @@
 
 | componente | capa | para qué |
 |---|---|---|
+| `common.capas` | main | Escena de la biblioteca compartida: personajes, poses, zonas teñidas, conexiones y cámara. Solo admite IDs aprobados; valida antes de dibujar. |
 | `common.punch` | main | Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento. |
 | `common.tag` | overlay | Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose. |
 | `common.flash` | overlay | Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido. |
@@ -64,6 +65,13 @@
 | `rough.browser` | main | Ventana de navegador dibujada a mano: la dirección se escribe letra a letra en la barra, aparece la página (título + renglones) y un cursor hace clic en un enlace lima en `clickAt`. |
 | `rough.counter` | main | Cifra GIGANTE que cuenta de `from` a `to` (con separador de miles) y queda subrayada a mano; etiqueta lima arriba y unidad manuscrita abajo. Para cifras de escala: usuarios, sitios, años, dinero. |
 | `rough.notemark` | main | Hoja manuscrita con conceptos destacados por separado en el margen o como sellos. Para ver sellos en stage.html agrega &p={"title":"ACCESO AUTORIZADO","marks":["seguridad","soporte","asuntos legales"],"style":"stamps"}. |
+| `rough.careerLadder` | main | La escalera de una carrera dibujada a mano, con un rótulo por peldaño. Al pie, una persona espera. En `dropAt` el primer peldaño se pinta de lima, se tacha y cae: queda el hueco y el segundo escalón lejos. Con `dropAt: -1` la escalera queda entera (la escalera sigue ahí). |
+| `rough.codeReview` | main | Un editor de código dibujado a mano: las líneas se escriben solas, rápido, en gris (las escribe la máquina). En modo `review` una persona revisa: en `reviewAt` tacha en lima la línea mala y firma con un ✓ lima. En modo `ai` solo escribe la máquina, con cursor y rótulo de quién teclea. |
+| `rough.layoffMail` | main | Un teléfono dibujado a mano se enciende de madrugada: llega una notificación con remitente y asunto, el teléfono vibra y en `stampAt` cae un sello lima (PUESTO ELIMINADO). Para el momento en que alguien se entera de un despido por correo o mensaje. |
+| `rough.legalWarrant` | main | Dibuja un documento con firma y revela un sello con la balanza de la justicia; representa órdenes y solicitudes legales. |
+| `rough.temporaryChat` | main | Dibuja un teléfono con mensajes y revela un reloj en color de acento; representa chats temporales y plazos de retención. |
+| `rough.chatRedaction` | main | Dibuja una conversación y revela tres barras de censura en secuencia; representa datos ocultados o desidentificados. |
+| `rough.retentionCalendar` | main | Dibuja un calendario de siete columnas, destaca una fecha y revela una carpeta; representa plazos de conservación de datos. |
 | `rough.outrov1` | main | Cierre v1 para NODETECH: gracias, marca, LIKE plano que se activa y desaparece, y suscripción rough con campana y flecha corregida. |
 | `rough.outro` | main | Cierre v1 para NODETECH: gracias, marca, LIKE plano que se activa y desaparece, y suscripción rough con campana y flecha corregida. Alias compatible para rough.outro. |
 | `acuarela.title` | main | Apertura 'THE HISTORY': título condensado en rojo ladrillo con rayas finas a ambos lados y subtítulo, sobre una gran mancha de acuarela que es una foto lavada (florece desde varios focos) y bloques manuscritos. |
@@ -227,8 +235,8 @@
 | `imperio.archive` | main | Material de archivo (ref 11.5–27.7 s): el atlas se DESATURA a gris, baja humo oscuro desde arriba y la foto en blanco y negro se FUNDE en multiplicar con el mapa (lo claro deja ver el mapa, lo oscuro lo tapa); los rayos carmesí siguen encima, rosa de los vientos fina abajo a la derecha, grano y polvo; la cámara sigue alejándose. Para mostrar una foto histórica sin salir del mapa. |
 | `imperio.word` | overlay | Título condensado BLANCO (Fjalla One) sobre el plano en curso: cada renglón SUBE desde abajo con degradé de opacidad (arriba aparece primero) y desenfoque, y después el título se ACHICA lento y exponencial (rápido al principio) mientras el mapa sigue moviéndose (ref 10–27 s: 'JAPANESE EMPIRE'). Usalo como overlay sobre imperio.archive / imperio.map para el nombre del imperio, la doctrina o el tema del bloque. |
 | `imperio.native` | overlay | Nombre en su IDIOMA ORIGINAL (kanji, alemán, ruso, árabe latinizado…) en gris grande: cada carácter entra con escala y desenfoque escalonados, la traducción en mayúsculas negras se tipea debajo, y al final se borra de derecha a izquierda (ref 4.9–9.9 s: '南進論 · SOUTHERN EXPANSION DOCTRINE'). Overlay sobre un plano con mapa claro (imperio.map / imperio.title). |
-| `imperio.introv1` | main | GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none). |
-| `imperio.introv2` | main | GANCHO pregunta + revelación: la pregunta se escribe carácter a carácter como el título en idioma original de la referencia (cada letra entra con escala y fantasma); en stampAt la pregunta sube y se achica, el SOL carmesí sale desde abajo detrás del centro con su abanico de rayos y la RESPUESTA sube en condensada blanca con degradé. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none). |
+| `imperio.introv1` | main | Apertura A de solo texto sobre el mapa del mundo completo, como el cierre v1, sin sol, rayos ni bandera. Titular blanco y palabra clave sobre carmesí; entrada por palabras. Foto/componente opcionales mediante bg explícito. |
+| `imperio.introv2` | main | Apertura B de texto e imagen: fotografía grande, titular blanco en campo oscuro y palabra clave sobre carmesí. En móvil la foto ocupa arriba y el titular abajo; en escritorio se distribuyen a ambos lados. Sin bandera ni rayos; foco y lado configurables. |
 | `imperio.outro` | main | Cierre v1 con mapa del mundo completo que se aleja y oscurece, en los colores de Imperio. GRACIAS POR VER → canal en blanco ante el sol carmesí y sus rayos → alfiler LIKE → flecha → SUSCRÍBETE y campana → apoyo tipeado y dirección. Fondo alternativo con bg; tiempos sincronizables con likeAt, subscribeAt, bellAt y supportAt. |
 | `imperio.outrov2` | main | Outro v2: GRACIAS POR VER un 45 % más grande, letras en negrita y fondos rojo sangre oscuro en LIKE y SUSCRÍBETE. Conserva el sol naciente, los rayos, la flecha, la campana y los tiempos sincronizables del cierre original. Textos, fondo, tamaño, peso y color editables por JSON; funciona en 9:16 y 16:9. |
 | `imperio.campaign` | main | Campaña en UN plano continuo: la cámara vuela entre destinos (`cameras`); desde el país foco salen flechas gruesas hacia cada destino y llegan justo cuando la voz lo nombra (`time: "@palabra"`). Al llegar, el territorio queda marcado en carmesí y aparece su bandera en un círculo con nombre y año (después se retira; el territorio sigue marcado). Tramos de video y fotos de archivo (`plates`) se funden en blanco y negro con el atlas. Para anexiones, ocupaciones y avances militares a lo largo del tiempo. |
@@ -240,8 +248,8 @@
 | `imperio.territory` | main | Territorio que aparece en carmesí con borde y pulso. Admite países, varios países, polígonos recortados dentro de un país o islas mediante puntos. |
 | `imperio.date` | overlay | Fecha o rango de años blanco con subrayado carmesí; es el sello de la esquina del video, ahora reutilizable por JSON. |
 | `imperio.caption` | overlay | Pie de archivo en Montserrat itálica con fundido; mismo rótulo de lugar y año de las fotografías y clips del video. |
-| `imperio.sun` | main | Sol carmesí que late sobre el país o las coordenadas elegidas; comparte el sol y los colores de bandera de imperio.map. |
-| `imperio.rays` | main | Abanico de rayos sobre el mar: rumbo, apertura, cantidad, longitud y entrada por voz. Mismo efecto de la apertura original. |
+| `imperio.sun` | main | Marca circular que late sobre el país o coordenadas elegidas, con su paleta nacional o histórica explícita; comparte el dibujo de imperio.map. |
+| `imperio.rays` | main | Abanico geográfico con los colores del país foco: rumbo, apertura, cantidad, longitud y entrada por voz. Sin país reconocido usa una paleta neutra. |
 | `imperio.ships` | main | Barcos pequeños que avanzan sobre las rutas del abanico. Reutiliza los barcos del mapa; la ruta conserva sus coordenadas geográficas. |
 | `imperio.compass` | main | Rosa de los vientos de línea fina que acompaña el giro del mapa; es la del archivo original. |
 | `memorias.title` | main | Portada 'Historical Memories': título manuscrito grande (Mr Dafoe) que se escribe de izquierda a derecha + subtítulo en Quicksand, sobre papel de yeso con humo gris; bocetos a lápiz de una o dos fotos en las esquinas (layout center) o un boceto grande a un costado con el texto arriba a la izquierda (layout side). |
@@ -443,6 +451,27 @@ Etiquetas: pregunta, comentarios, cierre, texto · capa: overlay
 ```json
 {"use": "common.question", "params": {"text": "¿La IA te quita trabajo?"}}
 ```
+
+### `common.capas`
+
+Escena de la biblioteca compartida: personajes, poses, zonas teñidas, conexiones y cámara. Solo admite IDs aprobados; valida antes de dibujar.
+
+Etiquetas: capas, personajes, poses, anclas, hilos, paralaje · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `fondo` | object | `null` | {preset: foco/degradado/horizonte/ciudad/sala/rayos/liso, color:#RRGGBB, acento:#RRGGBB, grano:0..1}. |
+| `camara` | object | `null` | {mov: acercar/alejar/paneo-izq/paneo-der/fijo/temblor, intensidad:0..0.2}. |
+| `elenco` | array · obligatorio | `null` | Actores {id,asset,pose?,x?,y?,escala?,profundidad?,espejo?,estilo?,entrada?,anim?}. Posición 0..1 del pivote; escala 1=60% de la altura. |
+| `conexiones` | array | `null` | {de:id:ancla,a:id:ancla,tipo:hilo/linea/cadena,color:#RRGGBB}. Permanecen todo el beat y siguen las poses y transformaciones. |
+| `eventos` | array | `null` | {en:segundos,id,accion:pose/mover/escala/color/silueta/salir/anim,valor}. mover={x,y,dur}; escala={valor,dur}; color={zona,color,dur}. Sin anclas @ anidadas. |
+| `textos` | array | `null` | {texto,pos:arriba/centro/abajo,estilo:titulo/subtitulo/etiqueta,color?:#RRGGBB}. Texto plano, ajustado a la zona segura. |
+| `formato` | object | `null` | {16x9:{elenco:{id:{x?,y?,escala?,profundidad?,espejo?}}},9x16:{elenco:{…}}}. Reencuadre por formato. |
+
+```json
+{"use": "common.capas", "params": {"fondo": {"preset": "foco", "color": "#0B1220", "acento": "#1F6BFF", "grano": 0.15}, "camara": {"mov": "acercar", "intensidad": 0.04}, "elenco": [], "textos": [{"texto": "BIBLIOTECA DE CAPAS", "pos": "arriba", "estilo": "titulo"}]}}
+```
+
 
 ## binary · NODEHISTORY
 
@@ -1429,6 +1458,121 @@ Etiquetas: documento, nota, marcador, sello · capa: main
 
 ```json
 {"use": "rough.notemark", "params": {"title": "ACCESO AUTORIZADO", "marks": ["seguridad", "soporte", "asuntos legales"]}}
+```
+
+### `rough.careerLadder`
+
+La escalera de una carrera dibujada a mano, con un rótulo por peldaño. Al pie, una persona espera. En `dropAt` el primer peldaño se pinta de lima, se tacha y cae: queda el hueco y el segundo escalón lejos. Con `dropAt: -1` la escalera queda entera (la escalera sigue ahí).
+
+Etiquetas: carrera, escalera, empleo, jóvenes, primer trabajo · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `rungs` | array | `["PRIMER EMPLEO", "SEMI-SENIOR", "SENIOR", "LÍDER"]` | Rótulos de los peldaños, de abajo hacia arriba (3–5). |
+| `dropAt` | number | `1.8` | Segundo del beat en que cae el primer peldaño; -1 = no cae. |
+| `title` | string | `""` | Rótulo arriba (mono); vacío = nada. |
+| `who` | string | `""` | Rótulo manuscrito junto a la persona del pie; vacío = sin rótulo. |
+| `note` | string | `""` | Nota manuscrita al pie; vacío = nada. |
+
+```json
+{"use": "rough.careerLadder", "params": {"rungs": ["PRIMER EMPLEO", "SEMI-SENIOR", "SENIOR", "LÍDER"], "dropAt": 1.8, "title": "LA CARRERA", "who": "22–25 AÑOS", "note": ""}}
+```
+
+### `rough.codeReview`
+
+Un editor de código dibujado a mano: las líneas se escriben solas, rápido, en gris (las escribe la máquina). En modo `review` una persona revisa: en `reviewAt` tacha en lima la línea mala y firma con un ✓ lima. En modo `ai` solo escribe la máquina, con cursor y rótulo de quién teclea.
+
+Etiquetas: código, editor, ia, revisión, programador · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `mode` | string | `"review"` | ai = solo escribe la máquina · review = además una persona tacha y aprueba. |
+| `header` | string | `"pedido.js"` | Nombre del archivo en la barra del editor (mono). |
+| `lines` | array | `["function cobrar(pedido) {", "  const total = sumar(pedido)", "  if (total < 0) borrar()", "  return enviar(total)", "}"]` | Líneas de código (hasta 6, ~26 caracteres). |
+| `who` | string | `"IA ESCRIBIENDO…"` | Rótulo arriba del editor (quién escribe); vacío = nada. |
+| `bad` | number | `2` | Índice de la línea que la persona tacha en modo review; -1 = ninguna. |
+| `reviewAt` | number | `2.2` | Segundo del beat en que llegan las marcas humanas (modo review). |
+| `note` | string | `""` | Nota manuscrita al pie (modo review sale en lima junto al ✓); vacío = nada. |
+
+```json
+{"use": "rough.codeReview", "params": {"mode": "review", "header": "pedido.js", "who": "IA ESCRIBIENDO…", "bad": 2, "reviewAt": 2.2, "note": "revisado por una persona"}}
+```
+
+### `rough.layoffMail`
+
+Un teléfono dibujado a mano se enciende de madrugada: llega una notificación con remitente y asunto, el teléfono vibra y en `stampAt` cae un sello lima (PUESTO ELIMINADO). Para el momento en que alguien se entera de un despido por correo o mensaje.
+
+Etiquetas: despido, correo, teléfono, notificación, trabajo · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `time` | string | `"6:04"` | Hora grande en la pantalla bloqueada. |
+| `from` | string | `"RECURSOS HUMANOS"` | Remitente de la notificación (mono). |
+| `subject` | string | `"Tu puesto ha sido eliminado"` | Asunto del correo (hasta 3 renglones). |
+| `stamp` | string | `"PUESTO ELIMINADO"` | Texto del sello lima; vacío = sin sello. |
+| `stampAt` | number | `2` | Segundo del beat en que cae el sello. |
+| `label` | string | `""` | Etiqueta de contexto arriba (fecha, empresa). |
+| `badge` | string | `""` | Cifra manuscrita al costado del teléfono (p. ej. ×250); vacío = nada. |
+| `note` | string | `""` | Nota manuscrita al pie; vacío = nada. |
+
+```json
+{"use": "rough.layoffMail", "params": {"time": "6:04", "from": "RECURSOS HUMANOS", "subject": "Tu puesto ha sido eliminado", "stamp": "PUESTO ELIMINADO", "stampAt": 2, "label": "MIÉRCOLES 28 OCT", "badge": "×250"}}
+```
+
+### `rough.legalWarrant`
+
+Dibuja un documento con firma y revela un sello con la balanza de la justicia; representa órdenes y solicitudes legales.
+
+Etiquetas: justicia, orden · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `title` | string | `""` | Título superior opcional; una cadena vacía lo oculta. |
+
+```json
+{"use": "rough.legalWarrant", "params": {"title": "ORDEN JUDICIAL"}}
+```
+
+### `rough.temporaryChat`
+
+Dibuja un teléfono con mensajes y revela un reloj en color de acento; representa chats temporales y plazos de retención.
+
+Etiquetas: chat, retención, tiempo · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `title` | string | `""` | Título superior opcional; una cadena vacía lo oculta. |
+
+```json
+{"use": "rough.temporaryChat", "params": {"title": "CHAT TEMPORAL"}}
+```
+
+### `rough.chatRedaction`
+
+Dibuja una conversación y revela tres barras de censura en secuencia; representa datos ocultados o desidentificados.
+
+Etiquetas: chat, desidentificación · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `title` | string | `""` | Título superior opcional; una cadena vacía lo oculta. |
+
+```json
+{"use": "rough.chatRedaction", "params": {"title": "DATOS OCULTOS"}}
+```
+
+### `rough.retentionCalendar`
+
+Dibuja un calendario de siete columnas, destaca una fecha y revela una carpeta; representa plazos de conservación de datos.
+
+Etiquetas: retención, archivo, tiempo · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `title` | string | `""` | Título superior opcional; una cadena vacía lo oculta. |
+
+```json
+{"use": "rough.retentionCalendar", "params": {"title": "TIEMPO DE RETENCIÓN"}}
 ```
 
 ### `rough.outrov1`
@@ -4900,14 +5044,14 @@ Etiquetas: apertura, título, mapa, imperio, sol, idioma original · capa: main
 |---|---|---|---|
 | `country` | string | `"Japan"` | País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado. |
 | `hatch` | array | `null` | Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno. |
-| `sun` | bool | `true` | Círculo carmesí que late sobre el país foco. |
+| `sun` | bool | `true` | Marca circular que late con la paleta del país foco. |
 | `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
 | `sunSize` | number [0.2–6] | `3.6` | Radio del sol en grados de mapa (se achica al alejarse la cámara). |
 | `labels` | array | `[]` | Rótulos de mares/regiones en itálica: [{"t":"Mar del\nJapón", "at":[134,40]}] ('at' también acepta un país). |
 | `compass` | bool | `false` | Rosa de los vientos de línea fina abajo a la derecha. |
 | `gray` | number [0–1] | `0` | Desaturación del atlas (1 = gris, como el tramo de archivo). |
 | `enter` | number [0–2] | `0.5` | Segundos de fundido de entrada sobre el plano anterior (0 = corte). |
-| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'. |
+| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'. |
 | `from` | array | `null` | Cámara inicial [lon, lat, span°, giro°] o "País*k". Vacío = donde terminó el plano con mapa anterior (plano continuo). |
 | `to` | array | `null` | Cámara final [lon, lat, span°, giro°] o "País*k" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`. |
 | `zoom` | number [0.3–6] | `1.3` | Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca). |
@@ -4917,7 +5061,7 @@ Etiquetas: apertura, título, mapa, imperio, sol, idioma original · capa: main
 | `dir` | number | `180` | Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste). |
 | `spread` | number [0–1] | `0.72` | Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`). |
 | `rayFloor` | number [0–0.4] | `0.02` | Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional. |
-| `rayAlpha` | number [0–1] | `0.56` | Opacidad de los rayos carmesí. |
+| `rayAlpha` | number [0–1] | `0.56` | Opacidad de los rayos de la paleta elegida. |
 | `rayLen` | number [0.1–1] | `0.46` | Largo máximo de los rayos (fracción del lado largo del cuadro). |
 | `raysAt` | number | `4` | Segundo en que nacen los rayos (acepta '@palabra'). |
 | `ships` | number [0–10] | `2` | Barquitos que avanzan sobre los rayos hacia el abanico. |
@@ -4944,14 +5088,14 @@ Etiquetas: mapa, lugar, país, geografía, atlas · capa: main
 |---|---|---|---|
 | `country` | string | `""` | País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado. |
 | `hatch` | array | `null` | Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno. |
-| `sun` | bool | `true` | Círculo carmesí que late sobre el país foco. |
+| `sun` | bool | `true` | Marca circular que late con la paleta del país foco. |
 | `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
 | `sunSize` | number [0.2–6] | `0.8` | Radio del sol en grados de mapa (se achica al alejarse la cámara). |
 | `labels` | array | `[]` | Rótulos de mares/regiones en itálica: [{"t":"Mar del\nJapón", "at":[134,40]}] ('at' también acepta un país). |
 | `compass` | bool | `false` | Rosa de los vientos de línea fina abajo a la derecha. |
 | `gray` | number [0–1] | `0` | Desaturación del atlas (1 = gris, como el tramo de archivo). |
 | `enter` | number [0–2] | `0.5` | Segundos de fundido de entrada sobre el plano anterior (0 = corte). |
-| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'. |
+| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'. |
 | `from` | array | `null` | Cámara inicial [lon, lat, span°, giro°] o "País*k". Vacío = donde terminó el plano con mapa anterior (plano continuo). |
 | `to` | array | `null` | Cámara final [lon, lat, span°, giro°] o "País*k" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`. |
 | `zoom` | number [0.3–6] | `1.3` | Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca). |
@@ -4961,7 +5105,7 @@ Etiquetas: mapa, lugar, país, geografía, atlas · capa: main
 | `dir` | number | `180` | Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste). |
 | `spread` | number [0–1] | `0.6` | Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`). |
 | `rayFloor` | number [0–0.4] | `0.16` | Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional. |
-| `rayAlpha` | number [0–1] | `0.82` | Opacidad de los rayos carmesí. |
+| `rayAlpha` | number [0–1] | `0.82` | Opacidad de los rayos de la paleta elegida. |
 | `rayLen` | number [0.1–1] | `0.42` | Largo máximo de los rayos (fracción del lado largo del cuadro). |
 | `raysAt` | number | `0.4` | Segundo en que nacen los rayos (acepta '@palabra'). |
 | `ships` | number [0–10] | `0` | Barquitos que avanzan sobre los rayos hacia el abanico. |
@@ -4983,14 +5127,14 @@ Etiquetas: expansión, conquista, invasión, influencia, mapa, rayos · capa: ma
 |---|---|---|---|
 | `country` | string | `""` | País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado. |
 | `hatch` | array | `null` | Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno. |
-| `sun` | bool | `true` | Círculo carmesí que late sobre el país foco. |
+| `sun` | bool | `true` | Marca circular que late con la paleta del país foco. |
 | `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
 | `sunSize` | number [0.2–6] | `1.3` | Radio del sol en grados de mapa (se achica al alejarse la cámara). |
 | `labels` | array | `[]` | Rótulos de mares/regiones en itálica: [{"t":"Mar del\nJapón", "at":[134,40]}] ('at' también acepta un país). |
 | `compass` | bool | `false` | Rosa de los vientos de línea fina abajo a la derecha. |
 | `gray` | number [0–1] | `0` | Desaturación del atlas (1 = gris, como el tramo de archivo). |
 | `enter` | number [0–2] | `0.5` | Segundos de fundido de entrada sobre el plano anterior (0 = corte). |
-| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'. |
+| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'. |
 | `from` | array | `null` | Cámara inicial [lon, lat, span°, giro°] o "País*k". Vacío = donde terminó el plano con mapa anterior (plano continuo). |
 | `to` | array | `null` | Cámara final [lon, lat, span°, giro°] o "País*k" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`. |
 | `zoom` | number [0.3–6] | `1.3` | Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca). |
@@ -5019,14 +5163,14 @@ Etiquetas: archivo, foto, blanco y negro, mapa, guerra, barco · capa: main
 | `photoFocus` | array | `[0.5, 0.42]` | Punto de interés de la foto [x,y] 0..1. |
 | `country` | string | `""` | País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado. |
 | `hatch` | array | `null` | Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno. |
-| `sun` | bool | `true` | Círculo carmesí que late sobre el país foco. |
+| `sun` | bool | `true` | Marca circular que late con la paleta del país foco. |
 | `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
 | `sunSize` | number [0.2–6] | `1.3` | Radio del sol en grados de mapa (se achica al alejarse la cámara). |
 | `labels` | array | `[]` | Rótulos de mares/regiones en itálica: [{"t":"Mar del\nJapón", "at":[134,40]}] ('at' también acepta un país). |
 | `compass` | bool | `true` | Rosa de los vientos de línea fina abajo a la derecha. |
 | `gray` | number [0–1] | `0` | Desaturación del atlas (1 = gris, como el tramo de archivo). |
 | `enter` | number [0–2] | `0.7` | Segundos de fundido de entrada sobre el plano anterior (0 = corte). |
-| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'. |
+| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'. |
 | `from` | array | `null` | Cámara inicial [lon, lat, span°, giro°] o "País*k". Vacío = donde terminó el plano con mapa anterior (plano continuo). |
 | `to` | array | `null` | Cámara final [lon, lat, span°, giro°] o "País*k" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`. |
 | `zoom` | number [0.3–6] | `1.35` | Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca). |
@@ -5036,7 +5180,7 @@ Etiquetas: archivo, foto, blanco y negro, mapa, guerra, barco · capa: main
 | `dir` | number | `180` | Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste). |
 | `spread` | number [0–1] | `0.72` | Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`). |
 | `rayFloor` | number [0–0.4] | `0.02` | Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional. |
-| `rayAlpha` | number [0–1] | `0.56` | Opacidad de los rayos carmesí. |
+| `rayAlpha` | number [0–1] | `0.56` | Opacidad de los rayos de la paleta elegida. |
 | `rayLen` | number [0.1–1] | `0.46` | Largo máximo de los rayos (fracción del lado largo del cuadro). |
 | `raysAt` | number | `0` | Segundo en que nacen los rayos (acepta '@palabra'). |
 | `ships` | number [0–10] | `3` | Barquitos que avanzan sobre los rayos hacia el abanico. |
@@ -5099,20 +5243,20 @@ Etiquetas: título, idioma original, kanji, doctrina, cita, traducción · capa:
 
 ### `imperio.introv1`
 
-GANCHO de apertura: sobre el atlas el SOL carmesí CAE (de 3× a su tamaño, con sacudida) y sus rayos estallan en 360°; el titular condensado blanco entra palabra por palabra con estela ('^palabra^' sobre franja carmesí); en burstAt los rayos se abren hasta los bordes con destello y sacudida. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).
+Apertura A de solo texto sobre el mapa del mundo completo, como el cierre v1, sin sol, rayos ni bandera. Titular blanco y palabra clave sobre carmesí; entrada por palabras. Foto/componente opcionales mediante bg explícito.
 
-Etiquetas: intro, gancho, apertura, título, impacto, sol · capa: main
+Etiquetas: intro, gancho, apertura, título, mapa mundial · capa: main
 
 | parámetro | tipo | por defecto | qué hace |
 |---|---|---|---|
 | `text` | string · obligatorio | `null` | Titular gancho (2–7 palabras). '\n' = renglón; '^x^' = palabras sobre franja carmesí. |
 | `kicker` | string | `""` | Rótulo chico arriba (lugar · fecha). |
 | `sub` | string | `""` | Línea chica en itálica debajo del titular. |
-| `country` | string | `""` | País foco del fondo atlas/archivo (rayado, el sol cae sobre él). Vacío = mundo y sol al centro. |
-| `sunAt` | number | `0.15` | Segundo en que cae el sol. |
+| `country` | string | `""` | Contexto del episodio; la apertura A mantiene el mundo completo sin bandera ni rayado. |
+| `sunAt` | number | `0.15` | Tiempo heredado de entrada; conservado por compatibilidad. La apertura A no dibuja un sol. |
 | `wordAt` | number | `0.7` | Segundo de la primera palabra. |
 | `stagger` | number [0.06–None] | `0.2` | Segundos entre palabras. |
-| `burstAt` | number | `2.6` | Impacto: los rayos llegan a los bordes (acepta '@palabra'; −1 = sin impacto). |
+| `burstAt` | number | `2.6` | Impacto tipográfico suave (acepta '@palabra'; −1 = sin impacto), sin rayos ni bandera. |
 | `bg` | enum (auto / atlas / archivo / papel / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso. |
 | `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
 | `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
@@ -5126,28 +5270,30 @@ Etiquetas: intro, gancho, apertura, título, impacto, sol · capa: main
 
 ### `imperio.introv2`
 
-GANCHO pregunta + revelación: la pregunta se escribe carácter a carácter como el título en idioma original de la referencia (cada letra entra con escala y fantasma); en stampAt la pregunta sube y se achica, el SOL carmesí sale desde abajo detrás del centro con su abanico de rayos y la RESPUESTA sube en condensada blanca con degradé. Fondo adaptable (bg: atlas | archivo | papel | image con src | component con use/useParams | none).
+Apertura B de texto e imagen: fotografía grande, titular blanco en campo oscuro y palabra clave sobre carmesí. En móvil la foto ocupa arriba y el titular abajo; en escritorio se distribuyen a ambos lados. Sin bandera ni rayos; foco y lado configurables.
 
-Etiquetas: intro, gancho, apertura, pregunta, revelación, sol naciente · capa: main
+Etiquetas: intro, gancho, apertura, foto, titular · capa: main
 
 | parámetro | tipo | por defecto | qué hace |
 |---|---|---|---|
-| `text` | string · obligatorio | `null` | Pregunta gancho ('\n' = renglón). |
+| `text` | string · obligatorio | `null` | Titular gancho; '\n' separa renglones y '^x^' destaca la palabra clave en carmesí. |
+| `highlight` | string | `""` | Palabra o frase del titular que se destaca; si falta se conserva el marcado ^x^ o la última palabra sustantiva. |
 | `kicker` | string | `""` | Rótulo chico arriba. |
-| `stamp` | string | `""` | Respuesta (1–3 palabras) que sube con el sol (vacío = sin revelación). |
+| `stamp` | string | `""` | Revelación secundaria opcional, dentro del campo de texto. |
 | `stampAt` | number | `2.6` | Segundo de la revelación (acepta '@palabra'). |
-| `typeAt` | number | `0.35` | Segundo en que empieza a escribirse la pregunta. |
-| `cps` | number [4–None] | `18` | Caracteres por segundo. |
-| `country` | string | `""` | País foco del fondo atlas/archivo. |
+| `typeAt` | number | `0.35` | Segundo de entrada del titular. |
+| `cps` | number [4–None] | `18` | Velocidad de entrada del titular, conservada del contrato anterior. |
+| `country` | string | `""` | País del episodio; no altera los colores de esta apertura editorial. |
 | `bg` | enum (auto / atlas / archivo / papel / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso. |
-| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `src` | image · obligatorio | `""` | Fotografía documental real del tema. Obligatoria en la apertura B; evitar documentos llenos de texto o fotos de sujetos ajenos. |
 | `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
 | `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
 | `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
-| `dim` | number [0–1] | `0.35` | Oscurecido del fondo foto/componente. |
+| `dim` | number [0–1] | `0.2` | Oscurecido suave de la fotografía sin perder al sujeto. |
+| `imageSide` | enum (auto / left / right) | `"right"` | Lado de la fotografía en escritorio; en móvil aparece siempre arriba. |
 
 ```json
-{"use": "imperio.introv2", "params": {"text": "¿POR QUÉ UN IMPERIO\nMIRÓ HACIA EL SUR?", "kicker": "Pacífico · 1940", "stamp": "PETRÓLEO", "stampAt": 2.6, "country": "Japan", "bg": "archivo"}}
+{"use": "imperio.introv2", "params": {"text": "LA NOCHE QUE\n^PARTIÓ BERLÍN^", "kicker": "Berlín · 1961", "src": "mauerbau.jpg", "country": "Germany", "imageSide": "right"}}
 ```
 
 ### `imperio.outro`
@@ -5175,6 +5321,7 @@ Etiquetas: cierre, canal, like, suscribirse, sol, mapa · capa: main
 | `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
 | `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
 | `dim` | number [0–1] | `0.5` | Oscurecido del fondo foto/componente. |
+| `fadeOut` | bool | `true` | Fundido a negro al final del cierre. |
 
 ```json
 {"use": "imperio.outro", "params": {"thanks": "GRACIAS POR VER", "channel": "NODEPOLITICS", "cta": "SUSCRÍBETE", "support": "Apoya el canal y comparte el video.", "handle": "youtube.com/@nodepolitics"}}
@@ -5205,6 +5352,7 @@ Etiquetas: cierre, canal, like, suscribirse, sol, v2, negrita, rojo sangre · ca
 | `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
 | `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
 | `dim` | number [0–1] | `0.5` | Oscurecido del fondo foto/componente. |
+| `fadeOut` | bool | `true` | Fundido a negro al final del cierre. |
 | `thanksScale` | number [1–2] | `1.45` | Escala de GRACIAS POR VER respecto al cierre original (1.45 = 45 % más grande). |
 | `textWeight` | number [400–900] | `800` | Peso tipográfico del nombre del canal, SUSCRÍBETE y el apoyo. 800 = negrita gruesa; GRACIAS y LIKE usan Montserrat 800. |
 | `actionColor` | color | `"#700B1B"` | Color de relleno de LIKE y SUSCRÍBETE; por defecto rojo sangre oscuro. No cambia el sol ni los rayos. |
@@ -5221,7 +5369,8 @@ Etiquetas: expansión, flechas, banderas, mapa, invasión, imperio, japón, vide
 
 | parámetro | tipo | por defecto | qué hace |
 |---|---|---|---|
-| `country` | string | `"Japan"` | País foco: pone el sol y el rayado. |
+| `country` | string | `""` | País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés. |
+| `flagColors` | string | `"auto"` | Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera. |
 | `hatch` | array | `null` | Países ya ocupados (rayado fijo). Va acumulando de plano en plano. |
 | `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
 | `sunSize` | number [0.2–6] | `1.15` | Radio del sol en grados de mapa. |
@@ -5282,7 +5431,8 @@ Etiquetas: archivo, video, blanco y negro, mapa, guerra, imperio · capa: main
 | `rate` | number [0.2–2] | `1` | Velocidad del clip (bajar si es corto). |
 | `loop` | bool | `true` | Repetir el clip si es más corto que el plano. |
 | `focus` | array | `[0.5, 0.45]` | Punto de interés del clip [x,y] 0..1. |
-| `country` | string | `"Japan"` | País foco: pone el sol y el rayado. |
+| `country` | string | `""` | País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés. |
+| `flagColors` | string | `"auto"` | Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera. |
 | `hatch` | array | `null` | Países ya ocupados (rayado fijo). Va acumulando de plano en plano. |
 | `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
 | `sunSize` | number [0.2–6] | `3` | Radio del sol en grados de mapa. |
@@ -5328,7 +5478,8 @@ Etiquetas: imperio, pieza, territories, badges, dates · capa: main
 | `zoom` | number [0.3–6] | `1` | Si no hay `to`: cuánto se aleja la cámara. |
 | `tilt` | number [-20–20] | `0` | Si no hay `to`: grados que gira el mapa. |
 | `ease` | enum (auto / out / in / inOut / linear / expo) | `"expo"` | Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados). |
-| `country` | string | `"Japan"` | País foco: pone el sol y el rayado. |
+| `country` | string | `""` | País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés. |
+| `flagColors` | string | `"auto"` | Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera. |
 | `target` | array | `"Taiwan"` | País o punto [longitud, latitud] del destino; nunca píxeles. |
 | `region` | object | `null` | Territorio: nombre de país, lista de países, {poly:[[lon,lat]…],within:'País'} o {dots:[[lon,lat]…]}. Vacío = el país de target. |
 | `label` | string | `"TAIWÁN"` | Nombre mostrado en la chapa del país o la ciudad. |
@@ -5355,7 +5506,8 @@ Etiquetas: imperio, pieza, badges · capa: main
 | `zoom` | number [0.3–6] | `1` | Si no hay `to`: cuánto se aleja la cámara. |
 | `tilt` | number [-20–20] | `0` | Si no hay `to`: grados que gira el mapa. |
 | `ease` | enum (auto / out / in / inOut / linear / expo) | `"expo"` | Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados). |
-| `country` | string | `"Japan"` | País foco: pone el sol y el rayado. |
+| `country` | string | `""` | País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés. |
+| `flagColors` | string | `"auto"` | Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera. |
 | `target` | array | `"Taiwan"` | País o punto [longitud, latitud] del destino; nunca píxeles. |
 | `label` | string | `"TAIWÁN"` | Nombre mostrado en la chapa del país o la ciudad. |
 | `flag` | image | `""` | Archivo SVG/PNG de bandera con licencia, relativo al episodio; no se deduce ni se inventa la bandera histórica. |
@@ -5380,7 +5532,8 @@ Etiquetas: imperio, pieza, badges · capa: main
 | `zoom` | number [0.3–6] | `1` | Si no hay `to`: cuánto se aleja la cámara. |
 | `tilt` | number [-20–20] | `0` | Si no hay `to`: grados que gira el mapa. |
 | `ease` | enum (auto / out / in / inOut / linear / expo) | `"expo"` | Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados). |
-| `country` | string | `"Japan"` | País foco: pone el sol y el rayado. |
+| `country` | string | `""` | País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés. |
+| `flagColors` | string | `"auto"` | Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera. |
 | `target` | array | `"Taiwan"` | País o punto [longitud, latitud] del destino; nunca píxeles. |
 | `label` | string | `"TAIWÁN"` | Nombre mostrado en la chapa del país o la ciudad. |
 | `time` | number [0–None] | `0.5` | Segundo local de llegada. Acepta @palabra de la narración. |
@@ -5404,7 +5557,8 @@ Etiquetas: imperio, pieza, arrows · capa: main
 | `zoom` | number [0.3–6] | `1` | Si no hay `to`: cuánto se aleja la cámara. |
 | `tilt` | number [-20–20] | `0` | Si no hay `to`: grados que gira el mapa. |
 | `ease` | enum (auto / out / in / inOut / linear / expo) | `"expo"` | Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados). |
-| `country` | string | `"Japan"` | País foco: pone el sol y el rayado. |
+| `country` | string | `""` | País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés. |
+| `flagColors` | string | `"auto"` | Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera. |
 | `target` | array | `"Taiwan"` | País o punto [longitud, latitud] del destino; nunca píxeles. |
 | `time` | number [0–None] | `0.5` | Segundo local de llegada. Acepta @palabra de la narración. |
 | `origin` | array | `null` | Origen de la flecha [lon,lat]; vacío = centro de country. |
@@ -5429,7 +5583,8 @@ Etiquetas: imperio, pieza, territories · capa: main
 | `zoom` | number [0.3–6] | `1` | Si no hay `to`: cuánto se aleja la cámara. |
 | `tilt` | number [-20–20] | `0` | Si no hay `to`: grados que gira el mapa. |
 | `ease` | enum (auto / out / in / inOut / linear / expo) | `"expo"` | Curva de la cámara. expo = llega rápido y se asienta (los destinos entran ya encuadrados). |
-| `country` | string | `"Japan"` | País foco: pone el sol y el rayado. |
+| `country` | string | `""` | País foco: pone la marca y el rayado. Elegir el país del relato, no copiar el ejemplo japonés. |
+| `flagColors` | string | `"auto"` | Paleta del sol y rayos: auto = país actual; neutral = sin identidad nacional; classic = carmesí japonés; lista hex para bandera histórica verificada. No sustituye el SVG de bandera. |
 | `target` | array | `"Taiwan"` | País o punto [longitud, latitud] del destino; nunca píxeles. |
 | `region` | object | `null` | Territorio: nombre de país, lista de países, {poly:[[lon,lat]…],within:'País'} o {dots:[[lon,lat]…]}. Vacío = el país de target. |
 | `time` | number [0–None] | `0.5` | Segundo local de llegada. Acepta @palabra de la narración. |
@@ -5476,7 +5631,7 @@ Etiquetas: imperio, texto, caption · capa: overlay
 
 ### `imperio.sun`
 
-Sol carmesí que late sobre el país o las coordenadas elegidas; comparte el sol y los colores de bandera de imperio.map.
+Marca circular que late sobre el país o coordenadas elegidas, con su paleta nacional o histórica explícita; comparte el dibujo de imperio.map.
 
 Etiquetas: imperio, pieza, sun · capa: main
 
@@ -5484,14 +5639,14 @@ Etiquetas: imperio, pieza, sun · capa: main
 |---|---|---|---|
 | `country` | string | `""` | País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado. |
 | `hatch` | array | `null` | Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno. |
-| `sun` | bool | `true` | Círculo carmesí que late sobre el país foco. |
+| `sun` | bool | `true` | Marca circular que late con la paleta del país foco. |
 | `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
 | `sunSize` | number [0.2–6] | `0.8` | Radio del sol en grados de mapa (se achica al alejarse la cámara). |
 | `labels` | array | `[]` | Rótulos de mares/regiones en itálica: [{"t":"Mar del\nJapón", "at":[134,40]}] ('at' también acepta un país). |
 | `compass` | bool | `false` | Rosa de los vientos de línea fina abajo a la derecha. |
 | `gray` | number [0–1] | `0` | Desaturación del atlas (1 = gris, como el tramo de archivo). |
 | `enter` | number [0–2] | `0.5` | Segundos de fundido de entrada sobre el plano anterior (0 = corte). |
-| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'. |
+| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'. |
 | `from` | array | `null` | Cámara inicial [lon, lat, span°, giro°] o "País*k". Vacío = donde terminó el plano con mapa anterior (plano continuo). |
 | `to` | array | `null` | Cámara final [lon, lat, span°, giro°] o "País*k" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`. |
 | `zoom` | number [0.3–6] | `1.3` | Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca). |
@@ -5501,7 +5656,7 @@ Etiquetas: imperio, pieza, sun · capa: main
 | `dir` | number | `180` | Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste). |
 | `spread` | number [0–1] | `0.6` | Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`). |
 | `rayFloor` | number [0–0.4] | `0.16` | Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional. |
-| `rayAlpha` | number [0–1] | `0.82` | Opacidad de los rayos carmesí. |
+| `rayAlpha` | number [0–1] | `0.82` | Opacidad de los rayos de la paleta elegida. |
 | `rayLen` | number [0.1–1] | `0.42` | Largo máximo de los rayos (fracción del lado largo del cuadro). |
 | `raysAt` | number | `0.4` | Segundo en que nacen los rayos (acepta '@palabra'). |
 | `ships` | number [0–10] | `0` | Barquitos que avanzan sobre los rayos hacia el abanico. |
@@ -5515,7 +5670,7 @@ Etiquetas: imperio, pieza, sun · capa: main
 
 ### `imperio.rays`
 
-Abanico de rayos sobre el mar: rumbo, apertura, cantidad, longitud y entrada por voz. Mismo efecto de la apertura original.
+Abanico geográfico con los colores del país foco: rumbo, apertura, cantidad, longitud y entrada por voz. Sin país reconocido usa una paleta neutra.
 
 Etiquetas: imperio, pieza, rays · capa: main
 
@@ -5523,14 +5678,14 @@ Etiquetas: imperio, pieza, rays · capa: main
 |---|---|---|---|
 | `country` | string | `""` | País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado. |
 | `hatch` | array | `null` | Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno. |
-| `sun` | bool | `false` | Círculo carmesí que late sobre el país foco. |
+| `sun` | bool | `false` | Marca circular que late con la paleta del país foco. |
 | `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
 | `sunSize` | number [0.2–6] | `0.8` | Radio del sol en grados de mapa (se achica al alejarse la cámara). |
 | `labels` | array | `[]` | Rótulos de mares/regiones en itálica: [{"t":"Mar del\nJapón", "at":[134,40]}] ('at' también acepta un país). |
 | `compass` | bool | `false` | Rosa de los vientos de línea fina abajo a la derecha. |
 | `gray` | number [0–1] | `0` | Desaturación del atlas (1 = gris, como el tramo de archivo). |
 | `enter` | number [0–2] | `0.5` | Segundos de fundido de entrada sobre el plano anterior (0 = corte). |
-| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'. |
+| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'. |
 | `from` | array | `null` | Cámara inicial [lon, lat, span°, giro°] o "País*k". Vacío = donde terminó el plano con mapa anterior (plano continuo). |
 | `to` | array | `null` | Cámara final [lon, lat, span°, giro°] o "País*k" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`. |
 | `zoom` | number [0.3–6] | `1.3` | Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca). |
@@ -5540,7 +5695,7 @@ Etiquetas: imperio, pieza, rays · capa: main
 | `dir` | number | `180` | Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste). |
 | `spread` | number [0–1] | `0.6` | Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`). |
 | `rayFloor` | number [0–0.4] | `0.16` | Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional. |
-| `rayAlpha` | number [0–1] | `0.82` | Opacidad de los rayos carmesí. |
+| `rayAlpha` | number [0–1] | `0.82` | Opacidad de los rayos de la paleta elegida. |
 | `rayLen` | number [0.1–1] | `0.42` | Largo máximo de los rayos (fracción del lado largo del cuadro). |
 | `raysAt` | number | `0.4` | Segundo en que nacen los rayos (acepta '@palabra'). |
 | `ships` | number [0–10] | `0` | Barquitos que avanzan sobre los rayos hacia el abanico. |
@@ -5562,14 +5717,14 @@ Etiquetas: imperio, pieza, ships · capa: main
 |---|---|---|---|
 | `country` | string | `""` | País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado. |
 | `hatch` | array | `null` | Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno. |
-| `sun` | bool | `false` | Círculo carmesí que late sobre el país foco. |
+| `sun` | bool | `false` | Marca circular que late con la paleta del país foco. |
 | `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
 | `sunSize` | number [0.2–6] | `0.8` | Radio del sol en grados de mapa (se achica al alejarse la cámara). |
 | `labels` | array | `[]` | Rótulos de mares/regiones en itálica: [{"t":"Mar del\nJapón", "at":[134,40]}] ('at' también acepta un país). |
 | `compass` | bool | `false` | Rosa de los vientos de línea fina abajo a la derecha. |
 | `gray` | number [0–1] | `0` | Desaturación del atlas (1 = gris, como el tramo de archivo). |
 | `enter` | number [0–2] | `0.5` | Segundos de fundido de entrada sobre el plano anterior (0 = corte). |
-| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'. |
+| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'. |
 | `from` | array | `null` | Cámara inicial [lon, lat, span°, giro°] o "País*k". Vacío = donde terminó el plano con mapa anterior (plano continuo). |
 | `to` | array | `null` | Cámara final [lon, lat, span°, giro°] o "País*k" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`. |
 | `zoom` | number [0.3–6] | `1.3` | Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca). |
@@ -5579,7 +5734,7 @@ Etiquetas: imperio, pieza, ships · capa: main
 | `dir` | number | `180` | Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste). |
 | `spread` | number [0–1] | `0.6` | Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`). |
 | `rayFloor` | number [0–0.4] | `0.16` | Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional. |
-| `rayAlpha` | number [0–1] | `0` | Opacidad de los rayos carmesí. |
+| `rayAlpha` | number [0–1] | `0` | Opacidad de los rayos de la paleta elegida. |
 | `rayLen` | number [0.1–1] | `0.42` | Largo máximo de los rayos (fracción del lado largo del cuadro). |
 | `raysAt` | number | `0.4` | Segundo en que nacen los rayos (acepta '@palabra'). |
 | `ships` | number [0–10] | `5` | Barquitos que avanzan sobre los rayos hacia el abanico. |
@@ -5601,14 +5756,14 @@ Etiquetas: imperio, pieza, compass · capa: main
 |---|---|---|---|
 | `country` | string | `""` | País foco (nombre de world-atlas en inglés o alias en español: 'Japón', 'Alemania', 'Reino Unido'). Pone el sol y el rayado. |
 | `hatch` | array | `null` | Países rayados en diagonal (territorio del imperio). Vacío = solo `country`; [] explícito = ninguno. |
-| `sun` | bool | `false` | Círculo carmesí que late sobre el país foco. |
+| `sun` | bool | `false` | Marca circular que late con la paleta del país foco. |
 | `sunAt` | array | `null` | [lon, lat] del sol (vacío = centro del país foco). |
 | `sunSize` | number [0.2–6] | `0.8` | Radio del sol en grados de mapa (se achica al alejarse la cámara). |
 | `labels` | array | `[]` | Rótulos de mares/regiones en itálica: [{"t":"Mar del\nJapón", "at":[134,40]}] ('at' también acepta un país). |
 | `compass` | bool | `true` | Rosa de los vientos de línea fina abajo a la derecha. |
 | `gray` | number [0–1] | `0` | Desaturación del atlas (1 = gris, como el tramo de archivo). |
 | `enter` | number [0–2] | `0.5` | Segundos de fundido de entrada sobre el plano anterior (0 = corte). |
-| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = bandera del país foco (Japón = carmesí de la referencia), 'none' = carmesí, o colores propios '#000,#d00,#fc0'. |
+| `flag` | string | `"auto"` | Colores del sol y los rayos: auto = paleta actual del país foco; neutral = sin identidad nacional; classic/none = carmesí japonés explícito; lista hex para paleta histórica verificada, por ejemplo '#000000,#ffffff,#dd0000'. |
 | `from` | array | `null` | Cámara inicial [lon, lat, span°, giro°] o "País*k". Vacío = donde terminó el plano con mapa anterior (plano continuo). |
 | `to` | array | `null` | Cámara final [lon, lat, span°, giro°] o "País*k" (k = cuántas veces el ancho del país). Vacío = se aleja `zoom`. |
 | `zoom` | number [0.3–6] | `1.3` | Si no hay `to`: cuánto se aleja la cámara en el plano (1.3 = 30 % más de mapa; < 1 acerca). |
@@ -5618,7 +5773,7 @@ Etiquetas: imperio, pieza, compass · capa: main
 | `dir` | number | `180` | Rumbo hacia donde se despliega el abanico (0 = norte, 90 = este, 180 = sur, 270 = oeste). |
 | `spread` | number [0–1] | `0.6` | Qué tan cerrado es el abanico (0 = parejo en 360°, 1 = solo hacia `dir`). |
 | `rayFloor` | number [0–0.4] | `0.16` | Largo residual de los rayos opuestos al rumbo principal; bajo = abanico más direccional. |
-| `rayAlpha` | number [0–1] | `0.82` | Opacidad de los rayos carmesí. |
+| `rayAlpha` | number [0–1] | `0.82` | Opacidad de los rayos de la paleta elegida. |
 | `rayLen` | number [0.1–1] | `0.42` | Largo máximo de los rayos (fracción del lado largo del cuadro). |
 | `raysAt` | number | `0.4` | Segundo en que nacen los rayos (acepta '@palabra'). |
 | `ships` | number [0–10] | `0` | Barquitos que avanzan sobre los rayos hacia el abanico. |
