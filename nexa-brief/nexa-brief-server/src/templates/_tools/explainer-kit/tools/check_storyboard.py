@@ -182,6 +182,9 @@ def quality_check(proto, config, script, beats, words, total, errs, catalog=None
     override = KIT / "designs" / str(config.get("design", "")) / "quality.json"
     if override.exists():
         settings.update(json.loads(override.read_text(encoding="utf-8")))
+    if config.get("design") == "titanes":
+        style = style_media_policy.policy_for(config)
+        settings.update(custom_min=style["custom_min"], long_video_min_spans=style["long_video_min_spans"])
     count = len(beats)
     icon = settings["icon_component"]
     icon_count = sum(x["use"] == icon for x in beats)
@@ -212,15 +215,20 @@ def quality_check(proto, config, script, beats, words, total, errs, catalog=None
         params = beat["b"].get("params") or {}
         spec = catalog.get(beat["use"], {}).get("params", {})
         # Una imagen se cuenta una sola vez por beat, aunque aparezca en dos parámetros.
-        paths = {str(params[name]).split("assets/media/", 1)[-1] for name, rule in spec.items()
+        paths = ({str(p).split("assets/media/", 1)[-1] for p in style_media_policy.titanes_media(beat, catalog)[0]}
+                 if config.get("design") == "titanes" else {str(params[name]).split("assets/media/", 1)[-1] for name, rule in spec.items()
                  if name != "logo" and rule.get("type") == "image" and isinstance(params.get(name), str) and params[name]}
+                 )
         photos.update(paths)
-    legacy_counts = (("componente propio", custom_counts),) if config.get("quality_policy_version", 1) >= 5 else (("componente propio", custom_counts), ("foto", photos))
+    legacy_counts = (("componente propio", custom_counts),) if config.get("quality_policy_version", 1) >= 5 or config.get("design") == "titanes" else (("componente propio", custom_counts), ("foto", photos))
     for kind, counts in legacy_counts:
         for name, n in counts.items():
             if count and (n > settings["repeat_max_uses"] or (n > 1 and n / count > settings["repeat_max_share"])):
                 errs.append(f"{kind} {name}: {n}/{count} usos ({n/count:.1%}); máximo {settings['repeat_max_uses']} usos o {settings['repeat_max_share']:.0%} de beats")
     def media_kinds(beat):
+        if config.get("design") == "titanes":
+            photos, videos = style_media_policy.titanes_media(beat, catalog)
+            return bool(photos), bool(videos)
         params = (beat["b"].get("params") or {})
         spec = catalog.get(beat["use"], {}).get("params", {})
         video = any(params.get(name) and rule.get("type") == "video" for name, rule in spec.items())
@@ -253,7 +261,7 @@ def quality_check(proto, config, script, beats, words, total, errs, catalog=None
                 errs.append(f"storyboard: {x['t0'] - cursor:.1f}s sin foto/clip antes del beat #{x['i']} (máximo {max_gap}s)")
             cursor = max(cursor, min(x["t1"], visual_end))
             has_photo, _ = media_kinds(x)
-            if config.get("quality_policy_version", 1) < 5 and has_photo and x["t1"] - x["t0"] < settings["min_photo_seconds"]:
+            if config.get("design") != "titanes" and config.get("quality_policy_version", 1) < 5 and has_photo and x["t1"] - x["t0"] < settings["min_photo_seconds"]:
                 errs.append(f"beat #{x['i']} {x['use']}: foto visible {x['t1'] - x['t0']:.1f}s (mínimo {settings['min_photo_seconds']}s)")
         if visual_end - cursor > max_gap:
             errs.append(f"storyboard: {visual_end - cursor:.1f}s sin foto/clip antes del outro (máximo {max_gap}s)")
@@ -323,7 +331,7 @@ def quality_check(proto, config, script, beats, words, total, errs, catalog=None
                 errs.append("golpe/miedo: no se pudo ubicar su final en la transcripción; corrige las anclas del guion para validar el primer tramo")
     hedge_count = len(narrative_check.hedge_hits(n, script)) if n else 0
     support = None
-    if config.get("quality_policy_version", 1) >= 5:
+    if config.get("quality_policy_version", 1) >= 5 or config.get("design") == "titanes":
         design_path = KIT / "designs" / str(config.get("design", "")) / "design.json"
         design = json.loads(design_path.read_text(encoding="utf-8")) if design_path.exists() else {}
         layout = ((design.get("defaults") or {}).get("clip") or {}).get("layout", "full")

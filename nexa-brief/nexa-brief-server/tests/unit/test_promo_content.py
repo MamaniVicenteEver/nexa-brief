@@ -1,6 +1,6 @@
 import json
 from types import SimpleNamespace
-from src.core.promos import content, reports
+from src.core.nodemotion.promo import content, reports
 
 SID='a'*32
 
@@ -13,7 +13,7 @@ def setup(tmp_path, monkeypatch):
     put(project/'work/content.json',{'revision':1,'project_id':f'{SID}-r1'})
     put(target/'draft.json',{'draft_id':'draft1'})
     put(target/'brief.json',{'topic':'Tema','duration_seconds':60})
-    put(target/'work/guion.json',{'segments':[{'n':1,'scene':'word','lines':['HOLA']}]})
+    put(target/'work/script.json',{'segments':[{'n':1,'scene':'word','lines':['HOLA']}]})
     put(target/'media-plan.json',{'items':[]})
     put(target/'music.json',{'asset_id':'m1'})
     profile=tmp_path/'profile'; output=profile/'productions/nodemotion/job1'; assets=output/'assets'
@@ -39,6 +39,16 @@ def test_content_uses_revision_files_and_whitelists_fields(tmp_path,monkeypatch)
     assert result['guion']['segments'][0]['lines']==['HOLA'] and result['media']==[]
     assert result['music']['name']=='Tema musical' and 'file' not in result['music'] and 'download_url' not in result['music']
     assert set(result['availability'].values())=={'available'}
+
+
+
+def test_content_reads_legacy_guion_filename(tmp_path, monkeypatch):
+    service, row, draft, project, target = setup(tmp_path, monkeypatch)
+    (target / "work/script.json").unlink()
+    put(target / "work/guion.json", {"segments": [{"n": 1, "scene": "word", "lines": ["LEGADO"]}]})
+    monkeypatch.setattr(content, "load_job", lambda _: None)
+    result = content.read_content(service, SID)
+    assert result["guion"]["segments"][0]["lines"] == ["LEGADO"]
 
 
 def test_legacy_missing_and_mismatched_revision_content(tmp_path,monkeypatch):

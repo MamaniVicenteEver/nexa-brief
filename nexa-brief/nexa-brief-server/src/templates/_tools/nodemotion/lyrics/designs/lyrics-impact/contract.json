@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-impact",
+  "family": "lyrics",
+  "source_of_truth": "templates.json#templates/lyrics-impact",
+  "config_json": "nodemotion/lyrics/lyrics-impact/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-impact/prompts/config_mapper.md",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "background",
+        "kind": "image|video",
+        "min": 1,
+        "max": 20,
+        "orientation": "portrait",
+        "target": "source",
+        "label": "Fondo",
+        "hint": "personas bailando, energía, movimiento"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/lyrics-impact",
+    "config": "nodemotion/lyrics/lyrics-impact/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-impact/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-impact/README.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

@@ -332,10 +332,20 @@ class HyperframesAdapter(RecorderPort):
 
         # El audio acompaña a config/lyrics en assets/ para jobs v2 nuevos.
         input_dir = audio_path.parent if (audio_path.parent / "config.json").is_file() else html_path.parent
+        marker_path = html_path.parent / ".nodemotion-render.json"
+        marker = json.loads(marker_path.read_text(encoding="utf-8")) if marker_path.is_file() else {}
+        native_urls = marker.get("data_urls") or {}
+        if native_urls:
+            input_dir = (html_path.parent / native_urls["config"]).parent
         config_path = input_dir / "config.json"
-        bg_source = input_dir / niche_cfg.template.media_src_filename
+        bg_source = (html_path.parent / native_urls["background"] if native_urls.get("background")
+                     else input_dir / niche_cfg.template.media_src_filename)
         needs_media = niche_cfg.template.requires_image or niche_cfg.template.requires_video
-        if not bg_source.exists() and (composition_dir is not None or needs_media):
+        if native_urls.get("background") and not bg_source.is_file():
+            raise RecordingError(f"HyperframesAdapter: falta el fondo del proyecto {bg_source}.")
+        # Native NodeMotion assets were already validated and materialized from
+        # their exact URLs; a generic bg.jpg filename is not necessarily used.
+        if not bg_source.exists() and (composition_dir is not None or (needs_media and not native_urls)):
             raise RecordingError(f"HyperframesAdapter: falta la imagen de fondo {bg_source}.")
 
         logger.info(
@@ -354,7 +364,8 @@ class HyperframesAdapter(RecorderPort):
             # formato (ver _render_passes). El EQ en vivo de las plantillas sin
             # reloj usa WebAudio (headless = barras silenciosas); para EQ
             # precalculado hay que portar la composición.
-            template_dir = _resolve_template_dir(niche_cfg)
+            template_dir = (html_path.parent if (html_path.parent / ".nodemotion-render.json").is_file()
+                            else _resolve_template_dir(niche_cfg))
             if template_dir is None:
                 raise RecordingError(
                     f"HyperframesAdapter: no hay index.html para "

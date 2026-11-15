@@ -81,6 +81,8 @@ def quick(data, design_id):
     out = [f"# {design_id} · {design.get('name', design_id)} — hoja rápida", "",
            "> GENERADO por `tools/catalog.py`. No editar a mano. Detalle completo de cada parámetro: `CATALOG.md`.",
            "> Beat: `{ \"at\": \"palabras ancla exactas de la voz\", \"use\": \"componente\", \"params\": {…} }`; el 1.º en `\"t\": 0`.", ""]
+    if design_id == "titanes":
+        out += ["Al cerrar el video es obligatorio ejecutar `kit.py licencias <video-id>`, revisar `LICENCIAS.md` y copiar sus créditos en la descripción. Regenerar tras cambios de montaje. Ver `guides/publish-package.md`.", ""]
     for title, pref in ((f"Componentes de {fam}", fam), ("Comunes (todos los diseños)", "common")):
         out += [f"## {title}", ""]
         for c in (c for c in data["comps"] if c["name"].split(".")[0] == pref):

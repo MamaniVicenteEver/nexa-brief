@@ -8,8 +8,12 @@
   let catalog, sceneSchema, catalogSchema, loading;
   let prepared = new WeakMap();
   const images = new Map();
+  const residents = new Set(), windows = new Set();
   const MAX_MEDIA_PIXELS = 16 * 1024 * 1024, MAX_CANVAS_PIXELS = 32 * 1024 * 1024;
-  let mediaPixels = 0;
+  const MAX_CACHE_PIXELS = 3 * MAX_MEDIA_PIXELS, MAX_CACHE_FILES = 384;
+  const WINDOW_ERROR = "La ventana activa de capas supera la caché (192 MiB / 384 archivos). Reduzca escenas simultáneas; cada escena admite 64 MiB / 128 archivos.";
+  let mediaPixels = 0, decoding = 0;
+  const decodeQueue = [];
   const clamp = (n, a = 0, b = 1) => Math.min(b, Math.max(a, n));
   const mix = (a, b, p) => a + (b - a) * p;
   const smooth = p => { p = clamp(p); return p * p * (3 - 2 * p); };
@@ -143,9 +147,10 @@
   }
 
   function configure(options) {
+    clear();
     catalog = options.catalog; sceneSchema = options.sceneSchema; catalogSchema = options.catalogSchema;
     if (options.baseURL) baseURL = options.baseURL;
-    prepared = new WeakMap(); images.clear(); mediaPixels = 0; loading = null;
+    loading = null;
   }
   async function load() {
     if (catalog && sceneSchema) return;
@@ -156,67 +161,185 @@
     })).then(([cat, scene, cs]) => { catalog = cat; sceneSchema = scene; catalogSchema = cs; });
     await loading;
   }
-  async function decode(file, w, h) {
-    if (!images.has(file)) {
-      if (images.size >= 128 || mediaPixels + w * h > MAX_MEDIA_PIXELS) throw new Error("La escena supera el presupuesto de imágenes de capas (64 MiB / 128 archivos). Divida el contenido o reduzca los lienzos.");
-      mediaPixels += w * h;
-      const pending = new Promise((resolve, reject) => {
+  function drop(entry) {
+    residents.delete(entry);
+    entry.data.ready = false;
+    for (const dispose of [...entry.data.instances]) dispose();
+    entry.data.media.clear();
+    for (const [file, resource] of images) {
+      resource.users.delete(entry);
+      if (!resource.users.size) {
+        images.delete(file); mediaPixels -= resource.pixels;
+        resource.cancel?.();
+      }
+    }
+  }
+  function pinned(entry) { return [...windows].some(w => w.params.has(entry.params)); }
+  function room(pixels, files) {
+    for (const entry of residents) {
+      if (mediaPixels + pixels <= MAX_CACHE_PIXELS && images.size + files <= MAX_CACHE_FILES) break;
+      if (!pinned(entry)) drop(entry);
+    }
+    if (mediaPixels + pixels > MAX_CACHE_PIXELS || images.size + files > MAX_CACHE_FILES)
+      throw new Error(WINDOW_ERROR);
+  }
+  function pump() {
+    while (decoding < 2 && decodeQueue.length) {
+      const job = decodeQueue.shift();
+      if (!job.resource.users.size) { job.reject(new Error("Precarga de capas liberada")); continue; }
+      decoding++;
+      job.run().then(job.resolve, job.reject).finally(() => { decoding--; pump(); });
+    }
+  }
+  async function decodeResource(file, w, h, resource) {
+    // Los bitmaps tienen liberación explícita; no dejan sesenta escenas en la
+    // caché de imágenes decodificadas del navegador al soltar sus elementos img.
+    if (typeof createImageBitmap === "function") {
+      const controller = new AbortController(); let bitmap;
+      resource.cancel = () => { controller.abort(); bitmap?.close(); };
+      const response = await fetch(new URL(file, baseURL), { signal: controller.signal });
+      if (!response.ok) throw new Error(`No carga imagen de capas: ${file} (${response.status})`);
+      bitmap = await createImageBitmap(await response.blob());
+      if (!resource.users.size) { bitmap.close(); throw new Error("Precarga de capas liberada"); }
+      if (bitmap.width !== w || bitmap.height !== h) { bitmap.close(); throw new Error(`Tamaño distinto al catálogo: ${file}`); }
+      return bitmap;
+    }
+    // Compatibilidad con consumidores sin ImageBitmap (incluidos los fixtures).
+    return new Promise((resolve, reject) => {
       const image = new Image();
+      const finish = error => { image.onload = image.onerror = null; error ? reject(error) : resolve(image); };
+      resource.cancel = () => { finish(new Error("Precarga de capas liberada")); image.removeAttribute?.("src"); };
       image.onload = async () => {
         try {
           await image.decode();
           if (image.width !== w || image.height !== h) throw new Error("Tamaño distinto al catálogo");
-          resolve(image);
-        } catch (e) { reject(new Error(`Imagen sin decodificar o inválida: ${file}: ${e.message}`)); }
+          finish();
+        } catch (e) { finish(new Error(`Imagen sin decodificar o inválida: ${file}: ${e.message}`)); }
       };
-      image.onerror = () => reject(new Error(`No carga imagen de capas: ${file}`));
+      image.onerror = () => finish(new Error(`No carga imagen de capas: ${file}`));
       image.src = new URL(file, baseURL).href;
-      });
-      images.set(file, pending);
-      pending.catch(() => { if (images.get(file) === pending) { images.delete(file); mediaPixels -= w * h; } });
-    }
-    return images.get(file);
+    });
   }
-  async function prepare(p, duration) {
+  async function decode(file, w, h, entry) {
+    if (!images.has(file)) {
+      room(w * h, 1);
+      mediaPixels += w * h;
+      const resource = { pixels: w * h, users: new Set([entry]) };
+      resource.promise = new Promise((resolve, reject) => {
+        decodeQueue.push({ resource, resolve, reject, run: () => decodeResource(file, w, h, resource) });
+      });
+      images.set(file, resource);
+      pump();
+    }
+    const resource = images.get(file);
+    resource.users.add(entry);
+    const image = await resource.promise;
+    if (!residents.has(entry)) throw new Error("Precarga de capas liberada");
+    return image;
+  }
+  async function prepare(p, duration, budgetError) {
     const object = p !== null && typeof p === "object", signature = JSON.stringify(p);
     const previous = object ? prepared.get(p) : null;
-    if (previous && previous.duration === duration && previous.signature === signature) return previous.promise;
-    const data = { errors: [], ready: false, media: new Map(), scene: object ? JSON.parse(signature) : p };
-    const entry = { duration, signature, data };
+    if (previous && residents.has(previous) && previous.duration === duration && previous.signature === signature && previous.budgetError === budgetError) {
+      residents.delete(previous); residents.add(previous); return previous.promise;
+    }
+    if (previous) drop(previous);
+    const data = { errors: [], ready: false, media: new Map(), instances: new Set(), scene: object ? JSON.parse(signature) : p };
+    const entry = { params: p, duration, signature, data, budgetError };
+    // También acotar preparaciones vacías o inválidas que no reservan píxeles.
+    for (const old of residents) if (residents.size >= 128 && !pinned(old)) drop(old);
+    residents.add(entry);
     /* Publicar la promesa, no un resultado a medio llenar: dos consumidores esperan
        la misma decodificación. Cada duración y revisión se valida por separado. */
-    entry.promise = prepareData(data, duration);
+    entry.promise = prepareData(entry, duration);
     if (object) prepared.set(p, entry);
     return entry.promise;
   }
-  async function prepareData(data, duration) {
+  async function prepareData(entry, duration) {
+    const data = entry.data;
     try {
       await load();
+      if (!residents.has(entry)) return data;
       const p = data.scene;
       const ce = validateCatalog(catalog);
       data.errors = ce.length ? ce : validateScene(p, catalog, duration);
       if (data.errors.length) return data;
-      const files = new Map();
-      for (const actor of p.elenco) {
-        const a = catalog.assets.find(a => a.id === actor.asset);
-        const poses = new Set([actor.pose || a.default_pose, ...(p.eventos || []).filter(e => e.id === actor.id && e.accion === "pose").map(e => e.valor)]);
-        for (const pose of poses) {
-          const pp = a.poses[pose]; files.set(pp.file, a.canvas);
-          for (const mask of Object.values(pp.masks)) files.set(mask, a.canvas);
-        }
-      }
+      const files = sceneFiles(p);
+      if (files.size > 128 || [...files.values()].reduce((n, c) => n + c.w * c.h, 0) > MAX_MEDIA_PIXELS)
+        throw new Error("La escena supera el presupuesto de imágenes de capas (64 MiB / 128 archivos). Reduzca los lienzos, poses o máscaras de este beat.");
+      if (entry.budgetError) throw new Error(entry.budgetError);
       const queue = [...files]; let next = 0;
       const workers = await Promise.allSettled(Array.from({ length: Math.min(2, queue.length) }, async () => {
-        while (next < queue.length) { const [file, { w, h }] = queue[next++]; data.media.set(file, await decode(file, w, h)); }
+        while (next < queue.length) { const [file, { w, h }] = queue[next++]; data.media.set(file, await decode(file, w, h, entry)); }
       }));
       const failed = workers.find(result => result.status === "rejected");
       if (failed) throw failed.reason;
-    } catch (e) { data.errors = [e.message]; data.media.clear(); }
-    finally { data.ready = true; }
+    } catch (e) { const released = !residents.has(entry); drop(entry); data.errors = [e.message]; if (!released) residents.add(entry); }
+    finally { data.ready = residents.has(entry); }
     return data;
   }
-  async function prepareBeats(beats) {
-    for (const b of beats) { if (b.params == null) b.params = {}; await prepare(b.params, b.dur); }
+  function sceneFiles(p) {
+    const files = new Map();
+    for (const actor of p.elenco) {
+      const a = catalog.assets.find(a => a.id === actor.asset);
+      const poses = new Set([actor.pose || a.default_pose, ...(p.eventos || []).filter(e => e.id === actor.id && e.accion === "pose").map(e => e.valor)]);
+      for (const pose of poses) {
+        const pp = a.poses[pose]; files.set(pp.file, a.canvas);
+        for (const mask of Object.values(pp.masks)) files.set(mask, a.canvas);
+      }
+    }
+    return files;
+  }
+  async function prepareBeats(beats, { time = beats[0]?.t0 ?? 0 } = {}) {
+    await load();
+    beats = [...beats].sort((a, b) => (a.t0 || 0) - (b.t0 || 0));
+    for (const b of beats) if (b.params == null) b.params = {};
+    let key, pending = Promise.resolve(), work = Promise.resolve(), closed = false;
+    const window = { params: new Set(),
+      update(t) {
+        if (closed) return Promise.resolve();
+        const active = beats.filter(b => t >= (b.t0 || 0) && t < (b.t1 ?? (b.t0 || 0) + b.dur));
+        const before = beats.filter(b => (b.t1 ?? (b.t0 || 0) + b.dur) <= t).at(-1);
+        const after = beats.find(b => (b.t0 || 0) > t);
+        const selected = [...active], files = new Map();
+        const needed = b => { try { return sceneFiles(b.params); } catch { return new Map(); } };
+        for (const b of active) for (const [file, canvas] of needed(b)) files.set(file, canvas);
+        const overflow = files.size > MAX_CACHE_FILES || [...files.values()].reduce((n, c) => n + c.w * c.h, 0) > MAX_CACHE_PIXELS;
+        // Nunca dejar que una precarga desplace lo visible. La elección depende
+        // solo de t y de los lienzos, no de qué se haya visitado anteriormente.
+        for (const b of [after, (active.length || after) && before].filter(Boolean)) {
+          if (overflow) break;
+          const union = new Map([...files, ...needed(b)]);
+          if (union.size <= MAX_CACHE_FILES && [...union.values()].reduce((n, c) => n + c.w * c.h, 0) <= MAX_CACHE_PIXELS) {
+            selected.push(b); for (const [file, canvas] of union) files.set(file, canvas);
+          }
+        }
+        const nextKey = selected.map(b => beats.indexOf(b)).join(":");
+        if (nextKey === key) return pending;
+        key = nextKey;
+        let ready;
+        pending = new Promise(resolve => { ready = resolve; });
+        work = work.then(async () => {
+          try {
+            if (closed || key !== nextKey) return;
+            window.params = new Set(selected.map(b => b.params));
+            for (const entry of residents) if (!pinned(entry)) drop(entry);
+            for (const b of active) { if (closed) return; await prepare(b.params, b.dur, overflow ? WINDOW_ERROR : undefined); }
+            ready();
+            // Los vecinos usan la misma cola, sin retrasar un cuadro ya listo.
+            for (const b of selected.filter(b => !active.includes(b))) {
+              if (closed || key !== nextKey) break;
+              await prepare(b.params, b.dur);
+            }
+          } finally { ready(); }
+        });
+        return pending;
+      },
+      dispose() { closed = true; windows.delete(window); window.params.clear(); for (const entry of residents) if (!pinned(entry)) drop(entry); },
+    };
+    windows.add(window);
+    await window.update(time);
+    return window;
   }
 
   function surface(w, h) {
@@ -369,6 +492,8 @@
       const c = surface(w, h); owned.add(c); pixelsOwned += w * h; return c;
     };
     const free = () => { for (const c of owned) { c.width = 0; c.height = 0; } owned.clear(); masks.clear(); tints.clear(); silhouettes.clear(); soft.clear(); pixelsOwned = 0; };
+    const dispose = () => { if (disposed) return; disposed = true; free(); data.instances.delete(dispose); };
+    data.instances.add(dispose);
     function maskAlpha(file, a) {
       if (!masks.has(file)) {
         const image = data.media.get(file), c = canvas(...dimensions(a)), G = c.getContext("2d", { willReadFrequently: true });
@@ -428,7 +553,7 @@
     }
       if (p.elenco.length) blend = canvas(Math.max(...p.elenco.map(actor => dimensions(assets.get(actor.asset))[0])), Math.max(...p.elenco.map(actor => dimensions(assets.get(actor.asset))[1])));
     } catch (e) {
-      free(); const errors = [e.message];
+      dispose(); const errors = [e.message];
       return { errors, render() { errorCard(ctx.g.main, st, errors); }, dispose() {}, stats() { return { surfaces: 0, tints: 0, masks: 0, pixels: 0 }; } };
     }
     function drawActor(G, actor, a, s, t) {
@@ -510,11 +635,18 @@
         return Object.fromEntries(p.elenco.map(actor => { const a = assets.get(actor.asset), s = actorState(actor, a, p, clamp(time, 0, dur), dur, st); return [actor.id, Object.fromEntries(Object.entries(a.poses[s.pose].anchors).map(([key, point]) => [key, anchorPoint(s, a, point)]))]; }));
       },
       stats() { return { surfaces: owned.size, tints: tints.size, masks: masks.size, pixels: [...owned].reduce((n, c) => n + c.width * c.height, 0) }; },
-      dispose() { if (disposed) return; disposed = true; free(); },
+      dispose,
     };
   }
-  K.capas = { configure, load, prepare, prepareBeats, validateScene, validateCatalog, schemaErrors, create, errorCard,
-    clear() { images.clear(); mediaPixels = 0; prepared = new WeakMap(); },
-    budgets: { mediaBytes: MAX_MEDIA_PIXELS * 4, compositionBytes: MAX_CANVAS_PIXELS * 4, mediaFiles: 128 }, version: "1.0.0" };
+  function clear() {
+    for (const w of [...windows]) w.dispose();
+    for (const entry of residents) drop(entry);
+    prepared = new WeakMap();
+  }
+  K.capas = { configure, load, prepare, prepareBeats, validateScene, validateCatalog, schemaErrors, create, errorCard, clear,
+    stats() { return { mediaBytes: mediaPixels * 4, mediaFiles: images.size, scenes: residents.size, decoding, queued: decodeQueue.length,
+      instances: [...residents].reduce((n, entry) => n + entry.data.instances.size, 0) }; },
+    budgets: { mediaBytes: MAX_MEDIA_PIXELS * 4, compositionBytes: MAX_CANVAS_PIXELS * 4, mediaFiles: 128,
+      cacheBytes: MAX_CACHE_PIXELS * 4, cacheFiles: MAX_CACHE_FILES }, version: "1.1.0" };
   if (typeof module !== "undefined" && module.exports) module.exports = K.capas;
 })(typeof window !== "undefined" ? window : globalThis);

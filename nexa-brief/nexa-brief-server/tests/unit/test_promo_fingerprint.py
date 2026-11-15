@@ -2,7 +2,7 @@
 import os
 from types import SimpleNamespace
 import pytest
-from src.core.promos import readiness
+from src.core.nodemotion.promo import readiness
 
 
 @pytest.fixture

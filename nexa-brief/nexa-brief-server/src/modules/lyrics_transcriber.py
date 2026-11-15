@@ -23,7 +23,7 @@ import structlog
 from src.adapters.lyrics.factory import get_lyrics_transcriber
 from src.config.niche_config import NicheConfig
 from src.core.job import Job, JobStage
-from src.core.library import transcription
+from src.core.library import transcription, asset_library
 
 logger = structlog.get_logger(__name__)
 
@@ -54,9 +54,25 @@ async def run(job: Job, niche_cfg: NicheConfig) -> Job:
     # compartidos con la transcripción en segundo plano de la librería: si la
     # canción se subió recién y Whisper ya la está procesando, esperamos ese
     # resultado en vez de transcribirla dos veces.
-    lyrics_json, cache_hit = await transcription.ensure_lyrics(
-        music_asset_id, music_path, get_lyrics_transcriber, language=language
-    )
+    from src.templates._tools.nodemotion.shared.assemble import registered
+    is_project = registered(niche_cfg.template.template_id)
+    is_promo = is_project and niche_cfg.template.template_id.startswith("promo-")
+    if is_project and job.input.timed_content is not None:
+        # Original/demo timing is explicit project input, never a replacement
+        # for the shared song transcription cache.
+        lyrics_json = job.input.timed_content
+        cache_hit = False
+    elif is_promo:
+        lyrics_json = job.input.promo_timeline
+        if lyrics_json is None:
+            raise ValueError("Promo projects require their own authored timeline")
+        cache_hit = False
+    else:
+        # Always transcribe the original library song, never a padded render copy.
+        source = asset_library.resolve_music_path(music_asset_id) if is_project else music_path
+        lyrics_json, cache_hit = await transcription.ensure_lyrics(
+            music_asset_id, source, get_lyrics_transcriber, language=language
+        )
 
     logger.info("lyrics_transcriber_done_analyzing", job_id=job.job_id, cache_hit=cache_hit)
 
@@ -66,8 +82,15 @@ async def run(job: Job, niche_cfg: NicheConfig) -> Job:
 
     lyrics_path = output_dir / "lyrics.json"
     lyrics_text = json.dumps(lyrics_json, indent=2, ensure_ascii=False)
-    lyrics_path.write_text(lyrics_text, encoding="utf-8")
-    (logs_dir / "02_lyrics_transcripcion.json").write_text(lyrics_text, encoding="utf-8")
+    if not is_project:
+        lyrics_path.write_text(lyrics_text, encoding="utf-8")
+    if is_project:
+        (logs_dir / "02_lyrics_transcripcion.json").write_text(
+            json.dumps({"music_asset_id": music_asset_id, "cache_hit": cache_hit, "project_timeline": is_promo,
+                        "provided_timing": job.input.timed_content is not None}),
+            encoding="utf-8")
+    else:
+        (logs_dir / "02_lyrics_transcripcion.json").write_text(lyrics_text, encoding="utf-8")
 
     elapsed = round(time.monotonic() - t_start, 2)
     logger.info("lyrics_transcriber_end", job_id=job.job_id, elapsed=elapsed, cache_hit=cache_hit)

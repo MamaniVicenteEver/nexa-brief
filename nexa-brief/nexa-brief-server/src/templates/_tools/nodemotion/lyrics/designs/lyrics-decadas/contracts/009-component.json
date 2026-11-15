@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "decadas.transiciones",
+  "entry_id": "decadas.transiciones",
+  "kind": "component",
+  "label": "Transiciones",
+  "summary": "Destello de foto, barrido azul, letra que cruza o corte.",
+  "component": {
+    "name": "decadas.transiciones",
+    "label": "Transiciones",
+    "summary": "Destello de foto, barrido azul, letra que cruza o corte.",
+    "tags": [
+      "transicion"
+    ],
+    "file": "components/transiciones.js",
+    "params": {
+      "type": {
+        "type": "string",
+        "default": "blueWipe",
+        "options": [
+          "cut",
+          "photoFlash",
+          "blueWipe",
+          "letterSlam"
+        ]
+      }
+    },
+    "demo": {
+      "type": "letterSlam"
+    },
+    "preview": {
+      "t": 0.1
+    }
+  },
+  "params": {
+    "type": {
+      "type": "string",
+      "default": "blueWipe",
+      "options": [
+        "cut",
+        "photoFlash",
+        "blueWipe",
+        "letterSlam"
+      ]
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/showcase/components.json",
+      "pointer": "/components/4"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

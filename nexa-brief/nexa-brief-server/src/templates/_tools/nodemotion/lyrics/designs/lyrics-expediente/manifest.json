@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-expediente",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-expediente",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "93dc57e2b100356d7bc18b4cfcf1fa167e41be2e216cd3fc325558e97975024e",
+  "migration_source_sha256": "93dc57e2b100356d7bc18b4cfcf1fa167e41be2e216cd3fc325558e97975024e",
+  "migration_runtime_sha256": {
+    "components/intro.js": "d74633b2a410e7543209f60895c615482e088a2aa8e490ebb89d952c54f870ba",
+    "components/outro.js": "2eec54f4abd30691bdf153f4f9cd7cf3f5616b08dfe123aa0f8915ba84ae4b4e"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-expediente",
+    "config": "nodemotion/lyrics/lyrics-expediente/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-expediente/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-expediente/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "926ac347ca3ee31762af8df48755110b568f49ef514d2d303a322d9698ae3a6f.webp",
+    "assets/song.mp3": "808ce605f3939053a4169f74bc40f7f0bcfa690b699a073810762c36d3131936.mp3"
+  }
+}

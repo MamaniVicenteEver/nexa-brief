@@ -10,13 +10,13 @@ from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
 import pytest
-from src.core import promo_prompts as prompts
+from src.core.nodemotion.promo import prompts
 from src.core.draft_details import research
 from src.core.metadata import active_strategies, build_copy_prompt
 from src.modules import copy_writer, template_inputs_applier as inputs
 
 SERVER = Path(__file__).resolve().parents[2]
-CLI = SERVER / 'src/templates/_tools/nodemotion-promo/promo.py'
+CLI = SERVER / 'src/templates/_tools/nodemotion/promo/tools/promo.py'
 
 @pytest.mark.parametrize('template', sorted(prompts.TEMPLATES))
 def test_new_and_every_stage_use_shared_files_only(tmp_path, template):
@@ -29,13 +29,13 @@ def test_new_and_every_stage_use_shared_files_only(tmp_path, template):
     result=subprocess.run([sys.executable,str(CLI),'new','--id','ensayo','--brief',str(brief)],env=env,capture_output=True,text=True)
     assert result.returncode==0,result.stderr
     target=root/'sandbox/nodemotion/ensayo'
-    assert json.loads((target/'work/instrucciones/prompts-version.json').read_text())==prompts.reference()
+    assert json.loads((target/'work/instructions/prompts-version.json').read_text())==prompts.reference()
     for stage in prompts.STAGES:
         result=subprocess.run([sys.executable,str(CLI),'prompt','--id','ensayo','--stage',stage],env=env,capture_output=True,text=True)
         assert result.returncode==0,result.stderr
         assert result.stdout==prompts.compose(stage,template)
-    assert not list((target/'work/instrucciones').glob('*.md'))
-    assert not (target/'work/instrucciones/prompts').exists()
+    assert not list((target/'work/instructions').glob('*.md'))
+    assert not (target/'work/instructions/prompts').exists()
 
 
 def test_hash_tampering_and_transport_conflicts_fail(tmp_path,monkeypatch):
@@ -163,7 +163,7 @@ def test_app_preparation_respects_project_version_for_all_promos(tmp_path,monkey
 @pytest.mark.parametrize('template',sorted(prompts.TEMPLATES))
 def test_recreation_reuses_reviewed_details_and_template_thumbnail(tmp_path,monkeypatch,template):
     import importlib.util
-    tools=SERVER/'src/templates/_tools/nodemotion-promo'
+    tools=SERVER/'src/templates/_tools/nodemotion/promo/tools'
     sys.path.insert(0,str(tools))
     spec=importlib.util.spec_from_file_location('workflow_shared_test',tools/'draft_workflow.py')
     workflow=importlib.util.module_from_spec(spec);spec.loader.exec_module(workflow)
@@ -196,13 +196,13 @@ def test_recreation_reuses_reviewed_details_and_template_thumbnail(tmp_path,monk
 
 
 def test_legacy_migration_dry_run_preserves_history_and_is_idempotent(tmp_path):
-    sys.path.insert(0,str(SERVER/'src/templates/_tools/nodemotion-promo'))
+    sys.path.insert(0,str(SERVER/'src/templates/_tools/nodemotion/promo/tools'))
     from prompt_migration import migrate
     target=tmp_path/'project';folder=target/'work/instrucciones/prompts';folder.mkdir(parents=True)
     (target/'brief.json').write_text(json.dumps({'template':'promo-sports'}))
-    history=prompts.PROMPTS/'history/narrativa-v2'
+    history=prompts.PROMPTS/'history/narrative-v2'
     hashes=json.loads((history/'manifest.json').read_text())['hashes']
-    for name in hashes:shutil.copy2(history/name,folder/name)
+    for name in hashes:shutil.copy2(history/prompts.prompt_filename(name),folder/name)
     previous={'version':'promo-narrativa-v2 + contrato Sports vigente','prompts':[{'archivo':name,'sha256':digest} for name,digest in hashes.items()],'extra':'conservar'}
     (folder.parent/'prompts-version.json').write_text(json.dumps(previous))
     before={str(p.relative_to(target)):p.read_bytes() for p in target.rglob('*') if p.is_file()}
@@ -216,7 +216,7 @@ def test_legacy_migration_dry_run_preserves_history_and_is_idempotent(tmp_path):
 
 
 def test_unknown_legacy_variant_is_never_deleted_or_adopted(tmp_path):
-    sys.path.insert(0,str(SERVER/'src/templates/_tools/nodemotion-promo'))
+    sys.path.insert(0,str(SERVER/'src/templates/_tools/nodemotion/promo/tools'))
     from prompt_migration import migrate
     target=tmp_path/'project';folder=target/'work/instrucciones';folder.mkdir(parents=True)
     (target/'brief.json').write_text(json.dumps({'template':'promo-editorial'}))

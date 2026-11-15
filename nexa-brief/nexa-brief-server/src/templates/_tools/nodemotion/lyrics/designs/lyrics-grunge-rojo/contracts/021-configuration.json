@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "config.variants",
+  "entry_id": "config.variants",
+  "name": "variants",
+  "kind": "configuration",
+  "label": "variants",
+  "summary": "Existing configuration configuration: variants.",
+  "params": {
+    "redChance": {
+      "default": 0.55
+    },
+    "doodleChance": {
+      "default": 0.35
+    },
+    "stripChance": {
+      "default": 0.35
+    },
+    "footageChance": {
+      "default": 0.9
+    },
+    "doodles": {
+      "default": {
+        "circle": 2,
+        "strike": 1.2,
+        "underline": 1,
+        "arrow": 1,
+        "crown": 0.6,
+        "bolt": 0.6,
+        "slash": 0.8
+      }
+    }
+  },
+  "example": {
+    "redChance": 0.55,
+    "doodleChance": 0.35,
+    "stripChance": 0.35,
+    "footageChance": 0.9,
+    "doodles": {
+      "circle": 2,
+      "strike": 1.2,
+      "underline": 1,
+      "arrow": 1,
+      "crown": 0.6,
+      "bolt": 0.6,
+      "slash": 0.8
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/assets/config.json",
+      "pointer": "/configs/0/variants"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-trendy",
+  "id": "config.grades",
+  "entry_id": "config.grades",
+  "name": "grades",
+  "kind": "configuration",
+  "label": "grades",
+  "summary": "Existing configuration configuration: grades.",
+  "params": {
+    "duoLime": {
+      "default": {
+        "type": "duo",
+        "dark": "#0E1A06",
+        "light": "#A6EB35",
+        "contrast": 1.35
+      }
+    },
+    "bwWarm": {
+      "default": {
+        "type": "duo",
+        "dark": "#0C0C0E",
+        "light": "#F2EFE6",
+        "contrast": 1.4
+      }
+    }
+  },
+  "example": {
+    "duoLime": {
+      "type": "duo",
+      "dark": "#0E1A06",
+      "light": "#A6EB35",
+      "contrast": 1.35
+    },
+    "bwWarm": {
+      "type": "duo",
+      "dark": "#0C0C0E",
+      "light": "#F2EFE6",
+      "contrast": 1.4
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-trendy/assets/config.json",
+      "pointer": "/configs/0/grades"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

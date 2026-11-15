@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-urban",
+  "family": "promo",
+  "source_of_truth": "templates.json#templates/promo-urban",
+  "config_json": "nodemotion/commercial/promo-urban/assets/config.json",
+  "config_prompt": null,
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "acción deportiva en movimiento, atletas entrenando"
+      },
+      {
+        "slot": "photos",
+        "kind": "image",
+        "min": 1,
+        "max": 12,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Fotos",
+        "hint": "atletas en primer plano, retrato deportivo"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.tagTop",
+        "label": "Marca",
+        "max": 40,
+        "default": "NEXA BRIEF\nSPORT GROUP"
+      },
+      {
+        "key": "brand.tagRight",
+        "label": "Serie",
+        "max": 30,
+        "default": "STREET SERIES"
+      },
+      {
+        "key": "brand.year",
+        "label": "Año",
+        "max": 8,
+        "default": "2026"
+      },
+      {
+        "key": "brand.blurb",
+        "label": "Texto de presentación",
+        "max": 160,
+        "default": "ENTRENAMOS CADA DÍA EN LA CALLE, EN LA CANCHA\nY EN LA PISTA. DEPORTE URBANO SIN FILTROS,\nHECHO POR ATLETAS PARA ATLETAS."
+      }
+    ],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/promo-urban",
+    "config": "nodemotion/commercial/promo-urban/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-urban/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-urban/README.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

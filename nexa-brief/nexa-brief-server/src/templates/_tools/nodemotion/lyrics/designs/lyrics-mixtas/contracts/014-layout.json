@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-mixtas",
+  "id": "layout.giantSpread",
+  "entry_id": "layout.giantSpread",
+  "name": "giantSpread",
+  "kind": "layout",
+  "label": "giantSpread",
+  "summary": "Existing layout configuration: giantSpread.",
+  "params": {
+    "weight": {
+      "default": 1.4
+    },
+    "bgs": {
+      "default": [
+        "red",
+        "black"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.4,
+    "bgs": [
+      "red",
+      "black"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+      "pointer": "/configs/0/layouts/giantSpread"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

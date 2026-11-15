@@ -6,7 +6,6 @@
 
 | componente | capa | para qué |
 |---|---|---|
-| `common.capas` | main | Escena de la biblioteca compartida: personajes, poses, zonas teñidas, conexiones y cámara. Solo admite IDs aprobados; valida antes de dibujar. |
 | `common.punch` | main | Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento. |
 | `common.tag` | overlay | Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose. |
 | `common.flash` | overlay | Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido. |
@@ -257,6 +256,20 @@
 | `memorias.introv1` | main | Gancho 'golpe': titular MANUSCRITO gigante (Mr Dafoe) que se escribe palabra a palabra sobre el papel, con rótulo en MAYÚSCULAS que se arma letra a letra arriba y subtítulo en Quicksand abajo; en dropAt revienta una salpicadura de acuarela azul detrás del titular con gotas y una sacudida, y la palabra ^marcada^ se tiñe de azul. Fondo: sketch (foto en boceto que se colorea) | smoke | image | component | none. |
 | `memorias.introv2` | main | Gancho 'pregunta + revelación': la pregunta en MAYÚSCULAS (Barlow 700) se arma letra a letra con glifos que parpadean; en stampAt la respuesta se escribe en manuscrita grande sobre una salpicadura de acuarela azul que revienta con gotas. Fondo: sketch | smoke | image | component | none. |
 | `memorias.outro` | main | Cierre del canal como la tarjeta final de la referencia: una mancha de tinta NEGRA crece desde abajo a la izquierda y traga el cuadro (bg ink; paper = sobre el papel con texto oscuro; image/component/none = contrato común) → 'gracias por ver' en sans fina → nombre del canal en manuscrita grande que se escribe → pulgar LIKE a trazo que se rellena con gotas azules → flecha fina → SUSCRÍBETE armado letra a letra + campana que suena → mensaje de apoyo → dirección en mayúsculas chiquitas. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt). |
+| `titanes.escenario` | main | Siete escenarios con profundidad, luz, grano y paralaje determinista. |
+| `titanes.introv1` | main | Título monumental de 2–4 palabras, kicker y protagonista ilustrado a contraluz. Golpe breve, revelado desde abajo y deriva pesada. |
+| `titanes.introv2` | main | Pregunta que abre el conflicto y revelación por barrido de luz. Foto duotono (src) o figura iluminada; compatible con todos los fondos del contrato hook. |
+| `titanes.outro` | main | Cierre común: gracias, canal, LIKE, flecha, suscripción, campana, apoyo y dirección. Los tiempos se comprimen con hook.outroTimes y el texto se mantiene en zona segura. |
+| `titanes.capitulo` | main | Número monumental en segundo plano, título y protagonista en escenario. Tinta de entrada/salida, cámara lenta y luz de borde del episodio. |
+| `titanes.cifra` | main | Cifra monumental con tic mecánico, signo semántico, comparación y hasta tres cifras secuenciales. |
+| `titanes.bolsa` | main | Serie de neón con años, valores y eventos. Quiebre rojo con impacto, pulso que se aplana o barras con cero real. |
+| `titanes.escala` | main | Compara entidades mediante edificios, monedas, tarjetas o ilustraciones por imagen. Área o altura proporcional explícita. |
+| `titanes.plantilla` | main | Cuadrícula de ilustraciones que crece y se vacía en sangre. Conteo exacto y equivalencia por figura, incluidas celdas parciales. |
+| `titanes.duelo` | main | Dos o tres nombres monumentales en planos enfrentados, métricas opcionales y resolución con ganador. |
+| `titanes.cronologia` | main | Una era ocupa el cuadro. Años monumentales que saltan por barrido de luz y dejan visible el punto de partida. |
+| `titanes.titular` | main | Documento propio con sello y referencia, cita atribuida, cartel de una palabra o titular editorial compuesto. |
+| `titanes.foto` | main | Foto o clip mudo en duotono con grano, marco iluminado, foco configurable y movimiento lento. src acepta imagen y video. |
+| `common.capas` | main | Escena de la biblioteca compartida: personajes, poses, zonas teñidas, conexiones y cámara. Solo admite IDs aprobados; valida antes de dibujar. |
 
 ## Comunes (cualquier familia)
 
@@ -471,7 +484,6 @@ Etiquetas: capas, personajes, poses, anclas, hilos, paralaje · capa: main
 ```json
 {"use": "common.capas", "params": {"fondo": {"preset": "foco", "color": "#0B1220", "acento": "#1F6BFF", "grano": 0.15}, "camara": {"mov": "acercar", "intensidad": 0.04}, "elenco": [], "textos": [{"texto": "BIBLIOTECA DE CAPAS", "pos": "arriba", "estilo": "titulo"}]}}
 ```
-
 
 ## binary · NODEHISTORY
 
@@ -5912,6 +5924,436 @@ Etiquetas: cierre, canal, like, suscribirse, tinta · capa: main
 
 ```json
 {"use": "memorias.outro", "params": {"thanks": "gracias por ver", "channel": "Memorias", "cta": "Suscríbete", "support": "Apoya el canal y comparte la historia", "handle": "youtube.com/@nodehistory"}}
+```
+
+## titanes · TITANES
+
+### `titanes.escenario`
+
+Siete escenarios con profundidad, luz, grano y paralaje determinista.
+
+Etiquetas: escenario, luz, fondo · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `escenario` | enum (foco / horizonte / ciudad / sala / rayos / mercado / archivo) | `"foco"` | Escenario que se dibuja a pantalla completa. |
+
+```json
+{"use": "titanes.escenario", "params": {"escenario": "foco"}}
+```
+
+### `titanes.introv1`
+
+Título monumental de 2–4 palabras, kicker y protagonista ilustrado a contraluz. Golpe breve, revelado desde abajo y deriva pesada.
+
+Etiquetas: intro, golpe, silueta, miniatura · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `figura` | image | `""` | Ilustración PNG transparente del protagonista; nunca se dibuja una persona en código. |
+| `escalaFigura` | number [0.65–1.15] | `1` | Escala de la figura respecto a la composición de cada formato. |
+| `text` | string | `"EL PRECIO\nDEL PODER"` | Titular de 2–4 palabras. Admite salto de línea; máximo recomendado 7 palabras sumando kicker y contexto. |
+| `kicker` | string | `"IBM"` | Rótulo pequeño espaciado; vacío lo apaga. |
+| `contexto` | string | `""` | Línea breve de contexto, opcional. |
+| `entrada` | enum (tinta / luz / golpe / ninguna) | `"golpe"` | Transición de entrada reutilizable. |
+| `salida` | enum (tinta / luz / golpe / ninguna) | `"tinta"` | Transición de salida reutilizable. |
+
+```json
+{"use": "titanes.introv1", "params": {"text": "EL PRECIO\nDEL PODER", "kicker": "IBM", "figura": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/de-pie.png", "bg": "foco"}}
+```
+
+### `titanes.introv2`
+
+Pregunta que abre el conflicto y revelación por barrido de luz. Foto duotono (src) o figura iluminada; compatible con todos los fondos del contrato hook.
+
+Etiquetas: intro, pregunta, revelación, foto · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `figura` | image | `""` | Ilustración PNG transparente del protagonista; nunca se dibuja una persona en código. |
+| `escalaFigura` | number [0.65–1.15] | `1` | Escala de la figura respecto a la composición de cada formato. |
+| `text` | string | `"EL PRECIO\nDEL PODER"` | Titular de 2–4 palabras. Admite salto de línea; máximo recomendado 7 palabras sumando kicker y contexto. |
+| `kicker` | string | `"IBM"` | Rótulo pequeño espaciado; vacío lo apaga. |
+| `contexto` | string | `""` | Línea breve de contexto, opcional. |
+| `entrada` | enum (tinta / luz / golpe / ninguna) | `"luz"` | Transición de entrada reutilizable. |
+| `salida` | enum (tinta / luz / golpe / ninguna) | `"tinta"` | Transición de salida reutilizable. |
+| `pregunta` | string | `"¿QUIÉN\nMANDA?"` | Pregunta inicial. Máximo recomendado 4 palabras. |
+| `revelarEn` | number [0.6–12] | `1.8` | Segundo local en que la pregunta da paso al titular y la figura/foto se revela. |
+
+```json
+{"use": "titanes.introv2", "params": {"pregunta": "¿QUIÉN\nMANDA?", "text": "EL PODER\nCAMBIA", "kicker": "IBM", "figura": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/encoge.png", "bg": "horizonte", "revelarEn": 1.8}}
+```
+
+### `titanes.outro`
+
+Cierre común: gracias, canal, LIKE, flecha, suscripción, campana, apoyo y dirección. Los tiempos se comprimen con hook.outroTimes y el texto se mantiene en zona segura.
+
+Etiquetas: cierre, canal, suscripción · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `thanks` | string | `"GRACIAS POR VER"` | Rótulo inicial. |
+| `channel` | string | `"TITANES"` | Nombre del canal (grande). |
+| `cta` | string | `"SUSCRÍBETE"` | Texto del botón de suscripción. |
+| `support` | string | `"Comparte estas historias."` | Mensaje de apoyo. |
+| `handle` | string | `""` | Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla). |
+| `arrow` | bool | `true` | Flecha del LIKE a SUSCRÍBETE. |
+| `likeAt` | number [0–None] | `1` | Segundo del LIKE. |
+| `subscribeAt` | number [0–None] | `2.5` | Segundo de SUSCRÍBETE. |
+| `bellAt` | number [0–None] | `3.25` | Segundo de la campana. |
+| `supportAt` | number [0–None] | `3.65` | Segundo del mensaje de apoyo y la dirección. |
+| `like` | string | `"LIKE"` | Etiqueta de la acción de aprobación. |
+| `salida` | enum (tinta / luz / golpe / ninguna) | `"golpe"` | Cierre final; corte por defecto. |
+
+```json
+{"use": "titanes.outro", "params": {"thanks": "GRACIAS POR VER", "channel": "TITANES", "cta": "SUSCRÍBETE", "support": "Comparte estas historias.", "handle": "", "bg": "rayos"}}
+```
+
+### `titanes.capitulo`
+
+Número monumental en segundo plano, título y protagonista en escenario. Tinta de entrada/salida, cámara lenta y luz de borde del episodio.
+
+Etiquetas: capítulo, número, transición · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `figura` | image | `""` | Ilustración PNG transparente del protagonista; nunca se dibuja una persona en código. |
+| `escalaFigura` | number [0.65–1.15] | `1` | Escala de la figura respecto a la composición de cada formato. |
+| `entrada` | enum (tinta / luz / golpe / ninguna) | `"tinta"` | Transición de entrada reutilizable. |
+| `salida` | enum (tinta / luz / golpe / ninguna) | `"tinta"` | Transición de salida reutilizable. |
+| `numero` | string | `"03"` | Número de capítulo; se conserva el cero inicial. |
+| `titulo` | string | `"EL TRONO"` | Título corto, máximo recomendado 4 palabras. |
+| `kicker` | string | `"IBM"` | Nombre o contexto superior; vacío lo apaga. |
+| `contexto` | string | `""` | Línea de contexto opcional; mantener máximo 7 palabras totales. |
+
+```json
+{"use": "titanes.capitulo", "params": {"numero": "03", "titulo": "EL TRONO", "kicker": "IBM", "contexto": "", "figura": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/brazos-arriba.png", "bg": "ciudad"}}
+```
+
+### `titanes.cifra`
+
+Cifra monumental con tic mecánico, signo semántico, comparación y hasta tres cifras secuenciales.
+
+Etiquetas: datos, contador, dinero, comparación · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `entrada` | enum (tinta / luz / golpe / ninguna) | `"golpe"` | Transición de entrada reutilizable. |
+| `salida` | enum (tinta / luz / golpe / ninguna) | `"tinta"` | Transición de salida reutilizable. |
+| `titulo` | string | `""` | Título breve. Vacío lo apaga. |
+| `fuente` | string | `""` | Fuente opcional y breve, en zona segura. |
+| `valor` | number | `5000` | Valor numérico final. Negativo activa sangre. |
+| `prefijo` | string | `""` | Unidad anterior, p. ej. US$. |
+| `sufijo` | string | `""` | Unidad posterior, p. ej. M o %. |
+| `contexto` | string | `"INVERSIÓN"` | Qué mide la cifra. |
+| `fecha` | string | `""` | Año o fecha del dato. |
+| `decimales` | number [0–6] | `0` | Decimales visibles con coma española. |
+| `modo` | enum (simple / comparacion / secuencia) | `"simple"` | Una cifra, antes/después o una secuencia de hasta tres. |
+| `antes` | number | `1.21` | Valor anterior en comparación. valor es el posterior. |
+| `cambioEn` | number [0–None] | `2.2` | Segundo local de la comparación, admite ancla @palabra. |
+| `tachado` | bool | `false` | Tacha el dato anterior al entrar el posterior. |
+| `cifras` | array | `[]` | Hasta 3 objetos {valor,prefijo,sufijo,contexto,fecha,decimales,at}. at opcional en segundos locales. |
+| `contarEn` | number [0.3–3] | `1.5` | Duración del contador mecánico. |
+
+```json
+{"use": "titanes.cifra", "params": {"valor": -8100, "sufijo": "M", "prefijo": "US$", "contexto": "PÉRDIDAS", "fecha": "1993", "bg": "mercado"}}
+```
+
+### `titanes.bolsa`
+
+Serie de neón con años, valores y eventos. Quiebre rojo con impacto, pulso que se aplana o barras con cero real.
+
+Etiquetas: datos, bolsa, caída, barras, electrocardiograma · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `entrada` | enum (tinta / luz / golpe / ninguna) | `"golpe"` | Transición de entrada reutilizable. |
+| `salida` | enum (tinta / luz / golpe / ninguna) | `"tinta"` | Transición de salida reutilizable. |
+| `titulo` | string | `"COTIZACIÓN"` | Titular de la serie. |
+| `fuente` | string | `""` | Fuente opcional y breve, en zona segura. |
+| `serie` | array | `[{"ano": "A", "valor": 100}, {"ano": "B", "valor": 35}]` | Objetos {ano,valor}. Años numéricos usan distancia temporal. Barras conservan el orden de entrada. |
+| `modo` | enum (linea / caida / electrocardiograma / barras) | `"linea"` | Tratamiento de la serie. Electrocardiograma es una metáfora visual. |
+| `eventos` | array | `[]` | Marcas {indice,texto}. Se muestra el último evento alcanzado. |
+| `unidad` | string | `""` | US$, M, %, etc. |
+| `decimales` | number [0–6] | `0` | Decimales del valor destacado. |
+| `dibujarEn` | number [0.5–None] | `2.8` | Segundos del trazado antes de respirar. |
+| `caidaIndice` | number [0–None] | `0` | Punto donde se quiebra la línea y empieza la sangre. |
+| `caidaEn` | number [0.2–None] | `2.4` | Segundo local del quiebre o del aplanamiento. Admite @palabra. |
+| `pulso` | string | `"PULSO"` | Etiqueta del estado vivo del electrocardiograma. |
+| `plano` | string | `"SIN PULSO"` | Etiqueta del estado plano del electrocardiograma. |
+
+```json
+{"use": "titanes.bolsa", "params": {"titulo": "LA CAÍDA", "modo": "caida", "serie": [{"ano": "1987", "valor": 175.88}, {"ano": "1993", "valor": 40.63}], "caidaIndice": 0, "decimales": 2, "unidad": "US$", "eventos": [{"indice": 0, "texto": "CUMBRE"}], "bg": "mercado"}}
+```
+
+### `titanes.escala`
+
+Compara entidades mediante edificios, monedas, tarjetas o ilustraciones por imagen. Área o altura proporcional explícita.
+
+Etiquetas: datos, escala, proporción · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `entrada` | enum (tinta / luz / golpe / ninguna) | `"golpe"` | Transición de entrada reutilizable. |
+| `salida` | enum (tinta / luz / golpe / ninguna) | `"tinta"` | Transición de salida reutilizable. |
+| `titulo` | string | `""` | Título breve. Vacío lo apaga. |
+| `fuente` | string | `""` | Fuente opcional y breve, en zona segura. |
+| `entidades` | array | `[{"nombre": "A", "valor": 100}, {"nombre": "B", "valor": 10}]` | Entidades {nombre,valor,src?}. Usar valores positivos. Las imágenes src se precargan automáticamente. |
+| `forma` | enum (edificio / moneda / tarjeta / figura) | `"edificio"` | Silueta económica o figura de la biblioteca por src. |
+| `proporcion` | enum (area / altura) | `"area"` | area escala ambos ejes con raíz del dato. altura conserva ancho y escala alto. En figura, altura mantiene proporciones del PNG. |
+| `figura` | image | `"http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/de-pie.png"` | Imagen común para forma figura cuando una entidad no indica src. |
+| `unidad` | string | `""` | Unidad junto a cada valor. |
+| `decimales` | number [0–6] | `0` | Decimales de las etiquetas. |
+
+```json
+{"use": "titanes.escala", "params": {"titulo": "CAPITAL", "entidades": [{"nombre": "MATRIZ", "valor": 100}, {"nombre": "FILIAL", "valor": 10}], "unidad": "M", "forma": "edificio", "bg": "ciudad"}}
+```
+
+### `titanes.plantilla`
+
+Cuadrícula de ilustraciones que crece y se vacía en sangre. Conteo exacto y equivalencia por figura, incluidas celdas parciales.
+
+Etiquetas: datos, empleo, despidos, cuadrícula · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `entrada` | enum (tinta / luz / golpe / ninguna) | `"golpe"` | Transición de entrada reutilizable. |
+| `salida` | enum (tinta / luz / golpe / ninguna) | `"tinta"` | Transición de salida reutilizable. |
+| `titulo` | string | `"PERSONAS"` | Qué cuenta la cuadrícula. |
+| `fuente` | string | `""` | Fuente opcional y breve, en zona segura. |
+| `total` | number [0–None] | `405000` | Plantilla máxima. |
+| `desde` | number [0–None] | `0` | Valor desde el que crece, entre cero y total. |
+| `hasta` | number [0–None] | `220000` | Plantilla restante tras el recorte. Igualar a total para solo crecer. |
+| `porFigura` | number [1–None] | `15000` | Personas por figura. Hasta 240 celdas visibles, luego se ajusta y se rotula la equivalencia efectiva. |
+| `crecerEn` | number [0.3–3] | `1.7` | Duración del crecimiento. |
+| `vaciarEn` | number [0–None] | `3.1` | Inicio del vaciado, admite @palabra. |
+| `vaciadoDur` | number [0.3–3] | `0.5` | Duración del vaciado. |
+| `abreviar` | bool | `false` | Usar 405 mil. El formato completo 405.000 también cabe en vertical. |
+| `fecha` | string | `""` | Contexto temporal breve. |
+| `equivalencia` | string | `"personas / figura"` | Texto de la equivalencia junto al valor numérico. |
+| `figura` | image | `"http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/de-pie.png"` | Ilustración PNG transparente del protagonista; nunca se dibuja una persona en código. |
+
+```json
+{"use": "titanes.plantilla", "params": {"titulo": "PERSONAS", "total": 405000, "hasta": 220000, "porFigura": 15000, "figura": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/de-pie.png", "bg": "ciudad"}}
+```
+
+### `titanes.duelo`
+
+Dos o tres nombres monumentales en planos enfrentados, métricas opcionales y resolución con ganador.
+
+Etiquetas: competencia, nombres, ganador · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `entrada` | enum (tinta / luz / golpe / ninguna) | `"golpe"` | Transición de entrada reutilizable. |
+| `salida` | enum (tinta / luz / golpe / ninguna) | `"tinta"` | Transición de salida reutilizable. |
+| `titulo` | string | `""` | Título breve. Vacío lo apaga. |
+| `fuente` | string | `""` | Fuente opcional y breve, en zona segura. |
+| `lados` | array | `[{"nombre": "OS/2"}, {"nombre": "WINDOWS"}]` | 2 o 3 objetos {nombre,metrica?}. Se conserva la tipografía del diseño. |
+| `ganador` | string | `""` | Nombre exacto del lado ganador. Vacío mantiene el duelo abierto. |
+| `ganadorEn` | number [0–None] | `3.2` | Segundo local de la resolución, admite @palabra. |
+| `veredicto` | string | `"GANA"` | Texto breve del resultado. |
+
+```json
+{"use": "titanes.duelo", "params": {"lados": [{"nombre": "OS/2"}, {"nombre": "WINDOWS"}], "ganador": "WINDOWS", "ganadorEn": 3.2, "bg": "sala"}}
+```
+
+### `titanes.cronologia`
+
+Una era ocupa el cuadro. Años monumentales que saltan por barrido de luz y dejan visible el punto de partida.
+
+Etiquetas: tiempo, eras, saltos · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `entrada` | enum (tinta / luz / golpe / ninguna) | `"golpe"` | Transición de entrada reutilizable. |
+| `salida` | enum (tinta / luz / golpe / ninguna) | `"tinta"` | Transición de salida reutilizable. |
+| `titulo` | string | `""` | Título breve. Vacío lo apaga. |
+| `fuente` | string | `""` | Fuente opcional y breve, en zona segura. |
+| `eras` | array | `[{"ano": "1964", "titulo": "SYSTEM/360"}, {"ano": "1981", "titulo": "EL PC"}]` | Eras {ano,titulo,at?}. at en segundos locales. Sin at se reparte el beat. |
+
+```json
+{"use": "titanes.cronologia", "params": {"eras": [{"ano": "1964", "titulo": "SYSTEM/360"}, {"ano": "1981", "titulo": "EL PC"}, {"ano": "1993", "titulo": "LA CRISIS"}], "bg": "archivo"}}
+```
+
+### `titanes.titular`
+
+Documento propio con sello y referencia, cita atribuida, cartel de una palabra o titular editorial compuesto.
+
+Etiquetas: documento, cita, cartel, titular · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | image | `""` | Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés de la foto [x,y] (0..1). |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `entrada` | enum (tinta / luz / golpe / ninguna) | `"golpe"` | Transición de entrada reutilizable. |
+| `salida` | enum (tinta / luz / golpe / ninguna) | `"tinta"` | Transición de salida reutilizable. |
+| `titulo` | string | `""` | Título breve. Vacío lo apaga. |
+| `fuente` | string | `""` | Fuente opcional y breve, en zona segura. |
+| `variante` | enum (documento / cita / cartel / titular) | `"titular"` | Composición editorial de texto propio. |
+| `text` | string | `"EL IMPERIO\nDE IBM"` | Texto principal. Cita breve hasta 25 palabras. Cartel de una palabra. |
+| `autor` | string | `""` | Autor real de la cita. Se imprime exactamente como se suministra. |
+| `fecha` | string | `""` | Año o fecha. |
+| `sello` | string | `"ARCHIVO"` | Sello tipográfico propio para documento. |
+| `referencia` | string | `""` | Referencia judicial u oficial breve y verificada por producción. |
+| `antetitulo` | string | `""` | Antetítulo del titular compuesto. |
+
+```json
+{"use": "titanes.titular", "params": {"variante": "documento", "text": "CORTE SUPREMA", "fecha": "1936", "sello": "ARCHIVO", "referencia": "EE. UU.", "bg": "archivo"}}
+```
+
+### `titanes.foto`
+
+Foto o clip mudo en duotono con grano, marco iluminado, foco configurable y movimiento lento. src acepta imagen y video.
+
+Etiquetas: foto, video, archivo, duotono · capa: main
+
+| parámetro | tipo | por defecto | qué hace |
+|---|---|---|---|
+| `acento` | color | `"palette.accent"` | Acento del plano; por defecto hereda palette.accent del video. |
+| `borde` | color | `"palette.rim"` | Luz de borde; hereda palette.rim. |
+| `intensidad` | number [0.25–1.7] | `1` | Potencia de luz y bruma, conservando los negros. |
+| `semilla` | number [1–999999] | `41` | Semilla de ventanas, polvo, grano y tinta. |
+| `bg` | enum (auto / foco / horizonte / ciudad / sala / rayos / mercado / archivo / image / component / none) | `"auto"` | Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso. |
+| `src` | string | `"http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/nasa-ames.jpg"` | Imagen o video local. Se precarga por prepare antes del primer cuadro. |
+| `focus` | array | `[0.5, 0.5]` | Punto de interés normalizado [x,y]. |
+| `use` | string | `""` | Componente de fondo (bg=component), p. ej. 'enmienda.map'. |
+| `useParams` | object | `{}` | Parámetros del componente de fondo (si no trae foto, recibe src). |
+| `dim` | number [0–1] | `0.45` | Oscurecido del fondo foto/componente (0 = nada). |
+| `entrada` | enum (tinta / luz / golpe / ninguna) | `"golpe"` | Transición de entrada reutilizable. |
+| `salida` | enum (tinta / luz / golpe / ninguna) | `"tinta"` | Transición de salida reutilizable. |
+| `titulo` | string | `""` | Título breve. Vacío lo apaga. |
+| `fuente` | string | `""` | Fuente opcional y breve, en zona segura. |
+| `tipo` | enum (auto / imagen / video) | `"auto"` | auto detecta MP4/WebM/MOV/M4V/OGV. Forzar video para URL sin extensión. |
+| `poster` | image | `""` | Imagen de respaldo opcional. |
+| `desplazar` | array | `[0.025, -0.015]` | Desplazamiento total del foco normalizado [dx,dy]. |
+| `zoom` | number [0–0.15] | `0.045` | Acercamiento lento a lo largo del beat. |
+| `start` | number [0–None] | `0` | Segundo inicial del video. |
+| `rate` | number [0.1–3] | `1` | Velocidad del clip mudo. |
+| `loop` | bool | `true` | Repite el clip desde start al llegar a su duración. |
+| `credito` | string | `""` | Autor, año y licencia breves. Crédito completo en CREDITS del episodio. |
+| `sinMedio` | string | `"MEDIO NO DISPONIBLE"` | Estado visible si falla el medio y el poster. |
+
+```json
+{"use": "titanes.foto", "params": {"src": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/nasa-ames.jpg", "titulo": "NASA AMES", "credito": "NASA · 1963 · dominio público", "focus": [0.65, 0.48], "bg": "foco"}}
 ```
 
 ## Iconos de la familia binary (`icon`)

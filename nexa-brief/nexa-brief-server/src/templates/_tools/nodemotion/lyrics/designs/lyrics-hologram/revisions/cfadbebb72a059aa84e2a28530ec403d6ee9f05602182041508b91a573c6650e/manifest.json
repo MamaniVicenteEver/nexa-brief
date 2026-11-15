@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-hologram",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-hologram",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/kit.js": "runtime/components/kit.js",
+    "components/outro-v1.js": "runtime/components/outro-v1.js",
+    "components/outro-v2.js": "runtime/components/outro-v2.js",
+    "components/scenes.js": "runtime/components/scenes.js",
+    "components/transitions.js": "runtime/components/transitions.js",
+    "gallery.html": "runtime/gallery.html",
+    "player.js": "runtime/player.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "source_sha256": "845f48a2dfa61d0069433a35050c073032c862db4c5c5b073ae091a467c383d2",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-hologram",
+    "config": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-hologram/DESIGN.md"
+  },
+  "demo_resource_aliases": {
+    "assets/media/glam-1.jpg": "b859a0164e8eeceb0d2c9d8d2bb037b624198abea6bf567095dead37a43cc9ad.jpg",
+    "assets/media/glam-2.jpg": "8926208c9284deee54e718bb4d9be3ec620bb7950ace6296a86df281bc2e43a0.jpg",
+    "assets/media/glam.mp4": "1549fc9ca7b51ae06b2424181537ee947466c068a4773f25414e9bb26393fa07.mp4",
+    "assets/media/glasses-1.jpg": "e101bc7e16825474f24a358d75bc9568e7257c6888862467c169bc443daf2edb.jpg",
+    "assets/media/glasses-2.jpg": "d3809ee5be955b2b7519c89e9bbf88908e315deb0ef67078868d7f4cb09f4688.jpg",
+    "assets/media/glasses.mp4": "b770b5749392c59e86bc6e3575bb9167dc36a0611c6abb718d48f14736c232c5.mp4",
+    "assets/media/graded/glam-1.holo.jpg": "6ce9393093c08321c0466cd712ebf31fab0b9352cb743c9cc88c8e62a6867315.jpg",
+    "assets/media/graded/glam.holo.mp4": "0c457667183605d9ab08add20ab71219ca3a92b0828b484562b644dfda47dd8d.mp4",
+    "assets/media/graded/glasses-1.holo.jpg": "dfb4e235aaa0e5bca28741a99e3c98ff8c5a678f4afa4fbf04a67aa47a067b44.jpg",
+    "assets/media/graded/glasses.holo.mp4": "c7dda8a7cdd7f589bd6eca2faba6e44e94d0d9ebce05130b422015086a2d9d53.mp4",
+    "assets/media/graded/hair-1.holo.jpg": "2f881ffbde8935faa582f7e561fe83e02c9edfd4b167abca205e8f6a5add2fc0.jpg",
+    "assets/media/graded/hair.holo.mp4": "acc4f9307c670ae076e0fad5d1f57f23bb7e754e48dad6ee534e146927b08c61.mp4",
+    "assets/media/graded/sil-duo-1.holo.jpg": "ef33c7d185ae5e9f8550e50eb8269bc15850f25d8f756c5cf8488317599d1344.jpg",
+    "assets/media/graded/sil-duo.holo.mp4": "2171f788b0af8cf265a6403aa0a43f56c2730ab0a746e807d16e74dd9f9ad92b.mp4",
+    "assets/media/graded/sil-solo-1.holo.jpg": "e31d5692b2a0b55c43e1e6dc53dbae78fd6d7bbea728a97a1c1cfbc17d7e879c.jpg",
+    "assets/media/graded/sil-solo.holo.mp4": "f2e1e88edef875998cbda9f10f9180e536c532cf01dddbc279fceb2a616a3f79.mp4",
+    "assets/media/graded/sil-trio-1.holo.jpg": "c602cf06df4f46b60e9248e3108325e59e4d3548ebe586404ccf50e658a80327.jpg",
+    "assets/media/graded/sil-trio.holo.mp4": "c4f239f17627e381a0cbbcc5ddbdc2d498ca5aeb8fb815b25f3331b91b3bcd95.mp4",
+    "assets/media/hair-1.jpg": "93abdbade11dec7213e8dbde1d44520d1181cb07a1fe882b635471fe434e6c90.jpg",
+    "assets/media/hair-2.jpg": "32dc2b61be12deef294f886e20aaf3c085fa187edfdd82659ae532a6f48bed11.jpg",
+    "assets/media/hair.mp4": "c427260b842fc4673edb89a6a5581cd246284afa1acf4a908db0bc86d18d17e7.mp4",
+    "assets/media/sil-duo-1.jpg": "84cb99bc85356f4da060631b54e32d20072e34620d8b4232ee9fc3095c381939.jpg",
+    "assets/media/sil-duo-2.jpg": "5f2b7e5f74e41c33d65b6a92cb97564364c23f0e15f187965eb9cc02af562e0a.jpg",
+    "assets/media/sil-duo.mp4": "34c6d1d37cb47a18be3d48816a7c5ac9b70213b4c939f5944b1dd7b62afc8d88.mp4",
+    "assets/media/sil-solo-1.jpg": "a832515af1fac3a8b7e39b9325af35c2403a795958cfcc2d40fe39dd37076718.jpg",
+    "assets/media/sil-solo-2.jpg": "7710246382601d3bb8b1e2aabc504a907d973cf9a637dedd7cd33853e7e7a5e6.jpg",
+    "assets/media/sil-solo.mp4": "96b93f3afa1e0481a4f0a540f66b139f23646ef26710049b9aa58f355ca1431c.mp4",
+    "assets/media/sil-trio-1.jpg": "259166b3904c7a6812cbdfaea4d95b514babc51b6e1e085f3b219c17b6551a30.jpg",
+    "assets/media/sil-trio-2.jpg": "5a287fc88667cb3fab97ce117544a28169933cfa55b3bbe4b002f116f5a0fe9f.jpg",
+    "assets/media/sil-trio.mp4": "05d23db6c36c9ca37f2c7dcdcdc0fda5c697bf036de57cbb45bac5775fc9f2e7.mp4",
+    "assets/song.mp3": "593f6fb2259f77a9bdc43ac65e2496ca4795834100d10a2f7ab1d541d61422bd.mp3"
+  },
+  "revision": "cfadbebb72a059aa84e2a28530ec403d6ee9f05602182041508b91a573c6650e"
+}

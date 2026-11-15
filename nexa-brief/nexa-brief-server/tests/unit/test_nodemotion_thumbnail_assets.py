@@ -151,5 +151,9 @@ def test_template_video_remains_available_after_using_a_custom_image(tmp_path):
     (tmp_path/"config.json").write_text(json.dumps({"bg":{"type":"image","src":"photo.jpg"}}))
     sources=assets.background_sources(job)
     assert sources["image"] == image
-    assert sources["video"].name == "women-dancing.mp4"
+    from src.core.nodemotion.shared import bundled, resources
+    key = bundled.demo_aliases("lyrics-impact")["assets/women-dancing.mp4"]
+    assert key == "b6afa20278e6385d920fbab482dc78f377db2319ad7b2e7b4097f2f446b2a450.mp4"
+    assert sources["video"] == bundled.resolve_bundled_key(key)
+    assert resources.digest(sources["video"]) == key[:64]
     assert assets.background_source(job) == image

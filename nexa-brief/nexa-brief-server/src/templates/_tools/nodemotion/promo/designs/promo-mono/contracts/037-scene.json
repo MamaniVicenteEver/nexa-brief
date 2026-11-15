@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "scene.chips",
+  "entry_id": "scene.chips",
+  "name": "chips",
+  "kind": "scene",
+  "label": "chips",
+  "summary": "Existing scene configuration: chips.",
+  "params": {
+    "type": {
+      "default": "chips"
+    },
+    "mode": {
+      "default": "float"
+    },
+    "count": {
+      "default": 30
+    },
+    "trans": {
+      "default": "cut"
+    }
+  },
+  "example": {
+    "type": "chips",
+    "mode": "float",
+    "count": 30,
+    "trans": "cut"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/assets/config.json",
+      "pointer": "/configs/0/scenes/4"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

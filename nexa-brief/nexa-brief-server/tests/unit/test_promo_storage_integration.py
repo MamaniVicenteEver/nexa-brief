@@ -7,7 +7,7 @@ from src.config.profile_layout import resolve_profile_layout
 from src.config.settings import settings
 from src.core.data import set_data_store
 from src.core.job import Job, JobInput, JobArtifacts
-from src.core.promos.service import PromoChatService
+from src.core.nodemotion.promo.service import PromoChatService
 
 @pytest.fixture(params=[2, 3])
 def store(request, tmp_path, monkeypatch):

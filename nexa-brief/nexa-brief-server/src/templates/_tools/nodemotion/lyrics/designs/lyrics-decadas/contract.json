@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-decadas",
+  "family": "lyrics",
+  "source_of_truth": "templates.json#templates/lyrics-decadas",
+  "config_json": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+  "config_prompt": null,
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "fotos",
+        "kind": "image",
+        "min": 0,
+        "max": 8,
+        "target": "media",
+        "label": "Fotos (opcional)",
+        "hint": "Retratos o calle; se convierten a semitono en blanco y negro. Si no subes nada, se usan las fotos de la plantilla."
+      }
+    ],
+    "texts": [
+      {
+        "key": "intro.title",
+        "label": "Título en la intro",
+        "max": 40,
+        "default": ""
+      },
+      {
+        "key": "intro.artist",
+        "label": "Artista en la intro",
+        "max": 40,
+        "default": ""
+      },
+      {
+        "key": "outro.title",
+        "label": "Título del cierre",
+        "max": 24,
+        "default": "Gracias"
+      },
+      {
+        "key": "outro.sub",
+        "label": "Subtítulo del cierre",
+        "max": 24,
+        "default": "por ver"
+      },
+      {
+        "key": "outro.feats",
+        "label": "Línea final del cierre",
+        "max": 40,
+        "default": "Suscríbete · NodeMotion"
+      },
+      {
+        "key": "texts.label",
+        "label": "Rótulo vertical",
+        "max": 24,
+        "default": ""
+      },
+      {
+        "key": "texts.credit",
+        "label": "Crédito (pie tecleado)",
+        "max": 40,
+        "default": ""
+      },
+      {
+        "key": "outro.brand",
+        "label": "Firma del cierre",
+        "max": 24,
+        "default": "NodeMotion"
+      }
+    ],
+    "brief": false
+  },
+  "sources": {
+    "template": "templates.json#templates/lyrics-decadas",
+    "config": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-decadas/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-decadas/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-decadas/DESIGN.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

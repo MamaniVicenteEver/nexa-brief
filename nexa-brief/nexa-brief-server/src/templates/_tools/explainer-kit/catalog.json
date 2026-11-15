@@ -28985,6 +28985,3019 @@
    }
   },
   {
+   "name": "titanes.escenario",
+   "summary": "Siete escenarios con profundidad, luz, grano y paralaje determinista.",
+   "tags": [
+    "escenario",
+    "luz",
+    "fondo"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "escenario": {
+     "type": "enum",
+     "default": "foco",
+     "doc": "Escenario que se dibuja a pantalla completa.",
+     "required": false,
+     "options": [
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "escenario": "foco"
+   }
+  },
+  {
+   "name": "titanes.introv1",
+   "summary": "Título monumental de 2–4 palabras, kicker y protagonista ilustrado a contraluz. Golpe breve, revelado desde abajo y deriva pesada.",
+   "tags": [
+    "intro",
+    "golpe",
+    "silueta",
+    "miniatura"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "figura": {
+     "type": "image",
+     "default": "",
+     "doc": "Ilustración PNG transparente del protagonista; nunca se dibuja una persona en código.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "escalaFigura": {
+     "type": "number",
+     "default": 1,
+     "doc": "Escala de la figura respecto a la composición de cada formato.",
+     "required": false,
+     "options": null,
+     "min": 0.65,
+     "max": 1.15
+    },
+    "text": {
+     "type": "string",
+     "default": "EL PRECIO\nDEL PODER",
+     "doc": "Titular de 2–4 palabras. Admite salto de línea; máximo recomendado 7 palabras sumando kicker y contexto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "IBM",
+     "doc": "Rótulo pequeño espaciado; vacío lo apaga.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "contexto": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea breve de contexto, opcional.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "entrada": {
+     "type": "enum",
+     "default": "golpe",
+     "doc": "Transición de entrada reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "salida": {
+     "type": "enum",
+     "default": "tinta",
+     "doc": "Transición de salida reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "text": "EL PRECIO\nDEL PODER",
+    "kicker": "IBM",
+    "figura": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/de-pie.png",
+    "bg": "foco"
+   }
+  },
+  {
+   "name": "titanes.introv2",
+   "summary": "Pregunta que abre el conflicto y revelación por barrido de luz. Foto duotono (src) o figura iluminada; compatible con todos los fondos del contrato hook.",
+   "tags": [
+    "intro",
+    "pregunta",
+    "revelación",
+    "foto"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "figura": {
+     "type": "image",
+     "default": "",
+     "doc": "Ilustración PNG transparente del protagonista; nunca se dibuja una persona en código.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "escalaFigura": {
+     "type": "number",
+     "default": 1,
+     "doc": "Escala de la figura respecto a la composición de cada formato.",
+     "required": false,
+     "options": null,
+     "min": 0.65,
+     "max": 1.15
+    },
+    "text": {
+     "type": "string",
+     "default": "EL PRECIO\nDEL PODER",
+     "doc": "Titular de 2–4 palabras. Admite salto de línea; máximo recomendado 7 palabras sumando kicker y contexto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "IBM",
+     "doc": "Rótulo pequeño espaciado; vacío lo apaga.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "contexto": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea breve de contexto, opcional.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "entrada": {
+     "type": "enum",
+     "default": "luz",
+     "doc": "Transición de entrada reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "salida": {
+     "type": "enum",
+     "default": "tinta",
+     "doc": "Transición de salida reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "pregunta": {
+     "type": "string",
+     "default": "¿QUIÉN\nMANDA?",
+     "doc": "Pregunta inicial. Máximo recomendado 4 palabras.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "revelarEn": {
+     "type": "number",
+     "default": 1.8,
+     "doc": "Segundo local en que la pregunta da paso al titular y la figura/foto se revela.",
+     "required": false,
+     "options": null,
+     "min": 0.6,
+     "max": 12
+    }
+   },
+   "example": {
+    "pregunta": "¿QUIÉN\nMANDA?",
+    "text": "EL PODER\nCAMBIA",
+    "kicker": "IBM",
+    "figura": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/encoge.png",
+    "bg": "horizonte",
+    "revelarEn": 1.8
+   }
+  },
+  {
+   "name": "titanes.outro",
+   "summary": "Cierre común: gracias, canal, LIKE, flecha, suscripción, campana, apoyo y dirección. Los tiempos se comprimen con hook.outroTimes y el texto se mantiene en zona segura.",
+   "tags": [
+    "cierre",
+    "canal",
+    "suscripción"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "thanks": {
+     "type": "string",
+     "default": "GRACIAS POR VER",
+     "doc": "Rótulo inicial.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "channel": {
+     "type": "string",
+     "default": "TITANES",
+     "doc": "Nombre del canal (grande).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "cta": {
+     "type": "string",
+     "default": "SUSCRÍBETE",
+     "doc": "Texto del botón de suscripción.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "support": {
+     "type": "string",
+     "default": "Comparte estas historias.",
+     "doc": "Mensaje de apoyo.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "handle": {
+     "type": "string",
+     "default": "",
+     "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "arrow": {
+     "type": "bool",
+     "default": true,
+     "doc": "Flecha del LIKE a SUSCRÍBETE.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "likeAt": {
+     "type": "number",
+     "default": 1,
+     "doc": "Segundo del LIKE.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "subscribeAt": {
+     "type": "number",
+     "default": 2.5,
+     "doc": "Segundo de SUSCRÍBETE.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "bellAt": {
+     "type": "number",
+     "default": 3.25,
+     "doc": "Segundo de la campana.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "supportAt": {
+     "type": "number",
+     "default": 3.65,
+     "doc": "Segundo del mensaje de apoyo y la dirección.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "like": {
+     "type": "string",
+     "default": "LIKE",
+     "doc": "Etiqueta de la acción de aprobación.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "salida": {
+     "type": "enum",
+     "default": "golpe",
+     "doc": "Cierre final; corte por defecto.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "thanks": "GRACIAS POR VER",
+    "channel": "TITANES",
+    "cta": "SUSCRÍBETE",
+    "support": "Comparte estas historias.",
+    "handle": "",
+    "bg": "rayos"
+   }
+  },
+  {
+   "name": "titanes.capitulo",
+   "summary": "Número monumental en segundo plano, título y protagonista en escenario. Tinta de entrada/salida, cámara lenta y luz de borde del episodio.",
+   "tags": [
+    "capítulo",
+    "número",
+    "transición"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "figura": {
+     "type": "image",
+     "default": "",
+     "doc": "Ilustración PNG transparente del protagonista; nunca se dibuja una persona en código.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "escalaFigura": {
+     "type": "number",
+     "default": 1,
+     "doc": "Escala de la figura respecto a la composición de cada formato.",
+     "required": false,
+     "options": null,
+     "min": 0.65,
+     "max": 1.15
+    },
+    "entrada": {
+     "type": "enum",
+     "default": "tinta",
+     "doc": "Transición de entrada reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "salida": {
+     "type": "enum",
+     "default": "tinta",
+     "doc": "Transición de salida reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "numero": {
+     "type": "string",
+     "default": "03",
+     "doc": "Número de capítulo; se conserva el cero inicial.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "titulo": {
+     "type": "string",
+     "default": "EL TRONO",
+     "doc": "Título corto, máximo recomendado 4 palabras.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "kicker": {
+     "type": "string",
+     "default": "IBM",
+     "doc": "Nombre o contexto superior; vacío lo apaga.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "contexto": {
+     "type": "string",
+     "default": "",
+     "doc": "Línea de contexto opcional; mantener máximo 7 palabras totales.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "numero": "03",
+    "titulo": "EL TRONO",
+    "kicker": "IBM",
+    "contexto": "",
+    "figura": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/brazos-arriba.png",
+    "bg": "ciudad"
+   }
+  },
+  {
+   "name": "titanes.cifra",
+   "summary": "Cifra monumental con tic mecánico, signo semántico, comparación y hasta tres cifras secuenciales.",
+   "tags": [
+    "datos",
+    "contador",
+    "dinero",
+    "comparación"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "entrada": {
+     "type": "enum",
+     "default": "golpe",
+     "doc": "Transición de entrada reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "salida": {
+     "type": "enum",
+     "default": "tinta",
+     "doc": "Transición de salida reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "titulo": {
+     "type": "string",
+     "default": "",
+     "doc": "Título breve. Vacío lo apaga.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fuente": {
+     "type": "string",
+     "default": "",
+     "doc": "Fuente opcional y breve, en zona segura.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "valor": {
+     "type": "number",
+     "default": 5000,
+     "doc": "Valor numérico final. Negativo activa sangre.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "prefijo": {
+     "type": "string",
+     "default": "",
+     "doc": "Unidad anterior, p. ej. US$.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sufijo": {
+     "type": "string",
+     "default": "",
+     "doc": "Unidad posterior, p. ej. M o %.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "contexto": {
+     "type": "string",
+     "default": "INVERSIÓN",
+     "doc": "Qué mide la cifra.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fecha": {
+     "type": "string",
+     "default": "",
+     "doc": "Año o fecha del dato.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "decimales": {
+     "type": "number",
+     "default": 0,
+     "doc": "Decimales visibles con coma española.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 6
+    },
+    "modo": {
+     "type": "enum",
+     "default": "simple",
+     "doc": "Una cifra, antes/después o una secuencia de hasta tres.",
+     "required": false,
+     "options": [
+      "simple",
+      "comparacion",
+      "secuencia"
+     ],
+     "min": null,
+     "max": null
+    },
+    "antes": {
+     "type": "number",
+     "default": 1.21,
+     "doc": "Valor anterior en comparación. valor es el posterior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "cambioEn": {
+     "type": "number",
+     "default": 2.2,
+     "doc": "Segundo local de la comparación, admite ancla @palabra.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "tachado": {
+     "type": "bool",
+     "default": false,
+     "doc": "Tacha el dato anterior al entrar el posterior.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "cifras": {
+     "type": "array",
+     "default": [],
+     "doc": "Hasta 3 objetos {valor,prefijo,sufijo,contexto,fecha,decimales,at}. at opcional en segundos locales.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "contarEn": {
+     "type": "number",
+     "default": 1.5,
+     "doc": "Duración del contador mecánico.",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 3
+    }
+   },
+   "example": {
+    "valor": -8100,
+    "sufijo": "M",
+    "prefijo": "US$",
+    "contexto": "PÉRDIDAS",
+    "fecha": "1993",
+    "bg": "mercado"
+   }
+  },
+  {
+   "name": "titanes.bolsa",
+   "summary": "Serie de neón con años, valores y eventos. Quiebre rojo con impacto, pulso que se aplana o barras con cero real.",
+   "tags": [
+    "datos",
+    "bolsa",
+    "caída",
+    "barras",
+    "electrocardiograma"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "entrada": {
+     "type": "enum",
+     "default": "golpe",
+     "doc": "Transición de entrada reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "salida": {
+     "type": "enum",
+     "default": "tinta",
+     "doc": "Transición de salida reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "titulo": {
+     "type": "string",
+     "default": "COTIZACIÓN",
+     "doc": "Titular de la serie.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fuente": {
+     "type": "string",
+     "default": "",
+     "doc": "Fuente opcional y breve, en zona segura.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "serie": {
+     "type": "array",
+     "default": [
+      {
+       "ano": "A",
+       "valor": 100
+      },
+      {
+       "ano": "B",
+       "valor": 35
+      }
+     ],
+     "doc": "Objetos {ano,valor}. Años numéricos usan distancia temporal. Barras conservan el orden de entrada.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "modo": {
+     "type": "enum",
+     "default": "linea",
+     "doc": "Tratamiento de la serie. Electrocardiograma es una metáfora visual.",
+     "required": false,
+     "options": [
+      "linea",
+      "caida",
+      "electrocardiograma",
+      "barras"
+     ],
+     "min": null,
+     "max": null
+    },
+    "eventos": {
+     "type": "array",
+     "default": [],
+     "doc": "Marcas {indice,texto}. Se muestra el último evento alcanzado.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "unidad": {
+     "type": "string",
+     "default": "",
+     "doc": "US$, M, %, etc.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "decimales": {
+     "type": "number",
+     "default": 0,
+     "doc": "Decimales del valor destacado.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 6
+    },
+    "dibujarEn": {
+     "type": "number",
+     "default": 2.8,
+     "doc": "Segundos del trazado antes de respirar.",
+     "required": false,
+     "options": null,
+     "min": 0.5,
+     "max": null
+    },
+    "caidaIndice": {
+     "type": "number",
+     "default": 0,
+     "doc": "Punto donde se quiebra la línea y empieza la sangre.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "caidaEn": {
+     "type": "number",
+     "default": 2.4,
+     "doc": "Segundo local del quiebre o del aplanamiento. Admite @palabra.",
+     "required": false,
+     "options": null,
+     "min": 0.2,
+     "max": null
+    },
+    "pulso": {
+     "type": "string",
+     "default": "PULSO",
+     "doc": "Etiqueta del estado vivo del electrocardiograma.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "plano": {
+     "type": "string",
+     "default": "SIN PULSO",
+     "doc": "Etiqueta del estado plano del electrocardiograma.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "titulo": "LA CAÍDA",
+    "modo": "caida",
+    "serie": [
+     {
+      "ano": "1987",
+      "valor": 175.88
+     },
+     {
+      "ano": "1993",
+      "valor": 40.63
+     }
+    ],
+    "caidaIndice": 0,
+    "decimales": 2,
+    "unidad": "US$",
+    "eventos": [
+     {
+      "indice": 0,
+      "texto": "CUMBRE"
+     }
+    ],
+    "bg": "mercado"
+   }
+  },
+  {
+   "name": "titanes.escala",
+   "summary": "Compara entidades mediante edificios, monedas, tarjetas o ilustraciones por imagen. Área o altura proporcional explícita.",
+   "tags": [
+    "datos",
+    "escala",
+    "proporción"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "entrada": {
+     "type": "enum",
+     "default": "golpe",
+     "doc": "Transición de entrada reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "salida": {
+     "type": "enum",
+     "default": "tinta",
+     "doc": "Transición de salida reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "titulo": {
+     "type": "string",
+     "default": "",
+     "doc": "Título breve. Vacío lo apaga.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fuente": {
+     "type": "string",
+     "default": "",
+     "doc": "Fuente opcional y breve, en zona segura.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "entidades": {
+     "type": "array",
+     "default": [
+      {
+       "nombre": "A",
+       "valor": 100
+      },
+      {
+       "nombre": "B",
+       "valor": 10
+      }
+     ],
+     "doc": "Entidades {nombre,valor,src?}. Usar valores positivos. Las imágenes src se precargan automáticamente.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "forma": {
+     "type": "enum",
+     "default": "edificio",
+     "doc": "Silueta económica o figura de la biblioteca por src.",
+     "required": false,
+     "options": [
+      "edificio",
+      "moneda",
+      "tarjeta",
+      "figura"
+     ],
+     "min": null,
+     "max": null
+    },
+    "proporcion": {
+     "type": "enum",
+     "default": "area",
+     "doc": "area escala ambos ejes con raíz del dato. altura conserva ancho y escala alto. En figura, altura mantiene proporciones del PNG.",
+     "required": false,
+     "options": [
+      "area",
+      "altura"
+     ],
+     "min": null,
+     "max": null
+    },
+    "figura": {
+     "type": "image",
+     "default": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/de-pie.png",
+     "doc": "Imagen común para forma figura cuando una entidad no indica src.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "unidad": {
+     "type": "string",
+     "default": "",
+     "doc": "Unidad junto a cada valor.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "decimales": {
+     "type": "number",
+     "default": 0,
+     "doc": "Decimales de las etiquetas.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 6
+    }
+   },
+   "example": {
+    "titulo": "CAPITAL",
+    "entidades": [
+     {
+      "nombre": "MATRIZ",
+      "valor": 100
+     },
+     {
+      "nombre": "FILIAL",
+      "valor": 10
+     }
+    ],
+    "unidad": "M",
+    "forma": "edificio",
+    "bg": "ciudad"
+   }
+  },
+  {
+   "name": "titanes.plantilla",
+   "summary": "Cuadrícula de ilustraciones que crece y se vacía en sangre. Conteo exacto y equivalencia por figura, incluidas celdas parciales.",
+   "tags": [
+    "datos",
+    "empleo",
+    "despidos",
+    "cuadrícula"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "entrada": {
+     "type": "enum",
+     "default": "golpe",
+     "doc": "Transición de entrada reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "salida": {
+     "type": "enum",
+     "default": "tinta",
+     "doc": "Transición de salida reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "titulo": {
+     "type": "string",
+     "default": "PERSONAS",
+     "doc": "Qué cuenta la cuadrícula.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fuente": {
+     "type": "string",
+     "default": "",
+     "doc": "Fuente opcional y breve, en zona segura.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "total": {
+     "type": "number",
+     "default": 405000,
+     "doc": "Plantilla máxima.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "desde": {
+     "type": "number",
+     "default": 0,
+     "doc": "Valor desde el que crece, entre cero y total.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "hasta": {
+     "type": "number",
+     "default": 220000,
+     "doc": "Plantilla restante tras el recorte. Igualar a total para solo crecer.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "porFigura": {
+     "type": "number",
+     "default": 15000,
+     "doc": "Personas por figura. Hasta 240 celdas visibles, luego se ajusta y se rotula la equivalencia efectiva.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": null
+    },
+    "crecerEn": {
+     "type": "number",
+     "default": 1.7,
+     "doc": "Duración del crecimiento.",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 3
+    },
+    "vaciarEn": {
+     "type": "number",
+     "default": 3.1,
+     "doc": "Inicio del vaciado, admite @palabra.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "vaciadoDur": {
+     "type": "number",
+     "default": 0.5,
+     "doc": "Duración del vaciado.",
+     "required": false,
+     "options": null,
+     "min": 0.3,
+     "max": 3
+    },
+    "abreviar": {
+     "type": "bool",
+     "default": false,
+     "doc": "Usar 405 mil. El formato completo 405.000 también cabe en vertical.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fecha": {
+     "type": "string",
+     "default": "",
+     "doc": "Contexto temporal breve.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "equivalencia": {
+     "type": "string",
+     "default": "personas / figura",
+     "doc": "Texto de la equivalencia junto al valor numérico.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "figura": {
+     "type": "image",
+     "default": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/de-pie.png",
+     "doc": "Ilustración PNG transparente del protagonista; nunca se dibuja una persona en código.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "titulo": "PERSONAS",
+    "total": 405000,
+    "hasta": 220000,
+    "porFigura": 15000,
+    "figura": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/de-pie.png",
+    "bg": "ciudad"
+   }
+  },
+  {
+   "name": "titanes.duelo",
+   "summary": "Dos o tres nombres monumentales en planos enfrentados, métricas opcionales y resolución con ganador.",
+   "tags": [
+    "competencia",
+    "nombres",
+    "ganador"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "entrada": {
+     "type": "enum",
+     "default": "golpe",
+     "doc": "Transición de entrada reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "salida": {
+     "type": "enum",
+     "default": "tinta",
+     "doc": "Transición de salida reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "titulo": {
+     "type": "string",
+     "default": "",
+     "doc": "Título breve. Vacío lo apaga.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fuente": {
+     "type": "string",
+     "default": "",
+     "doc": "Fuente opcional y breve, en zona segura.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "lados": {
+     "type": "array",
+     "default": [
+      {
+       "nombre": "OS/2"
+      },
+      {
+       "nombre": "WINDOWS"
+      }
+     ],
+     "doc": "2 o 3 objetos {nombre,metrica?}. Se conserva la tipografía del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "ganador": {
+     "type": "string",
+     "default": "",
+     "doc": "Nombre exacto del lado ganador. Vacío mantiene el duelo abierto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "ganadorEn": {
+     "type": "number",
+     "default": 3.2,
+     "doc": "Segundo local de la resolución, admite @palabra.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "veredicto": {
+     "type": "string",
+     "default": "GANA",
+     "doc": "Texto breve del resultado.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "lados": [
+     {
+      "nombre": "OS/2"
+     },
+     {
+      "nombre": "WINDOWS"
+     }
+    ],
+    "ganador": "WINDOWS",
+    "ganadorEn": 3.2,
+    "bg": "sala"
+   }
+  },
+  {
+   "name": "titanes.cronologia",
+   "summary": "Una era ocupa el cuadro. Años monumentales que saltan por barrido de luz y dejan visible el punto de partida.",
+   "tags": [
+    "tiempo",
+    "eras",
+    "saltos"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "entrada": {
+     "type": "enum",
+     "default": "golpe",
+     "doc": "Transición de entrada reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "salida": {
+     "type": "enum",
+     "default": "tinta",
+     "doc": "Transición de salida reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "titulo": {
+     "type": "string",
+     "default": "",
+     "doc": "Título breve. Vacío lo apaga.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fuente": {
+     "type": "string",
+     "default": "",
+     "doc": "Fuente opcional y breve, en zona segura.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "eras": {
+     "type": "array",
+     "default": [
+      {
+       "ano": "1964",
+       "titulo": "SYSTEM/360"
+      },
+      {
+       "ano": "1981",
+       "titulo": "EL PC"
+      }
+     ],
+     "doc": "Eras {ano,titulo,at?}. at en segundos locales. Sin at se reparte el beat.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "eras": [
+     {
+      "ano": "1964",
+      "titulo": "SYSTEM/360"
+     },
+     {
+      "ano": "1981",
+      "titulo": "EL PC"
+     },
+     {
+      "ano": "1993",
+      "titulo": "LA CRISIS"
+     }
+    ],
+    "bg": "archivo"
+   }
+  },
+  {
+   "name": "titanes.titular",
+   "summary": "Documento propio con sello y referencia, cita atribuida, cartel de una palabra o titular editorial compuesto.",
+   "tags": [
+    "documento",
+    "cita",
+    "cartel",
+    "titular"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "image",
+     "default": "",
+     "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés de la foto [x,y] (0..1).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "entrada": {
+     "type": "enum",
+     "default": "golpe",
+     "doc": "Transición de entrada reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "salida": {
+     "type": "enum",
+     "default": "tinta",
+     "doc": "Transición de salida reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "titulo": {
+     "type": "string",
+     "default": "",
+     "doc": "Título breve. Vacío lo apaga.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fuente": {
+     "type": "string",
+     "default": "",
+     "doc": "Fuente opcional y breve, en zona segura.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "variante": {
+     "type": "enum",
+     "default": "titular",
+     "doc": "Composición editorial de texto propio.",
+     "required": false,
+     "options": [
+      "documento",
+      "cita",
+      "cartel",
+      "titular"
+     ],
+     "min": null,
+     "max": null
+    },
+    "text": {
+     "type": "string",
+     "default": "EL IMPERIO\nDE IBM",
+     "doc": "Texto principal. Cita breve hasta 25 palabras. Cartel de una palabra.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "autor": {
+     "type": "string",
+     "default": "",
+     "doc": "Autor real de la cita. Se imprime exactamente como se suministra.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fecha": {
+     "type": "string",
+     "default": "",
+     "doc": "Año o fecha.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sello": {
+     "type": "string",
+     "default": "ARCHIVO",
+     "doc": "Sello tipográfico propio para documento.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "referencia": {
+     "type": "string",
+     "default": "",
+     "doc": "Referencia judicial u oficial breve y verificada por producción.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "antetitulo": {
+     "type": "string",
+     "default": "",
+     "doc": "Antetítulo del titular compuesto.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "variante": "documento",
+    "text": "CORTE SUPREMA",
+    "fecha": "1936",
+    "sello": "ARCHIVO",
+    "referencia": "EE. UU.",
+    "bg": "archivo"
+   }
+  },
+  {
+   "name": "titanes.foto",
+   "summary": "Foto o clip mudo en duotono con grano, marco iluminado, foco configurable y movimiento lento. src acepta imagen y video.",
+   "tags": [
+    "foto",
+    "video",
+    "archivo",
+    "duotono"
+   ],
+   "layer": "main",
+   "params": {
+    "acento": {
+     "type": "color",
+     "default": "palette.accent",
+     "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "borde": {
+     "type": "color",
+     "default": "palette.rim",
+     "doc": "Luz de borde; hereda palette.rim.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "intensidad": {
+     "type": "number",
+     "default": 1,
+     "doc": "Potencia de luz y bruma, conservando los negros.",
+     "required": false,
+     "options": null,
+     "min": 0.25,
+     "max": 1.7
+    },
+    "semilla": {
+     "type": "number",
+     "default": 41,
+     "doc": "Semilla de ventanas, polvo, grano y tinta.",
+     "required": false,
+     "options": null,
+     "min": 1,
+     "max": 999999
+    },
+    "bg": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+     "required": false,
+     "options": [
+      "auto",
+      "foco",
+      "horizonte",
+      "ciudad",
+      "sala",
+      "rayos",
+      "mercado",
+      "archivo",
+      "image",
+      "component",
+      "none"
+     ],
+     "min": null,
+     "max": null
+    },
+    "src": {
+     "type": "string",
+     "default": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/nasa-ames.jpg",
+     "doc": "Imagen o video local. Se precarga por prepare antes del primer cuadro.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "focus": {
+     "type": "array",
+     "default": [
+      0.5,
+      0.5
+     ],
+     "doc": "Punto de interés normalizado [x,y].",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "use": {
+     "type": "string",
+     "default": "",
+     "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "useParams": {
+     "type": "object",
+     "default": {},
+     "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "dim": {
+     "type": "number",
+     "default": 0.45,
+     "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 1
+    },
+    "entrada": {
+     "type": "enum",
+     "default": "golpe",
+     "doc": "Transición de entrada reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "salida": {
+     "type": "enum",
+     "default": "tinta",
+     "doc": "Transición de salida reutilizable.",
+     "required": false,
+     "options": [
+      "tinta",
+      "luz",
+      "golpe",
+      "ninguna"
+     ],
+     "min": null,
+     "max": null
+    },
+    "titulo": {
+     "type": "string",
+     "default": "",
+     "doc": "Título breve. Vacío lo apaga.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "fuente": {
+     "type": "string",
+     "default": "",
+     "doc": "Fuente opcional y breve, en zona segura.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "tipo": {
+     "type": "enum",
+     "default": "auto",
+     "doc": "auto detecta MP4/WebM/MOV/M4V/OGV. Forzar video para URL sin extensión.",
+     "required": false,
+     "options": [
+      "auto",
+      "imagen",
+      "video"
+     ],
+     "min": null,
+     "max": null
+    },
+    "poster": {
+     "type": "image",
+     "default": "",
+     "doc": "Imagen de respaldo opcional.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "desplazar": {
+     "type": "array",
+     "default": [
+      0.025,
+      -0.015
+     ],
+     "doc": "Desplazamiento total del foco normalizado [dx,dy].",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "zoom": {
+     "type": "number",
+     "default": 0.045,
+     "doc": "Acercamiento lento a lo largo del beat.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": 0.15
+    },
+    "start": {
+     "type": "number",
+     "default": 0,
+     "doc": "Segundo inicial del video.",
+     "required": false,
+     "options": null,
+     "min": 0,
+     "max": null
+    },
+    "rate": {
+     "type": "number",
+     "default": 1,
+     "doc": "Velocidad del clip mudo.",
+     "required": false,
+     "options": null,
+     "min": 0.1,
+     "max": 3
+    },
+    "loop": {
+     "type": "bool",
+     "default": true,
+     "doc": "Repite el clip desde start al llegar a su duración.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "credito": {
+     "type": "string",
+     "default": "",
+     "doc": "Autor, año y licencia breves. Crédito completo en CREDITS del episodio.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    },
+    "sinMedio": {
+     "type": "string",
+     "default": "MEDIO NO DISPONIBLE",
+     "doc": "Estado visible si falla el medio y el poster.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "src": "http://127.0.0.1:40961/_tools/explainer-kit/designs/titanes/samples/nasa-ames.jpg",
+    "titulo": "NASA AMES",
+    "credito": "NASA · 1963 · dominio público",
+    "focus": [
+     0.65,
+     0.48
+    ],
+    "bg": "foco"
+   }
+  },
+  {
    "name": "common.capas",
    "summary": "Escena de la biblioteca compartida: personajes, poses, zonas teñidas, conexiones y cámara. Solo admite IDs aprobados; valida antes de dibujar.",
    "tags": [

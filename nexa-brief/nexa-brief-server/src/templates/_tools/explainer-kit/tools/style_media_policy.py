@@ -22,6 +22,29 @@ def policy_for(config):
         "style_policies", {}).get(config.get("design"))
 
 
+def titanes_media(beat, catalog):
+    """Documentary media only; TITANES figures and layer assets are graphics."""
+    params = beat["b"].get("params") or {}
+    use = beat["use"]
+    if use.startswith("titanes.") or use == "common.capas":
+        if use not in ("titanes.foto", "titanes.introv1", "titanes.introv2"):
+            return [], []
+        src = params.get("src")
+        if not isinstance(src, str) or not src.strip():
+            return [], []
+        video = use == "titanes.foto" and (params.get("tipo") == "video" or
+                 (params.get("tipo", "auto") == "auto" and
+                  src.split("?", 1)[0].lower().endswith((".mp4", ".webm", ".mov", ".m4v"))))
+        return ([], [src]) if video else ([src], [])
+    spec = catalog.get(use, {}).get("params", {})
+    video = [str(params[k]) for k, rule in spec.items() if rule.get("type") == "video" and params.get(k)]
+    photos = [str(params[k]) for k, rule in spec.items() if rule.get("type") == "image" and params.get(k)
+              and k not in ("logo", "srcAfter") and (k != "poster" or (not video and use == "common.tabloid"))]
+    if use == "common.tabloid" and params.get("mode") == "split" and params.get("srcAfter"):
+        photos.append(str(params["srcAfter"]))
+    return list(dict.fromkeys(photos)), list(dict.fromkeys(video))
+
+
 def _norm(value):
     value = unicodedata.normalize("NFD", str(value).lower())
     value = "".join(c for c in value if unicodedata.category(c) != "Mn")
@@ -83,6 +106,8 @@ def check(config, beats, catalog, words, total, errors, proto=None):
     policy = policy_for(config)
     if policy is None:
         return None
+    if config.get("design") == "titanes":
+        return check_titanes(config, beats, catalog, total, errors, policy)
     check_openings(config, beats, policy, errors, proto)
     rules = policy["media"]
     end = min(float(total), float((config.get("outro") or {}).get("start", total)))
@@ -157,6 +182,27 @@ def check(config, beats, catalog, words, total, errors, proto=None):
     if proto is not None:
         report["audio"] = check_audio(proto, config, report, errors)
     return report
+
+
+def check_titanes(config, beats, catalog, total, errors, policy):
+    """Measure actual main windows, including interruption by the next main beat."""
+    end = min(float(total), float((config.get("outro") or {}).get("start", total)))
+    main = sorted((b for b in beats if not b.get("skip") and b.get("layer", "main") == "main" and b["t0"] < end),
+                  key=lambda b: (b["t0"], b["i"]))
+    windows = []
+    for index, beat in enumerate(main):
+        stop = min(float(beat["t1"]), end, float(main[index + 1]["t0"]) if index + 1 < len(main) else end)
+        duration = max(0, stop - beat["t0"])
+        photos, videos = titanes_media(beat, catalog)
+        for kind, sources in (("photo", photos), ("video", videos)):
+            lower, upper = policy["media"][kind + "_seconds"]
+            for source in sources:
+                windows.append({"beat": beat["i"], "component": beat["use"], "kind": kind, "src": source,
+                                "start": round(beat["t0"], 4), "end": round(stop, 4), "duration": round(duration, 4)})
+                if duration < lower - 1e-9 or duration > upper + 1e-9:
+                    errors.append(f"titanes beat #{beat['i']}: {kind} visible {duration:.2f}s; requerido {lower}–{upper}s")
+    return {"version": policy["version"], "design": "titanes", "media": windows,
+            "coverage": "documentary media in visible main windows; figures and layers excluded"}
 
 
 

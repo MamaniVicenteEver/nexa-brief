@@ -4,6 +4,11 @@ Contrato del agente creador y de sus trabajadores. Se aplica a proyectos nuevos;
 no autoriza trasladarlos, publicarlos ni grabarlos. En el ejecutor aislado se
 entrega una copia en `work/agent-context/PREPARAR-PRODUCCION.md`.
 
+## Contrato específico de NodeMotion
+Aplica [crear e integrar plantillas](../../../docs/nodemotion-template-authoring.md).
+Los archivos autocontenidos de un prototipo no son la estructura final: motor compartido bajo _tools/nodemotion/, demo de datos con entrada mínima y episodios con referencias.
+Si el traslado deja pendiente el motor, completar la integración y repetir la verificación; cambiar la categoría no equivale a integración terminada.
+
 ## Flujo y responsabilidades
 
 1. El agente crea y revisa el prototipo en el Sandbox del perfil seleccionado.

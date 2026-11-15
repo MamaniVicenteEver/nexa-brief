@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "config.look",
+  "entry_id": "config.look",
+  "name": "look",
+  "kind": "configuration",
+  "label": "look",
+  "summary": "Existing configuration configuration: look.",
+  "params": {
+    "dotScale": {
+      "default": 1
+    },
+    "dotContrast": {
+      "default": 1.25
+    },
+    "chipScale": {
+      "default": 1
+    },
+    "stroke": {
+      "default": 1
+    }
+  },
+  "example": {
+    "dotScale": 1,
+    "dotContrast": 1.25,
+    "chipScale": 1,
+    "stroke": 1
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/assets/config.json",
+      "pointer": "/configs/0/look"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -181,6 +181,9 @@ class JobInput(BaseModel):
     # Medios por slot, textos y brief elegidos en el Estudio / Crear video
     # (ver src/core/template_inputs.py). None = la plantilla usa sus defaults.
     template_inputs: TemplateInputs | None = None
+    # Promo scene timings belong to the project, never to the music cache.
+    promo_timeline: dict | None = None
+    timed_content: dict | None = None
     publishing: JobPublishingConfig = Field(default_factory=JobPublishingConfig)
     render_target: str | None = Field(
         default=None,

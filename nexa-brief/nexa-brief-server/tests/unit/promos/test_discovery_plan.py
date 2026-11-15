@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from src.core.promos import agents, evidence, pipeline, research
+from src.core.nodemotion.promo import agents, evidence, pipeline, research
 from src.adapters.agent import factory
 from src.core.explainer import agent_context
 

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-collage",
+  "id": "config.fonts",
+  "entry_id": "config.fonts",
+  "name": "fonts",
+  "kind": "configuration",
+  "label": "fonts",
+  "summary": "Existing configuration configuration: fonts.",
+  "params": {
+    "googleUrl": {
+      "default": "https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Stardos+Stencil:wght@400;700&family=Permanent+Marker&family=Courier+Prime:wght@400;700&display=swap"
+    },
+    "poster": {
+      "default": "\"Anton\", sans-serif"
+    },
+    "condensed": {
+      "default": "\"Bebas Neue\", sans-serif"
+    },
+    "stencil": {
+      "default": "\"Stardos Stencil\", cursive"
+    },
+    "marker": {
+      "default": "\"Permanent Marker\", cursive"
+    },
+    "caption": {
+      "default": "\"Courier Prime\", monospace"
+    }
+  },
+  "example": {
+    "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Stardos+Stencil:wght@400;700&family=Permanent+Marker&family=Courier+Prime:wght@400;700&display=swap",
+    "poster": "\"Anton\", sans-serif",
+    "condensed": "\"Bebas Neue\", sans-serif",
+    "stencil": "\"Stardos Stencil\", cursive",
+    "marker": "\"Permanent Marker\", cursive",
+    "caption": "\"Courier Prime\", monospace"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-collage/assets/config.json",
+      "pointer": "/configs/0/fonts"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

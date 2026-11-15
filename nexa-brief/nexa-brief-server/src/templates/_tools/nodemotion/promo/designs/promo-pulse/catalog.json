@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-pulse",
+  "family": "promo",
+  "display_name": "Promo Pulse",
+  "description": "Promo deportiva de alto impacto: metraje cinematográfico sobre negro, palabra condensada en itálica crema, palabra gigante en contorno verde neón, video enmarcado, texto calado con el video, medidores y esquinas verdes, cifras y bandas que corren.",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 18,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "acción en movimiento, entrenamiento, velocidad; se gradan cinematográficos"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.name",
+        "label": "Marca",
+        "max": 30,
+        "default": "NEXA BRIEF"
+      },
+      {
+        "key": "brand.url",
+        "label": "Dirección o usuario",
+        "max": 40,
+        "default": "@nexabrief"
+      },
+      {
+        "key": "brand.cta",
+        "label": "Llamada (caja verde del cierre v2)",
+        "max": 24,
+        "default": "SUSCRÍBETE"
+      },
+      {
+        "key": "brand.corner",
+        "label": "Rótulo de esquina",
+        "max": 30,
+        "default": "NEXA BRIEF"
+      },
+      {
+        "key": "brand.footer",
+        "label": "Pie",
+        "max": 60,
+        "default": "Diseño y animación · NEXA BRIEF"
+      }
+    ],
+    "brief": true
+  },
+  "config_json": "nodemotion/commercial/promo-pulse/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/promo-pulse",
+    "config": "nodemotion/commercial/promo-pulse/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-pulse/DESIGN.md"
+  },
+  "lookup": "/api/v1/templates/promo-pulse/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "scene.intro",
+      "kind": "scene",
+      "label": "intro",
+      "summary": "intro: titular del renglón 1 y subtítulo del renglón 2",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.intro",
+      "contract": "contracts/001-scene.json"
+    },
+    {
+      "entry_id": "scene.full",
+      "kind": "scene",
+      "label": "full",
+      "summary": "video completo con palabra, medidor y frase",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.full",
+      "contract": "contracts/002-scene.json"
+    },
+    {
+      "entry_id": "scene.framed",
+      "kind": "scene",
+      "label": "framed",
+      "summary": "video enmarcado con palabra y contorno gigante",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.framed",
+      "contract": "contracts/003-scene.json"
+    },
+    {
+      "entry_id": "scene.badge",
+      "kind": "scene",
+      "label": "badge",
+      "summary": "palabra en caja verde + palabra crema",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.badge",
+      "contract": "contracts/004-scene.json"
+    },
+    {
+      "entry_id": "scene.knockout",
+      "kind": "scene",
+      "label": "knockout",
+      "summary": "palabra calada con el video dentro",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.knockout",
+      "contract": "contracts/005-scene.json"
+    },
+    {
+      "entry_id": "scene.split3",
+      "kind": "scene",
+      "label": "split3",
+      "summary": "tres columnas de video + palabra",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.split3",
+      "contract": "contracts/006-scene.json"
+    },
+    {
+      "entry_id": "scene.marquee",
+      "kind": "scene",
+      "label": "marquee",
+      "summary": "bandas de la palabra que corren + frase en caja",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.marquee",
+      "contract": "contracts/007-scene.json"
+    },
+    {
+      "entry_id": "scene.counter",
+      "kind": "scene",
+      "label": "counter",
+      "summary": "cifra que cuenta + video enmarcado",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.counter",
+      "contract": "contracts/008-scene.json"
+    },
+    {
+      "entry_id": "scene.outro",
+      "kind": "scene",
+      "label": "outro",
+      "summary": "cierre con marca y llamada (Outro v1/v2)",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.outro",
+      "contract": "contracts/009-scene.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/010-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/011-configuration.json"
+    },
+    {
+      "entry_id": "config.brand",
+      "kind": "configuration",
+      "label": "brand",
+      "summary": "Existing configuration configuration: brand.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.brand",
+      "contract": "contracts/012-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/013-configuration.json"
+    },
+    {
+      "entry_id": "config.look",
+      "kind": "configuration",
+      "label": "look",
+      "summary": "Existing configuration configuration: look.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.look",
+      "contract": "contracts/014-configuration.json"
+    },
+    {
+      "entry_id": "config.anim",
+      "kind": "configuration",
+      "label": "anim",
+      "summary": "Existing configuration configuration: anim.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.anim",
+      "contract": "contracts/015-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/016-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/017-configuration.json"
+    },
+    {
+      "entry_id": "config.transition",
+      "kind": "configuration",
+      "label": "transition",
+      "summary": "Existing configuration configuration: transition.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.transition",
+      "contract": "contracts/018-configuration.json"
+    },
+    {
+      "entry_id": "config.hud",
+      "kind": "configuration",
+      "label": "hud",
+      "summary": "Existing configuration configuration: hud.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.hud",
+      "contract": "contracts/019-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/020-configuration.json"
+    },
+    {
+      "entry_id": "config.render",
+      "kind": "configuration",
+      "label": "render",
+      "summary": "Existing configuration configuration: render.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.render",
+      "contract": "contracts/021-configuration.json"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.transitions",
+  "entry_id": "mono.transitions",
+  "kind": "component",
+  "label": "Transiciones de entrada",
+  "summary": "dots (rejilla de puntos que se encoge), lineSweep (línea que barre), blink (cuadro negro), pillPop (sale de una píldora); además las del núcleo: fade, blur, iris, wipeL/R/Up/Down, bars, flash, zoomIn, zoomOut, slice, cut.",
+  "component": {
+    "name": "mono.transitions",
+    "label": "Transiciones de entrada",
+    "summary": "dots (rejilla de puntos que se encoge), lineSweep (línea que barre), blink (cuadro negro), pillPop (sale de una píldora); además las del núcleo: fade, blur, iris, wipeL/R/Up/Down, bars, flash, zoomIn, zoomOut, slice, cut.",
+    "tags": [
+      "transicion"
+    ],
+    "params": {
+      "trans": {
+        "type": "string",
+        "options": [
+          "cut",
+          "dots",
+          "lineSweep",
+          "blink",
+          "pillPop",
+          "fade",
+          "blur",
+          "iris",
+          "wipeL",
+          "wipeR",
+          "wipeUp",
+          "wipeDown",
+          "bars",
+          "flash",
+          "zoomIn",
+          "zoomOut",
+          "slice"
+        ],
+        "default": "cut",
+        "doc": "config.scenes[i].trans o pesos en config.transition.weights"
+      }
+    },
+    "demo": {},
+    "preview": {}
+  },
+  "params": {
+    "trans": {
+      "type": "string",
+      "options": [
+        "cut",
+        "dots",
+        "lineSweep",
+        "blink",
+        "pillPop",
+        "fade",
+        "blur",
+        "iris",
+        "wipeL",
+        "wipeR",
+        "wipeUp",
+        "wipeDown",
+        "bars",
+        "flash",
+        "zoomIn",
+        "zoomOut",
+        "slice"
+      ],
+      "default": "cut",
+      "doc": "config.scenes[i].trans o pesos en config.transition.weights"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/18"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

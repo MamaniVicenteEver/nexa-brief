@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-stylish-kinetic",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-stylish-kinetic",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "994e291791517df7bb01d7c6b75e4e7fe951cd3b01e0aded2969dc1ca6dce681",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-stylish-kinetic",
+    "config": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-stylish-kinetic/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-stylish-kinetic/README.md"
+  },
+  "revision": "34334604a58497d232c3219d518ff1841e25ace7d393af40d9ad402517e14fb7"
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "config.colors",
+  "entry_id": "config.colors",
+  "name": "colors",
+  "kind": "configuration",
+  "label": "colors",
+  "summary": "Existing configuration configuration: colors.",
+  "params": {
+    "dark": {
+      "default": "#190F06"
+    },
+    "pale": {
+      "default": "#E4EDF7"
+    },
+    "blue": {
+      "default": "#0080FD"
+    },
+    "white": {
+      "default": "#F4F4F2"
+    },
+    "black": {
+      "default": "#050505"
+    }
+  },
+  "example": {
+    "dark": "#190F06",
+    "pale": "#E4EDF7",
+    "blue": "#0080FD",
+    "white": "#F4F4F2",
+    "black": "#050505"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+      "pointer": "/configs/0/colors"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

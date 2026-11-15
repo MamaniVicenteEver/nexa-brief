@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "config.hatch",
+  "entry_id": "config.hatch",
+  "name": "hatch",
+  "kind": "configuration",
+  "label": "hatch",
+  "summary": "Existing configuration configuration: hatch.",
+  "params": {
+    "chance": {
+      "default": 0.06
+    }
+  },
+  "example": {
+    "chance": 0.06
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "pointer": "/configs/0/hatch"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.numbers",
+  "entry_id": "mono.numbers",
+  "kind": "component",
+  "label": "Rejilla de cifras que parpadean y dejan sólo las cifras del ",
+  "summary": "Rejilla de cifras que parpadean y dejan sólo las cifras del guion",
+  "component": {
+    "name": "mono.numbers",
+    "label": "Rejilla de cifras que parpadean y dejan sólo las cifras del ",
+    "summary": "Rejilla de cifras que parpadean y dejan sólo las cifras del guion",
+    "tags": [
+      "escena"
+    ],
+    "scene_type": "numbers",
+    "params": {
+      "flicker": {
+        "type": "number",
+        "min": 0.05,
+        "max": 0.4,
+        "default": 0.12
+      },
+      "collapse": {
+        "type": "number",
+        "min": 0.2,
+        "max": 0.9,
+        "default": 0.45
+      }
+    },
+    "demo": {
+      "time": 29.0
+    },
+    "preview": {
+      "t": 29.0
+    }
+  },
+  "params": {
+    "flicker": {
+      "type": "number",
+      "min": 0.05,
+      "max": 0.4,
+      "default": 0.12
+    },
+    "collapse": {
+      "type": "number",
+      "min": 0.2,
+      "max": 0.9,
+      "default": 0.45
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/8"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

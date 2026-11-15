@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "grunge.interludios",
+  "entry_id": "grunge.interludios",
+  "kind": "component",
+  "label": "Interludios",
+  "summary": "Silencios: metraje con ojos de tiza, franjas rojas o rejilla de frase.",
+  "component": {
+    "name": "grunge.interludios",
+    "label": "Interludios",
+    "summary": "Silencios: metraje con ojos de tiza, franjas rojas o rejilla de frase.",
+    "tags": [
+      "escena"
+    ],
+    "file": "components/transiciones.js",
+    "params": {
+      "type": {
+        "type": "string",
+        "default": "metraje",
+        "options": [
+          "metraje",
+          "franjas",
+          "rejilla"
+        ]
+      },
+      "text": {
+        "type": "string",
+        "default": "lose control",
+        "doc": "Frase ya cantada"
+      }
+    },
+    "demo": {
+      "type": "franjas"
+    },
+    "preview": {
+      "t": 1.0
+    }
+  },
+  "params": {
+    "type": {
+      "type": "string",
+      "default": "metraje",
+      "options": [
+        "metraje",
+        "franjas",
+        "rejilla"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "default": "lose control",
+      "doc": "Frase ya cantada"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/showcase/components.json",
+      "pointer": "/components/5"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

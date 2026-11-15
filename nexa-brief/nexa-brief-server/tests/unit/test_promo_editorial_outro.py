@@ -8,7 +8,8 @@ from urllib.request import urlopen
 import pytest
 
 SERVER = Path(__file__).resolve().parents[2]
-COMPONENT = SERVER / "src/templates/nodemotion/commercial/promo-editorial/components/outro.js"
+from src.templates._tools.nodemotion.shared.assemble import resolve_runtime_asset
+COMPONENT = resolve_runtime_asset("promo-editorial", "components/outro.js")
 
 
 @pytest.mark.skipif(not shutil.which("node"), reason="Node no disponible")

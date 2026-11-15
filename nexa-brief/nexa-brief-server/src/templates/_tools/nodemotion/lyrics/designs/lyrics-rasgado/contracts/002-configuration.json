@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-rasgado",
+  "id": "config.fonts",
+  "entry_id": "config.fonts",
+  "name": "fonts",
+  "kind": "configuration",
+  "label": "fonts",
+  "summary": "Existing configuration configuration: fonts.",
+  "params": {
+    "googleUrl": {
+      "default": "https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@62..125,100..900&display=swap"
+    },
+    "condensed": {
+      "default": "Anton"
+    },
+    "wide": {
+      "default": "Archivo"
+    },
+    "thin": {
+      "default": "Archivo"
+    }
+  },
+  "example": {
+    "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@62..125,100..900&display=swap",
+    "condensed": "Anton",
+    "wide": "Archivo",
+    "thin": "Archivo"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-rasgado/assets/config.json",
+      "pointer": "/configs/0/fonts"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

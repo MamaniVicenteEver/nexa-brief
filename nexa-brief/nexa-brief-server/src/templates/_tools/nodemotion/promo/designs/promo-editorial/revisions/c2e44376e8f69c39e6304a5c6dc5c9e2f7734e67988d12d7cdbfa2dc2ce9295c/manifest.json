@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-editorial",
+  "family": "promo",
+  "demo_folder": "nodemotion/commercial/promo-editorial",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "source_sha256": "78801ec982216de8106498b7987ce6053e8591e6f16be38e24b4c4164f48dc80",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/promo-editorial",
+    "config": "nodemotion/commercial/promo-editorial/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-editorial/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-editorial/README.md"
+  },
+  "revision": "c2e44376e8f69c39e6304a5c6dc5c9e2f7734e67988d12d7cdbfa2dc2ce9295c"
+}

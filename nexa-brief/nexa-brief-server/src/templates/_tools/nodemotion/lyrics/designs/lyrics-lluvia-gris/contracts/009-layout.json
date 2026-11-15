@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-lluvia-gris",
+  "id": "layout.window",
+  "entry_id": "layout.window",
+  "name": "window",
+  "kind": "layout",
+  "label": "window",
+  "summary": "Existing layout configuration: window.",
+  "params": {
+    "weight": {
+      "default": 2.2
+    },
+    "media": {
+      "default": [
+        "rain-window",
+        "drops"
+      ]
+    }
+  },
+  "example": {
+    "weight": 2.2,
+    "media": [
+      "rain-window",
+      "drops"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
+      "pointer": "/configs/0/layouts/window"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

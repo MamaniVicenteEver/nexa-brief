@@ -58,6 +58,7 @@ class ImageLibraryEntry(ResourceMetadata):
     asset_id: str
     category: str
     relative_path: str                # clave en FileStorage "images" ({categoría}/{archivo})
+    bundled_key: str | None = None  # validated content-addressed NodeMotion demo resource
     original_filename: str = ""      # nombre con el que se subió/descargó
     source: str                       # "auto" | "url"
     provider: str = ""                # "unsplash" | "pexels" | "pixabay" | "css_fallback" | "user_url"
@@ -97,6 +98,7 @@ class MusicLibraryEntry(ResourceMetadata):
     asset_id: str
     category: str
     relative_path: str                # clave en FileStorage "music" ({categoría}/{archivo})
+    bundled_key: str | None = None  # validated content-addressed NodeMotion demo resource
     original_filename: str = ""
     source: str                       # "auto" | "url"
     provider: str = ""                # "pixabay" | "jamendo" | "ytdlp" | "user_url"
@@ -143,6 +145,7 @@ class VideoLibraryEntry(ResourceMetadata):
     asset_id: str
     category: str
     relative_path: str                # clave en FileStorage "videos" ({categoría}/{archivo})
+    bundled_key: str | None = None  # validated content-addressed NodeMotion demo resource
     original_filename: str = ""
     source: str                       # "url" | "upload"
     provider: str = ""                # "user_url" | "user_upload"
@@ -468,7 +471,10 @@ async def register_uploaded_visual(
         if matches:
             digest = await asyncio.to_thread(hash_file, path)
             for entry in matches:
-                old_path = _storage(kind).local_path(entry.relative_path)
+                try:
+                    old_path = resolve_asset_path(kind, entry.asset_id)
+                except (AssetNotFoundError, FileNotFoundError, ValueError):
+                    continue
                 if old_path.is_file() and await asyncio.to_thread(hash_file, old_path) == digest:
                     existing = await attach_resource_origin(kind, entry.asset_id, category, template_id)
                     return existing, False
@@ -742,6 +748,23 @@ def _production_entry(kind: str, record: dict, *, video: dict | None = None, det
     return _MODELS[kind](**data)  # type: ignore[return-value]
 
 
+def metadata_gaps(kind: str, entry) -> list[str]:
+    """Datos que faltan para publicar un recurso. Vacío = listo."""
+    title = entry.track_name if kind == "music" else (getattr(entry, "label", "") or getattr(entry, "display_name", ""))
+    gaps: list[str] = []
+    if not str(title or "").strip():
+        gaps.append("título")
+    if not str(entry.description or "").strip():
+        gaps.append("descripción")
+    if not str(entry.tags or "").strip():
+        gaps.append("etiquetas")
+    if not str(entry.category or "").strip():
+        gaps.append("categoría")
+    if str(getattr(entry, "license_note", "") or "").strip().lower() in ("", "unknown"):
+        gaps.append("licencia")
+    return gaps
+
+
 def get_entry(kind: str, asset_id: str) -> LibraryEntry:
     raw = _records(kind).get(asset_id)
     if raw is not None:
@@ -752,19 +775,45 @@ def get_entry(kind: str, asset_id: str) -> LibraryEntry:
     return _production_entry(kind, record)
 
 
-def resolve_asset_path(kind: str, asset_id: str) -> Path:
-    """Ruta local validada; las referencias de producción nunca se copian."""
-    entry = get_entry(kind, asset_id)
-    if entry.source == "production" and _records(kind).get(asset_id) is None:
+def resolve_asset_entry_path(kind: str, entry: LibraryEntry, *, from_collection: bool) -> Path:
+    """Resolve a validated entry using its known DataStore provenance.
+
+    ``from_collection=True`` is for entries obtained from the corresponding
+    ``list_images/list_music/list_videos`` collection snapshot. A production
+    registry entry must use ``False`` so it goes through the content registry.
+    Storage and bundled-resource path validation are identical to ID lookup.
+    This helper does not cache entries or promise that a snapshot stays current.
+    """
+    model = _MODELS.get(kind)
+    if model is None or not isinstance(entry, model) or type(from_collection) is not bool:
+        raise ValueError("Invalid library entry or provenance")
+    bundled_key = getattr(entry, "bundled_key", None)
+    if bundled_key is not None:
+        if entry.source != "template" or kind not in {"music", "image", "video"}:
+            raise ValueError("Invalid bundled library reference")
+        from src.core.nodemotion.shared.bundled import resolve_bundled_key
+        return resolve_bundled_key(bundled_key)
+    if not from_collection:
+        if entry.source != "production":
+            raise ValueError("Invalid production resource provenance")
         from src.core.content_registry import resolve_resource
         try:
-            path = resolve_resource(asset_id)
+            path = resolve_resource(entry.asset_id)
         except (ValueError, KeyError) as exc:
             raise AssetNotFoundError("Ruta de recurso inválida") from exc
         if path is None:
             raise AssetNotFoundError("Recurso no encontrado")
         return path
     return _storage(kind).local_path(entry.relative_path)
+
+
+def resolve_asset_path(kind: str, asset_id: str) -> Path:
+    """Ruta local validada; las referencias de producción nunca se copian."""
+    entry = get_entry(kind, asset_id)
+    from_collection = True
+    if entry.source == "production" and getattr(entry, "bundled_key", None) is None:
+        from_collection = _records(kind).get(asset_id) is not None
+    return resolve_asset_entry_path(kind, entry, from_collection=from_collection)
 
 
 def search_assets(kind: str, q: str | None = None, category: str | None = None) -> list[LibraryEntry]:
@@ -871,6 +920,40 @@ def page_assets(kind: str, *, page: int = 1, page_size: int = 12,
     return entries[start:start + page_size], len(entries)
 
 
+
+async def register_bundled_resource(kind: str, template_id: str, bundled_key: str,
+                                    logical_path: str, *, category: str = "template_originals") -> LibraryEntry:
+    """Register a shared, verified demo resource without copying its bytes."""
+    if kind not in {"music", "image", "video"}:
+        raise ValueError("Unsupported bundled resource kind")
+    from src.core.nodemotion.shared.bundled import demo_aliases, resolve_bundled_key
+    if demo_aliases(template_id).get(logical_path) != bundled_key:
+        raise ValueError("Resource is not declared by this demo")
+    path = resolve_bundled_key(bundled_key)
+    async with coordination(f"library-bundled-{kind}-{bundled_key[:64]}"):
+        for raw in _records(kind).list():
+            if raw.get("source") == "template" and raw.get("bundled_key") == bundled_key:
+                return await attach_resource_origin(kind, raw["asset_id"], category, template_id)
+        filename = Path(logical_path).name
+        ident = uuid.uuid4().hex[:8]
+        values: dict[str, Any] = {
+            **resource_metadata(category, template_id), "asset_id": ident,
+            "category": category, "relative_path": f"_bundled/{bundled_key}",
+            "bundled_key": bundled_key, "original_filename": filename,
+            "source": "template", "provider": "template", "added_at": _now_iso(),
+            "last_used_at": _now_iso(), "usage_count": 1,
+        }
+        if kind == "music":
+            stem = Path(filename).stem.replace("_", " ").replace("-", " ").strip()
+            values["track_name"] = "" if stem.lower() in {"song", "audio", "music", "track", "cancion", "musica"} else stem
+            values["content_hash"] = bundled_key[:64]
+        else:
+            values["label"] = f"{template_id} (fondo)"
+        entry = _MODELS[kind](**values)
+        await _records(kind).insert(entry.model_dump())
+        logger.info("asset_library_bundled_registered", kind=kind, asset_id=ident, path=str(path))
+        return entry
+
 async def update_asset_metadata(kind: str, asset_id: str, patch: dict[str, Any]) -> LibraryEntry:
     """Aplica una edición del usuario. Ignora campos no editables (ver
     EDITABLE_FIELDS) en vez de fallar, así el front puede mandar el objeto
@@ -896,7 +979,7 @@ async def update_asset_metadata(kind: str, asset_id: str, patch: dict[str, Any])
         new_category = str(changes["category"]).strip()
         if not new_category:
             changes.pop("category")
-        elif new_category != current.category:
+        elif new_category != current.category and not getattr(current, "bundled_key", None):
             storage = _storage(kind)
             old_key = current.relative_path
             old_path = storage.local_path(old_key)
@@ -907,6 +990,8 @@ async def update_asset_metadata(kind: str, asset_id: str, patch: dict[str, Any])
                     old_path, folder=new_category, filename=old_path.name
                 )
                 storage.delete(old_key)
+            changes["category"] = new_category
+        elif new_category != current.category:
             changes["category"] = new_category
     if not changes:
         return current
@@ -929,15 +1014,15 @@ async def delete_asset(kind: str, asset_id: str) -> LibraryEntry:
     from src.config.profile_layout import layout_for_settings
     from src.config.settings import settings
     shared = False
-    if layout_for_settings(settings).schema_version >= 3:
+    if layout_for_settings(settings).schema_version >= 3 and not getattr(entry, "bundled_key", None):
         target = storage.local_path(entry.relative_path)
         for other in _records(kind).list():
-            if other.get("asset_id") == asset_id or not other.get("relative_path"):
+            if other.get("asset_id") == asset_id or not other.get("relative_path") or other.get("bundled_key"):
                 continue
             if storage.local_path(other["relative_path"]) == target:
                 shared = True
                 break
-    if not shared:
+    if not shared and not getattr(entry, "bundled_key", None):
         storage.delete(entry.relative_path)
     for store in _CACHE_STORES[kind]:
         documents(store).delete(asset_id)

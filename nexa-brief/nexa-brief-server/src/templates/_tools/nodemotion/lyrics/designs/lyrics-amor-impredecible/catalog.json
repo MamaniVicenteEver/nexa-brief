@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-amor-impredecible",
+  "family": "lyrics",
+  "display_name": "Amor Impredecible",
+  "description": "Visualizador romántico con letra manuscrita, corazones, flechas y destellos que reaccionan al ritmo de la canción.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-amor-impredecible/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-amor-impredecible",
+    "config": "nodemotion/lyrics/lyrics-amor-impredecible/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-amor-impredecible/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-amor-impredecible/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-amor-impredecible/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/002-configuration.json"
+    }
+  ]
+}

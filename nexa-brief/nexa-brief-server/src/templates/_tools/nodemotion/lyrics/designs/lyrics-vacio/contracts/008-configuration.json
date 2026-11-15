@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-vacio",
+  "id": "config.transition",
+  "entry_id": "config.transition",
+  "name": "transition",
+  "kind": "configuration",
+  "label": "transition",
+  "summary": "Existing configuration configuration: transition.",
+  "params": {
+    "overlapSec": {
+      "default": 0.7
+    },
+    "weights": {
+      "default": {
+        "fade": 2,
+        "iris": 1.2,
+        "slice": 1.2,
+        "zoomOut": 1.2,
+        "bars": 1,
+        "blur": 1
+      }
+    }
+  },
+  "example": {
+    "overlapSec": 0.7,
+    "weights": {
+      "fade": 2,
+      "iris": 1.2,
+      "slice": 1.2,
+      "zoomOut": 1.2,
+      "bars": 1,
+      "blur": 1
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-vacio/assets/config.json",
+      "pointer": "/configs/0/transition"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

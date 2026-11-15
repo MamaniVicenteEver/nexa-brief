@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-ceniza",
+  "id": "layout.embers",
+  "entry_id": "layout.embers",
+  "name": "embers",
+  "kind": "layout",
+  "label": "embers",
+  "summary": "Existing layout configuration: embers.",
+  "params": {
+    "weight": {
+      "default": 1.3
+    },
+    "media": {
+      "default": [
+        "sparks",
+        "flames"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.3,
+    "media": [
+      "sparks",
+      "flames"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-ceniza/assets/config.json",
+      "pointer": "/configs/0/layouts/embers"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

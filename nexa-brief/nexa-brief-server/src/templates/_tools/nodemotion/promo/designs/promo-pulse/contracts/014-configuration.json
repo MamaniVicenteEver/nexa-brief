@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-pulse",
+  "id": "config.look",
+  "entry_id": "config.look",
+  "name": "look",
+  "kind": "configuration",
+  "label": "look",
+  "summary": "Existing configuration configuration: look.",
+  "params": {
+    "giantOpacity": {
+      "default": 0.9
+    },
+    "vignette": {
+      "default": 0.6
+    },
+    "accents": {
+      "default": 1
+    },
+    "frameShadow": {
+      "default": 0.6
+    }
+  },
+  "example": {
+    "giantOpacity": 0.9,
+    "vignette": 0.6,
+    "accents": 1,
+    "frameShadow": 0.6
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-pulse/assets/config.json",
+      "pointer": "/configs/0/look"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

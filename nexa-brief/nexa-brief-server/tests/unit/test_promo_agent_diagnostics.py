@@ -5,7 +5,7 @@ import pytest
 from src.adapters.agent import factory
 from src.adapters.agent.infrastructure import isolated_executor
 from src.core.ports.agent_port import AgentIsolationUnavailableError
-from src.core.promos.agents import statuses
+from src.core.nodemotion.promo.agents import statuses
 
 
 @pytest.fixture

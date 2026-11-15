@@ -13,6 +13,7 @@ import {
 } from "../api/studio-service";
 import {
   buildDraftRequest,
+  defaultStudioValue,
   isStudioValueComplete,
   studioValueFromDraft,
   studioValueSignature,
@@ -73,7 +74,7 @@ export function usePrototypeEditor({
     if (loadedFor.current === key) return;
     if (draftId === null) {
       loadedFor.current = key;
-      setValue({ ...EMPTY_STUDIO_VALUE, mediaOpacity: supportsBackgroundVisibility(template.id)
+      setValue({ ...defaultStudioValue(requirements), mediaOpacity: supportsBackgroundVisibility(template.id)
         ? { background: backgroundVisibility.get(`new:${template.id}`) ?? 0.8 } : undefined });
       setBaseSignature(null);
       setName("");

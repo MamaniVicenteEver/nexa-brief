@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-hologram",
+  "family": "lyrics",
+  "source_of_truth": "templates.json#templates/lyrics-hologram",
+  "config_json": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+  "config_prompt": null,
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "siluetas claras sobre fondo negro (look silhouette: se llenan de holografía) y planos de moda, retrato o baile (duotono holográfico)"
+      }
+    ],
+    "texts": [
+      {
+        "key": "intro.title",
+        "label": "Título de la canción",
+        "max": 40,
+        "default": "Give It Up"
+      },
+      {
+        "key": "intro.artist",
+        "label": "Artista",
+        "max": 40,
+        "default": "djlang59 ft. Snowflake"
+      },
+      {
+        "key": "outro.title",
+        "label": "Título del cierre",
+        "max": 30,
+        "default": "Gracias"
+      },
+      {
+        "key": "outro.sub",
+        "label": "Subtítulo del cierre",
+        "max": 40,
+        "default": "por escuchar"
+      },
+      {
+        "key": "outro.feats",
+        "label": "Créditos del cierre",
+        "max": 60,
+        "default": "Suscríbete · NodeMotion"
+      }
+    ],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/lyrics-hologram",
+    "config": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-hologram/DESIGN.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

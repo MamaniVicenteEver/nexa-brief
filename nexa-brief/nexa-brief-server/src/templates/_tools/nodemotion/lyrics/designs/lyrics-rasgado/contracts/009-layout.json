@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-rasgado",
+  "id": "layout.stack2",
+  "entry_id": "layout.stack2",
+  "name": "stack2",
+  "kind": "layout",
+  "label": "stack2",
+  "summary": "Existing layout configuration: stack2.",
+  "params": {
+    "weight": {
+      "default": 1.6
+    },
+    "bgs": {
+      "default": [
+        "paper",
+        "lime"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.6,
+    "bgs": [
+      "paper",
+      "lime"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-rasgado/assets/config.json",
+      "pointer": "/configs/0/layouts/stack2"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

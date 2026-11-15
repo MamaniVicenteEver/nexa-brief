@@ -50,7 +50,7 @@ $NEXA_PROFILE_DIR/sandbox/nodemotion/ID/
 
 `Contrato del diseño + brief → new fija versión → prompt investigar → research valida fuentes → prompt escribir → revisar → medios → ritmo → timing/build → draft → prepare → check → revisión humana`.
 
-Desde bash en la raíz del repositorio remoto: `source scripts/profile-env.sh`; verificar el perfil, entrar a `nexa-brief-server` y usar `.venv/bin/python src/templates/_tools/nodemotion-promo/promo.py`.
+Desde bash en la raíz del repositorio remoto: `source scripts/profile-env.sh`; verificar el perfil, entrar a `nexa-brief-server` y usar `.venv/bin/python src/templates/_tools/nodemotion/promo/tools/promo.py`.
 
 - `new --id ID --brief /ruta/brief.json`: crea datos y referencia; no copia prompts.
 - `prompt --id ID --stage escribir`: entrega base, etapa y contrato al agente, sin guardarlos por video ni llamar por sí solo un modelo. También admite investigar, revisar, medios, ritmo, contexto, publicar y miniaturas.

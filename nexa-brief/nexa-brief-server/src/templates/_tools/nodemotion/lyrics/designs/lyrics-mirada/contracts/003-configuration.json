@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-mirada",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "night": {
+      "default": "#0A0807"
+    },
+    "tan": {
+      "default": "#B39A7C"
+    },
+    "tanLight": {
+      "default": "#D3BC9D"
+    },
+    "tanDeep": {
+      "default": "#88705A"
+    },
+    "umber": {
+      "default": "#5B4737"
+    },
+    "cream": {
+      "default": "#EDE2CF"
+    },
+    "teal": {
+      "default": "#1F6D69"
+    },
+    "crimson": {
+      "default": "#8E1C16"
+    }
+  },
+  "example": {
+    "night": "#0A0807",
+    "tan": "#B39A7C",
+    "tanLight": "#D3BC9D",
+    "tanDeep": "#88705A",
+    "umber": "#5B4737",
+    "cream": "#EDE2CF",
+    "teal": "#1F6D69",
+    "crimson": "#8E1C16"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-mirada/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

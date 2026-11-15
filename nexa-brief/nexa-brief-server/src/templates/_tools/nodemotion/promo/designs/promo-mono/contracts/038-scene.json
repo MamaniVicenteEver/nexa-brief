@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "scene.linetext",
+  "entry_id": "scene.linetext",
+  "name": "linetext",
+  "kind": "scene",
+  "label": "linetext",
+  "summary": "Existing scene configuration: linetext.",
+  "params": {
+    "type": {
+      "default": "linetext"
+    },
+    "squiggle": {
+      "default": true
+    },
+    "trans": {
+      "default": "lineSweep"
+    }
+  },
+  "example": {
+    "type": "linetext",
+    "squiggle": true,
+    "trans": "lineSweep"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/assets/config.json",
+      "pointer": "/configs/0/scenes/6"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

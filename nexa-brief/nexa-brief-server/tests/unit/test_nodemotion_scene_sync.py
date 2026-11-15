@@ -6,7 +6,7 @@ from types import SimpleNamespace
 
 import pytest
 
-TOOLS = Path(__file__).resolve().parents[2] / 'src/templates/_tools/nodemotion-promo'
+TOOLS = Path(__file__).resolve().parents[2] / 'src/templates/_tools/nodemotion/promo/tools'
 sys.path.insert(0, str(TOOLS))
 spec = importlib.util.spec_from_file_location('scene_workflow', TOOLS / 'draft_workflow.py')
 workflow = importlib.util.module_from_spec(spec)

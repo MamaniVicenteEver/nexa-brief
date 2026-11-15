@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "repeatStack",
+  "entry_id": "repeatStack",
+  "kind": "component",
+  "label": "Frase repetida en columna",
+  "summary": "La frase repetida en columna en contorno tenue y la central sólida holográfica, con deriva vertical.",
+  "component": {
+    "name": "repeatStack",
+    "label": "Frase repetida en columna",
+    "summary": "La frase repetida en columna en contorno tenue y la central sólida holográfica, con deriva vertical.",
+    "group": "scene",
+    "tags": [
+      "lyrics-hologram",
+      "scene"
+    ],
+    "params": {
+      "textIn": {
+        "type": "enum",
+        "options": [
+          "slide",
+          "stamp",
+          "glitch",
+          "spread",
+          "fade",
+          "cut"
+        ],
+        "default": "slide"
+      },
+      "rows": {
+        "type": "number",
+        "min": 3,
+        "max": 11,
+        "default": 7
+      },
+      "drift": {
+        "type": "number",
+        "min": 0,
+        "max": 2,
+        "default": 1
+      }
+    },
+    "demo": {
+      "t": 20.98,
+      "query": null,
+      "layout": {
+        "weight": 1,
+        "bgs": [
+          "void"
+        ]
+      }
+    },
+    "preview": {
+      "gallery": "gallery.html?only=repeatStack"
+    }
+  },
+  "params": {
+    "textIn": {
+      "type": "enum",
+      "options": [
+        "slide",
+        "stamp",
+        "glitch",
+        "spread",
+        "fade",
+        "cut"
+      ],
+      "default": "slide"
+    },
+    "rows": {
+      "type": "number",
+      "min": 3,
+      "max": 11,
+      "default": 7
+    },
+    "drift": {
+      "type": "number",
+      "min": 0,
+      "max": 2,
+      "default": 1
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/5"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

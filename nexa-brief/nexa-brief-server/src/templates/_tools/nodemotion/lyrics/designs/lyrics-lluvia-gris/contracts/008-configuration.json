@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-lluvia-gris",
+  "id": "config.transition",
+  "entry_id": "config.transition",
+  "name": "transition",
+  "kind": "configuration",
+  "label": "transition",
+  "summary": "Existing configuration configuration: transition.",
+  "params": {
+    "overlapSec": {
+      "default": 0.7
+    },
+    "weights": {
+      "default": {
+        "rain": 3,
+        "blur": 2.5,
+        "fade": 1.5,
+        "wipeDown": 1
+      }
+    }
+  },
+  "example": {
+    "overlapSec": 0.7,
+    "weights": {
+      "rain": 3,
+      "blur": 2.5,
+      "fade": 1.5,
+      "wipeDown": 1
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
+      "pointer": "/configs/0/transition"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

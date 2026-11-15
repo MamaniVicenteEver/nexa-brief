@@ -82,6 +82,9 @@ class SandboxFolder:
 
 def detect_kind(item_dir: Path) -> str:
     """Detecta el motor usado por un elemento del sandbox."""
+    from src.core.nodemotion.shared.content import has_project_entry
+    if has_project_entry(item_dir):
+        return "hyperframes"
     if (item_dir / "manifest.json").is_file():
         return "explainer_kit"
 
@@ -150,6 +153,9 @@ def _image_paths(item_dir: Path) -> list[Path]:
 def _updated_at(item_dir: Path) -> str | None:
     """Fecha ISO (UTC) más reciente entre index, manifest y archivos de render."""
     candidates = [item_dir / "index.html", item_dir / "manifest.json"]
+    from src.core.nodemotion.shared.content import has_project_entry
+    if has_project_entry(item_dir):
+        candidates.append(item_dir / "project.json")
     render_dir = item_dir / "render"
     if render_dir.is_dir():
         candidates.extend(path for path in render_dir.iterdir() if path.is_file())
@@ -172,9 +178,11 @@ def load_item(
     videos = _video_paths(item_dir)
     images = _image_paths(item_dir)
     index = item_dir / "index.html"
+    from src.core.nodemotion.shared.content import has_project_entry
+    has_index = index.is_file() or has_project_entry(item_dir)
     item_folder = folder or item_dir.parent.name
     is_reference = item_folder == "referencias" and item_dir.parent.name in REFERENCE_CATEGORIES
-    if not index.is_file() and not videos and not images and not (is_reference and (item_dir / "NOTAS.md").is_file()):
+    if not has_index and not videos and not images and not (is_reference and (item_dir / "NOTAS.md").is_file()):
         return None
 
     manifest = _read_json(item_dir / "manifest.json")
@@ -203,11 +211,11 @@ def load_item(
         thumbnail_url = (
             f"/api/v1/explainer/sandbox/{encoded_folder}/{encoded_subcategory}/{encoded_id}/thumbnail.jpg"
         )
-    elif index.is_file():
+    elif has_index:
         thumbnail_url = f"/api/v1/explainer/sandbox/{encoded_folder}/{encoded_id}/thumbnail.jpg"
     else:
         thumbnail_url = None
-    player = "protocol" if index.is_file() else "video" if videos else "none"
+    player = "protocol" if has_index else "video" if videos else "none"
     notes_file = next(
         (name for name in ("PLAN.md", "NOTAS.md") if (item_dir / name).is_file()),
         None,
@@ -235,7 +243,7 @@ def load_item(
         ),
         status=manifest.get("status"),
         design=manifest.get("design"),
-        has_index=index.is_file(),
+        has_index=has_index,
         has_poster=has_poster,
         has_info=has_info,
         has_components=has_components,

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-mixtas",
+  "family": "lyrics",
+  "source_of_truth": "templates.json#templates/lyrics-mixtas",
+  "config_json": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-mixtas/prompts/config_mapper.md",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "naturaleza y cielo: océano, playa, noche, nebulosa"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/lyrics-mixtas",
+    "config": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-mixtas/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-mixtas/README.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

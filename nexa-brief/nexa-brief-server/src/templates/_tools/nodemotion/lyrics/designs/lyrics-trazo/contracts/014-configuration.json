@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "config.components",
+  "entry_id": "config.components",
+  "name": "components",
+  "kind": "configuration",
+  "label": "components",
+  "summary": "Existing configuration configuration: components.",
+  "params": {
+    "intro": {
+      "default": true
+    },
+    "outro": {
+      "default": "trazo.outrov1"
+    },
+    "interludes": {
+      "default": true
+    },
+    "burst": {
+      "default": true
+    },
+    "invert": {
+      "default": true
+    },
+    "hatch": {
+      "default": true
+    },
+    "doodles": {
+      "default": true
+    }
+  },
+  "example": {
+    "intro": true,
+    "outro": "trazo.outrov1",
+    "interludes": true,
+    "burst": true,
+    "invert": true,
+    "hatch": true,
+    "doodles": true
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "pointer": "/configs/0/components"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

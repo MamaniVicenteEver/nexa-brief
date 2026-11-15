@@ -30,9 +30,9 @@
       formato: { type: "object", doc: "{16x9:{elenco:{id:{x?,y?,escala?,profundidad?,espejo?}}},9x16:{elenco:{…}}}. Reencuadre por formato." },
     },
     /* El núcleo espera este hook también en seek/capturas, sin timeout silencioso. */
-    async prepare(beats) {
+    async prepare(beats, options) {
       const rt = await runtime();
-      await rt.prepareBeats(beats);
+      return rt.prepareBeats(beats, options);
     },
     create(ctx) { return K.capas.create(ctx, ctx.beat.params || {}, ctx.beat.dur); },
   });

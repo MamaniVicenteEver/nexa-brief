@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-lluvia-gris",
+  "family": "lyrics",
+  "display_name": "Lluvia Gris",
+  "description": "Balada triste bajo la lluvia: metraje frío y desaturado de vidrios mojados y calles nocturnas, serif itálica fina con sans espaciada, lluvia real sobre la letra, palabras que gotean y se derriten, reflejos en el asfalto y texto que limpia el vaho del vidrio. Transiciones de cortina de lluvia y disolvencia desenfocada.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "lluvia: vidrios mojados, calle nocturna, paraguas, ventana"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-lluvia-gris/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-lluvia-gris",
+    "config": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-lluvia-gris/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-lluvia-gris/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-lluvia-gris/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.lyricsFilter",
+      "kind": "configuration",
+      "label": "lyricsFilter",
+      "summary": "Existing configuration configuration: lyricsFilter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.lyricsFilter",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.render",
+      "kind": "configuration",
+      "label": "render",
+      "summary": "Existing configuration configuration: render.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.render",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.phrases",
+      "kind": "configuration",
+      "label": "phrases",
+      "summary": "Existing configuration configuration: phrases.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.phrases",
+      "contract": "contracts/006-configuration.json"
+    },
+    {
+      "entry_id": "config.timing",
+      "kind": "configuration",
+      "label": "timing",
+      "summary": "Existing configuration configuration: timing.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timing",
+      "contract": "contracts/007-configuration.json"
+    },
+    {
+      "entry_id": "config.transition",
+      "kind": "configuration",
+      "label": "transition",
+      "summary": "Existing configuration configuration: transition.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.transition",
+      "contract": "contracts/008-configuration.json"
+    },
+    {
+      "entry_id": "layout.window",
+      "kind": "layout",
+      "label": "window",
+      "summary": "Existing layout configuration: window.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.window",
+      "contract": "contracts/009-layout.json"
+    },
+    {
+      "entry_id": "layout.melt",
+      "kind": "layout",
+      "label": "melt",
+      "summary": "Existing layout configuration: melt.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.melt",
+      "contract": "contracts/010-layout.json"
+    },
+    {
+      "entry_id": "layout.street",
+      "kind": "layout",
+      "label": "street",
+      "summary": "Existing layout configuration: street.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.street",
+      "contract": "contracts/011-layout.json"
+    },
+    {
+      "entry_id": "layout.fogged",
+      "kind": "layout",
+      "label": "fogged",
+      "summary": "Existing layout configuration: fogged.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.fogged",
+      "contract": "contracts/012-layout.json"
+    },
+    {
+      "entry_id": "layout.echo",
+      "kind": "layout",
+      "label": "echo",
+      "summary": "Existing layout configuration: echo.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.echo",
+      "contract": "contracts/013-layout.json"
+    },
+    {
+      "entry_id": "layout.split",
+      "kind": "layout",
+      "label": "split",
+      "summary": "Existing layout configuration: split.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.split",
+      "contract": "contracts/014-layout.json"
+    },
+    {
+      "entry_id": "layout.whisper",
+      "kind": "layout",
+      "label": "whisper",
+      "summary": "Existing layout configuration: whisper.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.whisper",
+      "contract": "contracts/015-layout.json"
+    },
+    {
+      "entry_id": "layout.dropWords",
+      "kind": "layout",
+      "label": "dropWords",
+      "summary": "Existing layout configuration: dropWords.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.dropWords",
+      "contract": "contracts/016-layout.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/017-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/018-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/019-configuration.json"
+    }
+  ]
+}

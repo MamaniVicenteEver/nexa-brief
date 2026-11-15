@@ -192,7 +192,9 @@ async def get_sandbox_thumbnail(folder: str, video_id: str) -> FileResponse:
 
     sandbox_root = sandbox_catalog.get_sandbox_dir().resolve()
     item_dir = (sandbox_catalog.get_sandbox_dir() / folder / video_id).resolve()
-    if not item_dir.is_relative_to(sandbox_root) or not item_dir.is_dir() or not (item_dir / "index.html").is_file():
+    from src.core.nodemotion.shared.content import has_project_entry
+    if (not item_dir.is_relative_to(sandbox_root) or not item_dir.is_dir()
+            or not ((item_dir / "index.html").is_file() or has_project_entry(item_dir))):
         raise HTTPException(status_code=404, detail="miniatura no encontrada")
 
     try:

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-resaltado",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-resaltado",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [],
+  "source_sha256": "171e9e40af35a525aeca9888acd9b48e8471c92ea8de5c78cbd2e034f963401c",
+  "migration_source_sha256": "171e9e40af35a525aeca9888acd9b48e8471c92ea8de5c78cbd2e034f963401c",
+  "migration_runtime_sha256": {},
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-resaltado",
+    "config": "nodemotion/lyrics/lyrics-resaltado/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-resaltado/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-resaltado/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "b974922ea8f46aa6899d2b212a1417d4e679acf4b6ab2544744ac2c60f4cd408.webp",
+    "assets/song.mp3": "7879c27751e8902bbfc5d07c8d10261645b3625ca85203a9aef9121f0a7d01b5.mp3"
+  }
+}

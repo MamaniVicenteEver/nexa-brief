@@ -1,13 +1,15 @@
 "use client";
 
 import { Clapperboard, FlaskConical, Loader2, Sparkles } from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { AccountFormatChoice } from "@/shared/components/publish/AccountFormatChoice";
 import { BrandAccountPicker } from "@/shared/components/publish/BrandAccountPicker";
 import { allowedFormatsFor, formatFor } from "@/shared/components/publish/brand-groups";
-import { isDraftRunning } from "../../hooks/useDraft";
+import { prepareDraft } from "../../api/studio-service";
+import { draftKey, draftsKey, isDraftRunning } from "../../hooks/useDraft";
 import { useDraftThumbnailEditor } from "../../hooks/useDraftThumbnailEditor";
 import { usePublishCategoryGroups } from "../../hooks/usePublishCategoryGroups";
 import { isRecordable } from "../../hooks/useRecordPrototype";
@@ -42,6 +44,20 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
   const artistDirty = !!selected && dirtyArtistDraftId === selected.draftId;
   const labels = { "16x9": tp("16x9"), "9x16": tp("9x16") };
   const recording = recorder.render.isPending || isDraftRunning(selected);
+  const queryClient = useQueryClient();
+  const generateData = useMutation({
+    mutationFn: () => {
+      if (!selected) throw new Error("no draft");
+      return prepareDraft(selected.draftId);
+    },
+    onSuccess: (updated) => {
+      queryClient.setQueryData(draftKey(updated.draftId), updated);
+      void queryClient.invalidateQueries({ queryKey: draftsKey(updated.templateId) });
+    },
+  });
+  const pending = selected?.pending ?? [];
+  // Con datos pendientes se puede grabar sin cuentas; publicar espera a que estén generados.
+  const blockedByPending = pending.length > 0 && recorder.accounts.length > 0;
   const busy = recording || thumbnailEditor.isSaving || thumbnailEditor.isSelecting;
   const missingFormat = recorder.accounts.some((selector) => {
     const account = accounts.find((a) => a.selector === selector);
@@ -207,6 +223,27 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
         {recorder.render.error && (
           <p className="text-[11.5px] text-nb-accent-coral">{recorder.render.error.message}</p>
         )}
+        {pending.length > 0 && (
+          <div className="flex flex-col gap-2 rounded-xl border border-nb-accent-coral/40 bg-nb-accent-coral/10 p-3">
+            <p className="text-[12px] font-bold text-nb-accent-coral">{t("pendingTitle")}</p>
+            <ul className="list-disc pl-4 text-[11.5px] text-nb-ink">
+              {pending.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+            <p className="text-[11px] text-nb-mute">
+              {blockedByPending ? t("pendingBlocksPublish") : t("pendingCanRecord")}
+            </p>
+            <button
+              type="button"
+              disabled={generateData.isPending || busy || !selected}
+              onClick={() => generateData.mutate()}
+              className="self-start rounded-full bg-nb-accent-coral px-4 py-2 text-[12px] font-bold text-white disabled:opacity-50"
+            >
+              {generateData.isPending ? t("generatingData") : t("generateData")}
+            </button>
+          </div>
+        )}
         <button
           type="button"
           disabled={
@@ -215,7 +252,8 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
             missingFormat ||
             !recorder.ready ||
             thumbnailEditor.hasError ||
-            artistDirty
+            artistDirty ||
+            blockedByPending
           }
           onClick={async () => {
             if (!selected) return;

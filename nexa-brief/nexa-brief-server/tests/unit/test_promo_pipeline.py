@@ -5,8 +5,8 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 import pytest
-from src.core.promos import pipeline,readiness,usage
-from src.core.promo_prompts import SKILL,TEMPLATES
+from src.core.nodemotion.promo import pipeline,readiness,usage
+from src.core.nodemotion.promo.prompts import SKILL,TEMPLATES
 
 
 def proposal(template):

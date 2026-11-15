@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "band",
+  "entry_id": "band",
+  "kind": "component",
+  "label": "Frase con barra holográfica",
+  "summary": "Frase condensada alineada con barra holográfica que crece y tachado opcional.",
+  "component": {
+    "name": "band",
+    "label": "Frase con barra holográfica",
+    "summary": "Frase condensada alineada con barra holográfica que crece y tachado opcional.",
+    "group": "scene",
+    "tags": [
+      "lyrics-hologram",
+      "scene"
+    ],
+    "params": {
+      "textIn": {
+        "type": "enum",
+        "options": [
+          "slide",
+          "stamp",
+          "glitch",
+          "spread",
+          "fade",
+          "cut"
+        ],
+        "default": "slide"
+      },
+      "strike": {
+        "type": "boolean",
+        "default": false
+      },
+      "align": {
+        "type": "enum",
+        "options": [
+          "left",
+          "center"
+        ],
+        "default": "left"
+      }
+    },
+    "demo": {
+      "t": 13.5,
+      "query": null,
+      "layout": {
+        "weight": 1.2,
+        "bgs": [
+          "void",
+          "violet"
+        ]
+      }
+    },
+    "preview": {
+      "gallery": "gallery.html?only=band"
+    }
+  },
+  "params": {
+    "textIn": {
+      "type": "enum",
+      "options": [
+        "slide",
+        "stamp",
+        "glitch",
+        "spread",
+        "fade",
+        "cut"
+      ],
+      "default": "slide"
+    },
+    "strike": {
+      "type": "boolean",
+      "default": false
+    },
+    "align": {
+      "type": "enum",
+      "options": [
+        "left",
+        "center"
+      ],
+      "default": "left"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/7"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

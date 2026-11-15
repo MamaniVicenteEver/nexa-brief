@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-night-journey",
+  "id": "scene.tunnel",
+  "entry_id": "scene.tunnel",
+  "name": "tunnel",
+  "kind": "scene",
+  "label": "tunnel",
+  "summary": "Existing scene configuration: tunnel.",
+  "params": {
+    "type": {
+      "default": "tunnel"
+    },
+    "weight": {
+      "default": 0.14
+    },
+    "palette": {
+      "default": {
+        "bg": "#060500",
+        "ink": "#EAD51F",
+        "dim": "#7C6F0C"
+      }
+    }
+  },
+  "example": {
+    "type": "tunnel",
+    "weight": 0.14,
+    "palette": {
+      "bg": "#060500",
+      "ink": "#EAD51F",
+      "dim": "#7C6F0C"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-night-journey/assets/config.json",
+      "pointer": "/configs/0/scenes/3"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

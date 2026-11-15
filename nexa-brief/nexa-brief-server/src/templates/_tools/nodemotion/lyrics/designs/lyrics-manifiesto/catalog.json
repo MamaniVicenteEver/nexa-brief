@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-manifiesto",
+  "family": "lyrics",
+  "display_name": "Manifiesto",
+  "description": "Editorial tipográfico blanco y negro con cortes en seco entre 5 composiciones de texto — para spoken word, hip-hop consciente o contenido reflexivo/político.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-manifiesto/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-manifiesto/prompts/config_mapper.md",
+  "runtime_assets": [
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-manifiesto",
+    "config": "nodemotion/lyrics/lyrics-manifiesto/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-manifiesto/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-manifiesto/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-manifiesto/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.bg",
+      "kind": "configuration",
+      "label": "bg",
+      "summary": "Existing configuration configuration: bg.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.bg",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.colors",
+      "kind": "configuration",
+      "label": "colors",
+      "summary": "Existing configuration configuration: colors.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.colors",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.wordmark",
+      "kind": "configuration",
+      "label": "wordmark",
+      "summary": "Existing configuration configuration: wordmark.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.wordmark",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.phrase",
+      "kind": "configuration",
+      "label": "phrase",
+      "summary": "Existing configuration configuration: phrase.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.phrase",
+      "contract": "contracts/006-configuration.json"
+    },
+    {
+      "entry_id": "config.laminas",
+      "kind": "configuration",
+      "label": "laminas",
+      "summary": "Existing configuration configuration: laminas.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.laminas",
+      "contract": "contracts/007-configuration.json"
+    }
+  ]
+}

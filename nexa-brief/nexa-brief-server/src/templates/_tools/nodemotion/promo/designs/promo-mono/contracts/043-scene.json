@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "scene.spaced",
+  "entry_id": "scene.spaced",
+  "name": "spaced",
+  "kind": "scene",
+  "label": "spaced",
+  "summary": "Existing scene configuration: spaced.",
+  "params": {
+    "type": {
+      "default": "spaced"
+    },
+    "echo": {
+      "default": 3
+    },
+    "trans": {
+      "default": "blink"
+    }
+  },
+  "example": {
+    "type": "spaced",
+    "echo": 3,
+    "trans": "blink"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/assets/config.json",
+      "pointer": "/configs/0/scenes/14"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

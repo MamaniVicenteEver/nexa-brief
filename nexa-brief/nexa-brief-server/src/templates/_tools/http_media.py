@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import http.server
 import os
+from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 
 class ProfileContentMixin:
@@ -38,7 +40,42 @@ class MediaRequestHandler(http.server.SimpleHTTPRequestHandler):
     def send_head(self):
         self._range_left = None
         path = self.translate_path(self.path)
-        if not path.lower().endswith((".mp4", ".webm", ".mov", ".mp3", ".m4a", ".ogg")) or not os.path.isfile(path):
+        logical_path = unquote(urlsplit(self.path).path)
+        if logical_path.endswith("/"):
+            logical_path += "index.html"
+        if os.path.isdir(path):
+            from src.core.nodemotion.shared.content import has_project_entry
+            if os.path.isfile(os.path.join(path, "index.html")) or has_project_entry(Path(path)):
+                path = os.path.join(path, "index.html")
+        # Demo code lives in one shared engine; recorder URLs remain unchanged.
+        from src.config.template_manifest import resolve_template_content
+        from src.core.nodemotion.shared.content import resolve_static_project_content
+        try:
+            content = resolve_static_project_content(Path(path), self.path)
+        except (OSError, ValueError, KeyError):
+            self.send_error(404, "NodeMotion project resource is unavailable")
+            return None
+        if content is None:
+            content = resolve_template_content(Path(path))
+        if isinstance(content, bytes):
+            import io
+            self.send_response(200)
+            self.send_header("Content-Type", self.guess_type(logical_path))
+            self.send_header("Content-Length", str(len(content)))
+            self.send_header("Cache-Control", "no-cache")
+            self.end_headers()
+            return io.BytesIO(content)
+        if isinstance(content, Path) and str(content) != path:
+            path = str(content)
+            if Path(logical_path).suffix.lower() not in {".mp4", ".webm", ".mov", ".mp3", ".wav", ".m4a", ".ogg", ".aac", ".flac", ".opus"}:
+                source = content.open("rb")
+                self.send_response(200)
+                self.send_header("Content-Type", self.guess_type(logical_path))
+                self.send_header("Content-Length", str(content.stat().st_size))
+                self.send_header("Cache-Control", "no-cache")
+                self.end_headers()
+                return source
+        if not logical_path.lower().endswith((".mp4", ".webm", ".mov", ".mp3", ".wav", ".m4a", ".ogg", ".aac", ".flac", ".opus")) or not os.path.isfile(path):
             return super().send_head()
         source = open(path, "rb")
         size = os.fstat(source.fileno()).st_size
@@ -68,7 +105,7 @@ class MediaRequestHandler(http.server.SimpleHTTPRequestHandler):
                 return None
         self._range_left = end - start + 1
         self.send_response(206 if request else 200)
-        self.send_header("Content-Type", self.guess_type(path))
+        self.send_header("Content-Type", self.guess_type(logical_path))
         self.send_header("Content-Length", str(self._range_left))
         self.send_header("Accept-Ranges", "bytes")
         if request:

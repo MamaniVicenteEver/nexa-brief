@@ -8,7 +8,7 @@ import pytest
 
 
 def test_create_pins_and_syncs_built_scenes_without_overrides(tmp_path, monkeypatch):
-    path=Path('src/templates/_tools/nodemotion-promo/draft_workflow.py').resolve()
+    path=Path('src/templates/_tools/nodemotion/promo/tools/draft_workflow.py').resolve()
     spec=importlib.util.spec_from_file_location('workflow_scene_test',path)
     workflow=importlib.util.module_from_spec(spec);spec.loader.exec_module(workflow)
     target=tmp_path/'project';(target/'assets').mkdir(parents=True)
@@ -29,7 +29,7 @@ def test_create_pins_and_syncs_built_scenes_without_overrides(tmp_path, monkeypa
     sync=Mock();monkeypatch.setattr(workflow,'sync_scene_config',sync)
     workflow.create(tmp_path,target,'project',read,write)
     state=read(target/'draft.json')
-    identity={'request':state['request'],'lyrics':lyrics,'scene_config':config}
+    identity={'request':state['request'],'promo_timeline':lyrics,'scene_config':config}
     assert state['fingerprint']==hashlib.sha256(json.dumps(identity,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
     sync.assert_called_once_with(target,'draft1',read)
     write(target/'assets/config.json',{'scenes':[{'type':'word'}]})
@@ -39,7 +39,7 @@ def test_create_pins_and_syncs_built_scenes_without_overrides(tmp_path, monkeypa
 
 
 def test_legacy_without_built_config_does_not_sync(tmp_path, monkeypatch):
-    path=Path('src/templates/_tools/nodemotion-promo/draft_workflow.py').resolve()
+    path=Path('src/templates/_tools/nodemotion/promo/tools/draft_workflow.py').resolve()
     spec=importlib.util.spec_from_file_location('workflow_legacy_scene_test',path)
     workflow=importlib.util.module_from_spec(spec);spec.loader.exec_module(workflow)
     target=tmp_path/'project';(target/'assets').mkdir(parents=True)
@@ -58,7 +58,7 @@ def test_legacy_without_built_config_does_not_sync(tmp_path, monkeypatch):
 
 @pytest.mark.parametrize('collection', [False, True])
 def test_sync_preserves_campaign_identity_and_resolved_runtime_paths(tmp_path, monkeypatch, collection):
-    path=Path('src/templates/_tools/nodemotion-promo/draft_workflow.py').resolve()
+    path=Path('src/templates/_tools/nodemotion/promo/tools/draft_workflow.py').resolve()
     spec=importlib.util.spec_from_file_location('workflow_identity_test',path)
     workflow=importlib.util.module_from_spec(spec);spec.loader.exec_module(workflow)
     target=tmp_path/'project';(target/'assets').mkdir(parents=True)
@@ -95,7 +95,7 @@ def test_sync_preserves_campaign_identity_and_resolved_runtime_paths(tmp_path, m
 
 
 def test_prepare_restores_campaign_after_details_before_thumbnails(tmp_path, monkeypatch):
-    path=Path('src/templates/_tools/nodemotion-promo/draft_workflow.py').resolve()
+    path=Path('src/templates/_tools/nodemotion/promo/tools/draft_workflow.py').resolve()
     spec=importlib.util.spec_from_file_location('workflow_prepare_identity_test',path)
     workflow=importlib.util.module_from_spec(spec);spec.loader.exec_module(workflow)
     target=tmp_path/'sandbox/nodemotion/demo';(target/'assets').mkdir(parents=True)
@@ -116,7 +116,7 @@ def test_prepare_restores_campaign_after_details_before_thumbnails(tmp_path, mon
         return draft
     monkeypatch.setattr(workflow,'call',call)
     monkeypatch.setattr(workflow,'sync_scene_config',lambda *args:events.append('sync'))
-    from src.core.promos import credits
+    from src.core.nodemotion.promo import credits
     monkeypatch.setattr(credits,'apply_credits',lambda details,*args,**kwargs:details)
     workflow.prepare(target,lambda path:json.loads(path.read_text()))
     assert events==['details','sync','thumbnail','thumbnail']

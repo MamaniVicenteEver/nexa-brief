@@ -3,6 +3,20 @@
   "max_agent_runs_total": 4,
   "max_tokens": 4000000,
   "style_policies": {
+    "titanes": {
+      "version": 1,
+      "guide": "designs/titanes/FABRICA.md",
+      "media": {
+        "photo_seconds": [4, 10],
+        "video_seconds": [8, 16],
+        "photo_components": ["titanes.foto", "titanes.introv1", "titanes.introv2"],
+        "max_uses_per_asset": 2,
+        "review_required": true
+      },
+      "custom_min": 1,
+      "long_video_min_spans": 0,
+      "text_only": {"max_share": 0.12, "max_consecutive": 2}
+    },
     "imperio": {
       "version": 2,
       "guide": "guides/imperio-production.md",

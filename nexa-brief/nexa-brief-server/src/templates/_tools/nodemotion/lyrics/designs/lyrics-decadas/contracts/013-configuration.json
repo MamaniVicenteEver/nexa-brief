@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "config.halftone",
+  "entry_id": "config.halftone",
+  "name": "halftone",
+  "kind": "configuration",
+  "label": "halftone",
+  "summary": "Existing configuration configuration: halftone.",
+  "params": {
+    "enabled": {
+      "default": true
+    },
+    "cell": {
+      "default": 7
+    },
+    "contrast": {
+      "default": 1.15
+    },
+    "size": {
+      "default": 900
+    }
+  },
+  "example": {
+    "enabled": true,
+    "cell": 7,
+    "contrast": 1.15,
+    "size": 900
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+      "pointer": "/configs/0/halftone"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-collage",
+  "family": "lyrics",
+  "display_name": "Collage Callejero",
+  "description": "Mural de recortes de papel urbano: cada palabra estalla como un flyer callejero (titular a tijera, sello stencil, etiqueta a mano o letra hueca transparente), con figuras recortadas en blanco y negro y cortes de plano al ritmo de la canción — para hip-hop, trap y contenido urbano de calle.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-collage/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-collage/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/figures",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-collage",
+    "config": "nodemotion/lyrics/lyrics-collage/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-collage/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-collage/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-collage/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.bg",
+      "kind": "configuration",
+      "label": "bg",
+      "summary": "Existing configuration configuration: bg.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.bg",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.figures",
+      "kind": "configuration",
+      "label": "figures",
+      "summary": "Existing configuration configuration: figures.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.figures",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/006-configuration.json"
+    },
+    {
+      "entry_id": "config.layout",
+      "kind": "configuration",
+      "label": "layout",
+      "summary": "Existing configuration configuration: layout.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.layout",
+      "contract": "contracts/007-configuration.json"
+    }
+  ]
+}

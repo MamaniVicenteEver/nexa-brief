@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-caution",
+  "id": "layout.giant",
+  "entry_id": "layout.giant",
+  "name": "giant",
+  "kind": "layout",
+  "label": "giant",
+  "summary": "Existing layout configuration: giant.",
+  "params": {
+    "weight": {
+      "default": 3.0
+    },
+    "bgs": {
+      "default": [
+        "red",
+        "black",
+        "white"
+      ]
+    }
+  },
+  "example": {
+    "weight": 3.0,
+    "bgs": [
+      "red",
+      "black",
+      "white"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-caution/assets/config.json",
+      "pointer": "/configs/0/layouts/giant"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

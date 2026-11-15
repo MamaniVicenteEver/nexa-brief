@@ -1,0 +1,172 @@
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* tema (fuentes/paleta) — defaults idénticos al caso actual; config.json puede pisarlos */
+  :root {
+    --fontPoster: "Anton", sans-serif;
+    --fontCondensed: "Bebas Neue", sans-serif;
+    --fontStencil: "Stardos Stencil", cursive;
+    --fontMarker: "Permanent Marker", cursive;
+    --fontCaption: "Courier Prime", monospace;
+    --ink: #17130F; --paper: #E7DFC7; --paperWhite: #F5EFDD; --red: #B81F19;
+  }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: var(--ink); cursor: pointer; }
+
+  /* cuaderno cuadriculado envejecido — 100% generativo, sin imagen */
+  #paper {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      repeating-linear-gradient(0deg, rgba(23,19,15,0.05) 0 1px, transparent 1px 34px),
+      repeating-linear-gradient(90deg, rgba(23,19,15,0.05) 0 1px, transparent 1px 34px),
+      radial-gradient(ellipse 60vw 45vh at 20% 15%, rgba(255,250,235,0.35), transparent 65%),
+      radial-gradient(ellipse 55vw 60vh at 85% 80%, rgba(0,0,0,0.10), transparent 70%),
+      linear-gradient(158deg, #EFE8D2 0%, var(--paper) 55%, #DCD2B4 100%);
+  }
+  /* franjas de luz diagonal cruzando la escena, como persianas — vida lenta */
+  #rays {
+    position: fixed; inset: -20%; z-index: 1; pointer-events: none; opacity: 0.5;
+    background: repeating-linear-gradient(72deg, rgba(255,255,255,0.16) 0 3vw, transparent 3vw 11vw);
+    animation: raysDrift 60s linear infinite;
+  }
+  @keyframes raysDrift { 0% { transform: translate(0,0); } 100% { transform: translate(-8%, 6%); } }
+  /* foto opcional casi imperceptible bajo el papel (CONFIG.bg) — apagada por defecto */
+  #bg {
+    position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0;
+    filter: grayscale(1) contrast(1.2) brightness(0.5); opacity: 0; display: none;
+  }
+  /* recortes decorativos fijos: papel rasgado negro/rojo en las esquinas, estáticos */
+  .deco { position: fixed; z-index: 1; pointer-events: none; opacity: 0.9; }
+  #decoTL { top: -6vh; left: -4vw; width: 30vw; height: 26vh; background: var(--ink);
+    clip-path: polygon(0 0, 78% 0, 100% 38%, 62% 100%, 0 82%); opacity: 0.92; }
+  #decoBR { bottom: -8vh; right: -5vw; width: 26vw; height: 30vh; background: var(--red);
+    clip-path: polygon(30% 0, 100% 10%, 100% 100%, 0 100%, 8% 42%); opacity: 0.85; }
+  #decoStar { bottom: 4vh; left: 3vw; width: 7vw; height: 7vw; background: var(--ink);
+    clip-path: polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); opacity: 0.8; }
+
+  #viewport { position: fixed; inset: 0; z-index: 2; overflow: hidden; }
+  #stage { position: absolute; inset: 0; will-change: transform; }
+
+  /* recorte con bordes rasgados (clip-path irregular vía JS) */
+  .clip {
+    position: absolute; white-space: nowrap; line-height: 0.92; text-transform: uppercase;
+    will-change: transform, opacity; opacity: 0; transform-origin: 50% 50%;
+    transition: opacity 0.6s ease;
+  }
+  .clip.enterL { animation: slamL 0.5s cubic-bezier(0.18, 0.85, 0.24, 1.15) forwards; }
+  .clip.enterR { animation: slamR 0.5s cubic-bezier(0.18, 0.85, 0.24, 1.15) forwards; }
+  @keyframes slamL {
+    0%   { opacity: 0; transform: translateX(-70vw) rotate(calc(var(--rot) - 14deg)) scale(1.1); }
+    62%  { opacity: 1; }
+    100% { opacity: 1; transform: translateX(0) rotate(var(--rot)) scale(1); }
+  }
+  @keyframes slamR {
+    0%   { opacity: 0; transform: translateX(70vw) rotate(calc(var(--rot) + 14deg)) scale(1.1); }
+    62%  { opacity: 1; }
+    100% { opacity: 1; transform: translateX(0) rotate(var(--rot)) scale(1); }
+  }
+  .clip.leaveL { transition: transform 0.55s cubic-bezier(0.4,0,1,1), opacity 0.5s ease;
+    transform: translateX(-90vw) rotate(calc(var(--rot) - 22deg)) scale(0.9) !important; opacity: 0 !important; }
+  .clip.leaveR { transition: transform 0.55s cubic-bezier(0.4,0,1,1), opacity 0.5s ease;
+    transform: translateX(90vw) rotate(calc(var(--rot) + 22deg)) scale(0.9) !important; opacity: 0 !important; }
+
+  /* voz 1 — poster: titular recortado a tijera, fondo sólido claro u oscuro */
+  .clip.poster {
+    font-family: var(--fontPoster); font-weight: 400; letter-spacing: 0.01em;
+    padding: 0.12em 0.34em 0.06em; box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+  }
+  /* voz 2 — stencil: sello militar estampado, con tinta rugosa */
+  .clip.stencil {
+    font-family: var(--fontStencil); font-weight: 700; letter-spacing: 0.06em;
+    padding: 0.3em 0.4em 0.22em; border: 0.11em solid currentColor; filter: url(#rough);
+  }
+  /* voz 3 — marker: etiqueta escrita a mano, siempre sobre un post-it de papel */
+  .clip.marker {
+    font-family: var(--fontMarker); font-weight: 400; letter-spacing: 0.01em;
+    padding: 0.2em 0.5em; background: var(--paperWhite); color: var(--ink);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.45);
+  }
+  /* voz 4 — hollow: letra transparente, se ve el trazo y por dentro la capa de abajo */
+  .clip.hollow {
+    font-family: var(--fontCondensed); font-weight: 400; letter-spacing: 0.015em;
+    color: transparent !important; -webkit-text-stroke: 0.05em currentColor;
+    paint-order: stroke fill;
+  }
+  /* recorte viejo: se apaga pero queda en escena hasta el corte de plano */
+  .clip.cold { opacity: 0.55; filter: brightness(0.8) saturate(0.85); }
+
+  /* voz 5 — caption: línea completa de la letra, a máquina de escribir, discreta */
+  #caption {
+    position: absolute; max-width: 62vw; font-family: var(--fontCaption); font-weight: 400;
+    font-size: 1.6vh; line-height: 1.5; letter-spacing: 0.02em; color: var(--ink);
+    background: rgba(245,239,221,0.88); padding: 0.6em 0.9em; opacity: 0;
+    transition: opacity 1.1s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  #caption.on { opacity: 0.92; }
+
+  /* figura recortada (persona sin fondo) — tratada en blanco y negro alto contraste */
+  .figure {
+    position: absolute; height: 58vh; width: auto; z-index: 1;
+    filter: grayscale(1) contrast(1.35) brightness(0.92) saturate(0);
+    opacity: 0; will-change: transform, opacity; transform-origin: 50% 100%;
+  }
+  .figure.enterL { animation: figL 0.7s cubic-bezier(0.2,0.8,0.24,1.05) forwards; }
+  .figure.enterR { animation: figR 0.7s cubic-bezier(0.2,0.8,0.24,1.05) forwards; }
+  @keyframes figL { 0% { opacity: 0; transform: translateX(-55vw) rotate(-6deg); } 100% { opacity: 0.94; transform: translateX(0) rotate(var(--rot)); } }
+  @keyframes figR { 0% { opacity: 0; transform: translateX(55vw) rotate(6deg); }  100% { opacity: 0.94; transform: translateX(0) rotate(var(--rot)); } }
+  .figure.leaving { transition: transform 0.6s cubic-bezier(0.4,0,1,1), opacity 0.5s ease; opacity: 0 !important; }
+  .figure.leaveL { transform: translateX(-70vw) rotate(-16deg) !important; }
+  .figure.leaveR { transform: translateX(70vw) rotate(16deg) !important; }
+
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 6; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.07; mix-blend-mode: overlay; animation: gsh 1s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+  #vignette {
+    position: fixed; inset: 0; z-index: 5; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 46%, transparent 46%, rgba(10,7,3,0.5) 100%);
+  }
+
+  /* #intro y #outro: portada de flyer/mixtape rasgada, misma estética que las cards */
+  .cardScreen {
+    position: fixed; inset: 0; z-index: 8; display: flex; align-items: center; justify-content: center;
+    text-align: center; transition: opacity 1.3s ease;
+  }
+  .flyer {
+    position: relative; display: flex; flex-direction: column; align-items: center; gap: 2vh;
+    padding: 6vh 7vw 5vh; transform: rotate(-1.4deg); background: var(--paperWhite);
+    clip-path: polygon(1.5% 3%, 40% 0, 60% 1.5%, 98.5% 4%, 100% 40%, 98% 97%, 55% 100%, 20% 98.5%, 0 62%);
+    box-shadow: 0 26px 60px rgba(0,0,0,0.6);
+  }
+  .flyer .tape { position: absolute; width: 10vw; height: 3vh; top: -1.6vh; left: 50%;
+    transform: translateX(-50%) rotate(-2deg); background: rgba(199,60,45,0.55); box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+  .cardScreen .artist { font-family: var(--fontMarker); font-size: 3vh; color: var(--red); }
+  .cardScreen .title  {
+    font-family: var(--fontPoster); font-size: 13vh; line-height: 0.95; color: var(--ink);
+    text-transform: uppercase; letter-spacing: 0.01em;
+  }
+  .cardScreen .sub    { font-family: var(--fontCondensed); font-size: 4vh; letter-spacing: 0.35em;
+    padding-left: 0.35em; color: var(--red); text-transform: uppercase; }
+  .cardScreen .feats  { font-family: var(--fontCaption); font-size: 1.7vh; letter-spacing: 0.14em;
+    color: var(--ink); margin-top: 1vh; }
+  #intro.gone { opacity: 0; pointer-events: none; }
+  #outro { opacity: 0; pointer-events: none; }
+  #outro.show { opacity: 1; pointer-events: auto; }
+  #hint { display: none !important;
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: var(--fontCaption); font-size: 1.6vh; letter-spacing: 0.5em;
+    opacity: 0.6; animation: hintPulse 2s ease infinite; pointer-events: none; color: var(--ink);
+  }
+  @keyframes hintPulse { 0%,100% { opacity: 0.25; } 50% { opacity: 0.75; } }
+
+  /* responsive móvil (solo orientación vertical — desktop queda intacto) */
+  @media (orientation: portrait) {
+    .flyer { padding: 5vh 6vw 4vh; }
+    .cardScreen .artist { font-size: min(3vh, 4.6vw); }
+    .cardScreen .title  { font-size: min(13vh, 15vw); }
+    .cardScreen .sub    { font-size: min(4vh, 5.8vw); letter-spacing: 0.26em; padding-left: 0.26em; }
+    .cardScreen .feats  { font-size: min(1.7vh, 3.2vw); }
+    #caption { max-width: 84vw; font-size: min(1.6vh, 2.8vw); }
+    .figure { height: 44vh; }
+  }
+

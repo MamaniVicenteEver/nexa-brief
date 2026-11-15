@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "giantOutline",
+  "entry_id": "giantOutline",
+  "kind": "component",
+  "label": "Contorno gigante + frase",
+  "summary": "Letras en contorno más grandes que el cuadro y la frase encima alternando contorno y sólido.",
+  "component": {
+    "name": "giantOutline",
+    "label": "Contorno gigante + frase",
+    "summary": "Letras en contorno más grandes que el cuadro y la frase encima alternando contorno y sólido.",
+    "group": "scene",
+    "tags": [
+      "lyrics-hologram",
+      "scene"
+    ],
+    "params": {
+      "textIn": {
+        "type": "enum",
+        "options": [
+          "slide",
+          "stamp",
+          "glitch",
+          "spread",
+          "fade",
+          "cut"
+        ],
+        "default": "stamp"
+      },
+      "drift": {
+        "type": "number",
+        "min": 0,
+        "max": 2,
+        "default": 1
+      }
+    },
+    "demo": {
+      "t": 42.03,
+      "query": null,
+      "layout": {
+        "weight": 1,
+        "bgs": [
+          "void",
+          "red"
+        ]
+      }
+    },
+    "preview": {
+      "gallery": "gallery.html?only=giantOutline"
+    }
+  },
+  "params": {
+    "textIn": {
+      "type": "enum",
+      "options": [
+        "slide",
+        "stamp",
+        "glitch",
+        "spread",
+        "fade",
+        "cut"
+      ],
+      "default": "stamp"
+    },
+    "drift": {
+      "type": "number",
+      "min": 0,
+      "max": 2,
+      "default": 1
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/13"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

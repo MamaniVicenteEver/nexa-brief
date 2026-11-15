@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-cristal",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-cristal",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "index1.html": "runtime/index1.html"
+  },
+  "runtime_assets": [
+    "assets/figures",
+    "assets/humo.mp4"
+  ],
+  "source_sha256": "c02bb50e0e488f068d9782e8673c1ab5a76f3e8b53c0736e4f3e2a1e7fdaaddb",
+  "migration_source_sha256": "c02bb50e0e488f068d9782e8673c1ab5a76f3e8b53c0736e4f3e2a1e7fdaaddb",
+  "migration_runtime_sha256": {
+    "index1.html": "765aeb20669dd97b7ab2be138a349445300264b085021cba88427b7d2c108bcd"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-cristal",
+    "config": "nodemotion/lyrics/lyrics-cristal/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-cristal/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-cristal/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "805f218f1b0ae4b6e7d0b0a4269d3398eefebefdcd007556eaac228b3b3cba92.webp",
+    "assets/figures/figura-01.png": "4a72ad409bbc9c6aa7eda15eff5f2b13a686712ee6ea9a671ef8004fda503a95.png",
+    "assets/figures/figura-02.png": "d72891526a9737e4fe53762aaa8287530c566c17151113065d5ef9af0d55d8d6.png",
+    "assets/figures/figura-03.png": "d1b47e46d4311fa021cd75bb3fb3fa6cd8419f90b494a94b2a614d1fa1cf49be.png",
+    "assets/humo.mp4": "b9d897d0f3e3e5e155f82a035f8b24885124171d010574a94c2d8f8373d0c556.mp4",
+    "assets/song.mp3": "84fa49015ac891d6f7bb5ebc8513885cb620239c280267b51cadaafa32755e96.mp3"
+  }
+}

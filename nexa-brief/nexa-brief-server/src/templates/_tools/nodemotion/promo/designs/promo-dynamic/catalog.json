@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-dynamic",
+  "family": "promo",
+  "display_name": "Promo Dynamic",
+  "description": "Opener sobre verde neón: letra negra extendida, palabras gigantes en contorno, letras enormes que barren la pantalla, fotos de atletas recortadas con borde pixelado y estela de copias, HUD técnico y logo con foto en la letra.",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "acción deportiva en movimiento, atletas entrenando"
+      },
+      {
+        "slot": "photos",
+        "kind": "image",
+        "min": 1,
+        "max": 12,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Fotos",
+        "hint": "atletas en primer plano, retrato deportivo"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.tag",
+        "label": "Marca",
+        "max": 40,
+        "default": "NEXA BRIEF\nSPORT SERIES"
+      },
+      {
+        "key": "brand.url",
+        "label": "Llamado a la acción",
+        "max": 40,
+        "default": "@NEXABRIEF · SUSCRÍBETE"
+      },
+      {
+        "key": "brand.vertical",
+        "label": "Texto vertical",
+        "max": 24,
+        "default": "NEXA BRIEF"
+      }
+    ],
+    "brief": true
+  },
+  "config_json": "nodemotion/commercial/promo-dynamic/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/promo-dynamic",
+    "config": "nodemotion/commercial/promo-dynamic/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-dynamic/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-dynamic/README.md"
+  },
+  "lookup": "/api/v1/templates/promo-dynamic/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "scene.word",
+      "kind": "scene",
+      "label": "word",
+      "summary": "palabra con contorno y transición",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.word",
+      "contract": "contracts/001-scene.json"
+    },
+    {
+      "entry_id": "scene.photo",
+      "kind": "scene",
+      "label": "photo",
+      "summary": "medio recortado y palabra con subtítulo opcional",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.photo",
+      "contract": "contracts/002-scene.json"
+    },
+    {
+      "entry_id": "scene.stack",
+      "kind": "scene",
+      "label": "stack",
+      "summary": "palabra repetida junto al medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.stack",
+      "contract": "contracts/003-scene.json"
+    },
+    {
+      "entry_id": "scene.collage",
+      "kind": "scene",
+      "label": "collage",
+      "summary": "collage de cuatro medios con dos palabras",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.collage",
+      "contract": "contracts/004-scene.json"
+    },
+    {
+      "entry_id": "scene.banner",
+      "kind": "scene",
+      "label": "banner",
+      "summary": "medio panorámico y palabra",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.banner",
+      "contract": "contracts/005-scene.json"
+    },
+    {
+      "entry_id": "scene.duo",
+      "kind": "scene",
+      "label": "duo",
+      "summary": "dos medios y palabra",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.duo",
+      "contract": "contracts/006-scene.json"
+    },
+    {
+      "entry_id": "scene.full",
+      "kind": "scene",
+      "label": "full",
+      "summary": "medio grande y palabra repetida",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.full",
+      "contract": "contracts/007-scene.json"
+    },
+    {
+      "entry_id": "scene.logo",
+      "kind": "scene",
+      "label": "logo",
+      "summary": "cierre con medio, nombre y llamada opcional",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.logo",
+      "contract": "contracts/008-scene.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/009-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/010-configuration.json"
+    },
+    {
+      "entry_id": "config.brand",
+      "kind": "configuration",
+      "label": "brand",
+      "summary": "Existing configuration configuration: brand.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.brand",
+      "contract": "contracts/011-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/012-configuration.json"
+    }
+  ]
+}

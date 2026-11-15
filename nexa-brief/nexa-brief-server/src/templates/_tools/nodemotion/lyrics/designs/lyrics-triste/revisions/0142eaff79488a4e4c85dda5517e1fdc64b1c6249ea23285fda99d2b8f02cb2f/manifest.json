@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-triste",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-triste",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "assets/bg.jpg"
+  ],
+  "source_sha256": "b2eccc94f9218596d7d912bd1c857afb4858046e86d049f3dc20bdb68c863f3d",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-triste",
+    "config": "nodemotion/lyrics/lyrics-triste/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-triste/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-triste/README.md"
+  },
+  "revision": "0142eaff79488a4e4c85dda5517e1fdc64b1c6249ea23285fda99d2b8f02cb2f"
+}

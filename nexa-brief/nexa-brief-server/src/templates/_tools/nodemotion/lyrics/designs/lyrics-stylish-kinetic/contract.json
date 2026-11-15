@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-stylish-kinetic",
+  "family": "lyrics",
+  "source_of_truth": "templates.json#templates/lyrics-stylish-kinetic",
+  "config_json": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-stylish-kinetic/prompts/config_mapper.md",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [],
+    "brief": false
+  },
+  "sources": {
+    "template": "templates.json#templates/lyrics-stylish-kinetic",
+    "config": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-stylish-kinetic/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-stylish-kinetic/README.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

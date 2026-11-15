@@ -1,0 +1,323 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "deck",
+  "entry_id": "deck",
+  "kind": "component",
+  "label": "Mazo de escenas (config.layouts)",
+  "summary": "Cada frase cantada elige un tipo de escena por peso entre los que cumplen su condición de texto; fondos, clips preferidos y transición por tipo.",
+  "component": {
+    "name": "deck",
+    "label": "Mazo de escenas (config.layouts)",
+    "kind": "json",
+    "group": "config",
+    "summary": "Cada frase cantada elige un tipo de escena por peso entre los que cumplen su condición de texto; fondos, clips preferidos y transición por tipo.",
+    "params": {
+      "layouts.<tipo>.weight": {
+        "type": "number",
+        "min": 0,
+        "max": 10,
+        "default": 1
+      },
+      "layouts.<tipo>.bgs": {
+        "type": "list",
+        "options": [
+          "void",
+          "holo",
+          "red",
+          "violet",
+          "pale",
+          "media"
+        ]
+      },
+      "layouts.<tipo>.media": {
+        "type": "list",
+        "items": "id de config.media"
+      },
+      "layouts.<tipo>.trans": {
+        "type": "enum",
+        "options": [
+          "cut",
+          "holoWipe",
+          "glitch",
+          "flashWhite",
+          "shutter",
+          "fade",
+          "blur",
+          "iris",
+          "wipeL",
+          "wipeR",
+          "wipeUp",
+          "wipeDown",
+          "bars",
+          "flash",
+          "zoomIn",
+          "zoomOut",
+          "slice"
+        ]
+      },
+      "look.holoSpeed": {
+        "type": "number",
+        "min": 0,
+        "max": 3,
+        "default": 1
+      },
+      "look.labels": {
+        "type": "number",
+        "min": 0,
+        "max": 1,
+        "default": 0.75
+      },
+      "look.labelText": {
+        "type": "string",
+        "maxLength": 40,
+        "default": ""
+      },
+      "look.ornaments": {
+        "type": "number",
+        "min": 0,
+        "max": 1,
+        "default": 0.6
+      },
+      "look.frame": {
+        "type": "number",
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      },
+      "look.glitch": {
+        "type": "number",
+        "min": 0,
+        "max": 2,
+        "default": 1
+      },
+      "look.mediaHolo": {
+        "type": "number",
+        "min": 0,
+        "max": 1,
+        "default": 0.65
+      },
+      "look.glow": {
+        "type": "number",
+        "min": 0,
+        "max": 1,
+        "default": 0.5
+      }
+    },
+    "demo": {
+      "layouts": {
+        "holoWord": {
+          "weight": 2,
+          "bgs": [
+            "void",
+            "violet"
+          ]
+        },
+        "outlineBack": {
+          "weight": 1.3,
+          "bgs": [
+            "void"
+          ]
+        },
+        "slice": {
+          "weight": 1.4,
+          "bgs": [
+            "void",
+            "red",
+            "pale"
+          ]
+        },
+        "assemble": {
+          "weight": 0.8,
+          "bgs": [
+            "void"
+          ]
+        },
+        "repeatStack": {
+          "weight": 1,
+          "bgs": [
+            "void"
+          ]
+        },
+        "verse": {
+          "weight": 1.6,
+          "bgs": [
+            "holo"
+          ]
+        },
+        "band": {
+          "weight": 1.2,
+          "bgs": [
+            "void",
+            "violet"
+          ]
+        },
+        "panel": {
+          "weight": 1.1,
+          "bgs": [
+            "void",
+            "red"
+          ],
+          "media": [
+            "glam",
+            "hair",
+            "glasses"
+          ]
+        },
+        "silhouette": {
+          "weight": 1,
+          "bgs": [
+            "void",
+            "violet",
+            "red"
+          ],
+          "media": [
+            "sil-duo",
+            "sil-solo",
+            "sil-trio"
+          ]
+        },
+        "trio": {
+          "weight": 0.9,
+          "bgs": [
+            "holo",
+            "void"
+          ]
+        },
+        "chrome": {
+          "weight": 1,
+          "bgs": [
+            "void",
+            "pale"
+          ]
+        },
+        "vertical": {
+          "weight": 0.8,
+          "bgs": [
+            "void",
+            "violet"
+          ]
+        },
+        "giantOutline": {
+          "weight": 1,
+          "bgs": [
+            "void",
+            "red"
+          ]
+        },
+        "rows": {
+          "weight": 0.7,
+          "bgs": [
+            "holo"
+          ],
+          "media": [
+            "sil-duo",
+            "sil-solo",
+            "sil-trio"
+          ]
+        }
+      }
+    }
+  },
+  "params": {
+    "layouts.<tipo>.weight": {
+      "type": "number",
+      "min": 0,
+      "max": 10,
+      "default": 1
+    },
+    "layouts.<tipo>.bgs": {
+      "type": "list",
+      "options": [
+        "void",
+        "holo",
+        "red",
+        "violet",
+        "pale",
+        "media"
+      ]
+    },
+    "layouts.<tipo>.media": {
+      "type": "list",
+      "items": "id de config.media"
+    },
+    "layouts.<tipo>.trans": {
+      "type": "enum",
+      "options": [
+        "cut",
+        "holoWipe",
+        "glitch",
+        "flashWhite",
+        "shutter",
+        "fade",
+        "blur",
+        "iris",
+        "wipeL",
+        "wipeR",
+        "wipeUp",
+        "wipeDown",
+        "bars",
+        "flash",
+        "zoomIn",
+        "zoomOut",
+        "slice"
+      ]
+    },
+    "look.holoSpeed": {
+      "type": "number",
+      "min": 0,
+      "max": 3,
+      "default": 1
+    },
+    "look.labels": {
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "default": 0.75
+    },
+    "look.labelText": {
+      "type": "string",
+      "maxLength": 40,
+      "default": ""
+    },
+    "look.ornaments": {
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "default": 0.6
+    },
+    "look.frame": {
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "default": 0.5
+    },
+    "look.glitch": {
+      "type": "number",
+      "min": 0,
+      "max": 2,
+      "default": 1
+    },
+    "look.mediaHolo": {
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "default": 0.65
+    },
+    "look.glow": {
+      "type": "number",
+      "min": 0,
+      "max": 1,
+      "default": 0.5
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/17"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "config.burst",
+  "entry_id": "config.burst",
+  "name": "burst",
+  "kind": "configuration",
+  "label": "burst",
+  "summary": "Existing configuration configuration: burst.",
+  "params": {
+    "minSec": {
+      "default": 0.85
+    },
+    "minLetters": {
+      "default": 3
+    },
+    "stepSec": {
+      "default": 0.1
+    },
+    "invertChance": {
+      "default": 0.5
+    },
+    "hatchChance": {
+      "default": 0.2
+    },
+    "words": {
+      "default": []
+    }
+  },
+  "example": {
+    "minSec": 0.85,
+    "minLetters": 3,
+    "stepSec": 0.1,
+    "invertChance": 0.5,
+    "hatchChance": 0.2,
+    "words": []
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "pointer": "/configs/0/burst"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

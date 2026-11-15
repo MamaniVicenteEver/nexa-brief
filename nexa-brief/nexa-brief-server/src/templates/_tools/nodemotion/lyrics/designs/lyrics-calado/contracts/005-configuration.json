@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-calado",
+  "id": "config.phrase",
+  "entry_id": "config.phrase",
+  "name": "phrase",
+  "kind": "configuration",
+  "label": "phrase",
+  "summary": "Existing configuration configuration: phrase.",
+  "params": {
+    "gapSec": {
+      "default": 0.5
+    },
+    "maxWords": {
+      "default": 4
+    },
+    "maxChars": {
+      "default": 20
+    }
+  },
+  "example": {
+    "gapSec": 0.5,
+    "maxWords": 4,
+    "maxChars": 20
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-calado/assets/config.json",
+      "pointer": "/configs/0/phrase"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

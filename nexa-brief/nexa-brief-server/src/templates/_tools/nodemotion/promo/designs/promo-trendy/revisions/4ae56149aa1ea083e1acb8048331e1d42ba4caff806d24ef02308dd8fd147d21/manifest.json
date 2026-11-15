@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-trendy",
+  "family": "promo",
+  "demo_folder": "nodemotion/commercial/promo-trendy",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "source_sha256": "82a6951dae0e3a56adad10bd13541c53b9689ccd9b97e5a9c1906bbe950e39c7",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/promo-trendy",
+    "config": "nodemotion/commercial/promo-trendy/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-trendy/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-trendy/README.md"
+  },
+  "revision": "4ae56149aa1ea083e1acb8048331e1d42ba4caff806d24ef02308dd8fd147d21"
+}

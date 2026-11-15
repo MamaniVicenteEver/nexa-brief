@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-mirada",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-mirada",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "assets/media",
+    "assets/niebla.mp4"
+  ],
+  "source_sha256": "154c30ecc7be59b6391d13b20a5e21de72615e699cbdfcb7d42cc5a151bd5638",
+  "migration_source_sha256": "154c30ecc7be59b6391d13b20a5e21de72615e699cbdfcb7d42cc5a151bd5638",
+  "migration_runtime_sha256": {},
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-mirada",
+    "config": "nodemotion/lyrics/lyrics-mirada/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-mirada/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-mirada/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "2cdb63d273aca557eb31f44e6eec6de4d15382e3647ebfdb24a5e692c5948945.webp",
+    "assets/media/angel.jpg": "b393760c529ed1e0004d00e85f8bc03b639624d39305b6de5885841cb26492af.jpg",
+    "assets/media/iris.mp4": "a7f922772cb9d55b87951d017bf9b419447b136e28e729d01f587352f11b5266.mp4",
+    "assets/media/luna.mp4": "ae134fadfe9ccbb264d517803976d68025969aad0a2506ed21cd6badcbac227d.mp4",
+    "assets/media/mano.mp4": "8827ceb7d5171a26ab76e62f20e9a695263702fa390bc32b573b5179bbccc46b.mp4",
+    "assets/media/mano.webm": "4dc3b4cc4594110abd06287be74c12896f048fda2852acd818e2851428b6771e.webm",
+    "assets/media/ojos.mp4": "50ae72516f8cd60af342475cab3fc0347cf03e8a4b9fc6c0079f0c38f4f2fbbb.mp4",
+    "assets/media/palomas.mp4": "d174c920d6e6f35e8378af84833a2dc382717d37f45ca081334f5964babc0a3d.mp4",
+    "assets/media/palomas.webm": "62ddedf002b507848b9ba4b27bf090beabc383071d4ee6f29d4c311b4a648bac.webm",
+    "assets/niebla.mp4": "b9d897d0f3e3e5e155f82a035f8b24885124171d010574a94c2d8f8373d0c556.mp4",
+    "assets/song.mp3": "84fa49015ac891d6f7bb5ebc8513885cb620239c280267b51cadaafa32755e96.mp3"
+  }
+}

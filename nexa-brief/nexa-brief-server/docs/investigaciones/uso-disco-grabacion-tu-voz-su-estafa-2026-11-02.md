@@ -85,7 +85,7 @@ Evidencia del código remoto:
 
 - `src/core/explainer/recorder.py:129`: define la llamada a `kit.py render`.
 - `src/templates/_tools/explainer-kit/tools/kit.py:289`: selecciona los formatos y los renderiza uno después del otro, con cuatro workers dentro de cada formato.
-- `src/templates/_tools/commercial/render_promo.py:43`: escribe un archivo `000000.jpg`, `000001.jpg`, etc., con calidad JPEG 92.
+- `src/templates/_tools/nodemotion/promo/compiler/render_promo.py:43`: escribe un archivo `000000.jpg`, `000001.jpg`, etc., con calidad JPEG 92.
 - `render_promo.py:64`: usa `tempfile.TemporaryDirectory()`.
 - `render_promo.py:73`: calcula todos los cuadros de la duración solicitada.
 - `render_promo.py:85`: solo después de capturarlos ejecuta FFmpeg para comprimirlos como H.264.

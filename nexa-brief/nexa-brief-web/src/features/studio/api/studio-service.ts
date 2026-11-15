@@ -53,6 +53,7 @@ interface DraftDto {
   details?: DraftDetailsDto | null;
   thumbnails?: DraftThumbnails | null;
   thumbnail_error?: string | null;
+  pending?: string[];
   created_at: string;
   updated_at: string;
 }
@@ -113,6 +114,7 @@ export function mapDraft(dto: DraftDto): Draft {
         }
       : null,
     thumbnailError: dto.thumbnail_error ?? null,
+    pending: dto.pending ?? [],
     createdAt: dto.created_at,
     updatedAt: dto.updated_at,
   };

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-dynamic",
+  "id": "scene.banner",
+  "entry_id": "scene.banner",
+  "name": "banner",
+  "kind": "scene",
+  "label": "banner",
+  "summary": "medio panorámico y palabra",
+  "variants": [
+    {
+      "type": "banner",
+      "media": [
+        "soccer"
+      ],
+      "flyer": "20",
+      "flyerAt": 1.3,
+      "max_text_lines": 1
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 11,
+      "type": "banner",
+      "shows": "medio panorámico y palabra",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "soccer",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+    "brand_texts": {
+      "brand.tag": "identidad o serie breve junto a medios",
+      "brand.url": "llamada o dirección de cierre; la segunda línea del cierre tiene prioridad",
+      "brand.vertical": "identidad breve en el borde"
+    },
+    "design_limitations": "El ciclo contiene fragmentos flyer fijos del ejemplo deportivo; revisar su sentido y reemplazarlos mediante scene-overrides si hace falta.",
+    "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/default_scenes/10"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/scene_cycle/10"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

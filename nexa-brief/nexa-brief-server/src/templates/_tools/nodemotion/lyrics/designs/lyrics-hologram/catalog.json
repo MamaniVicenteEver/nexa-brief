@@ -1,0 +1,527 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "family": "lyrics",
+  "display_name": "Holograma",
+  "description": "Lyric video de tipografía cinética sobre casi negro con relleno holográfico iridiscente: condensada alta y extendida itálica, contornos gigantes con ecos, barras que cortan la palabra, seda holográfica fluida en los versos, siluetas holográficas y secciones roja, violeta y gris claro; cada palabra al tiempo de la voz. Para pop, trap, electrónica e himnos de energía.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "siluetas claras sobre fondo negro (look silhouette: se llenan de holografía) y planos de moda, retrato o baile (duotono holográfico)"
+      }
+    ],
+    "texts": [
+      {
+        "key": "intro.title",
+        "label": "Título de la canción",
+        "max": 40,
+        "default": "Give It Up"
+      },
+      {
+        "key": "intro.artist",
+        "label": "Artista",
+        "max": 40,
+        "default": "djlang59 ft. Snowflake"
+      },
+      {
+        "key": "outro.title",
+        "label": "Título del cierre",
+        "max": 30,
+        "default": "Gracias"
+      },
+      {
+        "key": "outro.sub",
+        "label": "Subtítulo del cierre",
+        "max": 40,
+        "default": "por escuchar"
+      },
+      {
+        "key": "outro.feats",
+        "label": "Créditos del cierre",
+        "max": 60,
+        "default": "Suscríbete · NodeMotion"
+      }
+    ],
+    "brief": true,
+    "defaults": {
+      "audio_asset_id": "a2548323",
+      "media": {
+        "clips": [
+          {
+            "asset_id": "dfdda265",
+            "kind": "video"
+          },
+          {
+            "asset_id": "a44ab496",
+            "kind": "video"
+          },
+          {
+            "asset_id": "26a7aa15",
+            "kind": "video"
+          },
+          {
+            "asset_id": "5c1b6abd",
+            "kind": "video"
+          },
+          {
+            "asset_id": "e934fbd3",
+            "kind": "video"
+          },
+          {
+            "asset_id": "85f18a8b",
+            "kind": "video"
+          }
+        ]
+      }
+    }
+  },
+  "config_json": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-hologram",
+    "config": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-hologram/DESIGN.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-hologram/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "intro",
+      "kind": "component",
+      "label": "Intro · emblema holográfico + título",
+      "summary": "Intro: emblema geométrico propio con relleno holográfico, silueta holográfica opcional, título (intro.title) condensado holo y artista (intro.artist) espaciado.",
+      "constraints_status": "documented",
+      "id": "intro",
+      "contract": "contracts/001-component.json"
+    },
+    {
+      "entry_id": "holoWord",
+      "kind": "component",
+      "label": "Palabra holográfica con ecos",
+      "summary": "Palabra fuerte enorme con relleno holográfico, ecos en contorno arriba y abajo, resto de la frase pequeño y fila de rombos.",
+      "constraints_status": "documented",
+      "id": "holoWord",
+      "contract": "contracts/002-component.json"
+    },
+    {
+      "entry_id": "outlineBack",
+      "kind": "component",
+      "label": "Gigante en contorno + banda",
+      "summary": "Palabra gigante itálica en contorno (o holo) detrás y el resto de la frase en una banda blanca, con rombos arriba y abajo.",
+      "constraints_status": "documented",
+      "id": "outlineBack",
+      "contract": "contracts/003-component.json"
+    },
+    {
+      "entry_id": "slice",
+      "kind": "component",
+      "label": "Frase cortada por barras",
+      "summary": "Frase grande tapada por barras holográficas o blancas que se retiran al cantarse; la palabra fuerte va en holo.",
+      "constraints_status": "documented",
+      "id": "slice",
+      "contract": "contracts/004-component.json"
+    },
+    {
+      "entry_id": "assemble",
+      "kind": "component",
+      "label": "Letras que se ensamblan",
+      "summary": "Letras repartidas que se ensamblan en su sitio mientras cruza un panel holográfico (1-2 palabras).",
+      "constraints_status": "documented",
+      "id": "assemble",
+      "contract": "contracts/005-component.json"
+    },
+    {
+      "entry_id": "repeatStack",
+      "kind": "component",
+      "label": "Frase repetida en columna",
+      "summary": "La frase repetida en columna en contorno tenue y la central sólida holográfica, con deriva vertical.",
+      "constraints_status": "documented",
+      "id": "repeatStack",
+      "contract": "contracts/006-component.json"
+    },
+    {
+      "entry_id": "verse",
+      "kind": "component",
+      "label": "Verso espaciado + fantasma",
+      "summary": "Frase pequeña y espaciada sobre la seda holográfica con la palabra fuerte enorme y tenue detrás (versos largos).",
+      "constraints_status": "documented",
+      "id": "verse",
+      "contract": "contracts/007-component.json"
+    },
+    {
+      "entry_id": "band",
+      "kind": "component",
+      "label": "Frase con barra holográfica",
+      "summary": "Frase condensada alineada con barra holográfica que crece y tachado opcional.",
+      "constraints_status": "documented",
+      "id": "band",
+      "contract": "contracts/008-component.json"
+    },
+    {
+      "entry_id": "panel",
+      "kind": "component",
+      "label": "Ventanas de medio + frase",
+      "summary": "Ventanas de medio en duotono holográfico con marco iridiscente que entran y la frase grande abajo.",
+      "constraints_status": "documented",
+      "id": "panel",
+      "contract": "contracts/009-component.json"
+    },
+    {
+      "entry_id": "silhouette",
+      "kind": "component",
+      "label": "Silueta holográfica + palabra",
+      "summary": "Silueta holográfica (medio look silhouette) sobre filas gigantes en contorno y la palabra en la extendida itálica.",
+      "constraints_status": "documented",
+      "id": "silhouette",
+      "contract": "contracts/010-component.json"
+    },
+    {
+      "entry_id": "trio",
+      "kind": "component",
+      "label": "Palabra ×3 con rótulo",
+      "summary": "La palabra fuerte tres veces con el resto pequeño encima de cada una; caja oscura opcional sobre fondos claros.",
+      "constraints_status": "documented",
+      "id": "trio",
+      "contract": "contracts/011-component.json"
+    },
+    {
+      "entry_id": "chrome",
+      "kind": "component",
+      "label": "Palabra holográfica a sangre",
+      "summary": "Palabra a sangre con relleno holográfico y el resto como rótulo cruzado.",
+      "constraints_status": "documented",
+      "id": "chrome",
+      "contract": "contracts/012-component.json"
+    },
+    {
+      "entry_id": "vertical",
+      "kind": "component",
+      "label": "Palabra en columna + laterales",
+      "summary": "La palabra fuerte en columna (holo) con el resto repetido a izquierda y derecha y contorno gigante detrás.",
+      "constraints_status": "documented",
+      "id": "vertical",
+      "contract": "contracts/013-component.json"
+    },
+    {
+      "entry_id": "giantOutline",
+      "kind": "component",
+      "label": "Contorno gigante + frase",
+      "summary": "Letras en contorno más grandes que el cuadro y la frase encima alternando contorno y sólido.",
+      "constraints_status": "documented",
+      "id": "giantOutline",
+      "contract": "contracts/014-component.json"
+    },
+    {
+      "entry_id": "rows",
+      "kind": "component",
+      "label": "Filas inclinadas que corren",
+      "summary": "Filas inclinadas de «PALABRA //» que corren, silueta opcional y la palabra al centro.",
+      "constraints_status": "documented",
+      "id": "rows",
+      "contract": "contracts/015-component.json"
+    },
+    {
+      "entry_id": "outroV1",
+      "kind": "component",
+      "label": "Outro v1 · tarjeta holográfica",
+      "summary": "Outro v1 (por defecto): tarjeta casi negra con emblema, título holográfico itálico, subtítulo, créditos y fundido.",
+      "constraints_status": "documented",
+      "id": "outroV1",
+      "contract": "contracts/016-component.json"
+    },
+    {
+      "entry_id": "outroV2",
+      "kind": "component",
+      "label": "Outro v2 · seda holográfica",
+      "summary": "Outro v2: seda holográfica a pantalla completa, filas del título, título en tinta con ecos, créditos y fundido.",
+      "constraints_status": "documented",
+      "id": "outroV2",
+      "contract": "contracts/017-component.json"
+    },
+    {
+      "entry_id": "deck",
+      "kind": "component",
+      "label": "Mazo de escenas (config.layouts)",
+      "summary": "Cada frase cantada elige un tipo de escena por peso entre los que cumplen su condición de texto; fondos, clips preferidos y transición por tipo.",
+      "constraints_status": "documented",
+      "id": "deck",
+      "contract": "contracts/018-component.json"
+    },
+    {
+      "entry_id": "config.lyricsFilter",
+      "kind": "configuration",
+      "label": "lyricsFilter",
+      "summary": "Existing configuration configuration: lyricsFilter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.lyricsFilter",
+      "contract": "contracts/019-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/020-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/021-configuration.json"
+    },
+    {
+      "entry_id": "config.brand",
+      "kind": "configuration",
+      "label": "brand",
+      "summary": "Existing configuration configuration: brand.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.brand",
+      "contract": "contracts/022-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/023-configuration.json"
+    },
+    {
+      "entry_id": "config.phrases",
+      "kind": "configuration",
+      "label": "phrases",
+      "summary": "Existing configuration configuration: phrases.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.phrases",
+      "contract": "contracts/024-configuration.json"
+    },
+    {
+      "entry_id": "config.timing",
+      "kind": "configuration",
+      "label": "timing",
+      "summary": "Existing configuration configuration: timing.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timing",
+      "contract": "contracts/025-configuration.json"
+    },
+    {
+      "entry_id": "layout.holoWord",
+      "kind": "layout",
+      "label": "holoWord",
+      "summary": "Existing layout configuration: holoWord.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.holoWord",
+      "contract": "contracts/026-layout.json"
+    },
+    {
+      "entry_id": "layout.outlineBack",
+      "kind": "layout",
+      "label": "outlineBack",
+      "summary": "Existing layout configuration: outlineBack.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.outlineBack",
+      "contract": "contracts/027-layout.json"
+    },
+    {
+      "entry_id": "layout.slice",
+      "kind": "layout",
+      "label": "slice",
+      "summary": "Existing layout configuration: slice.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.slice",
+      "contract": "contracts/028-layout.json"
+    },
+    {
+      "entry_id": "layout.assemble",
+      "kind": "layout",
+      "label": "assemble",
+      "summary": "Existing layout configuration: assemble.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.assemble",
+      "contract": "contracts/029-layout.json"
+    },
+    {
+      "entry_id": "layout.repeatStack",
+      "kind": "layout",
+      "label": "repeatStack",
+      "summary": "Existing layout configuration: repeatStack.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.repeatStack",
+      "contract": "contracts/030-layout.json"
+    },
+    {
+      "entry_id": "layout.verse",
+      "kind": "layout",
+      "label": "verse",
+      "summary": "Existing layout configuration: verse.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.verse",
+      "contract": "contracts/031-layout.json"
+    },
+    {
+      "entry_id": "layout.band",
+      "kind": "layout",
+      "label": "band",
+      "summary": "Existing layout configuration: band.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.band",
+      "contract": "contracts/032-layout.json"
+    },
+    {
+      "entry_id": "layout.panel",
+      "kind": "layout",
+      "label": "panel",
+      "summary": "Existing layout configuration: panel.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.panel",
+      "contract": "contracts/033-layout.json"
+    },
+    {
+      "entry_id": "layout.silhouette",
+      "kind": "layout",
+      "label": "silhouette",
+      "summary": "Existing layout configuration: silhouette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.silhouette",
+      "contract": "contracts/034-layout.json"
+    },
+    {
+      "entry_id": "layout.trio",
+      "kind": "layout",
+      "label": "trio",
+      "summary": "Existing layout configuration: trio.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.trio",
+      "contract": "contracts/035-layout.json"
+    },
+    {
+      "entry_id": "layout.chrome",
+      "kind": "layout",
+      "label": "chrome",
+      "summary": "Existing layout configuration: chrome.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.chrome",
+      "contract": "contracts/036-layout.json"
+    },
+    {
+      "entry_id": "layout.vertical",
+      "kind": "layout",
+      "label": "vertical",
+      "summary": "Existing layout configuration: vertical.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.vertical",
+      "contract": "contracts/037-layout.json"
+    },
+    {
+      "entry_id": "layout.giantOutline",
+      "kind": "layout",
+      "label": "giantOutline",
+      "summary": "Existing layout configuration: giantOutline.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.giantOutline",
+      "contract": "contracts/038-layout.json"
+    },
+    {
+      "entry_id": "layout.rows",
+      "kind": "layout",
+      "label": "rows",
+      "summary": "Existing layout configuration: rows.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.rows",
+      "contract": "contracts/039-layout.json"
+    },
+    {
+      "entry_id": "config.look",
+      "kind": "configuration",
+      "label": "look",
+      "summary": "Existing configuration configuration: look.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.look",
+      "contract": "contracts/040-configuration.json"
+    },
+    {
+      "entry_id": "config.anim",
+      "kind": "configuration",
+      "label": "anim",
+      "summary": "Existing configuration configuration: anim.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.anim",
+      "contract": "contracts/041-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/042-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/043-configuration.json"
+    },
+    {
+      "entry_id": "config.transition",
+      "kind": "configuration",
+      "label": "transition",
+      "summary": "Existing configuration configuration: transition.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.transition",
+      "contract": "contracts/044-configuration.json"
+    },
+    {
+      "entry_id": "config.hud",
+      "kind": "configuration",
+      "label": "hud",
+      "summary": "Existing configuration configuration: hud.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.hud",
+      "contract": "contracts/045-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/046-configuration.json"
+    },
+    {
+      "entry_id": "config.render",
+      "kind": "configuration",
+      "label": "render",
+      "summary": "Existing configuration configuration: render.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.render",
+      "contract": "contracts/047-configuration.json"
+    }
+  ]
+}

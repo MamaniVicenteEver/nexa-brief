@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-ceniza",
+  "id": "layout.candle",
+  "entry_id": "layout.candle",
+  "name": "candle",
+  "kind": "layout",
+  "label": "candle",
+  "summary": "Existing layout configuration: candle.",
+  "params": {
+    "weight": {
+      "default": 1.4
+    },
+    "media": {
+      "default": [
+        "flames",
+        "candles-out"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.4,
+    "media": [
+      "flames",
+      "candles-out"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-ceniza/assets/config.json",
+      "pointer": "/configs/0/layouts/candle"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

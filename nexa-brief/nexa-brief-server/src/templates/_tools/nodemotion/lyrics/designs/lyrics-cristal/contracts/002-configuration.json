@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-cristal",
+  "id": "config.fonts",
+  "entry_id": "config.fonts",
+  "name": "fonts",
+  "kind": "configuration",
+  "label": "fonts",
+  "summary": "Existing configuration configuration: fonts.",
+  "params": {
+    "googleUrl": {
+      "default": "https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Unbounded:wght@700;900&family=Caveat+Brush&family=JetBrains+Mono:wght@500;700&display=swap"
+    },
+    "golpe": {
+      "default": "\"Big Shoulders Display\", Impact, sans-serif"
+    },
+    "grabado": {
+      "default": "\"Unbounded\", \"Arial Black\", sans-serif"
+    },
+    "vaho": {
+      "default": "\"Caveat Brush\", cursive"
+    },
+    "mono": {
+      "default": "\"JetBrains Mono\", monospace"
+    }
+  },
+  "example": {
+    "googleUrl": "https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Unbounded:wght@700;900&family=Caveat+Brush&family=JetBrains+Mono:wght@500;700&display=swap",
+    "golpe": "\"Big Shoulders Display\", Impact, sans-serif",
+    "grabado": "\"Unbounded\", \"Arial Black\", sans-serif",
+    "vaho": "\"Caveat Brush\", cursive",
+    "mono": "\"JetBrains Mono\", monospace"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-cristal/assets/config.json",
+      "pointer": "/configs/0/fonts"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

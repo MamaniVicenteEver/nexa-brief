@@ -1,7 +1,7 @@
 import asyncio
 from unittest.mock import AsyncMock
 import pytest
-from src.core.promos import pipeline, evidence, research
+from src.core.nodemotion.promo import pipeline, evidence, research
 
 
 def session():

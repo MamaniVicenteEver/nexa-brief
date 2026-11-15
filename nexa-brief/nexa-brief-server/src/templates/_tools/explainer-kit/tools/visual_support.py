@@ -2,9 +2,12 @@
 
 from collections import Counter
 import posixpath
+import style_media_policy
 
 
 def check(config, beats, catalog, total, policy, errors, warnings, default_clip_layout="full"):
+    if config.get("design") == "titanes":
+        return check_titanes(config, beats, catalog, total, errors)
     end = min(total, (config.get("outro") or {}).get("start", total))
     uses = Counter()
     kinds = Counter()
@@ -67,3 +70,47 @@ def check(config, beats, catalog, total, policy, errors, warnings, default_clip_
         if n and count / n > policy["dominance_warn_share"]:
             warnings.append(f"apoyos visuales: {kind} domina {count}/{n} ({count / n:.0%}); variá entre miniatura, video completo y cuadro")
     return {"kinds": dict(kinds), "assets": len(uses), "preferred_thirds": [any(b["t0"] < end * (i + 1) / 3 and b["t1"] > end * i / 3 for b in preferred) for i in range(3)]}
+
+
+def check_titanes(config, beats, catalog, total, errors):
+    policy = style_media_policy.policy_for(config)
+    end = min(total, (config.get("outro") or {}).get("start", total))
+    main = sorted((b for b in beats if not b.get("skip") and b.get("layer", "main") == "main" and b["t0"] < end),
+                  key=lambda b: (b["t0"], b["i"]))
+    uses, supports, text_only = Counter(), [], []
+    streak = []
+    for index, beat in enumerate(main):
+        params = beat["b"].get("params") or {}
+        photos, videos = style_media_policy.titanes_media(beat, catalog)
+        for source in set(photos + videos):
+            uses[posixpath.normpath(source)] += 1
+        use = beat["use"]
+        figure = bool(str(params.get("figura") or "").strip())
+        if photos or videos or use == "common.capas" or (use in ("titanes.cifra", "titanes.bolsa", "titanes.plantilla") and figure):
+            stop = min(beat["t1"], end, main[index + 1]["t0"] if index + 1 < len(main) else end)
+            if stop > beat["t0"]:
+                supports.append((beat["t0"], stop))
+        sides = params.get("lados") or []
+        metrics = any(isinstance(side, dict) and str(side.get("metrica") if side.get("metrica") is not None else "").strip() for side in sides)
+        is_text = ((use == "titanes.titular" and params.get("variante") not in ("documento", "cita")) or
+                   (use == "titanes.duelo" and not metrics) or
+                   (use == "titanes.introv1" and not figure and not photos and not videos))
+        if is_text:
+            text_only.append(beat)
+            streak.append(beat)
+            if len(streak) == policy["text_only"]["max_consecutive"] + 1:
+                errors.append(f"titanes beats #{streak[0]['i']}–#{beat['i']}: más de {policy['text_only']['max_consecutive']} planos de solo texto seguidos")
+        else:
+            streak = []
+    for path, count in uses.items():
+        if count > policy["media"]["max_uses_per_asset"]:
+            errors.append(f"titanes medio {path}: {count} usos; máximo {policy['media']['max_uses_per_asset']}")
+    thirds = [any(start < end * (i + 1) / 3 and stop > end * i / 3 for start, stop in supports) for i in range(3)]
+    for i, supported in enumerate(thirds):
+        if end > 0 and not supported:
+            errors.append(f"titanes tercio {i + 1}: falta apoyo visual (foto, capas o cifra/bolsa/plantilla con figura)")
+    share = len(text_only) / len(main) if main else 0
+    if share > policy["text_only"]["max_share"]:
+        errors.append(f"titanes: {len(text_only)}/{len(main)} planos de solo texto ({share:.1%}); máximo {policy['text_only']['max_share']:.0%}")
+    return {"assets": len(uses), "preferred_thirds": thirds, "text_only_beats": len(text_only),
+            "text_only_share": round(share, 4), "main_beats": len(main)}

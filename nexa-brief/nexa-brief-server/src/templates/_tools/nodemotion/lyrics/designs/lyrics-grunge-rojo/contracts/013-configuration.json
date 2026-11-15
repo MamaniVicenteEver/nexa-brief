@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "config.lyricsFilter",
+  "entry_id": "config.lyricsFilter",
+  "name": "lyricsFilter",
+  "kind": "configuration",
+  "label": "lyricsFilter",
+  "summary": "Existing configuration configuration: lyricsFilter.",
+  "params": {
+    "dropPatterns": {
+      "default": [
+        "(?i)audio ?jungle",
+        "(?i)envato",
+        "(?i)oriel",
+        "(?i)subt[ií]tulos",
+        "(?i)amara\\.org"
+      ]
+    },
+    "maxWordSec": {
+      "default": 3
+    }
+  },
+  "example": {
+    "dropPatterns": [
+      "(?i)audio ?jungle",
+      "(?i)envato",
+      "(?i)oriel",
+      "(?i)subt[ií]tulos",
+      "(?i)amara\\.org"
+    ],
+    "maxWordSec": 3
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/assets/config.json",
+      "pointer": "/configs/0/lyricsFilter"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

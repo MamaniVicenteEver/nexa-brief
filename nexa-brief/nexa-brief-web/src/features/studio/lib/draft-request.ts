@@ -1,5 +1,6 @@
 import type { TemplateRequirements } from "@/features/templates/types";
 import type { Draft, DraftRequest, MediaAssetKind, MediaRef, StudioValue, TemplateInputsPayload } from "../types";
+import { EMPTY_STUDIO_VALUE } from "../types";
 
 /** Qué falta para poder previsualizar: canción obligatoria y mínimos por lugar. */
 export function missingRequirements(
@@ -12,6 +13,19 @@ export function missingRequirements(
       .filter((slot) => (value.media[slot.slot]?.length ?? 0) < slot.min)
       .map((slot) => slot.slot),
   };
+}
+
+/** Valor inicial de un prototipo nuevo: la canción y los medios que trae la plantilla, en su orden. */
+export function defaultStudioValue(requirements: TemplateRequirements): StudioValue {
+  const defaults = requirements.defaults;
+  const media: Record<string, MediaRef[]> = {};
+  for (const slot of requirements.media) {
+    const items = defaults?.media[slot.slot] ?? [];
+    if (items.length > 0) {
+      media[slot.slot] = items.slice(0, slot.max).map((item) => ({ assetId: item.assetId, kind: item.kind }));
+    }
+  }
+  return { ...EMPTY_STUDIO_VALUE, musicAssetId: defaults?.audioAssetId ?? null, media };
 }
 
 export function isStudioValueComplete(requirements: TemplateRequirements, value: StudioValue) {

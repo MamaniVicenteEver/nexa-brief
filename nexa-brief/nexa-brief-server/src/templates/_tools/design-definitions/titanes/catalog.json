@@ -1,0 +1,1038 @@
+{
+  "schema_version": 1,
+  "design_id": "titanes",
+  "revision": "0ecbff3558801bd374a5cd762fccaf7a8ce836952c105e144ab357a238897021",
+  "entries": [
+    {
+      "id": "titanes.escenario",
+      "name": "titanes.escenario",
+      "label": "titanes.escenario",
+      "kind": "component",
+      "summary": "Siete escenarios con profundidad, luz, grano y paralaje determinista.",
+      "tags": [
+        "escenario",
+        "luz",
+        "fondo"
+      ],
+      "params": {
+        "acento": {
+          "type": "color",
+          "default": "palette.accent",
+          "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "borde": {
+          "type": "color",
+          "default": "palette.rim",
+          "doc": "Luz de borde; hereda palette.rim.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "intensidad": {
+          "type": "number",
+          "default": 1,
+          "doc": "Potencia de luz y bruma, conservando los negros.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 1.7
+        },
+        "semilla": {
+          "type": "number",
+          "default": 41,
+          "doc": "Semilla de ventanas, polvo, grano y tinta.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 999999
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "foco",
+            "horizonte",
+            "ciudad",
+            "sala",
+            "rayos",
+            "mercado",
+            "archivo",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "escenario": {
+          "type": "enum",
+          "default": "foco",
+          "doc": "Escenario que se dibuja a pantalla completa.",
+          "required": false,
+          "options": [
+            "foco",
+            "horizonte",
+            "ciudad",
+            "sala",
+            "rayos",
+            "mercado",
+            "archivo"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "escenario": "foco"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=titanes&c=titanes.escenario",
+      "data": {
+        "native_name": "titanes.escenario"
+      }
+    },
+    {
+      "id": "titanes.introv1",
+      "name": "titanes.introv1",
+      "label": "titanes.introv1",
+      "kind": "component",
+      "summary": "Título monumental de 2–4 palabras, kicker y protagonista ilustrado a contraluz. Golpe breve, revelado desde abajo y deriva pesada.",
+      "tags": [
+        "intro",
+        "golpe",
+        "silueta",
+        "miniatura"
+      ],
+      "params": {
+        "acento": {
+          "type": "color",
+          "default": "palette.accent",
+          "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "borde": {
+          "type": "color",
+          "default": "palette.rim",
+          "doc": "Luz de borde; hereda palette.rim.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "intensidad": {
+          "type": "number",
+          "default": 1,
+          "doc": "Potencia de luz y bruma, conservando los negros.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 1.7
+        },
+        "semilla": {
+          "type": "number",
+          "default": 41,
+          "doc": "Semilla de ventanas, polvo, grano y tinta.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 999999
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "foco",
+            "horizonte",
+            "ciudad",
+            "sala",
+            "rayos",
+            "mercado",
+            "archivo",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "figura": {
+          "type": "image",
+          "default": "",
+          "doc": "Ilustración PNG transparente del protagonista; nunca se dibuja una persona en código.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "escalaFigura": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la figura respecto a la composición de cada formato.",
+          "required": false,
+          "options": null,
+          "min": 0.65,
+          "max": 1.15
+        },
+        "text": {
+          "type": "string",
+          "default": "EL PRECIO\nDEL PODER",
+          "doc": "Titular de 2–4 palabras. Admite salto de línea; máximo recomendado 7 palabras sumando kicker y contexto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "IBM",
+          "doc": "Rótulo pequeño espaciado; vacío lo apaga.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "contexto": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea breve de contexto, opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "entrada": {
+          "type": "enum",
+          "default": "golpe",
+          "doc": "Transición de entrada reutilizable.",
+          "required": false,
+          "options": [
+            "tinta",
+            "luz",
+            "golpe",
+            "ninguna"
+          ],
+          "min": null,
+          "max": null
+        },
+        "salida": {
+          "type": "enum",
+          "default": "tinta",
+          "doc": "Transición de salida reutilizable.",
+          "required": false,
+          "options": [
+            "tinta",
+            "luz",
+            "golpe",
+            "ninguna"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "EL PRECIO\nDEL PODER",
+        "kicker": "IBM",
+        "figura": "http://127.0.0.1:43201/_tools/explainer-kit/designs/titanes/samples/de-pie.png",
+        "bg": "foco"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=titanes&c=titanes.introv1",
+      "data": {
+        "native_name": "titanes.introv1"
+      }
+    },
+    {
+      "id": "titanes.introv2",
+      "name": "titanes.introv2",
+      "label": "titanes.introv2",
+      "kind": "component",
+      "summary": "Pregunta que abre el conflicto y revelación por barrido de luz. Foto duotono (src) o figura iluminada; compatible con todos los fondos del contrato hook.",
+      "tags": [
+        "intro",
+        "pregunta",
+        "revelación",
+        "foto"
+      ],
+      "params": {
+        "acento": {
+          "type": "color",
+          "default": "palette.accent",
+          "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "borde": {
+          "type": "color",
+          "default": "palette.rim",
+          "doc": "Luz de borde; hereda palette.rim.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "intensidad": {
+          "type": "number",
+          "default": 1,
+          "doc": "Potencia de luz y bruma, conservando los negros.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 1.7
+        },
+        "semilla": {
+          "type": "number",
+          "default": 41,
+          "doc": "Semilla de ventanas, polvo, grano y tinta.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 999999
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "foco",
+            "horizonte",
+            "ciudad",
+            "sala",
+            "rayos",
+            "mercado",
+            "archivo",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "figura": {
+          "type": "image",
+          "default": "",
+          "doc": "Ilustración PNG transparente del protagonista; nunca se dibuja una persona en código.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "escalaFigura": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la figura respecto a la composición de cada formato.",
+          "required": false,
+          "options": null,
+          "min": 0.65,
+          "max": 1.15
+        },
+        "text": {
+          "type": "string",
+          "default": "EL PRECIO\nDEL PODER",
+          "doc": "Titular de 2–4 palabras. Admite salto de línea; máximo recomendado 7 palabras sumando kicker y contexto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "IBM",
+          "doc": "Rótulo pequeño espaciado; vacío lo apaga.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "contexto": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea breve de contexto, opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "entrada": {
+          "type": "enum",
+          "default": "luz",
+          "doc": "Transición de entrada reutilizable.",
+          "required": false,
+          "options": [
+            "tinta",
+            "luz",
+            "golpe",
+            "ninguna"
+          ],
+          "min": null,
+          "max": null
+        },
+        "salida": {
+          "type": "enum",
+          "default": "tinta",
+          "doc": "Transición de salida reutilizable.",
+          "required": false,
+          "options": [
+            "tinta",
+            "luz",
+            "golpe",
+            "ninguna"
+          ],
+          "min": null,
+          "max": null
+        },
+        "pregunta": {
+          "type": "string",
+          "default": "¿QUIÉN\nMANDA?",
+          "doc": "Pregunta inicial. Máximo recomendado 4 palabras.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "revelarEn": {
+          "type": "number",
+          "default": 1.8,
+          "doc": "Segundo local en que la pregunta da paso al titular y la figura/foto se revela.",
+          "required": false,
+          "options": null,
+          "min": 0.6,
+          "max": 12
+        }
+      },
+      "example": {
+        "pregunta": "¿QUIÉN\nMANDA?",
+        "text": "EL PODER\nCAMBIA",
+        "kicker": "IBM",
+        "figura": "http://127.0.0.1:43201/_tools/explainer-kit/designs/titanes/samples/encoge.png",
+        "bg": "horizonte",
+        "revelarEn": 1.8
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=titanes&c=titanes.introv2",
+      "data": {
+        "native_name": "titanes.introv2"
+      }
+    },
+    {
+      "id": "titanes.outro",
+      "name": "titanes.outro",
+      "label": "titanes.outro",
+      "kind": "component",
+      "summary": "Cierre común: gracias, canal, LIKE, flecha, suscripción, campana, apoyo y dirección. Los tiempos se comprimen con hook.outroTimes y el texto se mantiene en zona segura.",
+      "tags": [
+        "cierre",
+        "canal",
+        "suscripción"
+      ],
+      "params": {
+        "acento": {
+          "type": "color",
+          "default": "palette.accent",
+          "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "borde": {
+          "type": "color",
+          "default": "palette.rim",
+          "doc": "Luz de borde; hereda palette.rim.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "intensidad": {
+          "type": "number",
+          "default": 1,
+          "doc": "Potencia de luz y bruma, conservando los negros.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 1.7
+        },
+        "semilla": {
+          "type": "number",
+          "default": 41,
+          "doc": "Semilla de ventanas, polvo, grano y tinta.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 999999
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "foco",
+            "horizonte",
+            "ciudad",
+            "sala",
+            "rayos",
+            "mercado",
+            "archivo",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Rótulo inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "TITANES",
+          "doc": "Nombre del canal (grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón de suscripción.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Comparte estas historias.",
+          "doc": "Mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "",
+          "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": true,
+          "doc": "Flecha del LIKE a SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del LIKE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la campana.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo del mensaje de apoyo y la dirección.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "like": {
+          "type": "string",
+          "default": "LIKE",
+          "doc": "Etiqueta de la acción de aprobación.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "salida": {
+          "type": "enum",
+          "default": "golpe",
+          "doc": "Cierre final; corte por defecto.",
+          "required": false,
+          "options": [
+            "tinta",
+            "luz",
+            "golpe",
+            "ninguna"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "TITANES",
+        "cta": "SUSCRÍBETE",
+        "support": "Comparte estas historias.",
+        "handle": "",
+        "bg": "rayos"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=titanes&c=titanes.outro",
+      "data": {
+        "native_name": "titanes.outro"
+      }
+    },
+    {
+      "id": "titanes.capitulo",
+      "name": "titanes.capitulo",
+      "label": "titanes.capitulo",
+      "kind": "component",
+      "summary": "Número monumental en segundo plano, título y protagonista en escenario. Tinta de entrada/salida, cámara lenta y luz de borde del episodio.",
+      "tags": [
+        "capítulo",
+        "número",
+        "transición"
+      ],
+      "params": {
+        "acento": {
+          "type": "color",
+          "default": "palette.accent",
+          "doc": "Acento del plano; por defecto hereda palette.accent del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "borde": {
+          "type": "color",
+          "default": "palette.rim",
+          "doc": "Luz de borde; hereda palette.rim.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "intensidad": {
+          "type": "number",
+          "default": 1,
+          "doc": "Potencia de luz y bruma, conservando los negros.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 1.7
+        },
+        "semilla": {
+          "type": "number",
+          "default": 41,
+          "doc": "Semilla de ventanas, polvo, grano y tinta.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 999999
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: foco, horizonte, ciudad, sala, rayos, mercado, archivo; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "foco",
+            "horizonte",
+            "ciudad",
+            "sala",
+            "rayos",
+            "mercado",
+            "archivo",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "figura": {
+          "type": "image",
+          "default": "",
+          "doc": "Ilustración PNG transparente del protagonista; nunca se dibuja una persona en código.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "escalaFigura": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la figura respecto a la composición de cada formato.",
+          "required": false,
+          "options": null,
+          "min": 0.65,
+          "max": 1.15
+        },
+        "entrada": {
+          "type": "enum",
+          "default": "tinta",
+          "doc": "Transición de entrada reutilizable.",
+          "required": false,
+          "options": [
+            "tinta",
+            "luz",
+            "golpe",
+            "ninguna"
+          ],
+          "min": null,
+          "max": null
+        },
+        "salida": {
+          "type": "enum",
+          "default": "tinta",
+          "doc": "Transición de salida reutilizable.",
+          "required": false,
+          "options": [
+            "tinta",
+            "luz",
+            "golpe",
+            "ninguna"
+          ],
+          "min": null,
+          "max": null
+        },
+        "numero": {
+          "type": "string",
+          "default": "03",
+          "doc": "Número de capítulo; se conserva el cero inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "titulo": {
+          "type": "string",
+          "default": "EL TRONO",
+          "doc": "Título corto, máximo recomendado 4 palabras.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "IBM",
+          "doc": "Nombre o contexto superior; vacío lo apaga.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "contexto": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea de contexto opcional; mantener máximo 7 palabras totales.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "numero": "03",
+        "titulo": "EL TRONO",
+        "kicker": "IBM",
+        "contexto": "",
+        "figura": "http://127.0.0.1:43201/_tools/explainer-kit/designs/titanes/samples/brazos-arriba.png",
+        "bg": "ciudad"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=titanes&c=titanes.capitulo",
+      "data": {
+        "native_name": "titanes.capitulo"
+      }
+    }
+  ]
+}

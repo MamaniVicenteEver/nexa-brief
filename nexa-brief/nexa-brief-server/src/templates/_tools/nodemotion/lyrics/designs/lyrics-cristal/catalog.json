@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-cristal",
+  "family": "lyrics",
+  "display_name": "Cristal Roto",
+  "description": "La letra se pinta sobre una lámina de vidrio frente a un mundo nocturno en movimiento (bokeh, rayos de discoteca, aurora o la foto/video del nicho): cada golpe agrieta el vidrio con una telaraña real, algunas frases se graban esmeriladas o se escriben con el dedo en el vaho, y cuando el daño se acumula la lámina estalla en fragmentos que vuelan hacia la cámara revelando un mundo nuevo — para reggaetón, trap, pop urbano y EDM.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-cristal/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-cristal/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/figures",
+    "assets/humo.mp4"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-cristal",
+    "config": "nodemotion/lyrics/lyrics-cristal/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-cristal/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-cristal/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-cristal/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.bg",
+      "kind": "configuration",
+      "label": "bg",
+      "summary": "Existing configuration configuration: bg.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.bg",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.worlds",
+      "kind": "configuration",
+      "label": "worlds",
+      "summary": "Existing configuration configuration: worlds.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.worlds",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/006-configuration.json"
+    },
+    {
+      "entry_id": "config.layout",
+      "kind": "configuration",
+      "label": "layout",
+      "summary": "Existing configuration configuration: layout.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.layout",
+      "contract": "contracts/007-configuration.json"
+    },
+    {
+      "entry_id": "config.shatter",
+      "kind": "configuration",
+      "label": "shatter",
+      "summary": "Existing configuration configuration: shatter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.shatter",
+      "contract": "contracts/008-configuration.json"
+    }
+  ]
+}

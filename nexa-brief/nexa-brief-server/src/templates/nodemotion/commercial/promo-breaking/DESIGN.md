@@ -45,7 +45,7 @@ Fuentes editables: `_tools/commercial/build/promo-breaking.spec.json` (config po
 defecto, CSS y fuentes) + `player.js` + `components/`. Regenerar:
 
 ```bash
-python3 src/templates/_tools/commercial/build/build.py promo-breaking
+python3 src/templates/_tools/nodemotion/promo/compiler/build/build.py promo-breaking
 .venv/bin/python src/templates/_tools/hyperframes/optimize.py --check promo-breaking
 ```
 
@@ -198,8 +198,8 @@ los existentes; el validador lo incorpora solo.
 - **Catálogo**: `templates.json` → `promo-breaking` (categoría `commercial`,
   `runtime_assets`: `assets/media`, `components`). **Nicho**: `promo_video_breaking`
   en `niches.json` del repo y del perfil activo (`node_motion → promos`).
-- **Flujo compartido de promos**: `src/core/promo_prompts.py` (`TEMPLATES`),
-  contrato `src/skills/nodemotion/promo/templates/promo-breaking.json`, esquema
+- **Flujo compartido de promos**: `src/core/nodemotion/promo/prompts.py` (`TEMPLATES`),
+  contrato `src/templates/_tools/nodemotion/promo/production/templates/promo-breaking.json`, esquema
   `schemas/build-breaking.json`, enum de `schemas/brief.json`. Mismos prompts
   versionados y misma CLI (`promo.py build`, `scene-overrides.json`), sin productor
   propio. El ciclo son 44 escenas: un guion de 44 segmentos de 1,4–2,4 s (62–106 s).

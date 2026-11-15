@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-memoria",
+  "id": "config.transition",
+  "entry_id": "config.transition",
+  "name": "transition",
+  "kind": "configuration",
+  "label": "transition",
+  "summary": "Existing configuration configuration: transition.",
+  "params": {
+    "overlapSec": {
+      "default": 0.8
+    },
+    "weights": {
+      "default": {
+        "burn": 2.5,
+        "blur": 2,
+        "fade": 2,
+        "flash": 1,
+        "slice": 0.8
+      }
+    },
+    "flashColor": {
+      "default": "#FFE6C2"
+    },
+    "burnColor": {
+      "default": "rgba(255,150,60,0.9)"
+    }
+  },
+  "example": {
+    "overlapSec": 0.8,
+    "weights": {
+      "burn": 2.5,
+      "blur": 2,
+      "fade": 2,
+      "flash": 1,
+      "slice": 0.8
+    },
+    "flashColor": "#FFE6C2",
+    "burnColor": "rgba(255,150,60,0.9)"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-memoria/assets/config.json",
+      "pointer": "/configs/0/transition"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[2] / "src/templates"
 KIT = ROOT / "_tools/explainer-kit"
 sys.path.insert(0, str(ROOT / "_tools"))
 
-spec = importlib.util.spec_from_file_location("media_render_promo", ROOT / "_tools/commercial/render_promo.py")
+spec = importlib.util.spec_from_file_location("media_render_promo", ROOT / "_tools/nodemotion/promo/compiler/render_promo.py")
 renderer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(renderer)
 

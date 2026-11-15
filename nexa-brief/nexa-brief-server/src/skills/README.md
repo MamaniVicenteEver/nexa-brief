@@ -12,7 +12,8 @@ Punto de entrada de **cualquier agente** (Claude Code, Codex, otro) al que le pi
 | Un video explicativo con narración y un diseño existente (NodeTech, NodeHistory, NodeEconomy, NodePolitics…) | `explainer/produce/SKILL.md` | Diseños con estilos (Atlas, Mapas): la misma skill indica su ruta |
 | Una edición de un video existente para otro idioma o mercado, conservando su investigación y componentes | `editions/SKILL.md` | Web y agente utilizan la misma API privada; preflight, creación, seguimiento y recuperación con checkpoints |
 | Varios videos o preparación programada | `explainer/batch/SKILL.md` | Cola persistente, máximo cinco productores |
-| Una promo o video animado corto de texto sobre un tema, sin narración (equipo, marca, lugar, evento, producto o causa) | `nodemotion/promo/SKILL.md` | Contratos por plantilla en `nodemotion/promo/templates/` |
+| Crear o integrar un diseño reutilizable NodeMotion (letras o promos) | [Autoría de plantillas](../../docs/nodemotion-template-authoring.md) | Motor compartido, demo, contratos y registro; no preparación de episodios |
+| Una promo o video animado corto de texto sobre un tema, sin narración (equipo, marca, lugar, evento, producto o causa) | `nodemotion/promo/SKILL.md` y `../templates/_tools/nodemotion/promo/production/GUIDE.md` | Contratos por plantilla en `../templates/_tools/nodemotion/promo/production/templates/` |
 | Un video con el estilo Imperio (mapa histórico, sol/rayos y archivo documental; distinto de Atlas en Movimiento) | `explainer/produce/SKILL.md` y `../templates/_tools/explainer-kit/guides/imperio-production.md` | Identidad cinematográfica, aperturas A/B/C, paletas históricas y plan musical compartidos |
 | Un video con Atlas Cinemático (mapas 3D) | `../templates/nodeatlas/atlas-cinematico/_atlas/SKILL.md` | Episodio en producción del perfil |
 | Un video con Atlas en Movimiento | `../templates/nodeatlas/atlas-en-movimiento/SKILL.md` | Un único motor compartido |

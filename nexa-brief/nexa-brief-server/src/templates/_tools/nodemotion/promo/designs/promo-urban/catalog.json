@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-urban",
+  "family": "promo",
+  "display_name": "Promo Urban",
+  "description": "Opener urbano sobre negro: duotono rojo y blanco y negro en paneles, texto blanco condensado en escalera que se teclea, bloques naranjas entre escenas, rayados, flechas y año gigante en contorno.",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "acción deportiva en movimiento, atletas entrenando"
+      },
+      {
+        "slot": "photos",
+        "kind": "image",
+        "min": 1,
+        "max": 12,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Fotos",
+        "hint": "atletas en primer plano, retrato deportivo"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.tagTop",
+        "label": "Marca",
+        "max": 40,
+        "default": "NEXA BRIEF\nSPORT GROUP"
+      },
+      {
+        "key": "brand.tagRight",
+        "label": "Serie",
+        "max": 30,
+        "default": "STREET SERIES"
+      },
+      {
+        "key": "brand.year",
+        "label": "Año",
+        "max": 8,
+        "default": "2026"
+      },
+      {
+        "key": "brand.blurb",
+        "label": "Texto de presentación",
+        "max": 160,
+        "default": "ENTRENAMOS CADA DÍA EN LA CALLE, EN LA CANCHA\nY EN LA PISTA. DEPORTE URBANO SIN FILTROS,\nHECHO POR ATLETAS PARA ATLETAS."
+      }
+    ],
+    "brief": true
+  },
+  "config_json": "nodemotion/commercial/promo-urban/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/promo-urban",
+    "config": "nodemotion/commercial/promo-urban/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-urban/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-urban/README.md"
+  },
+  "lookup": "/api/v1/templates/promo-urban/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "scene.title",
+      "kind": "scene",
+      "label": "title",
+      "summary": "título y subtítulo con dos medios",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.title",
+      "contract": "contracts/001-scene.json"
+    },
+    {
+      "entry_id": "scene.stair",
+      "kind": "scene",
+      "label": "stair",
+      "summary": "líneas en escalera sobre uno o dos medios",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.stair",
+      "contract": "contracts/002-scene.json"
+    },
+    {
+      "entry_id": "scene.full",
+      "kind": "scene",
+      "label": "full",
+      "summary": "palabra sobre medio a pantalla completa",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.full",
+      "contract": "contracts/003-scene.json"
+    },
+    {
+      "entry_id": "scene.bottom",
+      "kind": "scene",
+      "label": "bottom",
+      "summary": "una o dos líneas al pie del medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.bottom",
+      "contract": "contracts/004-scene.json"
+    },
+    {
+      "entry_id": "scene.black3",
+      "kind": "scene",
+      "label": "black3",
+      "summary": "líneas sobre negro",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.black3",
+      "contract": "contracts/005-scene.json"
+    },
+    {
+      "entry_id": "scene.twoTone",
+      "kind": "scene",
+      "label": "twoTone",
+      "summary": "dos líneas sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.twoTone",
+      "contract": "contracts/006-scene.json"
+    },
+    {
+      "entry_id": "scene.ghost",
+      "kind": "scene",
+      "label": "ghost",
+      "summary": "líneas con ecos y medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.ghost",
+      "contract": "contracts/007-scene.json"
+    },
+    {
+      "entry_id": "scene.bigSmall",
+      "kind": "scene",
+      "label": "bigSmall",
+      "summary": "palabra grande y subtítulo sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.bigSmall",
+      "contract": "contracts/008-scene.json"
+    },
+    {
+      "entry_id": "scene.big2",
+      "kind": "scene",
+      "label": "big2",
+      "summary": "dos líneas y dos medios",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.big2",
+      "contract": "contracts/009-scene.json"
+    },
+    {
+      "entry_id": "scene.panel2",
+      "kind": "scene",
+      "label": "panel2",
+      "summary": "dos líneas y dos paneles",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.panel2",
+      "contract": "contracts/010-scene.json"
+    },
+    {
+      "entry_id": "scene.logo",
+      "kind": "scene",
+      "label": "logo",
+      "summary": "cierre con nombre y subtítulo",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.logo",
+      "contract": "contracts/011-scene.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/012-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/013-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/014-configuration.json"
+    },
+    {
+      "entry_id": "config.brand",
+      "kind": "configuration",
+      "label": "brand",
+      "summary": "Existing configuration configuration: brand.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.brand",
+      "contract": "contracts/015-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/016-configuration.json"
+    }
+  ]
+}

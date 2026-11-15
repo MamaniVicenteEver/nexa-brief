@@ -6,7 +6,7 @@ from types import SimpleNamespace
 
 import pytest
 
-MODULE = Path(__file__).resolve().parents[2] / 'src/templates/_tools/nodemotion-promo/media.py'
+MODULE = Path(__file__).resolve().parents[2] / 'src/templates/_tools/nodemotion/promo/tools/media.py'
 spec = importlib.util.spec_from_file_location('promo_media_test', MODULE)
 media = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(media)

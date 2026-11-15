@@ -25,11 +25,24 @@ def test_scene_video_is_available_and_user_image_keeps_priority(tmp_path, templa
 
 
 def test_scene_paths_cannot_escape_project(tmp_path):
-    config = tmp_path / "config.json"
-    config.write_text(json.dumps({"media": [{"src": "../outside.mp4"}, {"src": "https://invalid/video.mp4"}]}))
-    job = Job(input=JobInput(category_name="lyrics-grunge"), artifacts=JobArtifacts(output_dir=tmp_path, config_json_path=config))
-    # Las rutas ajenas no se resuelven; puede existir el video de la plantilla original.
-    assert all(path.is_relative_to(tmp_path) or path.is_relative_to(thumbnails.DESIGN_ROOT) for path in assets.background_sources(job).values())
+    from src.core.nodemotion.shared import bundled
+    project = tmp_path / "project"
+    project.mkdir()
+    outside = tmp_path / "outside.mp4"
+    outside.write_bytes(b"external video must never be selected")
+    config = project / "config.json"
+    config.write_text(json.dumps({"media": [{"src": "../outside.mp4"},
+        {"src": str(outside)}, {"src": "https://invalid/video.mp4"}]}))
+    job = Job(input=JobInput(category_name="lyrics-grunge"), artifacts=JobArtifacts(
+        output_dir=project, config_json_path=config))
+    sources = assets.background_sources(job)
+    assert sources and outside not in sources.values()
+    # A shared fallback is permitted only when this design registers its exact hash.
+    registered = set(bundled.demo_aliases("lyrics-grunge").values())
+    for path in sources.values():
+        if not path.is_relative_to(project):
+            key = bundled.bundled_key_for_path(path)
+            assert key is not None and key in registered
 
 
 @pytest.mark.parametrize("template,config,foreground,subtitle", [

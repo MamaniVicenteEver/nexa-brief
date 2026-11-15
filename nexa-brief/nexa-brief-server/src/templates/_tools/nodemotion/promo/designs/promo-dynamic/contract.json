@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-dynamic",
+  "family": "promo",
+  "source_of_truth": "templates.json#templates/promo-dynamic",
+  "config_json": "nodemotion/commercial/promo-dynamic/assets/config.json",
+  "config_prompt": null,
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "acción deportiva en movimiento, atletas entrenando"
+      },
+      {
+        "slot": "photos",
+        "kind": "image",
+        "min": 1,
+        "max": 12,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Fotos",
+        "hint": "atletas en primer plano, retrato deportivo"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.tag",
+        "label": "Marca",
+        "max": 40,
+        "default": "NEXA BRIEF\nSPORT SERIES"
+      },
+      {
+        "key": "brand.url",
+        "label": "Llamado a la acción",
+        "max": 40,
+        "default": "@NEXABRIEF · SUSCRÍBETE"
+      },
+      {
+        "key": "brand.vertical",
+        "label": "Texto vertical",
+        "max": 24,
+        "default": "NEXA BRIEF"
+      }
+    ],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/promo-dynamic",
+    "config": "nodemotion/commercial/promo-dynamic/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-dynamic/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-dynamic/README.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

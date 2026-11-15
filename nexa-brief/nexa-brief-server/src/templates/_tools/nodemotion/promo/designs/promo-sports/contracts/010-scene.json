@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-sports",
+  "id": "scene.scramble",
+  "entry_id": "scene.scramble",
+  "name": "scramble",
+  "kind": "scene",
+  "label": "scramble",
+  "summary": "palabra animada sobre medio",
+  "variants": [
+    {
+      "type": "scramble",
+      "media": [
+        "boxing"
+      ],
+      "max_text_lines": 1
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 12,
+      "type": "scramble",
+      "shows": "palabra animada sobre medio",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "boxing",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+    "brand_texts": {},
+    "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-sports.json",
+      "pointer": "/default_scenes/11"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-sports.json",
+      "pointer": "/scene_cycle/11"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

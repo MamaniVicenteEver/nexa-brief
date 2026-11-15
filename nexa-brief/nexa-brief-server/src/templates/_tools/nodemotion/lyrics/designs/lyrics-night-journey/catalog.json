@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-night-journey",
+  "family": "lyrics",
+  "display_name": "Viaje Nocturno",
+  "description": "Video de letras cinematográfico en cinco escenas encadenadas: tarjeta de reproductor 3D en ámbar con karaoke palabra por palabra, camino de parque de noche con palabras serif condensadas que se desenfocan en profundidad, una ola que borra todo hacia un cielo con la luna, un túnel amarillo con desenfoque de movimiento y un cierre sobre papel amarillo — movimiento suave y continuo, ideal para pop, R&B y reggaetón melódico.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-night-journey/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-night-journey/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/cover.jpg",
+    "assets/moon.png",
+    "assets/path.mp4",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-night-journey",
+    "config": "nodemotion/lyrics/lyrics-night-journey/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-night-journey/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-night-journey/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-night-journey/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.song",
+      "kind": "configuration",
+      "label": "song",
+      "summary": "Existing configuration configuration: song.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.song",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "scene.card",
+      "kind": "scene",
+      "label": "card",
+      "summary": "Existing scene configuration: card.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.card",
+      "contract": "contracts/003-scene.json"
+    },
+    {
+      "entry_id": "scene.path",
+      "kind": "scene",
+      "label": "path",
+      "summary": "Existing scene configuration: path.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.path",
+      "contract": "contracts/004-scene.json"
+    },
+    {
+      "entry_id": "scene.moon",
+      "kind": "scene",
+      "label": "moon",
+      "summary": "Existing scene configuration: moon.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.moon",
+      "contract": "contracts/005-scene.json"
+    },
+    {
+      "entry_id": "scene.tunnel",
+      "kind": "scene",
+      "label": "tunnel",
+      "summary": "Existing scene configuration: tunnel.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.tunnel",
+      "contract": "contracts/006-scene.json"
+    },
+    {
+      "entry_id": "scene.paper",
+      "kind": "scene",
+      "label": "paper",
+      "summary": "Existing scene configuration: paper.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.paper",
+      "contract": "contracts/007-scene.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/008-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/009-configuration.json"
+    },
+    {
+      "entry_id": "config.layout",
+      "kind": "configuration",
+      "label": "layout",
+      "summary": "Existing configuration configuration: layout.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.layout",
+      "contract": "contracts/010-configuration.json"
+    }
+  ]
+}

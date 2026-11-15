@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "decadas.fragmentos",
+  "entry_id": "decadas.fragmentos",
+  "kind": "component",
+  "label": "Fragmentos gigantes",
+  "summary": "Trozos del rótulo con foto que cruzan detrás del contador.",
+  "component": {
+    "name": "decadas.fragmentos",
+    "label": "Fragmentos gigantes",
+    "summary": "Trozos del rótulo con foto que cruzan detrás del contador.",
+    "default": true,
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "1980 - 1997",
+        "doc": "Texto"
+      }
+    },
+    "tags": [
+      "adorno"
+    ],
+    "file": "components/escenas.js",
+    "demo": {},
+    "preview": {
+      "t": 1.2
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "1980 - 1997",
+      "doc": "Texto"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/showcase/components.json",
+      "pointer": "/components/8"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

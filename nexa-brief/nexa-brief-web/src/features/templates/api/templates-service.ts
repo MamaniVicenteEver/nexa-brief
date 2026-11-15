@@ -163,6 +163,23 @@ interface TemplateRequirementsDto {
   }[];
   texts: { key: string; label: string; max: number | null; default: string | null }[];
   brief: boolean;
+  defaults?: {
+    audio_asset_id: string | null;
+    media: Record<string, { asset_id: string; kind: "image" | "video" }[]>;
+  };
+}
+
+function mapDefaults(dto: TemplateRequirementsDto["defaults"]): TemplateRequirements["defaults"] {
+  if (!dto) return undefined;
+  return {
+    audioAssetId: dto.audio_asset_id,
+    media: Object.fromEntries(
+      Object.entries(dto.media).map(([slot, items]) => [
+        slot,
+        items.map((item) => ({ assetId: item.asset_id, kind: item.kind })),
+      ]),
+    ),
+  };
 }
 
 /** Qué pide cada plantilla (canción, lugares de medios, textos): el Estudio y
@@ -197,5 +214,6 @@ export async function getTemplateRequirements(
     })),
     texts: dto.texts.map((text) => ({ ...text })),
     brief: dto.brief,
+    defaults: mapDefaults(dto.defaults),
   };
 }

@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-suave",
+  "family": "lyrics",
+  "display_name": "Letras Suaves",
+  "description": "El mismo motor urbano de impacto, en su versión calma: columna vertical de texto, cámara con deriva sutil y polvo ambiental — para trap o urbano de ritmo bajo.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "background",
+        "kind": "image|video",
+        "count": 1,
+        "orientation": "portrait",
+        "target": "source",
+        "label": "Fondo",
+        "hint": "paisaje sereno con luz suave"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/lyrics/lyrics-suave/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-suave/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/bg.jpg"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-suave",
+    "config": "nodemotion/lyrics/lyrics-suave/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-suave/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-suave/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-suave/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.bg",
+      "kind": "configuration",
+      "label": "bg",
+      "summary": "Existing configuration configuration: bg.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.bg",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.layout",
+      "kind": "configuration",
+      "label": "layout",
+      "summary": "Existing configuration configuration: layout.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.layout",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.dust",
+      "kind": "configuration",
+      "label": "dust",
+      "summary": "Existing configuration configuration: dust.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.dust",
+      "contract": "contracts/005-configuration.json"
+    }
+  ]
+}

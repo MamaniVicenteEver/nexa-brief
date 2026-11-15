@@ -162,7 +162,8 @@ class PlaywrightFFmpegAdapter(RecorderPort):
         # Serve original assets, but write captures and incomplete videos into a
         # private workspace so failure never replaces previous deliverables.
         shared = {}
-        if getattr(getattr(niche_cfg, "template", None), "template_id", None) == "promo-editorial":
+        if (not (html_path.parent / ".nodemotion-render.json").is_file()
+                and getattr(getattr(niche_cfg, "template", None), "template_id", None) == "promo-editorial"):
             from src.config.template_manifest import get_template_paths
             template = get_template_paths("promo-editorial").get("index_html")
             if template is not None:

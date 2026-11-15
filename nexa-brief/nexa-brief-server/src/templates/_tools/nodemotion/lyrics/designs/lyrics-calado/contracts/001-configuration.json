@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-calado",
+  "id": "config.video",
+  "entry_id": "config.video",
+  "name": "video",
+  "kind": "configuration",
+  "label": "video",
+  "summary": "Existing configuration configuration: video.",
+  "params": {
+    "src": {
+      "default": "assets/bg.mp4"
+    },
+    "filter": {
+      "default": "sepia(0.30) saturate(1.55) contrast(1.14) hue-rotate(-8deg)"
+    },
+    "dimSolido": {
+      "default": 0.42
+    },
+    "ghostCalado": {
+      "default": 0.05
+    }
+  },
+  "example": {
+    "src": "assets/bg.mp4",
+    "filter": "sepia(0.30) saturate(1.55) contrast(1.14) hue-rotate(-8deg)",
+    "dimSolido": 0.42,
+    "ghostCalado": 0.05
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-calado/assets/config.json",
+      "pointer": "/configs/0/video"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

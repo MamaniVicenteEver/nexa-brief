@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-lluvia-gris",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-lluvia-gris",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "6bf6af8cfb6925e2fa8f3cffc94682190d55141c38d7ce500bb692a67371c3ee",
+  "migration_source_sha256": "6bf6af8cfb6925e2fa8f3cffc94682190d55141c38d7ce500bb692a67371c3ee",
+  "migration_runtime_sha256": {
+    "components/intro.js": "352ddadb214c523543f0fca17e11f1ddd0c5cf1f4ff3f3772d5bee1c845700f5",
+    "components/outro.js": "e6bb0a5e07dc8e2be0578af8340a271de1845097c8197de2b5e8d7534fd0f4d9"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-lluvia-gris",
+    "config": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-lluvia-gris/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-lluvia-gris/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "5903b0aad86b87094cc23e12e634245448d28eeacb72d18f76558e8e11ae265f.webp",
+    "assets/media/drops-1.jpg": "2c4685fb7ae4e532ff3cdf75361f544c6665e0a2a45170ee319a7f6700b95ed5.jpg",
+    "assets/media/drops-2.jpg": "d7b7c7ad4eb996588871d1434597373486331cfa54bebe9b61983516a092ae66.jpg",
+    "assets/media/drops.mp4": "444dba3e81c19a23615d0da79239f72c76da11e09d3b450ac55346a5a8bfba48.mp4",
+    "assets/media/graded/drops-1.cold.jpg": "9d5900e5750ee16f72d961fd4ca384e22212d7d98afdfa80f8c34ba454789f10.jpg",
+    "assets/media/graded/drops-1.rain.jpg": "ea7af4dcd6907af48d43e46c58c5f38538aa116779e54558f5e034424d2556b4.jpg",
+    "assets/media/graded/drops.cold.mp4": "a50293e3caeb6e5f1808f467cb8c8e81707256a47dc264ea27992b8d54967971.mp4",
+    "assets/media/graded/drops.rain.mp4": "bc8309b9ad29bf56eabacce35ebb23fdd054b807a92b527c07177f20d2d5c506.mp4",
+    "assets/media/graded/rain-road-1.cold.jpg": "e0be63904df9822c27bc08c173607196794642c01a424b7321448e1c1353b193.jpg",
+    "assets/media/graded/rain-road-1.rain.jpg": "5aa1764c8c7629170b7026aeb2eb9510644b3c5378224b986d3d80a917f76873.jpg",
+    "assets/media/graded/rain-road.cold.mp4": "c13204b137cb0178d93a381494b4dbfa0cd7f66e90b87acbe1843612ee91ba1a.mp4",
+    "assets/media/graded/rain-road.rain.mp4": "58292ec0ed87c9c35cfd8310c3c55f93bf8ff96182b8d4c46ba553ae47acfe70.mp4",
+    "assets/media/graded/rain-window-1.cold.jpg": "2b5b60d120822f1cbb1003d39eea1c4a70582138d09e113df4e00965f158ba5d.jpg",
+    "assets/media/graded/rain-window-1.rain.jpg": "61d29fe5b8cc0e10a5f1393a721ad7819c026a928add29d71892619a6ceabefa.jpg",
+    "assets/media/graded/rain-window.cold.mp4": "8dfce4ceed981c2b63b10dd29faea4e489d44d2d460896345b5be544ee911129.mp4",
+    "assets/media/graded/rain-window.rain.mp4": "1e74773b3c03bbb434ab6447dd5eee8c3bac0827e43cb48abbe8468fea321deb.mp4",
+    "assets/media/graded/street-rain-1.cold.jpg": "daa51a7962831ae44f95bbd36ed85ac223fa1ba916616682c845e94ea90e4ccf.jpg",
+    "assets/media/graded/street-rain-1.rain.jpg": "5c1b3fcbfb86513fc7eb7f3b3edd15f6f46ae58a17f8c2f2d5f41f5721623ed2.jpg",
+    "assets/media/graded/street-rain.cold.mp4": "8d7e4562d6266d13e21ee6ef5c27275188e4e231de1010f94e5d1d696f6f41ae.mp4",
+    "assets/media/graded/street-rain.rain.mp4": "672009298a2c772e4dee4bdd5d1de2c0da50e9b0a36e1ceb159b01847c3eaed5.mp4",
+    "assets/media/graded/umbrella-1.cold.jpg": "866534a98e53a5630efe18ca3d392a35dff498ea5f08162df620ac6637418b95.jpg",
+    "assets/media/graded/umbrella-1.rain.jpg": "8e2c6f2a2128dea0d13341930e7d085eab37ec56c2ffde8f321959014fcd97d8.jpg",
+    "assets/media/graded/umbrella.cold.mp4": "251f0edd346c1091384aaf9f8191dfa706295bd2b1a8e400e342386c4f7a14e6.mp4",
+    "assets/media/graded/umbrella.rain.mp4": "0666ab1dcd45218728dda2052eaf8919360a9fe43741a03659102d8d25e7864e.mp4",
+    "assets/media/graded/window-woman-1.cold.jpg": "6bfc29792248abaf5105bd53f772aa84248ec31a24c617fb1931b50a09efd720.jpg",
+    "assets/media/graded/window-woman-1.rain.jpg": "41e8bc7d414e64626cddfeb713929ae197c2f9b79c7f3a79e31bee15558d99c4.jpg",
+    "assets/media/graded/window-woman.cold.mp4": "c5223c95dc61fb9cb4a2409c7a764b894e7788e706ea20fb9c15b3532fac3b9a.mp4",
+    "assets/media/graded/window-woman.rain.mp4": "ee18da2428ff5cfcd4835f0d29ecc9b2058afe0bb18d43e85fcdf1c6b87d8a73.mp4",
+    "assets/media/rain-road-1.jpg": "439be8169ff8a1f83b4bd3ef515215e084f5b73717d6db6b02e36da341654b83.jpg",
+    "assets/media/rain-road-2.jpg": "2aaa4258fac37a2f9699746f60627ab9dab23537c9e27b2c1e8d7d03d0799f16.jpg",
+    "assets/media/rain-road.mp4": "5cef8882966426297cf8c9cf9263b48c488cf6e35c523135a2c07989eb02cae6.mp4",
+    "assets/media/rain-window-1.jpg": "0fc4562eb6e4a02b0cf791c003b70473f1e63589d0706c6f2416f6bc78c207cb.jpg",
+    "assets/media/rain-window-2.jpg": "0312e12290690f0b7cf3a377379a702bb07425ddcfc31963d76450a38daed094.jpg",
+    "assets/media/rain-window.mp4": "348b97f2e12226cbc86b85fd66ecdb8e201a6bb5f5119c812427857b16c8ee4b.mp4",
+    "assets/media/street-rain-1.jpg": "0ccb9b5a2edb100e2dc5cef9f3e0c2add471a56dc5dda7f15241a343189f98a8.jpg",
+    "assets/media/street-rain-2.jpg": "c99288b2b1c865b492d7a7bad159bfab5a1bcdfe179fb6a78afe8823f75cd115.jpg",
+    "assets/media/street-rain.mp4": "dc9f7ace95083a7bb578f2d336332d6592999487b5493cbc9bd6e5f3d143dff7.mp4",
+    "assets/media/umbrella-1.jpg": "33d85151b6ccf72d4d5d15007209d8480da57ad898244c107ee3f6ff551c0657.jpg",
+    "assets/media/umbrella-2.jpg": "297191bb9a13cf3cf0e24ec485a1fba8ecc090e086ba4e05696faf919641eb26.jpg",
+    "assets/media/umbrella.mp4": "9d01c8e59978f6f969a553de96bc60033319b1be548c8e75b167492cf06f0d03.mp4",
+    "assets/media/window-woman-1.jpg": "a4c4a51cb28b2744587448f1b984bbb39afa0d3d4b3209ea9e0d3eec44e39dd3.jpg",
+    "assets/media/window-woman-2.jpg": "aa45b2acdc5f2af0a9277ab6d18ec0345a5fb509b3fad696b9fbe0b8a64208b6.jpg",
+    "assets/media/window-woman.mp4": "b474e8bf94e49b9a40092ae8da0adebbc0713208e874e7d00aac6bb417842e69.mp4",
+    "assets/song.mp3": "7879c27751e8902bbfc5d07c8d10261645b3625ca85203a9aef9121f0a7d01b5.mp3"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "config.interludes",
+  "entry_id": "config.interludes",
+  "name": "interludes",
+  "kind": "configuration",
+  "label": "interludes",
+  "summary": "Existing configuration configuration: interludes.",
+  "params": {
+    "minSec": {
+      "default": 0.45
+    },
+    "maxSec": {
+      "default": 3
+    },
+    "deck": {
+      "default": {
+        "sun": 3,
+        "holes": 2,
+        "crack": 2,
+        "scribble": 2,
+        "spark": 1
+      }
+    }
+  },
+  "example": {
+    "minSec": 0.45,
+    "maxSec": 3,
+    "deck": {
+      "sun": 3,
+      "holes": 2,
+      "crack": 2,
+      "scribble": 2,
+      "spark": 1
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "pointer": "/configs/0/interludes"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

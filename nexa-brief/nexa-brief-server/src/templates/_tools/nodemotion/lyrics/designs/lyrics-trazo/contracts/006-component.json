@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "trazo.inversion",
+  "entry_id": "trazo.inversion",
+  "kind": "component",
+  "label": "Inversión de fondo",
+  "summary": "Cuadros de papel blanco y tinta negra con destello de entrada.",
+  "component": {
+    "name": "trazo.inversion",
+    "label": "Inversión de fondo",
+    "summary": "Cuadros de papel blanco y tinta negra con destello de entrada.",
+    "default": true,
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "never",
+        "doc": "Texto"
+      }
+    },
+    "tags": [
+      "transicion"
+    ],
+    "file": "components/transiciones.js",
+    "demo": {},
+    "preview": {
+      "t": 0.5
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "never",
+      "doc": "Texto"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/showcase/components.json",
+      "pointer": "/components/7"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

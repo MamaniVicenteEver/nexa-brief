@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "chrome",
+  "entry_id": "chrome",
+  "kind": "component",
+  "label": "Palabra holográfica a sangre",
+  "summary": "Palabra a sangre con relleno holográfico y el resto como rótulo cruzado.",
+  "component": {
+    "name": "chrome",
+    "label": "Palabra holográfica a sangre",
+    "summary": "Palabra a sangre con relleno holográfico y el resto como rótulo cruzado.",
+    "group": "scene",
+    "tags": [
+      "lyrics-hologram",
+      "scene"
+    ],
+    "params": {
+      "textIn": {
+        "type": "enum",
+        "options": [
+          "slide",
+          "stamp",
+          "glitch",
+          "spread",
+          "fade",
+          "cut"
+        ],
+        "default": "slide"
+      },
+      "caption": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "t": 10.38,
+      "query": null,
+      "layout": {
+        "weight": 1,
+        "bgs": [
+          "void",
+          "pale"
+        ]
+      }
+    },
+    "preview": {
+      "gallery": "gallery.html?only=chrome"
+    }
+  },
+  "params": {
+    "textIn": {
+      "type": "enum",
+      "options": [
+        "slide",
+        "stamp",
+        "glitch",
+        "spread",
+        "fade",
+        "cut"
+      ],
+      "default": "slide"
+    },
+    "caption": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/11"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

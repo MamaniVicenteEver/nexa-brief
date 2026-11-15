@@ -18,6 +18,8 @@ TranscriptionStatus = Literal["none", "pending", "running", "done", "failed"]
 
 class ImageLibraryEntryResponse(ResourceMetadata):
     media_type: Literal["image"] = "image"
+    # Datos que faltan para publicar (vacía = listo).
+    metadata_missing: list[str] = []
     video_id: str | None = None
     production_id: str | None = None
     production_name: str = ""
@@ -45,6 +47,8 @@ class ImageLibraryEntryResponse(ResourceMetadata):
 
 class MusicLibraryEntryResponse(ResourceMetadata):
     media_type: Literal["music"] = "music"
+    # Datos que faltan para publicar (vacía = listo).
+    metadata_missing: list[str] = []
     video_id: str | None = None
     production_id: str | None = None
     production_name: str = ""
@@ -76,6 +80,8 @@ class MusicLibraryEntryResponse(ResourceMetadata):
 
 class VideoLibraryEntryResponse(ResourceMetadata):
     media_type: Literal["video"] = "video"
+    # Datos que faltan para publicar (vacía = listo).
+    metadata_missing: list[str] = []
     video_id: str | None = None
     production_id: str | None = None
     production_name: str = ""

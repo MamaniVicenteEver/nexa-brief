@@ -9,8 +9,8 @@ from jsonschema import Draft202012Validator
 from jsonschema.exceptions import ValidationError
 
 SERVER = Path(__file__).resolve().parents[2]
-SKILL = SERVER / 'src/skills/nodemotion/promo'
-SPEC = importlib.util.spec_from_file_location('promo_general_build', SERVER / 'src/templates/_tools/nodemotion-promo/build.py')
+SKILL = SERVER / 'src/templates/_tools/nodemotion/promo/production'
+SPEC = importlib.util.spec_from_file_location('promo_general_build', SERVER / 'src/templates/_tools/nodemotion/promo/tools/build.py')
 builder = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(builder)
 
@@ -25,7 +25,7 @@ def write(path, data):
 
 
 def validate(name, data):
-    Draft202012Validator(read(SKILL / 'schemas' / (name + '.json'))).validate(data)
+    Draft202012Validator(read(SKILL / 'schemas' / (('script' if name == 'guion' else name) + '.json'))).validate(data)
 
 
 @pytest.mark.parametrize('name', ['editorial', 'sports', 'dynamic', 'kinetic', 'trendy', 'urban'])
@@ -36,6 +36,12 @@ def test_build_and_contract(name, tmp_path, monkeypatch):
     texts = {key: 'TEMA' for key in required}
     brief = {'template': f'promo-{name}', 'topic': 'Tema', 'name': 'Tema', 'duration_seconds': 90,
              'tone': 'intenso', 'language': 'es', 'audience': 'público', 'texts': texts}
+    from src.config.settings import settings
+    from src.core.nodemotion.shared import resources
+    monkeypatch.setattr(settings, 'storage_profile_dir', tmp_path)
+    monkeypatch.setattr(settings, 'storage_layout_version', 3)
+    paths = {}
+    monkeypatch.setattr(resources, '_asset', lambda kind, asset_id: paths[(kind, asset_id)])
     target = tmp_path / 'project'
     write(target / 'brief.json', brief)
     scenes = contract['default_scenes']
@@ -55,11 +61,14 @@ def test_build_and_contract(name, tmp_path, monkeypatch):
         kind = kinds[slot]
         folder = tmp_path / 'resources' / ('videos' if kind == 'video' else 'images') / slot
         folder.mkdir(parents=True)
-        (folder / 'fixture.dat').write_bytes(b'fixture')
-        write(folder / 'resource.json', {'id': slot, 'type': kind, 'file': 'fixture.dat', 'attribution': 'autor', 'license': 'CC0', 'license_url': 'https://example.org'})
+        filename = 'fixture.mp4' if kind == 'video' else 'fixture.jpg'
+        (folder / filename).write_bytes(slot.encode())
+        paths[(kind, slot)] = folder / filename
+        write(folder / 'resource.json', {'id': slot, 'type': kind, 'file': filename, 'attribution': 'autor', 'license': 'CC0', 'license_url': 'https://example.org'})
     music = tmp_path / 'resources/music/music'
     music.mkdir(parents=True)
     (music / 'audio.mp3').write_bytes(b'fixture')
+    paths[('music', 'music')] = music / 'audio.mp3'
     write(music / 'resource.json', {'id': 'music', 'type': 'music', 'attribution': 'autor', 'license': 'CC0', 'license_url': 'https://example.org'})
     write(target / 'music.json', {'asset_id': 'music', 'ready_file': 'audio.mp3', 'duration_seconds': 90})
     commands = []
@@ -71,11 +80,16 @@ def test_build_and_contract(name, tmp_path, monkeypatch):
     monkeypatch.setattr(builder.subprocess, 'run', run_process)
     builder.build(tmp_path, target, read, write, validate)
     config = read(target / 'assets/config.json')['configs'][0]
-    assert config['scenes'] == scenes
+    expected_scenes = ([{key: value for key, value in scene.items() if key not in ('flyer', 'flyerAt')}
+                        for scene in scenes] if name == 'dynamic' else scenes)
+    assert config['scenes'] == expected_scenes
     assert [m['id'] for m in config['media']] == [m['id'] for m in contract['default_media'] if m['id'] in {x['slot'] for x in items}]
     for ref in config['media']:
         if ref['type'] == 'video':
-            assert (target / 'assets' / ref['poster']).read_bytes() == b'poster'
+            from src.core.nodemotion.service import resolve_project
+            assert resolve_project(target, 'assets/' + ref['poster']).read_bytes() == b'poster'
+    assert all(path.suffix == '.json' for path in target.rglob('*') if path.is_file())
+    assert not any(path.is_symlink() for path in target.rglob('*'))
     for key, value in texts.items():
         assert config['brand'][key.removeprefix('brand.')] == value
     builder.build(tmp_path, target, read, write, validate)
@@ -104,7 +118,7 @@ def test_build_and_contract(name, tmp_path, monkeypatch):
 
 
 def test_draft_inputs_preserve_positions_when_cycle_skips_slots(tmp_path, monkeypatch):
-    spec = importlib.util.spec_from_file_location('promo_general_draft', SERVER / 'src/templates/_tools/nodemotion-promo/draft_workflow.py')
+    spec = importlib.util.spec_from_file_location('promo_general_draft', SERVER / 'src/templates/_tools/nodemotion/promo/tools/draft_workflow.py')
     workflow = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(workflow)
     target = tmp_path / 'project'

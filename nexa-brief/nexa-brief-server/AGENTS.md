@@ -6,6 +6,13 @@ Para crear cualquier contenido empieza por el [índice](src/skills/README.md),
 
 Entrada para cualquier agente de IA (Codex, Claude Code…) que trabaje en este servidor.
 
+## Crear plantillas NodeMotion
+Para crear o integrar un diseño reutilizable de letras o promos, lee primero
+[la guía de autoría e integración](docs/nodemotion-template-authoring.md).
+Define fuente compartida, componentes, recursos, catálogos, renderers y criterios de aceptación.
+Es distinto de preparar videos de una plantilla existente.
+Claude, Codex y otros agentes siguen los mismos contratos y los permisos de su ejecutor.
+
 ## Implementar idiomas en categorías o diseños existentes
 
 Para habilitar o corregir ediciones multilingües de un diseño, empieza por
@@ -178,7 +185,7 @@ producto; `promote` se mantiene únicamente por compatibilidad de API.
 
 Para Editorial, Sports, Dynamic, Kinetic, Trendy y Urban, un pedido de plantilla
 y tema se inicia desde el chat de la app o con `chat.py create`; ambas entradas
-usan la misma API e historial. Sigue [OPERAR.md](src/skills/nodemotion/promo/OPERAR.md) para consultar estado,
+usan la misma API e historial. Sigue [OPERATE.md](src/templates/_tools/nodemotion/promo/production/OPERATE.md), [QUALITY.md](src/templates/_tools/nodemotion/promo/production/QUALITY.md) y [GUIDE.md](src/templates/_tools/nodemotion/promo/production/GUIDE.md) para consultar estado,
 enviar correcciones y revisar consumo. La calidad automática es técnica: la
 persona revisa fuentes, imágenes, licencias y composición, y solo ella aprueba
 la revisión vigente. Aprobar no inicia grabación ni publicación.

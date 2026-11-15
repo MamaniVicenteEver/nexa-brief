@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "trazo.palabra",
+  "entry_id": "trazo.palabra",
+  "kind": "component",
+  "label": "Palabra rotulada",
+  "summary": "Una palabra a pantalla grande con estilo, disposición, movimiento y transición.",
+  "component": {
+    "name": "trazo.palabra",
+    "label": "Palabra rotulada",
+    "summary": "Una palabra a pantalla grande con estilo, disposición, movimiento y transición.",
+    "tags": [
+      "escena"
+    ],
+    "file": "components/escenas.js",
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "jungle",
+        "doc": "Texto"
+      },
+      "style": {
+        "type": "string",
+        "default": "bubble",
+        "options": [
+          "marker-caps",
+          "bubble",
+          "brush",
+          "brush-outline",
+          "chalk",
+          "sketch",
+          "tall",
+          "scratch",
+          "signature",
+          "scribble",
+          "hatch-fill",
+          "sketch-caps",
+          "block-hatch",
+          "block-shadow",
+          "graffiti",
+          "thin-brush",
+          "doodle",
+          "caveat"
+        ]
+      },
+      "layout": {
+        "type": "string",
+        "default": "stack",
+        "options": [
+          "line",
+          "stack",
+          "vertical",
+          "stair"
+        ]
+      },
+      "motion": {
+        "type": "string",
+        "default": "punch",
+        "options": [
+          "none",
+          "punch",
+          "pop",
+          "drift",
+          "recede",
+          "shake"
+        ]
+      },
+      "transition": {
+        "type": "string",
+        "default": "cut",
+        "options": [
+          "cut",
+          "flash",
+          "zoom",
+          "shift",
+          "blink"
+        ]
+      },
+      "inverted": {
+        "type": "boolean",
+        "default": false
+      },
+      "hatch": {
+        "type": "boolean",
+        "default": false
+      },
+      "doodle": {
+        "type": "string",
+        "default": "",
+        "options": [
+          "",
+          "rays",
+          "star",
+          "underline",
+          "circle",
+          "arrow"
+        ]
+      }
+    },
+    "demo": {
+      "text": "jungle",
+      "style": "bubble",
+      "layout": "stack"
+    },
+    "preview": {
+      "t": 0.6
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "jungle",
+      "doc": "Texto"
+    },
+    "style": {
+      "type": "string",
+      "default": "bubble",
+      "options": [
+        "marker-caps",
+        "bubble",
+        "brush",
+        "brush-outline",
+        "chalk",
+        "sketch",
+        "tall",
+        "scratch",
+        "signature",
+        "scribble",
+        "hatch-fill",
+        "sketch-caps",
+        "block-hatch",
+        "block-shadow",
+        "graffiti",
+        "thin-brush",
+        "doodle",
+        "caveat"
+      ]
+    },
+    "layout": {
+      "type": "string",
+      "default": "stack",
+      "options": [
+        "line",
+        "stack",
+        "vertical",
+        "stair"
+      ]
+    },
+    "motion": {
+      "type": "string",
+      "default": "punch",
+      "options": [
+        "none",
+        "punch",
+        "pop",
+        "drift",
+        "recede",
+        "shake"
+      ]
+    },
+    "transition": {
+      "type": "string",
+      "default": "cut",
+      "options": [
+        "cut",
+        "flash",
+        "zoom",
+        "shift",
+        "blink"
+      ]
+    },
+    "inverted": {
+      "type": "boolean",
+      "default": false
+    },
+    "hatch": {
+      "type": "boolean",
+      "default": false
+    },
+    "doodle": {
+      "type": "string",
+      "default": "",
+      "options": [
+        "",
+        "rays",
+        "star",
+        "underline",
+        "circle",
+        "arrow"
+      ]
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/showcase/components.json",
+      "pointer": "/components/3"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

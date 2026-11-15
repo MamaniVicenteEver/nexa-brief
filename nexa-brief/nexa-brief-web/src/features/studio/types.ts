@@ -132,6 +132,8 @@ export interface Draft {
   details: DraftDetails | null;
   thumbnails?: DraftThumbnails | null;
   thumbnailError?: string | null;
+  /** Datos que faltan por generar (IA no disponible o recursos sin ficha): bloquean publicar. */
+  pending?: string[];
   createdAt: string;
   updatedAt: string;
 }

@@ -328,9 +328,13 @@
 
     /* Medios anidados de componentes optativos: terminar su validación y decodificación
        antes del primer cuadro, tanto en vista previa como en captura/seek. */
+    const mediaWindows = [];
     for (const use of new Set(beats.map(b => b.use))) {
       const def = registry.get(use);
-      if (def?.prepare) await def.prepare(beats.filter(b => b.use === use));
+      if (def?.prepare) {
+        const window = await def.prepare(beats.filter(b => b.use === use), { time: INITIAL_TIME });
+        if (window?.update) mediaWindows.push(window);
+      }
     }
 
     /* En la reproducción en vivo se esperan solo las imágenes visibles al abrir.
@@ -494,6 +498,15 @@
     }
 
     let lastDrawTime = INITIAL_TIME;
+    let drawRevision = 0, disposed = false, raf = null;
+    const scheduleFrame = () => { if (!disposed && raf == null) raf = requestAnimationFrame(frame); };
+    async function draw(t) {
+      const revision = ++drawRevision;
+      // No se borra el cuadro anterior mientras se decodifica un seek o un vecino.
+      if (mediaWindows.length) await Promise.all(mediaWindows.map(window => window.update(t)));
+      if (disposed || revision !== drawRevision) return false;
+      render(t); return true;
+    }
     function render(t) {
       t = clamp(t, 0, total);
       lastDrawTime = t;
@@ -545,7 +558,9 @@
       : CONTROLLED ? (SYNTHETIC_CLOCK ? (window.__nexaClock?.currentTime || 0) : mediaClock(now))
       : (!audio.paused && audio.currentTime > 0) ? mediaClock(now)
       : (t0wall == null ? (t0wall = now, START_AT) : LOOP ? START_AT + ((now - t0wall) / 1000) % Math.max(total - START_AT, 0.001) : START_AT + (now - t0wall) / 1000);
-    function frame(now) {
+    async function frame(now) {
+      raf = null;
+      if (disposed) return;
       /* La marca rAF puede preceder al callback cientos de ms si el hilo está
          ocupado. Muestrear audio y reloj aquí evita falsas aceleraciones y
          mantiene también los clips en la misma referencia temporal. */
@@ -554,31 +569,44 @@
       if (window.__kitTrace) window.__kitTrace.push([now, t, audio.currentTime || 0]);   /* solo si un perfilador lo pide */
       /* Tras el fin no borrar el último cuadro pintado: el outro ya salió de su
          ventana. El seek explícito conserva su dibujo exacto, también en total. */
-      if (forced != null || LOOP || t < total) render(t);
+      if (forced != null || LOOP || t < total) await draw(t);
       else syncClips();                 /* pausar los medios que ya no se dibujan */
       /* Al llegar al final se conserva el último cuadro; solo ?loop habilita otro ciclo. */
-      if (forced == null && (LOOP || CONTROLLED || t < total)) requestAnimationFrame(frame);
+      if (forced == null && (LOOP || CONTROLLED || t < total)) scheduleFrame();
     }
-    addEventListener("resize", () => {
+    const resize = () => {
       size(); for (const inst of live.values()) inst.dispose && inst.dispose(); live.clear();
       for (const [name, rt] of families) if (rt.resize) rt.resize(ctx, ctx.family[name]);
       if (forced == null && !LOOP && clock(performance.now()) >= total) {
-        render(lastDrawTime);          /* recomponer el cuadro retenido en el nuevo formato */
+        void draw(lastDrawTime);          /* recomponer el cuadro retenido en el nuevo formato */
         void settleClips(lastDrawTime);
-      }
-    });
+      } else if (forced != null) void draw(forced);
+    };
+    addEventListener("resize", resize);
+    function dispose() {
+      if (disposed) return;
+      disposed = true; drawRevision++;
+      if (raf != null) cancelAnimationFrame(raf);
+      removeEventListener("resize", resize); removeEventListener("pagehide", dispose);
+      for (const inst of live.values()) inst.dispose?.();
+      live.clear();
+      for (const window of mediaWindows) window.dispose?.();
+      for (const video of loadedVideos.values()) video.pause();
+    }
+    addEventListener("pagehide", dispose);
 
     window.__promo = {
       scenes: () => beats.map(b => ({ t0: b.t0, t1: b.t1, type: b.use, seg: { text: b.at || "" } })).concat([{ t0: total, t1: total, type: "end", seg: { text: "" } }]),
-      async seek(t) { forced = t; render(t); await settleClips(t); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); },
-      release() { forced = null; requestAnimationFrame(frame); },
+      async seek(t) { if (disposed) return; t = clamp(t, 0, total); forced = t; await draw(t); await settleClips(t); await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); },
+      release() { forced = null; scheduleFrame(); },
+      dispose,
       beats, total, words,
     };
     /* Dibuja antes de anunciar que el reproductor está listo: el audio no debe revelar
        un canvas todavía vacío. Esperamos dos frames para que el navegador pinte el inicial. */
-    render(clock(performance.now()));
+    await draw(clock(performance.now()));
     if (forced != null) await settleClips(forced);
-    requestAnimationFrame(frame);
+    scheduleFrame();
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     /* También fuera del modal: la primera rasterización puede tardar cientos de ms.
        El audio empieza después de que ese cuadro ya llegó a pantalla. */

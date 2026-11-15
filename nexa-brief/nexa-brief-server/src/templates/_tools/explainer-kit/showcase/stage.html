@@ -26,7 +26,7 @@
     const failure = () => window.parent.postMessage({ type: "nexa-animation-error" }, location.origin);
     addEventListener("error", failure); addEventListener("unhandledrejection", failure);
   }
-  const ids = ["binary", "rough", "acuarela", "carta", "collage", "cronica", "enmienda", "grunge", "pelicula", "periodico", "pop", "memorias", "dinero", "atlas", "imperio"];
+  const ids = ["binary", "rough", "acuarela", "carta", "collage", "cronica", "enmienda", "grunge", "pelicula", "periodico", "pop", "memorias", "dinero", "atlas", "imperio", "titanes"];
   const prefix = c.split(".")[0];
   const d = QS.get("d") || (ids.includes(prefix) ? prefix : "binary");
   const s = document.createElement("script"); s.src = "../engine/loader.js"; s.dataset.design = d; s.dataset.noboot = "1";

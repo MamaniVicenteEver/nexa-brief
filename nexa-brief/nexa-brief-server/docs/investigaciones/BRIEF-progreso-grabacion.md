@@ -16,7 +16,7 @@ avance, y al terminar hay que recargar la página para ver el resultado. Se quie
    grabación invalidar/refrescar los datos de la biblioteca y del modal para que aparezca el video sin recargar.
 
 ## Backend (nexa-brief-server)
-- src/templates/_tools/commercial/render_promo.py: hoy cada worker imprime "  [w1]  12.03s". Añade un contador compartido de
+- src/templates/_tools/nodemotion/promo/compiler/render_promo.py: hoy cada worker imprime "  [w1]  12.03s". Añade un contador compartido de
   cuadros y emite líneas de máquina con flush: `@@progress <hechos> <total>` (como mucho ~1 por segundo) y `@@phase encode`
   antes de ffmpeg. No cambies el resto del comportamiento ni los argumentos.
 - src/templates/_tools/explainer-kit/tools/kit.py cmd_render: antes de cada formato imprime `@@format <fmt> <i> <n>` (flush) y

@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.pattern",
+  "entry_id": "mono.pattern",
+  "kind": "component",
+  "label": "Patrón óptico de puntos en onda + botón central (pausa o pla",
+  "summary": "Patrón óptico de puntos en onda + botón central (pausa o play)",
+  "component": {
+    "name": "mono.pattern",
+    "label": "Patrón óptico de puntos en onda + botón central (pausa o pla",
+    "summary": "Patrón óptico de puntos en onda + botón central (pausa o play)",
+    "tags": [
+      "escena"
+    ],
+    "scene_type": "pattern",
+    "params": {
+      "icon": {
+        "type": "string",
+        "options": [
+          "pause",
+          "play",
+          "none"
+        ],
+        "default": "pause"
+      },
+      "cell": {
+        "type": "number",
+        "min": 20.0,
+        "max": 120.0,
+        "default": 56.0
+      },
+      "speed": {
+        "type": "number",
+        "min": 0.2,
+        "max": 4.0,
+        "default": 1.4
+      }
+    },
+    "demo": {
+      "time": 30.9
+    },
+    "preview": {
+      "t": 30.9
+    }
+  },
+  "params": {
+    "icon": {
+      "type": "string",
+      "options": [
+        "pause",
+        "play",
+        "none"
+      ],
+      "default": "pause"
+    },
+    "cell": {
+      "type": "number",
+      "min": 20.0,
+      "max": 120.0,
+      "default": 56.0
+    },
+    "speed": {
+      "type": "number",
+      "min": 0.2,
+      "max": 4.0,
+      "default": 1.4
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/9"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

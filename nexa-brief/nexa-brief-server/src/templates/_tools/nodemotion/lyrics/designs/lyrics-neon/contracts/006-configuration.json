@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-neon",
+  "id": "config.layout",
+  "entry_id": "config.layout",
+  "name": "layout",
+  "kind": "configuration",
+  "label": "layout",
+  "summary": "Existing configuration configuration: layout.",
+  "params": {
+    "stairVw": {
+      "default": 3.4
+    },
+    "colGapVw": {
+      "default": 52
+    },
+    "colGapVh": {
+      "default": 88
+    },
+    "rowsMin": {
+      "default": 2
+    },
+    "rowsMax": {
+      "default": 4
+    },
+    "verticalChance": {
+      "default": 0.13
+    },
+    "soloChance": {
+      "default": 0.14
+    },
+    "tubeChance": {
+      "default": 0.3
+    },
+    "dirWeights": {
+      "default": {
+        "left": 0.55,
+        "down": 0.25,
+        "up": 0.2
+      }
+    }
+  },
+  "example": {
+    "stairVw": 3.4,
+    "colGapVw": 52,
+    "colGapVh": 88,
+    "rowsMin": 2,
+    "rowsMax": 4,
+    "verticalChance": 0.13,
+    "soloChance": 0.14,
+    "tubeChance": 0.3,
+    "dirWeights": {
+      "left": 0.55,
+      "down": 0.25,
+      "up": 0.2
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-neon/assets/config.json",
+      "pointer": "/configs/0/layout"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

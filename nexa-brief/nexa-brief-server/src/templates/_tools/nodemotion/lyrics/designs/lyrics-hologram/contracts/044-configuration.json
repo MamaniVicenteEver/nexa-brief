@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "config.transition",
+  "entry_id": "config.transition",
+  "name": "transition",
+  "kind": "configuration",
+  "label": "transition",
+  "summary": "Existing configuration configuration: transition.",
+  "params": {
+    "overlapSec": {
+      "default": 0.3
+    },
+    "duration": {
+      "default": 0.32
+    },
+    "weights": {
+      "default": {
+        "cut": 4,
+        "glitch": 2,
+        "holoWipe": 1.5,
+        "flashWhite": 0.8,
+        "shutter": 0.8,
+        "slice": 0.6
+      }
+    }
+  },
+  "example": {
+    "overlapSec": 0.3,
+    "duration": 0.32,
+    "weights": {
+      "cut": 4,
+      "glitch": 2,
+      "holoWipe": 1.5,
+      "flashWhite": 0.8,
+      "shutter": 0.8,
+      "slice": 0.6
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+      "pointer": "/configs/0/transition"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-pulse",
+  "id": "scene.badge",
+  "entry_id": "scene.badge",
+  "name": "badge",
+  "kind": "scene",
+  "label": "badge",
+  "summary": "palabra en caja verde + palabra crema",
+  "variants": [
+    {
+      "type": "badge",
+      "media": [
+        "moto"
+      ],
+      "trans": "greenFlash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "badge",
+      "media": [
+        "bmx"
+      ],
+      "trans": "greenFlash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "badge",
+      "media": [
+        "boxing"
+      ],
+      "trans": "greenFlash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "badge",
+      "media": [
+        "skate"
+      ],
+      "trans": "greenFlash",
+      "max_text_lines": 2
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 4,
+      "type": "badge",
+      "shows": "palabra en caja verde + palabra crema",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "moto",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 17,
+      "type": "badge",
+      "shows": "palabra en caja verde + palabra crema",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "bmx",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 30,
+      "type": "badge",
+      "shows": "palabra en caja verde + palabra crema",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "boxing",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 42,
+      "type": "badge",
+      "shows": "palabra en caja verde + palabra crema",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "skate",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, renglones en lines (renglón 1 = palabra principal, renglón 2 = complemento). La primera escena es la intro y la última el outro.",
+    "brand_texts": {
+      "brand.name": "marca del cierre",
+      "brand.url": "dirección del cierre si el último segmento no trae renglón 2",
+      "brand.cta": "caja verde del Outro v2",
+      "brand.corner": "rótulo fijo arriba a la derecha (vacío = sin rótulo)",
+      "brand.footer": "pie fijo (vacío = sin pie)"
+    },
+    "design_limitations": "Escenas counter requieren un número entero al inicio del renglón 1; si no lo hay se dibujan como framed. knockout usa palabras cortas (≤ 10 letras) para que el video se lea dentro.",
+    "scene_cycle_note": "Las longitudes recomendadas no garantizan legibilidad: revisar ambos formatos.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/3"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/16"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/29"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/41"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/3"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/16"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/29"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/41"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

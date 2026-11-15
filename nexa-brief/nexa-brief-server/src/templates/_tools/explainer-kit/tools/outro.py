@@ -63,7 +63,8 @@ def spec_for(video: pathlib.Path) -> dict | None:
     design = _json(KIT / "designs" / cfg.get("design", "binary") / "design.json")
     voice = str(design.get("voice", {}).get("voice", "")).lower()
     channels = _json(OUTRO / "channels.json")
-    channel = channel_of(video, channels)
+    design_channel = str(design.get("outro_channel") or "").lower()
+    channel = design_channel if design_channel in channels else channel_of(video, channels)
     audio = OUTRO / "voices" / f"{voice}.mp3"
     if not channel or not audio.exists():
         return None

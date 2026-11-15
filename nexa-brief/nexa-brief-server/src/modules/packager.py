@@ -107,7 +107,33 @@ async def run(job: Job, niche_cfg: "NicheConfig") -> Job:
         return (output_dir if name == "index.html" else assets_dir) / name
     logger.info("packager_start", job_id=job.job_id, output_dir=str(output_dir), required=required)
 
-    missing = [f for f in required if not file_path(f).exists()]
+    from src.core.nodemotion.service import load_project, resolve_project
+    project = load_project(output_dir)
+    revision = (job.artifacts.recording_stats or {}).get("nodemotion_engine_revision")
+    sizes = {}
+    missing = []
+    for name in required:
+        value = None
+        if project is not None and name not in final_names:
+            prefix = project.get("content_prefix", "")
+            urls = project.get("data_urls") or {}
+            mapped = {"song.mp3": urls.get("audio"), "config.json": urls.get("config"),
+                      "lyrics.json": urls.get("timing")}.get(name)
+            if name == niche_cfg.template.media_src_filename and urls.get("background"):
+                mapped = urls["background"]
+            virtual = mapped or (name if name == "index.html" or not prefix else f"{prefix}/{name}")
+            try:
+                value = resolve_project(output_dir, virtual, expected_revision=revision)
+            except (FileNotFoundError, ValueError, KeyError):
+                value = None
+        else:
+            value = file_path(name)
+        if isinstance(value, bytes):
+            sizes[name] = len(value)
+        elif isinstance(value, Path) and value.is_file():
+            sizes[name] = value.stat().st_size
+        else:
+            missing.append(name)
     if missing:
         raise PackagingError(f"Job {job.job_id}: missing output files: {missing}")
 
@@ -140,7 +166,7 @@ async def run(job: Job, niche_cfg: "NicheConfig") -> Job:
         "tiktok_caption": job.artifacts.summary.tiktok_caption,
         "tiktok_hashtags": job.artifacts.summary.tiktok_hashtags,
         "video_formats": [fmt.model_dump() for fmt in niche_cfg.video.formats],
-        "files": {f: str(file_path(f).stat().st_size) for f in required},
+        "files": {f: str(sizes[f]) for f in required},
         "image": _image_manifest_block(job.artifacts.image_asset_id),
         "music": _music_manifest_block(job.artifacts.music_asset_id),
         "background_video": _video_manifest_block(job.artifacts.video_asset_id),
@@ -151,6 +177,8 @@ async def run(job: Job, niche_cfg: "NicheConfig") -> Job:
         manifest["composition"] = {"html": "index.html", "assets": assets_dir.relative_to(output_dir).as_posix()}
         if job.artifacts.config_json_path is not None:
             manifest["composition"]["config"] = job.artifacts.config_json_path.relative_to(output_dir).as_posix()
+        if project is not None and revision:
+            manifest["composition"]["engine_revision"] = revision
     (output_dir / "manifest.json").write_bytes(
         orjson.dumps(manifest, option=orjson.OPT_INDENT_2)
     )

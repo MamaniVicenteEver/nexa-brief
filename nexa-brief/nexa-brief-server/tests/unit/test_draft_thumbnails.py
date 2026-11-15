@@ -29,6 +29,7 @@ TEMPLATE_DIRS = {
     "lyrics-manifiesto": ("lyrics", "lyrics_video_manifiesto"),
     "lyrics-caution": ("lyrics", "lyrics_video_caution"),
     "lyrics-rasgado": ("lyrics", "lyrics_video_rasgado"),
+    "lyrics-hologram": ("lyrics", "lyrics_video_hologram"),
 }
 EXPECTED_LAYOUT = {
     "promo-editorial": "editorial",
@@ -42,6 +43,7 @@ EXPECTED_LAYOUT = {
     "lyrics-manifiesto": "manifesto",
     "lyrics-caution": "caution",
     "lyrics-rasgado": "rasgado",
+    "lyrics-hologram": "hologram",
 }
 
 

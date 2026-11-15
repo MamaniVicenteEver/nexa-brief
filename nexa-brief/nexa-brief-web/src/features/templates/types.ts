@@ -87,4 +87,11 @@ export interface TemplateRequirements {
   media: RequirementMediaSlot[];
   texts: RequirementText[];
   brief: boolean;
+  /** Lo que la plantilla trae puesto: canción y medios por lugar, en el orden de la plantilla. */
+  defaults?: TemplateRequirementsDefaults;
+}
+
+export interface TemplateRequirementsDefaults {
+  audioAssetId: string | null;
+  media: Record<string, { assetId: string; kind: "image" | "video" }[]>;
 }

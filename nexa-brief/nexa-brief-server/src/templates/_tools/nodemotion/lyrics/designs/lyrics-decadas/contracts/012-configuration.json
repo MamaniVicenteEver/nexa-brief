@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "config.fonts",
+  "entry_id": "config.fonts",
+  "name": "fonts",
+  "kind": "configuration",
+  "label": "fonts",
+  "summary": "Existing configuration configuration: fonts.",
+  "params": {
+    "display": {
+      "default": {
+        "family": "Archivo",
+        "src": "assets/fonts/Archivo.woff2",
+        "variable": true,
+        "stretch": 72,
+        "weight": 800,
+        "tracking": -0.01
+      }
+    },
+    "brand": {
+      "default": {
+        "family": "Caveat Brush",
+        "src": "assets/fonts/CaveatBrush-Regular.woff2",
+        "stretch": 100,
+        "weight": 400
+      }
+    },
+    "signature": {
+      "default": {
+        "family": "Mrs Saint Delafield",
+        "src": "assets/fonts/MrsSaintDelafield-Regular.woff2",
+        "stretch": 100,
+        "weight": 400
+      }
+    }
+  },
+  "example": {
+    "display": {
+      "family": "Archivo",
+      "src": "assets/fonts/Archivo.woff2",
+      "variable": true,
+      "stretch": 72,
+      "weight": 800,
+      "tracking": -0.01
+    },
+    "brand": {
+      "family": "Caveat Brush",
+      "src": "assets/fonts/CaveatBrush-Regular.woff2",
+      "stretch": 100,
+      "weight": 400
+    },
+    "signature": {
+      "family": "Mrs Saint Delafield",
+      "src": "assets/fonts/MrsSaintDelafield-Regular.woff2",
+      "stretch": 100,
+      "weight": 400
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+      "pointer": "/configs/0/fonts"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

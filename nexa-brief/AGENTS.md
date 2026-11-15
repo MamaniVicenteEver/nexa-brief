@@ -116,7 +116,7 @@ persistente con máximo cinco productores y sin grabación automática.
 
 Para Editorial, Sports, Dynamic, Kinetic, Trendy y Urban, un pedido de plantilla
 y tema se inicia desde el chat de la app o con `chat.py create`; ambas entradas
-usan la misma API e historial. Sigue [OPERAR.md](nexa-brief-server/src/skills/nodemotion/promo/OPERAR.md) para consultar estado,
+usan la misma API e historial. Sigue [OPERATE.md](nexa-brief-server/src/templates/_tools/nodemotion/promo/production/OPERATE.md) para consultar estado,
 enviar correcciones y revisar consumo. La calidad automática es técnica: la
 persona revisa fuentes, imágenes, licencias y composición, y solo ella aprueba
 la revisión vigente. Aprobar no inicia grabación ni publicación.
@@ -128,3 +128,5 @@ servicio utiliza los prompts centrales fijados por versión y hash y las
 herramientas compartidas; cada video conserva datos, resultados, referencias y
 evidencias, sin copiar prompts editables ni motores. No crees otro productor.
 El registro incluye uso conocido y deja lo desconocido en `null`.
+
+Para crear o integrar plantillas NodeMotion de letras o promos, consulta [la guía de autoría](nexa-brief-server/docs/nodemotion-template-authoring.md). Crear un diseño es distinto de preparar un episodio; motor y recursos se comparten.

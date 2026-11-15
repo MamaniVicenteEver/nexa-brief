@@ -31,7 +31,7 @@ def inventory(root: Path, profile: Path | None = None):
             skills += list(base.rglob(name))
     claudes = [root / 'CLAUDE.md', templates / 'CLAUDE.md']
     claudes += list(sandbox.glob('*/CLAUDE.md')) + list((templates / 'nodeatlas').rglob('CLAUDE.md'))
-    extra = [server / 'src/skills/README.md', templates / '_tools/explainer-kit/guides/orquestacion.md', server / 'src/skills/nodemotion/promo/CALIDAD.md']
+    extra = [server / 'src/skills/README.md', templates / '_tools/explainer-kit/guides/orquestacion.md', server / 'src/templates/_tools/nodemotion/promo/production/QUALITY.md']
     if profile:
         routers += [profile / 'AGENTS.md', profile / 'sandbox/AGENTS.md', profile / 'sandbox/SANDBOX.md',
                     profile / 'sandbox/EXPLAINER.md', profile / 'productions/AGENTS.md']

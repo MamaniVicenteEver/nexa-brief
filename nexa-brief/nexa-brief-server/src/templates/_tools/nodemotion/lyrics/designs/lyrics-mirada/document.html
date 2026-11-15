@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script data-nb-hf-clock="075fd9c8e584"><!-- nodemotion-fragment:scripts/01-hyperframes-clock.js --></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIRADA CELESTE — Letras en sepia (video real)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=League+Gothic&family=Alfa+Slab+One&display=swap" rel="stylesheet">
+<style><!-- nodemotion-fragment:styles/01-design.css --></style>
+</head>
+<body>
+<!-- borde de cartón recortado para la escena RECORTE -->
+<svg width="0" height="0" style="position:fixed">
+  <filter id="paperEdge" x="-5%" y="-5%" width="110%" height="110%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="9" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+<div id="camera"></div>
+<div id="flicker"></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+<div id="intro" class="cardScreen">
+  <div class="artist"></div><div class="title"></div><div class="sub"></div><div class="feats"></div>
+</div>
+<div id="outro" class="cardScreen">
+  <div class="feathers"></div>
+  <div class="artist"></div><div class="title"></div><div class="rule"></div><div class="sub"></div><div class="feats"></div>
+</div>
+<div id="hint">CLICK PARA EMPEZAR</div>
+<audio id="audio" preload="auto"></audio>
+<script type="module"><!-- nodemotion-fragment:scripts/02-runtime.js --></script>
+</body>
+</html>

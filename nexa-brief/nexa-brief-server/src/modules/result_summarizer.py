@@ -68,6 +68,16 @@ def _write_prepared(job: Job, niche_cfg: NicheConfig) -> Job:
 async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
     t_start = time.monotonic()
     logger.info("result_summarizer_start", job_id=job.job_id)
+    from src.core.ai_switch import ai_enabled
+
+    if not ai_enabled() and job.artifacts.summary is None:
+        from src.core.job import VideoSummary
+
+        empty = VideoSummary(youtube_title="", youtube_description="", youtube_tags=[],
+                             tiktok_caption="", tiktok_hashtags=[])
+        logger.warning("result_summarizer_pending_no_ai", job_id=job.job_id)
+        job = job.model_copy(update={"artifacts": job.artifacts.model_copy(update={"summary": empty})})
+        return _write_prepared(job, niche_cfg)
     if job.artifacts.summary is not None and job.artifacts.summary.platform_copies:
         return _write_prepared(job, niche_cfg)
 

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-rasgado",
+  "id": "layout.spaced",
+  "entry_id": "layout.spaced",
+  "name": "spaced",
+  "kind": "layout",
+  "label": "spaced",
+  "summary": "Existing layout configuration: spaced.",
+  "params": {
+    "weight": {
+      "default": 0.9
+    },
+    "bgs": {
+      "default": [
+        "lime",
+        "paper"
+      ]
+    }
+  },
+  "example": {
+    "weight": 0.9,
+    "bgs": [
+      "lime",
+      "paper"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-rasgado/assets/config.json",
+      "pointer": "/configs/0/layouts/spaced"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

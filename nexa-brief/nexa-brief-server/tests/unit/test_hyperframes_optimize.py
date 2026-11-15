@@ -123,7 +123,8 @@ def test_validated_templates_are_optimized_on_disk(template_id: str) -> None:
     runtime/nb-hf-clock.js cambió, hay que correr optimize.py y revalidar)."""
     (target,) = opt.resolve_targets([template_id])
     assert target.hf
-    assert opt.problems(target.path.read_text(encoding="utf-8"), hf=True) == []
+    from src.config.template_manifest import read_template_html
+    assert opt.problems(read_template_html(target.template_id), hf=True) == []
 
 
 def test_no_registered_template_keeps_the_recording_panel() -> None:

@@ -7,7 +7,7 @@ import pytest
 from jsonschema import Draft202012Validator
 
 BASE = Path(__file__).resolve().parents[2]
-spec = importlib.util.spec_from_file_location('promo_media_test', BASE / 'src/templates/_tools/nodemotion-promo/media.py')
+spec = importlib.util.spec_from_file_location('promo_media_test', BASE / 'src/templates/_tools/nodemotion/promo/tools/media.py')
 media = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(media)
 
@@ -23,7 +23,7 @@ def test_required_terms_normalizes_and_ignores_query_and_author():
 
 
 def test_schema_terms_limits():
-    schema = json.loads((BASE/'src/skills/nodemotion/promo/schemas/media-plan.json').read_text())
+    schema = json.loads((BASE/'src/templates/_tools/nodemotion/promo/production/schemas/media-plan.json').read_text())
     validator = Draft202012Validator(schema)
     base = {'scene': 1, 'slot':'city','kind':'image','query':'ciudad'}
     assert validator.is_valid({'items':[dict(base, required_terms=['Valparaíso'])]})

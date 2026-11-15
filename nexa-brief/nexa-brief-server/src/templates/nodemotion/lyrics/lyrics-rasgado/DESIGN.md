@@ -48,7 +48,7 @@ lyrics-rasgado/
 ├── galeria.html · DESIGN.md · MINIATURAS.md
 ```
 
-Regenerar: `python3 src/templates/_tools/commercial/build/build.py lyrics-rasgado`
+Regenerar: `python3 src/templates/_tools/nodemotion/promo/compiler/build/build.py lyrics-rasgado`
 y luego `optimize.py --check lyrics-rasgado`.
 
 `player.js` es el mismo orquestador que el de promo-breaking y promo-pulse, en

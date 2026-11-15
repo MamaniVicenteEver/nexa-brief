@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es"><meta charset="utf-8"><title>60 escenas de capas</title>
+<style>html,body,#stage{margin:0;width:100%;height:100%;overflow:hidden;background:#06080C}#stage{position:absolute;inset:0}</style>
+<div id="stage"></div>
+<script src="../../engine/kit.js"></script>
+<script src="../runtime/capas.js"></script>
+<script src="../../designs/common/capas.js"></script>
+<script>
+window.qaReady = (async () => {
+  const get = async file => (await fetch(file)).json();
+  const [fixture, sceneSchema, catalogSchema] = await Promise.all([
+    get('fixtures/catalog.json'), get('../schema/escena.schema.json'), get('../schema/catalog.schema.json')]);
+  const original = fixture.assets[0];
+  const catalog = {...fixture, assets:Array.from({length:60}, (_, i) => {
+    const asset = structuredClone(original); asset.id = `scene-${i}`;
+    asset.default_pose = 'original'; asset.poses = {original:asset.poses.original};
+    asset.poses.original.file = `stress/scene-${i}/original.png`;
+    for (const zone in asset.poses.original.masks) asset.poses.original.masks[zone] = `stress/scene-${i}/original.${zone}.png`;
+    return asset;
+  })};
+  Kit.capas.configure({catalog, sceneSchema, catalogSchema, baseURL:new URL('fixtures/', location.href).href});
+  window.qa = {draw:[], validDraw:[], errorDraw:[], instances:new Set(), disposedSurfaces:[], errors:[], created:0};
+  const create = Kit.capas.create;
+  Kit.capas.create = (...args) => {
+    const instance = create(...args), render = instance.render.bind(instance), dispose = instance.dispose.bind(instance);
+    qa.created++; qa.instances.add(instance); qa.errors.push(...instance.errors);
+    instance.render = (...args) => {const start=performance.now();render(...args);const ms=performance.now()-start;qa.draw.push(ms);(instance.errors.length?qa.errorDraw:qa.validDraw).push(ms);};
+    instance.dispose = () => {dispose();qa.instances.delete(instance);qa.disposedSurfaces.push(instance.stats?.().surfaces || 0);};
+    return instance;
+  };
+  const beats = catalog.assets.map((asset, i) => ({use:'common.capas',t:i*4,offset:0,dur:4,params:{
+    fondo:{preset:'foco',color:'#0B1220',acento:'#1F6BFF',grano:.1},camara:{mov:'acercar',intensidad:.04},
+    elenco:[{id:'jefe',asset:asset.id,x:.5,y:.9,escala:1,estilo:{zonas:{corbata:i%2?'#E9B23B':'#E3262F'}}}],
+    textos:[{texto:`ESCENA ${i+1} DE 60`,pos:'arriba',estilo:'titulo'}],
+    eventos:[{en:1,id:'jefe',accion:'color',valor:{zona:'corbata',color:'#1F6BFF',dur:1}}],
+  }}));
+  await Kit.boot({root:document.getElementById('stage'),total:240,dpr:1,
+    config:{family:'capas',palette:{bg:'#06080C',ink:'#EFE9DF',accent:'#1F6BFF'},captions:{enabled:false},outro:{enabled:false}},
+    lyrics:{metadata:{duration:240},segments:[]},storyboard:{beats}});
+  return true;
+})();
+</script></html>

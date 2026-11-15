@@ -206,6 +206,8 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
     output_dir: Path = job.artifacts.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
 
+    from src.templates._tools.nodemotion.shared.assemble import registered
+    is_project = registered(niche_cfg.template.template_id)
     # index.html es estático — se copia tal cual, nunca se regenera.
     index_html_src = template_paths["index_html"]
     if index_html_src is None or not index_html_src.exists():
@@ -213,23 +215,27 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
             f"Plantilla config-driven sin index.html: {niche_cfg.template.template_id}"
         )
     html_path = output_dir / "index.html"
-    html_path.write_text(_composition_html(index_html_src.read_text(encoding="utf-8"), job), encoding="utf-8")
     assets_dir = job.artifacts.content_dir
-    copied_assets = copy_template_runtime_assets(
-        niche_cfg.template.template_id,
-        assets_dir,
-    )
+    references = {} if is_project else None
+    if is_project:
+        copied_assets = []
+    else:
+        html_path.write_text(_composition_html(index_html_src.read_text(encoding="utf-8"), job), encoding="utf-8")
+        copied_assets = copy_template_runtime_assets(niche_cfg.template.template_id, assets_dir)
 
     # Textos y medios que eligió el usuario (Estudio / Crear video) — después de
     # copiar los runtime_assets para que sus archivos queden al lado del HTML.
-    config_dict = await apply_template_inputs(
-        config_dict,
-        job.input.template_inputs,
-        niche_cfg.template.template_id,
-        assets_dir,
-    )
+    if is_project:
+        config_dict = await apply_template_inputs(
+            config_dict, job.input.template_inputs, niche_cfg.template.template_id, assets_dir,
+            references=references,
+        )
+    else:
+        config_dict = await apply_template_inputs(
+            config_dict, job.input.template_inputs, niche_cfg.template.template_id, assets_dir,
+        )
 
-    from src.core.library.lyric_appearance import ensure_intro_title
+    from src.core.nodemotion.lyrics.appearance import ensure_intro_title
     ensure_intro_title(config_dict, job, niche_cfg.template.template_id)
 
     written_config = (
@@ -240,6 +246,25 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
     config_path = assets_dir / "config.json"
     config_json_text = json.dumps(written_config, indent=2, ensure_ascii=False)
     config_path.write_text(config_json_text, encoding="utf-8")
+
+    if is_project:
+        from src.core.nodemotion.service import asset_ref
+        from src.core.nodemotion.factory import get_project_strategy
+        from src.core.nodemotion.shared.bundled import ensure_design_resources
+        from src.modules.resource_fetcher import _outro_tail_seconds
+        defaults = await ensure_design_resources(niche_cfg.template.template_id)
+        references = {**defaults, **references}
+        references["song.mp3"] = asset_ref("music", job.artifacts.music_asset_id,
+                                           tail_seconds=_outro_tail_seconds(niche_cfg))
+        if job.artifacts.image_asset_id:
+            references[niche_cfg.template.media_src_filename] = asset_ref("image", job.artifacts.image_asset_id)
+        if job.artifacts.video_asset_id:
+            references[niche_cfg.template.media_src_filename] = asset_ref("video", job.artifacts.video_asset_id)
+        prefix = assets_dir.relative_to(output_dir).as_posix()
+        if prefix == ".":
+            prefix = ""
+        get_project_strategy(niche_cfg.template.template_id).create(
+            output_dir, niche_cfg.template.template_id, references, job, prefix)
 
     logs_dir = job.artifacts.log_dir or output_dir / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
@@ -269,6 +294,10 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
             "html_path": html_path,
             "template_config": config_dict,
             "config_json_path": config_path,
+            **({"lyrics_json": None} if is_project else {}),
         }
     )
-    return job.model_copy(update={"artifacts": artifacts}).advance(JobStage.HTML_GENERATED)
+    changes = {"artifacts": artifacts}
+    if is_project and (job.input.promo_timeline is not None or job.input.timed_content is not None):
+        changes["input"] = job.input.model_copy(update={"promo_timeline": None, "timed_content": None})
+    return job.model_copy(update=changes).advance(JobStage.HTML_GENERATED)

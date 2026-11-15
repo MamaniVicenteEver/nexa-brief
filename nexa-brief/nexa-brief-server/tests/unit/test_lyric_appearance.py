@@ -3,7 +3,7 @@ import pytest
 from pydantic import ValidationError
 from src.core.drafts import RenderOptions
 from src.core.job import Job, JobInput, JobArtifacts
-from src.core.library.lyric_appearance import ensure_intro_title, prepare_render_appearance
+from src.core.nodemotion.lyrics.appearance import ensure_intro_title, prepare_render_appearance
 
 
 def make_job(tmp_path):

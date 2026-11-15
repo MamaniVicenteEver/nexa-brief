@@ -2,8 +2,8 @@
 import json
 from types import SimpleNamespace
 import pytest
-from src.core.promos import agents
-from src.core.promos.copy_ai import PromoCopyAI
+from src.core.nodemotion.promo import agents
+from src.core.nodemotion.promo.copy_ai import PromoCopyAI
 
 
 def session(provider='codex', template='promo-kinetic'):
@@ -53,7 +53,7 @@ async def test_measured_run_records_failed_exception_without_message(tmp_path):
 
 @pytest.mark.asyncio
 async def test_copy_ai_records_failed_runner_attempt(tmp_path, monkeypatch):
-    from src.core.promos import copy_ai
+    from src.core.nodemotion.promo import copy_ai
     monkeypatch.setattr(copy_ai, 'ensure_private_workspace', lambda _: None)
     class Runner:
         async def run(self, *args, **kwargs): raise RuntimeError('secret')

@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-romantic",
+  "family": "lyrics",
+  "source_of_truth": "templates.json#templates/lyrics-romantic",
+  "config_json": "nodemotion/lyrics/lyrics-romantic/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-romantic/prompts/config_mapper.md",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "background",
+        "kind": "image|video",
+        "count": 1,
+        "orientation": "portrait",
+        "target": "source",
+        "label": "Fondo",
+        "hint": "pareja, atardecer cálido, ambiente romántico"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/lyrics-romantic",
+    "config": "nodemotion/lyrics/lyrics-romantic/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-romantic/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-romantic/README.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

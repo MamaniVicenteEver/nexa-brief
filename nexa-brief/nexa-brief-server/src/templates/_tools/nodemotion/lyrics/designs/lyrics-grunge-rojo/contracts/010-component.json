@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "grunge.escena",
+  "entry_id": "grunge.escena",
+  "kind": "component",
+  "label": "Escena de letra",
+  "summary": "Una de las 11 composiciones con un fragmento de letra.",
+  "component": {
+    "name": "grunge.escena",
+    "label": "Escena de letra",
+    "summary": "Una de las 11 composiciones con un fragmento de letra.",
+    "tags": [
+      "escena"
+    ],
+    "file": "components/escenas.js",
+    "params": {
+      "scene": {
+        "type": "string",
+        "default": "linea",
+        "options": [
+          "linea",
+          "espaciada",
+          "gigante",
+          "hud",
+          "pila",
+          "marco",
+          "eco",
+          "ancho",
+          "dupla",
+          "flecha",
+          "rojo"
+        ]
+      },
+      "text": {
+        "type": "string",
+        "default": "Like whoa put us on the map",
+        "doc": "Texto"
+      },
+      "color": {
+        "type": "string",
+        "default": "red",
+        "options": [
+          "red",
+          "white"
+        ]
+      },
+      "strip": {
+        "type": "string",
+        "default": "none",
+        "options": [
+          "none",
+          "top",
+          "bottom"
+        ]
+      },
+      "doodle": {
+        "type": "string",
+        "default": "",
+        "options": [
+          "",
+          "circle",
+          "arrow",
+          "underline",
+          "box",
+          "crown",
+          "bolt",
+          "xmarks",
+          "eyes",
+          "strike",
+          "slash",
+          "smear"
+        ]
+      },
+      "bg": {
+        "type": "string",
+        "default": "footage",
+        "options": [
+          "footage",
+          "dark",
+          "paper"
+        ]
+      },
+      "clip": {
+        "type": "number",
+        "default": 0,
+        "doc": "Índice de media",
+        "min": 0,
+        "max": 20
+      }
+    },
+    "demo": {
+      "scene": "gigante",
+      "text": "snapped"
+    },
+    "preview": {
+      "t": 1.0
+    }
+  },
+  "params": {
+    "scene": {
+      "type": "string",
+      "default": "linea",
+      "options": [
+        "linea",
+        "espaciada",
+        "gigante",
+        "hud",
+        "pila",
+        "marco",
+        "eco",
+        "ancho",
+        "dupla",
+        "flecha",
+        "rojo"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "default": "Like whoa put us on the map",
+      "doc": "Texto"
+    },
+    "color": {
+      "type": "string",
+      "default": "red",
+      "options": [
+        "red",
+        "white"
+      ]
+    },
+    "strip": {
+      "type": "string",
+      "default": "none",
+      "options": [
+        "none",
+        "top",
+        "bottom"
+      ]
+    },
+    "doodle": {
+      "type": "string",
+      "default": "",
+      "options": [
+        "",
+        "circle",
+        "arrow",
+        "underline",
+        "box",
+        "crown",
+        "bolt",
+        "xmarks",
+        "eyes",
+        "strike",
+        "slash",
+        "smear"
+      ]
+    },
+    "bg": {
+      "type": "string",
+      "default": "footage",
+      "options": [
+        "footage",
+        "dark",
+        "paper"
+      ]
+    },
+    "clip": {
+      "type": "number",
+      "default": 0,
+      "doc": "Índice de media",
+      "min": 0,
+      "max": 20
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/showcase/components.json",
+      "pointer": "/components/3"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

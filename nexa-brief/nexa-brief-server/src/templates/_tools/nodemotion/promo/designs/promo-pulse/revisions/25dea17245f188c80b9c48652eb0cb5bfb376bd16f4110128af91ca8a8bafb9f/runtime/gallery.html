@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>promo-pulse · galería de componentes</title>
+<style>
+  body { margin: 0; background: #0d0d0f; color: #ddd; font: 14px/1.4 system-ui, sans-serif; padding: 20px 16px; }
+  h1 { font-size: 18px; margin: 0 0 4px; } p { color: #999; margin: 0 0 16px; }
+  button { background: #222; color: #eee; border: 1px solid #444; border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+  .g { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 16px; margin-top: 14px; }
+  body.v .g { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  figure { margin: 0; } .f { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 8px; overflow: hidden; }
+  body.v .f { aspect-ratio: 9 / 16; }
+  iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  figcaption { margin-top: 6px; color: #aaa; }
+</style></head><body>
+<h1>promo-pulse · galería de componentes</h1>
+<p>Cada vista es el <code>index.html</code> real congelado en un instante (<code>?t=</code>) con el config por defecto. Generada por la plantilla; no forma parte del job.</p>
+<button onclick="document.body.classList.toggle('v')">Cambiar 16:9 / 9:16</button>
+<div class="g">
+  <figure><div class="f"><iframe loading="lazy" src="index.html?headless=1&t=1.68" title="intro"></iframe></div>
+    <figcaption><b>intro</b> · t = 1.68 s · ATENCIÓN / Siempre adelante</figcaption></figure>
+  <figure><div class="f"><iframe loading="lazy" src="index.html?headless=1&t=3.73" title="full"></iframe></div>
+    <figcaption><b>full</b> · t = 3.73 s · ENTRENA</figcaption></figure>
+  <figure><div class="f"><iframe loading="lazy" src="index.html?headless=1&t=5.63" title="framed"></iframe></div>
+    <figcaption><b>framed</b> · t = 5.63 s · LO MEJOR</figcaption></figure>
+  <figure><div class="f"><iframe loading="lazy" src="index.html?headless=1&t=7.53" title="badge"></iframe></div>
+    <figcaption><b>badge</b> · t = 7.53 s · ¡YA! / EXTREMO</figcaption></figure>
+  <figure><div class="f"><iframe loading="lazy" src="index.html?headless=1&t=13.23" title="knockout"></iframe></div>
+    <figcaption><b>knockout</b> · t = 13.23 s · MOTIVACIÓN</figcaption></figure>
+  <figure><div class="f"><iframe loading="lazy" src="index.html?headless=1&t=15.13" title="split3"></iframe></div>
+    <figcaption><b>split3</b> · t = 15.13 s · EXTREMO</figcaption></figure>
+  <figure><div class="f"><iframe loading="lazy" src="index.html?headless=1&t=28.53" title="marquee"></iframe></div>
+    <figcaption><b>marquee</b> · t = 28.53 s · ENERGÍA / Sin pausa</figcaption></figure>
+  <figure><div class="f"><iframe loading="lazy" src="index.html?headless=1&t=30.43" title="counter"></iframe></div>
+    <figcaption><b>counter</b> · t = 30.43 s · 100% / Entrega total</figcaption></figure>
+  <figure><div class="f"><iframe loading="lazy" src="index.html?headless=1&t=99.2&outro=v1" title="outroV1"></iframe></div>
+    <figcaption><b>outroV1</b> · t = 99.2 s · NEXA BRIEF / @nexabrief</figcaption></figure>
+  <figure><div class="f"><iframe loading="lazy" src="index.html?headless=1&t=99.2&outro=v2" title="outroV2"></iframe></div>
+    <figcaption><b>outroV2</b> · t = 99.2 s · NEXA BRIEF / @nexabrief</figcaption></figure>
+</div></body></html>

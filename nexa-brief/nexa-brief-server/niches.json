@@ -3413,6 +3413,164 @@
         "youtube_playlist_id": null,
         "youtube_as_short": true
       }
+    },
+    "lyrics_video_hologram": {
+      "id": "lyrics_video_hologram",
+      "display_name": "Holograma",
+      "active": true,
+      "description": "Lyric video de tipografía cinética sobre casi negro con relleno holográfico iridiscente: condensada alta y extendida itálica, contornos gigantes con ecos, barras que cortan la palabra, seda holográfica fluida en los versos, siluetas holográficas y secciones roja, violeta y gris claro; cada palabra al tiempo de la voz. Para pop, trap, electrónica e himnos de energía.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "lyrics-hologram",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "urban",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
+    },
+    "promo_video_mono": {
+      "id": "promo_video_mono",
+      "display_name": "Promo — Mono",
+      "active": true,
+      "description": "Promo de marca o servicio con interfaz minimalista en blanco y negro: logotipo, botón de reproducir, abanico de tarjetas y metraje en semitono, palabra partida por ventanas de video, lluvias de píldoras de texto, línea que se vuelve garabato, píldora con pin, cifras que parpadean, patrón óptico, texto espaciado, móvil con chat, cupones, campo de código y contacto final; 15 escenas reutilizables y 2 cierres.",
+      "pipeline_type": "config_driven_template",
+      "recorder_engine": "playwright",
+      "template": {
+        "enabled": true,
+        "template_id": "promo-mono",
+        "default_typography": "default",
+        "default_anchor_preference": "bottom",
+        "required_config_keys": [],
+        "requires_vision_extraction": false,
+        "requires_lyrics": true,
+        "media_dimension_key": null,
+        "media_src_filename": "bg.jpg",
+        "wrap_as_case_collection": true,
+        "requires_image": false,
+        "requires_video": false,
+        "static_config": true
+      },
+      "search_instructions": {
+        "image": "",
+        "music": "REQUIERE una canción real con letra. Se transcribe automáticamente para sincronizar el video."
+      },
+      "image": {
+        "results_count": 0,
+        "orientation": "portrait",
+        "library_category": "lyrics_backgrounds",
+        "validation": {
+          "enabled": false
+        }
+      },
+      "audio": {
+        "mode": "music_only",
+        "genre": "instrumental",
+        "adapter_order": [],
+        "library_category": "songs_with_lyrics"
+      },
+      "video": {
+        "duration_seconds": 60,
+        "duration_locked_to_music": true,
+        "formats": [
+          {
+            "id": "reels",
+            "aspect_ratio": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "output_filename": "reels_video.mp4",
+            "crf": 20,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          },
+          {
+            "id": "youtube",
+            "aspect_ratio": "16:9",
+            "width": 1920,
+            "height": 1080,
+            "output_filename": "youtube_video.mp4",
+            "crf": 18,
+            "preset": "veryfast",
+            "generation_method": "rerecord",
+            "use_device_viewport": true
+          }
+        ],
+        "generate_tiktok_clip": false
+      },
+      "ai": {
+        "analysis_model": "gemini",
+        "codegen_model": "deepseek"
+      },
+      "publishing": {
+        "accounts": [],
+        "youtube_playlist_id": null,
+        "youtube_as_short": true
+      }
     }
   },
   "categories": {
@@ -3563,7 +3721,8 @@
             "lyrics_video_trazo",
             "lyrics_video_decadas",
             "lyrics_video_rasgado",
-            "lyrics_video_grunge_rojo"
+            "lyrics_video_grunge_rojo",
+            "lyrics_video_hologram"
           ]
         },
         "promos": {
@@ -3577,7 +3736,8 @@
             "promo_video_urban",
             "promo_video_sports",
             "promo_video_breaking",
-            "promo_video_pulse"
+            "promo_video_pulse",
+            "promo_video_mono"
           ]
         },
         "fondos": {
@@ -3691,7 +3851,8 @@
       "engine": "explainer_kit",
       "folder": "nodeeconomy",
       "designs": [
-        "dinero"
+        "dinero",
+        "titanes"
       ],
       "niches": [
         "economy_finance"

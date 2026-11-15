@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-editorial",
+  "id": "scene.stack",
+  "entry_id": "scene.stack",
+  "name": "stack",
+  "kind": "scene",
+  "label": "stack",
+  "summary": "líneas apiladas",
+  "variants": [
+    {
+      "type": "stack",
+      "align": "center",
+      "max_text_lines": null
+    },
+    {
+      "type": "stack",
+      "align": "left",
+      "y": 0.28,
+      "max_text_lines": null
+    },
+    {
+      "type": "stack",
+      "align": "right",
+      "small": [
+        2,
+        3,
+        4
+      ],
+      "max_text_lines": null
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 14,
+      "type": "stack",
+      "shows": "líneas apiladas",
+      "lines_used": 5,
+      "max_characters_per_line_recommended": 16,
+      "media": [],
+      "line_usage": "Usa todas las líneas; se recomiendan hasta 5.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 15,
+      "type": "stack",
+      "shows": "líneas apiladas",
+      "lines_used": 5,
+      "max_characters_per_line_recommended": 16,
+      "media": [],
+      "line_usage": "Usa todas las líneas; se recomiendan hasta 5.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 16,
+      "type": "stack",
+      "shows": "líneas apiladas",
+      "lines_used": 5,
+      "max_characters_per_line_recommended": 16,
+      "media": [],
+      "line_usage": "Usa todas las líneas; se recomiendan hasta 5.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+    "brand_texts": {
+      "brand.name": "nombre del tema o marca; reserva del cierre",
+      "brand.round": "episodio, etapa o contexto del tema",
+      "brand.left": "primer polo real de una oposición",
+      "brand.right": "segundo polo real de esa oposición",
+      "brand.tagline": "frase secundaria de miniatura si no hay polos; no se dibuja en el video",
+      "brand.logo": "gráfico opcional del config; build no lo acepta como texto ni añade logos",
+      "sin_oposicion": "Dejar brand.left y brand.right vacíos y sustituir versus por otra escena mediante scene-overrides; adaptar el plan. Assemble no muestra los polos vacíos. Si se conserva versus, build exige ambos porque el motor mostraría A VS B."
+    },
+    "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+    "design_limitations": "Las escenas nameCut imprimen BEST como decoración fija; si desentona o sugiere una afirmación injustificada, sustituirlas en scene-overrides o elegir otra plantilla. La escena title puede solaparse en vertical; revisarla.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos. En versus, los renglones deben coincidir con brand.left, brand.right o brand.round: el motor dibuja esos campos de marca."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-editorial.json",
+      "pointer": "/default_scenes/13"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-editorial.json",
+      "pointer": "/default_scenes/14"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-editorial.json",
+      "pointer": "/default_scenes/15"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-editorial.json",
+      "pointer": "/scene_cycle/13"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-editorial.json",
+      "pointer": "/scene_cycle/14"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-editorial.json",
+      "pointer": "/scene_cycle/15"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

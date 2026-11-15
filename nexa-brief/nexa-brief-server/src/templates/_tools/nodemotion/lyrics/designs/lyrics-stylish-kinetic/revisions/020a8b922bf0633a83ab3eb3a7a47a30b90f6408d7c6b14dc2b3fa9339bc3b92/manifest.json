@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-stylish-kinetic",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-stylish-kinetic",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "994e291791517df7bb01d7c6b75e4e7fe951cd3b01e0aded2969dc1ca6dce681",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-stylish-kinetic",
+    "config": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-stylish-kinetic/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-stylish-kinetic/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/From Klickpin.com- Timeless productive morning routine ideas that can help you create a more curated classy and Pinterest-worthy result for anyone.mp4": "8b9ee3a18bf554ad350bafde3a6dc24fa91da7ac1d1672ca89d2d3cacba46768.mp4",
+    "assets/From-Klickpin2.mp3": "db67ce0cc93e179d89953a866b8c0cbd5ba9922cccae7ab3925d4cb672ddb2f3.mp3",
+    "assets/card-poster.webp": "26aac65734adfd28bd5649b068c5d84da4620e7fab70e1442608608f87f8ccd3.webp",
+    "assets/song.mp3": "db67ce0cc93e179d89953a866b8c0cbd5ba9922cccae7ab3925d4cb672ddb2f3.mp3"
+  },
+  "revision": "020a8b922bf0633a83ab3eb3a7a47a30b90f6408d7c6b14dc2b3fa9339bc3b92"
+}

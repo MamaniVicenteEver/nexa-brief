@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-stylish-kinetic",
+  "id": "config.transitions",
+  "entry_id": "config.transitions",
+  "name": "transitions",
+  "kind": "configuration",
+  "label": "transitions",
+  "summary": "Existing configuration configuration: transitions.",
+  "params": {
+    "signature": {
+      "default": "cut"
+    },
+    "weights": {
+      "default": {
+        "cut": 3,
+        "circle": 1.5,
+        "wipe": 1.2,
+        "push": 1
+      }
+    }
+  },
+  "example": {
+    "signature": "cut",
+    "weights": {
+      "cut": 3,
+      "circle": 1.5,
+      "wipe": 1.2,
+      "push": 1
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
+      "pointer": "/configs/0/transitions"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

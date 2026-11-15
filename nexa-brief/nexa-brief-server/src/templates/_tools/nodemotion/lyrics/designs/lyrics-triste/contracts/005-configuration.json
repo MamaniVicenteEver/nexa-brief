@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-triste",
+  "id": "config.rain",
+  "entry_id": "config.rain",
+  "name": "rain",
+  "kind": "configuration",
+  "label": "rain",
+  "summary": "Existing configuration configuration: rain.",
+  "params": {
+    "streaks": {
+      "default": 70
+    },
+    "tint": {
+      "default": "150,180,210"
+    }
+  },
+  "example": {
+    "streaks": 70,
+    "tint": "150,180,210"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-triste/assets/config.json",
+      "pointer": "/configs/0/rain"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -53,7 +53,9 @@ def capture_at(template_id: str | None) -> float:
         from src.config.template_manifest import get_template_root
 
         root = get_template_root(template_id)
-        at = declared_at(root / "components" / "intro.js") if root else None
+        from src.templates._tools.nodemotion.shared.assemble import registered, resolve_runtime_asset
+        intro = resolve_runtime_asset(template_id, "components/intro.js") if registered(template_id) else None
+        at = declared_at(intro or root / "components" / "intro.js") if root else None
         if at is not None:
             return at
     return _DEFAULT_AT

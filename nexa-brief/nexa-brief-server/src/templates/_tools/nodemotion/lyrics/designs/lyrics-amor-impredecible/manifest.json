@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-amor-impredecible",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-amor-impredecible",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [],
+  "source_sha256": "b9fbe900de8206fdf099218c5634289ac6557a8d45a14d4c32ce7115b9dd0d3d",
+  "migration_source_sha256": "b9fbe900de8206fdf099218c5634289ac6557a8d45a14d4c32ce7115b9dd0d3d",
+  "migration_runtime_sha256": {},
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-amor-impredecible",
+    "config": "nodemotion/lyrics/lyrics-amor-impredecible/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-amor-impredecible/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-amor-impredecible/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "e70657a052789942e82a3a4960506b50c35372691651f4eb7a656f8641c8e59c.webp",
+    "assets/song.mp3": "84fa49015ac891d6f7bb5ebc8513885cb620239c280267b51cadaafa32755e96.mp3"
+  }
+}

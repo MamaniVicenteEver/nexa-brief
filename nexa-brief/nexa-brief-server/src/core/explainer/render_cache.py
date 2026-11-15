@@ -14,7 +14,7 @@ def render_signature(video: ExplainerVideo) -> str:
              KIT_DIR / "designs" / video.design, video.path / "assets"]
     files = {p for root in roots if root.is_dir() for p in root.rglob("*") if p.is_file()}
     files.update({video.path / "index.html", KIT_DIR / "tools/kit.py",
-                  TEMPLATES_DIR / "_tools/commercial/render_promo.py", TEMPLATES_DIR / "_tools/http_media.py"})
+                  TEMPLATES_DIR / "_tools/nodemotion/promo/compiler/render_promo.py", TEMPLATES_DIR / "_tools/http_media.py"})
     if video.edition_path is not None:
         files.update(video.edition_path / name for name in (
             "edition.json", "config.json", "config.publication.json", "storyboard.json",

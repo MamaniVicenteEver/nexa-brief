@@ -22,7 +22,7 @@ from src.core.explainer.render_cache import render_signature
 
 @pytest.fixture
 def renderer():
-    script = Path(__file__).parents[2] / "src/templates/_tools/commercial/render_promo.py"
+    script = Path(__file__).parents[2] / "src/templates/_tools/nodemotion/promo/compiler/render_promo.py"
     spec = importlib.util.spec_from_file_location("native_render_promo_test", script)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -226,7 +226,7 @@ async def test_native_runner_builds_shared_encoder_commands_without_original_kit
                                      edition_path=video.edition_path)
     assert len(commands) == 2 and len(progress) == 2
     for command in commands:
-        assert command[1].endswith("commercial/render_promo.py")
+        assert command[1].endswith("nodemotion/promo/compiler/render_promo.py")
         assert command[command.index("--edition") + 1] == str(video.edition_path / "edition.json")
         assert command[command.index("--to") + 1] == "10"
         assert "kit.py" not in command

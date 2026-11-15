@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-mirada",
+  "id": "config.layout",
+  "entry_id": "config.layout",
+  "name": "layout",
+  "kind": "configuration",
+  "label": "layout",
+  "summary": "Existing configuration configuration: layout.",
+  "params": {
+    "motion": {
+      "default": 1
+    },
+    "invertChance": {
+      "default": 0.5
+    },
+    "starChance": {
+      "default": 0.42
+    },
+    "featherCount": {
+      "default": 12
+    },
+    "doveCount": {
+      "default": 3
+    },
+    "starCount": {
+      "default": 80
+    }
+  },
+  "example": {
+    "motion": 1,
+    "invertChance": 0.5,
+    "starChance": 0.42,
+    "featherCount": 12,
+    "doveCount": 3,
+    "starCount": 80
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-mirada/assets/config.json",
+      "pointer": "/configs/0/layout"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

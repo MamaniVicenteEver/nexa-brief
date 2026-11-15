@@ -63,9 +63,19 @@ def _resolve_medium(name: Any, roots: list[Path | None]) -> Path | None:
         if root is None:
             continue
         root = root.resolve()
+        from src.core.nodemotion.service import load_project, resolve_project
+        project_root = root if (root / "project.json").is_file() else root.parent
+        if (project_root / "project.json").is_file() and load_project(project_root):
+            resolved = resolve_project(project_root, name)
+            if isinstance(resolved, Path) and resolved.suffix.lower() in {".mp4", ".webm", ".mov", ".jpg", ".jpeg", ".png", ".webp"}:
+                return resolved
         for relative in (name, name.removeprefix("assets/")):
             candidate = (root / relative).resolve()
-            if candidate.is_relative_to(root) and candidate.is_file() and candidate.suffix.lower() in {".mp4", ".webm", ".mov", ".jpg", ".jpeg", ".png", ".webp"}:
+            from src.config.template_manifest import resolve_template_content
+            shared = resolve_template_content(root / relative)
+            if isinstance(shared, Path) and shared.is_file():
+                candidate = shared
+            if (isinstance(shared, Path) or candidate.is_relative_to(root)) and candidate.is_file() and candidate.suffix.lower() in {".mp4", ".webm", ".mov", ".jpg", ".jpeg", ".png", ".webp"}:
                 return candidate
     return None
 

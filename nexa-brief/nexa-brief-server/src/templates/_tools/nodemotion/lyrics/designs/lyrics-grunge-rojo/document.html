@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script data-nb-hf-clock="075fd9c8e584"><!-- nodemotion-fragment:scripts/01-hyperframes-clock.js --></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grunge Rojo · NodeMotion</title>
+<!-- lyrics-grunge-rojo: metraje urbano en blanco y negro, papel rasgado, letra condensada
+     blanca y roja con estela, tiza y pincel rojo. Cascarón mínimo: componentes en
+     components/*.js y orquestador en player.js. Configuración en config.json (job) o
+     assets/config.json (demo). Servir por HTTP. Ver DESIGN.md. -->
+<style><!-- nodemotion-fragment:styles/01-design.css --></style>
+<link rel="stylesheet" href="./components/grunge.css">
+<script src="./components/core.js"></script>
+<script src="./components/fondo.js"></script>
+<script src="./components/garabatos.js"></script>
+<script src="./components/escenas.js"></script>
+<script src="./components/transiciones.js"></script>
+<script src="./components/intro.js"></script>
+<script src="./components/outro-v1.js"></script>
+<script src="./components/outro-v2.js"></script>
+</head>
+<body>
+<audio id="audio" preload="auto"></audio>
+<div id="stage"></div>
+<div id="grain"></div>
+<div id="hud"></div>
+<script src="./player.js"></script>
+</body>
+</html>

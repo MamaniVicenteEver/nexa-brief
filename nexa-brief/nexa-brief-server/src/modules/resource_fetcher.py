@@ -44,6 +44,27 @@ logger = structlog.get_logger(__name__)
 
 
 async def run(job: Job, niche_cfg: NicheConfig, analysis_ai: AIPort) -> Job:
+    # Registered engines acquire resources in a disposable workspace. The
+    # library remains the durable source; the output project stores IDs only.
+    from src.templates._tools.nodemotion.shared.assemble import registered
+    if not registered(niche_cfg.template.template_id):
+        return await _run_legacy(job, niche_cfg, analysis_ai)
+    import tempfile
+    from src.core.nodemotion.service import asset_ref, _resolve_ref
+    with tempfile.TemporaryDirectory(prefix="nodemotion-acquire-") as temporary:
+        work = job.model_copy(update={"artifacts": job.artifacts.model_copy(update={"assets_dir": Path(temporary)})})
+        result = await _run_legacy(work, niche_cfg, analysis_ai)
+        art = result.artifacts
+        music_ref = asset_ref("music", art.music_asset_id, tail_seconds=_outro_tail_seconds(niche_cfg))
+        changes = {"assets_dir": job.artifacts.assets_dir, "music_path": _resolve_ref(music_ref)}
+        if art.image_asset_id:
+            changes["image_path"] = asset_library.resolve_image_path(art.image_asset_id)
+        if art.video_asset_id:
+            changes["video_path"] = asset_library.resolve_video_path(art.video_asset_id)
+        return result.model_copy(update={"artifacts": art.model_copy(update=changes)})
+
+
+async def _run_legacy(job: Job, niche_cfg: NicheConfig, analysis_ai: AIPort) -> Job:
     t_start = time.monotonic()
     output_dir = job.artifacts.content_dir
     logs_dir = job.artifacts.log_dir or job.artifacts.output_dir / "logs"

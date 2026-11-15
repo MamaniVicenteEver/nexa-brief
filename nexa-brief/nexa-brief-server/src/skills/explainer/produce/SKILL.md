@@ -65,6 +65,24 @@ Si el archivo es corto, reutilizar fragmentos con uniones suaves o elegir otro m
 no alterar la voz ni rellenar la duración con silencio.
 No renderizar. Esta excepción de diseño no cambia el resto de las familias.
 
+### Si el diseño es titanes
+
+Leer `src/templates/_tools/explainer-kit/designs/titanes/FABRICA.md` antes de
+producir. Para elegir personajes y objetos, ejecutar
+`.venv/bin/python src/templates/_tools/explainer-kit/tools/capas.py list --json`
+y usar solo los IDs y opciones que devuelve; revisar también sus licencias.
+El host conserva la responsabilidad de voz y transcripción en el pipeline.
+La política `style_policies.titanes` prevalece sobre los apoyos generales:
+fotografías documentales en `src` de `titanes.foto` o `titanes.introv1/introv2`,
+visibles 4–10 s, máximo dos usos por archivo y `shows`, `query` y `media_review`
+obligatorios; `figura` y `common.capas` son gráficos, no medios documentales.
+No poner fotos documentales en `figura`: el check no las reconoce ni exige revisión.
+Cada tercio necesita foto/video real, capas, o cifra/bolsa/plantilla con figura;
+clips largos opcionales y mínimo un componente propio cuando aplica el umbral
+general de duración. El check bloquea más del 12 % de planos principales de solo
+texto o más de dos seguidos: titular sin variante documental (`documento` o `cita`),
+duelo sin métricas e introv1 sin figura ni foto. Ver detalles en FABRICA.md.
+
 ### Estrategia narrativa
 
 `assets/config.json → narrative_id` (por defecto `narrative_amarillista_v1`). Si existe y no es

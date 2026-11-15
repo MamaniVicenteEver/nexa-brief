@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-stylish-kinetic",
+  "family": "lyrics",
+  "display_name": "Stylish Kinetic",
+  "description": "Tipografía cinética juguetona sobre colores planos (rojo, mostaza, menta, petróleo): cada frase entra en arco o deslizando con desenfoque, gira 90° hasta quedar en columna mientras el resto se apila al lado, las letras se despliegan como tecleadas y trazos de pincel blancos cruzan los cortes — con 9 recetas y 4 transiciones que se mezclan para temas largos. Para pop, indie, urbano ligero y contenido divertido.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-stylish-kinetic/prompts/config_mapper.md",
+  "runtime_assets": [
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-stylish-kinetic",
+    "config": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-stylish-kinetic/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-stylish-kinetic/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-stylish-kinetic/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.brush",
+      "kind": "configuration",
+      "label": "brush",
+      "summary": "Existing configuration configuration: brush.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.brush",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.timing",
+      "kind": "configuration",
+      "label": "timing",
+      "summary": "Existing configuration configuration: timing.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timing",
+      "contract": "contracts/006-configuration.json"
+    },
+    {
+      "entry_id": "config.scenes",
+      "kind": "configuration",
+      "label": "scenes",
+      "summary": "Existing configuration configuration: scenes.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.scenes",
+      "contract": "contracts/007-configuration.json"
+    },
+    {
+      "entry_id": "layout.arc",
+      "kind": "layout",
+      "label": "arc",
+      "summary": "Existing layout configuration: arc.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.arc",
+      "contract": "contracts/008-layout.json"
+    },
+    {
+      "entry_id": "layout.slide",
+      "kind": "layout",
+      "label": "slide",
+      "summary": "Existing layout configuration: slide.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.slide",
+      "contract": "contracts/009-layout.json"
+    },
+    {
+      "entry_id": "layout.type",
+      "kind": "layout",
+      "label": "type",
+      "summary": "Existing layout configuration: type.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.type",
+      "contract": "contracts/010-layout.json"
+    },
+    {
+      "entry_id": "layout.tilt",
+      "kind": "layout",
+      "label": "tilt",
+      "summary": "Existing layout configuration: tilt.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.tilt",
+      "contract": "contracts/011-layout.json"
+    },
+    {
+      "entry_id": "layout.pop",
+      "kind": "layout",
+      "label": "pop",
+      "summary": "Existing layout configuration: pop.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.pop",
+      "contract": "contracts/012-layout.json"
+    },
+    {
+      "entry_id": "layout.pinwheel",
+      "kind": "layout",
+      "label": "pinwheel",
+      "summary": "Existing layout configuration: pinwheel.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.pinwheel",
+      "contract": "contracts/013-layout.json"
+    },
+    {
+      "entry_id": "layout.bounce",
+      "kind": "layout",
+      "label": "bounce",
+      "summary": "Existing layout configuration: bounce.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.bounce",
+      "contract": "contracts/014-layout.json"
+    },
+    {
+      "entry_id": "layout.split",
+      "kind": "layout",
+      "label": "split",
+      "summary": "Existing layout configuration: split.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.split",
+      "contract": "contracts/015-layout.json"
+    },
+    {
+      "entry_id": "config.transitions",
+      "kind": "configuration",
+      "label": "transitions",
+      "summary": "Existing configuration configuration: transitions.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.transitions",
+      "contract": "contracts/016-configuration.json"
+    }
+  ]
+}

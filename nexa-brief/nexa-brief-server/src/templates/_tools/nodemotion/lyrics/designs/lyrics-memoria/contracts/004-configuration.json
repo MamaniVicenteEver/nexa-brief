@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-memoria",
+  "id": "config.grades",
+  "entry_id": "config.grades",
+  "name": "grades",
+  "kind": "configuration",
+  "label": "grades",
+  "summary": "Existing configuration configuration: grades.",
+  "params": {
+    "faded": {
+      "default": {
+        "type": "css",
+        "saturate": 0.5,
+        "contrast": 0.88,
+        "brightness": 0.95
+      }
+    },
+    "sepia": {
+      "default": {
+        "type": "duo",
+        "dark": "#1C130C",
+        "light": "#EBD9B6",
+        "contrast": 1.05
+      }
+    }
+  },
+  "example": {
+    "faded": {
+      "type": "css",
+      "saturate": 0.5,
+      "contrast": 0.88,
+      "brightness": 0.95
+    },
+    "sepia": {
+      "type": "duo",
+      "dark": "#1C130C",
+      "light": "#EBD9B6",
+      "contrast": 1.05
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-memoria/assets/config.json",
+      "pointer": "/configs/0/grades"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

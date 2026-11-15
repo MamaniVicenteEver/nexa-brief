@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-vacio",
+  "id": "config.grades",
+  "entry_id": "config.grades",
+  "name": "grades",
+  "kind": "configuration",
+  "label": "grades",
+  "summary": "Existing configuration configuration: grades.",
+  "params": {
+    "mist": {
+      "default": {
+        "type": "css",
+        "saturate": 0.12,
+        "contrast": 0.95,
+        "brightness": 0.8
+      }
+    },
+    "bw": {
+      "default": {
+        "type": "duo",
+        "dark": "#050607",
+        "light": "#D6DADD",
+        "contrast": 1.25
+      }
+    }
+  },
+  "example": {
+    "mist": {
+      "type": "css",
+      "saturate": 0.12,
+      "contrast": 0.95,
+      "brightness": 0.8
+    },
+    "bw": {
+      "type": "duo",
+      "dark": "#050607",
+      "light": "#D6DADD",
+      "contrast": 1.25
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-vacio/assets/config.json",
+      "pointer": "/configs/0/grades"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

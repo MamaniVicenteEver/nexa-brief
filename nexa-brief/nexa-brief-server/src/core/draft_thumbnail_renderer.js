@@ -832,6 +832,76 @@
     const brand = `<text data-role="brand" x="1236" y="700" text-anchor="end" font-family="Arial, sans-serif" font-size="14" font-weight="900" letter-spacing="2" fill="${key === "A" ? paper : ink}" opacity=".5">NODEMOTION</text>`;
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 1280 720" role="img" aria-label="${escapeXml(title)}"><defs>${defs}</defs><g data-role="layout">${body}</g>${copy}${brand}</svg>`;
   }
+  function hologramGradient(id, stops, angle) {
+    // Degradado iridiscente (lila, cian, rosa, azul) equivalente al relleno holográfico del video.
+    const s = stops.map((c, i) => `<stop offset="${(i / (stops.length - 1)).toFixed(3)}" stop-color="${c}"/>`).join("");
+    return `<linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1" gradientTransform="rotate(${angle} .5 .5)">${s}</linearGradient>`;
+  }
+  function hologramDiamonds(cx, cy, n, size, fill) {
+    let out = "";
+    for (let i = 0; i < n; i++) {
+      const x = cx + (i - (n - 1) / 2) * size * 1.9, a = size * .62;
+      out += `<path d="M${x} ${cy - size}L${x + a} ${cy - size * .2}L${x} ${cy + size * .55}L${x - a} ${cy - size * .2}Z" fill="${fill}"/>`;
+    }
+    return out;
+  }
+  function renderHologramSvg(selected, design, key, w, h, assets) {
+    const {palette: p, typography: t, background: b} = design;
+    const dark = p.background, white = p.foreground, lilac = p.accent;
+    const holo = [lilac, "#9EEFF4", "#F4C2EF", "#7F8CFF", "#EAFBFF", lilac];
+    let title = String(selected.text || "Música").trim().slice(0, 200);
+    if (key === "A") title = title.split(/\s+/u).slice(0, 5).join(" ");
+    title = title.toLocaleUpperCase("es");
+    const subtitle = String(design.subtitle || "").trim().toLocaleUpperCase("es");
+    const photo = b.kind === "solid" ? "" : safeData(assets?.backgroundData, "image");
+    const font = `font-family="${escapeXml(t.display)}" font-weight="${t.weight}"`;
+    const typo = {...t, tracking: 0};
+    const anchor = `${b.x < .34 ? "xMin" : b.x > .66 ? "xMax" : "xMid"}${b.y < .34 ? "YMin" : b.y > .66 ? "YMax" : "YMid"}`;
+    const defs = `<style>${fontCss(assets?.fonts)}</style>${hologramGradient("hg-a", holo, 25)}${hologramGradient("hg-b", holo.slice().reverse(), -20)}<radialGradient id="hg-vig" cx=".5" cy=".42" r=".75"><stop offset="0" stop-color="#17162A"/><stop offset="1" stop-color="${dark}"/></radialGradient><filter id="hg-glow" x="-10%" y="-20%" width="120%" height="140%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>${trendyDuo("hg", "holo", "#0B0A14", "#D6C8FF", 1.25)}`;
+    // Reparte en renglones equilibrados y ajusta el tamaño al ancho disponible.
+    const fitLines = (text, maxW, maxH, maxLines) => {
+      const words = text.split(" "), best = {lines: [text], size: 1};
+      for (let n = 1; n <= Math.min(maxLines, words.length); n++) {
+        const lines = []; let acc = [];
+        for (const wd of words) { acc.push(wd); if (acc.join(" ").length >= text.length / n && lines.length < n - 1) { lines.push(acc.join(" ")); acc = []; } }
+        if (acc.length) lines.push(acc.join(" "));
+        const size = Math.min(maxH / lines.length / .9, ...lines.map(l => maxW / Math.max(1, measure(l, typo, 100)) * 100));
+        if (size > best.size) Object.assign(best, {lines, size});
+      }
+      return best;
+    };
+    const labels = ["xMin", "xMid", "xMax"].map((_, i) => [70 + i * 570, i === 0 ? "start" : i === 1 ? "middle" : "end"]).map(([x, a]) =>
+      [42, 690].map(y => `<text ${font} font-size="13" letter-spacing="2" fill="${white}" opacity=".6" x="${x}" y="${y}" text-anchor="${a}">${escapeXml(title.split(" ").slice(0, 3).join(" ").slice(0, 28))}</text>`).join("")).join("");
+    let body, copy;
+    if (key === "A") {
+      // Escena «holoWord»: casi negro, título condensado enorme con relleno holográfico, ecos en contorno arriba y abajo y fila de rombos.
+      const f = fitLines(title, 1080, 400, 2);
+      const lh = f.size * .9, top = 360 - (f.lines.length - 1) * lh / 2;
+      const row = (l, y, extra) => `<text ${font} font-size="${f.size.toFixed(1)}" x="640" y="${(y + f.size * .36).toFixed(1)}" text-anchor="middle" ${extra}>${escapeXml(l)}</text>`;
+      const echo = [-1, 1].map(s => row(s < 0 ? f.lines[0] : f.lines[f.lines.length - 1], s < 0 ? top - lh : top + (f.lines.length - 1) * lh + lh, `fill="none" stroke="${white}" stroke-width="1.6" opacity=".28"`)).join("");
+      copy = `<g data-role="title">${echo}<g filter="url(#hg-glow)">${f.lines.map((l, i) => row(l, top + i * lh, `fill="url(#hg-a)"`)).join("")}</g></g>`;
+      const sy = top + (f.lines.length - 1) * lh + f.size * .62 + 34;
+      if (subtitle) copy += `<text data-role="subtitle" ${font} font-size="30" letter-spacing="12" fill="${white}" x="640" y="${Math.min(650, sy)}" text-anchor="middle">${escapeXml(subtitle)}</text>`;
+      body = `<rect width="1280" height="720" fill="url(#hg-vig)"/><rect x="90" y="86" width="1100" height="548" fill="none" stroke="${white}" stroke-opacity=".09" stroke-width="1.5"/>${hologramDiamonds(640, Math.max(70, top - f.size * .62 - 20), 4, 11, lilac)}${labels}`;
+    } else {
+      // Escena «panel»: fotograma en duotono holográfico a la derecha con marco iridiscente; frase condensada blanca a la izquierda, última palabra holográfica y barra.
+      const image = photo ? `<clipPath id="hg-win"><rect x="610" y="96" width="600" height="440"/></clipPath><rect x="604" y="90" width="612" height="452" fill="url(#hg-b)"/><g clip-path="url(#hg-win)"><image href="${photo}" x="610" y="96" width="600" height="440" preserveAspectRatio="${anchor} slice" filter="url(#hg-holo)"/><rect x="610" y="96" width="600" height="440" fill="url(#hg-a)" opacity=".35" style="mix-blend-mode:soft-light"/></g>` : `<rect x="604" y="90" width="612" height="452" fill="url(#hg-b)"/>`;
+      const f = fitLines(title, 500, 330, 3);
+      const lh = f.size * .94, y0 = 470 - (f.lines.length - 1) * lh;
+      const lines = f.lines.map((l, i) => {
+        const last = i === f.lines.length - 1, words = l.split(" ");
+        const head = last && words.length > 1 ? words.slice(0, -1).join(" ") + " " : last ? "" : l;
+        const tail = last ? words[words.length - 1] : "";
+        return `<text ${font} font-size="${f.size.toFixed(1)}" x="70" y="${(y0 + i * lh + f.size * .36).toFixed(1)}"><tspan fill="${white}">${escapeXml(head)}</tspan><tspan fill="url(#hg-a)">${escapeXml(tail)}</tspan></text>`;
+      }).join("");
+      const by = y0 + (f.lines.length - 1) * lh + f.size * .5 + 18;
+      copy = `<g data-role="title">${lines}<rect x="72" y="${by.toFixed(1)}" width="${Math.min(500, Math.max(...f.lines.map(l => measure(l, typo, f.size)))).toFixed(1)}" height="9" fill="url(#hg-a)"/></g>`;
+      if (subtitle) copy += `<text data-role="subtitle" ${font} font-size="26" letter-spacing="10" fill="${white}" opacity=".85" x="72" y="${Math.min(690, by + 52).toFixed(1)}">${escapeXml(subtitle)}</text>`;
+      body = `<rect width="1280" height="720" fill="url(#hg-vig)"/>${image}${hologramDiamonds(120, Math.max(60, y0 - f.size * .6 - 26), 3, 10, "#9EEFF4")}${labels}`;
+    }
+    const brand = `<text data-role="brand" x="1236" y="712" text-anchor="end" font-family="Arial, sans-serif" font-size="13" font-weight="900" letter-spacing="2" fill="${white}" opacity=".45">NODEMOTION</text>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 1280 720" role="img" aria-label="${escapeXml(title)}"><defs>${defs}</defs><g data-role="layout">${body}</g>${copy}${brand}</svg>`;
+  }
   function renderSvg(manifest, option, width, height, assets) {
     const w = Math.round(number(width, 1280, 320, 1920));
     const h = Math.round(number(height, 720, 180, 1920));
@@ -847,6 +917,7 @@
     if (design.style === "promo-breaking") return renderBreakingSvg(selected, design, key, w, h, assets);
     if (design.style === "promo-pulse") return renderPulseSvg(selected, design, key, w, h, assets);
     if (design.style === "lyrics-rasgado") return renderRasgadoSvg(selected, design, key, w, h, assets);
+    if (design.style === "lyrics-hologram") return renderHologramSvg(selected, design, key, w, h, assets);
     const { palette: p, typography: t, background: b } = design;
     let title = String(selected.text || "Música").trim().slice(0, 200);
     if (key === "A") title = title.split(/\s+/).slice(0, 5).join(" ");

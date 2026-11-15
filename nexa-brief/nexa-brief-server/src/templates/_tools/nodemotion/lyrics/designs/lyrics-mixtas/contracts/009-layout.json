@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-mixtas",
+  "id": "layout.condensed",
+  "entry_id": "layout.condensed",
+  "name": "condensed",
+  "kind": "layout",
+  "label": "condensed",
+  "summary": "Existing layout configuration: condensed.",
+  "params": {
+    "weight": {
+      "default": 1.6
+    },
+    "bgs": {
+      "default": [
+        "media",
+        "black"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.6,
+    "bgs": [
+      "media",
+      "black"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+      "pointer": "/configs/0/layouts/condensed"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "config.intro",
+  "entry_id": "config.intro",
+  "name": "intro",
+  "kind": "configuration",
+  "label": "intro",
+  "summary": "Existing configuration configuration: intro.",
+  "params": {
+    "title": {
+      "default": "Dueles tan bien"
+    },
+    "artist": {
+      "default": "Bruses"
+    },
+    "minSec": {
+      "default": 1.8
+    }
+  },
+  "example": {
+    "title": "Dueles tan bien",
+    "artist": "Bruses",
+    "minSec": 1.8
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+      "pointer": "/configs/0/intro"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

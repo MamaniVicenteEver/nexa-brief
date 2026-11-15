@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-calado",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-calado",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/bg.mp4",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "947d1bbe57b6f5509be4dd8a106a8aad18e7ea2880e2eaf695f79421436006d3",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-calado",
+    "config": "nodemotion/lyrics/lyrics-calado/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-calado/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-calado/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/bg.mp4": "0ab7ffcaf067267fbfd0fc6e967092de4edeea8106db1122246183a3700374b7.mp4",
+    "assets/card-poster.webp": "afa8196cbe3b40bcab62bb96e27326089940a3e3d601ad0275caf12f11ddb719.webp",
+    "assets/song.mp3": "e8a2242d2e426ec68d0269d9c9e234de099203633689ae4bb70ee792a177db41.mp3"
+  },
+  "revision": "20c2736aeb63678ffee42ac494baf5421f9768af7f3781722f64cf8ba1358acb"
+}

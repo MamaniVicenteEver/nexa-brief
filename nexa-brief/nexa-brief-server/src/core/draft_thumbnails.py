@@ -15,13 +15,15 @@ import os
 import re
 from functools import lru_cache
 from pathlib import Path
+
+from src.core.nodemotion.service import lyrics_for_job
 from typing import Any, Literal
 
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 from src.core.draft_details import DraftDetails
 from src.core.job import Job
-from src.core.promo_prompts import TEMPLATES
+from src.core.nodemotion.promo.prompts import TEMPLATES
 from src.core.template_config import active_config as _active_config
 
 Option = Literal["A", "B"]
@@ -149,6 +151,7 @@ _THEMES: dict[str, dict[str, str]] = {
     "lyrics-caution": {"layout": "caution", "font": "condensed", "accent": "primary", "background": "dark", "pattern_a": "stripes", "pattern_b": "dots", "badge": "NODEMOTION", "sub_badge": "LETRA"},
     "lyrics-mixtas": {"layout": "mixtas", "font": "condensed", "accent": "lime", "background": "black", "pattern_a": "dots", "pattern_b": "stripes", "badge": "NODEMOTION", "sub_badge": "LETRA"},
     "lyrics-rasgado": {"layout": "rasgado", "font": "condensed", "accent": "lime", "background": "paper", "pattern_a": "none", "pattern_b": "none", "badge": "NODEMOTION", "sub_badge": "LETRA"},
+    "lyrics-hologram": {"layout": "hologram", "font": "condensed", "accent": "h1", "background": "void", "pattern_a": "none", "pattern_b": "none", "badge": "NODEMOTION", "sub_badge": "LETRA"},
 }
 
 _FALLBACK_PALETTES: dict[str, dict[str, str]] = {
@@ -166,6 +169,7 @@ _FALLBACK_PALETTES: dict[str, dict[str, str]] = {
     "lyrics-caution": {"primary": "#C80202", "dark": "#000000", "light": "#FFFFFF"},
     "lyrics-mixtas": {"lime": "#BEFF0A", "red": "#B70004", "orange": "#F16F05", "white": "#FFFFFF", "paper": "#F4F4F2", "black": "#0B0B0C", "ink": "#111111"},
     "lyrics-rasgado": {"lime": "#90DE66", "ink": "#262626", "paper": "#DEDEE4"},
+    "lyrics-hologram": {"void": "#09090F", "white": "#F4F2FB", "h1": "#C9B6FF"},
 }
 
 
@@ -274,7 +278,7 @@ def _default_options(job: Job, details: DraftDetails, raw: dict[str, Any] | None
         config = _active_config(raw if raw is not None else _read_config(job))
         brand = config.get("brand") if isinstance(config.get("brand"), dict) else {}
         # El titular es el primer rótulo de dos filas del guion de la promo (p. ej. «FUERZA PURA»).
-        segments = (job.artifacts.lyrics_json or {}).get("segments", [])
+        segments = (lyrics_for_job(job) or {}).get("segments", [])
         headline = next((" ".join(item["lines"]) for item in segments if isinstance(item, dict)
                          and isinstance(item.get("lines"), list) and len(item["lines"]) == 2
                          and all(isinstance(line, str) and line.strip() for line in item["lines"])
@@ -293,7 +297,7 @@ def _default_options(job: Job, details: DraftDetails, raw: dict[str, Any] | None
         # Titular = renglón 1 del primer segmento (la intro); placa = su renglón 2 o el subtítulo de marca.
         config = _active_config(raw if raw is not None else _read_config(job))
         brand = config.get("brand") if isinstance(config.get("brand"), dict) else {}
-        segments = (job.artifacts.lyrics_json or {}).get("segments", [])
+        segments = (lyrics_for_job(job) or {}).get("segments", [])
         first = next((item["lines"] for item in segments if isinstance(item, dict) and isinstance(item.get("lines"), list)
                       and item["lines"] and str(item["lines"][0]).strip()), [])
         text = " ".join(_clean_copy(str(first[0]).replace("~", "") if first else title).split()[:5])
@@ -303,7 +307,7 @@ def _default_options(job: Job, details: DraftDetails, raw: dict[str, Any] | None
         return {"A": {"text": text, "design": designs["A"]}, "B": {"text": text, "design": designs["B"]}}
     if _template_id(job) in ("promo-sports", "promo-kinetic"):
         # Sports y Kinetic no tienen un rótulo de dos filas útil: el titular es su primer rótulo («DEPORTE»).
-        segments = (job.artifacts.lyrics_json or {}).get("segments", [])
+        segments = (lyrics_for_job(job) or {}).get("segments", [])
         first = next((" ".join(str(line) for line in item.get("lines") or [item.get("text", "")]) for item in segments
                       if isinstance(item, dict) and " ".join(str(line) for line in item.get("lines") or [item.get("text", "")]).strip()), "")
         text = " ".join(_clean_copy(re.sub(r"[#\^~*]", "", first or title)).split()[:5])
@@ -314,7 +318,7 @@ def _default_options(job: Job, details: DraftDetails, raw: dict[str, Any] | None
 
 def _alternate_title(job: Job, details: DraftDetails, title: str) -> str:
     # Una frase real de la canción evita inventar letra o añadir metadatos.
-    segments = (job.artifacts.lyrics_json or {}).get("segments", [])
+    segments = (lyrics_for_job(job) or {}).get("segments", [])
     phrases = [" ".join(str(item.get("text", "")).split()) for item in segments if isinstance(item, dict)]
     phrases = [text for text in phrases if 5 <= len(text.split()) <= 14]
     if phrases:
@@ -390,6 +394,12 @@ def fingerprint(job: Job, details: DraftDetails, options: Any = None) -> str:
         digest.update(b"promo-dynamic-photo-a-v1")
     if _template_id(job) == "promo-trendy":
         digest.update(b"promo-trendy-legible-a-v1")
+    from src.core.nodemotion.service import load_project
+    from src.templates._tools.nodemotion.shared.assemble import engine_revision
+    project = load_project(Path(job.artifacts.output_dir)) if job.artifacts.output_dir else None
+    if project:
+        digest.update(engine_revision(project["design_id"], project.get("engine", {}).get("revision")).encode())
+        digest.update(json.dumps(project, sort_keys=True).encode())
     paths = [job.artifacts.html_path, DESIGN_ROOT / "design-tokens.json"]
     from src.core.draft_thumbnail_assets import background_source
     media = background_source(job)
@@ -444,7 +454,9 @@ async def prepare(
     options: Any = None,
 ) -> ThumbnailSet | None:
     """Prepare A/B JSON for the editor; this intentionally performs no capture."""
-    if job.artifacts.html_path is None or not job.artifacts.html_path.is_file():
+    from src.core.nodemotion.service import load_project
+    has_project = bool(job.artifacts.output_dir and load_project(Path(job.artifacts.output_dir)))
+    if not has_project and (job.artifacts.html_path is None or not job.artifacts.html_path.is_file()):
         return None
     existing_options = options if options is not None else previous.options if previous else None
     manifest = preview_manifest(job, details, existing_options)
@@ -522,7 +534,9 @@ async def capture_selected(
     """Capture the selected SVG as one JPEG when recording starts."""
     if option not in ("A", "B"):
         raise ValueError("Opción de miniatura inválida")
-    if job.artifacts.html_path is None or not job.artifacts.html_path.is_file():
+    from src.core.nodemotion.service import load_project
+    has_project = bool(job.artifacts.output_dir and load_project(Path(job.artifacts.output_dir)))
+    if not has_project and (job.artifacts.html_path is None or not job.artifacts.html_path.is_file()):
         raise ValueError("El prototipo no tiene una vista previa disponible")
     manifest = preview_manifest(job, details, options)
     thumbs = ThumbnailSet(

@@ -300,7 +300,7 @@
     },
     "lyrics-grunge-rojo": {
       "folder": "nodemotion/lyrics/lyrics-grunge-rojo",
-      "display_name": "Grunge Rojo",
+      "display_name": "Grunge Rojo Glitch",
       "description": "Grunge de rap con metraje urbano en blanco y negro duro: papel gris rasgado, letra condensada blanca y roja que entra con estela, palabras gigantes con eco rojo, frases repetidas en filas, bloques anchos sobre papel, iconos de reproductor, tiza blanca y pincel rojo (círculos, tachones, flechas, coronas), glitch y destellos; en los silencios largos repasa frases ya cantadas — para rap, trap y drill.",
       "native_orientation": "any",
       "index_html": "nodemotion/lyrics/lyrics-grunge-rojo/index.html",
@@ -943,6 +943,116 @@
         "brief": true
       }
     },
+    "lyrics-hologram": {
+      "folder": "nodemotion/lyrics/lyrics-hologram",
+      "display_name": "Holograma",
+      "description": "Lyric video de tipografía cinética sobre casi negro con relleno holográfico iridiscente: condensada alta y extendida itálica, contornos gigantes con ecos, barras que cortan la palabra, seda holográfica fluida en los versos, siluetas holográficas y secciones roja, violeta y gris claro; cada palabra al tiempo de la voz. Para pop, trap, electrónica e himnos de energía.",
+      "native_orientation": "any",
+      "index_html": "nodemotion/lyrics/lyrics-hologram/index.html",
+      "config_json": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": null,
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media",
+        "components"
+      ],
+      "category_id": "lyrics",
+      "sort_order": 28,
+      "status": "ready",
+      "tags": [
+        "lyrics",
+        "music-video",
+        "pop",
+        "kinetic",
+        "holographic"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": true,
+          "lyrics": "auto"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 6,
+            "target": "media",
+            "label": "Videos",
+            "hint": "siluetas claras sobre fondo negro (look silhouette: se llenan de holografía) y planos de moda, retrato o baile (duotono holográfico)"
+          }
+        ],
+        "texts": [
+          {
+            "key": "intro.title",
+            "label": "Título de la canción",
+            "max": 40,
+            "default": "Give It Up"
+          },
+          {
+            "key": "intro.artist",
+            "label": "Artista",
+            "max": 40,
+            "default": "djlang59 ft. Snowflake"
+          },
+          {
+            "key": "outro.title",
+            "label": "Título del cierre",
+            "max": 30,
+            "default": "Gracias"
+          },
+          {
+            "key": "outro.sub",
+            "label": "Subtítulo del cierre",
+            "max": 40,
+            "default": "por escuchar"
+          },
+          {
+            "key": "outro.feats",
+            "label": "Créditos del cierre",
+            "max": 60,
+            "default": "Suscríbete · NodeMotion"
+          }
+        ],
+        "brief": true,
+        "defaults": {
+          "audio_asset_id": "a2548323",
+          "media": {
+            "clips": [
+              {
+                "asset_id": "dfdda265",
+                "kind": "video"
+              },
+              {
+                "asset_id": "a44ab496",
+                "kind": "video"
+              },
+              {
+                "asset_id": "26a7aa15",
+                "kind": "video"
+              },
+              {
+                "asset_id": "5c1b6abd",
+                "kind": "video"
+              },
+              {
+                "asset_id": "e934fbd3",
+                "kind": "video"
+              },
+              {
+                "asset_id": "85f18a8b",
+                "kind": "video"
+              }
+            ]
+          }
+        }
+      }
+    },
     "promo-editorial": {
       "folder": "nodemotion/commercial/promo-editorial",
       "display_name": "Promo Editorial",
@@ -1416,6 +1526,91 @@
           }
         ],
         "brief": true
+      }
+    },
+    "promo-mono": {
+      "folder": "nodemotion/commercial/promo-mono",
+      "display_name": "Promo Mono",
+      "description": "Promo de marca o servicio con interfaz minimalista en blanco y negro: logotipo, botón de reproducir, abanico de tarjetas y metraje en semitono, palabra partida por ventanas de video, lluvias de píldoras de texto, línea que se vuelve garabato, píldora con pin, cifras que parpadean, patrón óptico, texto espaciado, móvil con chat, cupones, campo de código y contacto final; 15 escenas reutilizables y 2 cierres.",
+      "native_orientation": "any",
+      "index_html": "nodemotion/commercial/promo-mono/index.html",
+      "config_json": "nodemotion/commercial/promo-mono/assets/config.json",
+      "vision_prompt": null,
+      "config_prompt": null,
+      "remotion_component": null,
+      "runtime_assets": [
+        "assets/media",
+        "components"
+      ],
+      "category_id": "commercial",
+      "sort_order": 36,
+      "status": "ready",
+      "tags": [
+        "commercial",
+        "promo",
+        "brand-video",
+        "minimal",
+        "ui"
+      ],
+      "requires_image": false,
+      "requires_video": false,
+      "requires_lyrics": true,
+      "static_config": true,
+      "inputs": {
+        "audio": {
+          "required": false,
+          "lyrics": "optional"
+        },
+        "media": [
+          {
+            "slot": "clips",
+            "kind": "video",
+            "min": 1,
+            "max": 12,
+            "target": "media",
+            "label": "Videos",
+            "hint": "personas en movimiento o actividades del tema; se muestran en blanco y negro y en semitono"
+          }
+        ],
+        "texts": [
+          {
+            "key": "brand.name",
+            "label": "Marca (logotipo)",
+            "max": 24,
+            "default": "Rutalia"
+          },
+          {
+            "key": "brand.cta",
+            "label": "Llamada en la píldora",
+            "max": 30,
+            "default": "Míralo y ve"
+          },
+          {
+            "key": "brand.url",
+            "label": "Dirección o usuario",
+            "max": 40,
+            "default": "@rutalia.demo"
+          },
+          {
+            "key": "intro.title",
+            "label": "Título de la intro",
+            "max": 24,
+            "default": "Rutalia"
+          },
+          {
+            "key": "outro.title",
+            "label": "Título del cierre",
+            "max": 24,
+            "default": "Rutalia"
+          },
+          {
+            "key": "outro.cta",
+            "label": "Llamada del cierre",
+            "max": 30,
+            "default": "Míralo y ve"
+          }
+        ],
+        "brief": false
       }
     },
     "promo-pulse": {

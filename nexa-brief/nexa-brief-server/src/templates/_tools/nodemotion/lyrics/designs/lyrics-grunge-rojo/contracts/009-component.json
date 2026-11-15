@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "grunge.repaso",
+  "entry_id": "grunge.repaso",
+  "kind": "component",
+  "label": "Repaso de frases",
+  "summary": "En silencios largos vuelve a mostrar frases ya cantadas (nunca inventa letra).",
+  "component": {
+    "name": "grunge.repaso",
+    "label": "Repaso de frases",
+    "summary": "En silencios largos vuelve a mostrar frases ya cantadas (nunca inventa letra).",
+    "default": true,
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "but now I won't",
+        "doc": "Frase ya cantada"
+      }
+    },
+    "tags": [
+      "escena"
+    ],
+    "file": "player.js",
+    "demo": {},
+    "preview": {
+      "t": 1.2
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "but now I won't",
+      "doc": "Frase ya cantada"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/showcase/components.json",
+      "pointer": "/components/8"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

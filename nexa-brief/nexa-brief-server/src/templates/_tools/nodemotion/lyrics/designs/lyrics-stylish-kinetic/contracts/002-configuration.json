@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-stylish-kinetic",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "schemes": {
+      "default": {
+        "red": {
+          "bg": "#E31D40",
+          "ink": "#FFFFFF",
+          "accent": "#F3C10A"
+        },
+        "yellow": {
+          "bg": "#F3C10A",
+          "ink": "#FFFFFF",
+          "accent": "#084E62"
+        },
+        "mint": {
+          "bg": "#85E5D3",
+          "ink": "#FFFFFF",
+          "accent": "#E31D40"
+        },
+        "teal": {
+          "bg": "#084E62",
+          "ink": "#FFFFFF",
+          "accent": "#F3C10A"
+        }
+      }
+    },
+    "order": {
+      "default": [
+        "red",
+        "yellow",
+        "mint",
+        "red",
+        "yellow"
+      ]
+    },
+    "cycle": {
+      "default": [
+        "red",
+        "yellow",
+        "mint",
+        "teal"
+      ]
+    }
+  },
+  "example": {
+    "schemes": {
+      "red": {
+        "bg": "#E31D40",
+        "ink": "#FFFFFF",
+        "accent": "#F3C10A"
+      },
+      "yellow": {
+        "bg": "#F3C10A",
+        "ink": "#FFFFFF",
+        "accent": "#084E62"
+      },
+      "mint": {
+        "bg": "#85E5D3",
+        "ink": "#FFFFFF",
+        "accent": "#E31D40"
+      },
+      "teal": {
+        "bg": "#084E62",
+        "ink": "#FFFFFF",
+        "accent": "#F3C10A"
+      }
+    },
+    "order": [
+      "red",
+      "yellow",
+      "mint",
+      "red",
+      "yellow"
+    ],
+    "cycle": [
+      "red",
+      "yellow",
+      "mint",
+      "teal"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

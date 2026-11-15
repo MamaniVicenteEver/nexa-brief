@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "config.motion",
+  "entry_id": "config.motion",
+  "name": "motion",
+  "kind": "configuration",
+  "label": "motion",
+  "summary": "Existing configuration configuration: motion.",
+  "params": {
+    "enterSec": {
+      "default": 0.14
+    },
+    "smear": {
+      "default": 0.9
+    },
+    "doodleSec": {
+      "default": 0.3
+    },
+    "videoRate": {
+      "default": 1
+    },
+    "grain": {
+      "default": 0.6
+    },
+    "distress": {
+      "default": 0.5
+    }
+  },
+  "example": {
+    "enterSec": 0.14,
+    "smear": 0.9,
+    "doodleSec": 0.3,
+    "videoRate": 1,
+    "grain": 0.6,
+    "distress": 0.5
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/assets/config.json",
+      "pointer": "/configs/0/motion"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

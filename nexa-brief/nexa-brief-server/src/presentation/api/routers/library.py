@@ -86,6 +86,7 @@ def _file_url(kind: str, asset_id: str) -> str:
 def _image_response(entry: asset_library.ImageLibraryEntry) -> ImageLibraryEntryResponse:
     return ImageLibraryEntryResponse(
         **entry.model_dump(),
+        metadata_missing=asset_library.metadata_gaps("image", entry),
         tag_list=asset_library.tag_list(entry.tags),
         file_url=_file_url("image", entry.asset_id),
     )
@@ -94,6 +95,7 @@ def _image_response(entry: asset_library.ImageLibraryEntry) -> ImageLibraryEntry
 def _music_response(entry: asset_library.MusicLibraryEntry) -> MusicLibraryEntryResponse:
     return MusicLibraryEntryResponse(
         **entry.model_dump(),
+        metadata_missing=asset_library.metadata_gaps("music", entry),
         tag_list=asset_library.tag_list(entry.tags),
         file_url=_file_url("music", entry.asset_id),
         lyrics_url=(
@@ -105,6 +107,7 @@ def _music_response(entry: asset_library.MusicLibraryEntry) -> MusicLibraryEntry
 def _video_response(entry: asset_library.VideoLibraryEntry) -> VideoLibraryEntryResponse:
     return VideoLibraryEntryResponse(
         **entry.model_dump(),
+        metadata_missing=asset_library.metadata_gaps("video", entry),
         tag_list=asset_library.tag_list(entry.tags),
         file_url=_file_url("video", entry.asset_id),
     )

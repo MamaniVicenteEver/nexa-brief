@@ -52,7 +52,7 @@ class CopyResult:
 
 def _thumbnail_prompt(profile: str | None, promo_prompt_version: str | None = None) -> str:
     if profile == "commercial":
-        from src.core.promo_prompts import compose
+        from src.core.nodemotion.promo.prompts import compose
         guidance = compose("miniaturas", version=promo_prompt_version, include_base=False)
     else:
         guidance = (
@@ -148,7 +148,8 @@ def build_facts(job: Job, niche_cfg: NicheConfig, user_notes: str = "", research
         f"Artista: {music.get('artist')}" if music.get("artist") else "",
         f"Género: {music.get('genre')}" if music.get("genre") else "",
     ]))
-    excerpt = _lyrics_excerpt(artifacts.lyrics_json)
+    from src.core.nodemotion.service import lyrics_for_job
+    excerpt = _lyrics_excerpt(lyrics_for_job(job))
     if excerpt:
         title = ("Textos que aparecen en pantalla (los nombres de evento, equipos o marca salen de acá)" if commercial
                  else "Letra (transcrita del audio, puede tener pequeños errores)")
@@ -212,7 +213,7 @@ async def write_copy(
     system, user = build_copy_prompt(strategies, facts, language, profile)
     promo_reference = None
     if profile == "commercial":
-        from src.core.promo_prompts import compose, reference
+        from src.core.nodemotion.promo.prompts import compose, reference
         promo_reference = reference(version=promo_prompt_version)
         system = compose("publicar", version=promo_reference["version"]) + "\n\n" + system
     if include_thumbnail_options:

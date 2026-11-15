@@ -73,7 +73,7 @@ async def research(ai: Any, notes: str, facts: str, *, profile: str | None = Non
     """Investigación previa breve: ordena la información que dio la persona junto con la letra."""
     system = _RESEARCH_SYSTEM
     if profile == "commercial":
-        from src.core.promo_prompts import compose
+        from src.core.nodemotion.promo.prompts import compose
         system = compose("contexto", version=promo_prompt_version)
     raw = await ai.complete_json(system, f"LO QUE CUENTA LA PERSONA:\n{notes.strip()}\n\nDATOS DEL VIDEO:\n{facts}")
     lines = [f"- {f.strip()}" for f in (raw.get("facts") or []) if isinstance(f, str) and f.strip()][:5]
@@ -98,7 +98,7 @@ async def generate(job: Job, niche_id: str, seed: str, notes: str = "", *, ai_ov
     ai = ai_override if ai_override is not None else get_copy_ai()
     promo_reference = None
     if profile == "commercial":
-        from src.core.promo_prompts import bind_reference, reference, reference_file
+        from src.core.nodemotion.promo.prompts import bind_reference, reference, reference_file
         output = job.artifacts.output_dir
         pinned = Path(output) / "promo-prompts-version.json" if output else None
         promo_reference = reference_file(pinned) if pinned and pinned.is_file() else reference()

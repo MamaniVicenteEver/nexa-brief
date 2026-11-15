@@ -1,0 +1,512 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "family": "promo",
+  "display_name": "Promo Mono",
+  "description": "Promo de marca o servicio con interfaz minimalista en blanco y negro: logotipo, botón de reproducir, abanico de tarjetas y metraje en semitono, palabra partida por ventanas de video, lluvias de píldoras de texto, línea que se vuelve garabato, píldora con pin, cifras que parpadean, patrón óptico, texto espaciado, móvil con chat, cupones, campo de código y contacto final; 15 escenas reutilizables y 2 cierres.",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 12,
+        "target": "media",
+        "label": "Videos",
+        "hint": "personas en movimiento o actividades del tema; se muestran en blanco y negro y en semitono"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.name",
+        "label": "Marca (logotipo)",
+        "max": 24,
+        "default": "Rutalia"
+      },
+      {
+        "key": "brand.cta",
+        "label": "Llamada en la píldora",
+        "max": 30,
+        "default": "Míralo y ve"
+      },
+      {
+        "key": "brand.url",
+        "label": "Dirección o usuario",
+        "max": 40,
+        "default": "@rutalia.demo"
+      },
+      {
+        "key": "intro.title",
+        "label": "Título de la intro",
+        "max": 24,
+        "default": "Rutalia"
+      },
+      {
+        "key": "outro.title",
+        "label": "Título del cierre",
+        "max": 24,
+        "default": "Rutalia"
+      },
+      {
+        "key": "outro.cta",
+        "label": "Llamada del cierre",
+        "max": 30,
+        "default": "Míralo y ve"
+      }
+    ],
+    "brief": false
+  },
+  "config_json": "nodemotion/commercial/promo-mono/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/promo-mono",
+    "config": "nodemotion/commercial/promo-mono/assets/config.json",
+    "info.json": "nodemotion/commercial/promo-mono/info.json",
+    "showcase/components.json": "nodemotion/commercial/promo-mono/showcase/components.json",
+    "DESIGN.md": "nodemotion/commercial/promo-mono/DESIGN.md"
+  },
+  "lookup": "/api/v1/templates/promo-mono/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "mono.intro",
+      "kind": "component",
+      "label": "Intro: logotipo de la marca",
+      "summary": "Intro: logotipo de la marca",
+      "constraints_status": "documented",
+      "id": "mono.intro",
+      "contract": "contracts/001-component.json"
+    },
+    {
+      "entry_id": "mono.outroV1",
+      "kind": "component",
+      "label": "Outro v1: logotipo + llamado en píldora",
+      "summary": "Outro v1: logotipo + llamado en píldora",
+      "constraints_status": "documented",
+      "id": "mono.outroV1",
+      "contract": "contracts/002-component.json"
+    },
+    {
+      "entry_id": "mono.outroV2",
+      "kind": "component",
+      "label": "Outro v2: chips que se apartan + píldora con pin + marca",
+      "summary": "Outro v2: chips que se apartan + píldora con pin + marca",
+      "constraints_status": "documented",
+      "id": "mono.outroV2",
+      "contract": "contracts/003-component.json"
+    },
+    {
+      "entry_id": "mono.headline",
+      "kind": "component",
+      "label": "Titular centrado (+ renglón 2 pequeño)",
+      "summary": "Titular centrado (+ renglón 2 pequeño)",
+      "constraints_status": "documented",
+      "id": "mono.headline",
+      "contract": "contracts/004-component.json"
+    },
+    {
+      "entry_id": "mono.playline",
+      "kind": "component",
+      "label": "Botón de reproducir y línea que crece (+ texto opcional)",
+      "summary": "Botón de reproducir y línea que crece (+ texto opcional)",
+      "constraints_status": "documented",
+      "id": "mono.playline",
+      "contract": "contracts/005-component.json"
+    },
+    {
+      "entry_id": "mono.cardfan",
+      "kind": "component",
+      "label": "Abanico de tarjetas con fotos en semitono (+ palabra detrás)",
+      "summary": "Abanico de tarjetas con fotos en semitono (+ palabra detrás)",
+      "constraints_status": "documented",
+      "id": "mono.cardfan",
+      "contract": "contracts/006-component.json"
+    },
+    {
+      "entry_id": "mono.wordgrid",
+      "kind": "component",
+      "label": "Palabra repetida en filas, partida por ventanas de video",
+      "summary": "Palabra repetida en filas, partida por ventanas de video",
+      "constraints_status": "documented",
+      "id": "mono.wordgrid",
+      "contract": "contracts/007-component.json"
+    },
+    {
+      "entry_id": "mono.chips",
+      "kind": "component",
+      "label": "Lluvia de píldoras de texto alrededor de un titular (float) ",
+      "summary": "Lluvia de píldoras de texto alrededor de un titular (float) o apiladas (pile)",
+      "constraints_status": "documented",
+      "id": "mono.chips",
+      "contract": "contracts/008-component.json"
+    },
+    {
+      "entry_id": "mono.linetext",
+      "kind": "component",
+      "label": "Línea que entra desde el borde + texto; opcional garabato qu",
+      "summary": "Línea que entra desde el borde + texto; opcional garabato que la reemplaza",
+      "constraints_status": "documented",
+      "id": "mono.linetext",
+      "contract": "contracts/009-component.json"
+    },
+    {
+      "entry_id": "mono.pin",
+      "kind": "component",
+      "label": "Píldora con pin de ubicación que crece mientras se escribe",
+      "summary": "Píldora con pin de ubicación que crece mientras se escribe",
+      "constraints_status": "documented",
+      "id": "mono.pin",
+      "contract": "contracts/010-component.json"
+    },
+    {
+      "entry_id": "mono.footage",
+      "kind": "component",
+      "label": "Metraje a pantalla completa en semitono (o gris) + subtítulo",
+      "summary": "Metraje a pantalla completa en semitono (o gris) + subtítulo + icono",
+      "constraints_status": "documented",
+      "id": "mono.footage",
+      "contract": "contracts/011-component.json"
+    },
+    {
+      "entry_id": "mono.numbers",
+      "kind": "component",
+      "label": "Rejilla de cifras que parpadean y dejan sólo las cifras del ",
+      "summary": "Rejilla de cifras que parpadean y dejan sólo las cifras del guion",
+      "constraints_status": "documented",
+      "id": "mono.numbers",
+      "contract": "contracts/012-component.json"
+    },
+    {
+      "entry_id": "mono.pattern",
+      "kind": "component",
+      "label": "Patrón óptico de puntos en onda + botón central (pausa o pla",
+      "summary": "Patrón óptico de puntos en onda + botón central (pausa o play)",
+      "constraints_status": "documented",
+      "id": "mono.pattern",
+      "contract": "contracts/013-component.json"
+    },
+    {
+      "entry_id": "mono.spaced",
+      "kind": "component",
+      "label": "Texto en mayúsculas muy espaciado, palabra a palabra; eco ap",
+      "summary": "Texto en mayúsculas muy espaciado, palabra a palabra; eco apilado del último renglón",
+      "constraints_status": "documented",
+      "id": "mono.spaced",
+      "contract": "contracts/014-component.json"
+    },
+    {
+      "entry_id": "mono.phonechat",
+      "kind": "component",
+      "label": "Móvil (punteado) con burbujas de chat que llegan; garabato o",
+      "summary": "Móvil (punteado) con burbujas de chat que llegan; garabato opcional",
+      "constraints_status": "documented",
+      "id": "mono.phonechat",
+      "contract": "contracts/015-component.json"
+    },
+    {
+      "entry_id": "mono.coupon",
+      "kind": "component",
+      "label": "Cupones que entran girando desde los bordes + rótulo central",
+      "summary": "Cupones que entran girando desde los bordes + rótulo central",
+      "constraints_status": "documented",
+      "id": "mono.coupon",
+      "contract": "contracts/016-component.json"
+    },
+    {
+      "entry_id": "mono.codeinput",
+      "kind": "component",
+      "label": "Móvil con campo donde se escribe un código y dos botones (re",
+      "summary": "Móvil con campo donde se escribe un código y dos botones (renglón 1 = código, 2 y 3 = botones)",
+      "constraints_status": "documented",
+      "id": "mono.codeinput",
+      "contract": "contracts/017-component.json"
+    },
+    {
+      "entry_id": "mono.contact",
+      "kind": "component",
+      "label": "Móvil grande punteado con encabezado y un número o contacto ",
+      "summary": "Móvil grande punteado con encabezado y un número o contacto enorme (renglón 1 = encabezado, 2+ = número)",
+      "constraints_status": "documented",
+      "id": "mono.contact",
+      "contract": "contracts/018-component.json"
+    },
+    {
+      "entry_id": "mono.transitions",
+      "kind": "component",
+      "label": "Transiciones de entrada",
+      "summary": "dots (rejilla de puntos que se encoge), lineSweep (línea que barre), blink (cuadro negro), pillPop (sale de una píldora); además las del núcleo: fade, blur, iris, wipeL/R/Up/Down, bars, flash, zoomIn, zoomOut, slice, cut.",
+      "constraints_status": "documented",
+      "id": "mono.transitions",
+      "contract": "contracts/019-component.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/020-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/021-configuration.json"
+    },
+    {
+      "entry_id": "config.brand",
+      "kind": "configuration",
+      "label": "brand",
+      "summary": "Existing configuration configuration: brand.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.brand",
+      "contract": "contracts/022-configuration.json"
+    },
+    {
+      "entry_id": "config.chips",
+      "kind": "configuration",
+      "label": "chips",
+      "summary": "Existing configuration configuration: chips.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.chips",
+      "contract": "contracts/023-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/024-configuration.json"
+    },
+    {
+      "entry_id": "config.look",
+      "kind": "configuration",
+      "label": "look",
+      "summary": "Existing configuration configuration: look.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.look",
+      "contract": "contracts/025-configuration.json"
+    },
+    {
+      "entry_id": "config.anim",
+      "kind": "configuration",
+      "label": "anim",
+      "summary": "Existing configuration configuration: anim.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.anim",
+      "contract": "contracts/026-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/027-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/028-configuration.json"
+    },
+    {
+      "entry_id": "config.transition",
+      "kind": "configuration",
+      "label": "transition",
+      "summary": "Existing configuration configuration: transition.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.transition",
+      "contract": "contracts/029-configuration.json"
+    },
+    {
+      "entry_id": "config.hud",
+      "kind": "configuration",
+      "label": "hud",
+      "summary": "Existing configuration configuration: hud.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.hud",
+      "contract": "contracts/030-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/031-configuration.json"
+    },
+    {
+      "entry_id": "config.render",
+      "kind": "configuration",
+      "label": "render",
+      "summary": "Existing configuration configuration: render.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.render",
+      "contract": "contracts/032-configuration.json"
+    },
+    {
+      "entry_id": "scene.intro",
+      "kind": "scene",
+      "label": "intro",
+      "summary": "Existing scene configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.intro",
+      "contract": "contracts/033-scene.json"
+    },
+    {
+      "entry_id": "scene.playline",
+      "kind": "scene",
+      "label": "playline",
+      "summary": "Existing scene configuration: playline.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.playline",
+      "contract": "contracts/034-scene.json"
+    },
+    {
+      "entry_id": "scene.cardfan",
+      "kind": "scene",
+      "label": "cardfan",
+      "summary": "Existing scene configuration: cardfan.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.cardfan",
+      "contract": "contracts/035-scene.json"
+    },
+    {
+      "entry_id": "scene.wordgrid",
+      "kind": "scene",
+      "label": "wordgrid",
+      "summary": "Existing scene configuration: wordgrid.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.wordgrid",
+      "contract": "contracts/036-scene.json"
+    },
+    {
+      "entry_id": "scene.chips",
+      "kind": "scene",
+      "label": "chips",
+      "summary": "Existing scene configuration: chips.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.chips",
+      "contract": "contracts/037-scene.json"
+    },
+    {
+      "entry_id": "scene.linetext",
+      "kind": "scene",
+      "label": "linetext",
+      "summary": "Existing scene configuration: linetext.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.linetext",
+      "contract": "contracts/038-scene.json"
+    },
+    {
+      "entry_id": "scene.pin",
+      "kind": "scene",
+      "label": "pin",
+      "summary": "Existing scene configuration: pin.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.pin",
+      "contract": "contracts/039-scene.json"
+    },
+    {
+      "entry_id": "scene.footage",
+      "kind": "scene",
+      "label": "footage",
+      "summary": "Existing scene configuration: footage.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.footage",
+      "contract": "contracts/040-scene.json"
+    },
+    {
+      "entry_id": "scene.numbers",
+      "kind": "scene",
+      "label": "numbers",
+      "summary": "Existing scene configuration: numbers.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.numbers",
+      "contract": "contracts/041-scene.json"
+    },
+    {
+      "entry_id": "scene.pattern",
+      "kind": "scene",
+      "label": "pattern",
+      "summary": "Existing scene configuration: pattern.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.pattern",
+      "contract": "contracts/042-scene.json"
+    },
+    {
+      "entry_id": "scene.spaced",
+      "kind": "scene",
+      "label": "spaced",
+      "summary": "Existing scene configuration: spaced.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.spaced",
+      "contract": "contracts/043-scene.json"
+    },
+    {
+      "entry_id": "scene.phonechat",
+      "kind": "scene",
+      "label": "phonechat",
+      "summary": "Existing scene configuration: phonechat.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.phonechat",
+      "contract": "contracts/044-scene.json"
+    },
+    {
+      "entry_id": "scene.coupon",
+      "kind": "scene",
+      "label": "coupon",
+      "summary": "Existing scene configuration: coupon.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.coupon",
+      "contract": "contracts/045-scene.json"
+    },
+    {
+      "entry_id": "scene.codeinput",
+      "kind": "scene",
+      "label": "codeinput",
+      "summary": "Existing scene configuration: codeinput.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.codeinput",
+      "contract": "contracts/046-scene.json"
+    },
+    {
+      "entry_id": "scene.contact",
+      "kind": "scene",
+      "label": "contact",
+      "summary": "Existing scene configuration: contact.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.contact",
+      "contract": "contracts/047-scene.json"
+    },
+    {
+      "entry_id": "scene.outro",
+      "kind": "scene",
+      "label": "outro",
+      "summary": "Existing scene configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "scene.outro",
+      "contract": "contracts/048-scene.json"
+    }
+  ]
+}

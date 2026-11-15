@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "vertical",
+  "entry_id": "vertical",
+  "kind": "component",
+  "label": "Palabra en columna + laterales",
+  "summary": "La palabra fuerte en columna (holo) con el resto repetido a izquierda y derecha y contorno gigante detrás.",
+  "component": {
+    "name": "vertical",
+    "label": "Palabra en columna + laterales",
+    "summary": "La palabra fuerte en columna (holo) con el resto repetido a izquierda y derecha y contorno gigante detrás.",
+    "group": "scene",
+    "tags": [
+      "lyrics-hologram",
+      "scene"
+    ],
+    "params": {
+      "textIn": {
+        "type": "enum",
+        "options": [
+          "slide",
+          "stamp",
+          "glitch",
+          "spread",
+          "fade",
+          "cut"
+        ],
+        "default": "cut"
+      },
+      "holo": {
+        "type": "boolean",
+        "default": true
+      },
+      "ghost": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "t": 8.73,
+      "query": null,
+      "layout": {
+        "weight": 0.8,
+        "bgs": [
+          "void",
+          "violet"
+        ]
+      }
+    },
+    "preview": {
+      "gallery": "gallery.html?only=vertical"
+    }
+  },
+  "params": {
+    "textIn": {
+      "type": "enum",
+      "options": [
+        "slide",
+        "stamp",
+        "glitch",
+        "spread",
+        "fade",
+        "cut"
+      ],
+      "default": "cut"
+    },
+    "holo": {
+      "type": "boolean",
+      "default": true
+    },
+    "ghost": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/12"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

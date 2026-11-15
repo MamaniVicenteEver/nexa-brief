@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-dynamic",
+  "id": "scene.word",
+  "entry_id": "scene.word",
+  "name": "word",
+  "kind": "scene",
+  "label": "word",
+  "summary": "palabra con contorno y transición",
+  "variants": [
+    {
+      "type": "word",
+      "flyer": "DE",
+      "flyerAt": 0.05,
+      "max_text_lines": 1
+    },
+    {
+      "type": "word",
+      "max_text_lines": 1
+    },
+    {
+      "type": "word",
+      "stretch": true,
+      "max_text_lines": 1
+    },
+    {
+      "type": "word",
+      "max_text_lines": 1
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 1,
+      "type": "word",
+      "shows": "palabra con contorno y transición",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 2,
+      "type": "word",
+      "shows": "palabra con contorno y transición",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 8,
+      "type": "word",
+      "shows": "palabra con contorno y transición",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 9,
+      "type": "word",
+      "shows": "palabra con contorno y transición",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+    "brand_texts": {
+      "brand.tag": "identidad o serie breve junto a medios",
+      "brand.url": "llamada o dirección de cierre; la segunda línea del cierre tiene prioridad",
+      "brand.vertical": "identidad breve en el borde"
+    },
+    "design_limitations": "El ciclo contiene fragmentos flyer fijos del ejemplo deportivo; revisar su sentido y reemplazarlos mediante scene-overrides si hace falta.",
+    "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/default_scenes/0"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/default_scenes/1"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/default_scenes/7"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/default_scenes/8"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/scene_cycle/0"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/scene_cycle/1"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/scene_cycle/7"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/scene_cycle/8"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

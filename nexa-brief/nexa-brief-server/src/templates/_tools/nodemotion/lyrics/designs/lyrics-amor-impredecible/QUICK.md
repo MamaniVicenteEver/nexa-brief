@@ -1,0 +1,17 @@
+# lyrics-amor-impredecible
+
+Read `catalog.json` to select a component, then only its contract in `contracts/`.
+
+These files are generated from the cited Showcase, info, production, or config sources. Edit those sources and refresh; do not edit derived contracts.
+
+Use config, lyrics, and media data in a project. The shared engine is resolved by design ID; never copy or modify it for content work.
+
+An `observed_defaults_only` contract lists real example values. Validation bounds and further options are unknown unless explicitly documented. No engine scan is required for discovery.
+
+| Entry ID | Kind | Summary | Contract |
+| --- | --- | --- | --- |
+| `config.intro` | configuration | Existing configuration configuration: intro. | [config.intro](contracts/001-configuration.json) |
+| `config.outro` | configuration | Existing configuration configuration: outro. | [config.outro](contracts/002-configuration.json) |
+
+Refresh: `python3 src/templates/_tools/nodemotion/shared/refresh_catalogs.py`.
+Engine changes use the shared compiler or implementation, then the extraction integrity check and NodeMotion tests.

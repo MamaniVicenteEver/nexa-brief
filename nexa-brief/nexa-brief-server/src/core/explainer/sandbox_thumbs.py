@@ -121,7 +121,8 @@ def ensure_thumbnail(
     item_dir = item_dir.resolve()
     index_path = item_dir / "index.html"
     manifest_path = item_dir / "manifest.json"
-    if not item_dir.is_dir() or not index_path.is_file():
+    from src.core.nodemotion.shared.content import has_project_entry
+    if not item_dir.is_dir() or not (index_path.is_file() or has_project_entry(item_dir)):
         raise FileNotFoundError("el elemento no tiene index.html")
 
     output_dir = (cache_dir or _thumb_cache_dir()) / folder

@@ -1,7 +1,7 @@
 """Chat de preparación de promociones; no inicia render."""
 from fastapi import APIRouter, HTTPException, Query
-from src.core.promos.models import CreateSession, SendMessage, ApproveSession
-from src.core.promos.service import PromoChatService
+from src.core.nodemotion.promo.models import CreateSession, SendMessage, ApproveSession
+from src.core.nodemotion.promo.service import PromoChatService
 
 router = APIRouter(prefix='/promos', tags=['promos'])
 service = PromoChatService()
@@ -44,7 +44,7 @@ async def delete_session(session_id: str):
 
 @router.get('/sessions/{session_id}/content')
 def get_session_content(session_id: str):
-    from src.core.promos.content import read_content
+    from src.core.nodemotion.promo.content import read_content
     try:
         return read_content(service, session_id)
     except (ValueError, LookupError) as exc:

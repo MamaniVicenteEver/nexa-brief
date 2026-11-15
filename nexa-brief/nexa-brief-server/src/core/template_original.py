@@ -72,15 +72,27 @@ def _referenced(config: Any, suffixes: tuple[str, ...]) -> list[str]:
 
 
 def _local(asset_dir: Path, ref: str) -> Path | None:
-    path = (asset_dir.parent / ref).resolve() if ref.startswith("assets/") else (asset_dir / ref).resolve()
-    return path if path.is_file() and path.is_relative_to(asset_dir.parent.resolve()) else None
+    logical = ref if ref.startswith("assets/") else f"assets/{ref}"
+    from src.core.nodemotion.shared.bundled import demo_design_for_root, resolve_demo_resource
+    path = (asset_dir.parent / logical).resolve()
+    if not path.is_relative_to(asset_dir.parent.resolve()):
+        return None
+    if path.is_file():
+        return path
+    design = demo_design_for_root(asset_dir.parent)
+    return resolve_demo_resource(design, logical) if design else None
 
 
 def _candidates(asset_dir: Path, suffixes: tuple[str, ...]) -> list[Path]:
-    return sorted(
-        p for p in asset_dir.iterdir()
-        if p.is_file() and p.suffix.lower() in suffixes and not p.stem.startswith(_SKIP)
-    )
+    from src.core.nodemotion.shared.bundled import demo_aliases, demo_design_for_root
+    names = {p.name for p in asset_dir.iterdir()
+             if p.is_file() and p.suffix.lower() in suffixes and not p.stem.startswith(_SKIP)}
+    design = demo_design_for_root(asset_dir.parent)
+    if design:
+        names.update(Path(name).name for name in demo_aliases(design)
+                     if Path(name).parent.as_posix() == "assets" and Path(name).suffix.lower() in suffixes
+                     and not Path(name).stem.startswith(_SKIP))
+    return [path for name in sorted(names) if (path := _local(asset_dir, name)) is not None]
 
 
 def background_file(asset_dir: Path, config: dict[str, Any], kind: str) -> Path | None:
@@ -91,9 +103,10 @@ def background_file(asset_dir: Path, config: dict[str, Any], kind: str) -> Path 
         path = _local(asset_dir, ref)
         if path is None:
             continue
-        if path.suffix.lower() in suffixes:
+        if Path(ref).suffix.lower() in suffixes:
             return path
-        twin = next((path.with_suffix(s) for s in suffixes if path.with_suffix(s).is_file()), None)
+        twin = next((candidate for suffix in suffixes
+                     if (candidate := _local(asset_dir, str(Path(ref).with_suffix(suffix)))) is not None), None)
         if twin is not None:
             return twin
     found = _candidates(asset_dir, suffixes)
@@ -154,15 +167,36 @@ async def ensure_assets(template_id: str, niche_cfg: NicheConfig) -> OriginalAss
     if song is None:
         raise OriginalUnavailable(f"La plantilla '{template_id}' no tiene su canción en assets/")
     name = template_id
+    from src.core.nodemotion.shared.bundled import bundled_key_for_path, demo_aliases, logical_name_for_key
 
-    music = await asset_library.register_music(
-        song, category=CATEGORY, source="template", provider="template", template_id=template_id,
-        filename=f"{template_id}{song.suffix}", track_name=track_name_of(song),
-    )
-    if lyrics is not None:
-        # la letra de la plantilla ya está sincronizada: no se vuelve a transcribir
-        await asset_library.save_lyrics_cache(music.asset_id, json.loads(lyrics.read_text(encoding="utf-8")))
-        await asset_library.set_transcription_status(music.asset_id, "done")
+    def bundled_logical(path: Path) -> tuple[str, str] | None:
+        key = bundled_key_for_path(path)
+        if key is None:
+            return None
+        logical = logical_name_for_key(template_id, key)
+        if logical is None or demo_aliases(template_id).get(logical) != key:
+            raise ValueError("Bundled resource is not declared by the demo")
+        return key, logical
+
+    digest = asset_library.hash_file(song)
+    music = asset_library.find_music_by_hash(digest)
+    if music is None:
+        bundled = bundled_logical(song)
+        if bundled:
+            music = await asset_library.register_bundled_resource("music", template_id, *bundled, category=CATEGORY)
+        else:
+            music = await asset_library.register_music(
+                song, category=CATEGORY, source="template", provider="template", template_id=template_id,
+                filename=f"{template_id}{song.suffix}", track_name=track_name_of(song), content_hash=digest,
+            )
+    else:
+        await asset_library.attach_resource_origin("music", music.asset_id, template_id=template_id)
+    # A promo script is campaign-owned data, not the transcription of its soundtrack.
+    is_promo = template_id.startswith("promo-")
+    if lyrics is not None and not is_promo:
+        if asset_library.get_lyrics_cache(music.asset_id) is None:
+            await asset_library.save_lyrics_cache(music.asset_id, json.loads(lyrics.read_text(encoding="utf-8")))
+            await asset_library.set_transcription_status(music.asset_id, "done")
     assets = OriginalAssets(music_asset_id=music.asset_id)
 
     template = niche_cfg.template
@@ -170,15 +204,23 @@ async def ensure_assets(template_id: str, niche_cfg: NicheConfig) -> OriginalAss
         path = background_file(asset_dir, config, "video")
         if path is None:
             raise OriginalUnavailable(f"La plantilla '{template_id}' no tiene un video de fondo propio")
-        video = await asset_library.register_video(path, category=CATEGORY, source="template", provider="template", template_id=template_id,
-                                                   filename=f"{template_id}{path.suffix}", label=f"{name} (fondo)")
+        bundled = bundled_logical(path)
+        if bundled:
+            video = await asset_library.register_bundled_resource("video", template_id, *bundled, category=CATEGORY)
+        else:
+            video = await asset_library.register_video(path, category=CATEGORY, source="template", provider="template", template_id=template_id,
+                                                       filename=f"{template_id}{path.suffix}", label=f"{name} (fondo)")
         assets.video_asset_id = video.asset_id
     elif template.requires_image:
         path = background_file(asset_dir, config, "image")
         if path is None:
             raise OriginalUnavailable(f"La plantilla '{template_id}' no tiene una imagen de fondo propia")
-        image = await asset_library.register_image(path, category=CATEGORY, source="template", provider="template", template_id=template_id,
-                                                   filename=f"{template_id}{path.suffix}", label=f"{name} (fondo)")
+        bundled = bundled_logical(path)
+        if bundled:
+            image = await asset_library.register_bundled_resource("image", template_id, *bundled, category=CATEGORY)
+        else:
+            image = await asset_library.register_image(path, category=CATEGORY, source="template", provider="template", template_id=template_id,
+                                                       filename=f"{template_id}{path.suffix}", label=f"{name} (fondo)")
         assets.image_asset_id = image.asset_id
 
     _store().put(template_id, assets.model_dump())

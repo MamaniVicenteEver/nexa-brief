@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-mirada",
+  "family": "lyrics",
+  "display_name": "Mirada Celeste",
+  "description": "Video de letras ilustrado en sepia en siete escenarios que se reparten la canción: ojos en la penumbra con una mano que se estira, palabras-columna gigantes, un ángel dentro de las letras, cielo nocturno con luna y niebla, palomas y plumas, un ojo gigante con mira y palabras de cartón recortado — todo con movimientos suaves y sincronizado con la canción real.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-mirada/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-mirada/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/media",
+    "assets/niebla.mp4"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-mirada",
+    "config": "nodemotion/lyrics/lyrics-mirada/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-mirada/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-mirada/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-mirada/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.bg",
+      "kind": "configuration",
+      "label": "bg",
+      "summary": "Existing configuration configuration: bg.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.bg",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.layout",
+      "kind": "configuration",
+      "label": "layout",
+      "summary": "Existing configuration configuration: layout.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.layout",
+      "contract": "contracts/006-configuration.json"
+    }
+  ]
+}

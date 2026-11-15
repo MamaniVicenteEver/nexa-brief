@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-editorial",
+  "family": "promo",
+  "display_name": "Promo Editorial",
+  "description": "Promo editorial de una final deportiva: blanco y negro puro sobre papel arrugado, grotesca extendida pesada, bloques negros que barren, nombres gigantes en contorno, recortes de jugadores con placa, versus y cierre de fecha. Equipos, fecha, textos y fotos por JSON.",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "fútbol: estadio, partido, festejo del equipo"
+      },
+      {
+        "slot": "photos",
+        "kind": "image",
+        "min": 1,
+        "max": 3,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Fotos",
+        "hint": "jugadores y entrenador, primer plano"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.name",
+        "label": "Liga o marca",
+        "max": 30,
+        "default": "Liga Nexa"
+      },
+      {
+        "key": "brand.round",
+        "label": "Instancia",
+        "max": 30,
+        "default": "Gran Final"
+      },
+      {
+        "key": "brand.left",
+        "label": "Equipo local",
+        "max": 20,
+        "default": "Leones"
+      },
+      {
+        "key": "brand.right",
+        "label": "Equipo visitante",
+        "max": 20,
+        "default": "Halcones"
+      }
+    ],
+    "brief": true
+  },
+  "config_json": "nodemotion/commercial/promo-editorial/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/promo-editorial",
+    "config": "nodemotion/commercial/promo-editorial/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-editorial/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-editorial/README.md"
+  },
+  "lookup": "/api/v1/templates/promo-editorial/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "scene.title",
+      "kind": "scene",
+      "label": "title",
+      "summary": "título principal y dos líneas posibles",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.title",
+      "contract": "contracts/001-scene.json"
+    },
+    {
+      "entry_id": "scene.mediaWord",
+      "kind": "scene",
+      "label": "mediaWord",
+      "summary": "palabra sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.mediaWord",
+      "contract": "contracts/002-scene.json"
+    },
+    {
+      "entry_id": "scene.blocks",
+      "kind": "scene",
+      "label": "blocks",
+      "summary": "dos renglones entre bloques",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.blocks",
+      "contract": "contracts/003-scene.json"
+    },
+    {
+      "entry_id": "scene.nameCut",
+      "kind": "scene",
+      "label": "nameCut",
+      "summary": "nombre con corte y contorno",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.nameCut",
+      "contract": "contracts/004-scene.json"
+    },
+    {
+      "entry_id": "scene.outlineName",
+      "kind": "scene",
+      "label": "outlineName",
+      "summary": "nombre con contorno",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.outlineName",
+      "contract": "contracts/005-scene.json"
+    },
+    {
+      "entry_id": "scene.player",
+      "kind": "scene",
+      "label": "player",
+      "summary": "medio con placa de nombre y dato",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.player",
+      "contract": "contracts/006-scene.json"
+    },
+    {
+      "entry_id": "scene.assemble",
+      "kind": "scene",
+      "label": "assemble",
+      "summary": "palabra con polos laterales al final",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.assemble",
+      "contract": "contracts/007-scene.json"
+    },
+    {
+      "entry_id": "scene.versus",
+      "kind": "scene",
+      "label": "versus",
+      "summary": "polos de marca, VS y dos medios; no usa líneas",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.versus",
+      "contract": "contracts/008-scene.json"
+    },
+    {
+      "entry_id": "scene.bigNumber",
+      "kind": "scene",
+      "label": "bigNumber",
+      "summary": "cifra o texto gigante apilado",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.bigNumber",
+      "contract": "contracts/009-scene.json"
+    },
+    {
+      "entry_id": "scene.stack",
+      "kind": "scene",
+      "label": "stack",
+      "summary": "líneas apiladas",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.stack",
+      "contract": "contracts/010-scene.json"
+    },
+    {
+      "entry_id": "scene.logo",
+      "kind": "scene",
+      "label": "logo",
+      "summary": "cierre de texto y subtítulo",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.logo",
+      "contract": "contracts/011-scene.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/012-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/013-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/014-configuration.json"
+    },
+    {
+      "entry_id": "config.brand",
+      "kind": "configuration",
+      "label": "brand",
+      "summary": "Existing configuration configuration: brand.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.brand",
+      "contract": "contracts/015-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/016-configuration.json"
+    }
+  ]
+}

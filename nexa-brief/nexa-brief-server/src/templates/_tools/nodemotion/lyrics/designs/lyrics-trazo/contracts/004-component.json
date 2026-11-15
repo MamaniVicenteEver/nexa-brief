@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "trazo.interludios",
+  "entry_id": "trazo.interludios",
+  "kind": "component",
+  "label": "Interludios",
+  "summary": "Silencios: sol que crece, impactos, grieta, ovillo o destello.",
+  "component": {
+    "name": "trazo.interludios",
+    "label": "Interludios",
+    "summary": "Silencios: sol que crece, impactos, grieta, ovillo o destello.",
+    "default": true,
+    "params": {
+      "type": {
+        "type": "string",
+        "default": "sun",
+        "options": [
+          "sun",
+          "holes",
+          "crack",
+          "scribble",
+          "spark"
+        ]
+      },
+      "duration": {
+        "type": "number",
+        "default": 2,
+        "doc": "Segundos",
+        "min": 0.4,
+        "max": 8
+      }
+    },
+    "tags": [
+      "escena",
+      "transicion"
+    ],
+    "file": "components/garabatos.js",
+    "demo": {
+      "type": "crack"
+    },
+    "preview": {
+      "t": 1.6
+    }
+  },
+  "params": {
+    "type": {
+      "type": "string",
+      "default": "sun",
+      "options": [
+        "sun",
+        "holes",
+        "crack",
+        "scribble",
+        "spark"
+      ]
+    },
+    "duration": {
+      "type": "number",
+      "default": 2,
+      "doc": "Segundos",
+      "min": 0.4,
+      "max": 8
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/showcase/components.json",
+      "pointer": "/components/5"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

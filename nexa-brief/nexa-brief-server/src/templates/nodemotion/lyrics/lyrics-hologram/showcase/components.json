@@ -1,0 +1,969 @@
+{
+  "design_id": "lyrics-hologram",
+  "components": [
+    {
+      "name": "intro",
+      "label": "Intro · emblema holográfico + título",
+      "summary": "Intro: emblema geométrico propio con relleno holográfico, silueta holográfica opcional, título (intro.title) condensado holo y artista (intro.artist) espaciado.",
+      "group": "intro",
+      "tags": [
+        "lyrics-hologram",
+        "intro"
+      ],
+      "params": {
+        "emblem": {
+          "type": "enum",
+          "options": [
+            "crest",
+            "diamond",
+            "none"
+          ],
+          "default": "crest"
+        },
+        "media": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "t": 2.59,
+        "query": null,
+        "layout": null
+      },
+      "preview": {
+        "gallery": "gallery.html?only=intro"
+      }
+    },
+    {
+      "name": "holoWord",
+      "label": "Palabra holográfica con ecos",
+      "summary": "Palabra fuerte enorme con relleno holográfico, ecos en contorno arriba y abajo, resto de la frase pequeño y fila de rombos.",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "stamp"
+        },
+        "echoes": {
+          "type": "number",
+          "min": 0,
+          "max": 3,
+          "default": 1
+        },
+        "holo": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "t": 4.71,
+        "query": null,
+        "layout": {
+          "weight": 2,
+          "bgs": [
+            "void",
+            "violet"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=holoWord"
+      }
+    },
+    {
+      "name": "outlineBack",
+      "label": "Gigante en contorno + banda",
+      "summary": "Palabra gigante itálica en contorno (o holo) detrás y el resto de la frase en una banda blanca, con rombos arriba y abajo.",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "cut"
+        },
+        "fill": {
+          "type": "enum",
+          "options": [
+            "outline",
+            "holo"
+          ],
+          "default": "outline"
+        },
+        "band": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "t": 11.2,
+        "query": null,
+        "layout": {
+          "weight": 1.3,
+          "bgs": [
+            "void"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=outlineBack"
+      }
+    },
+    {
+      "name": "slice",
+      "label": "Frase cortada por barras",
+      "summary": "Frase grande tapada por barras holográficas o blancas que se retiran al cantarse; la palabra fuerte va en holo.",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "glitch"
+        },
+        "bars": {
+          "type": "number",
+          "min": 1,
+          "max": 6,
+          "default": 4
+        },
+        "keep": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0.15
+        }
+      },
+      "demo": {
+        "t": 20.05,
+        "query": null,
+        "layout": {
+          "weight": 1.4,
+          "bgs": [
+            "void",
+            "red",
+            "pale"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=slice"
+      }
+    },
+    {
+      "name": "assemble",
+      "label": "Letras que se ensamblan",
+      "summary": "Letras repartidas que se ensamblan en su sitio mientras cruza un panel holográfico (1-2 palabras).",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "spread": {
+          "type": "number",
+          "min": 1,
+          "max": 3,
+          "default": 1.9
+        },
+        "holo": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "t": 7.91,
+        "query": null,
+        "layout": {
+          "weight": 0.8,
+          "bgs": [
+            "void"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=assemble"
+      }
+    },
+    {
+      "name": "repeatStack",
+      "label": "Frase repetida en columna",
+      "summary": "La frase repetida en columna en contorno tenue y la central sólida holográfica, con deriva vertical.",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "slide"
+        },
+        "rows": {
+          "type": "number",
+          "min": 3,
+          "max": 11,
+          "default": 7
+        },
+        "drift": {
+          "type": "number",
+          "min": 0,
+          "max": 2,
+          "default": 1
+        }
+      },
+      "demo": {
+        "t": 20.98,
+        "query": null,
+        "layout": {
+          "weight": 1,
+          "bgs": [
+            "void"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=repeatStack"
+      }
+    },
+    {
+      "name": "verse",
+      "label": "Verso espaciado + fantasma",
+      "summary": "Frase pequeña y espaciada sobre la seda holográfica con la palabra fuerte enorme y tenue detrás (versos largos).",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "cut"
+        },
+        "ghost": {
+          "type": "boolean",
+          "default": true
+        },
+        "size": {
+          "type": "number",
+          "min": 0.6,
+          "max": 1.6,
+          "default": 1
+        }
+      },
+      "demo": {
+        "t": 26.28,
+        "query": null,
+        "layout": {
+          "weight": 1.6,
+          "bgs": [
+            "holo"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=verse"
+      }
+    },
+    {
+      "name": "band",
+      "label": "Frase con barra holográfica",
+      "summary": "Frase condensada alineada con barra holográfica que crece y tachado opcional.",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "slide"
+        },
+        "strike": {
+          "type": "boolean",
+          "default": false
+        },
+        "align": {
+          "type": "enum",
+          "options": [
+            "left",
+            "center"
+          ],
+          "default": "left"
+        }
+      },
+      "demo": {
+        "t": 13.5,
+        "query": null,
+        "layout": {
+          "weight": 1.2,
+          "bgs": [
+            "void",
+            "violet"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=band"
+      }
+    },
+    {
+      "name": "panel",
+      "label": "Ventanas de medio + frase",
+      "summary": "Ventanas de medio en duotono holográfico con marco iridiscente que entran y la frase grande abajo.",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "slide"
+        },
+        "windows": {
+          "type": "number",
+          "min": 1,
+          "max": 3,
+          "default": 2
+        }
+      },
+      "demo": {
+        "t": 18.07,
+        "query": null,
+        "layout": {
+          "weight": 1.1,
+          "bgs": [
+            "void",
+            "red"
+          ],
+          "media": [
+            "glam",
+            "hair",
+            "glasses"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=panel"
+      }
+    },
+    {
+      "name": "silhouette",
+      "label": "Silueta holográfica + palabra",
+      "summary": "Silueta holográfica (medio look silhouette) sobre filas gigantes en contorno y la palabra en la extendida itálica.",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "stamp"
+        },
+        "rows": {
+          "type": "number",
+          "min": 0,
+          "max": 5,
+          "default": 3
+        }
+      },
+      "demo": {
+        "t": 9.55,
+        "query": null,
+        "layout": {
+          "weight": 1,
+          "bgs": [
+            "void",
+            "violet",
+            "red"
+          ],
+          "media": [
+            "sil-duo",
+            "sil-solo",
+            "sil-trio"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=silhouette"
+      }
+    },
+    {
+      "name": "trio",
+      "label": "Palabra ×3 con rótulo",
+      "summary": "La palabra fuerte tres veces con el resto pequeño encima de cada una; caja oscura opcional sobre fondos claros.",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "cut"
+        },
+        "box": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "t": 29.8,
+        "query": null,
+        "layout": {
+          "weight": 0.9,
+          "bgs": [
+            "holo",
+            "void"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=trio"
+      }
+    },
+    {
+      "name": "chrome",
+      "label": "Palabra holográfica a sangre",
+      "summary": "Palabra a sangre con relleno holográfico y el resto como rótulo cruzado.",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "slide"
+        },
+        "caption": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "t": 10.38,
+        "query": null,
+        "layout": {
+          "weight": 1,
+          "bgs": [
+            "void",
+            "pale"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=chrome"
+      }
+    },
+    {
+      "name": "vertical",
+      "label": "Palabra en columna + laterales",
+      "summary": "La palabra fuerte en columna (holo) con el resto repetido a izquierda y derecha y contorno gigante detrás.",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "cut"
+        },
+        "holo": {
+          "type": "boolean",
+          "default": true
+        },
+        "ghost": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "t": 8.73,
+        "query": null,
+        "layout": {
+          "weight": 0.8,
+          "bgs": [
+            "void",
+            "violet"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=vertical"
+      }
+    },
+    {
+      "name": "giantOutline",
+      "label": "Contorno gigante + frase",
+      "summary": "Letras en contorno más grandes que el cuadro y la frase encima alternando contorno y sólido.",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "stamp"
+        },
+        "drift": {
+          "type": "number",
+          "min": 0,
+          "max": 2,
+          "default": 1
+        }
+      },
+      "demo": {
+        "t": 42.03,
+        "query": null,
+        "layout": {
+          "weight": 1,
+          "bgs": [
+            "void",
+            "red"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=giantOutline"
+      }
+    },
+    {
+      "name": "rows",
+      "label": "Filas inclinadas que corren",
+      "summary": "Filas inclinadas de «PALABRA //» que corren, silueta opcional y la palabra al centro.",
+      "group": "scene",
+      "tags": [
+        "lyrics-hologram",
+        "scene"
+      ],
+      "params": {
+        "textIn": {
+          "type": "enum",
+          "options": [
+            "slide",
+            "stamp",
+            "glitch",
+            "spread",
+            "fade",
+            "cut"
+          ],
+          "default": "stamp"
+        },
+        "rows": {
+          "type": "number",
+          "min": 4,
+          "max": 16,
+          "default": 10
+        },
+        "figure": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "t": 6.75,
+        "query": null,
+        "layout": {
+          "weight": 0.7,
+          "bgs": [
+            "holo"
+          ],
+          "media": [
+            "sil-duo",
+            "sil-solo",
+            "sil-trio"
+          ]
+        }
+      },
+      "preview": {
+        "gallery": "gallery.html?only=rows"
+      }
+    },
+    {
+      "name": "outroV1",
+      "label": "Outro v1 · tarjeta holográfica",
+      "summary": "Outro v1 (por defecto): tarjeta casi negra con emblema, título holográfico itálico, subtítulo, créditos y fundido.",
+      "group": "outro",
+      "tags": [
+        "lyrics-hologram",
+        "outro"
+      ],
+      "params": {
+        "fadeSec": {
+          "type": "number",
+          "min": 0,
+          "max": 3,
+          "default": 0.8
+        },
+        "emblem": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "t": 134.2,
+        "query": "outro=v1",
+        "layout": null
+      },
+      "preview": {
+        "gallery": "gallery.html?only=outroV1"
+      },
+      "default": true
+    },
+    {
+      "name": "outroV2",
+      "label": "Outro v2 · seda holográfica",
+      "summary": "Outro v2: seda holográfica a pantalla completa, filas del título, título en tinta con ecos, créditos y fundido.",
+      "group": "outro",
+      "tags": [
+        "lyrics-hologram",
+        "outro"
+      ],
+      "params": {
+        "fadeSec": {
+          "type": "number",
+          "min": 0,
+          "max": 3,
+          "default": 0.8
+        },
+        "rows": {
+          "type": "number",
+          "min": 0,
+          "max": 8,
+          "default": 4
+        }
+      },
+      "demo": {
+        "t": 134.2,
+        "query": "outro=v2",
+        "layout": null
+      },
+      "preview": {
+        "gallery": "gallery.html?only=outroV2"
+      },
+      "default": false
+    },
+    {
+      "name": "deck",
+      "label": "Mazo de escenas (config.layouts)",
+      "kind": "json",
+      "group": "config",
+      "summary": "Cada frase cantada elige un tipo de escena por peso entre los que cumplen su condición de texto; fondos, clips preferidos y transición por tipo.",
+      "params": {
+        "layouts.<tipo>.weight": {
+          "type": "number",
+          "min": 0,
+          "max": 10,
+          "default": 1
+        },
+        "layouts.<tipo>.bgs": {
+          "type": "list",
+          "options": [
+            "void",
+            "holo",
+            "red",
+            "violet",
+            "pale",
+            "media"
+          ]
+        },
+        "layouts.<tipo>.media": {
+          "type": "list",
+          "items": "id de config.media"
+        },
+        "layouts.<tipo>.trans": {
+          "type": "enum",
+          "options": [
+            "cut",
+            "holoWipe",
+            "glitch",
+            "flashWhite",
+            "shutter",
+            "fade",
+            "blur",
+            "iris",
+            "wipeL",
+            "wipeR",
+            "wipeUp",
+            "wipeDown",
+            "bars",
+            "flash",
+            "zoomIn",
+            "zoomOut",
+            "slice"
+          ]
+        },
+        "look.holoSpeed": {
+          "type": "number",
+          "min": 0,
+          "max": 3,
+          "default": 1
+        },
+        "look.labels": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0.75
+        },
+        "look.labelText": {
+          "type": "string",
+          "maxLength": 40,
+          "default": ""
+        },
+        "look.ornaments": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0.6
+        },
+        "look.frame": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0.5
+        },
+        "look.glitch": {
+          "type": "number",
+          "min": 0,
+          "max": 2,
+          "default": 1
+        },
+        "look.mediaHolo": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0.65
+        },
+        "look.glow": {
+          "type": "number",
+          "min": 0,
+          "max": 1,
+          "default": 0.5
+        }
+      },
+      "demo": {
+        "layouts": {
+          "holoWord": {
+            "weight": 2,
+            "bgs": [
+              "void",
+              "violet"
+            ]
+          },
+          "outlineBack": {
+            "weight": 1.3,
+            "bgs": [
+              "void"
+            ]
+          },
+          "slice": {
+            "weight": 1.4,
+            "bgs": [
+              "void",
+              "red",
+              "pale"
+            ]
+          },
+          "assemble": {
+            "weight": 0.8,
+            "bgs": [
+              "void"
+            ]
+          },
+          "repeatStack": {
+            "weight": 1,
+            "bgs": [
+              "void"
+            ]
+          },
+          "verse": {
+            "weight": 1.6,
+            "bgs": [
+              "holo"
+            ]
+          },
+          "band": {
+            "weight": 1.2,
+            "bgs": [
+              "void",
+              "violet"
+            ]
+          },
+          "panel": {
+            "weight": 1.1,
+            "bgs": [
+              "void",
+              "red"
+            ],
+            "media": [
+              "glam",
+              "hair",
+              "glasses"
+            ]
+          },
+          "silhouette": {
+            "weight": 1,
+            "bgs": [
+              "void",
+              "violet",
+              "red"
+            ],
+            "media": [
+              "sil-duo",
+              "sil-solo",
+              "sil-trio"
+            ]
+          },
+          "trio": {
+            "weight": 0.9,
+            "bgs": [
+              "holo",
+              "void"
+            ]
+          },
+          "chrome": {
+            "weight": 1,
+            "bgs": [
+              "void",
+              "pale"
+            ]
+          },
+          "vertical": {
+            "weight": 0.8,
+            "bgs": [
+              "void",
+              "violet"
+            ]
+          },
+          "giantOutline": {
+            "weight": 1,
+            "bgs": [
+              "void",
+              "red"
+            ]
+          },
+          "rows": {
+            "weight": 0.7,
+            "bgs": [
+              "holo"
+            ],
+            "media": [
+              "sil-duo",
+              "sil-solo",
+              "sil-trio"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

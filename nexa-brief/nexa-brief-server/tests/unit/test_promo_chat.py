@@ -5,7 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import pytest
 
-from src.core.promos import service, agents
+from src.core.nodemotion.promo import service, agents
 
 class Rows:
     def __init__(self): self.data = {}
@@ -35,12 +35,12 @@ def env(monkeypatch, tmp_path):
     monkeypatch.setattr(service, 'collection', lambda name: rows if name == 'promo_chat_sessions' else drafts)
     monkeypatch.setattr(service, 'coordination', coordination)
     monkeypatch.setattr(service, 'sandbox_root', lambda: tmp_path)
-    from src.core.promos import reports
+    from src.core.nodemotion.promo import reports
     monkeypatch.setattr(reports, 'sandbox_root', lambda: tmp_path)
     monkeypatch.setattr(service, 'reference', lambda version=None: {'version': version or 'v2', 'hashes': {}})
     import sys
     from types import ModuleType
-    pipeline = ModuleType('src.core.promos.pipeline')
+    pipeline = ModuleType('src.core.nodemotion.promo.pipeline')
     async def inspect_existing(_):
         return {'passed': True, 'checks': [], 'errors': [], 'warnings': []}
     pipeline.inspect_existing = inspect_existing
@@ -71,7 +71,7 @@ async def test_review_approve_and_revise(env):
     assert current['usage']['totals']['input_tokens'] == 15
     assert current['usage']['totals']['work_seconds'] == 3
     assert (tmp_path / 'nodemotion' / row['session_id'] / 'use_tokens' / 'usage.json').is_file()
-    assert 'Estado: review' in (tmp_path / 'nodemotion' / row['session_id'] / 'INFORME.md').read_text()
+    assert 'Estado: review' in (tmp_path / 'nodemotion' / row['session_id'] / 'REPORT.md').read_text()
     with pytest.raises(ValueError): await svc.approve(row['session_id'], 2)
     drafts.data['draft']['status'] = 'preview_ready'
     with pytest.raises(ValueError): await svc.approve(row['session_id'], 1)
@@ -143,7 +143,7 @@ async def test_archive_serializes_with_import_of_historical_revision(env, monkey
                       'draft_id': 'new', 'draft_history': ['old'], 'created_at': '2026'}
     drafts.data.update(new={'status': 'prepared'}, old={'status': 'prepared', 'template_id': 'promo-urban'})
     import sys
-    pipeline = sys.modules['src.core.promos.pipeline']
+    pipeline = sys.modules['src.core.nodemotion.promo.pipeline']
     entered, release = asyncio.Event(), asyncio.Event()
     async def inspect(_):
         entered.set()
@@ -177,7 +177,7 @@ async def test_import_legacy_and_detect_changes(env, monkeypatch):
     from types import ModuleType
     rows, drafts, _ = env
     drafts.data['old'] = {'draft_id': 'old', 'template_id': 'promo-sports', 'status': 'prepared', 'details': {'title': 'original'}}
-    module = ModuleType('src.core.promos.pipeline')
+    module = ModuleType('src.core.nodemotion.promo.pipeline')
     async def inspect_existing(draft_id):
         return {'passed': True, 'checks': [], 'errors': [], 'warnings': []}
     module.inspect_existing = inspect_existing
@@ -200,7 +200,7 @@ async def test_import_legacy_and_detect_changes(env, monkeypatch):
 def test_cli_auto_and_usage(monkeypatch, capsys):
     import importlib.util
     from pathlib import Path
-    path = Path(__file__).resolve().parents[2] / 'src/templates/_tools/nodemotion-promo/chat.py'
+    path = Path(__file__).resolve().parents[2] / 'src/templates/_tools/nodemotion/promo/tools/chat.py'
     spec = importlib.util.spec_from_file_location('promo_chat_cli', path)
     cli = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(cli)
@@ -219,7 +219,7 @@ def test_cli_auto_and_usage(monkeypatch, capsys):
 
 
 def test_unknown_usage_does_not_invent_totals():
-    from src.core.promos.usage import summarize
+    from src.core.nodemotion.promo.usage import summarize
     result = summarize([{'model': 'm', 'input_tokens': 5, 'output_tokens': 1, 'seconds': 2},
                         {'model': 'm', 'input_tokens': None, 'output_tokens': None, 'seconds': 1},
                         {'model': None, 'seconds': 3}])['totals']
@@ -252,7 +252,7 @@ async def test_reimport_refreshes_quality_and_preserves_valid_approval(env, monk
     rows, drafts, _ = env
     drafts.data['demo'] = {'draft_id': 'demo', 'template_id': 'promo-dynamic', 'status': 'prepared'}
     gate = {'passed': False}
-    module = ModuleType('src.core.promos.pipeline')
+    module = ModuleType('src.core.nodemotion.promo.pipeline')
     async def inspect_existing(_):
         return {'passed': gate['passed'], 'checks': [{'id': 'preview', 'label': 'preview', 'passed': gate['passed']}],
                 'errors': [] if gate['passed'] else ['preview'], 'warnings': []}
@@ -283,7 +283,7 @@ async def test_import_preserves_only_verified_prompt_provenance(env, monkeypatch
     import sys
     from types import ModuleType
     rows, drafts, _ = env
-    module = ModuleType('src.core.promos.pipeline')
+    module = ModuleType('src.core.nodemotion.promo.pipeline')
     async def inspect_existing(_):
         return {'passed': True, 'checks': [], 'errors': [], 'warnings': []}
     module.inspect_existing = inspect_existing
@@ -320,7 +320,7 @@ async def test_retry_uses_saved_proposal_and_context_without_model(env, monkeypa
         raise AssertionError('Una reanudación no debe generar ni buscar')
     monkeypatch.setattr(agents, 'run', forbidden)
     import sys
-    monkeypatch.setattr(sys.modules['src.core.promos.pipeline'], 'source_context', forbidden)
+    monkeypatch.setattr(sys.modules['src.core.nodemotion.promo.pipeline'], 'source_context', forbidden)
     queued = await svc.retry(row['session_id'])
     assert queued['resume_host'] and queued['revision'] == 1 and queued['draft_id'] == 'draft-1'
     await asyncio.gather(*list(svc.tasks))

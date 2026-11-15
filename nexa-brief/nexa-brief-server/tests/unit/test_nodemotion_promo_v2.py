@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-TOOLS = Path(__file__).resolve().parents[2] / 'src/templates/_tools/nodemotion-promo'
+TOOLS = Path(__file__).resolve().parents[2] / 'src/templates/_tools/nodemotion/promo/tools'
 
 
 def load(name):

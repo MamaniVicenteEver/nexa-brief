@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-breaking",
+  "id": "scene.stat",
+  "entry_id": "scene.stat",
+  "name": "stat",
+  "kind": "scene",
+  "label": "stat",
+  "summary": "cifra que cuenta (renglón 1) + rótulo (renglón 2)",
+  "variants": [
+    {
+      "type": "stat",
+      "media": [
+        "crash"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    },
+    {
+      "type": "stat",
+      "media": [
+        "press"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    },
+    {
+      "type": "stat",
+      "media": [
+        "crowd"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    },
+    {
+      "type": "stat",
+      "media": [
+        "market"
+      ],
+      "trans": "stripes",
+      "max_text_lines": 2
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 10,
+      "type": "stat",
+      "shows": "cifra que cuenta (renglón 1) + rótulo (renglón 2)",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "crash",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 20,
+      "type": "stat",
+      "shows": "cifra que cuenta (renglón 1) + rótulo (renglón 2)",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "press",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 30,
+      "type": "stat",
+      "shows": "cifra que cuenta (renglón 1) + rótulo (renglón 2)",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "crowd",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 40,
+      "type": "stat",
+      "shows": "cifra que cuenta (renglón 1) + rótulo (renglón 2)",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "market",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, renglones en lines (renglón 1 = palabra principal, renglón 2 = complemento). La primera escena es la intro y la última el outro.",
+    "brand_texts": {
+      "brand.name": "marca del cierre y del rótulo de directo",
+      "brand.tag": "subtítulo espaciado de la intro si el guion no trae renglón 2",
+      "brand.cta": "texto de la caja roja del cierre (vacío = sin caja)",
+      "brand.url": "dirección del cierre si el último segmento no trae renglón 2",
+      "brand.live": "rótulo de la franja de directo (ticker)"
+    },
+    "design_limitations": "Escenas stat requieren una cifra al inicio del renglón 1; si no la hay se dibujan como word. ticker usa el renglón 2 como texto que corre.",
+    "scene_cycle_note": "Las longitudes recomendadas no garantizan legibilidad: revisar ambos formatos.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-breaking.json",
+      "pointer": "/default_scenes/9"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-breaking.json",
+      "pointer": "/default_scenes/19"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-breaking.json",
+      "pointer": "/default_scenes/29"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-breaking.json",
+      "pointer": "/default_scenes/39"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-breaking.json",
+      "pointer": "/scene_cycle/9"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-breaking.json",
+      "pointer": "/scene_cycle/19"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-breaking.json",
+      "pointer": "/scene_cycle/29"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-breaking.json",
+      "pointer": "/scene_cycle/39"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

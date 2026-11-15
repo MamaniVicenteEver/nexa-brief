@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-pulse",
+  "family": "promo",
+  "demo_folder": "nodemotion/commercial/promo-pulse",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/escenas.js": "runtime/components/scenes.js",
+    "components/intro.js": "runtime/components/intro.js",
+    "components/kit.js": "runtime/components/kit.js",
+    "components/outro-v1.js": "runtime/components/outro-v1.js",
+    "components/outro-v2.js": "runtime/components/outro-v2.js",
+    "components/transiciones.js": "runtime/components/transitions.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "source_sha256": "7bfab8b67a84ec7ccd8d2ff70ddeec8a5fd9d08f953613810484de2b647c2344",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/promo-pulse",
+    "config": "nodemotion/commercial/promo-pulse/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-pulse/DESIGN.md"
+  },
+  "revision": "401620587f9589163d7f9d6750bad4defb7ed0beb54f353d5c6c3a559dbe1e80"
+}

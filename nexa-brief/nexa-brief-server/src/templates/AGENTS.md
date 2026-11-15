@@ -1,3 +1,19 @@
+Start with the [content index](../skills/README.md).
+
+## Crear diseños NodeMotion
+La entrada específica es [crear e integrar plantillas](../../docs/nodemotion-template-authoring.md).
+Estas reglas de fuente compartida, datos y recursos prevalecen para NodeMotion sobre las recetas generales de HTML autocontenido o copiado por job que siguen en este archivo.
+Un prototipo aislado respeta su carpeta y entrega pendientes al integrador. Verificar alta, contratos, catálogos, recursos, preview y renderer, además de la apariencia.
+
+## NodeMotion shared-engine contract
+
+For registered NodeMotion lyrics and promos, follow [the current architecture](../../docs/nodemotion-architecture.md).
+Their implementation lives only in `_tools/nodemotion/{lyrics,promo}/designs/`.
+Demos keep their content and a thin entry; new projects keep JSON and registered-resource references.
+Use the shared assembler/resolver for source, assets, preview, recording, and packaging.
+The inline/copy-per-job instructions below describe legacy and image/video contracts; do not use them to duplicate NodeMotion engines.
+Use English filenames. Preserve stable IDs, legacy URLs, colors, fonts, transitions, movement, timing, and composition.
+
 Para crear cualquier contenido empieza por el [índice](../skills/README.md),
 [CALIDAD.md](../skills/CALIDAD.md) (estándar obligatorio) y
 [ORQUESTACION.md](../skills/ORQUESTACION.md) (roles, delegación, terminado e informe).
@@ -303,21 +319,21 @@ Todos los comandos se corren desde `nexa-brief-server/`.
 | `_tools/hyperframes/optimize.py` | Inserta o actualiza el reloj HyperFrames y reescribe los timers. Idempotente y reversible. | `.venv/bin/python src/templates/_tools/hyperframes/optimize.py <id>` · `--check <id>` · `--revert <id>` |
 | `_tools/hyperframes/reencode_media.py` | Recodifica los videos con keyframe cada 5 cuadros (CRF 12, sin pérdida visible) y guarda los originales en `media_originals/`. | `.venv/bin/python src/templates/_tools/hyperframes/reencode_media.py <id>` · `--revert <id>` |
 | `_tools/hyperframes/render_demo.py` | Graba N segundos con HyperFrames en todos los formatos del nicho y genera cuadros de control. | `PYTHONPATH=. .venv/bin/python src/templates/_tools/hyperframes/render_demo.py --seconds 30 <id>` |
-| `_tools/commercial/build/build.py` | **Genera** los `index.html` de promos y plantillas por escenas desde `core.js` + un archivo de escenas + un `*.spec.json`. | `python3 src/templates/_tools/commercial/build/build.py <id> …` |
-| `_tools/commercial/grade_media.py` | Pre-grada (color) el metraje de stock de las promos. | ver el docstring del script |
-| `_tools/commercial/render_promo.py` | Render cuadro a cuadro de plantillas pesadas, fuera de la app. | ver el docstring del script |
+| `_tools/nodemotion/promo/compiler/build/build.py` | Compila las promos por escenas desde `core.js`, un archivo de escenas y un `*.spec.json`; los diseños registrados actualizan el motor compartido. | `python3 src/templates/_tools/nodemotion/promo/compiler/build/build.py <id> …` |
+| `_tools/nodemotion/promo/compiler/grade_media.py` | Pre-grada (color) el metraje de stock de las promos. | ver el docstring del script |
+| `_tools/nodemotion/promo/compiler/render_promo.py` | Render cuadro a cuadro de plantillas pesadas, fuera de la app. | ver el docstring del script |
 
 ### Plantillas generadas: no editar el `index.html` a mano
 
 | Plantillas | Generador (editar acá) |
 |---|---|
-| `promo-dynamic`, `promo-editorial`, `promo-kinetic`, `promo-sports`, `promo-trendy`, `promo-urban` | `_tools/commercial/build/` (`<nombre>.js` + `promo-<nombre>.spec.json`) |
-| `promo-breaking`, `promo-pulse` | `_tools/commercial/build/promo-<nombre>.spec.json` + `player.js` y `components/` de la propia plantilla (ver su `DESIGN.md`) |
-| `lyrics-rasgado` | `_tools/lyrics-rasgado/build/lyrics-rasgado.spec.json` + `player.js` y `components/` de la propia plantilla (ver su `DESIGN.md`) |
-| `lyrics-grunge`, `lyrics-mixtas` | `_tools/lyrics-grunge/build/`, `_tools/lyrics-mixtas/build/` (se arman con el mismo `build.py`) |
-| `lyrics-lluvia-gris`, `lyrics-memoria`, `lyrics-ceniza`, `lyrics-vacio` | `_tools/lyrics-sad/build/` (`sad-common.js` + `<nombre>.js`; ver `_tools/lyrics-sad/README.md`) |
+| `promo-dynamic`, `promo-editorial`, `promo-kinetic`, `promo-sports`, `promo-trendy`, `promo-urban` | `_tools/nodemotion/promo/compiler/build/` (`<nombre>.js` + `promo-<nombre>.spec.json`) |
+| `promo-breaking`, `promo-pulse` | `_tools/nodemotion/promo/compiler/build/promo-<nombre>.spec.json` + `runtime/player.js` y `runtime/components/` en `_tools/nodemotion/promo/designs/promo-<nombre>/` |
+| `lyrics-rasgado` | `_tools/nodemotion/lyrics/compiler/torn/build/lyrics-rasgado.spec.json` + `runtime/player.js` y `runtime/components/` en `_tools/nodemotion/lyrics/designs/lyrics-rasgado/` |
+| `lyrics-grunge`, `lyrics-mixtas` | `_tools/nodemotion/lyrics/compiler/grunge/build/`, `_tools/nodemotion/lyrics/compiler/mixed/build/` (se arman con el mismo `build.py`) |
+| `lyrics-lluvia-gris`, `lyrics-memoria`, `lyrics-ceniza`, `lyrics-vacio` | `_tools/nodemotion/lyrics/compiler/sad/build/` (`sad-common.js` + `<nombre>.js`; ver `_tools/nodemotion/lyrics/compiler/sad/README.md`) |
 
-Todas se arman con `_tools/commercial/build/build.py`, que ya inserta el reloj HyperFrames
+Todas se arman con `_tools/nodemotion/promo/compiler/build/build.py`, que ya inserta el reloj HyperFrames
 al generar. Igual, después de regenerar SIEMPRE corré `optimize.py --check <id>`
 (sección 10.1). Si cambiaste un archivo de escenas compartido (`core.js`, `sad-common.js`),
 **se ven afectadas todas las plantillas que lo usan**: regenerá y validá cada una.
@@ -406,4 +422,4 @@ usuario que hay que actualizarlo.
 
 ## Promos: instrucciones compartidas, sin copias por video
 
-Para Editorial, Sports, Dynamic, Kinetic, Trendy y Urban, usa [el flujo único de promos](../skills/nodemotion/promo/OPERAR.md). Los prompts versionados viven en `src/skills/nodemotion/promo/prompts/` del servidor y se resuelven con `promo.py prompt --id ID --stage ETAPA`; nunca crees `work/instrucciones/prompts/`, copias de esos Markdown, otro productor ni scripts de campaña para repetir el flujo. Cada proyecto conserva solo la referencia de versión y hashes, sus datos y evidencias. Las reglas específicas del diseño proceden de `templates/<template-id>.json` y `DESIGN.md`; no se copian al proyecto. `CLAUDE.md` incorpora este archivo mediante `@AGENTS.md`. Las recetas de crear o bifurcar una plantilla nueva no aplican a videos basados en una promo existente.
+Para Editorial, Sports, Dynamic, Kinetic, Trendy y Urban, usa [el flujo único de promos](_tools/nodemotion/promo/production/OPERATE.md). Los prompts versionados viven en `src/templates/_tools/nodemotion/promo/production/prompts/` del servidor y se resuelven con `promo.py prompt --id ID --stage ETAPA`; nunca crees `work/instrucciones/prompts/`, copias de esos Markdown, otro productor ni scripts de campaña para repetir el flujo. Cada proyecto conserva solo la referencia de versión y hashes, sus datos y evidencias. Las reglas específicas del diseño proceden de `_tools/nodemotion/promo/production/templates/<template-id>.json` y `DESIGN.md`; no se copian al proyecto. `CLAUDE.md` incorpora este archivo mediante `@AGENTS.md`. Las recetas de crear o bifurcar una plantilla nueva no aplican a videos basados en una promo existente.

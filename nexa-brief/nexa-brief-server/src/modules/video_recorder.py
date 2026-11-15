@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import time
 import os
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import orjson
@@ -41,14 +42,26 @@ async def run(job: Job, niche_cfg: "NicheConfig") -> Job:
         assert_profile_path(record_dir)
     record_dir.mkdir(parents=True, exist_ok=True)
     async with heavy_work_slot("recording", job.job_id):
-        result = await recorder.record(
-            html_path=artifacts.html_path,
-            audio_path=artifacts.music_path,
-            output_dir=record_dir,
-            duration_seconds=artifacts.analyzed_input.duration_seconds,
-            niche_cfg=niche_cfg,
-            render_target=job.input.render_target,
-        )
+        from src.core.nodemotion.service import load_project, materialize
+        if load_project(artifacts.output_dir) is not None:
+            import tempfile
+            with tempfile.TemporaryDirectory(prefix="nodemotion-render-") as directory:
+                html_path, audio_path, revision = materialize(artifacts.output_dir, Path(directory))
+                result = await recorder.record(
+                    html_path=html_path, audio_path=audio_path, output_dir=record_dir,
+                    duration_seconds=artifacts.analyzed_input.duration_seconds,
+                    niche_cfg=niche_cfg, render_target=job.input.render_target,
+                )
+                result.stats["nodemotion_engine_revision"] = revision
+        else:
+            result = await recorder.record(
+                html_path=artifacts.html_path,
+                audio_path=artifacts.music_path,
+                output_dir=record_dir,
+                duration_seconds=artifacts.analyzed_input.duration_seconds,
+                niche_cfg=niche_cfg,
+                render_target=job.input.render_target,
+            )
 
     if layout.schema_version >= 3:
         from src.config.media_paths import pipeline_video_key

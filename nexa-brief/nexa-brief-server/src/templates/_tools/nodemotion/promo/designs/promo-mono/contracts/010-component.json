@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.pin",
+  "entry_id": "mono.pin",
+  "kind": "component",
+  "label": "Píldora con pin de ubicación que crece mientras se escribe",
+  "summary": "Píldora con pin de ubicación que crece mientras se escribe",
+  "component": {
+    "name": "mono.pin",
+    "label": "Píldora con pin de ubicación que crece mientras se escribe",
+    "summary": "Píldora con pin de ubicación que crece mientras se escribe",
+    "tags": [
+      "escena"
+    ],
+    "scene_type": "pin",
+    "params": {
+      "size": {
+        "type": "number",
+        "min": 0.5,
+        "max": 2.0,
+        "default": 1.0
+      },
+      "outline": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "time": 20.8
+    },
+    "preview": {
+      "t": 20.8
+    }
+  },
+  "params": {
+    "size": {
+      "type": "number",
+      "min": 0.5,
+      "max": 2.0,
+      "default": 1.0
+    },
+    "outline": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/6"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-urban",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "black": {
+      "default": "#050505"
+    },
+    "white": {
+      "default": "#F4F4F2"
+    },
+    "orange": {
+      "default": "#F2681A"
+    },
+    "red": {
+      "default": "#E4261C"
+    },
+    "redDark": {
+      "default": "#140102"
+    }
+  },
+  "example": {
+    "black": "#050505",
+    "white": "#F4F4F2",
+    "orange": "#F2681A",
+    "red": "#E4261C",
+    "redDark": "#140102"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-urban/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

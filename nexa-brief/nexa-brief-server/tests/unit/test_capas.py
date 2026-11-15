@@ -33,7 +33,8 @@ def test_catalog_fixture_checks_real_images_masks_alpha_anchors_hashes(catalog):
 
 def test_main_catalog_has_no_experimental_assets():
     catalog = capas.load_catalog()
-    assert catalog["assets"] == []
+    # La biblioteca de producción ya tiene assets; el fixture sigue aislado.
+    assert all("fixture" not in asset["tags"] for asset in catalog["assets"])
     assert capas.validate_catalog(catalog) == []
 
 

@@ -31,6 +31,8 @@ class DraftCreateRequest(BaseModel):
     image_asset_id: str | None = None
     video_asset_id: str | None = None
     template_inputs: TemplateInputs | None = None
+    promo_timeline: dict[str, Any] | None = None
+    timed_content: dict | None = None
     song_info: SongInfo | None = None
     user_context: str | None = Field(default=None, max_length=500)
     # Crear video en un paso: si viene, apenas el preview queda listo se graba

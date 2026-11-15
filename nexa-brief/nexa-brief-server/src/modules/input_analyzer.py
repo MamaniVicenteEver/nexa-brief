@@ -99,6 +99,20 @@ Responde ÚNICAMENTE con este JSON:
 """
 
 
+def offline_analysis(job: Job, niche_cfg: NicheConfig) -> AnalyzedInput:
+    """Análisis de entrada sin IA: sale de lo que ya se sabe de la canción y del nicho."""
+    song = job.input.song_info
+    topic = (song.topic or song.song_name or "") if song is not None else ""
+    return AnalyzedInput(
+        genre=(niche_cfg.audio.genre or "pop") if niche_cfg.audio else "pop",
+        mood_tags=[],
+        image_query=topic or niche_cfg.id,
+        description=(song.description or "") if song is not None else "",
+        duration_seconds=int(job.input.duration_seconds or 0),
+        category_name=job.input.category_name,
+    )
+
+
 async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
     t_start = time.monotonic()
     logger.info("input_analyzer_start", job_id=job.job_id, category=job.input.category_name)
@@ -116,6 +130,16 @@ async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
             song_info.model_dump_json(indent=2), encoding="utf-8"
         )
         logger.info("input_analyzer_song_info_collected", job_id=job.job_id, has_song_name=bool(song_info.song_name))
+
+    from src.core.ai_switch import ai_preview
+
+    if ai_preview.get():
+        # Vista previa sin IA: ningún agente se llama; no hay consultas de búsqueda.
+        analyzed = offline_analysis(job, niche_cfg)
+        (logs_dir / "01_input_completado.json").write_text(analyzed.model_dump_json(indent=2), encoding="utf-8")
+        logger.info("input_analyzer_offline", job_id=job.job_id)
+        artifacts = job.artifacts.model_copy(update={"analyzed_input": analyzed, "search_queries": None})
+        return job.model_copy(update={"artifacts": artifacts}).advance(JobStage.INPUT_ANALYZED)
 
     # ── 1a: análisis del input ────────────────────────────────────────────────
     user_context_line = (

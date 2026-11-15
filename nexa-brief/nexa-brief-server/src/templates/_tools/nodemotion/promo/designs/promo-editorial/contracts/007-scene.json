@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-editorial",
+  "id": "scene.assemble",
+  "entry_id": "scene.assemble",
+  "name": "assemble",
+  "kind": "scene",
+  "label": "assemble",
+  "summary": "palabra con polos laterales al final",
+  "variants": [
+    {
+      "type": "assemble",
+      "max_text_lines": 1
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 11,
+      "type": "assemble",
+      "shows": "palabra con polos laterales al final",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+    "brand_texts": {
+      "brand.name": "nombre del tema o marca; reserva del cierre",
+      "brand.round": "episodio, etapa o contexto del tema",
+      "brand.left": "primer polo real de una oposición",
+      "brand.right": "segundo polo real de esa oposición",
+      "brand.tagline": "frase secundaria de miniatura si no hay polos; no se dibuja en el video",
+      "brand.logo": "gráfico opcional del config; build no lo acepta como texto ni añade logos",
+      "sin_oposicion": "Dejar brand.left y brand.right vacíos y sustituir versus por otra escena mediante scene-overrides; adaptar el plan. Assemble no muestra los polos vacíos. Si se conserva versus, build exige ambos porque el motor mostraría A VS B."
+    },
+    "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+    "design_limitations": "Las escenas nameCut imprimen BEST como decoración fija; si desentona o sugiere una afirmación injustificada, sustituirlas en scene-overrides o elegir otra plantilla. La escena title puede solaparse en vertical; revisarla.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos. En versus, los renglones deben coincidir con brand.left, brand.right o brand.round: el motor dibuja esos campos de marca."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-editorial.json",
+      "pointer": "/default_scenes/10"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-editorial.json",
+      "pointer": "/scene_cycle/10"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

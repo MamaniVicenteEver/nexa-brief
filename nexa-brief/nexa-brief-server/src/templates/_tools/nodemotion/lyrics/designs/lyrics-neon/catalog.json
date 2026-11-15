@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-neon",
+  "family": "lyrics",
+  "display_name": "Letras de Neón",
+  "description": "Letreros de tubo neón que se encienden letra por letra sobre un video nocturno urbano integrado, con cámara impredecible y sincronización real con la canción.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "background",
+        "kind": "image|video",
+        "min": 0,
+        "max": 1,
+        "target": "config",
+        "path": "bg.src",
+        "label": "Fondo (opcional)",
+        "hint": "Video o imagen nocturna: luces, calle, fiesta. Si no subes nada, se usa el video de la plantilla."
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/lyrics/lyrics-neon/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-neon/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/remix.mp4",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-neon",
+    "config": "nodemotion/lyrics/lyrics-neon/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-neon/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-neon/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-neon/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.bg",
+      "kind": "configuration",
+      "label": "bg",
+      "summary": "Existing configuration configuration: bg.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.bg",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.neon",
+      "kind": "configuration",
+      "label": "neon",
+      "summary": "Existing configuration configuration: neon.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.neon",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.layout",
+      "kind": "configuration",
+      "label": "layout",
+      "summary": "Existing configuration configuration: layout.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.layout",
+      "contract": "contracts/006-configuration.json"
+    }
+  ]
+}

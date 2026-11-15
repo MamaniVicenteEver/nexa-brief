@@ -99,6 +99,10 @@ async def test_resume_pipeline_v2_keeps_media_logs_and_renders_separate(tmp_path
 
 @pytest.mark.asyncio
 async def test_new_v2_preview_assets_resume_and_library_references(tmp_path, monkeypatch):
+    # This synthetic fixture writes a legacy physical HTML/audio project and has
+    # no registered asset IDs; exercise the compatibility path explicitly.
+    from src.templates._tools.nodemotion.shared import assemble
+    monkeypatch.setattr(assemble, "registered", lambda _: False)
     from httpx import ASGITransport, AsyncClient
     from src.core import preview_tracker
     from src.core.draft_details import DraftDetails, PlatformDetails, to_summary

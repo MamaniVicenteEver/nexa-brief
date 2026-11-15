@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-night-journey",
+  "id": "scene.paper",
+  "entry_id": "scene.paper",
+  "name": "paper",
+  "kind": "scene",
+  "label": "paper",
+  "summary": "Existing scene configuration: paper.",
+  "params": {
+    "type": {
+      "default": "paper"
+    },
+    "weight": {
+      "default": 0.14
+    },
+    "palette": {
+      "default": {
+        "bg": "#F7E83C",
+        "ink": "#28260E",
+        "shade": "#8F8623"
+      }
+    }
+  },
+  "example": {
+    "type": "paper",
+    "weight": 0.14,
+    "palette": {
+      "bg": "#F7E83C",
+      "ink": "#28260E",
+      "shade": "#8F8623"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-night-journey/assets/config.json",
+      "pointer": "/configs/0/scenes/4"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -31,7 +31,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING
 
 import structlog
@@ -100,9 +100,9 @@ def _last_json_line(raw: str) -> dict | None:
         return None
 
 
-def _resolve_composition_id(niche_cfg: "NicheConfig") -> str | None:
+def _resolve_composition_id(niche_cfg: "NicheConfig", *, background: str | None = None) -> str | None:
     """`None` si el niche todavía no tiene una composición Remotion portada."""
-    bg_filename = niche_cfg.template.media_src_filename
+    bg_filename = background or niche_cfg.template.media_src_filename
     template_id = niche_cfg.template.template_id
     if template_id == "lyrics-neon":
         # Comportamiento preexistente, preservado tal cual: la familia neón
@@ -116,6 +116,24 @@ def supports_niche(niche_cfg: "NicheConfig") -> bool:
     """Usado por el router para validar un override a recorder_engine='remotion'
     antes de aceptar el job (ver videos.py) — sin duplicar el mapeo de arriba."""
     return _resolve_composition_id(niche_cfg) is not None
+
+
+def _native_asset(root: Path, relative: str) -> Path:
+    """Resolve only materialized public files declared by the project marker."""
+    if not isinstance(relative, str) or not relative or "\\" in relative:
+        raise RecordingError("RemotionAdapter: ruta nativa inválida.")
+    path = PurePosixPath(relative)
+    if path.is_absolute() or ".." in path.parts:
+        raise RecordingError("RemotionAdapter: ruta nativa fuera del proyecto.")
+    candidate = root / path
+    if not candidate.resolve().is_relative_to(root.resolve()) or not candidate.is_file():
+        raise RecordingError(f"RemotionAdapter: falta el recurso nativo {relative}.")
+    current = root
+    for part in path.parts:
+        current = current / part
+        if current.is_symlink():
+            raise RecordingError("RemotionAdapter: enlace en recurso nativo.")
+    return candidate
 
 
 class RemotionAdapter(RecorderPort):
@@ -136,15 +154,28 @@ class RemotionAdapter(RecorderPort):
 
         # El audio acompaña a config/lyrics en assets/ para jobs v2 nuevos.
         input_dir = audio_path.parent if (audio_path.parent / "config.json").is_file() else html_path.parent
-        config_path = input_dir / "config.json"
+        marker_path = html_path.parent / ".nodemotion-render.json"
+        marker = json.loads(marker_path.read_text(encoding="utf-8")) if marker_path.is_file() else {}
+        native_urls = marker.get("data_urls") or {}
+        if native_urls:
+            input_dir = html_path.parent
+            config_path = _native_asset(input_dir, native_urls["config"])
+            native_audio = _native_asset(input_dir, native_urls["audio"])
+            if native_audio.resolve() != audio_path.resolve():
+                raise RecordingError("RemotionAdapter: el audio no coincide con el proyecto materializado.")
+        else:
+            config_path = input_dir / "config.json"
         if not config_path.exists():
             raise RecordingError(
                 f"RemotionAdapter: falta config.json en {output_dir} "
                 "(¿corrió html_generator antes de este stage?)."
             )
 
-        bg_filename = niche_cfg.template.media_src_filename
-        composition_id = _resolve_composition_id(niche_cfg)
+        bg_filename = native_urls.get("background") or niche_cfg.template.media_src_filename
+        if native_urls.get("background"):
+            _native_asset(input_dir, bg_filename)
+        composition_id = (_resolve_composition_id(niche_cfg, background=bg_filename)
+                          if native_urls else _resolve_composition_id(niche_cfg))
         if composition_id is None:
             raise RecordingError(
                 f"RemotionAdapter: no hay composición Remotion mapeada para "
@@ -157,14 +188,15 @@ class RemotionAdapter(RecorderPort):
 
         props: dict = {
             "configData": json.loads(config_path.read_text(encoding="utf-8")),
-            "audioSrc": audio_path.name,
+            "audioSrc": native_urls["audio"] if native_urls else audio_path.name,
             "bgSrc": bg_filename,
         }
 
         if niche_cfg.template.requires_lyrics:
             # Camino existente (neon/impact/romantic): estos templates SÍ
             # dependen de lyrics.json, preservado tal cual.
-            lyrics_path = input_dir / "lyrics.json"
+            lyrics_path = (_native_asset(input_dir, native_urls["timing"])
+                           if native_urls else input_dir / "lyrics.json")
             if not lyrics_path.exists():
                 raise RecordingError(
                     f"RemotionAdapter: falta lyrics.json en {output_dir} "

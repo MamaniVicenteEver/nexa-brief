@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-lluvia-gris",
+  "id": "layout.street",
+  "entry_id": "layout.street",
+  "name": "street",
+  "kind": "layout",
+  "label": "street",
+  "summary": "Existing layout configuration: street.",
+  "params": {
+    "weight": {
+      "default": 1.4
+    },
+    "media": {
+      "default": [
+        "street-rain",
+        "rain-road"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.4,
+    "media": [
+      "street-rain",
+      "rain-road"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
+      "pointer": "/configs/0/layouts/street"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

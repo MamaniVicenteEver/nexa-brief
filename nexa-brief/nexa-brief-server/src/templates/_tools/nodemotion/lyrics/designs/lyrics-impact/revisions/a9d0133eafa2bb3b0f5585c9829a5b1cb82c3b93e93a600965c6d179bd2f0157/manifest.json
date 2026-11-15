@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-impact",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-impact",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/women-dancing.mp4",
+    "components/intro.js",
+    "components/background-sequence.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "cb1148ab3d760c83230a30d7e5a1653d99257262715b2a5e3b2741822311f8da",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-impact",
+    "config": "nodemotion/lyrics/lyrics-impact/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-impact/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-impact/README.md"
+  },
+  "revision": "a9d0133eafa2bb3b0f5585c9829a5b1cb82c3b93e93a600965c6d179bd2f0157"
+}

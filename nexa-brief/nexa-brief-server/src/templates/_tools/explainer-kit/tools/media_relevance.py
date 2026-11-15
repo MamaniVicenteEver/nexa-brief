@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 import re
 import unicodedata
+import style_media_policy
 
 KIT = Path(__file__).resolve().parents[1]
 
@@ -16,7 +17,10 @@ def _plain(value: str) -> str:
     return unicodedata.normalize("NFKD", value.casefold()).encode("ascii", "ignore").decode()
 
 
-def visible_media(beat: dict, catalog: dict) -> list[str]:
+def visible_media(beat: dict, catalog: dict, config: dict | None = None) -> list[str]:
+    if (config or {}).get("design") == "titanes":
+        photos, videos = style_media_policy.titanes_media(beat, catalog)
+        return list(dict.fromkeys(photos + videos))
     params = beat["b"].get("params") or {}
     spec = catalog.get(beat["use"], {}).get("params", {})
     has_video = any(params.get(key) and rule.get("type") == "video" for key, rule in spec.items())
@@ -87,7 +91,7 @@ def reused_elsewhere(proto: Path, sources: set[str]) -> dict[str, list[str]]:
 def check(proto: Path, config: dict, beats: list[dict], catalog: dict,
           errs: list[str], warns: list[str]) -> tuple[list[dict], dict]:
     policy = json.loads((KIT / "media-relevance.json").read_text(encoding="utf-8"))
-    required = config.get("quality_policy_version", 1) >= policy["policy_version"]
+    required = config.get("design") == "titanes" or config.get("quality_policy_version", 1) >= policy["policy_version"]
     patterns = [re.compile(expr, re.I) for expr in policy["generic_patterns"]]
     credits_path = proto / "assets/media/CREDITS.md"
     credits = credits_path.read_text(encoding="utf-8") if credits_path.is_file() else ""
@@ -95,7 +99,9 @@ def check(proto: Path, config: dict, beats: list[dict], catalog: dict,
     entries: list[dict] = []
     generic_beats: set[int] = set()
     for beat in beats:
-        sources = visible_media(beat, catalog)
+        if config.get("design") == "titanes" and (beat.get("skip") or beat.get("layer", "main") != "main"):
+            continue
+        sources = visible_media(beat, catalog, config)
         if not sources:
             continue
         raw = beat["b"]

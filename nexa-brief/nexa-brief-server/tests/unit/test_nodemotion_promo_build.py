@@ -7,10 +7,10 @@ from types import SimpleNamespace
 import pytest
 
 SERVER = Path(__file__).resolve().parents[2]
-SPEC = importlib.util.spec_from_file_location('promo_build', SERVER / 'src/templates/_tools/nodemotion-promo/build.py')
+SPEC = importlib.util.spec_from_file_location('promo_build', SERVER / 'src/templates/_tools/nodemotion/promo/tools/build.py')
 module = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(module)
-CONTRACT = json.loads((SERVER / 'src/skills/nodemotion/promo/templates/promo-editorial.json').read_text())
+CONTRACT = json.loads((SERVER / 'src/templates/_tools/nodemotion/promo/production/templates/promo-editorial.json').read_text())
 
 
 def write(path, value):
@@ -25,6 +25,12 @@ def read(path):
 @pytest.fixture
 def sample(tmp_path, monkeypatch):
     root = tmp_path / 'profile'
+    from src.config.settings import settings
+    from src.core.nodemotion.shared import resources
+    monkeypatch.setattr(settings, 'storage_profile_dir', root)
+    monkeypatch.setattr(settings, 'storage_layout_version', 3)
+    paths = {}
+    monkeypatch.setattr(resources, '_asset', lambda kind, asset_id: paths[(kind, asset_id)])
     target = root / 'sandbox/nodemotion/test'
     write(target / 'brief.json', {'template': 'promo-editorial', 'duration_seconds': 90, 'texts': {'brand.name': 'Equipo', 'brand.round': 'Historia', 'brand.left': 'Pasión', 'brand.right': 'Olvido', 'brand.tagline': 'Legado'}})
     scenes = CONTRACT['default_scenes']
@@ -37,13 +43,22 @@ def sample(tmp_path, monkeypatch):
         dest = root / 'resources' / folder / kind
         dest.mkdir(parents=True)
         (dest / ('ready' + ext)).write_bytes(b'fixture')
+        original = dest / ('original' + ext)
+        original.write_bytes(b'original differs from ready')
+        paths[(kind, kind)] = original
         write(dest / 'resource.json', {'id': kind, 'type': kind, 'attribution': 'Autor', 'license': 'License', 'license_url': 'https://example.org', 'file': 'original' + ext, 'ready_file': 'ready' + ext})
     music = root / 'resources/music/song'
     music.mkdir(parents=True)
     (music / 'ready.mp3').write_bytes(b'fixture')
+    (music / 'original.mp3').write_bytes(b'uncut original')
+    paths[('music', 'song')] = music / 'original.mp3'
     write(music / 'resource.json', {'id': 'song', 'type': 'music', 'attribution': 'Autor', 'license': 'CC BY', 'license_url': 'https://example.org'})
     write(target / 'music.json', {'asset_id': 'song', 'ready_file': 'ready.mp3', 'duration_seconds': 90})
-    monkeypatch.setattr(module.subprocess, 'run', lambda *a, **k: SimpleNamespace(stdout='90.02'))
+    def process(command, **kwargs):
+        if command[0] == 'ffmpeg':
+            Path(command[-1]).write_bytes(b'exact legacy poster')
+        return SimpleNamespace(stdout='90.02')
+    monkeypatch.setattr(module.subprocess, 'run', process)
     return root, target
 
 
@@ -60,15 +75,19 @@ def test_build_reuses_assets_and_covers_all_scenes(sample):
     assert config['lyricsUrl'] == 'lyrics.json'
     assert config['scenes'] == CONTRACT['default_scenes']
     assert len(config['media']) == 7
-    assert all((target / 'assets' / x['src']).is_file() for x in config['media'])
-    assert (target / 'assets/song.mp3').resolve() == root / 'resources/music/song/ready.mp3'
+    from src.core.nodemotion.service import resolve_project
+    assert all(resolve_project(target, 'assets/' + x['src']).read_bytes() == b'fixture' for x in config['media'])
+    assert resolve_project(target, 'assets/song.mp3') == root / 'resources/music/song/ready.mp3'
+    assert (target / 'project.json').is_file() and (target / 'assets/timeline.json').is_file()
+    assert all(path.suffix == '.json' for path in target.rglob('*') if path.is_file())
+    assert not any(path.is_symlink() for path in target.rglob('*'))
     assert run(sample)['duration_seconds'] == 90
 
 
 @pytest.mark.parametrize('template,color', [('promo-breaking','red'),('promo-pulse','green')])
 def test_campaign_parameters_survive_rebuild_without_changing_template_or_resources(sample,template,color):
     _,target=sample
-    contract=read(SERVER/'src/skills/nodemotion/promo/templates'/f'{template}.json')
+    contract=read(SERVER/'src/templates/_tools/nodemotion/promo/production/templates'/f'{template}.json')
     brief=read(target/'brief.json');brief.update(template=template,texts={})
     write(target/'brief.json',brief)
     scenes=contract['default_scenes']
@@ -88,7 +107,8 @@ def test_campaign_parameters_survive_rebuild_without_changing_template_or_resour
         assert cfg['intro']['title']=='CAMPAÑA' and cfg['intro']['sub']=='MARCA'
         assert cfg['outro']['version']=='v2' and cfg['palette'][color]=='#AA44FF'
         assert cfg['audio']['src']=='song.mp3' and cfg['lyricsUrl']=='lyrics.json'
-        assert all((target/'assets'/item['src']).is_file() for item in cfg['media'])
+        from src.core.nodemotion.service import resolve_project
+        assert all(resolve_project(target, 'assets/' + item['src']).read_bytes() == b'fixture' for item in cfg['media'])
     assert template_path.read_bytes()==original
 
 
@@ -138,7 +158,7 @@ def test_build_writes_lyrics_from_script(sample):
     script = read(target / 'assets/lyrics.json')
     script['segments'][0]['text'] = 'TEXTO NUEVO'
     script['segments'][0]['lines'] = ['TEXTO NUEVO']
-    write(target / 'work/guion.json', script)
+    write(target / 'work/script.json', script)
     run(sample)
     assert read(target / 'assets/lyrics.json')['segments'][0]['text'] == 'TEXTO NUEVO'
 
@@ -164,7 +184,7 @@ def test_build_rejects_uncredited_music(sample):
 
 def test_build_sports_uses_its_own_scenes_and_registered_media(sample):
     _, target = sample
-    contract = read(SERVER / 'src/skills/nodemotion/promo/templates/promo-sports.json')
+    contract = read(SERVER / 'src/templates/_tools/nodemotion/promo/production/templates/promo-sports.json')
     brief = read(target / 'brief.json')
     brief.update(template='promo-sports', texts={})
     write(target / 'brief.json', brief)
@@ -177,7 +197,8 @@ def test_build_sports_uses_its_own_scenes_and_registered_media(sample):
     config = read(target / 'assets/config.json')['configs'][0]
     assert config['scenes'] == scenes
     assert {item['id'] for item in config['media']} == {slot for scene in scenes for slot in scene.get('media', [])}
-    assert all((target / 'assets' / item['src']).is_file() for item in config['media'])
+    from src.core.nodemotion.service import resolve_project
+    assert all(resolve_project(target, 'assets/' + item['src']).read_bytes() == b'fixture' for item in config['media'])
     run(sample)
 
 

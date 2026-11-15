@@ -109,6 +109,7 @@ async def _apply_media_slot(
     slot: dict,
     asset_ids: list[str],
     output_dir: Path,
+    references: dict | None = None,
 ) -> int:
     entries = config.get("media")
     if not isinstance(entries, list):
@@ -129,12 +130,27 @@ async def _apply_media_slot(
             continue
         real_kind, source = _resolve_asset(slot["kind"], asset_id)
         relative = f"{INPUTS_DIR}/{slot['slot']}-{index + 1}{source.suffix.lower()}"
-        shutil.copy2(source, output_dir / relative)
+        if references is None:
+            shutil.copy2(source, output_dir / relative)
+        else:
+            from src.core.nodemotion.service import asset_ref
+            references[relative] = asset_ref(real_kind, asset_id)
         spec = {"type": real_kind, "src": relative}
         if real_kind == "video":
             poster_rel = f"{INPUTS_DIR}/{slot['slot']}-{index + 1}-poster.jpg"
-            if await _extract_poster(output_dir / relative, output_dir / poster_rel):
-                spec["poster"] = poster_rel
+            if references is None:
+                if await _extract_poster(output_dir / relative, output_dir / poster_rel):
+                    spec["poster"] = poster_rel
+            else:
+                from src.core.nodemotion.service import _resolve_ref
+                poster = dict(references[relative], poster=True)
+                try:
+                    await asyncio.to_thread(_resolve_ref, poster)
+                except Exception:
+                    pass
+                else:
+                    references[poster_rel] = poster
+                    spec["poster"] = poster_rel
         copied[asset_id] = spec
 
     for position, entry in enumerate(targets):
@@ -151,13 +167,17 @@ async def _apply_media_slot(
     return len(targets)
 
 
-def _apply_config_slot(config: dict[str, Any], slot: dict, asset_ids: list[str], output_dir: Path) -> bool:
+def _apply_config_slot(config: dict[str, Any], slot: dict, asset_ids: list[str], output_dir: Path, references: dict | None = None) -> bool:
     if not asset_ids or not slot.get("path"):
         return False
     real_kind, source = _resolve_asset(slot["kind"], asset_ids[0])
     relative = f"{INPUTS_DIR}/{slot['slot']}{source.suffix.lower()}"
     (output_dir / INPUTS_DIR).mkdir(parents=True, exist_ok=True)
-    shutil.copy2(source, output_dir / relative)
+    if references is None:
+        shutil.copy2(source, output_dir / relative)
+    else:
+        from src.core.nodemotion.service import asset_ref
+        references[relative] = asset_ref(real_kind, asset_ids[0])
     _set_dotted(config, slot["path"], relative)
     parent_path, _, _ = slot["path"].rpartition(".")
     parent = config
@@ -190,7 +210,7 @@ async def _sequence_video_duration(source: Path) -> float:
 
 
 async def _apply_impact_sequence(config: dict[str, Any], slot: dict, asset_ids: list[str],
-                                 kinds: list[str], output_dir: Path) -> int:
+                                 kinds: list[str], output_dir: Path, references: dict | None = None) -> int:
     """Copia la lista en orden sin depender de rutas del perfil durante la grabación."""
     if len(asset_ids) <= 1 or not isinstance(config.get("bg"), dict):
         return 0
@@ -202,7 +222,11 @@ async def _apply_impact_sequence(config: dict[str, Any], slot: dict, asset_ids: 
         real_kind, source = _resolve_asset(expected, asset_id)
         relative = f"{INPUTS_DIR}/background-{index + 1}{source.suffix.lower()}"
         duration = await _sequence_video_duration(source) if real_kind == "video" else 5.0
-        await asyncio.to_thread(shutil.copy2, source, output_dir / relative)
+        if references is None:
+            await asyncio.to_thread(shutil.copy2, source, output_dir / relative)
+        else:
+            from src.core.nodemotion.service import asset_ref
+            references[relative] = asset_ref(real_kind, asset_id)
         playlist.append({"type": real_kind, "src": relative, "duration": duration})
     config["bg"]["playlist"] = playlist
     return len(playlist)
@@ -213,6 +237,7 @@ async def apply_template_inputs(
     inputs: TemplateInputs | None,
     template_id: str,
     output_dir: Path,
+    references: dict | None = None,
 ) -> dict[str, Any]:
     """Devuelve una copia del config con textos y medios del usuario aplicados.
 
@@ -244,14 +269,14 @@ async def apply_template_inputs(
             logger.warning("template_inputs_unknown_slot", template_id=template_id, slot=slot_name)
             continue
         if template_id == "lyrics-impact" and slot_name == "background" and slot["target"] == "source":
-            replaced[slot_name] = await _apply_impact_sequence(result, slot, list(asset_ids), inputs.media_kinds.get(slot_name, []), output_dir)
+            replaced[slot_name] = await _apply_impact_sequence(result, slot, list(asset_ids), inputs.media_kinds.get(slot_name, []), output_dir, references)
             continue
         if slot["target"] == "config":
-            replaced[slot_name] = int(_apply_config_slot(result, slot, list(asset_ids), output_dir))
+            replaced[slot_name] = int(_apply_config_slot(result, slot, list(asset_ids), output_dir, references))
             continue
         if slot["target"] != "media":
             continue  # entra por image/video source del job
-        replaced[slot_name] = await _apply_media_slot(result, slot, list(asset_ids), output_dir)
+        replaced[slot_name] = await _apply_media_slot(result, slot, list(asset_ids), output_dir, references)
 
     logger.info(
         "template_inputs_applied",

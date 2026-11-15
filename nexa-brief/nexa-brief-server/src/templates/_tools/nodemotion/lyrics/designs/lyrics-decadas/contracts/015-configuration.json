@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "config.components",
+  "entry_id": "config.components",
+  "name": "components",
+  "kind": "configuration",
+  "label": "components",
+  "summary": "Existing configuration configuration: components.",
+  "params": {
+    "intro": {
+      "default": true
+    },
+    "outro": {
+      "default": "decadas.outrov1"
+    },
+    "photos": {
+      "default": true
+    },
+    "tags": {
+      "default": true
+    },
+    "signature": {
+      "default": true
+    },
+    "fragments": {
+      "default": true
+    }
+  },
+  "example": {
+    "intro": true,
+    "outro": "decadas.outrov1",
+    "photos": true,
+    "tags": true,
+    "signature": true,
+    "fragments": true
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+      "pointer": "/configs/0/components"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

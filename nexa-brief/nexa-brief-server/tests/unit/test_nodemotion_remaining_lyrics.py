@@ -42,7 +42,15 @@ def test_original_style_and_media_for_both_options(tid, family, weight, slant, b
     job = Job(input=JobInput(category_name=tid), artifacts=JobArtifacts(output_dir=root, config_json_path=config_path))
     assert assets.background_kind(job) == (kind or 'none')
     if tid == 'lyrics-lluvia-gris':
-        assert assets.background_source(job).name == 'street-rain.mp4'
+        from src.config.template_manifest import resolve_template_content
+        from src.core.nodemotion.shared.bundled import demo_aliases
+        from src.core.nodemotion.shared.resources import digest
+        logical = root / 'assets/media/street-rain.mp4'
+        expected = resolve_template_content(logical)
+        actual = assets.background_source(job)
+        assert isinstance(expected, Path) and actual == expected
+        key = demo_aliases(tid).get('assets/media/street-rain.mp4')
+        assert digest(actual) == (key[:64] if key else digest(logical))
 
 
 def test_nested_palettes_follow_active_config():

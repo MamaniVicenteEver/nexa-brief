@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "config.motion",
+  "entry_id": "config.motion",
+  "name": "motion",
+  "kind": "configuration",
+  "label": "motion",
+  "summary": "Existing configuration configuration: motion.",
+  "params": {
+    "boilFps": {
+      "default": 8
+    },
+    "boil": {
+      "default": 0.35
+    },
+    "wobble": {
+      "default": 2.2
+    },
+    "grain": {
+      "default": 0.5
+    },
+    "punch": {
+      "default": 0.1
+    },
+    "drift": {
+      "default": 0.05
+    },
+    "shake": {
+      "default": 0.5
+    },
+    "deck": {
+      "default": {
+        "punch": 3,
+        "drift": 2,
+        "pop": 1.5,
+        "recede": 1,
+        "shake": 0.6,
+        "none": 1
+      }
+    }
+  },
+  "example": {
+    "boilFps": 8,
+    "boil": 0.35,
+    "wobble": 2.2,
+    "grain": 0.5,
+    "punch": 0.1,
+    "drift": 0.05,
+    "shake": 0.5,
+    "deck": {
+      "punch": 3,
+      "drift": 2,
+      "pop": 1.5,
+      "recede": 1,
+      "shake": 0.6,
+      "none": 1
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "pointer": "/configs/0/motion"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -359,7 +359,7 @@ def cmd_render(a):
         print(f"@@format {f} {i} {len(formats)}", flush=True)
         page = (content_key(d / "index.html") if layout_for_settings(settings).schema_version >= 2
                 else os.path.relpath(d / "index.html", TEMPLATES))
-        cmd = [PY, TEMPLATES / "_tools/commercial/render_promo.py", page, out_dir / f"{a.id}-{f}{suffix}.mp4", "--size", sizes[f], "--workers", "4"]
+        cmd = [PY, TEMPLATES / "_tools/nodemotion/promo/compiler/render_promo.py", page, out_dir / f"{a.id}-{f}{suffix}.mp4", "--size", sizes[f], "--workers", "4"]
         if a.seconds: cmd += ["--to", str(a.seconds)]
         env = dict(os.environ)
         env["PYTHONUNBUFFERED"] = "1"
@@ -443,6 +443,12 @@ def cmd_usage(a):
     for name, b in s["by_provider"].items():
         print(f"  {name:<11} {b['calls']:>4} llamadas · {b['input_tokens']:>10,} entrada · {b['output_tokens']:>8,} salida · {b['seconds']:>8.0f} s")
 
+def cmd_licencias(a):
+    from licencias import generate
+    directory = vdir(a.id)
+    result = generate(directory, layout_for_settings(settings).root)
+    print(f"✓ {directory}: {len(result['items'])} recursos · apto para publicar: {'sí' if result['summary']['apto_para_publicar'] else 'no'}")
+
 # Comandos que se anotan en el registro de uso (los demás no tienen video o se anotan solos).
 LOGGED = {"status", "components", "voice", "transcribe", "outro", "preview", "check", "sheet", "manifest", "render", "poster"}
 PROVIDER_OF = {"transcribe": ("whisper", "large-v3")}   # voice anota cada pedido a Gemini desde narrate.py
@@ -470,6 +476,7 @@ def main():
     p = sp.add_parser("delegate", help="delegar un borrador a DeepSeek o Codex según roles.json"); p.add_argument("id"); p.add_argument("role", nargs="?"); p.add_argument("--prompt-file")
     p.add_argument("--out", default=""); p.add_argument("--context", action="append", default=[])
     sp.add_parser("usage").add_argument("id")
+    sp.add_parser("licencias").add_argument("id")
     for name in ("voice", "sheet", "render", "components", "delegate"):
         p = sp.choices[name]
         mode = p.add_mutually_exclusive_group(); mode.add_argument("--background", action="store_true"); mode.add_argument("--wait", action="store_true")

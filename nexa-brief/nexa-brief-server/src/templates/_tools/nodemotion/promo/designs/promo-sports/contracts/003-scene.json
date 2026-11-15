@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-sports",
+  "id": "scene.panels3",
+  "entry_id": "scene.panels3",
+  "name": "panels3",
+  "kind": "scene",
+  "label": "panels3",
+  "summary": "tres paneles; tres líneas o primeras tres palabras",
+  "variants": [
+    {
+      "type": "panels3",
+      "media": [
+        "ropes",
+        "boxing"
+      ],
+      "max_text_lines": 3,
+      "min_text_lines": 3
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 3,
+      "type": "panels3",
+      "shows": "tres paneles; tres líneas o primeras tres palabras",
+      "lines_used": 3,
+      "max_characters_per_line_recommended": 16,
+      "media": [
+        {
+          "slot": "ropes",
+          "kind": "video"
+        },
+        {
+          "slot": "boxing",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa las primeras tres líneas si hay al menos tres; de lo contrario usa las primeras tres palabras del segmento.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real.",
+      "media_render_order": [
+        "ropes",
+        "boxing",
+        "ropes"
+      ]
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+    "brand_texts": {},
+    "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-sports.json",
+      "pointer": "/default_scenes/2"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-sports.json",
+      "pointer": "/scene_cycle/2"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

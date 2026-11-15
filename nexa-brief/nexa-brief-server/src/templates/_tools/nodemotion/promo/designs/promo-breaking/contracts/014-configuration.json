@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-breaking",
+  "id": "config.look",
+  "entry_id": "config.look",
+  "name": "look",
+  "kind": "configuration",
+  "label": "look",
+  "summary": "Existing configuration configuration: look.",
+  "params": {
+    "tint": {
+      "default": 0.85
+    },
+    "giantOpacity": {
+      "default": 0.6
+    },
+    "decor": {
+      "default": 1
+    },
+    "vignette": {
+      "default": 0.55
+    }
+  },
+  "example": {
+    "tint": 0.85,
+    "giantOpacity": 0.6,
+    "decor": 1,
+    "vignette": 0.55
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-breaking/assets/config.json",
+      "pointer": "/configs/0/look"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

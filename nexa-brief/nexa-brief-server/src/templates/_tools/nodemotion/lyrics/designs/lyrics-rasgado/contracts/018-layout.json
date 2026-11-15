@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-rasgado",
+  "id": "layout.marquee",
+  "entry_id": "layout.marquee",
+  "name": "marquee",
+  "kind": "layout",
+  "label": "marquee",
+  "summary": "Existing layout configuration: marquee.",
+  "params": {
+    "weight": {
+      "default": 0.7
+    },
+    "bgs": {
+      "default": [
+        "paper"
+      ]
+    }
+  },
+  "example": {
+    "weight": 0.7,
+    "bgs": [
+      "paper"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-rasgado/assets/config.json",
+      "pointer": "/configs/0/layouts/marquee"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

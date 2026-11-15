@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "panel",
+  "entry_id": "panel",
+  "kind": "component",
+  "label": "Ventanas de medio + frase",
+  "summary": "Ventanas de medio en duotono holográfico con marco iridiscente que entran y la frase grande abajo.",
+  "component": {
+    "name": "panel",
+    "label": "Ventanas de medio + frase",
+    "summary": "Ventanas de medio en duotono holográfico con marco iridiscente que entran y la frase grande abajo.",
+    "group": "scene",
+    "tags": [
+      "lyrics-hologram",
+      "scene"
+    ],
+    "params": {
+      "textIn": {
+        "type": "enum",
+        "options": [
+          "slide",
+          "stamp",
+          "glitch",
+          "spread",
+          "fade",
+          "cut"
+        ],
+        "default": "slide"
+      },
+      "windows": {
+        "type": "number",
+        "min": 1,
+        "max": 3,
+        "default": 2
+      }
+    },
+    "demo": {
+      "t": 18.07,
+      "query": null,
+      "layout": {
+        "weight": 1.1,
+        "bgs": [
+          "void",
+          "red"
+        ],
+        "media": [
+          "glam",
+          "hair",
+          "glasses"
+        ]
+      }
+    },
+    "preview": {
+      "gallery": "gallery.html?only=panel"
+    }
+  },
+  "params": {
+    "textIn": {
+      "type": "enum",
+      "options": [
+        "slide",
+        "stamp",
+        "glitch",
+        "spread",
+        "fade",
+        "cut"
+      ],
+      "default": "slide"
+    },
+    "windows": {
+      "type": "number",
+      "min": 1,
+      "max": 3,
+      "default": 2
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/8"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

@@ -9,7 +9,7 @@ from types import SimpleNamespace
 import pytest
 
 BASE = Path(__file__).resolve().parents[2]
-TOOLS = BASE / 'src/templates/_tools/nodemotion-promo'
+TOOLS = BASE / 'src/templates/_tools/nodemotion/promo/tools'
 sys.path.insert(0, str(TOOLS))
 spec = importlib.util.spec_from_file_location('promo_candidates_media_test', TOOLS / 'media.py')
 media = importlib.util.module_from_spec(spec)

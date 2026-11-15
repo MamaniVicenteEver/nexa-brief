@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-pulse",
+  "family": "promo",
+  "source_of_truth": "templates.json#templates/promo-pulse",
+  "config_json": "nodemotion/commercial/promo-pulse/assets/config.json",
+  "config_prompt": null,
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 18,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "acción en movimiento, entrenamiento, velocidad; se gradan cinematográficos"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.name",
+        "label": "Marca",
+        "max": 30,
+        "default": "NEXA BRIEF"
+      },
+      {
+        "key": "brand.url",
+        "label": "Dirección o usuario",
+        "max": 40,
+        "default": "@nexabrief"
+      },
+      {
+        "key": "brand.cta",
+        "label": "Llamada (caja verde del cierre v2)",
+        "max": 24,
+        "default": "SUSCRÍBETE"
+      },
+      {
+        "key": "brand.corner",
+        "label": "Rótulo de esquina",
+        "max": 30,
+        "default": "NEXA BRIEF"
+      },
+      {
+        "key": "brand.footer",
+        "label": "Pie",
+        "max": 60,
+        "default": "Diseño y animación · NEXA BRIEF"
+      }
+    ],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/promo-pulse",
+    "config": "nodemotion/commercial/promo-pulse/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-pulse/DESIGN.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

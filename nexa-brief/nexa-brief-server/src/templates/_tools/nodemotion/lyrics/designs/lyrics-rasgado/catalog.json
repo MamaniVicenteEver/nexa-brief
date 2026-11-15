@@ -1,0 +1,324 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-rasgado",
+  "family": "lyrics",
+  "display_name": "Rasgado",
+  "description": "Lyric video de tipografía cinética sobre hojas de papel rasgado gris, lima y carbón: condensada alta, extendida negra y fina en contorno, cada palabra al tiempo de la voz, garabatos de marcador, pincelada lima y medio en B/N con acento lima. Para rap, trap, rock y himnos con energía.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "energía, público, escenario, calle de noche; se muestran en blanco y negro con acento lima"
+      }
+    ],
+    "texts": [
+      {
+        "key": "intro.title",
+        "label": "Título de la canción",
+        "max": 40,
+        "default": "Like A Rapper"
+      },
+      {
+        "key": "intro.artist",
+        "label": "Artista",
+        "max": 40,
+        "default": "donnieozone"
+      },
+      {
+        "key": "outro.title",
+        "label": "Título del cierre",
+        "max": 30,
+        "default": "Gracias"
+      },
+      {
+        "key": "outro.sub",
+        "label": "Subtítulo del cierre",
+        "max": 40,
+        "default": "por escuchar"
+      },
+      {
+        "key": "outro.feats",
+        "label": "Créditos del cierre",
+        "max": 60,
+        "default": "Suscríbete · NodeMotion"
+      }
+    ],
+    "brief": true
+  },
+  "config_json": "nodemotion/lyrics/lyrics-rasgado/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-rasgado",
+    "config": "nodemotion/lyrics/lyrics-rasgado/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-rasgado/DESIGN.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-rasgado/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.lyricsFilter",
+      "kind": "configuration",
+      "label": "lyricsFilter",
+      "summary": "Existing configuration configuration: lyricsFilter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.lyricsFilter",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.brand",
+      "kind": "configuration",
+      "label": "brand",
+      "summary": "Existing configuration configuration: brand.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.brand",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.phrases",
+      "kind": "configuration",
+      "label": "phrases",
+      "summary": "Existing configuration configuration: phrases.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.phrases",
+      "contract": "contracts/006-configuration.json"
+    },
+    {
+      "entry_id": "config.timing",
+      "kind": "configuration",
+      "label": "timing",
+      "summary": "Existing configuration configuration: timing.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timing",
+      "contract": "contracts/007-configuration.json"
+    },
+    {
+      "entry_id": "layout.build",
+      "kind": "layout",
+      "label": "build",
+      "summary": "Existing layout configuration: build.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.build",
+      "contract": "contracts/008-layout.json"
+    },
+    {
+      "entry_id": "layout.stack2",
+      "kind": "layout",
+      "label": "stack2",
+      "summary": "Existing layout configuration: stack2.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.stack2",
+      "contract": "contracts/009-layout.json"
+    },
+    {
+      "entry_id": "layout.echo3",
+      "kind": "layout",
+      "label": "echo3",
+      "summary": "Existing layout configuration: echo3.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.echo3",
+      "contract": "contracts/010-layout.json"
+    },
+    {
+      "entry_id": "layout.warp",
+      "kind": "layout",
+      "label": "warp",
+      "summary": "Existing layout configuration: warp.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.warp",
+      "contract": "contracts/011-layout.json"
+    },
+    {
+      "entry_id": "layout.circle",
+      "kind": "layout",
+      "label": "circle",
+      "summary": "Existing layout configuration: circle.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.circle",
+      "contract": "contracts/012-layout.json"
+    },
+    {
+      "entry_id": "layout.spaced",
+      "kind": "layout",
+      "label": "spaced",
+      "summary": "Existing layout configuration: spaced.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.spaced",
+      "contract": "contracts/013-layout.json"
+    },
+    {
+      "entry_id": "layout.brush",
+      "kind": "layout",
+      "label": "brush",
+      "summary": "Existing layout configuration: brush.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.brush",
+      "contract": "contracts/014-layout.json"
+    },
+    {
+      "entry_id": "layout.rise",
+      "kind": "layout",
+      "label": "rise",
+      "summary": "Existing layout configuration: rise.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.rise",
+      "contract": "contracts/015-layout.json"
+    },
+    {
+      "entry_id": "layout.giant",
+      "kind": "layout",
+      "label": "giant",
+      "summary": "Existing layout configuration: giant.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.giant",
+      "contract": "contracts/016-layout.json"
+    },
+    {
+      "entry_id": "layout.wide",
+      "kind": "layout",
+      "label": "wide",
+      "summary": "Existing layout configuration: wide.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.wide",
+      "contract": "contracts/017-layout.json"
+    },
+    {
+      "entry_id": "layout.marquee",
+      "kind": "layout",
+      "label": "marquee",
+      "summary": "Existing layout configuration: marquee.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.marquee",
+      "contract": "contracts/018-layout.json"
+    },
+    {
+      "entry_id": "layout.strike",
+      "kind": "layout",
+      "label": "strike",
+      "summary": "Existing layout configuration: strike.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.strike",
+      "contract": "contracts/019-layout.json"
+    },
+    {
+      "entry_id": "layout.tear",
+      "kind": "layout",
+      "label": "tear",
+      "summary": "Existing layout configuration: tear.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.tear",
+      "contract": "contracts/020-layout.json"
+    },
+    {
+      "entry_id": "config.look",
+      "kind": "configuration",
+      "label": "look",
+      "summary": "Existing configuration configuration: look.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.look",
+      "contract": "contracts/021-configuration.json"
+    },
+    {
+      "entry_id": "config.anim",
+      "kind": "configuration",
+      "label": "anim",
+      "summary": "Existing configuration configuration: anim.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.anim",
+      "contract": "contracts/022-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/023-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/024-configuration.json"
+    },
+    {
+      "entry_id": "config.transition",
+      "kind": "configuration",
+      "label": "transition",
+      "summary": "Existing configuration configuration: transition.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.transition",
+      "contract": "contracts/025-configuration.json"
+    },
+    {
+      "entry_id": "config.hud",
+      "kind": "configuration",
+      "label": "hud",
+      "summary": "Existing configuration configuration: hud.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.hud",
+      "contract": "contracts/026-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/027-configuration.json"
+    },
+    {
+      "entry_id": "config.render",
+      "kind": "configuration",
+      "label": "render",
+      "summary": "Existing configuration configuration: render.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.render",
+      "contract": "contracts/028-configuration.json"
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-collage",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-collage",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js",
+    "index-V1-DESKTOP-V1.html": "runtime/index-v1-desktop-v1.html",
+    "index-V1-DESKTOP.html": "runtime/index-v1-desktop.html",
+    "index-V1-MOVIL.html": "runtime/index-v1-mobile.html"
+  },
+  "runtime_assets": [
+    "assets/figures",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "cabcda4d988f4ce3599d01998e44f10c314e5a5630e5f8bab880de9b85d124a4",
+  "migration_source_sha256": "cabcda4d988f4ce3599d01998e44f10c314e5a5630e5f8bab880de9b85d124a4",
+  "migration_runtime_sha256": {
+    "components/intro.js": "1348c2659a0e6de9dc8fa1e7e5771f7e13d0a2dc5ac172456cb4cd3219d0a81e",
+    "components/outro.js": "1dc0c0c5aaa8708df414509a6bf02b0a47fee4593f64ba6d86f412834b1efdc1",
+    "index-V1-DESKTOP-V1.html": "9ee492c1291d626c630f2cd117bd361a02c1fc29114fcd2e182ed79f3c3d4839",
+    "index-V1-DESKTOP.html": "4d13dcd8b999cc53592fc43abb78d2e258c630a3be00110ede223a9da9cdc490",
+    "index-V1-MOVIL.html": "2d28d283f489b665e2b5d45c22f6f95dea06ecf93798aae1d6b7a1620b7fb220"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-collage",
+    "config": "nodemotion/lyrics/lyrics-collage/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-collage/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-collage/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "411fede9fe0bd9601de884d562803dfdf2464b75f87afd30aa297fada1681648.webp",
+    "assets/figures/figure-01.png": "fbfcf7f6cecdae031dce03da32dd523f53f7fd25915207c2c57a173282e7c582.png",
+    "assets/figures/figure-02.png": "5e1cfb476acfcbdeb81b6f5828293a0e4ce3f59079645a02f0a756525905eaa2.png",
+    "assets/figures/figure-03.png": "cfdaef8e2b0f09582aa3e262b83b1c8b35d776f81881ac45df6670c36e6ae9f2.png",
+    "assets/figures/figure-04.png": "c5c278ef6f70e0f7846de8af4b1bec492aec9999db5d686f8c765638f38d7e76.png",
+    "assets/figures/figure-05.png": "7ff2305b7ee44494dfaeaa20d9e45cf4d4f4c7179350afc88cdf4fa3d65d64a9.png",
+    "assets/figures/figure-06.png": "2e8dba1cffe5a057f6c39d90959a3276c636726f28e3e3925048c0fae96e4cc0.png",
+    "assets/figures/figure-07.png": "830ba98edfbea48e399a27859075fbaea072df659c38c333d8f7dea20b96cf03.png",
+    "assets/figures/figure-08.png": "f19ccddfa7eddc37b46f99cdc7bb9bdf2117c2d29e651fc2405fa6ef59db2ce3.png",
+    "assets/song.mp3": "84fa49015ac891d6f7bb5ebc8513885cb620239c280267b51cadaafa32755e96.mp3"
+  }
+}

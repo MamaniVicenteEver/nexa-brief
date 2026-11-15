@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.playline",
+  "entry_id": "mono.playline",
+  "kind": "component",
+  "label": "Botón de reproducir y línea que crece (+ texto opcional)",
+  "summary": "Botón de reproducir y línea que crece (+ texto opcional)",
+  "component": {
+    "name": "mono.playline",
+    "label": "Botón de reproducir y línea que crece (+ texto opcional)",
+    "summary": "Botón de reproducir y línea que crece (+ texto opcional)",
+    "tags": [
+      "escena"
+    ],
+    "scene_type": "playline",
+    "params": {
+      "lineLen": {
+        "type": "number",
+        "min": 0.05,
+        "max": 0.6,
+        "default": 0.18
+      },
+      "icon": {
+        "type": "string",
+        "options": [
+          "play",
+          "pause",
+          "pin"
+        ],
+        "default": "play"
+      },
+      "size": {
+        "type": "number",
+        "min": 0.5,
+        "max": 2.0,
+        "default": 1.0
+      }
+    },
+    "demo": {
+      "time": 4.6
+    },
+    "preview": {
+      "t": 4.6
+    }
+  },
+  "params": {
+    "lineLen": {
+      "type": "number",
+      "min": 0.05,
+      "max": 0.6,
+      "default": 0.18
+    },
+    "icon": {
+      "type": "string",
+      "options": [
+        "play",
+        "pause",
+        "pin"
+      ],
+      "default": "play"
+    },
+    "size": {
+      "type": "number",
+      "min": 0.5,
+      "max": 2.0,
+      "default": 1.0
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/1"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

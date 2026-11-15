@@ -46,14 +46,16 @@ async def _from_audio(job: Job) -> ResolvedLanguage | None:
 
 
 async def resolve_content_language(job: Job) -> ResolvedLanguage:
+    from src.core.nodemotion.service import lyrics_for_job
+    lyrics = lyrics_for_job(job)
     song_info = job.input.song_info
     user_code = normalize_language(song_info.language if song_info else None)
     if user_code:
         resolved = ResolvedLanguage(user_code, "user")
-    elif job.artifacts.lyrics_json is not None:
+    elif lyrics is not None:
         # Lyrics were already transcribed: their language is the answer, even if it's
         # neither es nor en (then default) — re-listening would only repeat Whisper.
-        resolved = language_from_lyrics(job.artifacts.lyrics_json, settings.metadata_language_min_confidence) or _default()
+        resolved = language_from_lyrics(lyrics, settings.metadata_language_min_confidence) or _default()
     else:
         resolved = await _from_audio(job) or _default()
 

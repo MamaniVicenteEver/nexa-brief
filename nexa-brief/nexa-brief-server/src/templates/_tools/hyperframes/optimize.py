@@ -353,6 +353,9 @@ def main(argv: list[str] | None = None) -> int:
     mode.add_argument("--revert", action="store_true", help="quita el reloj HyperFrames (el Recording UI no vuelve)")
     a = ap.parse_args(argv)
 
+    project_root = str(TEMPLATES_DIR.parent.parent)
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
     js = _clock_source()
     failed = 0
     for t in resolve_targets(a.templates):
@@ -361,7 +364,9 @@ def main(argv: list[str] | None = None) -> int:
             print(f"✗ {name}: no existe {t.path}")
             failed += 1
             continue
-        html = t.path.read_text(encoding="utf-8")
+        from src.templates._tools.nodemotion.shared.assemble import assemble, registered, update_engine
+        shared = registered(t.template_id)
+        html = assemble(t.template_id).decode("utf-8") if shared else t.path.read_text(encoding="utf-8")
         try:
             if a.check:
                 issues = problems(html, hf=t.hf, js=js)
@@ -374,7 +379,10 @@ def main(argv: list[str] | None = None) -> int:
             failed += 1
             continue
         if new != html:
-            t.path.write_text(new, encoding="utf-8")
+            if shared:
+                update_engine(t.template_id, new)
+            else:
+                t.path.write_text(new, encoding="utf-8")
             print(f"• {name}: {'revertida' if a.revert else 'optimizada'}{' (reloj HF)' if t.hf and not a.revert else ''}")
         else:
             print(f"= {name}: sin cambios")

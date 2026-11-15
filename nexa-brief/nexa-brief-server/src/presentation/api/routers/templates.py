@@ -20,6 +20,7 @@ from starlette.responses import Response
 from src.config.niche_config import NicheConfig, find_niche_by_template_id, list_all_niches
 from src.config.template_manifest import (
     get_template_asset_dir,
+    get_template_asset_relative_path,
     get_template_category_id,
     get_template_category_name,
     get_template_category_order,
@@ -98,7 +99,7 @@ def _build_template_response(template_id: str, niche: NicheConfig | None) -> Tem
         asset_dir = get_template_asset_dir(template_id)
         if path is None or asset_dir is None:
             return None
-        relative_path = path.relative_to(asset_dir).as_posix()
+        relative_path = get_template_asset_relative_path(template_id, path)
         # ?v=<mtime>: si se regenera la portada (p. ej. cambia el nombre de la canción en la intro),
         # el navegador no sigue mostrando la vieja desde su caché.
         return f"/api/v1/templates/{template_id}/asset/{relative_path}?v={int(path.stat().st_mtime)}"
@@ -310,12 +311,47 @@ async def get_template_asset(template_id: str, asset_path: str, request: Request
     }
     root = asset_dir.resolve()
     path = (root / asset_path).resolve()
-    if not path.is_relative_to(root) or path not in allowed_paths or not path.exists():
+    from src.templates._tools.nodemotion.shared.assemble import registered
+    shared = None
+    if registered(template_id):
+        from src.core.nodemotion.shared.bundled import resolve_demo_resource
+        shared = resolve_demo_resource(template_id, "assets/" + asset_path)
+        if shared is not None:
+            path = shared
+    if (shared is None and not path.is_relative_to(root)) or path not in allowed_paths or not path.exists():
         raise HTTPException(status_code=404, detail="Preview asset not available")
 
     path = media_for_request(path, request, always_preview=True)
-    media_type = mimetypes.guess_type(str(path))[0] or "application/octet-stream"
+    media_type = mimetypes.guess_type(asset_path if shared is not None else str(path))[0] or "application/octet-stream"
     return serve_file_with_range(path, request.headers.get("range"), media_type)
+
+
+@router.get("/templates/{template_id}/source")
+async def get_template_source(template_id: str) -> Response:
+    """Serve the canonical engine document at a thin demo entry's original URL."""
+    from src.templates._tools.nodemotion.shared.assemble import assemble, registered
+    if not registered(template_id):
+        raise HTTPException(status_code=404, detail="Shared NodeMotion design not found")
+    return Response(assemble(template_id), media_type="text/html; charset=utf-8", headers=NO_CACHE)
+
+
+@router.get("/templates/{template_id}/components")
+async def get_template_components(template_id: str) -> dict:
+    """Read component descriptions and parameters without reading engine source."""
+    from src.templates._tools.nodemotion.shared.assemble import catalog, registered
+    if not registered(template_id):
+        raise HTTPException(status_code=404, detail="Shared NodeMotion design not found")
+    return catalog(template_id)
+
+
+@router.get("/templates/{template_id}/components/{component_id}")
+async def get_template_component(template_id: str, component_id: str) -> dict:
+    """Read only the selected component contract."""
+    from src.templates._tools.nodemotion.shared.assemble import component_contract
+    try:
+        return component_contract(template_id, component_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="NodeMotion component not found") from exc
 
 
 @router.get("/templates/{template_id}/showcase/{file_path:path}")
@@ -327,6 +363,12 @@ async def get_template_showcase_file(template_id: str, file_path: str, request: 
 
     template_root = asset_dir.parent.resolve()
     path = (template_root / file_path).resolve()
+    from src.templates._tools.nodemotion.shared.assemble import assemble, registered, resolve_runtime_asset
+    shared_design = registered(template_id)
+    shared_asset = resolve_runtime_asset(template_id, file_path) if shared_design else None
+    if shared_asset is not None:
+        path = shared_asset
+
     # El pipeline copia los assets a la raíz del output, así que hay plantillas que
     # piden "song.mp3" a secas; en la carpeta de la plantilla vive en assets/.
     if not path.is_file() and "/" not in file_path:
@@ -338,7 +380,7 @@ async def get_template_showcase_file(template_id: str, file_path: str, request: 
         ".png", ".webp", ".svg", ".js", ".css", ".woff", ".woff2", ".ttf",
     }
     if (
-        not path.is_relative_to(template_root)
+        (shared_asset is None and not path.is_relative_to(template_root))
         or path.suffix.lower() not in allowed_suffixes
         or not path.is_file()
     ):
@@ -346,7 +388,8 @@ async def get_template_showcase_file(template_id: str, file_path: str, request: 
 
     media_type = mimetypes.guess_type(str(path))[0] or "application/octet-stream"
     if path.suffix.lower() in {".html", ".json"}:
-        content = path.read_text(encoding="utf-8")
+        content = (assemble(template_id).decode("utf-8")
+                   if shared_design and file_path == "index.html" else path.read_text(encoding="utf-8"))
         if path.suffix.lower() == ".html":
             content = version_local_assets(inject_preview_scripts(content, request.query_params), path.parent)
         else:
@@ -356,7 +399,7 @@ async def get_template_showcase_file(template_id: str, file_path: str, request: 
         return Response(content=content, media_type=media_type, headers=NO_CACHE)
     # Videos pedidos desde la tarjeta o el modal: copia liviana (ver preview_media).
     path = media_for_request(path, request)
-    media_type = mimetypes.guess_type(str(path))[0] or "application/octet-stream"
+    media_type = mimetypes.guess_type(file_path if shared_asset is not None else str(path))[0] or "application/octet-stream"
     response = serve_file_with_range(path, request.headers.get("range"), media_type)
     if path.suffix.lower() in {".js", ".css"}:
         response.headers.update(NO_CACHE)
@@ -367,6 +410,7 @@ async def get_template_showcase_file(template_id: str, file_path: str, request: 
 async def create_template_preview(
     template_id: str,
     user_context: str | None = Form(default=None, max_length=500),
+    promo_timeline: str | None = Form(default=None, max_length=500_000),
     song_name: str | None = Form(default=None),
     artist: str | None = Form(default=None),
     topic: str | None = Form(default=None),
@@ -385,6 +429,18 @@ async def create_template_preview(
     niche = find_niche_by_template_id(template_id)
     if niche is None:
         raise HTTPException(status_code=404, detail=f"Template '{template_id}' not found")
+
+    import json
+    timeline = None
+    if promo_timeline is not None:
+        try:
+            timeline = json.loads(promo_timeline)
+            if not isinstance(timeline, dict) or not isinstance(timeline.get("segments"), list):
+                raise ValueError("Expected authored promo segments")
+        except (ValueError, TypeError) as exc:
+            raise HTTPException(status_code=422, detail="Invalid promo timeline JSON") from exc
+    if template_id.startswith("promo-") and timeline is None:
+        raise HTTPException(status_code=422, detail="Prepare the promo script first and provide promo_timeline")
 
     image_source = await resolve_image_source(niche, niche.id, image_file, image_asset_id)
     music_source = await resolve_music_source(niche, niche.id, music_file, music_asset_id, song_name, artist)
@@ -408,6 +464,8 @@ async def create_template_preview(
         song_info=song_info,
     )[0]
 
+    if timeline is not None:
+        job = job.model_copy(update={"input": job.input.model_copy(update={"promo_timeline": timeline})})
     preview_tracker.create(job)
 
     task = asyncio.create_task(
@@ -434,6 +492,18 @@ async def get_preview_status(preview_id: str) -> PreviewStatusResponse:
 
 @router.get("/templates/preview/{preview_id}/{filename:path}")
 async def get_preview_file(preview_id: str, filename: str, request: Request) -> Response:
+    public_suffixes = {".html", ".json", ".js", ".css", ".mp3", ".wav", ".m4a", ".ogg", ".opus", ".aac", ".mp4", ".webm", ".mov",
+                       ".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg", ".woff", ".woff2", ".ttf", ".otf"}
+    if "\\\\" in filename or Path(filename).suffix.lower() not in public_suffixes:
+        raise HTTPException(status_code=404, detail=f"Unknown preview file '{filename}'")
+    record = preview_tracker.get(preview_id)
+    if record is None:
+        raise HTTPException(status_code=404, detail=f"Preview '{preview_id}' not found")
+    if record.get("output_dir"):
+        from src.presentation.api.nodemotion_preview import serve_project_preview
+        response = serve_project_preview(Path(record["output_dir"]).resolve(), filename, request)
+        if response is not None:
+            return response
     in_assets = filename.startswith("assets/")
     name = filename.removeprefix("assets/") if in_assets else filename
     from src.config.content_paths import is_private_content_key

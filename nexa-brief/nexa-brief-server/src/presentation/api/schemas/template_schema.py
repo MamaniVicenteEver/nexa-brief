@@ -53,6 +53,17 @@ class TemplateTextField(BaseModel):
     default: str | None = None
 
 
+class TemplateDefaultAsset(BaseModel):
+    asset_id: str
+    kind: Literal["image", "video"] = "video"
+
+
+class TemplateDefaults(BaseModel):
+    """Lo que la plantilla trae puesto: canción de la biblioteca y medios por lugar, en orden."""
+    audio_asset_id: str | None = None
+    media: dict[str, list[TemplateDefaultAsset]] = {}
+
+
 class TemplateRequirementsResponse(BaseModel):
     """GET /templates/{template_id}/requirements — ver template_manifest.get_template_inputs."""
     resource_context: ResourceOrigin | None = None
@@ -60,6 +71,7 @@ class TemplateRequirementsResponse(BaseModel):
     media: list[TemplateMediaSlot] = []
     texts: list[TemplateTextField] = []
     brief: bool = False
+    defaults: TemplateDefaults = TemplateDefaults()
 
 
 class TemplateResponse(BaseModel):

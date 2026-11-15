@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script data-nb-hf-clock="075fd9c8e584"><!-- nodemotion-fragment:scripts/01-hyperframes-clock.js --></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stylish Kinetic — Lyrics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Sniglet:wght@800&display=swap" rel="stylesheet">
+<style><!-- nodemotion-fragment:styles/01-design.css --></style>
+<script src="./components/intro.js"></script>
+<script src="./components/outro.js"></script>
+</head>
+<body>
+<!-- desenfoque de movimiento direccional (x / y) en 3 intensidades -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="mbx1" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="6 0"/></filter>
+  <filter id="mbx2" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="16 0"/></filter>
+  <filter id="mbx3" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="34 0"/></filter>
+  <filter id="mby1" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="0 6"/></filter>
+  <filter id="mby2" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="0 16"/></filter>
+  <filter id="mby3" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="0 34"/></filter>
+</svg>
+<div id="stage"></div>
+<div id="hud"></div>
+<div id="measure"></div>
+<div id="hint" aria-hidden="true"></div>
+<audio id="audio" preload="auto"></audio>
+
+<script type="module"><!-- nodemotion-fragment:scripts/02-runtime.js --></script>
+</body>
+</html>

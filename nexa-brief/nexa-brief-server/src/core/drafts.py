@@ -130,6 +130,8 @@ class Draft(BaseModel):
     details: DraftDetails | None = None
     thumbnails: ThumbnailSet | None = None
     thumbnail_error: str | None = None
+    # Datos que faltan por generar (IA no disponible o recursos sin ficha): bloquean publicar.
+    pending: list[str] = Field(default_factory=list)
     created_at: str
     updated_at: str
 
@@ -172,7 +174,7 @@ def can_render(draft: Draft, job: Job | None) -> bool:
         return False
     if draft.status not in ("preview_ready", "prepared") and not (draft.status == "failed" and draft.recoverable):
         return False
-    from src.core.promos.readiness import approved_for_recording
+    from src.core.nodemotion.promo.readiness import approved_for_recording
     return approved_for_recording(draft)
 
 
@@ -296,6 +298,11 @@ def thumbnail_manifest(
     """Hidrata A/B como JSON solamente. No abre navegador ni captura imágenes."""
     if job is None:
         return draft.thumbnails
+    if not generated_texts and job.artifacts.output_dir:
+        from src.core.nodemotion.promo.approval_compatibility import compatible_thumbnail_manifest
+        legacy = compatible_thumbnail_manifest(Path(job.artifacts.output_dir), draft.model_dump(mode="json"))
+        if legacy is not None:
+            return ThumbnailSet.model_validate(legacy)
     from src.core import draft_thumbnails
 
     details = draft.details or _fallback_thumbnail_details(job)
@@ -442,6 +449,11 @@ async def run_prepare(draft: Draft, job: Job) -> None:
     """Genera los detalles (draft_details.generate). Nunca lanza: si falla, el preview sigue
     listo y el error queda en el draft."""
     from src.core import draft_details
+    from src.core.ai_switch import AIUnavailableError, ai_enabled
+    from src.core.library import resource_curator
+
+    # Completa en segundo plano la ficha de los recursos que usa el borrador (no bloquea la preparación).
+    resource_curator.schedule_for_draft(draft)
 
     try:
         details = await draft_details.generate(job, draft.niche_id, seed=draft.draft_id, notes=draft.song_notes)
@@ -472,11 +484,21 @@ async def run_prepare(draft: Draft, job: Job) -> None:
                 await pipeline._index_job_logs(job)
         await _patch(draft.draft_id, {
             "status": "prepared", "details": details.model_dump(mode="json"), "errors": [],
+            "pending": resource_curator.pending_resources(draft),
             "name": (stored.get("name") or "").strip() or (draft.name if draft.original else _default_name(draft, details)),
             "thumbnails": thumbnails.model_dump(mode="json") if thumbnails else None,
             "thumbnail_error": thumbnail_error,
         })
     except Exception as exc:
+        if isinstance(exc, AIUnavailableError) or not ai_enabled():
+            # Sin IA: textos y miniaturas quedan pendientes (no es un error) y se puede grabar.
+            logger.warning("draft_prepare_pending_no_ai", draft_id=draft.draft_id)
+            await _patch(draft.draft_id, {
+                "status": "prepared", "errors": [],
+                "pending": ["textos de publicación y miniaturas (IA no disponible)",
+                            *resource_curator.pending_resources(draft)],
+            })
+            return
         logger.exception("draft_prepare_failed", draft_id=draft.draft_id)
         await _patch(draft.draft_id, {
             "status": "prepared" if draft.details else "preview_ready",
@@ -557,6 +579,8 @@ async def _on_preview_stage(draft_id: str, job: Job) -> None:
 async def run_preview(draft_id: str, job: Job) -> Job:
     """Corre el Job del draft hasta HTML_GENERATED (igual que el preview de
     plantillas, sin cola: no graba). Nunca lanza — un error queda en el draft."""
+    from src.core.ai_switch import ai_preview
+    token = ai_preview.set(True)  # vista previa: ningún agente se llama
     try:
         result = await pipeline.run(
             job,
@@ -576,6 +600,7 @@ async def run_preview(draft_id: str, job: Job) -> Job:
         await _fail(draft_id, failed)
         return failed
     finally:
+        ai_preview.reset(token)
         _running.discard(draft_id)
 
 
@@ -612,7 +637,7 @@ async def start_render(draft_id: str, job: Job) -> Draft | None:
     """Pasa el draft a `rendering` con el job_id que va a aparecer en
     Biblioteca. El caller lanza `run_render` enseguida."""
     current = await get(draft_id)
-    from src.core.promo_prompts import TEMPLATES
+    from src.core.nodemotion.promo.prompts import TEMPLATES
     if current is not None and current.template_id in TEMPLATES:
         from src.core.data import collection, coordination
         if current.original:
@@ -656,7 +681,9 @@ async def _capture_selected_thumbnail(draft_id: str, job: Job) -> Job:
     # One-step/legacy render jobs can reach this path without prepared details
     # or a thumbnail manifest. Keep that flow working when no preview artifact
     # exists; real prepared drafts with a chosen option must capture or fail.
-    if draft.details is None and (job.artifacts.html_path is None or not job.artifacts.html_path.is_file()):
+    from src.core.nodemotion.service import load_project
+    has_project = bool(job.artifacts.output_dir and load_project(Path(job.artifacts.output_dir)))
+    if draft.details is None and not has_project and (job.artifacts.html_path is None or not job.artifacts.html_path.is_file()):
         stored = _drafts().get(draft_id) or {}
         stored_thumbnails = stored.get("thumbnails") or {}
         if not (stored_thumbnails.get("options") if isinstance(stored_thumbnails, dict) else None):

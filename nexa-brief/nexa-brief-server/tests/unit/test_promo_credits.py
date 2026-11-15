@@ -1,6 +1,6 @@
 from copy import deepcopy
 import pytest
-from src.core.promos.credits import apply_credits
+from src.core.nodemotion.promo.credits import apply_credits
 
 
 def details(text='Texto editorial'):

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-neon",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-neon",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/remix.mp4",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "611ad68278a139d33f4ffabea052c28d3530fbe6c2b35e4c8f7e0549c343c838",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-neon",
+    "config": "nodemotion/lyrics/lyrics-neon/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-neon/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-neon/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "5da1a952fb8d7b5d1436d3220531035bdeb4604fdfdc5ab103c1872b09d0adec.webp",
+    "assets/remix.jpg": "22e483fe12595138eff850e2c6c83c33e85b8ec708935444c6c50845a0e42607.jpg",
+    "assets/remix.mp4": "9056f3b9a2976ca2835c30ea0b5c2246da1006cb8bfa37cd8e2bd2ccc3d2a2eb.mp4",
+    "assets/song.mp3": "84fa49015ac891d6f7bb5ebc8513885cb620239c280267b51cadaafa32755e96.mp3"
+  },
+  "revision": "8ec1888a5a35cebf8b14f88849a7e1fd74e6882b5c1cbcd0f26d2949e1ee6f79"
+}

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8">
+<meta name="nodemotion-design" content="lyrics-hologram">
+<title>NodeMotion · lyrics-hologram</title></head><body>
+<script>(async function(){
+  const response = await fetch("/api/v1/templates/lyrics-hologram/source");
+  if (!response.ok) throw new Error("Shared NodeMotion source is unavailable");
+  const html = await response.text();
+  document.open(); document.write(html); document.close();
+})();</script>
+</body></html>

@@ -887,6 +887,17 @@ async def get_explainer_file(file_path: str, request: Request) -> Response:
         raise HTTPException(status_code=404, detail="no encontrado")
     if layout_for_settings(settings).schema_version < 2 and not target.is_relative_to(root):
         raise HTTPException(status_code=404, detail="no encontrado")
+    from src.core.nodemotion.shared.content import locate_project_content
+    try:
+        project_content = locate_project_content(target)
+        if project_content is not None:
+            from src.presentation.api.nodemotion_preview import serve_project_preview
+            response = serve_project_preview(project_content.root, project_content.relative, request)
+            if response is None:
+                raise HTTPException(status_code=404, detail="no encontrado")
+            return response
+    except (OSError, ValueError, KeyError):
+        raise HTTPException(status_code=404, detail="no encontrado")
     if not target.is_file():
         raise HTTPException(status_code=404, detail="no encontrado")
     if request.query_params.get("edition") and parts[-2:] == ("assets", "config.json"):

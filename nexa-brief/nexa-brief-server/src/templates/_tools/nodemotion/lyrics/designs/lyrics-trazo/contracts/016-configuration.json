@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "config.outro",
+  "entry_id": "config.outro",
+  "name": "outro",
+  "kind": "configuration",
+  "label": "outro",
+  "summary": "Existing configuration configuration: outro.",
+  "params": {
+    "title": {
+      "default": "Gracias"
+    },
+    "sub": {
+      "default": "por ver"
+    },
+    "feats": {
+      "default": "Suscríbete · NodeMotion"
+    },
+    "titleFont": {
+      "default": "bubble"
+    },
+    "subFont": {
+      "default": "signature"
+    },
+    "featsFont": {
+      "default": "tall"
+    },
+    "leadSec": {
+      "default": 0.35
+    },
+    "minSec": {
+      "default": 2.6
+    },
+    "maxSec": {
+      "default": 6
+    }
+  },
+  "example": {
+    "title": "Gracias",
+    "sub": "por ver",
+    "feats": "Suscríbete · NodeMotion",
+    "titleFont": "bubble",
+    "subFont": "signature",
+    "featsFont": "tall",
+    "leadSec": 0.35,
+    "minSec": 2.6,
+    "maxSec": 6
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "pointer": "/configs/0/outro"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

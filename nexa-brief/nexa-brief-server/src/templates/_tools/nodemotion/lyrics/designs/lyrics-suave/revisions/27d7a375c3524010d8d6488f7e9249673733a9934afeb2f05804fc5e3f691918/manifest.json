@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-suave",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-suave",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "assets/bg.jpg"
+  ],
+  "source_sha256": "0f3ad32ad9d3491af481b9591b18a17f94ccc661edf98f858c60c4b3487bc17b",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-suave",
+    "config": "nodemotion/lyrics/lyrics-suave/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-suave/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-suave/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/bg.jpg": "08c9c9343bb37616c5d7c7f53b0f649e79c41f30c692cf204fbac51564b3213a.jpg",
+    "assets/card-poster.webp": "3d7a518108e0922c62d8307fe6b85b56d6f128ae821b0589d413c0c31327c5dd.webp",
+    "assets/song.mp3": "7879c27751e8902bbfc5d07c8d10261645b3625ca85203a9aef9121f0a7d01b5.mp3"
+  },
+  "revision": "27d7a375c3524010d8d6488f7e9249673733a9934afeb2f05804fc5e3f691918"
+}

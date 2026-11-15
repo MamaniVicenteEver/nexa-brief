@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-ceniza",
+  "id": "layout.burnAway",
+  "entry_id": "layout.burnAway",
+  "name": "burnAway",
+  "kind": "layout",
+  "label": "burnAway",
+  "summary": "Existing layout configuration: burnAway.",
+  "params": {
+    "weight": {
+      "default": 2.0
+    },
+    "media": {
+      "default": [
+        "flames",
+        "burning-diary",
+        "sparks"
+      ]
+    }
+  },
+  "example": {
+    "weight": 2.0,
+    "media": [
+      "flames",
+      "burning-diary",
+      "sparks"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-ceniza/assets/config.json",
+      "pointer": "/configs/0/layouts/burnAway"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

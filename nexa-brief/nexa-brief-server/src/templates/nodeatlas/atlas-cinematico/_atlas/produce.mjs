@@ -139,7 +139,7 @@ export function main(args=process.argv.slice(2)) {
     const relative=path.relative(TEMPLATES,path.join(root,'index.html'));if(relative.startsWith('..'))throw Error('El episodio debe vivir dentro de src/templates');
     const extra=['--size',flags.size||'1920x1080','--fps',flags.fps||'30','--workers',flags.workers||'1'];
     for(const k of ['from','to'])if(flags[k]!==undefined)extra.push('--'+k,String(flags[k]));
-    run('src/templates/_tools/commercial/render_promo.py',[relative,path.resolve(name),...extra]);return;
+    run('src/templates/_tools/nodemotion/promo/compiler/render_promo.py',[relative,path.resolve(name),...extra]);return;
   }
   throw Error(`Comando desconocido: ${cmd}\n${HELP}`);
 }

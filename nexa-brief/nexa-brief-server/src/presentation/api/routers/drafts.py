@@ -68,7 +68,7 @@ _draft_tasks: set[asyncio.Task] = set()
 # Lo que el preview puede pedir del output del job: el HTML y los medios que
 # referencia. logs/ queda afuera (prompts, respuestas de la IA, stats).
 _PREVIEW_SUFFIXES = {
-    ".html", ".json", ".mp3", ".wav", ".m4a", ".mp4", ".webm", ".mov", ".jpg", ".jpeg",
+    ".html", ".json", ".mp3", ".wav", ".m4a", ".ogg", ".opus", ".aac", ".mp4", ".webm", ".mov", ".jpg", ".jpeg",
     ".png", ".webp", ".gif", ".svg", ".woff", ".woff2", ".ttf", ".otf", ".css", ".js",
 }
 _PREVIEW_BLOCKED_DIRS = {"logs"}
@@ -188,7 +188,7 @@ async def _start_render(draft: Draft, job: Job, options: RenderOptions) -> str:
     niche_cfg = get_niche_config(draft.niche_id)
     job = drafts.load_job(draft.draft_id) or job
     job = drafts.apply_render_options(job, options, draft.details)
-    from src.core.library.lyric_appearance import prepare_render_appearance
+    from src.core.nodemotion.lyrics.appearance import prepare_render_appearance
     job = prepare_render_appearance(job, draft.template_id, options.background_opacity)
     # Un reintento tras un fallo reusa el registro existente (mismo job_id).
     if job_tracker.get(job.job_id) is None:
@@ -322,10 +322,26 @@ async def original_draft(template_id: str, request: DraftPrepareRequest | None =
             image_asset_id=assets.image_asset_id,
             video_asset_id=assets.video_asset_id,
             song_info=song_info,
+            timed_content=_original_timed_content(template_id, niche),
         ),
         original=True,
         song_notes=notes,
     )
+
+
+def _original_timed_content(template_id: str, niche) -> dict | None:
+    if not niche.template.requires_lyrics:
+        return None
+    import json
+    asset_dir = template_original.get_template_asset_dir(template_id)
+    if asset_dir is None or not (asset_dir / "config.json").is_file():
+        return None
+    _, timeline = template_original.song_and_lyrics(asset_dir, template_original._config(asset_dir))
+    if timeline is None:
+        if template_id.startswith("promo-"):
+            raise HTTPException(status_code=422, detail="Promo original has no timeline")
+        return None
+    return json.loads(timeline.read_text(encoding="utf-8"))
 
 
 async def _create_draft(request: DraftCreateRequest, *, original: bool = False, song_notes: str = "") -> DraftResponse:
@@ -353,9 +369,11 @@ async def _create_draft(request: DraftCreateRequest, *, original: bool = False, 
         # Igual que /videos/upload: la duración es la de la canción real.
         duration_config=DurationConfig(mode=DurationMode.AUTO, repeat_count=1),
     )[0]
-    if request.template_inputs is not None:
+    if request.template_inputs is not None or request.promo_timeline is not None or request.timed_content is not None:
         job = job.model_copy(update={
-            "input": job.input.model_copy(update={"template_inputs": request.template_inputs}),
+            "input": job.input.model_copy(update={"template_inputs": request.template_inputs,
+                                                   "promo_timeline": request.promo_timeline,
+                                                   "timed_content": request.timed_content}),
         })
 
     draft = await drafts.create(
@@ -404,7 +422,7 @@ async def delete_draft(draft_id: str) -> DraftResponse:
     draft = await drafts.get(draft_id)
     if draft is None:
         raise HTTPException(status_code=404, detail=f"Draft '{draft_id}' not found")
-    from src.core.promo_prompts import TEMPLATES
+    from src.core.nodemotion.promo.prompts import TEMPLATES
     if draft.original and draft.template_id in TEMPLATES:
         raise HTTPException(status_code=409, detail="La demo original no se puede eliminar")
     if drafts.is_running(draft_id):
@@ -540,6 +558,9 @@ async def render_draft(draft_id: str, request: DraftRenderRequest) -> DraftRende
             detail=f"Draft '{draft_id}' cannot be rendered (status={draft.status}).",
         )
     niche_cfg = get_niche_config(draft.niche_id)
+    if request.publish_accounts and draft.pending:
+        raise HTTPException(status_code=409, detail="Faltan datos antes de publicar: " + "; ".join(draft.pending)
+                            + ". Generalos con Preparar o completalos a mano.")
     await _validate_render_options(niche_cfg, request)
     _check_background_capacity(1)
 
@@ -555,7 +576,7 @@ async def get_draft_preview_file(draft_id: str, file_path: str, request: Request
     draft = await drafts.get(draft_id)
     if draft is None:
         raise HTTPException(status_code=404, detail=f"Draft '{draft_id}' not found")
-    from src.core.promos.readiness import is_archived_draft
+    from src.core.nodemotion.promo.readiness import is_archived_draft
     if is_archived_draft(draft):
         raise HTTPException(status_code=404, detail="Draft preview not available")
     job = drafts.load_job(draft_id)
@@ -564,6 +585,10 @@ async def get_draft_preview_file(draft_id: str, file_path: str, request: Request
 
     root = Path(job.artifacts.output_dir).resolve()
     path = (root / file_path).resolve()
+    from src.presentation.api.nodemotion_preview import serve_project_preview
+    response = serve_project_preview(root, file_path, request, job=job, template_id=draft.template_id)
+    if response is not None:
+        return response
     if (
         not path.is_relative_to(root)
         or path.suffix.lower() not in _PREVIEW_SUFFIXES
@@ -583,7 +608,7 @@ async def get_draft_preview_file(draft_id: str, file_path: str, request: Request
         content = preview_config_json(path.read_text(encoding="utf-8"), request)
         if draft.template_id == "lyrics-impact" and job.artifacts.config_json_path and path == Path(job.artifacts.config_json_path).resolve():
             import json
-            from src.core.library.lyric_appearance import ensure_intro_title
+            from src.core.nodemotion.lyrics.appearance import ensure_intro_title
             config = json.loads(content)
             if ensure_intro_title(config, job, draft.template_id):
                 content = json.dumps(config, ensure_ascii=False)

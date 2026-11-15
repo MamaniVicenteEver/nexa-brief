@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-impact",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-impact",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/women-dancing.mp4",
+    "components/intro.js",
+    "components/background-sequence.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "cb1148ab3d760c83230a30d7e5a1653d99257262715b2a5e3b2741822311f8da",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-impact",
+    "config": "nodemotion/lyrics/lyrics-impact/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-impact/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-impact/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/bg.png": "9c96bee361987b56992fa2308dcf2526d6446088d7812000de7a785185abe948.png",
+    "assets/card-poster.webp": "652c8c44e8c999d56ec8781ddeef884be84cf4c18bb7691c47cbde891d83c7b9.webp",
+    "assets/remix.jpg": "22e483fe12595138eff850e2c6c83c33e85b8ec708935444c6c50845a0e42607.jpg",
+    "assets/song.mp3": "84fa49015ac891d6f7bb5ebc8513885cb620239c280267b51cadaafa32755e96.mp3",
+    "assets/women-dancing.mp4": "b6afa20278e6385d920fbab482dc78f377db2319ad7b2e7b4097f2f446b2a450.mp4"
+  },
+  "revision": "b4d3c67d91cb1beb80f20485287402a0202ba90a2021c83f94f63d749a4a9ba7"
+}

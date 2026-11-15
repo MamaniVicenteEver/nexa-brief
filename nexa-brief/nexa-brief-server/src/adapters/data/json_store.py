@@ -293,7 +293,8 @@ class JsonDataStore:
             path = data_directory() / "prototypes" / ".preparation-coordination.lock"
         elif re.fullmatch(r"localization-[a-f0-9]{32}", name):
             path = data_directory() / "explainer" / f".{name}.lock"
-        elif name in {"library-upload-image", "library-upload-video"}:
+        elif (name in {"library-upload-image", "library-upload-video"}
+              or re.fullmatch(r"library-bundled-(?:image|video|music)-[a-f0-9]{64}", name)):
             path = data_directory() / "library" / f".{name}.lock"
         elif (name == "promo-host-preparation"
               or re.fullmatch(r"promo-chat-[a-f0-9]{32}", name)

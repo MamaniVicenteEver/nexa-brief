@@ -8,7 +8,7 @@ import sys
 import pytest
 
 SERVER = Path(__file__).resolve().parents[2]
-CLI = SERVER / 'src/templates/_tools/nodemotion-promo/promo.py'
+CLI = SERVER / 'src/templates/_tools/nodemotion/promo/tools/promo.py'
 
 
 @pytest.fixture
@@ -54,7 +54,7 @@ def test_check_rejects_numeric_segment_without_existing_fact(workspace):
     target = root / 'sandbox/nodemotion/ensayo'
     (target / 'work/research').mkdir(parents=True)
     (target / 'work/research/research.json').write_text(json.dumps({'findings': [{'id': 'titulo'}]}))
-    (target / 'work/guion.json').write_text(json.dumps({'segments': [{'lines': ['29 LIGAS'], 'facts': ['otro']}]}))
+    (target / 'work/script.json').write_text(json.dumps({'segments': [{'lines': ['29 LIGAS'], 'facts': ['otro']}]}))
     result = invoke(root, 'check', '--id', 'ensayo')
     assert result.returncode == 1
     assert any('cifra sin fact existente' in error for error in json.loads(result.stdout)['errors'])
@@ -110,7 +110,7 @@ def test_research_allows_source_with_only_year_without_inventing_a_day(workspace
                                    'promo-sports', 'promo-trendy', 'promo-urban'])
 def test_contract_matches_catalog_and_active_config(ident):
     catalog = json.loads((SERVER / 'src/templates/templates.json').read_text())['templates']
-    contract = json.loads((SERVER / f'src/skills/nodemotion/promo/templates/{ident}.json').read_text())
+    contract = json.loads((SERVER / f'src/templates/_tools/nodemotion/promo/production/templates/{ident}.json').read_text())
     wrapper = json.loads((SERVER / f'src/templates/nodemotion/commercial/{ident}/assets/config.json').read_text())
     active = next(config for config in wrapper['configs'] if config['id'] == wrapper['activeId'])
     assert contract['inputs'] == catalog[ident]['inputs']

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-calado",
+  "id": "config.colors",
+  "entry_id": "config.colors",
+  "name": "colors",
+  "kind": "configuration",
+  "label": "colors",
+  "summary": "Existing configuration configuration: colors.",
+  "params": {
+    "ink": {
+      "default": "#F4EFE6"
+    },
+    "palette": {
+      "default": [
+        "#FF7A1A",
+        "#4FC3FF",
+        "#E0362C",
+        "#FFD23F"
+      ]
+    },
+    "outline": {
+      "default": "rgba(244,239,230,0.10)"
+    }
+  },
+  "example": {
+    "ink": "#F4EFE6",
+    "palette": [
+      "#FF7A1A",
+      "#4FC3FF",
+      "#E0362C",
+      "#FFD23F"
+    ],
+    "outline": "rgba(244,239,230,0.10)"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-calado/assets/config.json",
+      "pointer": "/configs/0/colors"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

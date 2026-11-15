@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "trazo.outrov2",
+  "entry_id": "trazo.outrov2",
+  "kind": "component",
+  "label": "Outro v2 Grieta",
+  "summary": "Papel blanco, grieta que se abre, letras de estilos mezclados e impactos.",
+  "component": {
+    "name": "trazo.outrov2",
+    "label": "Outro v2 Grieta",
+    "summary": "Papel blanco, grieta que se abre, letras de estilos mezclados e impactos.",
+    "group": "outro",
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "Gracias",
+        "doc": "config.outro.title"
+      },
+      "sub": {
+        "type": "string",
+        "default": "por ver",
+        "doc": "config.outro.sub"
+      },
+      "feats": {
+        "type": "string",
+        "default": "Suscríbete · NodeMotion",
+        "doc": "config.outro.feats"
+      }
+    },
+    "tags": [
+      "outro"
+    ],
+    "file": "components/outro-v2.js",
+    "demo": {},
+    "preview": {
+      "t": 3.3
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "Gracias",
+      "doc": "config.outro.title"
+    },
+    "sub": {
+      "type": "string",
+      "default": "por ver",
+      "doc": "config.outro.sub"
+    },
+    "feats": {
+      "type": "string",
+      "default": "Suscríbete · NodeMotion",
+      "doc": "config.outro.feats"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/showcase/components.json",
+      "pointer": "/components/2"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

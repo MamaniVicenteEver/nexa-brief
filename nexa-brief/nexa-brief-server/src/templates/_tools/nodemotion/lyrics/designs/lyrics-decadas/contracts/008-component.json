@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "decadas.escena",
+  "entry_id": "decadas.escena",
+  "kind": "component",
+  "label": "Escena de letra",
+  "summary": "Una de las siete escenas del mazo con un fragmento de letra.",
+  "component": {
+    "name": "decadas.escena",
+    "label": "Escena de letra",
+    "summary": "Una de las siete escenas del mazo con un fragmento de letra.",
+    "tags": [
+      "escena"
+    ],
+    "file": "components/escenas.js",
+    "params": {
+      "scene": {
+        "type": "string",
+        "default": "titulo",
+        "options": [
+          "letras",
+          "titulo",
+          "barrido",
+          "gigante",
+          "contador",
+          "credito",
+          "foto"
+        ]
+      },
+      "text": {
+        "type": "string",
+        "default": "1980 - 1990",
+        "doc": "Texto"
+      },
+      "keyword": {
+        "type": "string",
+        "default": "1980",
+        "doc": "Palabra para letras gigantes"
+      },
+      "duration": {
+        "type": "number",
+        "default": 2.2,
+        "doc": "Segundos",
+        "min": 0.5,
+        "max": 8
+      }
+    },
+    "demo": {
+      "scene": "gigante",
+      "text": "1997 - 2007"
+    },
+    "preview": {
+      "t": 1.4
+    }
+  },
+  "params": {
+    "scene": {
+      "type": "string",
+      "default": "titulo",
+      "options": [
+        "letras",
+        "titulo",
+        "barrido",
+        "gigante",
+        "contador",
+        "credito",
+        "foto"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "default": "1980 - 1990",
+      "doc": "Texto"
+    },
+    "keyword": {
+      "type": "string",
+      "default": "1980",
+      "doc": "Palabra para letras gigantes"
+    },
+    "duration": {
+      "type": "number",
+      "default": 2.2,
+      "doc": "Segundos",
+      "min": 0.5,
+      "max": 8
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/showcase/components.json",
+      "pointer": "/components/3"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

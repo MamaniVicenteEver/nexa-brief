@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "config.fonts",
+  "entry_id": "config.fonts",
+  "name": "fonts",
+  "kind": "configuration",
+  "label": "fonts",
+  "summary": "Existing configuration configuration: fonts.",
+  "params": {
+    "condensed": {
+      "default": {
+        "family": "Anton",
+        "src": "assets/fonts/Anton-Regular.woff2",
+        "weight": 400,
+        "stretch": 100,
+        "tracking": 0
+      }
+    },
+    "thin": {
+      "default": {
+        "family": "Oswald",
+        "src": "assets/fonts/Oswald.woff2",
+        "variable": "wght",
+        "weight": 300,
+        "stretch": 100,
+        "tracking": 0.3
+      }
+    },
+    "wide": {
+      "default": {
+        "family": "Archivo",
+        "src": "assets/fonts/Archivo.woff2",
+        "variable": "wdth",
+        "weight": 900,
+        "stretch": 125,
+        "tracking": 0.02
+      }
+    }
+  },
+  "example": {
+    "condensed": {
+      "family": "Anton",
+      "src": "assets/fonts/Anton-Regular.woff2",
+      "weight": 400,
+      "stretch": 100,
+      "tracking": 0
+    },
+    "thin": {
+      "family": "Oswald",
+      "src": "assets/fonts/Oswald.woff2",
+      "variable": "wght",
+      "weight": 300,
+      "stretch": 100,
+      "tracking": 0.3
+    },
+    "wide": {
+      "family": "Archivo",
+      "src": "assets/fonts/Archivo.woff2",
+      "variable": "wdth",
+      "weight": 900,
+      "stretch": 125,
+      "tracking": 0.02
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/assets/config.json",
+      "pointer": "/configs/0/fonts"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

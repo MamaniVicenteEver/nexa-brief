@@ -14,7 +14,7 @@ def module(monkeypatch):
     factory = types.ModuleType("src.adapters.researcher_data.factory")
     factory.ResearcherDataAdapter = object
     monkeypatch.setitem(sys.modules, factory.__name__, factory)
-    path = Path(__file__).parents[3] / "src/core/promos/research.py"
+    path = Path(__file__).parents[3] / "src/core/nodemotion/promo/research.py"
     spec = importlib.util.spec_from_file_location("promo_research_test", path)
     result = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(result)

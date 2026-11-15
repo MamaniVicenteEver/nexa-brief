@@ -9,6 +9,10 @@ Punto de entrada único. Si te pasaron este archivo (o su URL) sos el **agente l
 prototipo: una plantilla NUEVA del sandbox de la que después salen cientos de videos. No es hacer
 un video con una plantilla que ya existe (para eso: `_tools/explainer-kit/AGENTS.md`).
 
+## Diseños NodeMotion de letras o promos
+Lee [crear e integrar plantillas](../../../docs/nodemotion-template-authoring.md): fuente compartida, componentes, datos, recursos y registro.
+El prototipo queda dentro del Sandbox autorizado; el integrador completa el motor compartido y sus registros. No confundir con preparar un video de una plantilla existente.
+
 ## Contrato de entrega obligatorio
 
 Leé y aplicá [PREPARAR-PRODUCCION.md](PREPARAR-PRODUCCION.md) antes del plan y

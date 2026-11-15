@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-neon",
+  "family": "lyrics",
+  "source_of_truth": "templates.json#templates/lyrics-neon",
+  "config_json": "nodemotion/lyrics/lyrics-neon/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-neon/prompts/config_mapper.md",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "background",
+        "kind": "image|video",
+        "min": 0,
+        "max": 1,
+        "target": "config",
+        "path": "bg.src",
+        "label": "Fondo (opcional)",
+        "hint": "Video o imagen nocturna: luces, calle, fiesta. Si no subes nada, se usa el video de la plantilla."
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/lyrics-neon",
+    "config": "nodemotion/lyrics/lyrics-neon/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-neon/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-neon/README.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

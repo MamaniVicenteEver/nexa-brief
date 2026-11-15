@@ -2,8 +2,8 @@
 import json
 from unittest.mock import AsyncMock
 import pytest
-from src.core.promos import pipeline
-from src.core.promo_prompts import reference
+from src.core.nodemotion.promo import pipeline
+from src.core.nodemotion.promo.prompts import reference
 from test_promo_pipeline import proposal
 
 
@@ -14,7 +14,7 @@ async def test_retry_rebuilds_preview_preserves_old_draft_and_reuses_publication
     normalized={**data,'brief':brief,'research':research,'guion':guion,'media_plan':plan}
     session={'session_id':sid,'revision':1,'template_id':'promo-kinetic','provider':'claude','resume_host':True,
              'prompt_ref':reference('v3'),'proposal':normalized,'source_context':[{'url':s['url'],'text':'contenido'} for s in research['findings'][0]['sources']]}
-    for path,value in [('brief.json',brief),('work/research/input.json',research),('work/guion.json',guion),('media-plan.json',plan),('draft.json',{'draft_id':'old'}),('work/instrucciones/prompts-version.json',reference('v3'))]:
+    for path,value in [('brief.json',brief),('work/research/input.json',research),('work/script.json',guion),('media-plan.json',plan),('draft.json',{'draft_id':'old'}),('work/instructions/prompts-version.json',reference('v3'))]:
         pipeline.write(target/path,value)
     rows={'old':{'status':'prepared','details':{'copies':{'youtube':{'title':'revisado'}}},'thumbnails':{'options':{'A':{'text':'PRIMOS'},'B':{'text':'PRIMOS'}}}},'new':{'status':'prepared'}}
     monkeypatch.setattr(pipeline,'collection',lambda _:type('Rows',(),{'get':lambda self,k:rows.get(k)})())
@@ -39,7 +39,7 @@ async def test_retry_rebuilds_preview_preserves_old_draft_and_reuses_publication
     ai.assert_not_awaited()
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize('present', [[], ['brief.json'], ['brief.json', 'work/guion.json', 'work/instrucciones/prompts-version.json']])
+@pytest.mark.parametrize('present', [[], ['brief.json'], ['brief.json', 'work/script.json', 'work/instructions/prompts-version.json']])
 async def test_resume_partial_directory_restores_only_missing_without_replacing_existing(tmp_path, monkeypatch, present):
     sid = 'b' * 32
     project = tmp_path / sid
@@ -52,7 +52,7 @@ async def test_resume_partial_directory_restores_only_missing_without_replacing_
     session = {'session_id':sid, 'revision':1, 'template_id':'promo-kinetic', 'provider':'claude',
                'resume_host':True, 'prompt_ref':reference('v3'), 'proposal':data,
                'source_context':[{'url':s['url'], 'text':'contenido'} for s in research['findings'][0]['sources']]}
-    files = {'brief.json':brief, 'work/guion.json':guion, 'work/instrucciones/prompts-version.json':reference('v3')}
+    files = {'brief.json':brief, 'work/script.json':guion, 'work/instructions/prompts-version.json':reference('v3')}
     for path in present: pipeline.write(target/path, files[path])
     before = {path:(target/path).read_bytes() for path in present}
     rows = {'new':{'status':'prepared'}}
@@ -71,7 +71,7 @@ async def test_resume_partial_directory_restores_only_missing_without_replacing_
     result = await pipeline._prepare(session, project, data, AsyncMock())
     assert result['draft_id'] == 'new'
     assert all((target/path).read_bytes() == value for path,value in before.items())
-    for path in ('brief.json','work/guion.json','work/research/input.json','media-plan.json','work/instrucciones/prompts-version.json'):
+    for path in ('brief.json','work/script.json','work/research/input.json','media-plan.json','work/instructions/prompts-version.json'):
         assert (target/path).is_file()
     forbidden.assert_not_awaited()
 

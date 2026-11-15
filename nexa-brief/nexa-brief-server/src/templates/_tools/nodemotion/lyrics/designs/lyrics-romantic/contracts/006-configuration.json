@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-romantic",
+  "id": "config.layout",
+  "entry_id": "config.layout",
+  "name": "layout",
+  "kind": "configuration",
+  "label": "layout",
+  "summary": "Existing configuration configuration: layout.",
+  "params": {
+    "groupGapSec": {
+      "default": 0.42
+    },
+    "maxRowChars": {
+      "default": 22
+    },
+    "rowGapVh": {
+      "default": 3.6
+    },
+    "anchorVhFrac": {
+      "default": 0.55
+    },
+    "scriptChanceSolo": {
+      "default": 0.75
+    },
+    "scriptChanceMulti": {
+      "default": 0.22
+    },
+    "sideAlignChance": {
+      "default": 0.3
+    },
+    "maxTiltDeg": {
+      "default": 1.6
+    },
+    "charStepMs": {
+      "default": 55
+    },
+    "oldAfter": {
+      "default": 3
+    }
+  },
+  "example": {
+    "groupGapSec": 0.42,
+    "maxRowChars": 22,
+    "rowGapVh": 3.6,
+    "anchorVhFrac": 0.55,
+    "scriptChanceSolo": 0.75,
+    "scriptChanceMulti": 0.22,
+    "sideAlignChance": 0.3,
+    "maxTiltDeg": 1.6,
+    "charStepMs": 55,
+    "oldAfter": 3
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-romantic/assets/config.json",
+      "pointer": "/configs/0/layout"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

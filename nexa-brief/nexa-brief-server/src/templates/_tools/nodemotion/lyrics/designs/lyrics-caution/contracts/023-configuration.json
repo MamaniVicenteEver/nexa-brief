@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-caution",
+  "id": "config.mosaic",
+  "entry_id": "config.mosaic",
+  "name": "mosaic",
+  "kind": "configuration",
+  "label": "mosaic",
+  "summary": "Existing configuration configuration: mosaic.",
+  "params": {
+    "enabled": {
+      "default": true
+    },
+    "atSec": {
+      "default": null
+    },
+    "minGapSec": {
+      "default": 1.2
+    },
+    "maxSec": {
+      "default": 2.6
+    },
+    "tailFraction": {
+      "default": 0.35
+    },
+    "cols": {
+      "default": 4
+    },
+    "rows": {
+      "default": 4
+    },
+    "swapSec": {
+      "default": 0.45
+    }
+  },
+  "example": {
+    "enabled": true,
+    "atSec": null,
+    "minGapSec": 1.2,
+    "maxSec": 2.6,
+    "tailFraction": 0.35,
+    "cols": 4,
+    "rows": 4,
+    "swapSec": 0.45
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-caution/assets/config.json",
+      "pointer": "/configs/0/mosaic"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

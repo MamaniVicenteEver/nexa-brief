@@ -210,7 +210,7 @@ async def run_kit_render(
         for fmt in formats:
             if fmt not in sizes:
                 raise RenderError(f"Formato inválido: {fmt}")
-            cmd = [sys.executable, str(settings.templates_dir / "_tools/commercial/render_promo.py"),
+            cmd = [sys.executable, str(settings.templates_dir / "_tools/nodemotion/promo/compiler/render_promo.py"),
                    page, str(destination / render_filename(video_id, fmt, seconds)),
                    "--edition", str(edition_path / "edition.json"), "--size", sizes[fmt], "--workers", "4"]
             if seconds:

@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import pytest
 from src.core.template_config import active_config
-from src.core import promo_prompts
+from src.core.nodemotion.promo import prompts as promo_prompts
 
 
 def test_active_config_selects_requested_case_and_falls_back_like_runtime():
@@ -48,7 +48,7 @@ def test_music_new_and_reused_share_preparation(tmp_path):
     import asyncio
     import tempfile
     from types import SimpleNamespace
-    source = Path('src/templates/_tools/nodemotion-promo/media.py').read_text()
+    source = Path('src/templates/_tools/nodemotion/promo/tools/media.py').read_text()
     node = next(n for n in ast.parse(source).body if isinstance(n, ast.AsyncFunctionDef) and n.name == 'music')
     root, target = tmp_path / 'profile', tmp_path / 'project'
     folder = root / 'resources/music/track'
@@ -92,9 +92,9 @@ def test_music_new_and_reused_share_preparation(tmp_path):
 
 @pytest.mark.parametrize('template', sorted(promo_prompts.TEMPLATES))
 def test_scene_contract_matches_generator_spec(template):
-    root = Path('src')
-    contract = json.loads((root / 'skills/nodemotion/promo/templates' / f'{template}.json').read_text())
-    spec = json.loads((root / 'templates/_tools/commercial/build' / f'{template}.spec.json').read_text())
+    root = Path(__file__).resolve().parents[2] / 'src'
+    contract = json.loads((root / 'templates/_tools/nodemotion/promo/production/templates' / f'{template}.json').read_text())
+    spec = json.loads((root / 'templates/_tools/nodemotion/promo/compiler/build' / f'{template}.spec.json').read_text())
     metadata = {'max_text_lines', 'min_text_lines', 'text_source'}
     scenes = [{k: v for k, v in scene.items() if k not in metadata} for scene in contract['default_scenes']]
     assert scenes == spec['config']['scenes']

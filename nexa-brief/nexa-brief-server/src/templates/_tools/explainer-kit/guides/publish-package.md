@@ -58,3 +58,13 @@ Las demás categorías siguen con
 
 **Sin emojis** en ningún texto. Toda cifra con dígitos (títulos, miniaturas, antetítulo, Facebook,
 TikTok) tiene que estar en el guion: `check` lo controla.
+
+## Licencias del video (obligatorio al cerrar)
+
+Ejecutá `.venv/bin/python src/templates/_tools/explainer-kit/tools/kit.py licencias <video-id>`
+desde `nexa-brief-server/` al cerrar el montaje y repetilo después de cualquier cambio de
+recursos. Se generan `licencias.json` y `LICENCIAS.md` junto al video. Revisá los motivos,
+las atribuciones y las condiciones de cada elemento; copiá el bloque de créditos en la
+descripción. Si hay CC BY-SA, la adaptación se declara CC BY-SA 4.0 y hay que confirmar
+la compatibilidad de todos los componentes. Las licencias desconocidas y bloqueadas
+impiden publicar. El archivo no sustituye la decisión de publicación de la persona.

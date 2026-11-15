@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LETRAS ROMÁNTICA V1 — Colapso</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Great+Vibes&display=swap" rel="stylesheet">
+<style><!-- nodemotion-fragment:styles/01-design.css --></style>
+</head>
+<body>
+<div id="bgFallback"></div>
+<img id="bgMedia" alt="" style="display:none">
+<div id="warmTint"></div>
+<canvas id="bokeh"></canvas>
+<div id="viewport"><div id="world"></div></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+<div id="intro" class="cardScreen">
+  <div class="artist"></div><div class="title"></div><div class="sub"></div><div class="feats"></div>
+</div>
+<div id="outro" class="cardScreen">
+  <div class="artist"></div><div class="title"></div><div class="sub"></div><div class="feats"></div>
+</div>
+<div id="hint">Click para empezar</div>
+<audio id="audio" preload="auto"></audio>
+<!-- ── Recording panel ────────────────────────────────────────────────── -->
+<button id="rec-btn" title="Motor de grabación (R)">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round" style="color:#fff">
+    <circle cx="12" cy="12" r="7" fill="rgba(255,60,60,0.85)" stroke="none"/>
+    <circle cx="12" cy="12" r="11" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none"/>
+  </svg>
+</button>
+<div id="rec-panel">
+  <h3>Motor de grabación</h3>
+  <div class="rec-engine" data-engine="hyperframes">
+    <div class="rec-engine-icon" style="background:rgba(255,160,30,0.15)">⚡</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">HyperFrames</p>
+      <p class="rec-engine-desc">Rápido, nativo del pipeline Nexa.</p>
+    </div>
+    <span class="rec-engine-badge badge-fast">RÁPIDO</span>
+  </div>
+  <div class="rec-engine" data-engine="remotion">
+    <div class="rec-engine-icon" style="background:rgba(100,60,255,0.15)">🎬</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">Remotion</p>
+      <p class="rec-engine-desc">Mejor calidad, render más lento.</p>
+    </div>
+    <span class="rec-engine-badge badge-quality">CALIDAD</span>
+  </div>
+  <div class="rec-engine" data-engine="playwright">
+    <div class="rec-engine-icon" style="background:rgba(60,180,255,0.15)">🎭</div>
+    <div class="rec-engine-info">
+      <p class="rec-engine-name">Playwright</p>
+      <p class="rec-engine-desc">Captura real del navegador.</p>
+    </div>
+    <span class="rec-engine-badge badge-dev">BROWSER</span>
+  </div>
+  <button id="rec-go" disabled>● Grabar</button>
+  <p id="rec-status"></p>
+</div>
+<!-- ──────────────────────────────────────────────────────────────────────── -->
+
+<script type="module"><!-- nodemotion-fragment:scripts/01-runtime.js --></script>
+</body>
+</html>

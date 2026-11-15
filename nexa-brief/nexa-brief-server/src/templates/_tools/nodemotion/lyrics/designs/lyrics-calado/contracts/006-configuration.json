@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-calado",
+  "id": "config.laminas",
+  "entry_id": "config.laminas",
+  "name": "laminas",
+  "kind": "configuration",
+  "label": "laminas",
+  "summary": "Existing configuration configuration: laminas.",
+  "params": {
+    "deck": {
+      "default": [
+        "calado",
+        "solido",
+        "calado",
+        "mixto",
+        "calado",
+        "solido",
+        "calado",
+        "mixto",
+        "solido"
+      ]
+    },
+    "bleedChance": {
+      "default": 0.45
+    },
+    "scriptChance": {
+      "default": 0.3
+    },
+    "punch": {
+      "default": 0.05
+    }
+  },
+  "example": {
+    "deck": [
+      "calado",
+      "solido",
+      "calado",
+      "mixto",
+      "calado",
+      "solido",
+      "calado",
+      "mixto",
+      "solido"
+    ],
+    "bleedChance": 0.45,
+    "scriptChance": 0.3,
+    "punch": 0.05
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-calado/assets/config.json",
+      "pointer": "/configs/0/laminas"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

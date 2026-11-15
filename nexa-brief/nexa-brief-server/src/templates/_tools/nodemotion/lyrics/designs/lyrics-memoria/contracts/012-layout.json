@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-memoria",
+  "id": "layout.projector",
+  "entry_id": "layout.projector",
+  "name": "projector",
+  "kind": "layout",
+  "label": "projector",
+  "summary": "Existing layout configuration: projector.",
+  "params": {
+    "weight": {
+      "default": 1.3
+    },
+    "media": {
+      "default": [
+        "family-snow",
+        "child-8mm",
+        "family-kitchen",
+        "family-nature"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.3,
+    "media": [
+      "family-snow",
+      "child-8mm",
+      "family-kitchen",
+      "family-nature"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-memoria/assets/config.json",
+      "pointer": "/configs/0/layouts/projector"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

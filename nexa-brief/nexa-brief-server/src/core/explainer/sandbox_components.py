@@ -22,7 +22,9 @@ def list_components(root: Path) -> list[dict]:
             if directory.is_symlink() or not directory.resolve().is_relative_to(root.resolve()):
                 return
             children = [p for p in directory.iterdir() if p.is_dir() and not p.name.startswith(('.', '_')) and not p.is_symlink()]
-            is_item = (directory / 'info.json').is_file() or (directory / 'index.html').is_file() or (directory / 'manifest.json').is_file()
+            from src.core.nodemotion.shared.content import has_project_entry
+            project_entry = has_project_entry(directory)
+            is_item = project_entry or (directory / 'info.json').is_file() or (directory / 'index.html').is_file() or (directory / 'manifest.json').is_file()
             if len(parts) >= 2 and is_item:
                 info_path = directory / 'info.json'
                 stat = info_path.stat() if info_path.is_file() else directory.stat()
@@ -34,7 +36,7 @@ def list_components(root: Path) -> list[dict]:
                     status=info.get('status') if isinstance(info.get('status'), str) else None,
                     summary=info.get('summary') if isinstance(info.get('summary'), str) else None,
                     design=info.get('design') if isinstance(info.get('design'), str) else None,
-                    has_index=(directory / 'index.html').is_file(),
+                    has_index=(directory / 'index.html').is_file() or project_entry,
                     updated_at=datetime.fromtimestamp(stat.st_mtime, timezone.utc).isoformat().replace('+00:00', 'Z'),
                     thumbnail_url='/api/v1/explainer/files/' + '/'.join(quote(p, safe='') for p in (*path.split('/'), 'render', 'poster.jpg')) if poster.is_file() else None,
                     components=components, has_components=bool(components)))

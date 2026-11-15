@@ -19,7 +19,7 @@ printf '%s\n' '<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180">
 printf '%s\n' "window.__promo={scenes:()=>[{t1:1}],seek:async(t)=>{let im=document.getElementById('art');if(!im.complete||!im.naturalWidth)throw Error('image failed');document.body.style.opacity=String(0.5+t/2)}};" > "$VIDEO/assets/runtime.js"
 printf '%s\n' '<!doctype html><html><body style="margin:0;background:#101827"><img id="art" src="assets/image.svg"><audio src="assets/song.mp3"></audio><script src="assets/runtime.js"></script></body></html>' > "$VIDEO/index.html"
 ffmpeg -hide_banner -loglevel error -y -f lavfi -i sine=frequency=440:duration=1 -c:a libmp3lame "$VIDEO/assets/song.mp3"
-XDG_CONFIG_HOME="$TMPDIR_REVIEW/config" NEXA_PROFILE_DIR="$PROFILE" PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="$CHROME" "$PYTHON" "$SERVER/src/templates/_tools/commercial/render_promo.py" productions/nodetech/synthetic/index.html "$PROFILE/renders/synthetic/check/synthetic.mp4" --fps 5 --size 320x180 --to 1 --workers 1
+XDG_CONFIG_HOME="$TMPDIR_REVIEW/config" NEXA_PROFILE_DIR="$PROFILE" PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH="$CHROME" "$PYTHON" "$SERVER/src/templates/_tools/nodemotion/promo/compiler/render_promo.py" productions/nodetech/synthetic/index.html "$PROFILE/renders/synthetic/check/synthetic.mp4" --fps 5 --size 320x180 --to 1 --workers 1
 ffprobe -v error -show_entries stream=codec_type,width,height -show_entries format=duration -of json "$PROFILE/renders/synthetic/check/synthetic.mp4"
 rm -rf "$TMPDIR_REVIEW"
 ```

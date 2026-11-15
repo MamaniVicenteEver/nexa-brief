@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-TOOLS = Path(__file__).resolve().parents[2] / 'src/templates/_tools/nodemotion-promo'
+TOOLS = Path(__file__).resolve().parents[2] / 'src/templates/_tools/nodemotion/promo/tools'
 sys.path.insert(0, str(TOOLS))
 spec = importlib.util.spec_from_file_location('nm_draft_workflow', TOOLS / 'draft_workflow.py')
 workflow = importlib.util.module_from_spec(spec)
@@ -19,7 +19,7 @@ class Records:
     async def insert(self, data): self.data[data['asset_id']] = data
 
 
-def test_music_derived_reuses_file_and_rejects_changed_lyrics(tmp_path, monkeypatch):
+def test_music_derived_reuses_audio_without_transcription_cache(tmp_path, monkeypatch):
     folder = tmp_path/'resources/music/source'; folder.mkdir(parents=True)
     audio=folder/'cut.mp3'; audio.write_bytes(b'audio')
     (folder/'resource.json').write_text(json.dumps({'id':'source','attribution':'CC BY'}))
@@ -27,11 +27,11 @@ def test_music_derived_reuses_file_and_rejects_changed_lyrics(tmp_path, monkeypa
     (target/'music.json').write_text(json.dumps({'asset_id':'source','ready_file':'cut.mp3','duration_seconds':90}))
     lyrics={'segments':[{'text':'hola'}]}; (target/'assets/lyrics.json').write_text(json.dumps(lyrics))
     records=Records({'asset_id':'source','relative_path':'source/original.mp3','track_name':'Song'})
-    cache={}
+    cache_calls=[]
     monkeypatch.setattr(workflow,'collection',lambda _:records)
     monkeypatch.setattr(workflow.asset_library,'resolve_music_path',lambda _:audio)
-    monkeypatch.setattr(workflow.asset_library,'get_lyrics_cache',lambda ident:cache.get(ident))
-    async def save(ident, data): cache[ident]=data
+    monkeypatch.setattr(workflow.asset_library,'get_lyrics_cache',lambda ident:cache_calls.append(('read',ident)))
+    async def save(ident, data): cache_calls.append(('write',ident))
     monkeypatch.setattr(workflow.asset_library,'save_lyrics_cache',save)
     read=lambda p:json.loads(p.read_text())
     write=lambda p,d:p.write_text(json.dumps(d))
@@ -39,13 +39,11 @@ def test_music_derived_reuses_file_and_rejects_changed_lyrics(tmp_path, monkeypa
     assert asyncio.run(workflow.derived_music(tmp_path,target,'demo',read,write))==first
     assert records.get(first)['relative_path']=='source/cut.mp3'
     assert records.get(first)['derived_from']=='source'
-    assert cache[first]==lyrics
     (target/'assets/lyrics.json').write_text(json.dumps({'segments':[{'text':'otra'}]}))
     second=asyncio.run(workflow.derived_music(tmp_path,target,'demo',read,write))
-    assert second != first
-    assert cache[first]==lyrics
-    assert cache[second]=={'segments':[{'text':'otra'}]}
-    assert asyncio.run(workflow.derived_music(tmp_path,target,'demo',read,write))==second
+    assert second == first
+    assert cache_calls == []
+    assert asyncio.run(workflow.derived_music(tmp_path,target,'demo',read,write))==first
 
 
 def test_wait_for_never_treats_errors_as_ready(monkeypatch,tmp_path):
@@ -205,6 +203,7 @@ def test_draft_creation_is_resumable_and_never_requests_render(tmp_path, monkeyp
     assert posts[0][1]=='/drafts'
     assert 'auto_render' not in posts[0][2]
     assert posts[0][2]['template_inputs']['media']=={'clips':['a','b','c','d','e','f'],'photos':['g','g','g']}
+    assert posts[0][2]['promo_timeline']=={'segments':[]}
     brief['name']='Cambiado'; (target/'brief.json').write_text(json.dumps(brief))
     with pytest.raises(ValueError,match='inputs cambiaron'):
         workflow.create(tmp_path,target,'demo',read,write)

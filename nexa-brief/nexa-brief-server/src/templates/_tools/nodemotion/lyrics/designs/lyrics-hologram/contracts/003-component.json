@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "outlineBack",
+  "entry_id": "outlineBack",
+  "kind": "component",
+  "label": "Gigante en contorno + banda",
+  "summary": "Palabra gigante itálica en contorno (o holo) detrás y el resto de la frase en una banda blanca, con rombos arriba y abajo.",
+  "component": {
+    "name": "outlineBack",
+    "label": "Gigante en contorno + banda",
+    "summary": "Palabra gigante itálica en contorno (o holo) detrás y el resto de la frase en una banda blanca, con rombos arriba y abajo.",
+    "group": "scene",
+    "tags": [
+      "lyrics-hologram",
+      "scene"
+    ],
+    "params": {
+      "textIn": {
+        "type": "enum",
+        "options": [
+          "slide",
+          "stamp",
+          "glitch",
+          "spread",
+          "fade",
+          "cut"
+        ],
+        "default": "cut"
+      },
+      "fill": {
+        "type": "enum",
+        "options": [
+          "outline",
+          "holo"
+        ],
+        "default": "outline"
+      },
+      "band": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "t": 11.2,
+      "query": null,
+      "layout": {
+        "weight": 1.3,
+        "bgs": [
+          "void"
+        ]
+      }
+    },
+    "preview": {
+      "gallery": "gallery.html?only=outlineBack"
+    }
+  },
+  "params": {
+    "textIn": {
+      "type": "enum",
+      "options": [
+        "slide",
+        "stamp",
+        "glitch",
+        "spread",
+        "fade",
+        "cut"
+      ],
+      "default": "cut"
+    },
+    "fill": {
+      "type": "enum",
+      "options": [
+        "outline",
+        "holo"
+      ],
+      "default": "outline"
+    },
+    "band": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/2"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

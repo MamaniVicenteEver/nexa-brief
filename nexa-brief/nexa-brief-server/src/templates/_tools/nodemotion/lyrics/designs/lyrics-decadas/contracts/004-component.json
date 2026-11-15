@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "decadas.fotos",
+  "entry_id": "decadas.fotos",
+  "kind": "component",
+  "label": "Fotos en semitono",
+  "summary": "Fotos de config.media convertidas a puntos de imprenta.",
+  "component": {
+    "name": "decadas.fotos",
+    "label": "Fotos en semitono",
+    "summary": "Fotos de config.media convertidas a puntos de imprenta.",
+    "default": true,
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "Dueles",
+        "doc": "Texto"
+      }
+    },
+    "tags": [
+      "medio"
+    ],
+    "file": "components/core.js",
+    "demo": {},
+    "preview": {
+      "t": 1.0
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "Dueles",
+      "doc": "Texto"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/showcase/components.json",
+      "pointer": "/components/5"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

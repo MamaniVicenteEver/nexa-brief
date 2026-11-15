@@ -4,7 +4,7 @@ La grabación del Explainer ahora emite progreso por formato y por fase. La band
 
 ## Cambios
 
-- `src/templates/_tools/commercial/render_promo.py`: contador compartido de cuadros, línea `@@progress <hechos> <total>` aproximadamente una vez por segundo y emisión final, más `@@phase encode` antes de ffmpeg.
+- `src/templates/_tools/nodemotion/promo/compiler/render_promo.py`: contador compartido de cuadros, línea `@@progress <hechos> <total>` aproximadamente una vez por segundo y emisión final, más `@@phase encode` antes de ffmpeg.
 - `src/templates/_tools/explainer-kit/tools/kit.py`: línea `@@format <fmt> <i> <n>` por formato y salida del render sin buffering.
 - `src/core/explainer/recorder.py`: lectura de stdout línea a línea con callback opcional, progreso global y ETA; los runners existentes sin callback siguen funcionando. El error conserva las últimas 800 letras de salida.
 - API: `GET /api/v1/explainer/jobs?active=true` lista jobs activos y trabajos finalizados durante las últimas 24 horas (`active=false` devuelve el historial completo en memoria). La respuesta incluye `progress`, `progress_format`, `progress_phase`, `started_at` y `eta_seconds`; también `title` y `poster_url` para la tarjeta de Biblioteca.
@@ -12,7 +12,7 @@ La grabación del Explainer ahora emite progreso por formato y por fase. La band
 
 ## Archivos de esta tarea
 
-- Backend: `src/templates/_tools/commercial/render_promo.py`, `src/templates/_tools/explainer-kit/tools/kit.py`, `src/core/explainer/recorder.py`, `src/presentation/api/routers/explainer.py`, `src/presentation/api/schemas/explainer_schema.py`.
+- Backend: `src/templates/_tools/nodemotion/promo/compiler/render_promo.py`, `src/templates/_tools/explainer-kit/tools/kit.py`, `src/core/explainer/recorder.py`, `src/presentation/api/routers/explainer.py`, `src/presentation/api/schemas/explainer_schema.py`.
 - Pruebas: `tests/conftest.py`, `tests/unit/test_explainer.py`, `tests/unit/test_explainer_production.py`, `tests/unit/test_explainer_sandbox.py`.
 - Web: `src/features/explainer/types.ts`, `src/features/explainer/api/explainer-service.ts`, `src/features/explainer/hooks/useExplainer.ts`, `src/features/explainer/components/RecordingProgress.tsx`, `src/features/explainer/components/RecordingTrayCard.tsx`, `src/features/explainer/components/ExplainerPrepSection.tsx`, `src/features/library/components/BibliotecaView.tsx`, `src/features/library/components/ExplainerRecordingCard.tsx`, `messages/es.json`, `messages/en.json`.
 

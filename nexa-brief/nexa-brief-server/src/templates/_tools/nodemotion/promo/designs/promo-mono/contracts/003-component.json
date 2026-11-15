@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.outroV2",
+  "entry_id": "mono.outroV2",
+  "kind": "component",
+  "label": "Outro v2: chips que se apartan + píldora con pin + marca",
+  "summary": "Outro v2: chips que se apartan + píldora con pin + marca",
+  "component": {
+    "name": "mono.outroV2",
+    "label": "Outro v2: chips que se apartan + píldora con pin + marca",
+    "summary": "Outro v2: chips que se apartan + píldora con pin + marca",
+    "group": "outro",
+    "params": {
+      "count": {
+        "type": "number",
+        "min": 6.0,
+        "max": 40.0,
+        "default": 22.0
+      }
+    },
+    "tags": [
+      "outro"
+    ],
+    "scene_type": "outro",
+    "demo": {
+      "time": 54.0,
+      "outro": "v2"
+    },
+    "preview": {
+      "t": 54.0
+    }
+  },
+  "params": {
+    "count": {
+      "type": "number",
+      "min": 6.0,
+      "max": 40.0,
+      "default": 22.0
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/17"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

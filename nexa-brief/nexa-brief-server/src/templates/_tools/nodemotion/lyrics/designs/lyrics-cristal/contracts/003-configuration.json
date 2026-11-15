@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-cristal",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "night": {
+      "default": "#07040F"
+    },
+    "glass": {
+      "default": "#DDF3FF"
+    },
+    "text": {
+      "default": "#FFFFFF"
+    },
+    "hot": {
+      "default": "#FF2E88"
+    },
+    "cool": {
+      "default": "#35E0FF"
+    },
+    "frost": {
+      "default": "#F4F8FF"
+    },
+    "fog": {
+      "default": "#E6EEF8"
+    }
+  },
+  "example": {
+    "night": "#07040F",
+    "glass": "#DDF3FF",
+    "text": "#FFFFFF",
+    "hot": "#FF2E88",
+    "cool": "#35E0FF",
+    "frost": "#F4F8FF",
+    "fog": "#E6EEF8"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-cristal/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

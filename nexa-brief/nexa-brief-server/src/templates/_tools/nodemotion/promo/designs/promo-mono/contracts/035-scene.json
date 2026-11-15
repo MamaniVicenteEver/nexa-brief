@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "scene.cardfan",
+  "entry_id": "scene.cardfan",
+  "name": "cardfan",
+  "kind": "scene",
+  "label": "cardfan",
+  "summary": "Existing scene configuration: cardfan.",
+  "params": {
+    "type": {
+      "default": "cardfan"
+    },
+    "media": {
+      "default": [
+        "concert",
+        "couple",
+        "skater",
+        "horses",
+        "boat",
+        "crowd",
+        "roadtrip"
+      ]
+    },
+    "trans": {
+      "default": "blink"
+    }
+  },
+  "example": {
+    "type": "cardfan",
+    "media": [
+      "concert",
+      "couple",
+      "skater",
+      "horses",
+      "boat",
+      "crowd",
+      "roadtrip"
+    ],
+    "trans": "blink"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/assets/config.json",
+      "pointer": "/configs/0/scenes/2"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

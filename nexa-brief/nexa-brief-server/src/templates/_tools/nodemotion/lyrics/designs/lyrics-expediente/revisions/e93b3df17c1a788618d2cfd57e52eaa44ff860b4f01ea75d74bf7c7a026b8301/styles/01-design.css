@@ -1,0 +1,178 @@
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #14110C; cursor: pointer; }
+
+  /* muro de sala de investigación: yeso sucio, manchas, fibra — 100% generativo */
+  #wall {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 60vw 45vh at 18% 22%, rgba(255,235,190,0.045), transparent 70%),
+      radial-gradient(ellipse 50vw 60vh at 82% 70%, rgba(0,0,0,0.35), transparent 75%),
+      radial-gradient(ellipse 34vw 26vh at 65% 15%, rgba(120,90,50,0.10), transparent 70%),
+      radial-gradient(ellipse 44vw 30vh at 30% 85%, rgba(60,45,25,0.16), transparent 70%),
+      repeating-linear-gradient(93deg, rgba(255,255,255,0.012) 0 2px, transparent 2px 7px),
+      linear-gradient(165deg, #262019 0%, #1C1712 48%, #120E0A 100%);
+  }
+  /* foto opcional detrás del muro (CONFIG.bg) — casi imperceptible, da textura */
+  #bg {
+    position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0;
+    filter: grayscale(0.8) sepia(0.5) brightness(0.22) contrast(1.15);
+    opacity: 0; display: none;
+  }
+
+  #viewport { position: fixed; inset: 0; z-index: 2; overflow: hidden; }
+  #world { position: absolute; left: 0; top: 0; will-change: transform; }
+  #threads { position: absolute; left: 0; top: 0; width: 1px; height: 1px; overflow: visible; pointer-events: none; }
+  #threads path {
+    fill: none; stroke: #B3231C; stroke-width: 3; stroke-linecap: round;
+    opacity: 0.85; transition: stroke-dashoffset 0.55s cubic-bezier(0.3, 0.7, 0.3, 1);
+  }
+
+  /* piezas del expediente — cada palabra es evidencia clavada al muro */
+  .clip {
+    position: absolute; white-space: nowrap; line-height: 1.05;
+    transform: rotate(var(--rot, 0deg)); transform-origin: 50% 50%;
+    will-change: transform, opacity; opacity: 0;
+    transition: opacity 0.9s ease, filter 0.9s ease;
+  }
+  .clip.on { opacity: 1; animation: slam 0.17s cubic-bezier(0.15, 0.9, 0.3, 1.2); }
+  @keyframes slam {
+    0%  { opacity: 0; transform: rotate(var(--rot, 0deg)) scale(1.55); filter: blur(3px); }
+    60% { opacity: 1; }
+  }
+  /* evidencia vieja: se oscurece y amarillea, pero queda clavada al muro */
+  .clip.cold { opacity: 0.68; filter: brightness(0.62) sepia(0.4) saturate(0.75); }
+
+  /* recorte mecanografiado con bordes rasgados (clip-path por JS) */
+  .clip.torn {
+    font-family: "Special Elite", monospace; color: #17130E;
+    background: linear-gradient(172deg, #EFE6CF 0%, #E4D8BC 60%, #D8C9A7 100%);
+    padding: 0.30em 0.55em 0.24em;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.55);
+  }
+  /* titular de periódico recortado, a veces subrayado con marcador */
+  .clip.head {
+    font-family: "Oswald", sans-serif; font-weight: 700; text-transform: uppercase;
+    color: #100D08; letter-spacing: 0.02em;
+    background: linear-gradient(178deg, #F2ECDC 0%, #E6DDC4 100%);
+    padding: 0.16em 0.42em 0.12em;
+    box-shadow: 0 7px 16px rgba(0,0,0,0.55);
+  }
+  .clip.head.mark {
+    background:
+      linear-gradient(transparent 52%, rgba(216,64,47,0.50) 54% 88%, transparent 90%),
+      linear-gradient(178deg, #F2ECDC 0%, #E6DDC4 100%);
+  }
+  /* cinta adhesiva en las esquinas del titular */
+  .clip.head::before, .clip.head::after {
+    content: ""; position: absolute; width: 2.2em; height: 0.65em; font-size: 0.5em;
+    background: rgba(226,214,182,0.55); box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    top: -0.3em;
+  }
+  .clip.head::before { left: -0.7em; transform: rotate(-38deg); }
+  .clip.head::after  { right: -0.7em; transform: rotate(36deg); }
+  /* anotación a marcador rojo, escrita directo sobre el muro */
+  .clip.marker {
+    font-family: "Caveat", cursive; font-weight: 700; color: #E0503E;
+    text-shadow: 0 0 1px rgba(224,80,62,0.6), 0 2px 8px rgba(0,0,0,0.5);
+  }
+  /* sello de goma gigante — palabras clave estampadas tipo CONFIDENCIAL */
+  .clip.stamp {
+    font-family: "Oswald", sans-serif; font-weight: 700; text-transform: uppercase;
+    color: #E23A2B; letter-spacing: 0.10em; padding: 0.10em 0.38em;
+    border: 0.13em solid #E23A2B; border-radius: 0.12em;
+    box-shadow: inset 0 0 0 0.035em #E23A2B;
+    filter: url(#rough) drop-shadow(0 3px 10px rgba(0,0,0,0.5));
+  }
+  .clip.stamp.cold { opacity: 0.55; filter: url(#rough) brightness(0.6) saturate(0.8); }
+
+  /* chinche que sostiene cada recorte */
+  .pin {
+    position: absolute; width: 13px; height: 13px; border-radius: 50%;
+    background: radial-gradient(circle at 34% 28%, #FF7A6B, #A31410 55%, #570A06);
+    box-shadow: 0 3px 5px rgba(0,0,0,0.65), inset 0 -2px 3px rgba(0,0,0,0.35);
+    opacity: 0; transition: opacity 0.3s ease; z-index: 3;
+  }
+  .pin.on { opacity: 1; }
+
+  /* lámpara que cuelga: luz cálida arriba, con parpadeo eléctrico irregular */
+  #lamp {
+    position: fixed; inset: 0; z-index: 4; pointer-events: none;
+    background: radial-gradient(ellipse 80vw 60vh at 50% -12%, rgba(255,226,170,0.10), transparent 58%);
+    animation: lampFlick 9s steps(1, end) infinite;
+  }
+  @keyframes lampFlick {
+    0%, 100% { opacity: 1; } 71% { opacity: 1; }
+    72% { opacity: 0.55; } 73.2% { opacity: 1; }
+    74% { opacity: 0.7; } 74.8% { opacity: 1; }
+    91% { opacity: 0.8; } 91.7% { opacity: 1; }
+  }
+  #vignette {
+    position: fixed; inset: 0; z-index: 5; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 44%, transparent 34%, rgba(4,3,1,0.86) 100%);
+  }
+  #dust { position: fixed; inset: 0; z-index: 5; pointer-events: none; }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 6; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.07; mix-blend-mode: overlay; animation: gsh 1s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+  /* flash de cámara de fotos cuando cae un sello importante */
+  #flash { position: fixed; inset: 0; z-index: 7; background: #FFF6E6; opacity: 0; pointer-events: none; transition: opacity 0.5s ease-out; }
+
+  /* #intro y #outro: carpeta de expediente sobre el muro */
+  .cardScreen {
+    position: fixed; inset: 0; z-index: 8; display: flex;
+    align-items: center; justify-content: center; text-align: center;
+    transition: opacity 1.3s ease;
+  }
+  .folder {
+    position: relative; display: flex; flex-direction: column; align-items: center;
+    gap: 2.6vh; padding: 7vh 7vw 6vh; transform: rotate(-1.6deg);
+    background: linear-gradient(174deg, #CBB88C 0%, #C0AB77 55%, #AE9760 100%);
+    border-radius: 4px 14px 5px 5px;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.72), inset 0 1px 0 rgba(255,255,255,0.28);
+  }
+  .folder::before {   /* pestaña de la carpeta */
+    content: ""; position: absolute; top: -3vh; left: 7%; width: 26%; height: 3.2vh;
+    background: linear-gradient(#CBB88C, #C0AB77); border-radius: 8px 8px 0 0;
+  }
+  .cardScreen .artist {
+    font-family: "Special Elite", monospace; font-size: 2.4vh; letter-spacing: 0.34em;
+    color: #241C10; text-transform: uppercase;
+  }
+  .cardScreen .title {
+    font-family: "Oswald", sans-serif; font-weight: 700; font-size: 11vh; line-height: 1.05;
+    text-transform: uppercase; letter-spacing: 0.07em; color: #C3231E;
+    border: 0.9vh solid #C3231E; box-shadow: inset 0 0 0 0.25vh #C3231E;
+    padding: 0.4vh 2.4vh 0.2vh; transform: rotate(-2.6deg);
+    filter: url(#rough); mix-blend-mode: multiply;
+  }
+  .cardScreen .sub {
+    font-family: "Special Elite", monospace; font-size: 3.4vh; letter-spacing: 0.55em;
+    padding-left: 0.55em; color: #241C10; text-transform: uppercase;
+  }
+  .cardScreen .feats {
+    font-family: "Special Elite", monospace; font-size: 1.7vh; letter-spacing: 0.3em;
+    color: #3A2E1A; margin-top: 1.6vh;
+  }
+  #intro.gone { opacity: 0; pointer-events: none; }
+  #outro { opacity: 0; pointer-events: none; }
+  #outro.show { opacity: 1; pointer-events: auto; }
+  #hint {
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: "Special Elite", monospace; font-size: 1.7vh; letter-spacing: 0.5em;
+    opacity: 0.55; animation: hintPulse 2s ease infinite; pointer-events: none; color: #E8D9A8;
+  }
+  @keyframes hintPulse { 0%,100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+
+  /* responsive móvil (solo orientación vertical — desktop queda intacto) */
+  @media (orientation: portrait) {
+    .folder { padding: 6vh 6vw 5vh; }
+    .cardScreen .artist { font-size: min(2.4vh, 3.8vw); letter-spacing: 0.22em; }
+    .cardScreen .title  { font-size: min(11vh, 14vw); }
+    .cardScreen .sub    { font-size: min(3.4vh, 5.4vw); letter-spacing: 0.4em; padding-left: 0.4em; }
+    .cardScreen .feats  { font-size: min(1.7vh, 3.2vw); letter-spacing: 0.2em; }
+  }
+

@@ -268,6 +268,21 @@
       },
       "fallback_policy": "codex_unavailable_or_quota"
     },
+    "resource_curator": {
+      "provider": "codex",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "high",
+      "structured_agent": true,
+      "timeout_seconds": 120,
+      "invalid_json_retries": 1,
+      "does": "Completa descripción, etiquetas, género e idioma de los recursos de biblioteca que llegan sin ficha. Solo rellena campos vacíos.",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "medium"
+      },
+      "fallback_policy": "codex_unavailable_or_quota"
+    },
     "edition_lead": {
       "provider": "codex",
       "model": "gpt-6.1-terra",

@@ -110,12 +110,21 @@ async def test_migration_uses_evidence_and_is_resumable():
 @pytest.mark.parametrize("template_id", ["lyrics-impact", "lyrics-romantic", "lyrics-suave", "lyrics-triste"])
 async def test_prepared_config_uses_actual_video_type(template_id, tmp_path, monkeypatch):
     from src.core.job import Job, JobInput, JobArtifacts, VideoSource
-    from src.modules import html_generator
+    from src.modules import html_generator, resource_fetcher
     niche = find_niche_by_template_id(template_id)
     niche = niche.model_copy(update={"template": niche.template.model_copy(update={"static_config": True})})
+    music_file = tmp_path / "source.mp3"
+    video_file = tmp_path / "source.mp4"
+    music_file.write_bytes(b"test audio")
+    video_file.write_bytes(b"test video")
+    music = await asset_library.register_music(music_file, category="node_motion", source="upload")
+    video = await asset_library.register_video(video_file, category="node_motion", source="upload")
+    await asset_library.save_lyrics_cache(music.asset_id, {"segments": []})
+    monkeypatch.setattr(resource_fetcher, "_outro_tail_seconds", lambda _: 0)
     job = Job(job_id="mixed-media-test", input=JobInput(category_name=niche.id,
-              video_source=VideoSource(type=AssetSourceType.LIBRARY, asset_id="selected-video")),
-              artifacts=JobArtifacts(output_dir=tmp_path))
+              video_source=VideoSource(type=AssetSourceType.LIBRARY, asset_id=video.asset_id)),
+              artifacts=JobArtifacts(output_dir=tmp_path, music_asset_id=music.asset_id,
+                                     video_asset_id=video.asset_id))
     niche = with_selected_background(niche, job)
     monkeypatch.setattr(html_generator, "copy_template_runtime_assets", lambda *args: [])
     result = await html_generator.run(job, None, niche)

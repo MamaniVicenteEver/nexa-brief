@@ -85,6 +85,9 @@ def text_for(role: str) -> AIPort:
 async def text_json_with_usage(role: str, system: str, prompt: str, *, structured: bool = False,
                                schema: dict | None = None, usage_out: list | None = None) -> tuple[dict, dict]:
     """Obtiene JSON y uso real cuando el proveedor lo expone; desconocido queda nulo."""
+    from src.core.ai_switch import require_ai
+
+    require_ai(role)
     spec = roles_config()["roles"][role]
     # Optativo: los roles anteriores conservan su adaptador y sus reintentos.
     if spec.get("structured_agent"):

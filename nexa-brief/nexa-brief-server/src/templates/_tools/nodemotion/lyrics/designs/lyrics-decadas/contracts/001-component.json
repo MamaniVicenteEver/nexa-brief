@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "decadas.intro",
+  "entry_id": "decadas.intro",
+  "kind": "component",
+  "label": "Intro letras gigantes",
+  "summary": "Letras del título una a una con foto y firma; luego el título tecleado con etiquetas.",
+  "component": {
+    "name": "decadas.intro",
+    "label": "Intro letras gigantes",
+    "summary": "Letras del título una a una con foto y firma; luego el título tecleado con etiquetas.",
+    "default": true,
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "Dueles tan bien",
+        "doc": "config.intro.title"
+      },
+      "artist": {
+        "type": "string",
+        "default": "Bruses",
+        "doc": "config.intro.artist"
+      },
+      "duration": {
+        "type": "number",
+        "default": 3.4,
+        "doc": "Segundos",
+        "min": 1.5,
+        "max": 10
+      }
+    },
+    "tags": [
+      "intro"
+    ],
+    "file": "components/intro.js",
+    "demo": {
+      "title": "Dueles tan bien",
+      "artist": "Bruses"
+    },
+    "preview": {
+      "t": 3.0
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "Dueles tan bien",
+      "doc": "config.intro.title"
+    },
+    "artist": {
+      "type": "string",
+      "default": "Bruses",
+      "doc": "config.intro.artist"
+    },
+    "duration": {
+      "type": "number",
+      "default": 3.4,
+      "doc": "Segundos",
+      "min": 1.5,
+      "max": 10
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/showcase/components.json",
+      "pointer": "/components/0"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

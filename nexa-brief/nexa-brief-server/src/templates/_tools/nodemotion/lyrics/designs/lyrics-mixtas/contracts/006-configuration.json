@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-mixtas",
+  "id": "config.timing",
+  "entry_id": "config.timing",
+  "name": "timing",
+  "kind": "configuration",
+  "label": "timing",
+  "summary": "Existing configuration configuration: timing.",
+  "params": {
+    "leadSec": {
+      "default": 0.12
+    },
+    "holdSec": {
+      "default": 0.9
+    },
+    "gapSec": {
+      "default": 2.4
+    },
+    "echoSec": {
+      "default": 1.2
+    },
+    "cooldown": {
+      "default": 4
+    }
+  },
+  "example": {
+    "leadSec": 0.12,
+    "holdSec": 0.9,
+    "gapSec": 2.4,
+    "echoSec": 1.2,
+    "cooldown": 4
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+      "pointer": "/configs/0/timing"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -8,7 +8,7 @@ import pytest
 
 @pytest.fixture
 def mod():
-    path = Path(__file__).parents[3] / 'src/core/promos/evidence.py'
+    path = Path(__file__).parents[3] / 'src/core/nodemotion/promo/evidence.py'
     spec = importlib.util.spec_from_file_location('promo_evidence_test', path)
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-night-journey",
+  "id": "scene.moon",
+  "entry_id": "scene.moon",
+  "name": "moon",
+  "kind": "scene",
+  "label": "moon",
+  "summary": "Existing scene configuration: moon.",
+  "params": {
+    "type": {
+      "default": "moon"
+    },
+    "weight": {
+      "default": 0.14
+    },
+    "moon": {
+      "default": "assets/moon.png"
+    },
+    "palette": {
+      "default": {
+        "bg": "#020203",
+        "ink": "#FFD93B",
+        "fringeA": "#FF3A2E",
+        "fringeB": "#27D3FF"
+      }
+    }
+  },
+  "example": {
+    "type": "moon",
+    "weight": 0.14,
+    "moon": "assets/moon.png",
+    "palette": {
+      "bg": "#020203",
+      "ink": "#FFD93B",
+      "fringeA": "#FF3A2E",
+      "fringeB": "#27D3FF"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-night-journey/assets/config.json",
+      "pointer": "/configs/0/scenes/2"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

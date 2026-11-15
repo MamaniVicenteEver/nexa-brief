@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-memoria",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-memoria",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "3953d7e4592a4377aed43e10ecb44e1ca6523d5821dfeb82d0b83882174d96a4",
+  "migration_source_sha256": "3953d7e4592a4377aed43e10ecb44e1ca6523d5821dfeb82d0b83882174d96a4",
+  "migration_runtime_sha256": {
+    "components/intro.js": "dbd450eccc7d3e65086d0bb7658d44bbc678fdee589cf3ad2e288c8b8b579622",
+    "components/outro.js": "c13cf0c645a0239c7a8cfb576f0c6eeb80e708af65e1856327bf098f086ae26c"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-memoria",
+    "config": "nodemotion/lyrics/lyrics-memoria/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-memoria/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-memoria/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "06a009952a973308e96329f9e8fe55a91ee2dc14b3f7b324e73f540713a89391.webp",
+    "assets/media/child-8mm-1.jpg": "8ed61b059e1f83ec8c8acc9fb962740e5ce52964d7ad98974664176220b9c099.jpg",
+    "assets/media/child-8mm-2.jpg": "1b5572ca513d8a222a684cad779ed07d28fc47ba6a0cdf3d9f6a1cb2e1287bad.jpg",
+    "assets/media/child-8mm.mp4": "50fe2d22eeb11546f0f953f47ed3ba19cbaad64259cc9a787c40f62b21f403f4.mp4",
+    "assets/media/family-kitchen-1.jpg": "9a748cf8b96554af7094ad4e512e36d535c9695a33e321dbf1b450ad129b0d22.jpg",
+    "assets/media/family-kitchen-2.jpg": "3874c00f2b476113e7e48fa7f2a0d83f5422f397dfdefc0adf8031091f3d5937.jpg",
+    "assets/media/family-kitchen.mp4": "30ef1712fd09cde018fce878fa04cca81734713480d44951cf03ca3114ddd472.mp4",
+    "assets/media/family-nature-1.jpg": "69dbf89ccd37a4c511fce690b70e71617d09edcd92fecb0d09feb661284acf8d.jpg",
+    "assets/media/family-nature-2.jpg": "9093b11d431f0e47b9cd00c76a4fad4fffb2f5f4b16acff90b94aadb370e40ac.jpg",
+    "assets/media/family-nature.mp4": "dd9f523797da2c15b58a8e3da07f9ea5bd8e211c6bbbffd54d246bd257fe10c0.mp4",
+    "assets/media/family-snow-1.jpg": "a32af1ce36c033676b54aeb16306fd733a30a8bb387519f0f7c81b87e405f033.jpg",
+    "assets/media/family-snow-2.jpg": "90269d165c7e0d1c40d953d42293f9ae4ffcfb668f895cd445b1d9d94fed487b.jpg",
+    "assets/media/family-snow.mp4": "d9fd8d50680c86ec601bf8d4b4298c1b1c8079aa3f6f024a5daa9b2e70ed07d3.mp4",
+    "assets/media/father-baby-1.jpg": "9a0bf9a0bc5d45649f6172257f5defee88548bab8d5365734668a5ca65a73e10.jpg",
+    "assets/media/father-baby-2.jpg": "5d505733bed0564a312394646ec53e7d9363493bbb9ac95877a3cd4909adf1c0.jpg",
+    "assets/media/father-baby.mp4": "227b4ce89b25b5a31ce671730c116fa651b0ac00f9d43fe3ad7e85c1dc58be69.mp4",
+    "assets/media/graded/child-8mm-1.faded.jpg": "749fb58e626c9b555b7c1f351604bdc34b7687e740723678fa4e9a05d3ea4018.jpg",
+    "assets/media/graded/child-8mm-1.sepia.jpg": "3fbad9e00923cbd50376daf8ce2ffcc5793ab631746336bde804b019756f76ec.jpg",
+    "assets/media/graded/child-8mm.faded.mp4": "34cbd95a9021392643fb3b0cfd928f61621f522e81a1fc39845e267e63b7058b.mp4",
+    "assets/media/graded/child-8mm.sepia.mp4": "c272892553a7293800984e4d9e509a0907aac8d1298c2cb40326210db712c854.mp4",
+    "assets/media/graded/family-kitchen-1.faded.jpg": "df8950f8fd0bd7197edaf1b0355263ad3afa920ff76abe8869f259a91cc6795e.jpg",
+    "assets/media/graded/family-kitchen-1.sepia.jpg": "442fe1a0fbdfb6e3db9d94aa40a1ce9569ffe4ce6d428dd2617bca528dc672f6.jpg",
+    "assets/media/graded/family-kitchen.faded.mp4": "5cb75445232ec12cbb23d35e913a572e79fb266fcc8b2a98605f5d6a5f1d2ed5.mp4",
+    "assets/media/graded/family-kitchen.sepia.mp4": "cc04399343ec632a8385f2692efd15e5db15a2de1deb387e8e7422271156e137.mp4",
+    "assets/media/graded/family-nature-1.faded.jpg": "cb6d1643940cbfe8e2a26ee81cd56d6e0c7544faf9067186cd026515a82bf40b.jpg",
+    "assets/media/graded/family-nature-1.sepia.jpg": "8713635f56db7e72af1811dba340a65af171f011de3724a0a3254cdc276c959b.jpg",
+    "assets/media/graded/family-nature.faded.mp4": "95ba9b4779cbfe6ed62842bff28b9e21995e4bd0bd46aa8c0758a91f0a2d87db.mp4",
+    "assets/media/graded/family-nature.sepia.mp4": "23b46a5238519815612e1a39561e20c6aeb3d8da110671f1a7a60c7ddbd4565a.mp4",
+    "assets/media/graded/family-snow-1.faded.jpg": "4e9edcdbc3ba0682ef1cdaf79edf60bca2dbf49ff4568c54e8fc0e1116f21e81.jpg",
+    "assets/media/graded/family-snow-1.sepia.jpg": "0e00368851333325c6ca36bbbb65c2ecf904c93c4adaa5121426bb3b00395fe7.jpg",
+    "assets/media/graded/family-snow.faded.mp4": "f6255374b7c2239f1a36015a904bda26eb8351943f0435f5044f27c6af756d34.mp4",
+    "assets/media/graded/family-snow.sepia.mp4": "d78bbe99887c34de565350e4caf1f042615946ccac61cca3cd5d06259dc5dde5.mp4",
+    "assets/media/graded/father-baby-1.faded.jpg": "1fb70f40858f0a88dbd3a23d77ccdffeacbcb7efaf94f92aee1e23b4f6b2cfff.jpg",
+    "assets/media/graded/father-baby-1.sepia.jpg": "0c354bb5b32933ef806281949c11c8bda3c9a8a32250abc833417b0e2834bcba.jpg",
+    "assets/media/graded/father-baby.faded.mp4": "e41ddf8a8df6bd8a5c99991e559ae52da0ee5d540ccc4dbf50ff83eb4b0f02b2.mp4",
+    "assets/media/graded/father-baby.sepia.mp4": "09224630a9a65633fdf93017d6c5bfd80eae4b4abe4bb979cb1367b5af000c41.mp4",
+    "assets/media/graded/hands-1.faded.jpg": "c4d5f025983d03fdae1e34e8b4b51f64b91e674a7c8f4b7c01b84a24d6f360ce.jpg",
+    "assets/media/graded/hands-1.sepia.jpg": "9ea53bc2c464e817bc5504164c41be37fca5aa063ccdf2502f85d08fc3e223ee.jpg",
+    "assets/media/graded/hands.faded.mp4": "b52e803048d4a403bfe0f26776a57cc7e921cb3e9421e292c9d0f9e2631061cd.mp4",
+    "assets/media/graded/hands.sepia.mp4": "88a94286599d813ae22c95835a43be372992b085787ad17827c49fa8ffe47494.mp4",
+    "assets/media/hands-1.jpg": "f2b2af2c2f9778215035c048e1f98753d60fbb380ad3e36cd0b86e766a13e992.jpg",
+    "assets/media/hands-2.jpg": "ef6c54e86ddb8f0cd497e72043fe35ba22db88b7f530bcb80377580d9f9f31d2.jpg",
+    "assets/media/hands.mp4": "f003555dc6500107849d1c94911665bc0af716d992bd3ba75a9c6de701017530.mp4",
+    "assets/song.mp3": "e8a2242d2e426ec68d0269d9c9e234de099203633689ae4bb70ee792a177db41.mp3"
+  }
+}

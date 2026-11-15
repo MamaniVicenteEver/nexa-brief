@@ -47,7 +47,15 @@ def test_editorial_retains_original_video_as_alternative_to_user_image(tmp_path)
     image.write_bytes(b'image')
     job.artifacts.image_path = image
     assert assets.background_source(job) == image
-    assert assets.background_source(job, 'video').name == 'stadium.mp4'
+    from src.config.template_manifest import resolve_template_content
+    from src.core.nodemotion.shared.bundled import demo_aliases
+    from src.core.nodemotion.shared.resources import digest
+    logical = ROOT / 'assets/media/stadium.mp4'
+    expected = resolve_template_content(logical)
+    actual = assets.background_source(job, 'video')
+    assert isinstance(expected, Path) and actual == expected
+    key = demo_aliases('promo-editorial').get('assets/media/stadium.mp4')
+    assert digest(actual) == (key[:64] if key else digest(logical))
 
 
 def test_editorial_renderer_keeps_copy_short_and_never_adds_lyrics_labels():

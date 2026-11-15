@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "layout.panel",
+  "entry_id": "layout.panel",
+  "name": "panel",
+  "kind": "layout",
+  "label": "panel",
+  "summary": "Existing layout configuration: panel.",
+  "params": {
+    "weight": {
+      "default": 1.1
+    },
+    "bgs": {
+      "default": [
+        "void",
+        "red"
+      ]
+    },
+    "media": {
+      "default": [
+        "glam",
+        "hair",
+        "glasses"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.1,
+    "bgs": [
+      "void",
+      "red"
+    ],
+    "media": [
+      "glam",
+      "hair",
+      "glasses"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+      "pointer": "/configs/0/layouts/panel"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}
