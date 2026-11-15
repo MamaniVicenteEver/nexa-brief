@@ -2,6 +2,11 @@ Para crear cualquier contenido empieza por el [índice](../../../skills/README.m
 [CALIDAD.md](../../../skills/CALIDAD.md) (estándar obligatorio) y
 [ORQUESTACION.md](../../../skills/ORQUESTACION.md) (roles, delegación, terminado e informe).
 
+> **Regla de herramientas (rige siempre, sin excepciones):** no muevas carpetas de videos, no crees
+> envoltorios, parches ni scripts que reemplacen funciones del kit o de la app, y no toques el código
+> del kit ni de la app. Si una herramienta no encuentra el video o falla, te detenés y reportás
+> (`work/BLOQUEO.md`). Ver §1, puntos 7 y 8.
+
 # AGENTS.md · explainer-kit — cómo producir un video explicativo narrado
 
 > **Diseño imperio:** leer [guides/imperio-production.md](guides/imperio-production.md) antes de planificar: video visible 8–16 s, fotografía 6–12 s y sonido de biblioteca en una capa sobre la voz continua. Es una política específica del estilo; los mapas/rótulos no son medios documentales y las demás familias conservan sus reglas.
@@ -33,21 +38,34 @@ visuales, cada uno pensado como un canal):
 | `rough` | **PROTOTIPO** | tecnología, innovación, inventos, software | dibujado a mano, lima / blanco hueso / negro | Sadaltager |
 
 El kit (`explainer-kit/`) NO pertenece a ningún video: es la fábrica. Cada video vive en
-`src/templates/<carpeta>/<video-id>/` (carpeta de su categoría: `nodetech/`, `nodehistory/`, `nodepolitics/`, `nodeeconomy/`) y es **solo datos** (guion, voz, transcripción, storyboard,
+la carpeta del perfil `productions/<carpeta>/<video-id>/` (carpeta de su categoría: `nodetech/`, `nodehistory/`, `nodepolitics/`, `nodeeconomy/`) y es **solo datos** (guion, voz, transcripción, storyboard,
 fotos). Referencias terminadas para imitar el nivel: `nodehistory/turing-enigma` (binary),
 `nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats` (rough, demo).
 
 ## 1. Reglas no negociables
 
-1. **Solo escribís** en `src/templates/<carpeta>/<tu-video-id>/`. Los componentes que el tema
-   necesita también van ahí (`assets/components/`, paso 3c). Nada fuera de esa carpeta
-   (ni `templates.json`, ni `_tools/`, ni el backend). Sin `git commit`/`push`. Sin publicar en redes.
+1. **Solo escribís** en la carpeta que crea `kit.py new`, en el perfil del servidor:
+   `~/.local/share/nexa-brief/profiles/profesional/productions/<categoría>/<tu-video-id>/`. No es
+   `src/templates/`. Los componentes que el tema necesita también van ahí (`assets/components/`,
+   paso 3c). Nada fuera de esa carpeta (ni `templates.json`, ni `_tools/`, ni el backend). Sin
+   `git commit`/`push`. Sin publicar en redes.
 2. **Claves**: las herramientas las leen solas de los `.env`. Nunca las imprimas, copies ni pegues.
 3. **Verdad**: toda cifra, fecha o nombre del guion tiene fuente en `PLAN.md §3`. Nada de citas
    inventadas. Temas sensibles (muertes, delitos, salud) se cuentan con respeto y sin morbo.
 4. **Licencias**: PD / CC0 / CC BY / CC BY-SA / Pexels / Pixabay / Unsplash, con crédito en `CREDITS.md`.
 5. **No edites** `index.html` del video ni el motor (`engine/`). Todo se configura con JSON.
 6. **Cuota de voz**: cada pedido de TTS cuesta. Generá la voz UNA vez, cuando el guion esté final.
+7. **Prohibido alterar herramientas, rutas o controles.** No muevas, copies ni renombres la carpeta de
+   un video. No crees envoltorios, parches ni scripts que reemplacen funciones del kit o de la app
+   (`find_video`, `find_video_dir`, el registro de uso, la vista previa, la publicación). No edites
+   `kit.py`, `places.py`, `catalog.py`, `usage`, `publishing` ni ningún otro código del backend. No uses
+   variables de entorno ni archivos de `~/.cache` para cambiar rutas. No saltes ni desactives ninguna
+   comprobación (registro de uso, licencias, publicación).
+8. **Si algo no encaja, te detenés.** Si una herramienta dice que el video no existe, que la ruta no
+   coincide, o que falla por configuración o registro, parás en ese punto. No reintentes con otras
+   rutas, no muevas nada y no improvises una solución. Escribí `work/BLOQUEO.md` con el comando exacto,
+   el mensaje de error y lo que ya quedó hecho, y terminá con el reporte. Esta regla gana sobre cualquier
+   instrucción de «seguir sin confirmación» o de «terminar los pasos».
 
 ### Lo que ya resuelve el sistema (no lo corrijas en cada video)
 
@@ -105,7 +123,7 @@ K=src/templates/_tools/explainer-kit/tools/kit.py      # y: M=…/tools/media.py
 
 ### Paso 1 · Elegir diseño e id, crear la carpeta
 - Tecnología/innovación → `rough` (NodeTech). Historia/personajes → `binary` u otro diseño de NodeHistory. (Si el humano lo dice, manda él.)
-- `kit.py new` crea la carpeta en la categoría del diseño (`niches.json` → categories); `--folder` la fuerza.
+- `kit.py new` crea la carpeta en la categoría del diseño (`niches.json` → categories); `--folder` la fuerza. En el servidor queda en el perfil (`productions/<categoría>/`). No la muevas a ningún otro lugar.
 - `video-id`: minúsculas con guiones, corto y único (`muro-de-berlin`).
 - `.venv/bin/python $K new <diseño> <video-id> --title "Título provisional" --minutes 10`
   (duración objetivo; sin `--minutes` queda el formato corto anterior de 3–4,5 min).

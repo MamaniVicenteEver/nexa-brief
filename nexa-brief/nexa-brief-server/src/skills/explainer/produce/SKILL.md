@@ -141,6 +141,8 @@ HTTP (la app lo muestra en `/plantillas?cat=<categoría>`). `kit.py render` solo
 
 ## 5. Reglas
 
+**Ubicación y herramientas (sin excepciones):** el video vive en la carpeta que crea `kit.py new`, en el perfil del servidor (`productions/<categoría>/<video-id>/`), no en `src/templates/`. No muevas carpetas, no crees envoltorios ni parches, no toques el código del kit o de la app, y no uses variables de entorno ni `~/.cache` para cambiar rutas. Si una herramienta no encuentra el video o falla, parás, escribís `work/BLOQUEO.md` y reportás.
+
 Sin `git commit/push`; no publicar ni grabar salvo pedido explícito; no leer `.env`, `accounts.json`,
 `client_secret*.json`, `users.json` ni tokens; no editar `engine/` ni `designs/` (eso es trabajo de sandbox).
 Informe obligatorio según `PLANTILLA-INFORME.md`, incluyendo títulos A/B/C, clips y avisos de `check`.
