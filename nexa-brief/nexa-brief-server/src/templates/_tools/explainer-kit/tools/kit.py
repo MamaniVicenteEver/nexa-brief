@@ -48,6 +48,7 @@ from lengths import of_script  # noqa: E402
 from scene_count import storyboard_moments  # noqa: E402
 import outro as outro_tool  # noqa: E402
 import usage  # noqa: E402
+import registro  # noqa: E402
 import transcribe_job  # noqa: E402
 import job  # noqa: E402
 import kit_job  # noqa: E402
@@ -61,8 +62,13 @@ TOOLS = KIT / "tools"
 
 def vdir(vid):
     d = find_video(vid)
-    if d is None: sys.exit(f"no existe el video {vid} (se busca en src/templates/<carpeta de categoría>/)")
-    return d
+    if d is not None:
+        return d
+    from places import folders
+    existentes = [r / vid for r in [production_root() / f for f in folders()] + [sandbox_root() / f for f in folders()] if (r / vid).is_dir()]
+    if existentes:
+        sys.exit(f"el video {vid} existe en {existentes[0]} pero no está registrado en el perfil. Registralo con: kit.py register {vid}")
+    sys.exit(f"no existe el video {vid} en el perfil (categorías: {', '.join(folders())}). No lo muevas ni lo copies: revisá el id.")
 def jload(p, default=None):
     try: return json.loads(pathlib.Path(p).read_text())
     except Exception: return default
@@ -137,7 +143,25 @@ def cmd_new(a):
         jsave(d / "manifest.json", {"video_id": a.id, "design": a.design, "design_name": D["name"], "channel": D["channel"]["name"],
               "status": "nuevo", "created": datetime.date.today().isoformat(), "title": title})
     (d / preview / ".gitignore").write_text("*.mp4\n"); (d / "work" / ".gitignore").write_text("*\n!.gitignore\n")
+    try:
+        registro.registrar(a.id, d, details={"design": a.design, "title": title, "origen": "kit new"})
+    except Exception as e:
+        sys.exit(f"carpeta creada en {d}, pero no se pudo registrar en el perfil: {e}. No la muevas; corregí el registro con kit.py register {a.id}.")
     print(f"✓ {content_key(d)} listo. Siguiente: completar PLAN.md (AGENTS.md, paso 2).")
+
+# ---------------------------------------------------------------- register
+def cmd_register(a):
+    """Registra en el perfil un video que ya existe en productions/ o sandbox/. No mueve nada."""
+    from places import folders
+    candidatas = []
+    for root in [production_root() / f for f in folders()] + [sandbox_root() / f for f in folders()]:
+        d = root / a.id
+        if d.is_dir() and ((d / "manifest.json").exists() or (d / "index.html").exists()):
+            candidatas.append(d)
+    if len(candidatas) != 1:
+        sys.exit(f"{a.id}: encontré {len(candidatas)} carpetas candidatas {[str(c) for c in candidatas]}; no registro nada")
+    r = registro.registrar(a.id, candidatas[0])
+    print(f"✓ {a.id}: {r['estado']} · {r['folder_key']}")
 
 # ---------------------------------------------------------------- status
 def cmd_status(a):
@@ -462,6 +486,7 @@ def main():
     p.add_argument("--minutes", type=float, default=0, help="duración objetivo (lengths.json: 5 corto, 10 normal, 15 serio, 30 largo)")
     p = sp.add_parser("components"); p.add_argument("id"); p.add_argument("--only", default="", help="un solo componente")
     for name in ("status", "check", "manifest", "outro"): sp.add_parser(name).add_argument("id")
+    sp.add_parser("register").add_argument("id")
     p = sp.add_parser("transcribe"); p.add_argument("id")
     mode = p.add_mutually_exclusive_group(); mode.add_argument("--background", action="store_true"); mode.add_argument("--wait", action="store_true")
     p.add_argument("--timeout", type=float, default=20, help="segundos de espera por consulta (0–30; solo con --wait)")
