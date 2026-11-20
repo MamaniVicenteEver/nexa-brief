@@ -30,19 +30,20 @@
     const t = raw.typography || {};
     return {
       palette: { background: safeColor(p.background, "#111111"), foreground: safeColor(p.foreground, "#F4F4F2"), accent: safeColor(p.accent, "#F4F4F2"), brand: safeColor(p.brand, safeColor(p.foreground, "#F4F4F2")), subtitle: safeColor(p.subtitle, safeColor(p.foreground, "#F4F4F2")), deep: safeColor(p.deep, safeColor(p.accent, "#F4F4F2")) },
-      background: { kind: ["frame", "image", "solid"].includes(b.kind) ? b.kind : "frame", mediaSource: ["image", "video"].includes(b.mediaSource) ? b.mediaSource : "auto", mediaVersion: /^[a-f\d]{20}$/.test(b.mediaVersion) ? b.mediaVersion : "", time: number(b.time, 12, 0, 86400), asset: /^[a-f\d]{24}$/.test(b.asset) ? b.asset : "", overlay: number(b.overlay, .2, 0, .85), edgeDarkening: number(b.edgeDarkening, 0, 0, .5), filter: typeof b.filter === "string" ? (b.filter.match(/(?:grayscale|sepia|saturate|contrast|hue-rotate)\(\s*[-+]?[0-9.]+(?:%|deg)?\s*\)/g) || []).join(" ") : "", x: number(b.x, .5, 0, 1), y: number(b.y, .5, 0, 1) },
+      background: { kind: ["frame", "image", "solid", "design"].includes(b.kind) ? b.kind : "frame", at: number(b.at, .5, 0, 1), seconds: number(b.seconds, -1, -1, 86400), bare: b.bare === true, labelColor: /^#[0-9a-fA-F]{6}$/.test(b.labelColor) ? b.labelColor : "", labelX: number(b.labelX, -1, -1, 1280), labelY: number(b.labelY, -1, -1, 720), inside: b.inside === true, zoom: number(b.zoom, 1, 1, 2.5), mediaSource: ["image", "video"].includes(b.mediaSource) ? b.mediaSource : "auto", mediaVersion: /^[a-f\d]{20}$/.test(b.mediaVersion) ? b.mediaVersion : "", time: number(b.time, 12, 0, 86400), asset: /^[a-f\d]{24}$/.test(b.asset) ? b.asset : "", overlay: number(b.overlay, .2, 0, .85), edgeDarkening: number(b.edgeDarkening, 0, 0, .5), filter: typeof b.filter === "string" ? (b.filter.match(/(?:grayscale|sepia|saturate|contrast|hue-rotate)\(\s*[-+]?[0-9.]+(?:%|deg)?\s*\)/g) || []).join(" ") : "", x: number(b.x, .5, 0, 1), y: number(b.y, .5, 0, 1) },
       typography: { display: family(t.display), weight: number(t.weight, 700, 100, 900), slant: t.slant === "italic" ? "italic" : "normal", transform: t.transform === "none" ? "none" : "uppercase", tracking: number(t.tracking, -1.5, -5, 12), font: t.font, subtitleDisplay: family(t.subtitleDisplay || t.outlineDisplay || t.display), subtitleWeight: number(t.subtitleWeight, t.weight || 700, 100, 900), subtitleSlant: t.subtitleSlant === "italic" ? "italic" : "normal", subtitleFont: t.subtitleFont, outlineDisplay: family(t.outlineDisplay || t.display), outlineFont: t.outlineFont },
       style: /^[a-z-]{1,30}$/.test(raw.style) ? raw.style : "minimal",
       maxWords: number(raw.maxWords, 5, 1, 5),
       outlineWidth: number(raw.outlineWidth, .013, .008, .04),
       rowTreatments: Array.isArray(raw.rowTreatments) ? raw.rowTreatments.filter(value => ["solid", "outline", "striped"].includes(value)).slice(0, 4) : [],
-      subtitle: "LETRAS",
+      subtitle: typeof raw.subtitle === "string" ? raw.subtitle.replace(/\s+/g, " ").trim().slice(0, 40) : "LETRAS",
       kicker: typeof raw.kicker === "string" ? raw.kicker.replace(/\s+/g, " ").trim().slice(0, 40) : "",
       tagline: typeof raw.tagline === "string" ? raw.tagline.replace(/\s+/g, " ").trim().slice(0, 40) : "",
       side: raw.side === "left" ? "left" : "right",
       corner: typeof raw.corner === "string" ? raw.corner.replace(/[^\S\n]+/g, " ").trim().slice(0, 60) : "",
       year: typeof raw.year === "string" ? raw.year.replace(/\s+/g, " ").trim().slice(0, 12) : "",
       blurb: typeof raw.blurb === "string" ? raw.blurb.replace(/[^\S\n]+/g, " ").trim().slice(0, 180) : "",
+      artist: typeof raw.artist === "string" ? raw.artist.replace(/\s+/g, " ").trim().slice(0, 60) : "",
       vertical: typeof raw.vertical === "string" ? raw.vertical.replace(/\s+/g, " ").trim().slice(0, 24) : "",
     };
   }
@@ -68,10 +69,8 @@
     }
     return [...text].reduce((n, c) => n + (/[MWÁÓ]/.test(c) ? .85 : /[Iil.,! ]/.test(c) ? .32 : .62) * size, 0);
   }
-  function fitTitle(text, typography, maxLines, maxSize) {
+  function fitTitle(text, typography, maxLines, maxSize, width = 1090, height = 440) {
     const words = text.split(/\s+/).filter(Boolean);
-    const width = 1090;
-    const height = 440;
     let best = { lines: [text], size: 1, score: 0 };
     // Pocas palabras: comparar todos los cortes conserva frases y equilibra las dos filas.
     for (let size = maxSize; size >= 5; size -= 1) {
@@ -294,18 +293,16 @@
     const defs = [`<style>${fontCss(assets?.fonts)}</style><pattern id="${id}-dots" width="22" height="22" patternUnits="userSpaceOnUse"><circle cx="11" cy="11" r="1.1" fill="${ink}"/></pattern>`];
     let body, titleSvg;
     if (key === "A") {
-      // Palabra y fotografía real con el recorte dentado del montaje Dynamic.
-      const giant = outline(giantWord, 400, 46, 499, "start");
-      const media = dynamicPhoto(photo, b, id, {x: 64, y: 72, w: 1152, h: 576}, r, ink, {name: "a"});
-      defs.push(media.defs);
-      const fitted = fitEditorial(title, t, 1020, 240, 130, true);
+      // Palabra gigante en contorno (recortada por el borde, como el fotograma de la intro) y el llamado a la acción encima.
+      const giant = outline(giantWord, 620, 640, 540, "middle");
+      const fitted = fitEditorial(title, t, 1000, 280, 160, true);
       const top = 360 - fitted.height / 2;
       const spans = fitted.lines.map((line, i) => {
         const metrics = fitted.metrics[i];
         return `<tspan x="${640 - metrics.width / 2}" y="${top + fitted.ascent + fitted.lineHeight * i}" textLength="${metrics.width}" lengthAdjust="spacingAndGlyphs">${escapeXml(line)}</tspan>`;
       }).join("");
-      titleSvg = `<text data-role="title" ${font} font-size="${fitted.size}" fill="${ink}">${spans}</text>`;
-      body = `${giant}${media.svg}<rect x="64" y="${top - 24}" width="1152" height="${fitted.height + 48}" fill="${lime}"/>`;
+      titleSvg = `<text data-role="title" ${font} font-size="${fitted.size}" fill="${ink}" stroke="${lime}" stroke-width="16" stroke-linejoin="round" paint-order="stroke">${spans}</text>`;
+      body = giant;
     } else {
       // Escena «FUERZA PURA»: palabra gigante en contorno detrás, titular sólido + contorno y foto escalonada a un lado.
       const fitted = fitEditorial(title, t, 570, 330, 190, true);
@@ -902,12 +899,81 @@
     const brand = `<text data-role="brand" x="1236" y="712" text-anchor="end" font-family="Arial, sans-serif" font-size="13" font-weight="900" letter-spacing="2" fill="${white}" opacity=".45">NODEMOTION</text>`;
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 1280 720" role="img" aria-label="${escapeXml(title)}"><defs>${defs}</defs><g data-role="layout">${body}</g>${copy}${brand}</svg>`;
   }
+  function renderPortraitSvg(selected, design, key, w, h, assets) {
+    const {palette: p, typography: t, background: b} = design;
+    let title = String(selected.text || "Música").trim().slice(0, 200);
+    if (key === "A") title = title.split(/\s+/u).slice(0, 5).join(" ");
+    if (t.transform !== "none") title = title.toLocaleUpperCase("es");
+    const fitted = fitTitle(title, t, key === "A" ? 2 : 4, 140, 492, 500);
+    const lineHeight = fitted.size * 1.12;
+    const centerY = 585;
+    const firstY = centerY - ((fitted.lines.length - 1) * lineHeight) / 2;
+    const id = "nm-portrait-" + key.toLowerCase();
+    const backgroundData = safeData(assets?.backgroundData, "image");
+    const anchor = (b.x < .34 ? "xMin" : b.x > .66 ? "xMax" : "xMid")
+      + (b.y < .34 ? "YMin" : b.y > .66 ? "YMax" : "YMid");
+    const image = backgroundData
+      ? '<image href="' + backgroundData + '" x="0" y="0" width="720" height="1280" preserveAspectRatio="' + anchor + ' slice"/>'
+      : "";
+    const treatmentFor = (i) => design.rowTreatments.length
+      ? design.rowTreatments[Math.min(i, design.rowTreatments.length - 1)]
+      : design.style === "neon" ? (i === fitted.lines.length - 1 ? "striped" : "outline") : "solid";
+    const spans = fitted.lines.map((line, i) => {
+      const treatment = treatmentFor(i);
+      const outlined = treatment === "outline";
+      const face = outlined ? t.outlineDisplay : t.display;
+      const ink = outlined
+        ? 'fill="none" stroke="' + p.foreground + '" stroke-width="' + Math.max(2, fitted.size * design.outlineWidth) + '" stroke-linejoin="round"'
+        : treatment === "striped"
+          ? 'fill="url(#' + id + '-stripes)" stroke="' + p.foreground + '" stroke-width="1"'
+          : 'fill="' + p.foreground + '"';
+      return '<tspan data-treatment="' + treatment + '" font-family="' + escapeXml(face)
+        + '" ' + ink + ' x="308" y="' + (firstY + i * lineHeight).toFixed(1) + '">'
+        + escapeXml(line) + '</tspan>';
+    }).join("");
+    const label = design.subtitle
+      ? '<text data-role="subtitle" x="308" y="' + (firstY + (fitted.lines.length - 1) * lineHeight + fitted.size * .76 + 58).toFixed(1)
+        + '" text-anchor="middle" font-family="' + escapeXml(t.subtitleDisplay)
+        + '" font-size="' + Math.max(15, fitted.size * .2).toFixed(1)
+        + '" font-weight="' + t.subtitleWeight + '" letter-spacing="5" fill="' + p.subtitle
+        + '" opacity=".92">' + escapeXml(design.subtitle) + '</text>'
+      : "";
+    const defs = '<clipPath id="' + id + '-safe"><rect x="48" y="130" width="520" height="900"/></clipPath>'
+      + '<linearGradient id="' + id + '-shade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + p.background
+      + '" stop-opacity=".32"/><stop offset=".55" stop-color="' + p.background + '" stop-opacity=".18"/><stop offset="1" stop-color="'
+      + p.background + '" stop-opacity=".72"/></linearGradient>'
+      + '<pattern id="' + id + '-stripes" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)">'
+      + '<rect width="12" height="5" fill="' + p.foreground + '"/></pattern><style>' + fontCss(assets?.fonts) + '</style>'
+      + '<filter id="' + id + '-shadow" x="-30%" y="-30%" width="160%" height="170%">'
+      + '<feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="#000000" flood-opacity=".72"/></filter>';
+    const titleNode = '<text data-role="title" font-family="' + escapeXml(t.display) + '" font-weight="' + t.weight
+      + '" font-style="' + t.slant + '" letter-spacing="' + t.tracking
+      + '" font-size="' + fitted.size + '" text-anchor="middle" dominant-baseline="central" filter="url(#' + id + '-shadow)">'
+      + spans + '</text>';
+    const brand = '<text data-role="brand" x="544" y="1000" text-anchor="end" font-family="Arial, sans-serif"'
+      + ' font-size="13" font-weight="900" letter-spacing="2" fill="' + p.brand + '" opacity=".62">NODEMOTION</text>';
+    const artistPortrait = design.artist
+      ? '<text data-role="artist" x="308" y="' + (firstY - fitted.size * .62 - 40).toFixed(1) + '" text-anchor="middle" dominant-baseline="central" font-family="' + escapeXml(t.display)
+        + '" font-weight="' + t.weight + '" font-size="' + Math.max(22, fitted.size * .3).toFixed(1) + '" letter-spacing="3" fill="' + p.foreground + '" opacity=".92" filter="url(#' + id + '-shadow)">'
+        + escapeXml(t.transform !== "none" ? design.artist.toLocaleUpperCase("es") : design.artist) + '</text>'
+      : "";
+    const safeContent = '<g data-role="safe-content" clip-path="url(#' + id + '-safe)">'
+      + titleNode + label + brand + '</g>';
+    const accent = '<path d="M64 192 H218" stroke="' + p.accent + '" stroke-width="5" stroke-linecap="round" opacity=".9"/>'
+      + '<path d="M64 208 H148" stroke="' + p.accent + '" stroke-width="1.5" opacity=".55"/>';
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h
+      + '" viewBox="0 0 720 1280" role="img" aria-label="' + escapeXml(title) + '"><defs>' + defs
+      + '</defs><rect width="720" height="1280" fill="' + p.background + '"/>' + image
+      + '<rect width="720" height="1280" fill="url(#' + id + '-shade)"/>' + accent
+      + safeContent + artistPortrait + '</svg>';
+  }
   function renderSvg(manifest, option, width, height, assets) {
     const w = Math.round(number(width, 1280, 320, 1920));
     const h = Math.round(number(height, 720, 180, 1920));
     const key = option === "B" ? "B" : "A";
     const selected = manifest?.options?.[key] || {};
     const design = safeDesign(selected.design);
+    if (manifest?.format === "9x16" || h > w) return renderPortraitSvg(selected, design, key, w, h, assets);
     if (design.style === "promo-editorial") return renderEditorialSvg(selected, design, key, w, h, assets);
     if (design.style === "promo-dynamic") return renderDynamicSvg(selected, design, key, w, h, assets);
     if (design.style === "promo-trendy") return renderTrendySvg(selected, design, key, w, h, assets);
@@ -916,8 +982,22 @@
     if (design.style === "promo-kinetic") return renderKineticSvg(selected, design, key, w, h, assets);
     if (design.style === "promo-breaking") return renderBreakingSvg(selected, design, key, w, h, assets);
     if (design.style === "promo-pulse") return renderPulseSvg(selected, design, key, w, h, assets);
-    if (design.style === "lyrics-rasgado") return renderRasgadoSvg(selected, design, key, w, h, assets);
-    if (design.style === "lyrics-hologram") return renderHologramSvg(selected, design, key, w, h, assets);
+    const capturedBare = design.background.kind === "design" && design.background.bare && safeData(assets?.backgroundData, "image");
+    if (!capturedBare && design.style === "lyrics-rasgado") return renderRasgadoSvg(selected, design, key, w, h, assets);
+    if (!capturedBare && design.style === "lyrics-hologram") return renderHologramSvg(selected, design, key, w, h, assets);
+    if (design.background.kind === "design" && design.background.bare && safeData(assets?.backgroundData, "image")) {
+      const bare = safeData(assets?.backgroundData, "image");
+      const t0 = design.typography, p0 = design.palette;
+      // «LETRAS» pequeno, debajo del titulo y a un costado (A: debajo del sello; B: debajo del papel).
+      const label = design.subtitle ? (() => {
+        const size = design.background.inside ? 22 : 24;
+        let x = design.background.inside ? 1030 : 955, y = design.background.inside ? 510 : 530;
+        if (design.background.labelX >= 0) x = design.background.labelX;
+        if (design.background.labelY >= 0) y = design.background.labelY;
+        return `<text x="${x}" y="${y}" text-anchor="end" font-family="${escapeXml(family(t0.subtitleDisplay || t0.display))}" font-weight="${t0.subtitleWeight || t0.weight}" font-size="${size}" letter-spacing="${size * .06}" fill="${design.background.labelColor || p0.subtitle || p0.accent}"${design.background.labelColor ? "" : ' stroke="#000" stroke-opacity=".55" stroke-width="3" paint-order="stroke"'}>${escapeXml(design.subtitle)}</text>`;
+      })() : "";
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 1280 720"><defs><style>${fontCss(assets?.fonts)}</style></defs><rect width="1280" height="720" fill="${p0.background}"/><image href="${bare}" width="1280" height="720" preserveAspectRatio="xMidYMid slice"/>${label}</svg>`;
+    }
     const { palette: p, typography: t, background: b } = design;
     let title = String(selected.text || "Música").trim().slice(0, 200);
     if (key === "A") title = title.split(/\s+/).slice(0, 5).join(" ");
@@ -934,7 +1014,7 @@
     const zoom = b.x === .5 ? 1 : 1.2;
     const imageX = (1280 - 1280 * zoom) * b.x;
     const imageY = (720 - 720 * zoom) * b.y;
-    const image = backgroundData ? `<image href="${backgroundData}" x="${imageX}" y="${imageY}" width="${1280 * zoom}" height="${720 * zoom}" preserveAspectRatio="${anchor} slice" /><rect width="1280" height="720" fill="url(#${id}-vignette)"/>` : "";
+    const image = backgroundData ? `<image href="${backgroundData}" x="${imageX}" y="${imageY}" width="${1280 * zoom}" height="${720 * zoom}" preserveAspectRatio="${anchor} slice" /><rect width="1280" height="720" fill="url(#${id}-vignette)"/>${b.kind === "design" && b.overlay > 0 ? `<rect width="1280" height="720" fill="#000" opacity="${b.overlay}"/>` : ""}` : "";
     const neon = design.style === "neon";
     const defs = `<filter id="${id}-shadow" x="-20%" y="-40%" width="140%" height="180%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000000" flood-opacity=".75"/></filter><pattern id="${id}-stripes" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-12)"><rect width="8" height="3.5" fill="${p.foreground}"/></pattern><style>${fontCss(assets?.fonts)}</style><radialGradient id="${id}-vignette"><stop offset=".1" stop-color="#000000" stop-opacity="${b.overlay}"/><stop offset="1" stop-color="#000000" stop-opacity="${b.overlay}"/></radialGradient>${neon ? `<filter id="${id}-glow" x="-100%" y="-200%" width="300%" height="500%"><feDropShadow dx="0" dy="0" stdDeviation="${Math.max(2, fitted.size * .05)}" flood-color="${p.foreground}"/><feDropShadow dx="0" dy="0" stdDeviation="${fitted.size * .16}" flood-color="${p.accent}"/><feDropShadow dx="0" dy="0" stdDeviation="${fitted.size * .4}" flood-color="${p.deep}"/></filter>` : ""}`;
     const type = `font-family="${escapeXml(t.display)}" font-weight="${t.weight}" font-style="${t.slant}" letter-spacing="${t.tracking}" text-anchor="middle" dominant-baseline="central"`;
@@ -955,9 +1035,10 @@
     const subtitleLayout = subtitlePosition(lastLine, t, subtitleFont, fitted.size, subtitleSize, key === "A" ? .9 : 1, subtitleTypography);
     const subtitleShift = neon && key === "B" ? subtitleSize * .1 : 0;
     const subtitleY = start + (fitted.lines.length - 1) * lineHeight + subtitleLayout.offset + subtitleShift;
-    const sub = `<text data-role="subtitle" data-gap="${subtitleLayout.gap + subtitleShift}" font-family="${escapeXml(subtitleFont)}" font-weight="${t.subtitleWeight}" font-style="${t.subtitleSlant}" stroke="${p.subtitle}" stroke-width=".22" paint-order="stroke" text-anchor="end" dominant-baseline="central" x="${subtitleX}" y="${subtitleY}" font-size="${subtitleSize}" fill="${p.subtitle}">LETRAS</text>`;
+    const sub = design.subtitle ? `<text data-role="subtitle" data-gap="${subtitleLayout.gap + subtitleShift}" font-family="${escapeXml(subtitleFont)}" font-weight="${t.subtitleWeight}" font-style="${t.subtitleSlant}" stroke="${p.subtitle}" stroke-width=".22" paint-order="stroke" text-anchor="end" dominant-baseline="central" x="${subtitleX}" y="${subtitleY}" font-size="${subtitleSize}" fill="${p.subtitle}">${escapeXml(design.subtitle)}</text>` : "";
+    const artistNode = design.artist ? `<text data-role="artist" x="640" y="${(start - fitted.size * .62 - 34).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="${escapeXml(t.display)}" font-weight="${t.weight}" font-style="${t.slant}" font-size="${Math.max(24, fitted.size * .3).toFixed(1)}" letter-spacing="${(fitted.size * .03).toFixed(1)}" fill="${p.foreground}" opacity=".92" filter="url(#${id}-shadow)">${escapeXml(t.transform !== "none" ? design.artist.toLocaleUpperCase("es") : design.artist)}</text>` : "";
     const brand = `<text x="1224" y="674" text-anchor="end" font-family="Arial, sans-serif" font-size="15.6" font-weight="900" letter-spacing="2" fill="${p.brand}" stroke="${p.brand}" stroke-width=".4" paint-order="stroke" opacity=".28">NODEMOTION</text>`;
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 1280 720" role="img" aria-label="${escapeXml(title)}"><defs>${defs}</defs><rect width="1280" height="720" fill="${p.background}"/>${image}${copy}${sub}${brand}</svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 1280 720" role="img" aria-label="${escapeXml(title)}"><defs>${defs}</defs><rect width="1280" height="720" fill="${p.background}"/>${image}${copy}${sub}${artistNode}${brand}</svg>`;
   }
   async function readData(url, resolveUrl) {
     if (!/^\/api\/v1\/drafts\/[a-z\d/?=&_.%-]+$/i.test(url)) throw new Error("Recurso de miniatura inválido");
@@ -986,9 +1067,9 @@
     let assets = settings?.assets;
     if (!assets) {
       const b = design.background;
-      const query = new URLSearchParams({kind: b.kind, source: b.mediaSource, time: String(b.kind === "frame" ? b.time : 0), asset: b.asset, v: b.kind === "image" ? b.asset : b.mediaVersion});
+      const query = new URLSearchParams({kind: b.kind, source: b.mediaSource, time: String(b.kind === "frame" ? b.time : 0), at: String(b.at), t: String(b.seconds), z: String(b.zoom), phrase: b.inside ? String(selected.text || "") : "", asset: b.asset, v: b.kind === "image" ? b.asset : b.mediaVersion});
       const background = manifest?.draftId && /^[a-z\d-]{1,80}$/i.test(manifest.draftId) && b.kind !== "solid"
-        ? `/api/v1/drafts/${manifest.draftId}/thumbnail-background?${query}` : null;
+        ? `/api/v1/drafts/${manifest.draftId}/thumbnail-background?${query.toString().replace(/\+/g, '%20').replace(/\*/g, '%2A')}` : null;
       const fonts = [design.typography.font, design.typography.outlineFont, design.typography.subtitleFont].filter(Boolean);
       const [backgroundData, fontData] = await Promise.all([
         background ? readData(background, settings?.resolveUrl) : "",
@@ -1010,5 +1091,5 @@
     }
     return renderSvg(manifest, option, width, height, assets);
   }
-  return { version: 22, renderSvg, renderSvgAsync, escapeXml, safeColor, safeDesign, wrapText, fitTitle };
+  return { version: 26, renderSvg, renderSvgAsync, escapeXml, safeColor, safeDesign, wrapText, fitTitle };
 });

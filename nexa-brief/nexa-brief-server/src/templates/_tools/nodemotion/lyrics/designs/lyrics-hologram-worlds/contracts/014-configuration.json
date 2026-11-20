@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram-worlds",
+  "id": "config.phrases",
+  "entry_id": "config.phrases",
+  "name": "phrases",
+  "kind": "configuration",
+  "label": "phrases",
+  "summary": "Existing configuration configuration: phrases.",
+  "params": {
+    "maxWords": {
+      "default": 4
+    },
+    "maxSec": {
+      "default": 2.4
+    },
+    "minWords": {
+      "default": 2
+    }
+  },
+  "example": {
+    "maxWords": 4,
+    "maxSec": 2.4,
+    "minWords": 2
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram-worlds/assets/config.json",
+      "pointer": "/configs/0/phrases"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

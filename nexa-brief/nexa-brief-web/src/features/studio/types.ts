@@ -28,14 +28,25 @@ export const EMPTY_STUDIO_VALUE: StudioValue = {
 
 export type RecorderEngine = "remotion" | "hyperframes" | "playwright";
 export type RecordFormat = "16x9" | "9x16";
+export const DEFAULT_RECORD_OUTPUTS = ["tiktok", "instagram", "facebook", "youtube", "youtube_shorts"] as const;
+export type RecordOutput = (typeof DEFAULT_RECORD_OUTPUTS)[number];
+export const RECORD_OUTPUT_FORMAT: Record<RecordOutput, RecordFormat> = {
+  tiktok: "9x16",
+  instagram: "9x16",
+  facebook: "16x9",
+  youtube: "16x9",
+  youtube_shorts: "9x16",
+};
 
 export interface RenderOptions {
   recorderEngine?: RecorderEngine;
   backgroundOpacity?: number;
   publishAccounts: string[];
-  /** Formatos a grabar: 16:9 siempre; 9:16 se suma. */
+  /** Destinos cuyos archivos se preparan. No implica publicar en ninguna cuenta. */
+  outputs?: RecordOutput[];
+  /** Contrato legacy: formatos explícitos a grabar si outputs no viene. */
   formats?: RecordFormat[];
-  /** Un formato por cuenta ("platform:alias"). */
+  /** Contrato legacy: un formato por cuenta ("platform:alias"). */
   accountFormats?: Record<string, RecordFormat>;
 }
 
@@ -49,7 +60,9 @@ export type DraftStatus =
   | "failed";
 
 export type DetailsPlatform = "youtube" | "facebook" | "instagram" | "tiktok";
+export type DraftCopyPlatform = DetailsPlatform | "youtube_shorts";
 export const DETAILS_PLATFORMS: DetailsPlatform[] = ["youtube", "facebook", "instagram", "tiktok"];
+export const DRAFT_DETAILS_PLATFORMS: DraftCopyPlatform[] = [...DEFAULT_RECORD_OUTPUTS];
 
 export interface PlatformDetails {
   title: string;
@@ -65,7 +78,7 @@ export interface DraftDetails {
   songName: string;
   artist: string;
   language: string | null;
-  copies: Partial<Record<DetailsPlatform, PlatformDetails>>;
+  copies: Partial<Record<DraftCopyPlatform, PlatformDetails>>;
   generatedAt: string | null;
   edited: boolean;
   /** Investigación previa: lo que la IA ordenó de la información de la canción. */
@@ -87,7 +100,7 @@ export interface DraftRequest {
   image_asset_id?: string;
   video_asset_id?: string;
   template_inputs?: TemplateInputsPayload;
-  auto_render?: { recorder_engine?: RecorderEngine; publish_accounts: string[] };
+  auto_render?: { recorder_engine?: RecorderEngine; publish_accounts: string[]; outputs?: RecordOutput[] };
 }
 
 export type DraftThumbnailOptionId = "A" | "B";
@@ -101,11 +114,15 @@ export interface DraftThumbnailOption {
 
 export interface DraftThumbnails {
   fingerprint: string;
+  /** Legacy manifests omit format and remain 16:9. */
+  format?: RecordFormat;
   selected: DraftThumbnailOptionId;
   urls: Partial<Record<DraftThumbnailOptionId, string>>;
   /** Opcional para poder leer drafts creados antes de guardar el manifest A/B. */
   options?: Partial<Record<DraftThumbnailOptionId, DraftThumbnailOption>>;
 }
+
+/** Miniaturas A/B y elección independientes por salida; ausencia significa fallback legacy. */
 
 export interface Draft {
   draftId: string;
@@ -131,6 +148,7 @@ export interface Draft {
   recoverable: boolean;
   details: DraftDetails | null;
   thumbnails?: DraftThumbnails | null;
+  /** Cuando falta un destino se conserva thumbnails como manifest A/B compartido. */
   thumbnailError?: string | null;
   /** Datos que faltan por generar (IA no disponible o recursos sin ficha): bloquean publicar. */
   pending?: string[];

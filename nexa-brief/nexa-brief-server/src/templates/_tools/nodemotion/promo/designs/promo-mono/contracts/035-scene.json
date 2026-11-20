@@ -2,55 +2,40 @@
   "schema_version": 1,
   "generated": true,
   "design_id": "promo-mono",
-  "id": "scene.cardfan",
-  "entry_id": "scene.cardfan",
-  "name": "cardfan",
+  "id": "scene.outro",
+  "entry_id": "scene.outro",
+  "name": "outro",
   "kind": "scene",
-  "label": "cardfan",
-  "summary": "Existing scene configuration: cardfan.",
-  "params": {
-    "type": {
-      "default": "cardfan"
-    },
-    "media": {
-      "default": [
-        "concert",
-        "couple",
-        "skater",
-        "horses",
-        "boat",
-        "crowd",
-        "roadtrip"
-      ]
-    },
-    "trans": {
-      "default": "blink"
+  "label": "outro",
+  "summary": "Existing scene type: outro.",
+  "variants": [
+    {
+      "type": "outro",
+      "max_text_lines": null
     }
-  },
-  "example": {
-    "type": "cardfan",
-    "media": [
-      "concert",
-      "couple",
-      "skater",
-      "horses",
-      "boat",
-      "crowd",
-      "roadtrip"
-    ],
-    "trans": "blink"
+  ],
+  "scene_cycle": [
+    {
+      "scene": 21,
+      "type": "outro",
+      "max_text_lines": null
+    }
+  ],
+  "notes": {
+    "script": "Un segmento por escena, en el orden de la plantilla. La primera escena es la intro y la última el cierre. Adapta el texto al tema; no uses el texto de la demo. Sigue max_text_lines por tipo: null indica que el componente no impone un límite a sus líneas de entrada; pattern y outro pueden usar el segmento como paso visual sin mostrar ese texto."
   },
   "sources": [
     {
-      "path": "nodemotion/commercial/promo-mono/assets/config.json",
-      "pointer": "/configs/0/scenes/2"
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/default_scenes/20"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/scene_cycle/20"
     }
   ],
-  "constraints_status": "observed_defaults_only",
+  "constraints_status": "documented_per_variant",
   "unknown": [
-    "validation bounds",
-    "supported options beyond the example",
-    "text capacity"
-  ],
-  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+    "validation rules not explicitly present in the cited source"
+  ]
 }

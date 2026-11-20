@@ -14,6 +14,7 @@ import {
 } from "../components/ThumbnailStageContext";
 import type { TemplateStudioController } from "../hooks/useTemplateStudio";
 import { thumbnailLocalEdits } from "../services/thumbnail-local-edits";
+import { DEFAULT_RECORD_OUTPUTS } from "../types";
 import type { Draft } from "../types";
 
 vi.mock("next-intl", () => ({
@@ -101,8 +102,10 @@ function viewRecord() {
       engine: "hyperframes",
       hyperframesSupported: true,
       accounts: [],
-      formats: ["16x9"],
-      accountFormats: {},
+      formats: ["16x9", "9x16"],
+      outputs: [...DEFAULT_RECORD_OUTPUTS],
+      setOutput: vi.fn(),
+      hasOutputForAccount: vi.fn().mockReturnValue(true),
       desktop: true,
       vertical: false,
       canVertical: true,

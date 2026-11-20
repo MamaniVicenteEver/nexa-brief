@@ -1,5 +1,7 @@
 # Tarea para Codex: terminar 2 réplicas Klickpin (sandbox NodeMotion)
 
+> **Histórico (2026-10-15):** tarea que Codex ejecutó con resultado insuficiente; Claude rehízo las dos réplicas (`promo-fuerza-motivacion`, `lyrics-final-cut`). No es una instrucción vigente. Para NodeMotion nuevo rige el «Estándar vigente para plantillas NodeMotion nuevas» del AGENTS.md raíz.
+
 > ## ⚠️ REGLA ABSOLUTA DEL USUARIO: CERO INVENCIÓN
 > Cada plantilla **tiene que ser idéntica a su video de referencia**. **No inventes nada**: ni
 > escenas, ni transiciones, ni efectos, ni colores, ni tipografías, ni composiciones, ni orden, ni

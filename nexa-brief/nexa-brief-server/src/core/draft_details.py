@@ -14,11 +14,13 @@ from pathlib import Path
 
 from typing import Any
 
-from pydantic import BaseModel, Field, PrivateAttr
+from src.core.publication_text import strip_urls
+
+from pydantic import BaseModel, Field, PrivateAttr, model_validator
 
 from src.core.job import Job, PlatformCopyText, VideoSummary
 
-PLATFORMS = ("youtube", "facebook", "instagram", "tiktok")
+PLATFORMS = ("youtube", "youtube_shorts", "facebook", "instagram", "tiktok")
 
 
 class PlatformDetails(BaseModel):
@@ -28,6 +30,28 @@ class PlatformDetails(BaseModel):
     strategy: str = ""
     # YouTube: el comentario que se publica y se fija.
     pinned_comment: str = Field(default="", max_length=1000)
+
+
+def _shorts_variant(copy: PlatformDetails) -> PlatformDetails:
+    """Separate editable metadata for the vertical YouTube destination.
+
+    Copy the prepared YouTube text as a useful starting point, mark its title
+    and tag for Shorts, and cap the title at YouTube's 100-character limit.
+    """
+    title = copy.title.strip()
+    marker = " #Shorts"
+    if title and "#shorts" not in title.casefold():
+        title = title[:100 - len(marker)].rstrip() + marker
+    tags = list(copy.tags)
+    if not any(tag.strip().lstrip("#").casefold() == "shorts" for tag in tags):
+        tags.append("Shorts")
+    return PlatformDetails(
+        title=title,
+        description=copy.description,
+        tags=tags,
+        strategy=copy.strategy,
+        pinned_comment=copy.pinned_comment,
+    )
 
 
 class DraftDetails(BaseModel):
@@ -46,6 +70,14 @@ class DraftDetails(BaseModel):
     # de transporte: drafts los guardan en Draft.thumbnails, separado de metadatos.
     _thumbnail_texts: dict[str, str] = PrivateAttr(default_factory=dict)
     _thumbnail_selected: str | None = PrivateAttr(default=None)
+
+    @model_validator(mode="after")
+    def _add_shorts_copy(self) -> "DraftDetails":
+        # Compatibility for saved details that predate the explicit Shorts copy.
+        youtube = self.copies.get("youtube")
+        if youtube is not None and "youtube_shorts" not in self.copies:
+            self.copies = {**self.copies, "youtube_shorts": _shorts_variant(youtube)}
+        return self
 
 
 def _now_iso() -> str:
@@ -120,8 +152,8 @@ async def generate(job: Job, niche_id: str, seed: str, notes: str = "", *, ai_ov
         language=language_code,
         copies={
             platform: PlatformDetails(
-                title=c.title, description=c.description, tags=list(c.tags), strategy=c.strategy_id,
-                pinned_comment=c.pinned_comment,
+                title=strip_urls(c.title), description=strip_urls(c.description), tags=list(c.tags), strategy=c.strategy_id,
+                pinned_comment=strip_urls(c.pinned_comment),
             )
             for platform, c in result.copies.items()
         },

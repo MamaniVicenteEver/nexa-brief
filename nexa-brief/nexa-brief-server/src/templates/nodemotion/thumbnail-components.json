@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "notes": "Miniatura v1 (opcion A) y v2 (opcion B) para los disenos de letras registrados en el motor compartido. Cada diseno puede afinar la captura en su thumbnail-style.json (clave capture).",
+  "v1": {
+    "option": "A",
+    "summary": "A: nombre de la canción con LETRAS. El cuadro es el de su plantilla (intro o segundo declarado en thumbnail-style.json).",
+    "bare": true
+  },
+  "v2": {
+    "option": "B",
+    "summary": "B: una parte de la letra que suena en el segundo de su cuadro, con LETRAS. El segundo lo declara la plantilla en capture.frames.B o backgrounds.B.",
+    "at": 0.5
+  }
+}

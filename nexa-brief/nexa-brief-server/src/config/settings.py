@@ -1,6 +1,7 @@
 from pathlib import Path
+from typing import Literal
 
-from pydantic import Field, model_validator
+from pydantic import Field, SecretStr, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from src.config.production_limits import MAX_CONTENT_PRODUCERS
 
@@ -11,7 +12,7 @@ BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         # Root .env owns shared public configuration; server .env keeps API secrets.
-        env_file=(BASE_DIR.parent / ".env", BASE_DIR / ".env"),
+        env_file=(BASE_DIR.parent / ".env", BASE_DIR / ".env", Path.home() / ".config/private-media-worker/nexa-media.env"),
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
@@ -71,6 +72,25 @@ class Settings(BaseSettings):
     # Solo para detectar si se canta en español o inglés (ver content_language.py):
     # un modelo chico basta y evita cargar large-v3 en nichos que no transcriben.
     whisper_language_detection_model: str = "small"
+
+    # None keeps the existing local/AWS configuration. Explicit overrides make
+    # migrations reversible without changing the video pipeline or niche.
+    nexa_media_provider: Literal["local", "vps"] | None = Field(default=None, alias="NEXA_MEDIA_PROVIDER")
+    nexa_transcription_provider: Literal["local", "vps"] | None = Field(default=None, alias="NEXA_TRANSCRIPTION_PROVIDER")
+    nexa_render_provider: Literal["local", "vps"] | None = Field(default=None, alias="NEXA_RENDER_PROVIDER")
+    nexa_private_media_url: str = Field(default="", alias="NEXA_PRIVATE_MEDIA_URL")
+    nexa_private_media_token: SecretStr = Field(default=SecretStr(""), alias="NEXA_PRIVATE_MEDIA_TOKEN")
+    nexa_private_media_token_file: Path | None = Field(default=None, alias="NEXA_PRIVATE_MEDIA_TOKEN_FILE")
+    nexa_private_media_timeout_seconds: int = Field(default=7200, ge=60, alias="NEXA_PRIVATE_MEDIA_TIMEOUT_SECONDS")
+
+    def effective_transcription_provider(self) -> str:
+        return self.nexa_transcription_provider or self.nexa_media_provider or "local"
+
+    def effective_hyperframes_target(self, job_target: str | None = None) -> str:
+        target = job_target or self.nexa_render_provider or self.nexa_media_provider or self.hyperframes_render_target
+        if target not in {"local", "vps", "aws"}:
+            raise ValueError("Destino HyperFrames no válido: use local, vps o aws.")
+        return target
 
     # ── Published metadata (título/descripción/tags) ──────────────────────────
     # Idioma del copy: el de la canción si es español o inglés; si no se puede

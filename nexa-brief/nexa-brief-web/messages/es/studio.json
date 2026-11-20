@@ -112,7 +112,7 @@
     },
     "render": {
       "engineUnavailable": "No disponible por ahora",
-      "hyperframesUnsupported": "HyperFrames no está disponible para esta categoría.",
+      "hyperframesUnsupported": "HyperFrames aún no está habilitado para esta plantilla.",
       "engine": "Motor de grabación",
       "engines": {
         "remotion": "Remotion",
@@ -202,7 +202,8 @@
         "prepareAgain": "Volver a preparar los textos",
         "prepareAgainConfirm": "Editaste los detalles: volver a preparar los reemplaza. ¿Seguir?",
         "missingSong": "Elegí una canción para previsualizar.",
-        "missingMedia": "Completá los medios marcados para previsualizar."
+        "missingMedia": "Completá los medios marcados para previsualizar.",
+        "loadingSongDetails": "Consultando los datos de la canción…"
       },
       "play": "Previsualizar {name}",
       "previewUnavailable": "Previsualizá este prototipo para poder reproducirlo.",
@@ -248,8 +249,10 @@
       "goSandbox": "Ir al Sandbox",
       "prototype": "Prototipo",
       "prototypeHint": "El video original o uno de tus prototipos preparados.",
-      "formats": "Formatos",
-      "formatsHint": "Elegí uno o ambos.",
+      "formats": "Salidas",
+      "formatsHint": "Marcá las salidas que se van a preparar; para publicar, elegí también cuentas.",
+      "youtubeNormal": "YouTube · video normal",
+      "missingOutputForAccount": "Cada cuenta necesita una salida compatible seleccionada.",
       "publish": "Publicar al terminar",
       "publishHint": "Opcional. Si no elegís cuentas, el video queda en Biblioteca.",
       "record": "Grabar",
@@ -276,6 +279,17 @@
     },
     "thumbnails": {
       "stopViewing": "Dejar de ver",
+      "destinationLabel": "Destino de la miniatura",
+      "sharedFallback": "Se muestra la miniatura A/B global de este borrador. Prepará los destinos para crear elecciones independientes y capturar la imagen elegida de cada uno antes de grabar.",
+      "prepareDestinations": "Preparar miniaturas de los cinco destinos",
+      "preparingDestinations": "Preparando vistas y capturas elegidas…",
+      "destinations": {
+        "tiktok": "TikTok",
+        "instagram": "Instagram",
+        "facebook": "Facebook",
+        "youtube": "YouTube normal",
+        "youtube_shorts": "YouTube Shorts"
+      },
       "title": "Opciones de miniatura",
       "hint": "Dos opciones con el estilo del video. Cada una conserva su texto y fondo.",
       "option": "Opción {option}",

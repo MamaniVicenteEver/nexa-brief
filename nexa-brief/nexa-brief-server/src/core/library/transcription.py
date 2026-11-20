@@ -24,6 +24,7 @@ ya estaba en caché.
 from __future__ import annotations
 
 import asyncio
+from contextlib import nullcontext
 import weakref
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -113,11 +114,18 @@ async def ensure_lyrics(
             if cached is not None:
                 return cached, True
 
-        async with heavy_work_slot("transcription", asset_id):
+        try:
+            transcriber = transcriber_factory()
+        except Exception as exc:
+            logger.error("lyrics_transcription_failed", asset_id=asset_id, error=str(exc))
+            await _set_status(asset_id, "failed", str(exc)[:500] or exc.__class__.__name__)
+            raise
+        slot = heavy_work_slot("transcription", asset_id) if getattr(transcriber, "requires_local_heavy_slot", True) else nullcontext()
+        async with slot:
             await _set_status(asset_id, "running")
             logger.info("lyrics_transcription_start", asset_id=asset_id, language=language, force=force)
             try:
-                lyrics_json = await transcriber_factory().transcribe(audio_path, language=language)
+                lyrics_json = await transcriber.transcribe(audio_path, language=language)
             except Exception as exc:
                 logger.error("lyrics_transcription_failed", asset_id=asset_id, error=str(exc))
                 await _set_status(asset_id, "failed", str(exc)[:500] or exc.__class__.__name__)

@@ -140,6 +140,25 @@ describe("local thumbnail editor", () => {
     expect(prepareDraftThumbnails).not.toHaveBeenCalled();
     expect(updateDraftThumbnailOption).not.toHaveBeenCalled();
   });
+  it("chooses one shared option for every destination", async () => {
+    function SharedPicker() {
+      const editor = useDraftThumbnailEditor(prepared);
+      return (
+        <>
+          <DraftThumbnailPicker draft={prepared} editor={editor} />
+          <button type="button" onClick={() => void editor.flush()}>sync destination</button>
+        </>
+      );
+    }
+    render(<SharedPicker />, { wrapper: Wrapper });
+    fireEvent.click(screen.getByRole("button", { name: "chooseOption B" }));
+    fireEvent.click(screen.getByRole("button", { name: "sync destination" }));
+    await waitFor(() =>
+      expect(chooseDraftThumbnail).toHaveBeenCalledWith(prepared.draftId, "B"),
+    );
+    expect(server.thumbnails?.selected).toBe("B");
+  });
+
   it("edits B immediately without choosing it and restores unsynced JSON on reopen", async () => {
     const view = render(<Picker />, { wrapper: Wrapper });
     fireEvent.click(screen.getByRole("button", { name: "viewOption B" }));

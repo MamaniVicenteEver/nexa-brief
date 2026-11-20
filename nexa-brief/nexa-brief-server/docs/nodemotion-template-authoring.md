@@ -2,7 +2,7 @@
 
 Esta guía corresponde a crear **un diseño reutilizable** de letras o promociones. No es el flujo para preparar otro video de una plantilla existente. Es válida para Claude, Codex y otros agentes; el modelo elegido no cambia los contratos ni los permisos del ejecutor.
 
-Lee primero las reglas del repositorio, `src/templates/AGENTS.md` y [la arquitectura](nodemotion-architecture.md). Para prototipos aplica también `src/templates/sandbox/PROTOTIPO.md` y `PREPARAR-PRODUCCION.md`.
+Lee primero las reglas del repositorio, `src/templates/AGENTS.md` y [la arquitectura](nodemotion-architecture.md). Para NodeMotion no aplican `src/templates/sandbox/PROTOTIPO.md` ni `PREPARAR-PRODUCCION.md`: son del Sandbox; ver la sección 2.
 
 ## 1. Decidir el alcance
 
@@ -11,53 +11,30 @@ Lee primero las reglas del repositorio, `src/templates/AGENTS.md` y [la arquitec
 - No cambiar otros diseños ni sus demos, colores, fuentes, tiempos, transiciones o movimientos para integrar uno nuevo. La apariencia del diseño encargado se define en su brief y se valida en ambos formatos.
 - Usar nombres de carpetas, archivos y nuevos IDs en inglés, en minúsculas y con guiones donde corresponda. Mantener los IDs históricos y las URL públicas existentes.
 
-## 2. Responsabilidades y ubicación
+## 2. Responsabilidades y ubicación (estándar vigente desde 2026-11-16)
 
-El **creador del prototipo** trabaja dentro de la carpeta asignada del Sandbox del perfil efectivo. Entrega diseño, datos de demostración, contratos y evidencia; no escribe registros de producción, no mueve carpetas manualmente y no presenta una integración pendiente como terminada. Si el ejecutor está aislado, respeta sus permisos: no sale de su carpeta ni ejecuta herramientas del repositorio por deducción de esta guía.
+Esta sección sustituye cualquier referencia anterior al Sandbox para plantillas NodeMotion.
+Prevalece sobre `docs/ubicacion-demos-pruebas-episodios.md` en lo que toca a NodeMotion.
 
-El **integrador del repositorio**, con alcance para modificar código compartido, registra y verifica el motor. Usa el servicio de preparación y paso a producción para el traslado y registro que ese servicio soporte. Si el informe deja pendiente el motor compartido NodeMotion, completa esa integración en código y repite la verificación; cambiar una tarjeta de categoría no integra el motor.
+| Qué | Dónde |
+| --- | --- |
+| Motor y definición de la plantilla (código y JSON) | Repositorio: `src/templates/nodemotion/<lyrics\|commercial>/<id>/` |
+| Imágenes, videos, audio, fuentes y capturas de tarjeta | Perfil, recursos compartidos: `$NEXA_PROFILE_DIR/productions/nodemotion/recursos/` (pendiente de código) |
+| Prototipos y sus datos (canción, letra, textos, línea de tiempo, referencias) | Perfil: `$NEXA_PROFILE_DIR/productions/nodemotion/<lyrics\|commercial>/<id>/` |
+| Motor compartido registrado | `src/templates/_tools/nodemotion/<familia>/designs/<id>/` (código; ver nota) |
 
-La fuente final queda organizada así (las rutas parten de `nexa-brief-server/`):
+Reglas:
 
-```text
-src/core/nodemotion/
-├── service.py                         # Fachada existente: proyectos, resolución y ejecución
-├── factory.py                         # Selecciona lyrics o promo desde el manifiesto
-├── shared/                            # Recursos, revisiones y ejecución comunes
-├── lyrics/                            # Comportamiento exclusivo de letras
-└── promo/                             # Guion, preparación, estrategias y aprobación de promos
+- En `src/` solo hay código y JSON. Ninguna imagen, video, audio, fuente ni captura.
+- El **creador** de la plantilla trabaja en `src/templates/nodemotion/<cat>/<id>/` y en su carpeta de prototipo del perfil. No crea nada en Sandbox.
+- El **integrador** registra el motor compartido y las conexiones obligatorias: entrada en
+  `niches.json` (activa solo al quedar lista), entrada en `templates.json`, diseño registrado,
+  `showcase/components.json` y captura de tarjeta en recursos compartidos.
+- Nada se mueve ni se borra a mano: copia verificada (diferencia vacía) y confirmación del usuario.
 
-src/templates/_tools/nodemotion/
-├── AGENTS.md                          # Reglas de autoría e integración
-├── shared/
-│   ├── assemble.py                    # Ensambla la fuente y conserva revisiones
-│   ├── discovery.py                   # Deriva contratos breves para agentes
-│   └── resources/<sha256>.<ext>        # Medios de demo compartidos por contenido
-├── lyrics/
-│   ├── designs/lyrics-<name>/          # Fuente única del diseño
-│   └── compiler/<family>/             # Solo si el diseño necesita compilador
-└── promo/
-    ├── designs/promo-<name>/           # Fuente única del diseño
-    ├── compiler/                      # Compilación compartida, sin otro productor
-    ├── tools/                         # Herramientas de preparación existentes
-    └── production/
-        ├── templates/<id>.json        # Contrato editorial/técnico de la promo
-        ├── schemas/                   # Validación de datos
-        └── prompts/                  # Prompts versionados; no copias por video
-
-src/templates/nodemotion/
-├── lyrics/lyrics-<name>/               # Demo pública registrada
-└── commercial/promo-<name>/            # Demo pública registrada de promo
-    ├── index.html                     # Entrada mínima, sin motor duplicado
-    ├── assets/config.json             # Datos de demostración
-    ├── info.json / DESIGN.md           # Identidad y reglas del diseño
-    └── showcase/components.json       # Contratos de piezas, cuando existan
-
-<profile>/sandbox/nodemotion/<id>/      # Prototipo privado y sus evidencias
-<profile>/productions/nodemotion/<id>/  # Episodios: JSON y referencias, sin motor propio
-```
-
-Las carpetas `commercial`, las categorías públicas y otros identificadores existentes son contratos: no renombrarlos para ajustarlos a un término de la guía.
+Nota: hoy el registro copia el código del motor a `src/templates/_tools/nodemotion/<familia>/designs/<id>/`
+y deja en la carpeta de la plantilla una entrada delgada. Esa copia es código. Queda pendiente decidir si el
+motor debe quedar solo en la carpeta de la plantilla.
 
 ## 3. Contrato del motor
 
@@ -101,7 +78,7 @@ revisions/          # Revisiones inmutables administradas por el motor
 ## 5. Integración de un diseño
 
 1. **Brief e identidad.** Definir familia, ID, propósito, formatos, inputs, piezas, escenas, restricciones y renderer soportado. Para una demo principal de diseño nuevo declarar `is_new_design: true` en el contrato de Sandbox; para un episodio no utilizar esa marca.
-2. **Prototipo.** Entregar la composición dentro del Sandbox autorizado con `info.json`, configuración válida y medios trazables. Añadir `DESIGN.md` y contratos de componentes. Una demo aislada aún puede necesitar su composición autocontenida para la verificación de Sandbox; esto no es la estructura final del motor ni una receta para copiarlo a episodios.
+2. **Prototipo.** Entregar la composición en `productions/nodemotion/<cat>/<id>/` del perfil con `info.json`, configuración válida y medios trazables. Añadir `DESIGN.md` y contratos de componentes. Una demo aislada aún puede necesitar su composición autocontenida para la verificación de Sandbox; esto no es la estructura final del motor ni una receta para copiarlo a episodios.
 3. **Preparación y registro.** Ejecutar el flujo existente de verificación/paso a producción. Respetar sus pendientes técnicos. El catálogo público de plantillas tiene su fuente en `src/templates/templates.json`; el integrador debe verificar la entrada generada y sus rutas. Si una integración de código necesita modificar esa fuente, hacerlo como cambio revisable y validado, nunca editar el estado del perfil para simular un registro. `niches.json` describe el comportamiento del pipeline y no sustituye el catálogo público.
 4. **Fuente compartida.** Integrar `designs/<id>/` y una demo de datos con entrada mínima. Para incorporar una composición registrada todavía autocontenida, la herramienta existente `extract.py --extract <id>` realiza la extracción inicial y comprueba equivalencia antes de retirar la implementación de la demo. Usarla solo sobre el ID revisado y la composición autorizada: no ejecutarla globalmente ni usarla para sobrescribir motores ya registrados. Si la composición contiene dependencias externas no contempladas por el extractor, inventariarlas, registrarlas y verificar su resolución; no asumir que la extracción las encontró todas.
 5. **Recursos de demo.** Inventariar solo este diseño con `plan_demo_resources(templates_root, [design_id])` del módulo `src/core/nodemotion/shared/bundled.py`, revisar el plan y aplicarlo mediante `apply_demo_resource_plan`. La API y la CLI existen; se ejecutan con el perfil/rutas efectivos y las reglas del repositorio. No reconstruir manualmente las claves hash o alias. Conservar los originales hasta verificar sus reemplazos.
@@ -110,7 +87,7 @@ revisions/          # Revisiones inmutables administradas por el motor
 8. **Descubrimiento y Showcase.** Los contratos deben permitir elegir piezas sin leer todo el motor. Documentar parámetros, tipos, valores por defecto, opciones, límites, ejemplo mínimo y diferencias 16:9/9:16. Actualizar fuentes de verdad (`showcase/components.json`, metadata de diseño o contrato de producción) y regenerar los índices; no editar solo `contracts/*.json`. Mantener las reglas de visibilidad del perfil: una demo registrada no autoriza activar todos los proyectos en Showcase.
 9. **Pruebas y entrega.** Completar los criterios siguientes antes de declarar integrada la plantilla. Si el entorno no permite una prueba, registrar la limitación; no afirmar que pasó.
 
-**Referencias, variantes y nombres.** Una referencia o ejemplo es una guía: se parte de la base aprobada y se adapta a la canción, el texto y el tiempo pedidos. No se copia literal ni se mezclan dos diseños en uno. Una variante declara su base en `REPORT.md` y tiene su propio `id` y `display_name`. Los nombres visibles son únicos en `templates.json` (mayúsculas y espacios no cuentan); el catálogo rechaza duplicados. Convención: el id es `<familia>-<cambio>` y el nombre visible conserva la base de la familia y termina con la palabra del cambio.
+**Referencias, variantes y nombres.** Una referencia o ejemplo es una guía: se parte de la base aprobada y se adapta a la canción, el texto y el tiempo pedidos. No se copia literal ni se mezclan dos diseños en uno. Una variante declara su base en `REPORT.md` y tiene su propio `id` y `display_name`. Los nombres visibles son únicos en `templates.json` (mayúsculas y espacios no cuentan); el catálogo rechaza duplicados. Convención: la base es `lyrics-<plantilla>` (por ejemplo `lyrics-grunge`). Una nueva versión es `lyrics-<plantilla>-<cambio>` (por ejemplo `lyrics-grunge-glitch`). El nombre visible es «<Plantilla> <Cambio>», único y en español. El término de la familia usa el ID existente (`hologram`, no `holograma`); el cambio va en minúsculas y sin acentos.
 
 ## 6. Herramientas existentes y límites
 
@@ -136,7 +113,7 @@ Las carpetas de compilador `build/` contienen código fuente y specs, no basura 
 ## 7. Criterios de aceptación
 
 - ID/familia/demo coherentes; `registered(id)`, `assemble(id)` y congelación de revisión funcionan.
-- Catálogo público y resolución del diseño reconocen la entrada; las rutas de datos, runtime, fuentes y medios responden sin dependencias del Sandbox ni de otra máquina.
+- Catálogo público y resolución del diseño reconocen la entrada; las rutas de datos, runtime, fuentes y medios responden sin dependencias de rutas de prueba ni de otra máquina.
 - Documento y runtime de la referencia aprobada conservan sus bytes al extraer; comprobar errores del navegador y que no falten medios/fuentes.
 - Preview en 16:9 y 9:16, reproducción, seek, intro/outro y transición de escenas verificados según los formatos realmente soportados. No reducir resolución, fps, efectos o calidad para hacer pasar una prueba.
 - Un proyecto de prueba con datos propios usa el motor y Recursos compartidos; no crea otra implementación persistente ni copias de medios. La finalidad de ese proyecto es verificar la integración del diseño.

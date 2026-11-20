@@ -219,3 +219,118 @@ def test_copy_writer_requests_thumbnail_texts_in_the_same_traced_ai_call(monkeyp
     assert '"thumbnail_options"' in ai.calls[0][1]
     assert result.thumbnail_options == {"A": "Nombre de canción", "B": "Otra frase distinta"}
     assert result.raw_responses == [{"thumbnail_options": {"A": "Nombre de canción", "B": "Otra frase distinta"}}]
+
+def test_target_thumbnail_formats_keep_legacy_horizontal_and_migrate_destination_selection(tmp_path: Path):
+    job = _job(tmp_path)
+    details = DraftDetails(song_name="Canción original", artist="Artista original")
+    horizontal = draft_thumbnails.preview_manifest(job, details)
+    portrait = draft_thumbnails.preview_manifest(job, details, output_format="9x16")
+    assert horizontal["format"] == "16x9"
+    assert portrait["format"] == "9x16"
+    assert horizontal["fingerprint"] != portrait["fingerprint"]
+    legacy = draft_thumbnails.ThumbnailSet.model_validate({
+        "fingerprint": "0123456789abcdefabcd", "selected": "B",
+        "urls": {"B": "/legacy/B.jpg"},
+        "options": {"A": {"text": "Original A"}, "B": {"text": "Original B"}},
+    })
+    assert legacy.format == "16x9"  # old records retain the shared landscape contract
+
+    async def scenario():
+        draft = await _create_ready(tmp_path / "draft")
+        stale = draft.model_copy(update={"thumbnails": legacy, "thumbnails_by_output": {"tiktok": legacy}})
+        return drafts.thumbnail_manifest(stale, _job(tmp_path / "draft"), output="tiktok")
+
+    migrated = asyncio.run(scenario())
+    assert migrated.format == "16x9"  # una sola miniatura horizontal para todos los destinos
+    assert migrated.selected == "B"  # la elección guardada se conserva
+    assert migrated.options["B"].text == "Original B"
+
+
+def test_portrait_capture_contract_has_vertical_dimensions_and_safe_area(tmp_path: Path):
+    import subprocess
+    import xml.etree.ElementTree as ET
+
+    manifest = draft_thumbnails.preview_manifest(
+        _job(tmp_path), DraftDetails(song_name="Cinco palabras en pantalla"), output_format="9x16",
+    )
+    script = "const fs=require('fs'),vm=require('vm');const c={module:{exports:{}}};vm.runInNewContext(fs.readFileSync(process.argv[1],'utf8'),c);const m=JSON.parse(fs.readFileSync(0,'utf8'));console.log(c.module.exports.renderSvg(m,'A',720,1280,{}));"
+    result = subprocess.run(
+        ["node", "-e", script, str(draft_thumbnails.RENDERER_PATH)],
+        input=json.dumps(manifest), text=True, capture_output=True, check=True, timeout=10,
+    )
+    root = ET.fromstring(result.stdout)
+    assert root.attrib["width"] == "720" and root.attrib["height"] == "1280"
+    assert root.attrib["viewBox"] == "0 0 720 1280"
+    safe = next(node for node in root.iter() if node.attrib.get("data-role") == "safe-content")
+    safe_clip = safe.attrib["clip-path"].removeprefix("url(#").removesuffix(")")
+    clip = next(node for node in root.iter() if node.tag.endswith("clipPath") and node.attrib.get("id") == safe_clip)
+    safe_rect = next(node for node in clip if node.tag.endswith("rect"))
+    assert {key: safe_rect.attrib[key] for key in ("x", "y", "width", "height")} == {
+        "x": "48", "y": "130", "width": "520", "height": "900",
+    }
+    title = next(node for node in safe if node.attrib.get("data-role") == "title")
+    assert len(list(title)) <= 2
+    assert all(child.attrib.get("x") == "308" for child in title)
+
+
+def test_capture_validator_accepts_only_dimensions_for_each_destination(tmp_path: Path):
+    from PIL import Image, ImageDraw
+
+    for output_format, size in draft_thumbnails.THUMBNAIL_SIZE.items():
+        path = tmp_path / f"{output_format}.jpg"
+        image = Image.new("RGB", size, "#101020")
+        ImageDraw.Draw(image).rectangle((0, 0, size[0] // 2, size[1]), fill="#E0D0B0")
+        image.save(path, format="JPEG", quality=90)
+        draft_thumbnails._validate(path, output_format)
+    with pytest.raises(ValueError, match="formato incorrecto"):
+        draft_thumbnails._validate(tmp_path / "9x16.jpg", "16x9")
+
+
+
+def test_promo_portrait_does_not_add_lyrics_label(tmp_path: Path):
+    import subprocess
+    import xml.etree.ElementTree as ET
+
+    manifest = draft_thumbnails.preview_manifest(
+        _job(tmp_path), DraftDetails(song_name="Una final"), output_format="9x16",
+    )
+    manifest['options']['A']['design']['subtitle'] = ''
+    script = "const fs=require('fs'),vm=require('vm');const c={module:{exports:{}}};vm.runInNewContext(fs.readFileSync(process.argv[1],'utf8'),c);const m=JSON.parse(fs.readFileSync(0,'utf8'));console.log(c.module.exports.renderSvg(m,'A',720,1280,{}));"
+    result = subprocess.run(
+        ['node', '-e', script, str(draft_thumbnails.RENDERER_PATH)],
+        input=json.dumps(manifest), text=True, capture_output=True, check=True, timeout=10,
+    )
+    root = ET.fromstring(result.stdout)
+    assert not any(node.attrib.get('data-role') == 'subtitle' for node in root.iter())
+
+
+def test_refresh_preserves_custom_text_and_matches_captured_fingerprint(tmp_path: Path):
+    async def scenario():
+        draft = await _create_ready(tmp_path / 'draft')
+        job = _job(tmp_path / 'draft')
+        details = DraftDetails(song_name='Tema')
+        raw = draft_thumbnails.preview_manifest(job, details)
+        raw['selected'] = 'B'
+        raw['options']['A']['text'] = 'Texto elegido por la persona'
+        stored = draft_thumbnails.ThumbnailSet.model_validate(raw)
+        current = draft.model_copy(update={'details': details, 'thumbnails': stored})
+        return job, details, drafts.thumbnail_manifest(current, job, force_refresh=True)
+
+    job, details, refreshed = asyncio.run(scenario())
+    assert refreshed.selected == 'B'
+    assert refreshed.options['A'].text == 'Texto elegido por la persona'
+    rendered = draft_thumbnails.preview_manifest(job, details, refreshed.options, refreshed.format)
+    assert refreshed.fingerprint == rendered['fingerprint']
+
+
+def test_promo_generic_landscape_does_not_add_lyrics_label(tmp_path: Path):
+    import subprocess
+    import xml.etree.ElementTree as ET
+
+    manifest = draft_thumbnails.preview_manifest(_job(tmp_path), DraftDetails(song_name='Promo'))
+    manifest['options']['A']['design']['style'] = 'minimal'
+    manifest['options']['A']['design']['subtitle'] = ''
+    script = "const fs=require('fs'),vm=require('vm');const c={module:{exports:{}}};vm.runInNewContext(fs.readFileSync(process.argv[1],'utf8'),c);const m=JSON.parse(fs.readFileSync(0,'utf8'));console.log(c.module.exports.renderSvg(m,'A',1280,720,{}));"
+    result = subprocess.run(['node', '-e', script, str(draft_thumbnails.RENDERER_PATH)],
+        input=json.dumps(manifest), text=True, capture_output=True, check=True, timeout=10)
+    assert not any(node.attrib.get('data-role') == 'subtitle' for node in ET.fromstring(result.stdout).iter())

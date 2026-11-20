@@ -45,7 +45,7 @@ export interface PromoContent {
 	revision: number;
 	draft_id: string | null;
 	can_retry_preparation: boolean;
-	media_basis: "resolved_plan" | "draft_inputs" | null;
+	media_basis: "resolved_plan" | "draft_inputs" | "effective_config" | null;
 	brief: { topic: string | null; tone: string | null; language: string | null; audience: string | null; duration_seconds: number | null } | null;
 	title: string | null;
 	copies: Record<
@@ -61,6 +61,8 @@ export interface PromoContent {
 				source: string | null;
 				author: string | null;
 				license: string | null;
+				scene_uses?: { scene: number; slot: string | null }[] | null;
+	positions?: number[] | null;
 		  }[]
 		| null;
 	music: {
@@ -79,6 +81,34 @@ export interface PromoContent {
 		music: PromoContentAvailability;
 	};
 }
+export interface PromoLegacyResource {
+	id: string | null;
+	name: string | null;
+	type: string | null;
+	source: string | null;
+	author: string | null;
+	license: string | null;
+	scene_uses?: { scene: number; slot: string | null }[] | null;
+}
+export interface PromoLegacyResources {
+	draft_id: string;
+	title: string | null;
+	song: { title: string | null; artist: string | null };
+	music: PromoLegacyResource | null;
+	media: PromoLegacyResource[];
+	media_basis: "effective_config" | "draft_inputs" | null;
+	lyrics: { segments: { n: number; scene: string | null; lines: string[] }[] } | null;
+	availability: {
+		guion: PromoContentAvailability;
+		media: PromoContentAvailability;
+		music: PromoContentAvailability;
+	};
+}
+export const getPromoDraftResources = (draftId: string, signal?: AbortSignal) =>
+	httpClient<PromoLegacyResources>(
+		`/api/v1/promos/drafts/${encodeURIComponent(draftId)}/resources`,
+		{ signal },
+	);
 export const getPromoContent = (id: string, signal?: AbortSignal) =>
 	httpClient<PromoContent>(
 		`/api/v1/promos/sessions/${encodeURIComponent(id)}/content`,
@@ -118,6 +148,7 @@ export const PROMO_IDS = new Set([
 	"promo-urban",
 	"promo-breaking",
 	"promo-pulse",
+	"promo-mono",
 ]);
 export const promoSessionsKey = (id: string) => ["promo-sessions", id] as const;
 export const promoSessionKey = (id: string) => ["promo-session", id] as const;
@@ -152,6 +183,20 @@ export const sendPromoMessage = (id: string, message: string) =>
 	httpClient<PromoSession>(
 		`/api/v1/promos/sessions/${encodeURIComponent(id)}/messages`,
 		{ method: "POST", body: { message }, timeoutMs: 60_000 },
+	);
+export interface PromoMediaReplacementRequest {
+	revision: number;
+	scene: number;
+	slot: string;
+	asset_id: string;
+}
+export const replacePromoMedia = (
+	id: string,
+	replacement: PromoMediaReplacementRequest,
+) =>
+	httpClient<PromoSession>(
+		`/api/v1/promos/sessions/${encodeURIComponent(id)}/media`,
+		{ method: "POST", body: replacement, timeoutMs: 60_000 },
 	);
 export const retryPromo = (id: string) =>
 	httpClient<PromoSession>(

@@ -135,6 +135,10 @@ async def update(job: Job) -> None:
     if job.stage in (JobStage.PACKAGED, JobStage.FAILED) and record.get("generation_seconds") is None:
         patch["generation_seconds"] = _seconds_between(record.get("created_at"), _now_iso())
 
+    # Imágenes capturadas durante la preparación: una selección por destino.
+    patch["thumbnail_paths_by_output"] = {
+        output: str(path) for output, path in artifacts.thumbnail_paths_by_output.items()
+    }
     if artifacts.assets_dir is not None:
         patch["assets_dir"] = str(artifacts.assets_dir)
     if artifacts.render_dir is not None:

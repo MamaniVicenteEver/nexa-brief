@@ -10,7 +10,62 @@
       "required": true,
       "lyrics": "auto"
     },
-    "media": [],
+    "media": [
+      {
+        "slot": "eyes",
+        "kind": "video",
+        "min": 1,
+        "max": 1,
+        "target": "config",
+        "path": "media.eyes",
+        "label": "Ojos"
+      },
+      {
+        "slot": "hand",
+        "kind": "video",
+        "min": 1,
+        "max": 1,
+        "target": "config",
+        "path": "media.hand",
+        "label": "Mano"
+      },
+      {
+        "slot": "iris",
+        "kind": "video",
+        "min": 1,
+        "max": 1,
+        "target": "config",
+        "path": "media.iris",
+        "label": "Iris"
+      },
+      {
+        "slot": "doves",
+        "kind": "video",
+        "min": 1,
+        "max": 1,
+        "target": "config",
+        "path": "media.doves",
+        "label": "Palomas"
+      },
+      {
+        "slot": "moon",
+        "kind": "video",
+        "min": 1,
+        "max": 1,
+        "target": "config",
+        "path": "media.moon",
+        "label": "Luna"
+      },
+      {
+        "slot": "angel",
+        "kind": "image",
+        "min": 1,
+        "max": 1,
+        "target": "config",
+        "path": "media.angel",
+        "label": "Ángel"
+      }
+    ],
     "texts": [],
     "brief": false
   },

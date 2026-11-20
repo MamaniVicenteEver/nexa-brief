@@ -9,6 +9,8 @@
   "use strict";
   const DEFAULT_DURATION_SECONDS = 2.8;
   const FADE_SECONDS = 0.45;
+  /* Opacidad del cartón: por debajo de 1 se ve tenue el tablero animado del fondo. */
+  const DEFAULT_FOLDER_ALPHA = 0.8;
 
   function stateAt(timeSeconds, durationSeconds, outroActive) {
     const time = Math.max(0, Number(timeSeconds) || 0);
@@ -20,6 +22,15 @@
     const active = !outroActive && duration > 0 && time < duration;
     const x = fadeSeconds > 0 ? Math.max(0, Math.min(1, (time - duration + fadeSeconds) / fadeSeconds)) : 1;
     return {active, opacity: active ? 1 - x * x * (3 - 2 * x) : 0, time, duration, fadeSeconds};
+  }
+
+  function folderAlpha(config) {
+    const raw = config && config.backdrop ? Number(config.backdrop.opacity) : NaN;
+    return Number.isFinite(raw) ? Math.min(1, Math.max(0.2, raw)) : DEFAULT_FOLDER_ALPHA;
+  }
+
+  function folderGradient(alpha) {
+    return "linear-gradient(174deg, rgba(203,184,140," + alpha + ") 0%, rgba(192,171,119," + alpha + ") 55%, rgba(174,151,96," + alpha + ") 100%)";
   }
 
   function resolveTitle(config) {
@@ -53,6 +64,7 @@
     if (root) {
       root.classList.remove("gone");
       root.style.transition = "none";
+      root.style.setProperty("--folderAlpha", String(folderAlpha(options.config)));
     }
     function update(timeSeconds, durationSeconds, outroActive) {
       const state = stateAt(timeSeconds, durationSeconds, outroActive);
@@ -68,6 +80,7 @@
   function createRemotionElement(options) {
     const state = stateAt(options.timeSeconds, options.durationSeconds, options.outroActive);
     const config = options.config || {};
+    const alpha = folderAlpha(config);
     const title = String(options.title || resolveTitle(config) || "").trim();
     if (!state.active || !title) return null;
     const React = options.React;
@@ -80,7 +93,7 @@
     const children = [
       React.createElement("div", {key: "tab", style: {
         position: "absolute", top: "-3vh", left: "7%", width: "26%", height: "3.2vh",
-        background: "linear-gradient(#CBB88C, #C0AB77)", borderRadius: "8px 8px 0 0",
+        background: "linear-gradient(rgba(203,184,140," + alpha + "), rgba(192,171,119," + alpha + "))", borderRadius: "8px 8px 0 0",
       }}),
     ];
     if (artist) children.push(React.createElement("div", {key: "artist", style: {
@@ -105,12 +118,12 @@
       style: {
         position: "relative", display: "flex", flexDirection: "column", alignItems: "center",
         gap: "2.6vh", maxWidth: "88vw", padding: "7vh 7vw 6vh", transform: "rotate(-1.6deg)",
-        background: "linear-gradient(174deg, #CBB88C 0%, #C0AB77 55%, #AE9760 100%)",
+        background: folderGradient(alpha),
         borderRadius: "4px 14px 5px 5px",
         boxShadow: "0 24px 60px rgba(0,0,0,0.72), inset 0 1px 0 rgba(255,255,255,0.28)",
       },
     }, ...children));
   }
 
-  return {DEFAULT_DURATION_SECONDS, stateAt, resolveTitle, createDOMIntro, createRemotionElement};
+  return {DEFAULT_DURATION_SECONDS, DEFAULT_FOLDER_ALPHA, folderAlpha, stateAt, resolveTitle, createDOMIntro, createRemotionElement};
 });

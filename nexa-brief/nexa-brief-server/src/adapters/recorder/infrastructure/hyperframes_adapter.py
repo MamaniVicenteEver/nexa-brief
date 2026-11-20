@@ -34,14 +34,21 @@ remotion_adapter.py: ese motor tampoco lo usa, delega todo a Node).
 from __future__ import annotations
 
 import asyncio
+import html
 import json
 import re
 import os
+import posixpath
 import shutil
 import time
+import zipfile
+from contextlib import nullcontext
 from dataclasses import dataclass
+from html.parser import HTMLParser
 from pathlib import Path
 from typing import TYPE_CHECKING
+from uuid import uuid4
+from urllib.parse import parse_qs, urlsplit
 
 import structlog
 
@@ -51,6 +58,7 @@ from src.config.settings import settings
 from src.adapters.recorder.infrastructure.render_workspace import render_workspace
 from src.adapters.recorder.infrastructure.subprocess_progress import parse_percent, run_with_progress
 from src.config.template_manifest import get_template_paths
+from src.core.heavy_work import finish_thread
 from src.core.ports.recorder_port import RecorderPort, RecordingResult
 from src.core.progress import report_step_progress
 
@@ -141,6 +149,7 @@ def _resolve_template_dir(niche_cfg: "NicheConfig") -> Path | None:
 # letra sincronizada, audio y fondo en movimiento.
 # 2026-10-05: promo-sports, promo-trendy, promo-urban — 30 s, 16:9 y 9:16,
 # CTA/letra legible y fondo en movimiento.
+# 2026-11-16: promo-breaking y promo-pulse — 30 s, 16:9 y 9:16, imagen y audio.
 # 2026-10-05: promo-editorial — aprobada por revisión manual del usuario; 30 s,
 # 16:9 y 9:16, con el corte editorial del título aceptado.
 HF_VALIDATED_LYRICS_TEMPLATE_IDS: frozenset[str] = frozenset({
@@ -167,6 +176,13 @@ HF_VALIDATED_LYRICS_TEMPLATE_IDS: frozenset[str] = frozenset({
     "lyrics-stylish-kinetic",
     "lyrics-suave",
     "lyrics-triste",
+    "lyrics-trazo",
+    "lyrics-decadas",
+    "lyrics-grunge-rojo",
+    "lyrics-grunge-montage",
+    "lyrics-hologram-worlds",
+    "lyrics-rasgado",
+    "lyrics-hologram",
     # commercial/ con guion sincronizado (requires_lyrics): misma regla.
     "promo-kinetic",
     "promo-dynamic",
@@ -174,6 +190,8 @@ HF_VALIDATED_LYRICS_TEMPLATE_IDS: frozenset[str] = frozenset({
     "promo-sports",
     "promo-trendy",
     "promo-urban",
+    "promo-breaking",
+    "promo-pulse",
 })
 
 # Marca que optimize.py deja en el <script> del reloj (data-nb-hf-clock="<hash>").
@@ -202,6 +220,227 @@ def _hyperframes_bin() -> Path:
     # node_modules/.bin/hyperframes directo, nunca `npx` — mismo motivo que
     # documenta nexa-render (overhead medido ~170s en su POC con npx).
     return settings.hyperframes_project_dir / "node_modules" / ".bin" / "hyperframes"
+
+
+_EXTERNAL_URL = re.compile(r"^(?:https?:)?//", re.IGNORECASE)
+_EXTERNAL_CSS = re.compile(r"(?:url\(\s*['\"]?|@import\s+(?:url\(\s*)?['\"]?)(?:https?:)?//", re.IGNORECASE)
+_EXTERNAL_SCRIPT = re.compile(r"\b(?:fetch|importScripts|WebSocket|EventSource)\s*\(\s*['\"](?:https?:)?//", re.IGNORECASE)
+_HTML_ASSET_TAG = re.compile(r"<(?P<tag>script|link)\b(?P<attrs>[^>]*?)>", re.IGNORECASE)
+_HTML_URL_ATTR = re.compile(r"\b(?P<name>src|href)\s*=\s*(?P<quote>['\"])(?P<url>.*?)(?P=quote)", re.IGNORECASE)
+
+
+def _reject_source_symlinks(root: Path) -> None:
+    """Prevent copytree from dereferencing unintended files into a VPS job."""
+    if root.is_symlink():
+        raise RecordingError("El proyecto HyperFrames contiene enlaces simbólicos.")
+    for parent, directories, files in os.walk(root, followlinks=False):
+        for name in directories + files:
+            if (Path(parent) / name).is_symlink():
+                raise RecordingError("El proyecto HyperFrames contiene enlaces simbólicos.")
+
+
+def _font_requests(url: str) -> set[tuple[str, str, int]]:
+    """Resolve supported Google Fonts css2 family requests to exact local faces."""
+    parsed = urlsplit(url)
+    if parsed.hostname != "fonts.googleapis.com" or parsed.path not in {"/css", "/css2"}:
+        raise RecordingError("La hoja de fuentes externa no se puede incluir localmente.")
+    families = parse_qs(parsed.query).get("family", [])
+    if not families:
+        raise RecordingError("La hoja de fuentes no declara una familia válida.")
+    requests: set[tuple[str, str, int]] = set()
+    for value in families:
+        family, separator, variation = value.partition(":")
+        if not separator:
+            requests.add((family, "normal", 400))
+            continue
+        axis, marker, variants = variation.partition("@")
+        if not marker or axis not in {"wght", "ital,wght"}:
+            raise RecordingError("La variante de fuentes solicitada no está disponible localmente.")
+        for variant in variants.split(";"):
+            parts = variant.split(",")
+            if axis == "wght" and len(parts) == 1 and parts[0].isdigit():
+                requests.add((family, "normal", int(parts[0])))
+            elif axis == "ital,wght" and len(parts) == 2 and parts[0] in {"0", "1"} and parts[1].isdigit():
+                requests.add((family, "italic" if parts[0] == "1" else "normal", int(parts[1])))
+            else:
+                raise RecordingError("La variante de fuentes solicitada no está disponible localmente.")
+    return requests
+
+
+def _localize_known_assets(site_dir: Path) -> None:
+    """Stage known JS/font dependencies beside the private composition."""
+    dependency_dir = site_dir / "_nexa_dependencies"
+    if dependency_dir.exists():
+        raise RecordingError("El nombre de recursos temporales de HyperFrames ya está en uso.")
+    requested_fonts: set[tuple[str, str, int]] = set()
+    requires_gsap = False
+    replacements: list[tuple[Path, str]] = []
+
+    for path in site_dir.rglob("*"):
+        if path.is_symlink():
+            raise RecordingError("El proyecto HyperFrames contiene un enlace simbólico.")
+        if not path.is_file() or path.suffix.lower() not in {".html", ".htm"}:
+            continue
+        original = path.read_text(encoding="utf-8", errors="replace")
+        relative_root = posixpath.relpath(dependency_dir.as_posix(), path.parent.as_posix())
+
+        def replace_tag(match: re.Match[str]) -> str:
+            nonlocal requires_gsap
+            attribute = _HTML_URL_ATTR.search(match.group("attrs"))
+            if not attribute:
+                return match.group(0)
+            tag = match.group("tag").lower()
+            url = html.unescape(attribute.group("url"))
+            parsed = urlsplit(url if not url.startswith("//") else "https:" + url)
+            replacement: str | None = None
+            if tag == "link" and attribute.group("name").lower() == "href" and parsed.hostname == "fonts.googleapis.com":
+                if parsed.path in {"", "/"} and re.search(r"\b(?:preconnect|dns-prefetch)\b", match.group("attrs"), re.I):
+                    return ""
+                requested_fonts.update(_font_requests(parsed.geturl()))
+                replacement = f"{relative_root}/fonts.css"
+            elif tag == "script" and attribute.group("name").lower() == "src" and parsed.hostname == "cdn.jsdelivr.net" and parsed.path in {
+                "/npm/gsap@3/dist/gsap.min.js", "/npm/gsap@3.15.0/dist/gsap.min.js",
+            }:
+                requires_gsap = True
+                replacement = f"{relative_root}/gsap.min.js"
+            if replacement is None:
+                return match.group(0)
+            attrs = match.group("attrs")
+            attrs = attrs[:attribute.start("url")] + replacement + attrs[attribute.end("url"):]
+            return f"<{match.group('tag')}{attrs}>"
+
+        rewritten = _HTML_ASSET_TAG.sub(replace_tag, original)
+        if rewritten != original:
+            replacements.append((path, rewritten))
+
+    if requested_fonts:
+        # A config may override the font families in the HTML link at runtime.
+        # Include those explicitly requested faces as well, or fail early.
+        for config_file in site_dir.rglob("config.json"):
+            try:
+                config = json.loads(config_file.read_text(encoding="utf-8"))
+            except (ValueError, OSError):
+                continue
+            def inspect(value: object) -> None:
+                if isinstance(value, dict):
+                    for key, item in value.items():
+                        if key == "googleUrl" and isinstance(item, str) and item:
+                            requested_fonts.update(_font_requests(item))
+                        else:
+                            inspect(item)
+                elif isinstance(value, list):
+                    for item in value:
+                        inspect(item)
+            inspect(config)
+
+    if not requested_fonts and not requires_gsap:
+        return
+    dependency_dir.mkdir(mode=0o700)
+    if requires_gsap:
+        source = settings.hyperframes_project_dir / "vendor" / "gsap.min.js"
+        if not source.is_file():
+            raise RecordingError("Falta GSAP local para este proyecto HyperFrames.")
+        shutil.copyfile(source, dependency_dir / "gsap.min.js")
+
+    if requested_fonts:
+        font_dir = settings.templates_dir / "nodemotion" / "assets" / "fonts"
+        try:
+            index = json.loads((font_dir / "index.json").read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            raise RecordingError("Falta el catálogo local de fuentes para HyperFrames.") from exc
+        fonts_dest = dependency_dir / "fonts"
+        fonts_dest.mkdir(mode=0o700)
+        rules = []
+        for family, style, weight in sorted(requested_fonts):
+            match = next((entry for entry in index.values() if entry.get("family") == family and entry.get("style") == style and entry.get("weight") == weight), None)
+            if match is None:
+                raise RecordingError(f"Falta la fuente local solicitada: {family} {style} {weight}.")
+            filename = match.get("file", "")
+            license_name = Path(urlsplit(match.get("license", "")).path).parent.name + "-LICENSE.txt"
+            if not filename or Path(filename).name != filename or Path(license_name).name != license_name:
+                raise RecordingError("El catálogo local contiene una ruta de fuente inválida.")
+            source, license_path = font_dir / filename, font_dir / license_name
+            if not source.is_file() or not license_path.is_file():
+                raise RecordingError(f"Faltan los archivos o la licencia de la fuente local: {family}.")
+            shutil.copyfile(source, fonts_dest / filename)
+            shutil.copyfile(license_path, fonts_dest / license_name)
+            safe_family = family.replace("\\", "\\\\").replace("'", "\\'")
+            rules.append(f"@font-face {{ font-family: '{safe_family}'; font-style: {style}; font-weight: {weight}; src: url('fonts/{filename}') format('truetype'); font-display: block; }}")
+        (dependency_dir / "fonts.css").write_text("\n".join(rules) + "\n", encoding="utf-8")
+    for path, content in replacements:
+        path.write_text(content, encoding="utf-8")
+
+
+class _StaticAssetCheck(HTMLParser):
+    """Detect common literal network dependencies in HTML; JS may be dynamic."""
+
+    def __init__(self) -> None:
+        super().__init__()
+        self.in_style = False
+        self.external = False
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        tag = tag.lower()
+        self.in_style = tag == "style" or self.in_style
+        for name, value in attrs:
+            if not value:
+                continue
+            name = name.lower()
+            is_resource = (
+                (name == "src" and tag in {"script", "img", "video", "audio", "source", "iframe", "embed"})
+                or (name == "href" and tag == "link")
+                or (name == "poster" and tag == "video")
+                or (name == "data" and tag == "object")
+            )
+            if (is_resource and _EXTERNAL_URL.match(value.strip())) or (name == "style" and _EXTERNAL_CSS.search(value)):
+                self.external = True
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.lower() == "style":
+            self.in_style = False
+
+    def handle_data(self, data: str) -> None:
+        if (self.in_style and _EXTERNAL_CSS.search(data)) or _EXTERNAL_SCRIPT.search(data):
+            self.external = True
+
+
+def _package_site(site_dir: Path, package_path: Path) -> None:
+    """Pack only this render's staged files, without following symbolic links."""
+    if not (site_dir / "index.html").is_file():
+        raise RecordingError("El proyecto HyperFrames no contiene index.html.")
+    _localize_known_assets(site_dir)
+    # ZIP_STORED avoids a large CPU spike and avoids triggering the worker's
+    # compression-ratio guard for legitimate, repetitive JSON or media data.
+    fd = os.open(package_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    try:
+        with os.fdopen(fd, "wb") as output, zipfile.ZipFile(output, "w", compression=zipfile.ZIP_STORED) as archive:
+            for parent, directories, files in os.walk(site_dir, followlinks=False):
+                parent_path = Path(parent)
+                directories.sort()
+                for name in directories:
+                    if (parent_path / name).is_symlink():
+                        raise RecordingError("El proyecto HyperFrames contiene un enlace simbólico.")
+                for name in sorted(files):
+                    path = parent_path / name
+                    if path.is_symlink() or not path.is_file():
+                        raise RecordingError("El proyecto HyperFrames contiene un archivo no admitido.")
+                    if path.suffix.lower() in {".html", ".htm", ".css", ".js", ".mjs"}:
+                        text = path.read_text(encoding="utf-8", errors="replace")
+                        if path.suffix.lower() in {".html", ".htm"}:
+                            check = _StaticAssetCheck()
+                            check.feed(text)
+                            external = check.external
+                        else:
+                            external = bool(_EXTERNAL_CSS.search(text) or _EXTERNAL_SCRIPT.search(text))
+                        if external:
+                            raise RecordingError(
+                                "El proyecto HyperFrames necesita recursos externos. "
+                                "Agrégalos al proyecto antes de renderizar en el VPS privado."
+                            )
+                    archive.write(path, arcname=path.relative_to(site_dir).as_posix())
+    except BaseException:
+        package_path.unlink(missing_ok=True)
+        raise
 
 
 @dataclass(frozen=True)
@@ -300,14 +539,18 @@ class HyperframesAdapter(RecorderPort):
         niche_cfg: "NicheConfig | None" = None,
         render_target: str | None = None,
     ) -> RecordingResult:
-        effective_render_target = render_target or settings.hyperframes_render_target
+        effective_render_target = settings.effective_hyperframes_target(render_target)
         if niche_cfg is None:
             raise RecordingError("HyperframesAdapter requiere niche_cfg (necesita template.template_id).")
+        if effective_render_target not in {"local", "aws", "vps"}:
+            raise RecordingError(f"Destino HyperFrames no admitido: {effective_render_target!r}.")
 
         composition_dir = _resolve_composition_dir(niche_cfg)
+        if effective_render_target == "vps" and composition_dir is not None:
+            _reject_source_symlinks(composition_dir)
 
         bin_path = _hyperframes_bin()
-        if not bin_path.exists():
+        if effective_render_target != "vps" and not bin_path.exists():
             raise RecordingError(
                 f"HyperframesAdapter: no se encontró el binario en {bin_path} — "
                 "¿corrió `npm install` en nexa-brief-hyperframes?"
@@ -371,12 +614,14 @@ class HyperframesAdapter(RecorderPort):
                     f"HyperframesAdapter: no hay index.html para "
                     f"template_id={niche_cfg.template.template_id!r}."
                 )
+            if effective_render_target == "vps":
+                _reject_source_symlinks(template_dir)
             passes = _render_passes(niche_cfg, supersample=effective_render_target != "aws")
             pass_seconds: list[float] = []
             report_step_progress(0.0)  # waiting for the render slot is not progress
             with render_workspace(output_dir, "hyperframes") as workspace:
                 staged = []
-                async with _get_render_semaphore():
+                async with (nullcontext() if effective_render_target == "vps" else _get_render_semaphore()):
                     for i, rp in enumerate(passes):
                         pass_dir = workspace / str(i)
                         pass_dir.mkdir()
@@ -446,7 +691,7 @@ class HyperframesAdapter(RecorderPort):
                 (site_dir / "_hyperframes_variables.json").write_text(json.dumps(variables), encoding="utf-8")
 
                 report_step_progress(0.0)  # waiting for the render slot is not progress
-                async with _get_render_semaphore():
+                async with (nullcontext() if effective_render_target == "vps" else _get_render_semaphore()):
                     await self._render(
                         bin_path, site_dir, workspace / youtube_path.name, effective_render_target, output_dir.name,
                         duration_seconds=duration_seconds,
@@ -535,6 +780,43 @@ class HyperframesAdapter(RecorderPort):
         # configuration local to this temporary render, independent of HOME.
         (site_dir / ".puppeteerrc.json").write_text("{}", encoding="utf-8")
         variables_path = site_dir / "_hyperframes_variables.json"
+        if render_target == "vps":
+            profiles = {"draft": "draft", "standard": "looks", "high": "delivery"}
+            profile = profiles.get(settings.hyperframes_quality)
+            package_path = site_dir.parent / f"_hyperframes_package_{uuid4().hex}.zip"
+            done, total = progress_span
+            last_status: tuple[str | None, str | None] | None = None
+
+            def on_status(status: dict) -> None:
+                nonlocal last_status
+                current = (status.get("state"), status.get("phase"))
+                if current != last_status:
+                    logger.info("hyperframes_vps_status", state=current[0], phase=current[1], pass_number=done + 1, total_passes=total)
+                    last_status = current
+
+            try:
+                if profile is None:
+                    raise RecordingError("La calidad de HyperFrames no está admitida por el VPS.")
+                from src.adapters.private_media.client import PrivateMediaClient
+
+                await finish_thread(_package_site, site_dir, package_path)
+                await PrivateMediaClient().render(
+                    package_path,
+                    dest_path,
+                    quality=profile,
+                    resolution=resolution,
+                    timeout=render_timeout_seconds(duration_seconds),
+                    on_status=on_status,
+                )
+                if not dest_path.is_file() or dest_path.stat().st_size == 0:
+                    raise RecordingError("El VPS no devolvió un video válido.")
+                # The worker reports its phase, but does not report frame
+                # percentages. Advance only after a pass has been downloaded.
+                report_step_progress((done + 1) / total)
+            finally:
+                package_path.unlink(missing_ok=True)
+                shutil.rmtree(site_dir, ignore_errors=True)
+            return
         output_key = None
         if render_target == "aws":
             output_key = f"renders/nexa-brief/{job_id}/{dest_path.name}"

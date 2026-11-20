@@ -130,13 +130,13 @@
   .folder {
     position: relative; display: flex; flex-direction: column; align-items: center;
     gap: 2.6vh; padding: 7vh 7vw 6vh; transform: rotate(-1.6deg);
-    background: linear-gradient(174deg, #CBB88C 0%, #C0AB77 55%, #AE9760 100%);
+    background: linear-gradient(174deg, rgba(203,184,140,var(--folderAlpha, .8)) 0%, rgba(192,171,119,var(--folderAlpha, .8)) 55%, rgba(174,151,96,var(--folderAlpha, .8)) 100%);
     border-radius: 4px 14px 5px 5px;
     box-shadow: 0 24px 60px rgba(0,0,0,0.72), inset 0 1px 0 rgba(255,255,255,0.28);
   }
   .folder::before {   /* pestaña de la carpeta */
     content: ""; position: absolute; top: -3vh; left: 7%; width: 26%; height: 3.2vh;
-    background: linear-gradient(#CBB88C, #C0AB77); border-radius: 8px 8px 0 0;
+    background: linear-gradient(rgba(203,184,140,var(--folderAlpha, .8)), rgba(192,171,119,var(--folderAlpha, .8))); border-radius: 8px 8px 0 0;
   }
   .cardScreen .artist {
     font-family: "Special Elite", monospace; font-size: 2.4vh; letter-spacing: 0.34em;

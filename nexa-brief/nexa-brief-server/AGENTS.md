@@ -111,8 +111,11 @@ Mapas: `src/templates/nodeatlas/mapas-satelitales/_mapas/QUICK.md`. Atlas conser
 
 ## Entrega de prototipos para pasar a producción
 
-Todo agente que cree una plantilla nueva debe seguir `src/templates/sandbox/PROTOTIPO.md`
-y el contrato `src/templates/sandbox/PREPARAR-PRODUCCION.md`. Este define la identidad
+Excepción NodeMotion (letras y promos): la plantilla nueva sigue el «Estándar vigente para
+plantillas NodeMotion nuevas» del AGENTS.md raíz (motor en `src/templates/nodemotion/<cat>/<id>/`,
+prototipo en `productions/nodemotion/<cat>/<id>/` del perfil); no pasa por el Sandbox.
+Para el resto de categorías, todo agente que cree una plantilla nueva debe seguir
+`src/templates/sandbox/PROTOTIPO.md` y el contrato `src/templates/sandbox/PREPARAR-PRODUCCION.md`. Este define la identidad
 de demo principal o episodio, archivos, rutas portables, catálogo y reporte de
 pendientes. El ejecutor aislado recibe una copia del contrato, sin ampliar permisos.
 El flujo técnico sin IA y la preparación editorial posterior están documentados
@@ -183,7 +186,7 @@ producto; `promote` se mantiene únicamente por compatibilidad de API.
 
 ## Promos: chat y flujo compartido
 
-Para Editorial, Sports, Dynamic, Kinetic, Trendy y Urban, un pedido de plantilla
+Para Editorial, Sports, Dynamic, Kinetic, Trendy, Urban, Breaking, Pulse y Mono, un pedido de plantilla
 y tema se inicia desde el chat de la app o con `chat.py create`; ambas entradas
 usan la misma API e historial. Sigue [OPERATE.md](src/templates/_tools/nodemotion/promo/production/OPERATE.md), [QUALITY.md](src/templates/_tools/nodemotion/promo/production/QUALITY.md) y [GUIDE.md](src/templates/_tools/nodemotion/promo/production/GUIDE.md) para consultar estado,
 enviar correcciones y revisar consumo. La calidad automática es técnica: la

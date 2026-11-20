@@ -171,7 +171,7 @@ def _legacy_content_files(output: Path, content: Path) -> dict[str, str]:
 
 
 def snapshot_fingerprint(draft: dict) -> str:
-    fields = ("draft_id", "template_id", "inputs", "details", "thumbnails", "preview_url")
+    fields = ("draft_id", "template_id", "inputs", "details", "thumbnails", "thumbnails_by_output", "preview_url")
     value = {key: draft.get(key) for key in fields}
     files, _ = _content_files(str(draft.get("draft_id") or ""))
     value["files"] = files
@@ -199,11 +199,41 @@ def _has_required_data(files: dict[str, str], job) -> bool:
     return any(k.endswith("config.json") for k in files) and any(k.endswith("lyrics.json") for k in files)
 
 
+def _thumbnails_ready(draft: dict, job) -> bool:
+    thumbnails = (draft.get("thumbnails") or {}).get("options") or {}
+    shared_ready = all(
+        isinstance(thumbnails.get(key), dict) and thumbnails[key].get("text")
+        for key in ("A", "B")
+    )
+    by_output = {}  # una sola miniatura A/B para todos los destinos
+    if not by_output:
+        return shared_ready  # borradores legacy conservan su puerta A/B anterior.
+    if not isinstance(by_output, dict) or job is None:
+        return False
+    paths = job.artifacts.thumbnail_paths_by_output or {}
+    for output in ("tiktok", "instagram", "facebook", "youtube", "youtube_shorts"):
+        manifest = by_output.get(output)
+        if not isinstance(manifest, dict):
+            return False
+        options = manifest.get("options") or {}
+        selected = manifest.get("selected")
+        if selected not in ("A", "B") or not all(
+            isinstance(options.get(key), dict) and options[key].get("text")
+            for key in ("A", "B")
+        ):
+            return False
+        if not (manifest.get("urls") or {}).get(selected):
+            return False
+        path = paths.get(output)
+        if path is None or not Path(path).is_file():
+            return False
+    return True
+
+
 def evaluate(draft: dict, *, checks=None) -> dict:
     files, job = _content_files(draft["draft_id"])
     details = draft.get("details") or {}
     copies = details.get("copies") or {}
-    thumbnails = (draft.get("thumbnails") or {}).get("options") or {}
     entries = [
         {"id": "promo", "label": "Plantilla comercial reconocida", "passed": draft.get("template_id") in TEMPLATES},
         {
@@ -233,8 +263,8 @@ def evaluate(draft: dict, *, checks=None) -> dict:
         },
         {
             "id": "thumbnails",
-            "label": "Opciones de miniatura A y B",
-            "passed": all(isinstance(thumbnails.get(k), dict) and thumbnails[k].get("text") for k in ("A", "B")),
+            "label": "Opciones A/B y capturas elegidas por destino",
+            "passed": _thumbnails_ready(draft, job),
         },
     ]
     entries.extend(checks or [])

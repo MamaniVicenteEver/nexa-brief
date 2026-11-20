@@ -14,12 +14,15 @@ job_tracker, notification_tracker, queue_repository, asset_library, etc.
 from __future__ import annotations
 
 import asyncio
+import contextvars
 import json
 import os
 import re
 import tempfile
+import threading
 from collections import defaultdict
 from collections.abc import Callable, Sequence
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
@@ -212,6 +215,28 @@ class JsonRecordCollection:
         return await self._mutate(fn) or []
 
 
+# Escrituras y lecturas de un almacén de documentos fuera del bucle de eventos.
+# Un hilo por almacén: su archivo se reescribe entero, así que las operaciones
+# de un mismo almacén se ejecutan en el orden en que se pidieron.
+_colas_de_documentos: dict[str, ThreadPoolExecutor] = {}
+_colas_lock = threading.Lock()
+
+
+def _cola_de_documentos(nombre: str) -> ThreadPoolExecutor:
+    with _colas_lock:
+        cola = _colas_de_documentos.get(nombre)
+        if cola is None:
+            cola = ThreadPoolExecutor(max_workers=1, thread_name_prefix=f"docs-{nombre}")
+            _colas_de_documentos[nombre] = cola
+        return cola
+
+
+async def _en_cola_de_documentos(nombre: str, fn: Callable[..., Any], *args: Any) -> Any:
+    # Como asyncio.to_thread: el hilo recibe una copia del contexto de la petición.
+    ctx = contextvars.copy_context()
+    return await asyncio.wrap_future(_cola_de_documentos(nombre).submit(ctx.run, fn, *args))
+
+
 class JsonDocumentStore:
     """Un archivo `{clave}.json` por documento."""
 
@@ -225,6 +250,18 @@ class JsonDocumentStore:
         path = data_directory() / self._relative_dir / f"{key}.json"
         assert_profile_path(path)
         return path
+
+    def all_documents(self) -> dict[str, Any]:
+        """Todos los documentos de la colección en una sola lectura del almacén."""
+        if is_v3():
+            docs = Section(DOCUMENT_SECTIONS[self.name]).read()["documents"].get(self.name, {})
+            return dict(docs) if isinstance(docs, dict) else {}
+        found: dict[str, Any] = {}
+        for path in sorted((data_directory() / self._relative_dir).glob("*.json")):
+            value = _read_json(path, None)
+            if value is not None:
+                found[path.stem] = value
+        return found
 
     def get(self, key: str) -> Any | None:
         if is_v3():
@@ -274,6 +311,21 @@ class JsonDocumentStore:
     def _validate_key(key: str) -> None:
         if "/" in key or "\\" in key or key.startswith("."):
             raise ValueError(f"Invalid document key: {key!r}")
+
+    async def aall_documents(self) -> dict[str, Any]:
+        """Como all_documents, sin bloquear el bucle de eventos."""
+        return await _en_cola_de_documentos(self.name, self.all_documents)
+
+    async def aget(self, key: str) -> Any | None:
+        return await _en_cola_de_documentos(self.name, self.get, key)
+
+    async def aput(self, key: str, document: Any) -> None:
+        """Guarda sin bloquear el bucle. Las operaciones del mismo almacén se
+        ejecutan en el orden en que se piden: un guardado viejo no pisa uno nuevo."""
+        await _en_cola_de_documentos(self.name, self.put, key, document)
+
+    async def adelete(self, key: str) -> bool:
+        return await _en_cola_de_documentos(self.name, self.delete, key)
 
 
 class JsonDataStore:

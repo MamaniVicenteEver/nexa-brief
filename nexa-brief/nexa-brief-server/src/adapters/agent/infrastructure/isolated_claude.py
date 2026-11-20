@@ -134,17 +134,42 @@ def _environment(home: str, config_dir: Path, socat_dir: Path) -> dict[str, str]
             'DISABLE_NONESSENTIAL_MODEL_CALLS': '1', 'CLAUDE_CODE_SUBPROCESS_ENV_SCRUB': '1'}
 
 
+# La verificación hasheaba el binario entero en cada consulta (varios segundos en el
+# bucle de eventos). El resultado se guarda por firma del archivo: dispositivo, inodo,
+# tamaño y fechas de modificación y de cambio. El ctime no lo puede fijar quien
+# modifica el archivo, así que un cambio de contenido siempre cambia la firma.
+_VERIFICACIONES_BINARIO: dict[tuple, bool] = {}
+# Una firma reciente puede repetirse dentro de la misma marca de tiempo del sistema
+# (un cambio del mismo tamaño no se vería): solo se guarda si el archivo lleva este tiempo sin cambios.
+_EDAD_MINIMA_CACHE_NS = 2_000_000_000
+
+
+def _firma_binario(binary: Path) -> tuple:
+    info = binary.stat()
+    return (str(binary), info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+
+
 def _binary_matches(binary: Path, expected: str) -> bool:
     if not _SHA.fullmatch(expected):
         return False
     try:
         if not binary.is_file() or not os.access(binary, os.X_OK):
             return False
+        firma = _firma_binario(binary)
+        clave = (firma, expected)
+        if clave in _VERIFICACIONES_BINARIO:
+            return _VERIFICACIONES_BINARIO[clave]
         sha = hashlib.sha256()
         with binary.open('rb') as stream:
             for block in iter(lambda: stream.read(1024 * 1024), b''):
                 sha.update(block)
-        return sha.hexdigest() == expected
+        resultado = sha.hexdigest() == expected
+        ahora = time.time_ns()
+        # firma[5] es st_ctime_ns: sin cambios mientras se leía y lo bastante antiguo
+        if _firma_binario(binary) == firma and ahora - firma[5] >= _EDAD_MINIMA_CACHE_NS:
+            _VERIFICACIONES_BINARIO.clear()
+            _VERIFICACIONES_BINARIO[clave] = resultado
+        return resultado
     except OSError:
         return False
 
@@ -207,7 +232,7 @@ class ClaudeFileRunner(IsolatedAgentRunnerPort):
 
     async def run(self, prompt: str, *, cwd: Path, log_path: Path,
                   timeout_seconds: float, scope: AgentScope | None = None) -> AgentRunResult:
-        if not self.available():
+        if not await asyncio.to_thread(self.available):
             raise AgentIsolationUnavailableError('Claude aislado o sus dependencias no están verificados')
         if timeout_seconds <= 0:
             raise ValueError('Timeout inválido')

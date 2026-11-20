@@ -1,0 +1,22 @@
+/* lyrics-trazo · estilos compartidos por el video (index.html) y la galería (showcase/). */
+:root { --ink: #FFFFFF; --paper: #050505; --ink-inv: #0B0B0B; --paper-inv: #F6F6F3; }
+#stage { position: fixed; inset: 0; overflow: hidden; background: var(--paper); color: var(--ink); }
+#stage.inv { --ink: var(--ink-inv); --paper: var(--paper-inv); }
+#ink { position: absolute; inset: 0; color: var(--ink); }
+.tz-scene { position: absolute; inset: 0; }
+.tz-holder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transform-origin: 50% 50%; }
+.tz-block { display: flex; flex-direction: column; align-items: center; white-space: nowrap; color: var(--ink); text-rendering: geometricPrecision; }
+.tz-row { display: block; transform-origin: 50% 60%; }
+.tz-t-outline .tz-row { color: transparent; -webkit-text-stroke: max(2px, .03em) var(--ink); }
+.tz-t-hatch .tz-row { color: transparent; background: repeating-linear-gradient(-38deg, var(--ink) 0 .035em, transparent .035em .1em);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-stroke: max(1.5px, .02em) var(--ink); }
+.tz-t-shadow .tz-row { position: relative; }
+.tz-t-shadow .tz-row::before { content: attr(data-text); position: absolute; left: .07em; top: .06em; color: transparent;
+  -webkit-text-stroke: max(1.5px, .02em) var(--ink); z-index: -1; }
+.tz-sep .tz-row { text-shadow: 0 0 .03em var(--paper), 0 0 .06em var(--paper), 0 0 .1em var(--paper), 0 0 .16em var(--paper); }
+.tz-svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; }
+.tz-intro-artist, .tz-outro-feats, .tz-outro-sub { position: absolute; left: 0; right: 0; text-align: center; color: var(--ink); white-space: nowrap; letter-spacing: .04em; }
+.tz-outro-sub { top: 63%; }
+.tz-outro-feats { bottom: 12%; }
+.tz-ransom { gap: .02em; }
+.tz-ransom-l { display: inline-block; color: var(--ink); line-height: 1; }

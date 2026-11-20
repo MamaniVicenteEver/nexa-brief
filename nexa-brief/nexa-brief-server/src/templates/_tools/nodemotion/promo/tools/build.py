@@ -42,6 +42,26 @@ def apply_config_overrides(config, changes):
     return result
 
 
+
+def apply_campaign_texts(config, texts):
+    """Aplica campos estructurados de la campaña al grupo configurado por diseño."""
+    if not isinstance(texts, dict):
+        raise ValueError("texts debe ser un objeto")
+    result = copy.deepcopy(config)
+    for key, value in texts.items():
+        if not isinstance(key, str):
+            raise ValueError("clave de texto inválida")
+        group, separator, field = key.partition(".")
+        if not separator or group not in ("brand", "intro", "outro") or not field:
+            raise ValueError(f"campo de texto de campaña no admitido: {key}")
+        target = result.get(group)
+        if not isinstance(target, dict):
+            raise ValueError(f"la configuración no declara el grupo {group}")
+        if group != "brand" and field not in target:
+            raise ValueError(f"la configuración no declara el campo {key}")
+        target[field] = value
+    return result
+
 def build(root: Path, target: Path, read_json, write_json, validate):
     brief = read_json(target / 'brief.json')
     validate('brief', brief)
@@ -153,7 +173,7 @@ def build(root: Path, target: Path, read_json, write_json, validate):
     config['audio']['src'] = 'song.mp3'
     config['lyricsUrl'] = 'lyrics.json'
     if brief['texts']:
-        config.setdefault('brand', {}).update({key.removeprefix('brand.'): value for key, value in brief['texts'].items()})
+        config = apply_campaign_texts(config, brief['texts'])
     overrides=target/'config-overrides.json'
     if overrides.exists() or overrides.is_symlink():
         if overrides.is_symlink() or not overrides.is_file():

@@ -1,5 +1,7 @@
 # Entrega de Sandbox compatible con los botones de producción
 
+> **Excepción NodeMotion (vigente desde 2026-11-16):** las plantillas NodeMotion (letras y promos) no siguen esta guía. Ver el estándar en `AGENTS.md` de la raíz (sección «Estándar vigente…») y en `docs/nodemotion-template-authoring.md` (sección 2). Motor en `src/templates/nodemotion/<cat>/<id>/`, prototipos en `productions/nodemotion/<cat>/<id>/`.
+
 Contrato del agente creador y de sus trabajadores. Se aplica a proyectos nuevos;
 no autoriza trasladarlos, publicarlos ni grabarlos. En el ejecutor aislado se
 entrega una copia en `work/agent-context/PREPARAR-PRODUCCION.md`.

@@ -65,7 +65,7 @@ class VideoGenerationRequest(BaseModel):
         ),
     )
     publishing: JobPublishingConfig = Field(default_factory=JobPublishingConfig)
-    render_target: Literal["local", "aws"] | None = Field(
+    render_target: Literal["local", "aws", "vps"] | None = Field(
         default=None,
         description=(
             "Override del motor de render (Remotion o HyperFrames) para este batch. Solo válido "

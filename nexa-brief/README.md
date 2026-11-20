@@ -210,7 +210,7 @@ Más detalle: `CONTRIBUTING.md` (flujo de trabajo) y `nexa-brief-server/README.m
 
 ### Servicio TikTok local
 
-Instalá con `cd nexa-tiktok && uv sync --python 3.12` y `uv run playwright install chromium`; `uv.lock` fija Playwright 1.64.1 y Chromium, así que conservá esa versión mientras existan perfiles. Copiá `nexa-tiktok/.env.example` a `nexa-tiktok/.env` y configurá también `TIKTOK_SERVICE_KEY` en el `.env` raíz con el mismo valor que `NEXA_TIKTOK_KEY` del servicio. `make dev` inicia la API, la web y el servicio TikTok local en `127.0.0.1:8100`. Conectá la cuenta desde `/canales`: escaneá el QR con la aplicación de TikTok en el móvil y confirmá el acceso. No cierres sesión en TikTok. No expongas el servicio a Internet.
+El servicio compartido de TikTok queda apagado por defecto: `make dev`, `make api`, `make docker-up` y los scripts de inicio/actualización de Docker ya no lo arrancan. En Alfred también está deshabilitada su unidad de inicio automático. Si vuelves a necesitar las funciones que dependen de ese servicio, puedes iniciarlo manualmente con `make connections-up`; usa el puerto `8100`. No lo expongas a Internet.
 
 ### Perfil de datos compartido en alfred-server
 

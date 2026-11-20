@@ -17,6 +17,9 @@ from typing import Any
 class LyricsTranscriptionPort(ABC):
     """Transcribe una canción a un JSON con timestamps por palabra."""
 
+    # Remote adapters may submit work without occupying the local CPU lane.
+    requires_local_heavy_slot = True
+
     @abstractmethod
     async def transcribe(self, audio_path: Path, language: str | None = None) -> dict[str, Any]:
         """Transcribe *audio_path* y devuelve un dict con el schema:

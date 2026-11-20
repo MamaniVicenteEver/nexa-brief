@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "family": "lyrics",
+  "display_name": "Grunge Montaje",
+  "description": "Versión de Grunge con montaje dirigido: metraje en blanco y negro, papel rasgado, tiza y pincel, cortes de glitch, cierre de marca. Para rap, trap y drill.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "Calle, escenario, baile y retratos de alto contraste."
+      }
+    ],
+    "texts": [],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-grunge-montage/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-grunge-montage",
+    "config": "nodemotion/lyrics/lyrics-grunge-montage/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-grunge-montage/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json"
+  },
+  "lookup": "/api/v1/templates/lyrics-grunge-montage/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "grunge-montage.intro",
+      "kind": "component",
+      "label": "Intro de apertura",
+      "summary": "Primera toma del video: fondo de niebla, artista en rojo cuyas palabras se juntan y engordan, título blanco ancho y fino que baja al centro y engorda, corona de tiza y flecha roja.",
+      "constraints_status": "documented",
+      "id": "grunge-montage.intro",
+      "contract": "contracts/001-component.json"
+    },
+    {
+      "entry_id": "grunge-montage.outrov1",
+      "kind": "component",
+      "label": "Outro v1 Marca gigante",
+      "summary": "Palabra roja gigante sobre metraje (toma 59,4-61,4 s) que se desarma: la corona y el subrayado se borran trazo a trazo, el subtítulo y la línea final se corren y desaparecen y el título sale con un barrido; queda solo el metraje.",
+      "constraints_status": "documented",
+      "id": "grunge-montage.outrov1",
+      "contract": "contracts/002-component.json"
+    },
+    {
+      "entry_id": "grunge-montage.outrov2",
+      "kind": "component",
+      "label": "Outro v2 Tarjeta de papel",
+      "summary": "Tarjeta de papel del final del video (64-68 s): marca roja con corona y subrayado de tiza; la corona y el subrayado se borran, la marca se va con un barrido y queda el papel vacío.",
+      "constraints_status": "documented",
+      "id": "grunge-montage.outrov2",
+      "contract": "contracts/003-component.json"
+    },
+    {
+      "entry_id": "grunge-montage.movimiento",
+      "kind": "component",
+      "label": "Movimiento a cuadros",
+      "summary": "Lenguaje de toda la plantilla: cada 2 cuadros la letra, la tiza y los bordes de papel saltan (temblor tipo stop-motion), ecos desplazados y borrosos detrás de cada palabra, erosión de fotocopia que cambia por cuadros, cortes de toma dentro de la frase (a veces por un agujero de papel), barrido scan al cambiar de escena, polvo, grano y parpadeo de exposición. Se regula con config.fx.",
+      "constraints_status": "documented",
+      "id": "grunge-montage.movimiento",
+      "contract": "contracts/004-component.json"
+    },
+    {
+      "entry_id": "grunge-montage.texto",
+      "kind": "component",
+      "label": "Palabra con golpe",
+      "summary": "Texto condensado gastado que entra aplastándose (slam), con fantasma rojo y subrayado de pincel.",
+      "constraints_status": "documented",
+      "id": "grunge-montage.texto",
+      "contract": "contracts/005-component.json"
+    },
+    {
+      "entry_id": "grunge-montage.pila",
+      "kind": "component",
+      "label": "Pila que corre",
+      "summary": "Palabras gigantes que se empujan en vertical (LIKE, FOOT, IS ON THE, GAS) y filas repetidas.",
+      "constraints_status": "documented",
+      "id": "grunge-montage.pila",
+      "contract": "contracts/006-component.json"
+    },
+    {
+      "entry_id": "grunge-montage.rejilla",
+      "kind": "component",
+      "label": "Rejilla de frases",
+      "summary": "Frase repetida en celdas que aparecen en cascada, con deriva lateral.",
+      "constraints_status": "documented",
+      "id": "grunge-montage.rejilla",
+      "contract": "contracts/007-component.json"
+    },
+    {
+      "entry_id": "grunge-montage.tiza",
+      "kind": "component",
+      "label": "Garabatos de tiza y pincel",
+      "summary": "Flechas, triángulo, espiral, elipses, marcos y cruces que se dibujan solos con trazo seco.",
+      "constraints_status": "documented",
+      "id": "grunge-montage.tiza",
+      "contract": "contracts/008-component.json"
+    },
+    {
+      "entry_id": "grunge-montage.papel",
+      "kind": "component",
+      "label": "Banda de papel en niebla",
+      "summary": "Fondo de niebla clara con banda de papel negro rasgado y texto dentro.",
+      "constraints_status": "documented",
+      "id": "grunge-montage.papel",
+      "contract": "contracts/009-component.json"
+    },
+    {
+      "entry_id": "grunge-montage.scan",
+      "kind": "component",
+      "label": "Corte scan",
+      "summary": "Franjas horizontales del propio cuadro desplazadas a los lados con estela roja tenue.",
+      "constraints_status": "documented",
+      "id": "grunge-montage.scan",
+      "contract": "contracts/010-component.json"
+    },
+    {
+      "entry_id": "grunge-montage.resumen",
+      "kind": "component",
+      "label": "Resumen final",
+      "summary": "Collage de las frases y garabatos del video que aparecen y se desvanecen antes del cierre.",
+      "constraints_status": "documented",
+      "id": "grunge-montage.resumen",
+      "contract": "contracts/011-component.json"
+    },
+    {
+      "entry_id": "config.lyricsFilter",
+      "kind": "configuration",
+      "label": "lyricsFilter",
+      "summary": "Existing configuration configuration: lyricsFilter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.lyricsFilter",
+      "contract": "contracts/012-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/013-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/014-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/015-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/016-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/017-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/018-configuration.json"
+    },
+    {
+      "entry_id": "config.timeOffsetSec",
+      "kind": "configuration",
+      "label": "timeOffsetSec",
+      "summary": "Existing configuration configuration: timeOffsetSec.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timeOffsetSec",
+      "contract": "contracts/019-configuration.json"
+    },
+    {
+      "entry_id": "config.look",
+      "kind": "configuration",
+      "label": "look",
+      "summary": "Existing configuration configuration: look.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.look",
+      "contract": "contracts/020-configuration.json"
+    },
+    {
+      "entry_id": "config.strokeScale",
+      "kind": "configuration",
+      "label": "strokeScale",
+      "summary": "Existing configuration configuration: strokeScale.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.strokeScale",
+      "contract": "contracts/021-configuration.json"
+    },
+    {
+      "entry_id": "config.timeline",
+      "kind": "configuration",
+      "label": "timeline",
+      "summary": "Existing configuration configuration: timeline.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timeline",
+      "contract": "contracts/022-configuration.json"
+    },
+    {
+      "entry_id": "config.outroDesigns",
+      "kind": "configuration",
+      "label": "outroDesigns",
+      "summary": "Existing configuration configuration: outroDesigns.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outroDesigns",
+      "contract": "contracts/023-configuration.json"
+    },
+    {
+      "entry_id": "config.bgCuts",
+      "kind": "configuration",
+      "label": "bgCuts",
+      "summary": "Existing configuration configuration: bgCuts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.bgCuts",
+      "contract": "contracts/024-configuration.json"
+    }
+  ]
+}

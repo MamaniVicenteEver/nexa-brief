@@ -347,3 +347,14 @@ def test_music_group_endpoint_returns_full_versions(client: TestClient, monkeypa
     assert [item["asset_id"] for item in body["items"][0]["items"]] == ["v2", "v1"]
     assert [item["duration_seconds"] for item in body["items"][0]["items"]] == [92, 91]
     assert client.get("/api/v1/library/page/music/groups?page=0").status_code == 422
+
+
+def test_template_config_texts_preserve_lists():
+    from src.presentation.api.schemas.library_schema import TemplateConfigEntryResponse
+
+    entry = asset_library.TemplateConfigEntry(
+        job_id="job", template_id="lyrics-decadas", niche_id="lyrics",
+        config_path="job", texts={"title": "Décadas", "tags": ["DIC-97", "LADO A"]},
+    )
+    response = TemplateConfigEntryResponse(**entry.model_dump())
+    assert response.model_dump()["texts"] == {"title": "Décadas", "tags": ["DIC-97", "LADO A"]}

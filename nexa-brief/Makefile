@@ -81,18 +81,16 @@ dev api: export ACCOUNTS_JSON_PATH := $(SHARED_CONNECTIONS_DIR)/accounts.json
 dev api: export TIKTOK_SERVICE_UPLOAD_MEDIA := true
 dev api: export TIKTOK_IDEMPOTENCY_NAMESPACE := development
 dev api: export ENABLE_AUTO_PUBLISHING := false
-connections-up: ## Inicia el servicio TikTok compartido, independiente del desarrollo
+connections-up: ## Inicia manualmente el servicio TikTok compartido cuando haga falta
 	./scripts/start-connections.sh
 
-dev: connections-up
-dev: ## API (:8000) y web (:3000); TikTok compartido sigue activo al detener desarrollo
+dev: ## API (:8000) y web (:3000); TikTok compartido queda apagado
 	@trap 'trap - INT TERM EXIT; kill 0' INT TERM EXIT; \
 	(cd $(SERVER) && uv run uvicorn src.presentation.main:app --reload --reload-dir src --reload-exclude '$(CURDIR)/$(SERVER)/src/templates' --host 0.0.0.0 --port 8000) & \
 	(cd $(WEB) && pnpm dev --hostname 0.0.0.0 --port 3000) & \
 	wait
 
-api: connections-up
-api: ## Solo la API
+api: ## Solo la API, sin iniciar TikTok compartido
 	cd $(SERVER) && uv run uvicorn src.presentation.main:app --reload --reload-dir src --reload-exclude '$(CURDIR)/$(SERVER)/src/templates' --host 0.0.0.0 --port 8000
 
 web: ## Solo la web
@@ -133,8 +131,7 @@ docker-build: ## Construye las imágenes api + web
 	docker compose build
 	bash ./scripts/docker-clean-images.sh
 
-docker-up: connections-up
-docker-up: ## Levanta api + web en segundo plano
+docker-up: ## Levanta api + web en segundo plano, sin iniciar TikTok compartido
 	docker compose up -d
 
 docker-down: ## Detiene (conserva los volúmenes con datos)

@@ -16,3 +16,10 @@ class SendMessage(BaseModel):
 
 class ApproveSession(BaseModel):
     revision: int = Field(ge=1)
+
+
+class ReplacePromoMediaRequest(BaseModel):
+    revision: int = Field(ge=1, strict=True)
+    scene: int = Field(ge=1, le=200, strict=True)
+    slot: str = Field(min_length=1, max_length=128, pattern=r"^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$")
+    asset_id: str = Field(min_length=1, max_length=128, pattern=r"^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$")

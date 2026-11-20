@@ -7,6 +7,7 @@ import os
 import re
 import tempfile
 from contextlib import ExitStack
+from collections.abc import Iterable
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -165,14 +166,26 @@ def plan_demo_resources(templates_root: Path, design_ids: list[str] | None = Non
             "unique_bytes": sum(next(row["size"] for row in rows if row["sha256"] == sha) for sha in suffixes)}
 
 
-async def ensure_design_resources(design_id: str) -> dict[str, dict[str, Any]]:
-    """Register default demo media once and return refs for new projects."""
+async def ensure_design_resources(
+    design_id: str,
+    relative_paths: Iterable[str] | None = None,
+) -> dict[str, dict[str, Any]]:
+    """Register bundled demo resources once, optionally limited to selected paths."""
     from src.core.library import asset_library
     from src.core.nodemotion.shared.resources import asset_ref
     from src.templates._tools.nodemotion.shared.assemble import runtime_files
+    requested = None if relative_paths is None else set(relative_paths)
+    if requested is None:
+        files = runtime_files(design_id)
+    else:
+        files = {
+            relative: path
+            for relative in sorted(requested)
+            if (path := resolve_demo_resource(design_id, relative)) is not None
+        }
     refs: dict[str, dict[str, Any]] = {}
     known: dict[tuple[str, str], Any] = {}
-    for relative, path in runtime_files(design_id).items():
+    for relative, path in files.items():
         key = bundled_key_for_path(path)
         kind = _KIND_BY_SUFFIX.get(Path(relative).suffix.lower())
         if key is None or kind is None:

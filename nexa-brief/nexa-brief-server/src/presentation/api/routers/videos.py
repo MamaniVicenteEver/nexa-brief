@@ -208,6 +208,8 @@ def _validate_recorder_engine_override(
                     f"'{category_name}' — todavía no tiene una composición HyperFrames portada.",
         )
     effective_engine = recorder_engine_override or niche_cfg.recorder_engine
+    if render_target == "vps" and effective_engine != "hyperframes":
+        raise HTTPException(status_code=400, detail="El destino VPS requiere el motor HyperFrames.")
     if render_target is not None and effective_engine not in ("remotion", "hyperframes"):
         raise HTTPException(
             status_code=400,

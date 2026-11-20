@@ -16,6 +16,8 @@ afterEach(() => {
   cleanup();
   delete window.NexaDraftThumbnailRenderer;
   vi.unstubAllGlobals();
+
+
 });
 describe("thumbnail image replacement", () => {
   it("keeps the decoded image visible while rendering its replacement", async () => {
@@ -38,7 +40,7 @@ describe("thumbnail image replacement", () => {
             resolve = done;
           }),
       );
-    window.NexaDraftThumbnailRenderer = { version: 11, renderSvg: () => "", renderSvgAsync };
+    window.NexaDraftThumbnailRenderer = { version: 26, renderSvg: () => "", renderSvgAsync };
     const view = render(<DraftThumbnailArtwork manifest={manifest("first")} option="A" />);
     await waitFor(() => expect(screen.getByRole("img").getAttribute("src")).toContain("first"));
     const previous = screen.getByRole("img");
@@ -61,7 +63,7 @@ describe("thumbnail image replacement", () => {
       },
     );
     const renderSvgAsync = vi.fn().mockResolvedValue('<svg xmlns="http://www.w3.org/2000/svg"/>');
-    window.NexaDraftThumbnailRenderer = { version: 11, renderSvg: () => "", renderSvgAsync };
+    window.NexaDraftThumbnailRenderer = { version: 26, renderSvg: () => "", renderSvgAsync };
     const value = manifest("A");
     const view = render(<DraftThumbnailArtwork manifest={value} option="A" />);
     await waitFor(() => expect(renderSvgAsync).toHaveBeenCalledTimes(1));
@@ -84,7 +86,7 @@ describe("thumbnail image replacement", () => {
       },
     );
     const renderSvgAsync = vi.fn().mockResolvedValue('<svg xmlns="http://www.w3.org/2000/svg"/>');
-    window.NexaDraftThumbnailRenderer = { version: 11, renderSvg: () => "", renderSvgAsync };
+    window.NexaDraftThumbnailRenderer = { version: 26, renderSvg: () => "", renderSvgAsync };
     const value = manifest("Gran final");
     value.options.B.design = { style: "promo-editorial" };
     const view = render(<DraftThumbnailArtwork manifest={value} option="B" />);
@@ -99,4 +101,23 @@ describe("thumbnail image replacement", () => {
     await waitFor(() => expect(renderSvgAsync).toHaveBeenCalledTimes(2));
     expect(renderSvgAsync.mock.calls[1][0].options.B.design.maxWords).toBe(1);
   });
+  it("renders vertical targets as 9:16 and shows the platform safe area", async () => {
+    vi.stubGlobal(
+      "Image",
+      class {
+        src = "";
+        decode() {
+          return Promise.resolve();
+        }
+      },
+    );
+    const renderSvgAsync = vi.fn().mockResolvedValue('<svg xmlns="http://www.w3.org/2000/svg"/>');
+    window.NexaDraftThumbnailRenderer = { version: 26, renderSvg: () => "", renderSvgAsync };
+    render(<DraftThumbnailArtwork manifest={{ ...manifest("Vertical"), format: "9x16" }} option="A" />);
+    await waitFor(() => expect(renderSvgAsync).toHaveBeenCalledTimes(1));
+    expect(renderSvgAsync.mock.calls[0].slice(1, 4)).toEqual(["A", 720, 1280]);
+    expect(screen.getByTestId("thumbnail-safe-area")).toBeTruthy();
+    expect(screen.getByTestId("thumbnail-safe-area").parentElement?.classList.contains("aspect-[9/16]")).toBe(true);
+  });
+
 });

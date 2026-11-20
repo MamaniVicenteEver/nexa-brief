@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "grunge-montage.rejilla",
+  "entry_id": "grunge-montage.rejilla",
+  "kind": "component",
+  "label": "Rejilla de frases",
+  "summary": "Frase repetida en celdas que aparecen en cascada, con deriva lateral.",
+  "component": {
+    "name": "grunge-montage.rejilla",
+    "label": "Rejilla de frases",
+    "summary": "Frase repetida en celdas que aparecen en cascada, con deriva lateral.",
+    "default": true,
+    "params": {
+      "scene": {
+        "type": "string",
+        "default": "s49",
+        "doc": "Nombre de la escena de config.timeline que se muestra"
+      },
+      "duration": {
+        "type": "number",
+        "default": 2.0,
+        "doc": "Segundos de la demo",
+        "min": 0.5,
+        "max": 6
+      }
+    },
+    "tags": [
+      "escena"
+    ],
+    "file": "player.js",
+    "demo": {
+      "scene": "s49"
+    },
+    "preview": {
+      "t": 1.0
+    }
+  },
+  "params": {
+    "scene": {
+      "type": "string",
+      "default": "s49",
+      "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+      "type": "number",
+      "default": 2.0,
+      "doc": "Segundos de la demo",
+      "min": 0.5,
+      "max": 6
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json",
+      "pointer": "/components/6"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

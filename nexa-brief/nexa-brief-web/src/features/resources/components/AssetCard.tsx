@@ -6,6 +6,8 @@ import type { LibraryAsset } from "@/features/library/api/library-assets-service
 import { cn } from "@/lib/utils";
 import { useRetranscribe } from "../hooks/useResources";
 import { formatDuration } from "../kinds";
+import { musicActionClass, musicActionLabelClass } from "../music-actions";
+import { MusicEnrichButton } from "./MusicEnrichButton";
 import { TranscriptionBadge } from "./TranscriptionBadge";
 
 interface AssetCardProps {
@@ -122,7 +124,27 @@ export function AssetCard({ asset, onEdit, onDelete, onShowLyrics }: AssetCardPr
             </ul>
           </div>
         )}
-        {meta.length > 0 && <p className="text-[11.5px] text-nb-mute">{meta.join(" · ")}</p>}
+        {isMusic ? (
+          // En canciones, el estado de la letra va en esta misma línea: el pie queda solo con las acciones.
+          <div className="flex min-w-0 items-center justify-between gap-2">
+            {meta.length > 0 && (
+              <p className="min-w-0 truncate text-[11.5px] text-nb-mute" title={meta.join(" · ")}>
+                {meta.join(" · ")}
+              </p>
+            )}
+            <TranscriptionBadge
+              className="shrink-0"
+              status={asset.transcriptionStatus}
+              error={asset.transcriptionError}
+              retrying={retry.isPending}
+              onRetry={() =>
+                retry.mutate({ assetId: asset.assetId, language: asset.language || undefined })
+              }
+            />
+          </div>
+        ) : (
+          meta.length > 0 && <p className="text-[11.5px] text-nb-mute">{meta.join(" · ")}</p>
+        )}
         {asset.tags.length > 0 && (
           <div className="flex flex-wrap gap-1">
             {asset.tags.slice(0, 6).map((tag) => (
@@ -160,25 +182,20 @@ export function AssetCard({ asset, onEdit, onDelete, onShowLyrics }: AssetCardPr
           <>
             {/** biome-ignore lint/a11y/useMediaCaption: la letra está en el visor de letra */}
             <audio src={asset.fileUrl} controls preload="none" className="mt-1 h-9 w-full" />
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <TranscriptionBadge
-                status={asset.transcriptionStatus}
-                error={asset.transcriptionError}
-                retrying={retry.isPending}
-                onRetry={() =>
-                  retry.mutate({ assetId: asset.assetId, language: asset.language || undefined })
-                }
-              />
+            {/* Una sola fila: ver letra, completar y regenerar. Con poco ancho solo quedan los íconos. */}
+            <div className="@container flex flex-nowrap items-center justify-end gap-0.5">
               {asset.hasLyrics && onShowLyrics && (
                 <button
                   type="button"
                   onClick={onShowLyrics}
-                  className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[12px] font-semibold text-nb-green-dark hover:bg-nb-green/20"
+                  title={t("lyrics")}
+                  className={cn(musicActionClass, "text-nb-green-dark hover:bg-nb-green/20")}
                 >
-                  <FileText className="size-3.5" />
-                  {t("lyrics")}
+                  <FileText className="size-3.5 shrink-0" />
+                  <span className={musicActionLabelClass}>{t("lyrics")}</span>
                 </button>
               )}
+              <MusicEnrichButton asset={asset} />
             </div>
           </>
         )}

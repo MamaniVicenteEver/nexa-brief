@@ -1,0 +1,139 @@
+{
+ "id": "default",
+ "description": "Lyric video grunge de rap con montaje dirigido: metraje B/N, papel rasgado, tiza y pincel, glitch y cierre de marca.",
+ "audio": {
+  "src": "assets/song.mp3"
+ },
+ "lyricsUrl": "assets/lyrics.json",
+ "lyricsFilter": {
+  "minLogprob": -0.4,
+  "drop": [
+   "audio ?jungle",
+   "envato",
+   "subt[ií]tulos",
+   "amara\\.org",
+   "oriel"
+  ]
+ },
+ "fonts": {
+  "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@62..125,100..900&family=Oswald:wght@300;500&display=swap"
+ },
+ "palette": {
+  "red": "#E8292E",
+  "white": "#F1F1EF",
+  "black": "#070707",
+  "paper": "#EDEDEA",
+  "ink": "#101010",
+  "chalk": "#F5F5F2"
+ },
+ "grades": {
+  "bw": {
+   "type": "duo",
+   "dark": "#040404",
+   "light": "#EDEDED",
+   "contrast": 1.55
+  }
+ },
+ "media": [
+  {
+   "id": "tunnel",
+   "type": "video",
+   "src": "assets/media/tunnel-dance.mp4",
+   "poster": "assets/media/tunnel-dance-1.jpg",
+   "graded": {
+    "bw": {
+     "src": "assets/media/graded/tunnel-dance.bw.mp4",
+     "poster": "assets/media/graded/tunnel-dance-1.bw.jpg"
+    }
+   }
+  },
+  {
+   "id": "street",
+   "type": "video",
+   "src": "assets/media/street-dance.mp4",
+   "poster": "assets/media/street-dance-1.jpg",
+   "graded": {
+    "bw": {
+     "src": "assets/media/graded/street-dance.bw.mp4",
+     "poster": "assets/media/graded/street-dance-1.bw.jpg"
+    }
+   }
+  },
+  {
+   "id": "hoodie",
+   "type": "video",
+   "src": "assets/media/hoodie.mp4",
+   "poster": "assets/media/hoodie-1.jpg",
+   "graded": {
+    "bw": {
+     "src": "assets/media/graded/hoodie.bw.mp4",
+     "poster": "assets/media/graded/hoodie-1.bw.jpg"
+    }
+   }
+  },
+  {
+   "id": "crowd",
+   "type": "video",
+   "src": "assets/media/crowd.mp4",
+   "poster": "assets/media/crowd-1.jpg",
+   "graded": {
+    "bw": {
+     "src": "assets/media/graded/crowd.bw.mp4",
+     "poster": "assets/media/graded/crowd-1.bw.jpg"
+    }
+   }
+  },
+  {
+   "id": "breakdance",
+   "type": "video",
+   "src": "assets/media/breakdance.mp4",
+   "poster": "assets/media/breakdance-1.jpg",
+   "graded": {
+    "bw": {
+     "src": "assets/media/graded/breakdance.bw.mp4",
+     "poster": "assets/media/graded/breakdance-1.bw.jpg"
+    }
+   }
+  },
+  {
+   "id": "night",
+   "type": "video",
+   "src": "assets/media/night-hoodie.mp4",
+   "poster": "assets/media/night-hoodie-1.jpg",
+   "graded": {
+    "bw": {
+     "src": "assets/media/graded/night-hoodie.bw.mp4",
+     "poster": "assets/media/graded/night-hoodie-1.bw.jpg"
+    }
+   }
+  }
+ ],
+ "intro": {
+  "enabled": true,
+  "title": "Double Control",
+  "artist": "Pista de demostración"
+ },
+ "outro": {
+  "enabled": true,
+  "version": "v1",
+  "title": "Gracias",
+  "sub": "por ver",
+  "feats": "Suscríbete · NodeMotion"
+ },
+ "texture": {
+  "grain": 0.1
+ },
+ "debug": {
+  "enabled": false
+ },
+ "seed": 13,
+ "timeOffsetSec": 0.22,
+ "look": {
+  "darkScale": 0.55,
+  "haze": 0.06,
+  "fogScale": 1.5,
+  "fogSize": 55,
+  "vignette": 0.42
+ },
+ "strokeScale": 2.3
+}

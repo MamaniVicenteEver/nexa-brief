@@ -283,6 +283,21 @@
       },
       "fallback_policy": "codex_unavailable_or_quota"
     },
+    "music_researcher": {
+      "provider": "codex",
+      "model": "gpt-6-luna",
+      "reasoning_effort": "low",
+      "structured_agent": true,
+      "timeout_seconds": 60,
+      "invalid_json_retries": 1,
+      "does": "Botón «Completar datos» de Recursos: redacta artista, género, descripción y etiquetas de una canción solo con fuentes abiertas recibidas (MusicBrainz, Wikipedia). Solo rellena campos vacíos y nunca inventa.",
+      "fallback": {
+        "provider": "claude",
+        "model": "claude-haiku-5-5",
+        "reasoning_effort": "low"
+      },
+      "fallback_policy": "codex_unavailable_or_quota"
+    },
     "edition_lead": {
       "provider": "codex",
       "model": "gpt-6.1-terra",

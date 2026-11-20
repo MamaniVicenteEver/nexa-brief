@@ -7,7 +7,7 @@ import { useState } from "react";
 import { saveDraftDetails } from "../../api/studio-service";
 import { draftKey, draftsKey } from "../../hooks/useDraft";
 import type { DraftThumbnailEditor } from "../../hooks/useDraftThumbnailEditor";
-import type { Draft, DraftDetails } from "../../types";
+import { type Draft, type DraftDetails } from "../../types";
 import { DraftThumbnailPicker } from "./DraftThumbnailPicker";
 
 const FIELD =

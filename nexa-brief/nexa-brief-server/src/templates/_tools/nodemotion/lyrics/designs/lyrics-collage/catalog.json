@@ -10,7 +10,18 @@
       "required": true,
       "lyrics": "auto"
     },
-    "media": [],
+    "media": [
+      {
+        "slot": "figures",
+        "kind": "image",
+        "min": 0,
+        "max": 8,
+        "target": "config",
+        "path": "figures.items",
+        "label": "Figuras",
+        "hint": ""
+      }
+    ],
     "texts": [],
     "brief": false
   },

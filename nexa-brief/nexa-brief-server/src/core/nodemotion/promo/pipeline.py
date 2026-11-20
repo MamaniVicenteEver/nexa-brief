@@ -131,6 +131,8 @@ def prepare_data(session, proposal):
     for n, scene in enumerate(cycle, 1):
         for slot in scene.get("media", []):
             item = dict(supplied.get((n, slot), {}))
+            # El agente no puede autorizar que se omitan los requisitos de búsqueda.
+            item.pop("manual_selection", None)
             # Los usos son los del contrato; no se crea otro motor ni se desplazan slots.
             item.update(scene=n, slot=slot, kind=kinds[slot])
             item.setdefault("query", brief["topic"])
@@ -570,6 +572,34 @@ async def _repair_proposal(session, project, proposal, progress, error):
     return agents.decode(result.last_message)
 
 
+def _mark_manual_media(plan, selections):
+    selected = set()
+    if isinstance(selections, list):
+        for item in selections:
+            if (
+                isinstance(item, dict)
+                and type(item.get("scene")) is int
+                and 1 <= item["scene"] <= 200
+                and isinstance(item.get("slot"), str)
+                and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}", item["slot"])
+            ):
+                selected.add((item["scene"], item["slot"]))
+    if not selected:
+        return plan
+    items = plan.get("items") if isinstance(plan, dict) else None
+    if not isinstance(items, list):
+        return plan
+    return {
+        **plan,
+        "items": [
+            {**item, "manual_selection": True}
+            if isinstance(item, dict) and (item.get("scene"), item.get("slot")) in selected
+            else item
+            for item in items
+        ],
+    }
+
+
 async def _prepare(session, project, proposal, progress):
     ident = session["session_id"] + "-r" + str(session["revision"])
     target = project.parent / ident
@@ -615,6 +645,7 @@ async def _prepare(session, project, proposal, progress):
             brief, research, guion, plan = prepare_data(session, proposal)
             check_evidence(research, session["source_context"])
         target.mkdir(parents=True, exist_ok=False)
+    plan = _mark_manual_media(plan, session.get("manual_media_slots"))
     proposal = {**proposal, "brief": brief, "research": research, "guion": guion, "media_plan": plan}
     previous = read(target / "draft.json").get("draft_id") if (target / "draft.json").is_file() else None
     old = collection("drafts").get(previous) if previous else None

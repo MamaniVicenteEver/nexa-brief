@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-grunge-montage",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-grunge-montage",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "player.js": "runtime/player.js",
+    "showcase/index.html": "runtime/showcase/index.html"
+  },
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "source_sha256": "250b535ffe96833a6d0f54f748b947ca8a6bd3190bf8aa223019154f95cb7733",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-grunge-montage",
+    "config": "nodemotion/lyrics/lyrics-grunge-montage/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-grunge-montage/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json"
+  },
+  "revision": "574597438d2c9a37228c298aa111b3b4072af04c7329f21fbd676ad416f6b551"
+}

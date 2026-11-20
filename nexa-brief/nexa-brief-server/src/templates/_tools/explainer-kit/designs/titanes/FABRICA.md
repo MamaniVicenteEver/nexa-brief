@@ -112,4 +112,14 @@ Revisar `LICENCIAS.md` y `licencias.json`, atribuciones, transformaciones y dere
 .venv/bin/python "$K/tools/kit.py" render "$ID" --formats 16x9,9x16
 ```
 
+**Catálogo del Showcase.** El Showcase v3 lee `_tools/design-definitions/titanes/`, no `designs/titanes/design.json`: editar el kit no cambia lo que se ve. Tras añadir componentes o poses de capas, regenerar el contrato desde nexa-brief-server y comprobar que `different` lista solo los dos archivos de TITANES:
+
+```bash
+.venv/bin/python scripts/export-titanes-showcase.py          # comprueba
+.venv/bin/python scripts/export-titanes-showcase.py --write  # escribe design.json y catalog.json
+.venv/bin/python scripts/generate_showcase_posters.py --design titanes --only-missing
+```
+
+Los personajes y las imágenes salen de `explainer-kit/capas/catalog.json`; los componentes de TITANES y los comunes que el diseño carga (`text.js`, `capas.js`), del registro del kit. `common.flash` y `common.tag` tienen miniaturas casi vacías porque son efectos de instante; el modal muestra la vista animada.
+
 **Reutilización y costo.** El diseño, motor, capas aprobadas, voz de cierre y sonidos registrados son compartidos; investigación, guion, paleta, medios con derechos, voz, storyboard, mezcla y paquete cambian por video. Las ilustraciones de muestra tienen licencia sin acreditar. Un cierre ya generado se reutiliza; su generación inicial documentada consumió 18 tokens de entrada y 120 de audio, costo monetario sin dato. La voz de cada episodio, llamadas editoriales, investigación y recursos nuevos generan costo incremental variable: no hay tarifa ni total medido fiable para prometer por video. Registrar uso conocido y lo desconocido como sin dato.

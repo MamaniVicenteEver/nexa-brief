@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-grunge-montage",
+  "family": "lyrics",
+  "source_of_truth": "templates.json#templates/lyrics-grunge-montage",
+  "config_json": "nodemotion/lyrics/lyrics-grunge-montage/assets/config.json",
+  "config_prompt": null,
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [],
+    "brief": false
+  },
+  "sources": {
+    "template": "templates.json#templates/lyrics-grunge-montage",
+    "config": "nodemotion/lyrics/lyrics-grunge-montage/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-grunge-montage/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

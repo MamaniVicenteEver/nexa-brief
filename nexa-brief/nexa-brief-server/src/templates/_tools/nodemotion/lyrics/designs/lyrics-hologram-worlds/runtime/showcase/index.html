@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holograma Mundos · componentes</title>
+<!-- Galería de lyrics-hologram-worlds. ?only=<nombre> muestra una pieza (ver components.json),
+     ?aspect=16:9|9:16, ?p=<JSON de parámetros>, ?t=<s> congela. Sin ?only lista las piezas con su
+     vista fija; al pulsar una tarjeta se monta un único reproductor a la vez.
+     ?src=<ruta> cambia la página de la demo (por omisión ../index.html). -->
+<style>
+  html, body { margin: 0; background: #0b0b10; color: #eee; font: 14px/1.4 system-ui, sans-serif; }
+  .one { position: fixed; inset: 0; display: grid; place-items: center; }
+  .one iframe { border: 0; background: #000; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; padding: 16px; }
+  .card iframe, .card .slot { width: 100%; aspect-ratio: 16 / 9; border: 0; background: #000; display: block; color: #bbb; font: inherit; cursor: pointer; }
+  .card h2 { font-size: 14px; margin: 8px 0 2px; }
+  .card p { margin: 0; color: #9a9aa6; font-size: 12px; }
+</style>
+</head>
+<body>
+<script>
+(async function () {
+  "use strict";
+  const q = new URLSearchParams(location.search);
+  const src = q.get("src") || (/\/api\/v1\/templates\//.test(location.pathname) ? "../source" : "../index.html");   /* en la app la demo registrada se sirve ensamblada */
+  const url = (name, p, t) => `${src}?headless=1&only=${encodeURIComponent(name)}&p=${encodeURIComponent(JSON.stringify(p || {}))}` + (t != null ? `&t=${t}` : "");
+  let cat = { components: [] };
+  try { cat = await (await fetch("components.json")).json(); } catch (e) { document.body.textContent = "No se pudo leer components.json"; return; }
+  const only = q.get("only");
+  if (only) {
+    const c = cat.components.find(x => x.name === only);
+    let p = c ? { ...(c.demo || {}) } : {};
+    try { if (q.get("p")) p = { ...p, ...JSON.parse(q.get("p")) }; } catch (e) { /* p inválido: se usa la demo */ }
+    const vert = q.get("aspect") === "9:16", box = document.createElement("div"); box.className = "one";
+    const f = document.createElement("iframe");
+    const fit = () => { const W = innerWidth, H = innerHeight, r = vert ? 9 / 16 : 16 / 9; const w = Math.min(W, H * r); f.style.width = w + "px"; f.style.height = w / r + "px"; };
+    fit(); addEventListener("resize", fit);
+    f.src = url(only, p, q.get("t")); box.appendChild(f); document.body.appendChild(box); return;
+  }
+  const grid = document.createElement("div"); grid.className = "grid"; document.body.appendChild(grid);
+  let live = null;
+  for (const c of cat.components) {
+    const card = document.createElement("div"); card.className = "card";
+    const slot = document.createElement("button"); slot.className = "slot"; slot.type = "button"; slot.textContent = "Ver " + c.label;
+    slot.addEventListener("click", () => {
+      if (live) live.replaceWith(live._slot);   /* un solo reproductor a la vez */
+      const f = document.createElement("iframe"); f._slot = slot; f.src = url(c.name, c.demo); slot.replaceWith(f); live = f;
+    });
+    const h = document.createElement("h2"); h.textContent = c.label;
+    const p = document.createElement("p"); p.textContent = c.summary;
+    card.append(slot, h, p); grid.appendChild(card);
+  }
+})();
+</script>
+</body>
+</html>

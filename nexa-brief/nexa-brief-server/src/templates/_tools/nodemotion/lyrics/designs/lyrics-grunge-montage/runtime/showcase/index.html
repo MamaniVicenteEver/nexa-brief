@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grunge Montaje · componentes</title>
+<!-- Galería de lyrics-grunge-montage. Muestra la demo con un solo componente:
+     ?only=<nombre> (ver components.json)  ?aspect=16:9|9:16  ?p=<JSON de parámetros>  ?t=<s> congela.
+     Sin ?only lista todos los componentes. ?src=<ruta> cambia la página de la demo (por omisión ../index.html). -->
+<style>
+  html, body { margin: 0; background: #111; color: #eee; font: 14px/1.4 system-ui, sans-serif; }
+  .one { position: fixed; inset: 0; display: grid; place-items: center; }
+  .one iframe { border: 0; background: #000; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; padding: 16px; }
+  .card iframe, .card .slot { width: 100%; aspect-ratio: 16 / 9; border: 0; background: #000; display: block; color: #ccc; font: inherit; cursor: pointer; }
+  .card h2 { font-size: 14px; margin: 8px 0 2px; } .card p { margin: 0; color: #aaa; font-size: 12px; }
+</style>
+</head>
+<body>
+<script>
+(async function () {
+  "use strict";
+  const q = new URLSearchParams(location.search);
+  const src = q.get("src") || (/\/api\/v1\/templates\//.test(location.pathname) ? "../source" : "../index.html");   /* en la app la demo registrada se sirve ensamblada */
+  const url = (name, p, t) => `${src}?headless=1&only=${encodeURIComponent(name)}&p=${encodeURIComponent(JSON.stringify(p || {}))}` + (t != null ? `&t=${t}` : "");
+  let cat = { components: [] };
+  try { cat = await (await fetch("components.json")).json(); } catch (e) { console.warn("components.json no disponible"); }
+  const only = q.get("only");
+  if (only) {
+    let p = {}; try { p = JSON.parse(q.get("p") || "{}") || {}; } catch (e) { console.warn("p inválido"); }
+    const c = cat.components.find(x => x.name === only) || {};
+    const [aw, ah] = (q.get("aspect") || "16:9").split(":").map(Number);
+    const s = Math.min(innerWidth / aw, innerHeight / ah);
+    document.body.innerHTML = `<div class="one"><iframe width="${Math.round(aw * s)}" height="${Math.round(ah * s)}" allow="autoplay"></iframe></div>`;
+    document.querySelector("iframe").src = url(only, { ...(c.demo || {}), ...p }, q.get("t"));
+    return;
+  }
+  const g = document.createElement("div"); g.className = "grid"; document.body.appendChild(g);
+  for (const c of cat.components) {
+    const el = document.createElement("div"); el.className = "card";
+    /* un reproductor por vez: la tarjeta lo monta al pulsarla y libera el anterior */
+    el.innerHTML = `<div class="view"></div><h2></h2><p></p>`;
+    el.querySelector("h2").textContent = c.label; el.querySelector("p").textContent = c.summary;
+    const idle = () => { const b = document.createElement("button"); b.type = "button"; b.className = "slot"; b.textContent = "Ver"; b.addEventListener("click", play); el.querySelector(".view").replaceChildren(b); };
+    function play() {
+      document.querySelectorAll(".card").forEach(k => k.__idle && k !== el && k.querySelector("iframe") && k.__idle());
+      const f = document.createElement("iframe"); f.src = url(c.name, c.demo); f.allow = "autoplay";
+      el.querySelector(".view").replaceChildren(f);
+    }
+    el.__idle = idle; idle();
+    g.appendChild(el);
+  }
+})();
+</script>
+</body>
+</html>

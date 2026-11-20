@@ -239,6 +239,9 @@ class SharedDefinitionsShowcaseAdapter(FilesystemShowcaseAdapter):
             return None
         if not entry_id and not design.get("preview_url"):
             return None
+        if selected and selected.get("preview_kind") == "image":
+            # Entradas de imagen (p. ej. capas): la miniatura es el propio archivo, no un componente del kit.
+            return selected["preview_url"]
         source = design.get("definition_source")
         if source in ("builtin", "vida"):
             return super().preview(design_id, entry_id, format)

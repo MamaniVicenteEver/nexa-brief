@@ -172,12 +172,16 @@ def cycle(config):
                 "SELECT job_id,attempts,error FROM backups WHERE status='error' ORDER BY updated DESC LIMIT 20"
             )
         ]
+        paused = db.execute(
+            "SELECT error FROM backups WHERE status='queued' AND error LIKE 'StorageFull:%' ORDER BY updated DESC LIMIT 1"
+        ).fetchone()
     status = {
         "updated_at": datetime.now(timezone.utc).isoformat(),
         "active_since": activation,
         "counts": counts,
         "errors": errors[:20],
         "backup_failures": failures,
+        "storage_paused": paused[0] if paused else None,
         "worker_error": worker_error,
         "enqueued": enqueued,
         "scratch_removed": removed,
@@ -208,7 +212,7 @@ def main():
             status = cycle(config)
             signal = {
                 k: status[k]
-                for k in ["counts", "errors", "backup_failures", "worker_error"]
+                for k in ["counts", "errors", "backup_failures", "storage_paused", "worker_error"]
             }
             signal["backup_failures"] = [
                 {k: v for k, v in r.items() if k != "attempts"}

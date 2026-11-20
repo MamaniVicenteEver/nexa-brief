@@ -36,6 +36,12 @@ SECRET = re.compile(
     r"(password|passwd|secret|token|credential|api[_-]?key|private[_-]?key)", re.I
 )
 SAFE_ID = re.compile(r"^[A-Za-z0-9_-]{1,128}$")
+# Reserva que el respaldo nunca ocupa: si el disco baja de este margen, la cola se pausa.
+MIN_FREE_BYTES = 20 * 1024**3
+
+
+class StorageFull(RuntimeError):
+    """Espacio insuficiente en el disco de respaldo: la cola se pausa, el trabajo no falla."""
 
 
 def safe_components(path):
@@ -216,7 +222,27 @@ def verify_copy(path, expected_digest, expected_size):
         raise RuntimeError("Backup verification failed")
 
 
-def process_spec(spec, mount, expected_uuid, allowed_roots):
+def source_size(entry):
+    if "expected_size" in entry:
+        return entry["expected_size"]
+    try:
+        return os.stat(entry["source"]).st_size
+    except OSError:
+        return 0
+
+
+def check_free_space(fd, spec, min_free=None):
+    reserve = MIN_FREE_BYTES if min_free is None else min_free
+    needed = sum(source_size(entry) for entry in spec["files"])
+    info = os.statvfs(fd)
+    free = info.f_bavail * info.f_frsize
+    if free < needed + reserve:
+        raise StorageFull(
+            f"need {needed + reserve} bytes free including reserve, have {free}"
+        )
+
+
+def process_spec(spec, mount, expected_uuid, allowed_roots, min_free=None):
     validate_spec(spec)
     roots = [Path(p).resolve(strict=True) for p in allowed_roots]
     if not roots:
@@ -252,6 +278,8 @@ def process_spec(spec, mount, expected_uuid, allowed_roots):
                 and not old.is_symlink()
             ):
                 shutil.rmtree(old)
+        # Checked after reaping this job's old generations, which may free space.
+        check_free_space(fd, spec, min_free)
         name = f"{job_id}--{uuid.uuid4().hex}"
         stage = generations / name
         stage.mkdir(mode=0o700)
@@ -359,6 +387,19 @@ def process_queue(db_path, mount, expected_uuid, allowed_roots):
                     process_spec(
                         json.loads(payload), mount, expected_uuid, allowed_roots
                     )
+                except StorageFull as exc:
+                    # Pausa: el trabajo queda en cola sin contar como fallo hasta que haya espacio.
+                    with db:
+                        db.execute(
+                            "UPDATE backups SET error=?,updated=? WHERE job_id=? AND spec_hash=?",
+                            (
+                                f"{type(exc).__name__}: {exc}"[:1000],
+                                time.time(),
+                                job_id,
+                                digest,
+                            ),
+                        )
+                    break
                 except Exception as exc:
                     with db:
                         db.execute(

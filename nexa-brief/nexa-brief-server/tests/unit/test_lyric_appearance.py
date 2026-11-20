@@ -76,7 +76,7 @@ async def test_impact_intro_keeps_song_name_not_thumbnail_text(tmp_path, monkeyp
     details = draft_details.DraftDetails(song_name='Nombre de la canción')
     draft = SimpleNamespace(details=details, template_id='lyrics-impact')
     option = SimpleNamespace(text='Texto diferente de miniatura')
-    manifest = SimpleNamespace(selected='A', options={'A': option}, model_dump=lambda **_: {'options': {}})
+    manifest = SimpleNamespace(selected='A', options={'A': option}, urls={}, format='16x9', model_dump=lambda **_: {'options': {}}, model_copy=lambda **_: manifest)
     async def get(_): return draft
     async def capture(*args, **kwargs):
         image = tmp_path / 'thumbnail.png'
@@ -88,6 +88,7 @@ async def test_impact_intro_keeps_song_name_not_thumbnail_text(tmp_path, monkeyp
     monkeypatch.setattr(drafts, 'thumbnail_manifest', lambda *_: manifest)
     monkeypatch.setattr(draft_details, 'apply_to_intro', lambda _path, data: captured.append(data.song_name))
     monkeypatch.setattr(draft_thumbnails, 'capture_selected', capture)
+    monkeypatch.setattr(draft_thumbnails, 'preview_manifest', lambda *_a, **_k: {'fingerprint': '0' * 20})
     monkeypatch.setattr(drafts, '_save_job', lambda *_: None)
     monkeypatch.setattr(drafts, '_patch', patch)
     await drafts._capture_selected_thumbnail('one', job)

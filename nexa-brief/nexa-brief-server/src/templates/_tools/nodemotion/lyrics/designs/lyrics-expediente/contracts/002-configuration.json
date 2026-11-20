@@ -9,6 +9,11 @@
   "label": "intro",
   "summary": "Existing configuration configuration: intro.",
   "params": {
+    "backdrop": {
+      "default": {
+        "opacity": 0.8
+      }
+    },
     "artist": {
       "default": "Yasuha · Expediente Nº 084"
     },
@@ -23,6 +28,9 @@
     }
   },
   "example": {
+    "backdrop": {
+      "opacity": 0.8
+    },
     "artist": "Yasuha · Expediente Nº 084",
     "title": "Flyday\nChinatown",
     "sub": "",

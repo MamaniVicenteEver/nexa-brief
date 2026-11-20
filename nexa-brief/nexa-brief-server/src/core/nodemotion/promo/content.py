@@ -18,7 +18,7 @@ from src.config.profile_layout import layout_for_settings
 from .reports import _json, _target, _resource_rows
 from .paths import work_script_path
 
-PLATFORMS = ('youtube', 'facebook', 'instagram', 'tiktok')
+PLATFORMS = ('youtube', 'youtube_shorts', 'facebook', 'instagram', 'tiktok')
 
 
 def _text(value, limit=500):
@@ -34,6 +34,30 @@ def _resource(row):
             'author': _text(row.get('author')), 'license': _text(row.get('license'))}
 
 
+def _scene_uses(plan):
+    # Index the real scene and slot for each resolved asset.
+    uses = {}
+    items = plan.get('items') if isinstance(plan, dict) else None
+    if not isinstance(items, list):
+        return uses
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        kind, ident, scene, slot = (item.get('kind'), item.get('asset_id'),
+                                    item.get('scene'), item.get('slot'))
+        if kind not in ('image', 'video') or not isinstance(ident, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,127}', ident):
+            continue
+        if type(scene) is not int or not 1 <= scene <= 200:
+            continue
+        if not isinstance(slot, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,127}', slot):
+            slot = None
+        key = (kind, ident)
+        use = {'scene': scene, 'slot': slot}
+        if use not in uses.setdefault(key, []):
+            uses[key].append(use)
+    return uses
+
+
 def _can_retry(row, draft):
     if not row or row.get('state') not in {'failed', 'review'} or task_is_owned('promo-chat', row['session_id']):
         return False
@@ -46,6 +70,108 @@ def _can_retry(row, draft):
                 and isinstance(ref, dict) and bool(ref.get('version')) and isinstance(ref.get('hashes'), dict))
     except (TypeError, ValueError):
         return False
+
+
+
+
+def _scene_media_uses(config, project):
+    """Map each configured visual to the scenes that reference its project asset."""
+    scenes = active_config(config).get('scenes') if isinstance(config, dict) else None
+    references = project.get('assets') if isinstance(project, dict) else None
+    if not isinstance(scenes, list) or not isinstance(references, dict):
+        return {}
+    prefix = project.get('content_prefix') or ''
+    uses = {}
+
+    def visit(value, number):
+        if isinstance(value, dict):
+            for child in value.values():
+                visit(child, number)
+        elif isinstance(value, list):
+            for child in value:
+                visit(child, number)
+        elif isinstance(value, str):
+            ref = references.get(value) or references.get(f'{prefix}/{value}' if prefix else value)
+            if not isinstance(ref, dict) or ref.get('kind') not in ('image', 'video'):
+                return
+            kind, ident = ref.get('kind'), ref.get('asset_id')
+            if not isinstance(ident, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,127}', ident):
+                return
+            key = (kind, ident)
+            use = {'scene': number, 'slot': None}
+            if use not in uses.setdefault(key, []):
+                uses[key].append(use)
+
+    for number, scene in enumerate(scenes[:200], 1):
+        visit(scene, number)
+    return uses
+
+
+def _configured_project_media(config, project, resources_root):
+    """Return the configured visual resources, including non-input defaults.
+
+    The config is not a playback trace: callers must label these as configured,
+    and unknown references remain visible without disclosing local paths.
+    """
+    if not isinstance(config, dict) or not isinstance(project, dict):
+        return None
+    configured = active_config(config).get('media')
+    references = project.get('assets')
+    if not isinstance(configured, list) or not configured or len(configured) > 200 or not isinstance(references, dict):
+        return None
+    items, seen, complete = [], {}, True
+    prefix = project.get('content_prefix') or ''
+    for position, spec in enumerate(configured, 1):
+        if not isinstance(spec, dict) or spec.get('type') not in ('image', 'video'):
+            continue
+        kind, source = spec['type'], spec.get('src')
+        if not isinstance(source, str) or not source or source.startswith('/') or '..' in source.split('/'):
+            complete = False
+            continue
+        ref = references.get(source) or references.get(f'{prefix}/{source}' if prefix else source)
+        ident = ref.get('asset_id') if isinstance(ref, dict) and ref.get('kind') == kind else None
+        if not isinstance(ident, str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,127}', ident):
+            complete = False
+            items.append({'id': None, 'name': _text(spec.get('id')) or 'Recurso configurado',
+                          'type': kind, 'source': None, 'author': None, 'license': None})
+            continue
+        key = (kind, ident)
+        if key in seen:
+            seen[key]['positions'].append(position)
+            continue
+        folder = 'images' if kind == 'image' else 'videos'
+        meta = _json(resources_root, folder, ident, 'resource.json')
+        if isinstance(meta, dict) and meta.get('id') == ident:
+            item = _resource({**meta, 'type': kind})
+        else:
+            try:
+                entry = asset_library.get_entry(kind, ident)
+            except (AssetNotFoundError, ValueError, TypeError):
+                entry = None
+            note = _text(getattr(entry, 'license_note', None))
+            if note:
+                note = re.sub(r'https?://\S+', '[enlace omitido]', note)
+            item = _resource({'id': ident, 'type': kind,
+                              'name': getattr(entry, 'display_name', None) or getattr(entry, 'label', None) or spec.get('id'),
+                              'source': getattr(entry, 'provider', None), 'license': note})
+        complete = complete and bool(item.get('name'))
+        item['positions'] = [position]
+        seen[key] = item
+        items.append(item)
+    if items:
+        scene_uses = _scene_media_uses(config, project)
+        for item in items:
+            item['scene_uses'] = scene_uses.get((item.get('type'), item.get('id')), [])
+        indexed = list(enumerate(items))
+        indexed.sort(key=lambda pair: (
+            0 if pair[1].get('scene_uses') else 1,
+            min((use['scene'] for use in pair[1].get('scene_uses', [])),
+                default=min(pair[1].get('positions', [pair[0] + 1])),
+            ),
+            pair[0],
+        ))
+        items = [item for _, item in indexed]
+    return (items, complete) if items else None
 
 
 def _legacy(result, draft, draft_id):
@@ -108,10 +234,19 @@ def _legacy(result, draft, draft_id):
                 items.append(_resource(meta))
             else:
                 items.append({'id':ident,'name':None,'type':kind,'source':None,'author':None,'license':None})
+    configured_media = _configured_project_media(config, project, root)
+    if configured_media is not None:
+        items, complete = configured_media
+        result['media_basis'] = 'effective_config'
+        result['availability']['media'] = 'available' if complete else 'missing'
+    else:
+        result['media_basis'] = 'draft_inputs'
+        result['availability']['media'] = 'available' if all(x.get('name') for x in items) else 'missing'
     result['media'] = items
-    result['media_basis'] = 'draft_inputs'
-    result['availability']['media'] = 'available' if all(x.get('name') for x in items) else 'missing'
+    music_record = _json(assets, 'music.json')
     ident = inputs.get('music_asset_id')
+    if not isinstance(ident, str) and isinstance(music_record, dict):
+        ident = music_record.get('asset_id')
     if isinstance(ident,str) and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_-]{0,127}',ident):
         meta = _json(root,'music',ident,'resource.json')
         if isinstance(meta,dict) and meta.get('id')==ident:
@@ -133,6 +268,42 @@ def _legacy(result, draft, draft_id):
 
     return True
 
+
+def read_legacy_resources(draft_id):
+    """Read-only resource sheet for a saved Promo draft that has no review session yet."""
+    if not isinstance(draft_id, str) or not re.fullmatch(r'[A-Za-z0-9_-]{1,128}', draft_id):
+        return None
+    draft = collection('drafts').get(draft_id)
+    if (
+        not isinstance(draft, dict)
+        or not isinstance(draft.get('template_id'), str)
+        or not draft['template_id'].startswith('promo-')
+        or draft.get('original') is True
+        or draft.get('status') not in {'prepared', 'preview_ready'}
+    ):
+        return None
+    result = {
+        'guion': None, 'media': None, 'media_basis': None, 'music': None,
+        'availability': {'guion': 'missing', 'media': 'missing', 'music': 'missing'},
+    }
+    if not _legacy(result, draft, draft_id):
+        return None
+    details = draft.get('details') if isinstance(draft.get('details'), dict) else {}
+    music = result.get('music') if isinstance(result.get('music'), dict) else None
+    song_name = _text(details.get('song_name'), 200) or (music or {}).get('name')
+    artist = _text(details.get('artist'), 200) or (music or {}).get('author')
+    return {
+        'draft_id': draft_id,
+        'title': _text(draft.get('name'), 300),
+        'song': {'title': song_name, 'artist': artist},
+        'music': music,
+        'media': result.get('media') if isinstance(result.get('media'), list) else [],
+        'media_basis': result.get('media_basis'),
+        'lyrics': result.get('guion'),
+        'availability': result['availability'],
+    }
+
+
 def read_content(service, session_id):
     row = service.get(session_id)
     revision, draft_id = row.get('revision'), row.get('draft_id')
@@ -153,6 +324,15 @@ def read_content(service, session_id):
             item = copies.get(name)
             if isinstance(item, dict):
                 result['copies'][name] = {'title': _text(item.get('title'), 500), 'description': _text(item.get('description'), 5000)}
+        # Older drafts acquire the same Shorts starting copy as DraftDetails.
+        if 'youtube_shorts' not in copies and isinstance(copies.get('youtube'), dict):
+            from src.core.draft_details import PlatformDetails, _shorts_variant
+            youtube = copies['youtube']
+            variant = _shorts_variant(PlatformDetails(
+                title=_text(youtube.get('title'), 300) or '',
+                description=_text(youtube.get('description'), 5000) or '',
+            ))
+            result['copies']['youtube_shorts'] = {'title': variant.title, 'description': variant.description}
         result['availability']['draft'] = 'available'
     else:
         return result
@@ -184,7 +364,12 @@ def read_content(service, session_id):
             resources = _resource_rows(target)
             if isinstance(plan, dict) and isinstance(plan.get('items'), list) and len(plan['items']) <= 200:
                 used = [r for r in resources if r.get('type') in ('image', 'video')]
-                result['media'] = [_resource(r) for r in used]
+                uses = _scene_uses(plan)
+                result['media'] = []
+                for resource in used:
+                    item = _resource(resource)
+                    item['scene_uses'] = uses.get((resource.get('type'), resource.get('id')), [])
+                    result['media'].append(item)
                 result['media_basis'] = 'resolved_plan'
                 expected = {(item.get('kind'), item.get('asset_id')) for item in plan['items'] if isinstance(item, dict) and item.get('kind') in ('image', 'video')}
                 actual = {(r.get('type'), r.get('id')) for r in used if r.get('name')}

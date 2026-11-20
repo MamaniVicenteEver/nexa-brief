@@ -6,7 +6,7 @@ import type { Niche } from "@/features/create-video/types";
 import type { Template } from "@/features/templates/types";
 import { useJobsTrayStore } from "@/shared/store/jobs-tray-store";
 import { renderDraft } from "../api/studio-service";
-import type { Draft, RecorderEngine, RecordFormat } from "../types";
+import { DEFAULT_RECORD_OUTPUTS, RECORD_OUTPUT_FORMAT, type Draft, type RecordOutput, type RecorderEngine, type RecordFormat } from "../types";
 import { backgroundVisibility, supportsBackgroundVisibility } from "../services/background-visibility";
 import { draftKey, draftsKey } from "./useDraft";
 
@@ -57,21 +57,24 @@ export function useRecordPrototype(
   const engines = ENGINE_ORDER;
   const engine = "hyperframes" as const;
   const hyperframesSupported = niche?.supportedEngines.includes(engine) ?? false;
-  const canVertical = true;
-  const [vertical, setVertical] = useState(false);
-  const [desktop, setDesktop] = useState(true);
+  const [outputs, setOutputs] = useState<RecordOutput[]>([...DEFAULT_RECORD_OUTPUTS]);
   useEffect(() => {
-    if (!open) {
-      setVertical(false);
-      setDesktop(true);
-    }
+    if (!open) setOutputs([...DEFAULT_RECORD_OUTPUTS]);
   }, [open]);
   const formats: RecordFormat[] = [
-    ...(desktop ? ["16x9" as const] : []),
-    ...(vertical && canVertical ? ["9x16" as const] : []),
+    ...(outputs.some((output) => RECORD_OUTPUT_FORMAT[output] === "16x9") ? ["16x9" as const] : []),
+    ...(outputs.some((output) => RECORD_OUTPUT_FORMAT[output] === "9x16") ? ["9x16" as const] : []),
   ];
+  const setOutput = (output: RecordOutput, checked: boolean) =>
+    setOutputs((previous) => checked
+      ? (previous.includes(output) ? previous : [...previous, output])
+      : previous.filter((item) => item !== output));
+  const hasOutputForAccount = (selector: string) => {
+    const platform = selector.split(":", 1)[0];
+    return outputs.includes(platform as RecordOutput) ||
+      (platform === "youtube" && outputs.includes("youtube_shorts"));
+  };
   const [accounts, setAccounts] = useState<string[]>([]);
-  const [accountFormats, setAccountFormats] = useState<Record<string, RecordFormat>>({});
 
   const render = useMutation({
     mutationFn: async (draft: Draft) => {
@@ -81,8 +84,7 @@ export function useRecordPrototype(
           (draft.inputs.templateInputs?.media?.background?.length || draft.inputs.imageAssetId || draft.inputs.videoAssetId)
           ? (backgroundVisibility.get(draft.draftId) ?? 0.8) : undefined,
         publishAccounts: accounts,
-        formats,
-        accountFormats,
+        outputs,
       });
       return { draft, result };
     },
@@ -107,23 +109,18 @@ export function useRecordPrototype(
     isOriginal: choice === ORIGINAL,
     selected,
     /** El elegido está listo para grabar (preparado o reintentable). */
-    ready: selected !== null && isRecordable(selected) && hyperframesSupported && formats.length > 0,
+    ready: selected !== null && isRecordable(selected) && hyperframesSupported && outputs.length > 0,
     select: setSelectedId,
     engines,
     defaultEngine: niche?.recorderEngine as RecorderEngine | undefined,
     engine,
     hyperframesSupported,
-    canVertical,
     formats,
-    desktop,
-    setDesktop,
-    vertical: vertical && canVertical,
-    setVertical,
+    outputs,
+    setOutput,
+    hasOutputForAccount,
     accounts,
     setAccounts,
-    accountFormats,
-    setAccountFormat: (selector: string, format: RecordFormat) =>
-      setAccountFormats((prev) => ({ ...prev, [selector]: format })),
     render,
   };
 }

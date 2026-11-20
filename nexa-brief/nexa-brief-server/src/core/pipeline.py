@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import time
 from typing import Awaitable, Callable
 
@@ -54,6 +55,12 @@ _STAGE_RESULT: dict[str, JobStage] = {
 }
 
 Stage = tuple[str, Callable[[Job], Awaitable[Job]]]
+
+
+async def _resumen_con_ia_fuera_del_bucle(job: Job, niche_cfg):
+    # get_copy_ai verifica los agentes (hash de binarios): va en un hilo, no en el bucle.
+    ai = await asyncio.to_thread(_publication_ai, job)
+    return await result_summarizer.run(job, ai, niche_cfg)
 
 
 def _publication_ai(job: Job):
@@ -235,7 +242,7 @@ async def run(
             ("prompt_architect",  lambda j: prompt_architect.run(j, niche_cfg)),
             ("html_generator",    lambda j: html_generator.run(j, for_video(codegen_ai, j, "composition"), niche_cfg)),
             ("video_recorder",    lambda j: video_recorder.run(j, niche_cfg)),
-            ("result_summarizer", lambda j: result_summarizer.run(j, _publication_ai(j), niche_cfg)),
+            ("result_summarizer", lambda j: _resumen_con_ia_fuera_del_bucle(j, niche_cfg)),
             ("packager",          lambda j: packager.run(j, niche_cfg)),
         ]
         logger.info(
@@ -278,7 +285,7 @@ async def run(
             ("prompt_architect",  lambda j: prompt_architect.run(j, niche_cfg)),
             ("html_generator",    lambda j: html_generator.run(j, for_video(codegen_ai, j, "composition"), niche_cfg)),
             ("video_recorder",    lambda j: video_recorder.run(j, niche_cfg)),
-            ("result_summarizer", lambda j: result_summarizer.run(j, _publication_ai(j), niche_cfg)),
+            ("result_summarizer", lambda j: _resumen_con_ia_fuera_del_bucle(j, niche_cfg)),
             ("packager",          lambda j: packager.run(j, niche_cfg)),
         ]
 
@@ -396,7 +403,8 @@ async def _index_job_logs(job: Job) -> None:
     layout = layout_for_settings(settings)
     if layout.schema_version < 2 or job.artifacts.log_dir is None:
         return
-    existing = {r.get("key") for r in collection("execution_logs").list(where={"video_id": job.job_id})}
+    existentes = await asyncio.to_thread(collection("execution_logs").list, where={"video_id": job.job_id})
+    existing = {r.get("key") for r in existentes}
     for path in job.artifacts.log_dir.iterdir():
         if path.is_symlink() or not path.is_file() or path.name.startswith("."):
             continue

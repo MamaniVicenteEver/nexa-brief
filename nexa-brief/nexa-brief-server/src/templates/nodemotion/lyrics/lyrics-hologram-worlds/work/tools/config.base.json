@@ -1,0 +1,189 @@
+{
+ "id": "default",
+ "description": "Holograma Mundos: réplica de un lyric video con línea de tiempo explícita. Metadatos; la plantilla no lo usa.",
+ "audio": {
+  "src": "assets/song.mp3"
+ },
+ "lyricsUrl": "assets/lyrics.json",
+ "lyricsFilter": {
+  "minLogprob": -1.0,
+  "drop": [
+   "subt[ií]tulos",
+   "amara\\.org",
+   "thank you for watching"
+  ]
+ },
+ "fonts": {
+  "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+KR:wght@700;900&display=swap",
+  "condensed": "Anton",
+  "wide": "Anton"
+ },
+ "palette": {
+  "void": "#08090C",
+  "night": "#14151B",
+  "white": "#F4F2FB",
+  "ink": "#0E0C18",
+  "red": "#EE0A2B",
+  "violet": "#46108A",
+  "pale": "#E6E6EC",
+  "h1": "#9A8AF4",
+  "h2": "#A4E8F2",
+  "h3": "#B69EF4",
+  "h4": "#6C76F0",
+  "h5": "#DDE7FF"
+ },
+ "brand": {
+  "name": "NODEMOTION"
+ },
+ "grades": {
+  "holo": {
+   "type": "duo",
+   "dark": "#0B0A14",
+   "light": "#D6C8FF",
+   "contrast": 1.25
+  }
+ },
+ "media": [
+  {
+   "id": "sil-duo",
+   "type": "video",
+   "src": "assets/media/sil-duo.mp4",
+   "poster": "assets/media/sil-duo-1.jpg",
+   "look": "silhouette",
+   "graded": {
+    "holo": {
+     "src": "assets/media/graded/sil-duo.holo.mp4",
+     "poster": "assets/media/graded/sil-duo-1.holo.jpg"
+    }
+   }
+  },
+  {
+   "id": "sil-solo",
+   "type": "video",
+   "src": "assets/media/sil-solo.mp4",
+   "poster": "assets/media/sil-solo-1.jpg",
+   "look": "silhouette",
+   "graded": {
+    "holo": {
+     "src": "assets/media/graded/sil-solo.holo.mp4",
+     "poster": "assets/media/graded/sil-solo-1.holo.jpg"
+    }
+   }
+  },
+  {
+   "id": "sil-trio",
+   "type": "video",
+   "src": "assets/media/sil-trio.mp4",
+   "poster": "assets/media/sil-trio-1.jpg",
+   "look": "silhouette",
+   "graded": {
+    "holo": {
+     "src": "assets/media/graded/sil-trio.holo.mp4",
+     "poster": "assets/media/graded/sil-trio-1.holo.jpg"
+    }
+   }
+  },
+  {
+   "id": "glam",
+   "type": "video",
+   "src": "assets/media/glam.mp4",
+   "poster": "assets/media/glam-1.jpg",
+   "graded": {
+    "holo": {
+     "src": "assets/media/graded/glam.holo.mp4",
+     "poster": "assets/media/graded/glam-1.holo.jpg"
+    }
+   }
+  },
+  {
+   "id": "hair",
+   "type": "video",
+   "src": "assets/media/hair.mp4",
+   "poster": "assets/media/hair-1.jpg",
+   "graded": {
+    "holo": {
+     "src": "assets/media/graded/hair.holo.mp4",
+     "poster": "assets/media/graded/hair-1.holo.jpg"
+    }
+   }
+  },
+  {
+   "id": "glasses",
+   "type": "video",
+   "src": "assets/media/glasses.mp4",
+   "poster": "assets/media/glasses-1.jpg",
+   "graded": {
+    "holo": {
+     "src": "assets/media/graded/glasses.holo.mp4",
+     "poster": "assets/media/graded/glasses-1.holo.jpg"
+    }
+   }
+  }
+ ],
+ "phrases": {
+  "maxWords": 4,
+  "maxSec": 2.4,
+  "minWords": 2
+ },
+ "timing": {
+  "leadSec": 0.08,
+  "holdSec": 0.8,
+  "gapSec": 2.0,
+  "echoSec": 0.9,
+  "cooldown": 4
+ },
+ "layouts": {},
+ "look": {
+  "holoSpeed": 1,
+  "labels": 0,
+  "labelText": "",
+  "ornaments": 1,
+  "frame": 0,
+  "glitch": 1,
+  "mediaHolo": 0.65,
+  "glow": 0.5
+ },
+ "anim": {
+  "textIn": "slide",
+  "speed": 1,
+  "intensity": 1
+ },
+ "intro": {
+  "enabled": true,
+  "title": "THE BADDEST",
+  "artist": "K/DA"
+ },
+ "outro": {
+  "enabled": true,
+  "version": "v1",
+  "sec": 4.0,
+  "title": "GRACIAS",
+  "sub": "POR VER",
+  "feats": "SUSCRÍBETE · NODEMOTION"
+ },
+ "transition": {
+  "overlapSec": 0.3,
+  "duration": 0.3,
+  "weights": {
+   "cut": 4,
+   "glitch": 2,
+   "holoWipe": 1.5,
+   "flashWhite": 0.8,
+   "shutter": 0.8,
+   "slice": 0.6
+  }
+ },
+ "hud": {
+  "enabled": false
+ },
+ "texture": {
+  "grain": 0.035
+ },
+ "render": {
+  "kbVideo": false
+ },
+ "debug": {
+  "enabled": false
+ },
+ "seed": 17
+}

@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 import asyncio
+import copy
 import json
 import logging
+import math
+import re
 import uuid
+from pathlib import Path
 from contextlib import AsyncExitStack
 from datetime import datetime, timezone
 
@@ -222,6 +226,7 @@ class PromoChatService:
             patch = {
                 "provider": provider,
                 "resume_host": False,
+                "manual_media_slots": [],
                 "revision": row["revision"] + 1,
                 "messages": [*row["messages"], message("user", text.strip())],
                 "state": "queued",
@@ -242,6 +247,184 @@ class PromoChatService:
             self._report(row)
             self._start(session_id)
             return row
+
+    async def replace_media(self, session_id, revision, scene, slot, asset_id):
+        if not isinstance(session_id, str) or not re.fullmatch(r"[0-9a-f]{32}", session_id):
+            raise ValueError("Identificador de sesión inválido")
+        if type(revision) is not int or revision < 1:
+            raise ValueError("La revisión debe ser un entero positivo")
+        if type(scene) is not int or not 1 <= scene <= 200:
+            raise ValueError("La escena no es válida")
+        if not isinstance(slot, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}", slot):
+            raise ValueError("El lugar de medios no es válido")
+        if not isinstance(asset_id, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}", asset_id):
+            raise ValueError("El identificador del recurso no es válido")
+
+        from jsonschema import Draft202012Validator, FormatChecker, ValidationError
+        from src.config.exceptions import AssetNotFoundError
+        from src.config.profile_layout import layout_for_settings
+        from src.core import drafts
+        from src.core.library import asset_library
+        from .reports import _json, _target
+        from .workspace import timeline
+
+        async with coordination("promo-chat-" + session_id):
+            row = self.get(session_id)
+            if row.get("revision") != revision:
+                raise ValueError("La revisión cambió; actualiza la ficha antes de reemplazar medios")
+            if row.get("state") not in {"review", "ready"}:
+                raise ValueError("La revisión actual no permite reemplazar medios")
+            if row.get("state") in ACTIVE or task_is_owned("promo-chat", session_id):
+                raise ValueError("Ya hay una revisión en curso")
+            draft_id = row.get("draft_id")
+            draft = collection("drafts").get(draft_id) if draft_id else None
+            if not draft or draft.get("status") != "prepared" or drafts.is_running(draft_id):
+                raise ValueError("El borrador ya no está preparado para revisión")
+            if row.get("review_fingerprint") != draft_fingerprint(draft):
+                raise ValueError("El borrador cambió después de la revisión")
+
+            project = self._project(session_id)
+            target = _target(project, session_id, revision)
+            record = _json(target, "draft.json") if target else None
+            plan = _json(target, "media-plan.json") if target else None
+            if not isinstance(record, dict) or record.get("draft_id") != draft_id:
+                raise ValueError("La revisión ya no coincide con su borrador")
+            items = plan.get("items") if isinstance(plan, dict) else None
+            if not isinstance(items, list) or len(items) > 200:
+                raise ValueError("El plan de medios de la revisión no está disponible")
+            matching = [
+                item for item in items
+                if isinstance(item, dict) and type(item.get("scene")) is int
+                and item.get("scene") == scene and item.get("slot") == slot
+            ]
+            if len(matching) != 1:
+                raise ValueError("La escena o el lugar ya no coincide con la revisión actual")
+            kind = matching[0].get("kind")
+            if kind not in {"image", "video"}:
+                raise ValueError("El lugar seleccionado no admite medios visuales")
+            slot_items = [item for item in items if isinstance(item, dict) and item.get("slot") == slot]
+            if not slot_items or any(item.get("kind") != kind for item in slot_items):
+                raise ValueError("El lugar compartido tiene tipos de medio incompatibles")
+
+            resource_root = layout_for_settings(settings).resources_dir
+            folder = "images" if kind == "image" else "videos"
+            resource = _json(resource_root, folder, asset_id, "resource.json")
+            if (
+                not isinstance(resource, dict)
+                or resource.get("id") != asset_id
+                or resource.get("type") != kind
+                or resource.get("approved") is False
+            ):
+                raise ValueError("El recurso no tiene una ficha Promo verificada y aprobada; elige otro medio o sugiérelo en el chat")
+            schema_path = (
+                Path(__file__).resolve().parents[3]
+                / "templates" / "_tools" / "nodemotion" / "promo" / "production" / "schemas" / "resource.json"
+            )
+            try:
+                schema = json.loads(schema_path.read_text(encoding="utf-8"))
+                Draft202012Validator(schema, format_checker=FormatChecker()).validate(resource)
+                entry = asset_library.get_entry(kind, asset_id)
+                library_file = asset_library.resolve_asset_path(kind, asset_id).resolve(strict=True)
+                filename = resource.get("file")
+                resource_file = _safe(resource_root, folder, asset_id, filename).resolve(strict=True)
+                if (
+                    entry is None
+                    or getattr(entry, "asset_id", None) != asset_id
+                    or not library_file.is_file()
+                    or library_file != resource_file
+                ):
+                    raise ValueError("El recurso no coincide con su archivo de Biblioteca")
+                if kind == "video":
+                    ready_name = resource.get("ready_file")
+                    ready_file = _safe(resource_root, folder, asset_id, ready_name).resolve(strict=True)
+                    if not ready_file.is_file():
+                        raise ValueError("Falta la versión preparada del video")
+            except (AssetNotFoundError, OSError, TypeError, ValueError, ValidationError) as exc:
+                raise ValueError("El recurso no tiene archivos y licencia compatibles con Promo") from exc
+
+            orientations = {item.get("orientation", "landscape") for item in slot_items}
+            if len(orientations) != 1 or resource.get("orientation") not in orientations:
+                raise ValueError("El recurso no coincide con la orientación del lugar")
+            if kind == "video":
+                try:
+                    segments = timeline(target).get("segments")
+                    if not isinstance(segments, list):
+                        raise ValueError("falta el ritmo de las escenas")
+                    duration = resource.get("duration_seconds")
+                    if isinstance(duration, bool) or not isinstance(duration, (int, float)) or not math.isfinite(duration):
+                        raise ValueError("duración no válida")
+                    for item in slot_items:
+                        number = item.get("scene")
+                        if type(number) is not int or not 1 <= number <= len(segments):
+                            raise ValueError("escena fuera del ritmo")
+                        segment = segments[number - 1]
+                        required = float(segment["end"]) - float(segment["start"])
+                        minimum = item.get("minimum_duration_seconds", 0)
+                        if isinstance(minimum, bool) or not isinstance(minimum, (int, float)) or not math.isfinite(minimum):
+                            raise ValueError("duración mínima no válida")
+                        if duration + 1e-6 < max(required, minimum):
+                            raise ValueError("el video es demasiado corto para una de sus escenas")
+                except (OSError, KeyError, TypeError, ValueError) as exc:
+                    raise ValueError("El video no dura lo suficiente para todas las escenas del lugar") from exc
+
+            proposal = copy.deepcopy(row.get("proposal"))
+            if not isinstance(proposal, dict):
+                raise ValueError("La propuesta de la revisión ya no está disponible")
+            next_items = []
+            stored_manual_slots = row.get("manual_media_slots")
+            manual_slots = {
+                (item.get("scene"), item.get("slot"))
+                for item in stored_manual_slots if isinstance(item, dict)
+                and type(item.get("scene")) is int and isinstance(item.get("slot"), str)
+            } if isinstance(stored_manual_slots, list) else set()
+            for item in items:
+                if not isinstance(item, dict):
+                    raise ValueError("El plan de medios de la revisión no es válido")
+                next_item = dict(item)
+                if next_item.get("slot") == slot:
+                    next_item["asset_id"] = asset_id
+                    next_item.pop("provider", None)
+                    next_item.pop("provider_id", None)
+                    next_item.pop("sha256", None)
+                    manual_slots.add((next_item.get("scene"), slot))
+                next_items.append(next_item)
+                if item.get("manual_selection") is True:
+                    manual_slots.add((item.get("scene"), item.get("slot")))
+            proposal["media_plan"] = {"items": next_items}
+            manual_media_slots = [
+                {"scene": number, "slot": name}
+                for number, name in sorted(manual_slots, key=lambda value: (value[0], value[1]))
+            ]
+            previous = list(row.get("draft_history") or [])
+            if draft_id not in previous:
+                previous.append(draft_id)
+            scenes = ", ".join(str(item.get("scene")) for item in slot_items)
+            queued = await self._rows().update(
+                session_id,
+                {
+                    "revision": revision + 1,
+                    "state": "queued",
+                    "stage": "queued",
+                    "resume_host": True,
+                    "manual_media_slots": manual_media_slots,
+                    "proposal": proposal,
+                    "messages": [*row.get("messages", []), message(
+                        "user", f"Reemplazo directo del lugar {slot} en las escenas {scenes}; recurso {asset_id}."
+                    )],
+                    "draft_id": None,
+                    "draft_history": previous,
+                    "error": None,
+                    "failed_stage": None,
+                    "quality": {"passed": False, "checks": [], "errors": [], "warnings": []},
+                    "approved_revision": None,
+                    "reviewed_fingerprint": None,
+                    "review_fingerprint": None,
+                    "updated_at": now(),
+                },
+            )
+            self._report(queued)
+            self._start(session_id)
+            return queued
 
     async def retry(self, session_id):
         """Reanuda el host con la propuesta persistida, sin volver a inferirla."""

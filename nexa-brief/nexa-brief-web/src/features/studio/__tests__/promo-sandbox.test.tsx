@@ -15,10 +15,18 @@ import type { TemplateStudioController } from "../hooks/useTemplateStudio";
 import * as api from "../api/promo-service";
 
 vi.mock("next-intl", () => ({ useTranslations: () => (key: string) => key }));
+vi.mock("@/features/resources", () => ({
+	ResourcePicker: ({ kind, onChange }: { kind: string; onChange: (assetId: string | null) => void }) => (
+		<button type="button" data-kind={kind} onClick={() => onChange("replacement-2")}>
+			Elegir recurso {kind}
+		</button>
+	),
+}));
 vi.mock("../api/promo-service", async (original) => ({
 	...(await original<typeof api>()),
 	getPromoSession: vi.fn(),
 	approvePromo: vi.fn(),
+	replacePromoMedia: vi.fn(),
 	importPromoDraft: vi.fn(),
 	listPromoAgents: vi.fn(),
 	sendPromoMessage: vi.fn(),
@@ -535,4 +543,102 @@ it("does not load thumbnails without a manifest or while content is pending", as
  client.setQueryData(["promo-content", session.session_id, 1, "d"], {...base, availability: {...base.availability, draft: "pending"}});
  rerender(<QueryClientProvider client={client}><PromoReview session={session} draft={{draftId: "d", thumbnails: {fingerprint: "x", selected: "A", urls: {A: "/a", B: "/b"}}} as unknown as Draft} /></QueryClientProvider>);
  await waitFor(() => expect(screen.queryByRole("img")).toBeNull());
+});
+
+it("previews both thumbnail manifests before any JPEG has been captured", async () => {
+ const session: api.PromoSession = {session_id: "manifest-thumbs", template_id: "promo-breaking", state: "review", stage: null, revision: 1, draft_id: "d", messages: [], error: null, usage: null, quality: null};
+ vi.mocked(api.getPromoContent).mockResolvedValue({session_id: session.session_id, revision: 1, draft_id: "d", title: null, copies: null, brief: null, guion: null, media: null, music: null, availability: {draft: "available", brief: "missing", guion: "missing", media: "missing", music: "missing"}} as api.PromoContent);
+ const client = new QueryClient({defaultOptions: {queries: {retry: false}}});
+ const draft = {draftId: "d", thumbnails: {fingerprint: "x", selected: "B", urls: {}, options: {A: {text: "VIVIR CUESTA", design: {}}, B: {text: "EL PRECIO", design: {}}}}} as unknown as Draft;
+ render(<QueryClientProvider client={client}><PromoReview session={session} draft={draft} /></QueryClientProvider>);
+ expect(await screen.findByRole("img", {name: "A · VIVIR CUESTA"})).toBeTruthy();
+ expect(screen.getByRole("img", {name: "B · EL PRECIO"})).toBeTruthy();
+ expect(screen.getByText("Opción B · Seleccionada · EL PRECIO")).toBeTruthy();
+ expect(document.querySelector('img[src*="/thumbnails/"]')).toBeNull();
+});
+
+it("shows the real visual resources and soundtrack in the current promo review", async () => {
+ const session: api.PromoSession = {session_id: "review-assets", template_id: "promo-mono", state: "review", stage: null, revision: 3, draft_id: "draft-assets", messages: [], error: null, usage: null, quality: null};
+ vi.mocked(api.getPromoContent).mockResolvedValue({
+  session_id: session.session_id, revision: 3, draft_id: "draft-assets", can_retry_preparation: false,
+  media_basis: "resolved_plan", title: "Campaña real", copies: {},
+  brief: {topic: "Tema", audience: "Público", tone: "energético", language: "es", duration_seconds: 56},
+  guion: {segments: [{n: 1, scene: "footage", lines: ["AREQUIPA"]}]},
+  media: [{id: "clip-1", name: "Video real", type: "video", source: "Wikimedia", author: "Autora", license: "CC BY", scene_uses: [{scene: 1, slot: "clip-01"}]},
+   {id: "photo-1", name: "Foto real", type: "image", source: "Wikimedia", author: "Autor", license: "CC0"}],
+  music: {id: "track-1", name: "Pista real", type: "music", source: "Biblioteca", author: "Compositora", license: "CC BY"},
+  availability: {draft: "available", brief: "available", guion: "available", media: "available", music: "available"},
+ });
+ const client = new QueryClient({defaultOptions: {queries: {retry: false}}});
+ render(<QueryClientProvider client={client}><PromoReview session={session} /></QueryClientProvider>);
+ const video = await screen.findByLabelText("Video del recurso: Video real") as HTMLVideoElement;
+ expect(video.getAttribute("src")).toContain("/api/v1/library/videos/clip-1/file");
+ expect(screen.getByRole("img", {name: "Imagen del recurso: Foto real"})).toBeTruthy();
+ expect(screen.getByText("Escena 1 · footage · clip-01")).toBeTruthy();
+ const audio = screen.getByLabelText("Audio: Pista real") as HTMLAudioElement;
+ expect(audio.getAttribute("src")).toContain("/api/v1/library/music/track-1/file");
+ expect(screen.getByRole("note").textContent).toContain("Sugerir cambios");
+});
+
+it("exposes all nine promo designs including Mono", () => {
+ expect(api.PROMO_IDS.size).toBe(9);
+ expect(api.PROMO_IDS.has("promo-mono")).toBe(true);
+});
+
+it("replaces a visual at its shared scene slot through a new review revision", async () => {
+	const session: api.PromoSession = {
+		session_id: "replace-session",
+		template_id: "promo-editorial",
+		state: "review",
+		stage: "review",
+		revision: 3,
+		draft_id: "draft-3",
+		messages: [],
+		error: null,
+		usage: null,
+		quality: { passed: true },
+	};
+	const updated: api.PromoSession = {
+		...session,
+		state: "queued",
+		stage: "queued",
+		revision: 4,
+		draft_id: null,
+		quality: { passed: false },
+	};
+	vi.mocked(api.getPromoContent).mockResolvedValue({
+		session_id: session.session_id,
+		revision: session.revision,
+		draft_id: session.draft_id,
+		can_retry_preparation: false,
+		media_basis: "resolved_plan",
+		brief: null,
+		title: "Demo",
+		copies: {},
+		guion: { segments: [{ n: 1, scene: "footage", lines: ["Texto"] }, { n: 3, scene: "detail", lines: ["Otro"] }] },
+		media: [{
+			id: "current-asset",
+			name: "Video actual",
+			type: "video",
+			source: "Wikimedia",
+			author: "Autora",
+			license: "CC BY",
+			scene_uses: [{ scene: 1, slot: "clip-01" }, { scene: 3, slot: "clip-01" }],
+		}],
+		music: null,
+		availability: { draft: "available", brief: "missing", guion: "available", media: "available", music: "missing" },
+	});
+	vi.mocked(api.replacePromoMedia).mockResolvedValue(updated);
+	const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+	render(<QueryClientProvider client={client}><PromoReview session={session} /></QueryClientProvider>);
+
+	fireEvent.click(await screen.findByRole("button", { name: "Reemplazar en clip-01" }));
+	const picker = screen.getByRole("button", { name: "Elegir recurso video" });
+	expect(picker.getAttribute("data-kind")).toBe("video");
+	fireEvent.click(picker);
+	await waitFor(() => expect(api.replacePromoMedia).toHaveBeenCalledWith(
+		session.session_id,
+		{ revision: 3, scene: 1, slot: "clip-01", asset_id: "replacement-2" },
+	));
+	expect(client.getQueryData(api.promoSessionKey(session.session_id))).toEqual(updated);
 });

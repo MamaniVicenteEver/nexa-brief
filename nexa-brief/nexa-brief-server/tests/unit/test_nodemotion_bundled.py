@@ -72,6 +72,18 @@ async def test_original_uses_bundled_song_and_background_without_library_copy(de
 
 
 @pytest.mark.asyncio
+async def test_default_registration_can_select_only_needed_paths(demo, monkeypatch):
+    _, aliases, song, background = demo
+    paths = {"assets/song.mp3": song, "assets/bg.jpg": background}
+    monkeypatch.setattr(bundled, "resolve_demo_resource", lambda design, relative: paths.get(relative))
+    refs = await bundled.ensure_design_resources("lyrics-suave", ["assets/bg.jpg"])
+    assert set(refs) == {"assets/bg.jpg"}
+    assert refs["assets/bg.jpg"]["kind"] == "image"
+    assert len(asset_library._records("image").list()) == 1
+    assert asset_library._records("music").list() == []
+
+
+@pytest.mark.asyncio
 async def test_default_media_refs_reuse_registered_shared_source(demo, monkeypatch):
     from src.templates._tools.nodemotion.shared import assemble
 

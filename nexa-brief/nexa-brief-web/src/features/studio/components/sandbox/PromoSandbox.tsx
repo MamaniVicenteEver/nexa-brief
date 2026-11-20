@@ -21,6 +21,7 @@ import type { TemplateStudioController } from "../../hooks/useTemplateStudio";
 import { isRecordable, ORIGINAL } from "../../hooks/useRecordPrototype";
 import { PromoUsage } from "./PromoUsage";
 import { PromoReview } from "./PromoReview";
+import { PromoLegacyResources } from "./PromoLegacyResources";
 import { PromoPreviewButton } from "./PromoPreviewButton";
 import { DeletePromoSessionButton } from "./DeletePromoSessionButton";
 import { DeletePrototypeButton } from "./DeletePrototypeButton";
@@ -56,6 +57,7 @@ export function PromoSandbox({ studio }: { studio: TemplateStudioController }) {
 	const [creating, setCreating] = useState(false);
 	const [message, setMessage] = useState("");
 	const [requestChanges, setRequestChanges] = useState(false);
+	const [expandedLegacyId, setExpandedLegacyId] = useState<string | null>(null);
 	const [provider, setProvider] = useState<PromoProvider | null>(null);
 	const messageInput = useRef<HTMLTextAreaElement>(null);
 	const agents = useQuery({
@@ -221,26 +223,34 @@ export function PromoSandbox({ studio }: { studio: TemplateStudioController }) {
 							Prototipos existentes · pendientes de revisión
 						</h4>
 						<ul>
-							{legacy.map((draft) => (
-								<li
-									key={draft.draftId}
-									className="flex items-center gap-2 border-b border-nb-line py-2"
-								>
-									<span className="min-w-0 flex-1 text-xs">
-										{draft.name || "Prototipo"}
-									</span>
-									<PromoPreviewButton studio={studio} draftId={draft.draftId} />
-									<button
-										type="button"
-										disabled={busy}
-										className="text-xs font-semibold disabled:opacity-50"
-										onClick={() => importDraft.mutate(draft.draftId)}
-									>
-										Revisar
-									</button>
-									<DeletePrototypeButton draft={draft} />
-								</li>
-							))}
+							{legacy.map((draft) => {
+								const expanded = expandedLegacyId === draft.draftId;
+								return <li key={draft.draftId} className="border-b border-nb-line py-2">
+									<div className="flex min-w-0 items-center gap-2">
+										<button
+											type="button"
+											className="min-w-0 flex-1 text-left text-xs"
+											aria-expanded={expanded}
+											aria-label={`${expanded ? "Ocultar" : "Ver"} recursos de ${draft.name || "Prototipo"}`}
+											onClick={() => setExpandedLegacyId(expanded ? null : draft.draftId)}
+										>
+											<strong className="block truncate">{draft.name || "Prototipo"}</strong>
+											<span className="text-[10px] text-nb-mute">{expanded ? "Ocultar recursos ▴" : "Ver canción, imágenes, videos y letra ▾"}</span>
+										</button>
+										<PromoPreviewButton studio={studio} draftId={draft.draftId} />
+										<button
+											type="button"
+											disabled={busy}
+											className="text-xs font-semibold disabled:opacity-50"
+											onClick={() => importDraft.mutate(draft.draftId)}
+										>
+											Revisar
+										</button>
+										<DeletePrototypeButton draft={draft} />
+									</div>
+									{expanded && <PromoLegacyResources draftId={draft.draftId} onOpenReview={() => importDraft.mutate(draft.draftId)} />}
+								</li>;
+							})}
 						</ul>
 					</section>
 				)}
@@ -376,7 +386,7 @@ export function PromoSandbox({ studio }: { studio: TemplateStudioController }) {
 						))}
 						{current.state === "review" && (
 							<p className="mt-3 text-xs">
-								Antes de confirmar, revisa el texto, las fuentes, los medios,
+								Antes de confirmar, revisa los títulos, las descripciones y el guion,
 								ambos formatos y las miniaturas. Las comprobaciones técnicas no
 								sustituyen esta revisión humana.
 							</p>

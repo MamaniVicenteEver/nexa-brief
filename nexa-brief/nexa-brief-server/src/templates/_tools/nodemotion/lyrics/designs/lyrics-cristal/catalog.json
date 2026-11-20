@@ -10,7 +10,58 @@
       "required": true,
       "lyrics": "auto"
     },
-    "media": [],
+    "media": [
+      {
+        "slot": "figure_one",
+        "kind": "image",
+        "min": 0,
+        "max": 1,
+        "target": "config",
+        "path": "worlds.0.figure.src",
+        "label": "Figura del primer mundo",
+        "hint": ""
+      },
+      {
+        "slot": "smoke_one",
+        "kind": "video",
+        "min": 0,
+        "max": 1,
+        "target": "config",
+        "path": "worlds.1.src",
+        "label": "Video del segundo mundo",
+        "hint": ""
+      },
+      {
+        "slot": "figure_two",
+        "kind": "image",
+        "min": 0,
+        "max": 1,
+        "target": "config",
+        "path": "worlds.2.figure.src",
+        "label": "Figura del tercer mundo",
+        "hint": ""
+      },
+      {
+        "slot": "smoke_two",
+        "kind": "video",
+        "min": 0,
+        "max": 1,
+        "target": "config",
+        "path": "worlds.4.src",
+        "label": "Video del quinto mundo",
+        "hint": ""
+      },
+      {
+        "slot": "figure_three",
+        "kind": "image",
+        "min": 0,
+        "max": 1,
+        "target": "config",
+        "path": "worlds.4.figure.src",
+        "label": "Figura del quinto mundo",
+        "hint": ""
+      }
+    ],
     "texts": [],
     "brief": false
   },

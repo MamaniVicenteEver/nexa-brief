@@ -10,7 +10,38 @@
       "required": true,
       "lyrics": "auto"
     },
-    "media": [],
+    "media": [
+      {
+        "slot": "cover",
+        "kind": "image",
+        "min": 0,
+        "max": 1,
+        "target": "config",
+        "path": "song.cover",
+        "label": "Portada",
+        "hint": ""
+      },
+      {
+        "slot": "path_video",
+        "kind": "video",
+        "min": 0,
+        "max": 1,
+        "target": "config",
+        "path": "scenes.1.video.src",
+        "label": "Video del camino",
+        "hint": ""
+      },
+      {
+        "slot": "moon",
+        "kind": "image",
+        "min": 0,
+        "max": 1,
+        "target": "config",
+        "path": "scenes.2.moon",
+        "label": "Luna",
+        "hint": ""
+      }
+    ],
     "texts": [],
     "brief": false
   },

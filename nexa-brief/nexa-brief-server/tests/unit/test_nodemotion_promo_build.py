@@ -235,3 +235,36 @@ def test_build_rejects_non_boolean_dark_parameter(sample):
     write(target/'scene-overrides.json', {'2': {'type': 'mediaWord', 'media': ['trophy'], 'dark': 'false'}})
     with pytest.raises(ValueError, match='booleano'):
         run(sample)
+
+
+def test_campaign_texts_follow_template_groups_without_mutating_base():
+    original = {
+        "brand": {"name": "Demo", "url": "@demo", "cta": "Ver"},
+        "intro": {"title": "Demo", "sub": ""},
+        "outro": {"title": "Demo", "cta": "Ver"},
+    }
+    result = module.apply_campaign_texts(original, {
+        "brand.name": "Atacama", "brand.url": "@atacama", "brand.cta": "Conócela",
+        "intro.title": "Atacama", "outro.title": "Atacama", "outro.cta": "Visítala",
+    })
+    assert result["brand"] == {"name": "Atacama", "url": "@atacama", "cta": "Conócela"}
+    assert result["intro"]["title"] == "Atacama"
+    assert result["outro"] == {"title": "Atacama", "cta": "Visítala"}
+    assert original["brand"]["name"] == "Demo" and original["intro"]["title"] == "Demo"
+
+
+def test_mono_contract_keeps_the_registered_scene_sequence_and_slots():
+    contract = read(SERVER / "src/templates/_tools/nodemotion/promo/production/templates/promo-mono.json")
+    schema = read(SERVER / "src/templates/_tools/nodemotion/promo/production/schemas/build-mono.json")
+    source_path = SERVER / "src/templates/nodemotion/commercial/promo-mono/assets/config.json"
+    source = read(source_path)
+    source = next(row for row in source["configs"] if row["id"] == source["activeId"])
+    slot_order = [row["id"] for row in source["media"]]
+    assert contract["template_id"] == "promo-mono"
+    assert [{key: value for key, value in scene.items() if key == "max_text_lines"} for scene in contract["default_scenes"]]
+    assert [{key: value for key, value in scene.items() if key != "max_text_lines"} for scene in contract["default_scenes"]] == source["scenes"]
+    assert all("max_text_lines" in scene for scene in contract["default_scenes"])
+    assert contract["default_media"] == [{"id": row["id"], "type": row["type"]} for row in source["media"]]
+    assert contract["media_slot_order"] == {"clips": slot_order}
+    assert schema["properties"]["template"]["const"] == "promo-mono"
+    assert {"brand.name", "intro.title", "outro.title", "outro.cta"} <= set(schema["properties"]["texts"]["properties"])

@@ -10,6 +10,8 @@ from urllib.parse import unquote, urlsplit
 from src.config.settings import settings
 from src.config.content_paths import resolve_content_key
 
+IGNORED_DIRS = {'work', 'render', 'thumbnails', '__pycache__', 'node_modules', '.git'}
+
 class ResourceParser(HTMLParser):
     def __init__(self):
         super().__init__(); self.resources = []
@@ -52,10 +54,15 @@ def review_files(source: Path, folder: str, project: str, destination: Path, rew
     for path in source.rglob('*'):
         relative = path.relative_to(source)
         if path.is_symlink():
-            issues.append(f'Enlace simbólico no permitido: {relative}'); continue
+            # Las carpetas de trabajo/caché (work, node_modules, ...) no se
+            # revisan ni se publican: sus enlaces (p. ej. caché de modelos
+            # Whisper) no bloquean. Un enlace con ese nombre sí cuenta.
+            if not any(p in IGNORED_DIRS for p in relative.parts[:-1]):
+                issues.append(f'Enlace simbólico no permitido: {relative}')
+            continue
         if path.name in {'.env','accounts.json','users.json'} or path.name.startswith(('client_secret','credentials')) or path.suffix.lower() in {'.pem','.key','.p12','.pfx'}:
             issues.append(f'Archivo privado no permitido: {relative}'); continue
-        if not path.is_file() or any(p in {'work','render','thumbnails','__pycache__','node_modules','.git'} for p in relative.parts):
+        if not path.is_file() or any(p in IGNORED_DIRS for p in relative.parts):
             continue
         checked_files += 1
         if path.suffix not in {'.html','.js','.mjs','.css','.json'}:

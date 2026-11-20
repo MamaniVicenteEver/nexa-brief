@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "noir.intro",
+  "entry_id": "noir.intro",
+  "kind": "component",
+  "label": "Intro marco",
+  "summary": "Título en grotesca extendida dentro del marco y artista sobre el borde.",
+  "component": {
+    "name": "noir.intro",
+    "label": "Intro marco",
+    "summary": "Título en grotesca extendida dentro del marco y artista sobre el borde.",
+    "default": true,
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "Let Out The Beast",
+        "doc": "config.intro.title"
+      },
+      "artist": {
+        "type": "string",
+        "default": "Ombré ft. KTHLN",
+        "doc": "config.intro.artist"
+      }
+    },
+    "tags": [
+      "intro"
+    ],
+    "file": "components/intro.js",
+    "demo": {
+      "title": "Let Out The Beast",
+      "artist": "Ombré ft. KTHLN"
+    },
+    "preview": {
+      "t": 2.2
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "Let Out The Beast",
+      "doc": "config.intro.title"
+    },
+    "artist": {
+      "type": "string",
+      "default": "Ombré ft. KTHLN",
+      "doc": "config.intro.artist"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/showcase/components.json",
+      "pointer": "/components/0"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

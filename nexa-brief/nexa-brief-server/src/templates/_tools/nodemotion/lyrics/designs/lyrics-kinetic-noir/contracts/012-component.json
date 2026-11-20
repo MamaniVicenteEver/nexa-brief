@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "noir.box",
+  "entry_id": "noir.box",
+  "kind": "component",
+  "label": "Caja",
+  "summary": "Primer renglón en caja blanca invertida que se abre; el resto debajo con mezcla de caracteres.",
+  "component": {
+    "name": "noir.box",
+    "label": "Caja",
+    "summary": "Primer renglón en caja blanca invertida que se abre; el resto debajo con mezcla de caracteres.",
+    "tags": [
+      "scene"
+    ],
+    "file": "components/scenes.js",
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "CREAR ES SOLO TAN RARO COMO LO QUE MIRAS",
+        "doc": "Texto de la frase (en el video sale de la letra)"
+      },
+      "smoke": {
+        "type": "boolean",
+        "default": false,
+        "doc": "Humo bajo en la demo"
+      }
+    },
+    "demo": {
+      "text": "CREAR ES SOLO TAN RARO COMO LO QUE MIRAS"
+    },
+    "preview": {
+      "t": 2.8
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "CREAR ES SOLO TAN RARO COMO LO QUE MIRAS",
+      "doc": "Texto de la frase (en el video sale de la letra)"
+    },
+    "smoke": {
+      "type": "boolean",
+      "default": false,
+      "doc": "Humo bajo en la demo"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/showcase/components.json",
+      "pointer": "/components/9"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

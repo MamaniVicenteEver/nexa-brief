@@ -57,6 +57,18 @@ async def lifespan(app: FastAPI):
     from src.core.categories import ensure_output_dirs
     ensure_output_dirs(settings.output_dir)
     logger.info("nexa_brief_started", output_dir=str(settings.output_dir))
+    # Cargar antes de servir los modulos del pipeline: su primera carga bloqueaba el bucle ~1,5 s.
+    import src.adapters.recorder.infrastructure.hyperframes_adapter  # noqa: F401
+    import src.core.content_registry  # noqa: F401
+    import src.core.pipeline  # noqa: F401
+    import src.modules.packager  # noqa: F401
+    import src.modules.result_summarizer  # noqa: F401
+    import src.modules.video_recorder  # noqa: F401
+    import src.adapters.ai.infrastructure.gemini_flash_adapter  # noqa: F401
+    from src.core.loop_watchdog import iniciar_vigilancia
+    iniciar_vigilancia()
+    from src.adapters.agent.factory import precalentar_verificaciones
+    _precalentado = asyncio.create_task(asyncio.to_thread(precalentar_verificaciones))
 
     # Marcar runs que quedaron sin proceso al reiniciar y reactivar la cola persistida.
     await prototypes.get_prototype_run_service().recover_interrupted()

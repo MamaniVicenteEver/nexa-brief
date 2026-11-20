@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import time
 import os
+from contextlib import nullcontext
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -41,7 +42,10 @@ async def run(job: Job, niche_cfg: "NicheConfig") -> Job:
         record_dir = layout.runtime_dir / "recordings" / job.job_id / "pipeline"
         assert_profile_path(record_dir)
     record_dir.mkdir(parents=True, exist_ok=True)
-    async with heavy_work_slot("recording", job.job_id):
+    engine = job.input.recorder_engine_override or niche_cfg.recorder_engine
+    remote = engine == "hyperframes" and settings.effective_hyperframes_target(job.input.render_target) == "vps"
+    slot = nullcontext() if remote else heavy_work_slot("recording", job.job_id)
+    async with slot:
         from src.core.nodemotion.service import load_project, materialize
         if load_project(artifacts.output_dir) is not None:
             import tempfile

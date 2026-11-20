@@ -94,11 +94,13 @@ def test_each_template_gets_its_own_composition_palette_and_copy(tmp_path: Path,
     assert a["design"]["layout"] == b["design"]["layout"] == EXPECTED_LAYOUT[template_id]
     assert a["design"]["composition"] == b["design"]["composition"] == "center"
     assert a["design"]["palette"] == b["design"]["palette"]
-    assert a["design"]["background"]["kind"] == b["design"]["background"]["kind"] == "frame"
+    # Solo los disenos con `capture` usan miniatura v1/v2; el resto conserva el fotograma del medio.
+    expected_kind = "design" if template_id == "lyrics-caution" else "frame"  # Caution declara captura propia (thumbnail-style.json)
+    assert a["design"]["background"]["kind"] == b["design"]["background"]["kind"] == expected_kind
     assert set(a["design"]["palette"].values()) <= known_colors
     assert a["design"]["typography"]["display"] == thumbs._design_tokens()[template_id]["display"]
     assert a["design"]["badges"] == []
-    assert a["design"]["subtitle"] == ("" if template_id == "promo-editorial" else "LETRAS")
+    assert a["design"]["subtitle"] == ("" if template_id.startswith("promo-") else "LETRAS")
 
 
 def test_partial_options_are_merged_safely_and_prepare_never_captures(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
@@ -152,7 +154,7 @@ def test_background_and_subtitle_persist_independently_while_old_designs_migrate
     result = thumbs.preview_manifest(job, details, options)["options"]
     assert result["A"]["design"]["background"]["asset"] == "a" * 24
     assert result["A"]["design"]["subtitle"] == "LETRAS"
-    assert result["B"]["design"]["background"]["kind"] == "frame"
+    assert result["B"]["design"]["background"]["kind"] == "design"  # Caution declara captura propia
     assert result["B"]["design"]["palette"]["background"] == "#000000"
     assert result["B"]["design"]["badges"] == []
 
@@ -293,3 +295,50 @@ console.log(JSON.stringify([normal,neon]));
     assert float(neon.attrib["y"]) - float(normal.attrib["y"]) == pytest.approx(float(neon.attrib["font-size"]) * .1)
     assert neon.attrib["font-size"] == normal.attrib["font-size"]
     assert neon.attrib["fill"] == normal.attrib["fill"]
+
+
+def test_thumbnail_options_reuse_background_lookup(tmp_path, monkeypatch):
+    import hashlib
+    from src.core import draft_thumbnail_assets as assets
+
+    image = tmp_path / 'background.jpg'
+    video = tmp_path / 'background.mp4'
+    image.write_bytes(b'image')
+    video.write_bytes(b'video')
+    sources = {'video': video, 'image': image}
+    calls = []
+
+    def lookup(job):
+        calls.append(job)
+        return sources
+
+    monkeypatch.setattr(assets, 'background_sources', lookup)
+    job = sample_job(tmp_path, 'promo-editorial')
+    options = thumbs._default_options(job, DraftDetails(song_name='Prueba', artist=''))
+    descriptor = [(kind, str(path), path.stat().st_size, path.stat().st_mtime_ns) for kind, path in sources.items()]
+    version = hashlib.sha256(json.dumps(descriptor).encode()).hexdigest()[:20]
+    assert len(calls) == 1
+    for option in ('A', 'B'):
+        background = options[option]['design']['background']
+        assert background['sourceKind'] == 'video'
+        assert background['availableSources'] == ['video', 'image']
+        assert background['mediaVersion'] == version
+
+
+def test_background_snapshot_only_reuses_within_preparation(tmp_path, monkeypatch):
+    from src.core import draft_thumbnail_assets as assets
+
+    job = sample_job(tmp_path, 'promo-editorial')
+    image = tmp_path / 'one.jpg'
+    image.write_bytes(b'one')
+    calls = []
+    def resolve(value):
+        calls.append(value)
+        return {'image': image}
+    monkeypatch.setattr(assets, '_resolve_background_sources', resolve)
+    with assets.background_sources_snapshot():
+        assert assets.background_sources(job) == {'image': image}
+        assert assets.background_sources(job) == {'image': image}
+        assert len(calls) == 1
+    assert assets.background_sources(job) == {'image': image}
+    assert len(calls) == 2

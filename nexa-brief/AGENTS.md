@@ -4,7 +4,44 @@ Para crear cualquier contenido empieza por el [índice](nexa-brief-server/src/sk
 
 # Nexa Brief — instrucciones para agentes
 
+## Estándar vigente para plantillas NodeMotion nuevas (decisión del usuario, 2026-11-16)
+
+Aplica a toda plantilla nueva de NodeMotion (letras y promos). Prevalece sobre las
+reglas de Sandbox de este archivo y sobre `nexa-brief-server/docs/nodemotion-template-authoring.md`,
+que quedan por actualizar.
+
+1. **Motor y definición en el repositorio:** el motor y la definición de cada plantilla
+   van directo en `nexa-brief-server/src/templates/nodemotion/<categoría>/<id>/`, donde
+   `<categoría>` es `lyrics` (letras) o `commercial` (promos). Esa carpeta solo contiene
+   código y archivos JSON (configuración, manifiesto, contratos, información).
+2. **Sin medios en el repositorio:** imágenes, videos, audio, fuentes y capturas de
+   tarjeta nunca se guardan en `src/`.
+3. **Prototipos y producciones en el perfil:** los prototipos y sus datos (canción, letra,
+   textos, línea de tiempo, referencias) van a
+   `$NEXA_PROFILE_DIR/productions/nodemotion/<categoría>/<id>/`, según corresponda a
+   letras o promos. Un prototipo de una plantilla existente se muestra dentro de esa
+   plantilla (en su card, pestaña Sandbox), no como plantilla aparte.
+4. **Recursos compartidos:** los medios que puede usar cualquier plantilla van a
+   `$NEXA_PROFILE_DIR/productions/nodemotion/recursos/` (por tipo: `video/`, `image/`,
+   `audio/`, `font/`, `card/`). Las plantillas los referencian; nadie los copia dentro de su
+   carpeta. **Pendiente:** el código actual resuelve los medios compartidos desde
+   `src/templates/_tools/nodemotion/shared/resources`, así que esta ruta requiere un cambio
+   de código y una migración verificada antes de usarse.
+5. **Conexiones obligatorias al crear una plantilla** (igual para todas): entrada en el
+   nicho de `niches.json` (activa solo al quedar lista), entrada en `templates.json` que
+   apunte a su carpeta en `src/templates/nodemotion/...`, diseño registrado en el motor
+   compartido, catálogo de piezas en `showcase/components.json` y captura de tarjeta
+   desde los recursos compartidos.
+6. **Nada se mueve ni se borra en silencio:** antes de mover o borrar una carpeta del
+   repositorio o del perfil, copia verificada al destino (diferencia vacía) y pide
+   confirmación al usuario.
+
+Las plantillas existentes que todavía guardan medios en `src/` o no cumplen estas
+conexiones deben migrarse solo con aprobación explícita.
+
 ## Perfil activo: ubicación de proyectos y diseños
+
+> Excepción: las plantillas NodeMotion (letras y promos) no siguen las reglas de Sandbox de esta sección. Siguen el «Estándar vigente…» de arriba.
 
 - En perfiles v2/v3, `NEXA_PROFILE_DIR` identifica la raíz del perfil activo; la
   selección por defecto se configura una sola vez en el `.env` raíz. Las variables
@@ -38,6 +75,8 @@ Para crear cualquier contenido empieza por el [índice](nexa-brief-server/src/sk
   migración verificada. Los episodios nunca incluyen una copia del motor.
 
 ## Demos principales de diseños compartidos
+
+> Excepción NodeMotion: las plantillas de letras y promos se crean en `src/templates/nodemotion/<cat>/<id>/` y sus prototipos viven en `productions/nodemotion/`; no pasan por el Sandbox.
 
 Por decisión explícita del usuario, una demo principal de diseño validada puede
 pasar completa desde el Sandbox del perfil al repositorio en
@@ -114,7 +153,7 @@ persistente con máximo cinco productores y sin grabación automática.
 
 ## Promos: chat y flujo compartido
 
-Para Editorial, Sports, Dynamic, Kinetic, Trendy y Urban, un pedido de plantilla
+Para Editorial, Sports, Dynamic, Kinetic, Trendy, Urban, Breaking, Pulse y Mono, un pedido de plantilla
 y tema se inicia desde el chat de la app o con `chat.py create`; ambas entradas
 usan la misma API e historial. Sigue [OPERATE.md](nexa-brief-server/src/templates/_tools/nodemotion/promo/production/OPERATE.md) para consultar estado,
 enviar correcciones y revisar consumo. La calidad automática es técnica: la

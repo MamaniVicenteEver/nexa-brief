@@ -2,6 +2,7 @@ import { ApiError, parseErrorBody } from "@/infrastructure/api/api-error";
 import { httpClient, resolveApiUrl } from "@/infrastructure/api/http-client";
 import type {
   AssetPatch,
+  EnrichMusicResult,
   LibraryAsset,
   LibraryAssetKind,
   LibraryAssetPage,
@@ -10,6 +11,7 @@ import type {
   Lyrics,
   LyricsSegment,
   MusicGroupPage,
+  MusicGroupPageParams,
   TranscriptionStatus,
   UploadAssetInput,
   UploadAssetResult,
@@ -110,6 +112,7 @@ function baseFields(kind: LibraryAssetKind, dto: BaseAssetDto) {
     recommendedUses: [] as string[],
     approvalStatus: null as "pending" | "approved" | "rejected" | null,
     provider: dto.provider ?? "",
+    source: dto.source,
     licenseNote: dto.license_note ?? "unknown",
     licenseUrl: "",
   };
@@ -302,6 +305,22 @@ export async function retranscribe(assetId: string, language?: string): Promise<
   return mapAsset("music", dto);
 }
 
+/** «Completar datos» rellena solo los campos vacíos; «Regenerar» (overwrite) reemplaza descripción y etiquetas. */
+export async function enrichMusic(assetId: string, overwrite = false): Promise<EnrichMusicResult> {
+  const dto = await httpClient<{
+    status: EnrichMusicResult["status"];
+    fields: string[];
+    sources: string[];
+    asset: unknown;
+  }>(`/api/v1/library/music/${assetId}/enrich`, { method: "POST", body: { overwrite } });
+  return {
+    status: dto.status,
+    fields: dto.fields,
+    sources: dto.sources,
+    asset: mapAsset("music", dto.asset),
+  };
+}
+
 /** La página se resuelve en el servidor; solo descarga los recursos visibles. */
 async function getLibraryPage(
   kind: LibraryAssetKind,
@@ -329,7 +348,7 @@ async function getLibraryPage(
 }
 
 async function getMusicGroupsPage(
-  params: LibraryPageParams = {},
+  params: MusicGroupPageParams = {},
   signal?: AbortSignal,
 ): Promise<MusicGroupPage> {
   const search = new URLSearchParams({
@@ -338,6 +357,7 @@ async function getMusicGroupsPage(
   });
   if (params.q?.trim()) search.set("q", params.q.trim());
   if (params.category) search.set("category", params.category);
+  if (params.hasLyrics !== undefined) search.set("has_lyrics", String(params.hasLyrics));
   const dto = await httpClient<{
     items: { title: string; artist: string; items: MusicAssetDto[] }[];
     total: number;
@@ -363,6 +383,7 @@ export const httpLibraryAssetsAdapter: LibraryAssetsPort = {
   remove: deleteLibraryAsset,
   lyrics: getLyrics,
   retranscribe,
+  enrichMusic,
   fileUrl: resolveAssetFileUrl,
   previewUrl: (kind, assetId) => resolveApiUrl(`/api/v1/library/${kind}/${assetId}/preview`),
 };

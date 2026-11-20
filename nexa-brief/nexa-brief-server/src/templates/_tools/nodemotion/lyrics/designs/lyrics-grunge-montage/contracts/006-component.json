@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "grunge-montage.pila",
+  "entry_id": "grunge-montage.pila",
+  "kind": "component",
+  "label": "Pila que corre",
+  "summary": "Palabras gigantes que se empujan en vertical (LIKE, FOOT, IS ON THE, GAS) y filas repetidas.",
+  "component": {
+    "name": "grunge-montage.pila",
+    "label": "Pila que corre",
+    "summary": "Palabras gigantes que se empujan en vertical (LIKE, FOOT, IS ON THE, GAS) y filas repetidas.",
+    "default": true,
+    "params": {
+      "scene": {
+        "type": "string",
+        "default": "s10",
+        "doc": "Nombre de la escena de config.timeline que se muestra"
+      },
+      "duration": {
+        "type": "number",
+        "default": 2.0,
+        "doc": "Segundos de la demo",
+        "min": 0.5,
+        "max": 6
+      }
+    },
+    "tags": [
+      "escena"
+    ],
+    "file": "player.js",
+    "demo": {
+      "scene": "s10"
+    },
+    "preview": {
+      "t": 1.9
+    }
+  },
+  "params": {
+    "scene": {
+      "type": "string",
+      "default": "s10",
+      "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+      "type": "number",
+      "default": 2.0,
+      "doc": "Segundos de la demo",
+      "min": 0.5,
+      "max": 6
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json",
+      "pointer": "/components/5"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

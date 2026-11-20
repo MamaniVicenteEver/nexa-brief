@@ -6,6 +6,30 @@ repositorio. Los nombres `src/templates/` se resuelven desde `nexa-brief-server`
 El perfil efectivo lo selecciona `NEXA_PROFILE_DIR`; comprueba su `profile.json`
 y el proceso activo antes de escribir. No imprimas el `.env` ni credenciales.
 
+## NodeMotion (letras y promos): estándar vigente desde 2026-11-16
+
+Esta sección prevalece sobre la tabla y el flujo de traslado de abajo para las
+plantillas NodeMotion (letras y promos). Las demás categorías conservan las reglas de esta guía.
+
+| Contenido | Ubicación |
+| --- | --- |
+| Motor y definición de la plantilla (código y JSON) | Repositorio: `src/templates/nodemotion/<lyrics\|commercial>/<id>/` |
+| Imágenes, videos, audio, fuentes y capturas de tarjeta | Perfil, recursos compartidos: `$NEXA_PROFILE_DIR/productions/nodemotion/recursos/` (pendiente de código; ver AGENTS.md) |
+| Prototipos y sus datos (canción, letra, textos, línea de tiempo, referencias) | Perfil: `$NEXA_PROFILE_DIR/productions/nodemotion/<lyrics\|commercial>/<id>/` |
+| Prototipo de una plantilla existente | Se muestra dentro de esa plantilla (su card y su pestaña Sandbox); no es una plantilla aparte |
+
+- Nunca hay imágenes, videos, audio, fuentes ni capturas dentro de `src/`.
+- Registro del motor compartido: hoy el registro copia el código del motor a
+  `src/templates/_tools/nodemotion/<familia>/designs/<id>/` y deja en la carpeta de la plantilla
+  una entrada delgada. Esa copia es código, no medios. Queda pendiente decidir si el motor debe
+  quedarse solo en la carpeta de la plantilla.
+- Conexiones obligatorias al crear una plantilla: entrada en `niches.json` (activa solo al
+  quedar lista), entrada en `templates.json`, diseño registrado en el motor compartido,
+  `showcase/components.json` y captura de tarjeta en recursos compartidos.
+- Nada se mueve ni se borra sin copia verificada (diferencia vacía) y confirmación del usuario.
+
+## Tabla general (demás categorías)
+
 ## Una ubicación por responsabilidad
 
 | Contenido | Ubicación física canónica |
@@ -70,7 +94,9 @@ ubicado en producción; las nuevas URLs y herramientas usan la raíz canónica.
 
 ## Traslado y preparación editorial
 
-1. El agente entrega el prototipo en el Sandbox del perfil y cumple
+1. Para NodeMotion no hay paso por Sandbox: el prototipo vive en
+   `productions/nodemotion/<lyrics|commercial>/<id>/` y se muestra dentro de su plantilla.
+   Para las demás categorías, el agente entrega el prototipo en el Sandbox del perfil y cumple
    [PREPARAR-PRODUCCION.md](../src/templates/sandbox/PREPARAR-PRODUCCION.md).
 2. **Preparar para producción → Verificar archivos y rutas** revisa técnicamente
    recursos, identidad, dependencias, destino, colisiones y catálogo. No utiliza

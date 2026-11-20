@@ -1,6 +1,6 @@
 """Chat de preparación de promociones; no inicia render."""
 from fastapi import APIRouter, HTTPException, Query
-from src.core.nodemotion.promo.models import CreateSession, SendMessage, ApproveSession
+from src.core.nodemotion.promo.models import CreateSession, SendMessage, ApproveSession, ReplacePromoMediaRequest
 from src.core.nodemotion.promo.service import PromoChatService
 
 router = APIRouter(prefix='/promos', tags=['promos'])
@@ -42,6 +42,16 @@ async def delete_session(session_id: str):
     except (ValueError, LookupError) as exc:
         _error(exc)
 
+
+@router.get('/drafts/{draft_id}/resources')
+def get_legacy_draft_resources(draft_id: str):
+    from src.core.nodemotion.promo.content import read_legacy_resources
+    result = read_legacy_resources(draft_id)
+    if result is None:
+        raise HTTPException(status_code=404, detail="No se encontraron los recursos de este prototipo Promo")
+    return result
+
+
 @router.get('/sessions/{session_id}/content')
 def get_session_content(session_id: str):
     from src.core.nodemotion.promo.content import read_content
@@ -54,6 +64,13 @@ def get_session_content(session_id: str):
 async def send_message(session_id: str, body: SendMessage):
     try:
         return await service.send(session_id, body.message)
+    except (ValueError, LookupError) as exc:
+        _error(exc)
+
+@router.post('/sessions/{session_id}/media')
+async def replace_session_media(session_id: str, body: ReplacePromoMediaRequest):
+    try:
+        return await service.replace_media(session_id, body.revision, body.scene, body.slot, body.asset_id)
     except (ValueError, LookupError) as exc:
         _error(exc)
 

@@ -11,6 +11,7 @@ import asyncio
 import time
 from pathlib import Path
 
+import anyio
 import pytest
 from fastapi.testclient import TestClient
 
@@ -25,6 +26,17 @@ TEMPLATE_ID = "lyrics-caution"
 NICHE_ID = "lyrics_video_caution"   # config_driven_template + requires_lyrics, recorder playwright
 
 client = TestClient(app)
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _bucle_persistente():
+    # Starlette crea un bucle por petición y lo cierra al terminarla: las tareas de
+    # fondo de los borradores (vista previa, grabación) se cancelarían a mitad.
+    # El servidor real mantiene un solo bucle; aquí se reproduce ese comportamiento.
+    with anyio.from_thread.start_blocking_portal(**client.async_backend) as portal:
+        client.portal = portal
+        yield
+    client.portal = None
 
 
 @pytest.fixture(autouse=True)
@@ -68,6 +80,30 @@ def fake_stages(monkeypatch: pytest.MonkeyPatch) -> list[str]:
 
 def _job(stage: JobStage = JobStage.PENDING) -> Job:
     return Job(input=JobInput(category_name=NICHE_ID), stage=stage)
+
+
+async def _mark_nodemotion_ready(draft_id: str, tmp_path: Path) -> None:
+    """Materializa el paquete mínimo para probar el recorrido de grabación."""
+    from src.core.draft_details import DraftDetails, PlatformDetails
+    from src.core.draft_thumbnails import ThumbnailOption, ThumbnailSet, image_path
+
+    job = drafts.load_job(draft_id)
+    content = tmp_path / "ready-content"
+    content.mkdir(parents=True, exist_ok=True)
+    job = job.model_copy(update={"artifacts": job.artifacts.model_copy(update={"content_dir": content})})
+    from src.core.draft_thumbnails import preview_manifest
+    raw = preview_manifest(job, DraftDetails(song_name="Tema"))
+    raw["selected"] = "A"
+    manifest = ThumbnailSet.model_validate({**raw, "urls": {"A": "/drafts/test/shared"}})
+    path = image_path(job, manifest, "A")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(b"captura de prueba")
+    # Una sola miniatura A/B: la misma captura para todos los destinos.
+    paths = {output: path for output in drafts.DEFAULT_RECORD_OUTPUTS}
+    job = job.model_copy(update={"artifacts": job.artifacts.model_copy(update={"thumbnail_paths_by_output": paths})})
+    await drafts._save_job_async(draft_id, job)
+    details = DraftDetails(copies={output: PlatformDetails(title="Título", description="Descripción") for output in drafts.DEFAULT_RECORD_OUTPUTS})
+    await collection("drafts").update(draft_id, {"status": "prepared", "details": details.model_dump(mode="json"), "thumbnails": manifest.model_dump(mode="json")})
 
 
 # ── pipeline.run(resume=True) ─────────────────────────────────────────────────
@@ -279,7 +315,8 @@ def test_orphaned_in_flight_draft_is_marked_failed_recoverable():
     draft = asyncio.run(scenario())
     assert draft.status == "failed"
     assert draft.recoverable is True
-    assert drafts.can_render(draft, drafts.load_job(draft.draft_id))
+    # Una recuperación conserva el preview, pero debe completar preparación antes de grabar.
+    assert not drafts.can_render(draft, drafts.load_job(draft.draft_id))
 
 
 def test_running_draft_is_not_treated_as_orphan():
@@ -382,7 +419,7 @@ def test_get_unknown_draft_404():
     assert client.post("/api/v1/drafts/nope/render", json={}).status_code == 404
 
 
-def test_full_flow_preview_then_render(fake_stages: list[str]):
+def test_full_flow_preview_then_render(fake_stages: list[str], tmp_path: Path, monkeypatch):
     r = client.post("/api/v1/drafts", json={
         "template_id": TEMPLATE_ID,
         "template_inputs": {"texts": {"brand.tag": "Hola"}},
@@ -404,6 +441,15 @@ def test_full_flow_preview_then_render(fake_stages: list[str]):
     assert client.get("/api/v1/drafts?template_id=otra").json()["total"] == 0
 
     fake_stages.clear()
+    assert client.post(f"/api/v1/drafts/{draft_id}/render", json={}).status_code == 409
+    asyncio.run(_mark_nodemotion_ready(draft_id, tmp_path))
+    # El renderer se prueba aparte; esta prueba solo valida la reanudación del pipeline.
+    from src.core import draft_thumbnails
+    async def fake_capture(*args, **kwargs):
+        path = tmp_path / "ready-content" / "thumbnail.jpg"
+        path.write_bytes(b"captura de prueba")
+        return path
+    monkeypatch.setattr(draft_thumbnails, "capture_selected", fake_capture)
     r = client.post(f"/api/v1/drafts/{draft_id}/render", json={})
     assert r.status_code == 202
     job_id = r.json()["job_id"]
@@ -547,7 +593,8 @@ def test_prepare_generates_details_then_save_marks_edited(fake_stages: list[str]
         prepared = await drafts.get(draft.draft_id)
         assert prepared.status == "prepared" and prepared.details.song_name == "Cielo"
         assert seen_notes == ["Cielo de Ana Ruiz, habla de una despedida"]   # la información llega a la IA
-        assert drafts.can_render(prepared, drafts.load_job(draft.draft_id))
+        # La respuesta simulada solo tiene un título y no incluye las cinco capturas.
+        assert not drafts.can_render(prepared, drafts.load_job(draft.draft_id))
         saved = await drafts.save_details(draft.draft_id, prepared.details.model_copy(update={"song_name": "Cielo 2"}))
         assert saved.details.edited and saved.details.song_name == "Cielo 2"
         renamed = await drafts.rename(draft.draft_id, "  Mi versión ")
@@ -576,11 +623,12 @@ def test_prepare_failure_keeps_preview_ready(fake_stages: list[str], monkeypatch
     asyncio.run(scenario())
 
 
-def test_render_accepts_vertical_only_on_supported_engine(fake_stages: list[str]):
+def test_render_accepts_vertical_only_on_supported_engine(fake_stages: list[str], tmp_path: Path):
     created = client.post("/api/v1/drafts", json={"template_id": TEMPLATE_ID}).json()
     for _ in range(50):
         if client.get(f"/api/v1/drafts/{created['draft_id']}").json()["status"] == "preview_ready":
             break
         time.sleep(0.05)
+    asyncio.run(_mark_nodemotion_ready(created["draft_id"], tmp_path))
     response = client.post(f"/api/v1/drafts/{created['draft_id']}/render", json={"formats": ["9x16"]})
     assert response.status_code == 202

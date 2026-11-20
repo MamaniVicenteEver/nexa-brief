@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "layout.deck",
+  "entry_id": "layout.deck",
+  "name": "deck",
+  "kind": "layout",
+  "label": "deck",
+  "summary": "Existing layout configuration: deck.",
+  "params": {
+    "bar": {
+      "default": 1.2
+    },
+    "stack": {
+      "default": 1.3
+    },
+    "quote": {
+      "default": 1
+    },
+    "ghost": {
+      "default": 1
+    },
+    "subtitle": {
+      "default": 1.1
+    },
+    "frame": {
+      "default": 1
+    },
+    "box": {
+      "default": 1
+    },
+    "highlight": {
+      "default": 1.1
+    }
+  },
+  "example": {
+    "bar": 1.2,
+    "stack": 1.3,
+    "quote": 1,
+    "ghost": 1,
+    "subtitle": 1.1,
+    "frame": 1,
+    "box": 1,
+    "highlight": 1.1
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/assets/config.json",
+      "pointer": "/configs/0/layouts/deck"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

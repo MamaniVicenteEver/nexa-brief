@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram-worlds",
+  "id": "config.fonts",
+  "entry_id": "config.fonts",
+  "name": "fonts",
+  "kind": "configuration",
+  "label": "fonts",
+  "summary": "Existing configuration configuration: fonts.",
+  "params": {
+    "googleUrl": {
+      "default": "https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+KR:wght@700;900&display=swap"
+    },
+    "condensed": {
+      "default": "Anton"
+    },
+    "wide": {
+      "default": "Anton"
+    }
+  },
+  "example": {
+    "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+KR:wght@700;900&display=swap",
+    "condensed": "Anton",
+    "wide": "Anton"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram-worlds/assets/config.json",
+      "pointer": "/configs/0/fonts"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

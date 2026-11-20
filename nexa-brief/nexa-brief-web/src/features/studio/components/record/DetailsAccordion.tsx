@@ -4,13 +4,14 @@ import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { DETAILS_PLATFORMS, type DraftDetails } from "../../types";
+import { DRAFT_DETAILS_PLATFORMS, type DraftCopyPlatform, type DraftDetails } from "../../types";
 
-const LABEL = {
-  youtube: "YouTube",
-  facebook: "Facebook",
-  instagram: "Instagram",
+const LABEL: Record<DraftCopyPlatform, string> = {
   tiktok: "TikTok",
+  instagram: "Instagram",
+  facebook: "Facebook",
+  youtube: "YouTube · video normal",
+  youtube_shorts: "YouTube Shorts",
 };
 
 /** Los detalles del prototipo a grabar, cerrados de entrada (se abren para revisarlos). */
@@ -39,7 +40,7 @@ export function DetailsAccordion({ details }: { details: DraftDetails }) {
       </button>
       {open && (
         <div className="flex flex-col gap-3 border-t border-nb-line px-3 py-3">
-          {DETAILS_PLATFORMS.map((platform) => {
+          {DRAFT_DETAILS_PLATFORMS.map((platform) => {
             const copy = details.copies[platform];
             if (!copy) return null;
             return (

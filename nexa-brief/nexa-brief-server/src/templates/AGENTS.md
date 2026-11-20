@@ -20,6 +20,8 @@ Para crear cualquier contenido empieza por el [índice](../skills/README.md),
 
 # AGENTS.md — Reglas para crear o modificar plantillas de video
 
+> **Excepción NodeMotion (vigente desde 2026-11-16):** las plantillas NodeMotion (letras y promos) no siguen esta guía. Ver el estándar en `AGENTS.md` de la raíz (sección «Estándar vigente…») y en `docs/nodemotion-template-authoring.md` (sección 2). Motor en `src/templates/nodemotion/<cat>/<id>/`, prototipos en `productions/nodemotion/<cat>/<id>/`.
+
 > **Ubicación obligatoria (v2/v3):** las demos principales validadas viven en
 > `src/templates/<categoría>/<id>/` del repositorio; los episodios viven en
 > `$NEXA_PROFILE_DIR/productions/<categoría>/<id>/`. Todos los proyectos de

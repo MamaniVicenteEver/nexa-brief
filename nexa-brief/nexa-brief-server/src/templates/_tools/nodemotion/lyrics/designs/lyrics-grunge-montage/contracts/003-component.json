@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "grunge-montage.outrov2",
+  "entry_id": "grunge-montage.outrov2",
+  "kind": "component",
+  "label": "Outro v2 Tarjeta de papel",
+  "summary": "Tarjeta de papel del final del video (64-68 s): marca roja con corona y subrayado de tiza; la corona y el subrayado se borran, la marca se va con un barrido y queda el papel vacío.",
+  "component": {
+    "name": "grunge-montage.outrov2",
+    "label": "Outro v2 Tarjeta de papel",
+    "summary": "Tarjeta de papel del final del video (64-68 s): marca roja con corona y subrayado de tiza; la corona y el subrayado se borran, la marca se va con un barrido y queda el papel vacío.",
+    "group": "outro",
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "Gracias",
+        "doc": "config.outro.title"
+      },
+      "sub": {
+        "type": "string",
+        "default": "por ver",
+        "doc": "config.outro.sub"
+      },
+      "feats": {
+        "type": "string",
+        "default": "Suscríbete · NodeMotion",
+        "doc": "config.outro.feats"
+      },
+      "duration": {
+        "type": "number",
+        "default": 4.2,
+        "doc": "Segundos de la demo",
+        "min": 1.5,
+        "max": 8
+      }
+    },
+    "tags": [
+      "outro"
+    ],
+    "file": "player.js",
+    "demo": {},
+    "preview": {
+      "t": 2.2
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "Gracias",
+      "doc": "config.outro.title"
+    },
+    "sub": {
+      "type": "string",
+      "default": "por ver",
+      "doc": "config.outro.sub"
+    },
+    "feats": {
+      "type": "string",
+      "default": "Suscríbete · NodeMotion",
+      "doc": "config.outro.feats"
+    },
+    "duration": {
+      "type": "number",
+      "default": 4.2,
+      "doc": "Segundos de la demo",
+      "min": 1.5,
+      "max": 8
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json",
+      "pointer": "/components/2"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

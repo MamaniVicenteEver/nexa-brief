@@ -14,5 +14,39 @@
     ]
   },
   "outlineWidth": 0.022,
-  "notes": "Conserva las fuentes y los colores originales; A y B comparten la misma paleta."
+  "notes": "Conserva las fuentes y los colores originales; A y B comparten la misma paleta.",
+  "capture": {
+    "phraseMode": "words",
+    "stageSelector": "#stage",
+    "palette": {
+      "ink": "#17130F",
+      "red": "#B81F19",
+      "paperWhite": "#F5EFDD"
+    },
+    "kinds": [
+      "poster",
+      "stencil",
+      "marker",
+      "poster",
+      "stencil",
+      "marker"
+    ],
+    "playClock": true,
+    "settleMs": 500,
+    "hideSelectors": [
+      "#caption"
+    ],
+    "label": {
+      "A": {
+        "x": 850,
+        "y": 432,
+        "color": "#B81F19"
+      },
+      "B": {
+        "x": 1000,
+        "y": 655,
+        "color": "#B81F19"
+      }
+    }
+  }
 }

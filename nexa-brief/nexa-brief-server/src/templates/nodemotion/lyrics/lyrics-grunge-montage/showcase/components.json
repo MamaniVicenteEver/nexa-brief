@@ -1,0 +1,355 @@
+{
+ "design": "lyrics-grunge-montage",
+ "gallery": "showcase/index.html",
+ "query": {
+  "only": "name",
+  "aspect": "16:9|9:16",
+  "p": "JSON de params",
+  "t": "segundos (congela)",
+  "outro": "v1|v2 en la demo completa"
+ },
+ "components": [
+  {
+   "name": "grunge-montage.intro",
+   "label": "Intro de apertura",
+   "summary": "Primera toma del video: fondo de niebla, artista en rojo cuyas palabras se juntan y engordan, título blanco ancho y fino que baja al centro y engorda, corona de tiza y flecha roja.",
+   "tags": [
+    "intro"
+   ],
+   "file": "player.js",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": "Double Control",
+     "doc": "Título (config.intro.title)"
+    },
+    "artist": {
+     "type": "string",
+     "default": "Pista de demostración",
+     "doc": "Artista (config.intro.artist)"
+    },
+    "duration": {
+     "type": "number",
+     "default": 1.44,
+     "doc": "Segundos de la demo",
+     "min": 1,
+     "max": 4
+    }
+   },
+   "demo": {
+    "title": "Double Control",
+    "artist": "Pista de demostración"
+   },
+   "preview": {
+    "t": 1.2
+   }
+  },
+  {
+   "name": "grunge-montage.outrov1",
+   "label": "Outro v1 Marca gigante",
+   "summary": "Palabra roja gigante sobre metraje (toma 59,4-61,4 s) que se desarma: la corona y el subrayado se borran trazo a trazo, el subtítulo y la línea final se corren y desaparecen y el título sale con un barrido; queda solo el metraje.",
+   "tags": [
+    "outro"
+   ],
+   "file": "player.js",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": "Gracias",
+     "doc": "config.outro.title"
+    },
+    "sub": {
+     "type": "string",
+     "default": "por ver",
+     "doc": "config.outro.sub"
+    },
+    "feats": {
+     "type": "string",
+     "default": "Suscríbete · NodeMotion",
+     "doc": "config.outro.feats"
+    },
+    "duration": {
+     "type": "number",
+     "default": 4.2,
+     "doc": "Segundos de la demo",
+     "min": 1.5,
+     "max": 8
+    }
+   },
+   "demo": {},
+   "preview": {
+    "t": 2.2
+   }
+  },
+  {
+   "name": "grunge-montage.outrov2",
+   "label": "Outro v2 Tarjeta de papel",
+   "summary": "Tarjeta de papel del final del video (64-68 s): marca roja con corona y subrayado de tiza; la corona y el subrayado se borran, la marca se va con un barrido y queda el papel vacío.",
+   "tags": [
+    "outro"
+   ],
+   "file": "player.js",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": "Gracias",
+     "doc": "config.outro.title"
+    },
+    "sub": {
+     "type": "string",
+     "default": "por ver",
+     "doc": "config.outro.sub"
+    },
+    "feats": {
+     "type": "string",
+     "default": "Suscríbete · NodeMotion",
+     "doc": "config.outro.feats"
+    },
+    "duration": {
+     "type": "number",
+     "default": 4.2,
+     "doc": "Segundos de la demo",
+     "min": 1.5,
+     "max": 8
+    }
+   },
+   "demo": {},
+   "preview": {
+    "t": 2.2
+   }
+  },
+  {
+   "name": "grunge-montage.movimiento",
+   "label": "Movimiento a cuadros",
+   "summary": "Lenguaje de toda la plantilla: cada 2 cuadros la letra, la tiza y los bordes de papel saltan (temblor tipo stop-motion), ecos desplazados y borrosos detrás de cada palabra, erosión de fotocopia que cambia por cuadros, cortes de toma dentro de la frase (a veces por un agujero de papel), barrido scan al cambiar de escena, polvo, grano y parpadeo de exposición. Se regula con config.fx.",
+   "tags": [
+    "escena",
+    "efecto"
+   ],
+   "file": "player.js",
+   "params": {
+    "scene": {
+     "type": "string",
+     "default": "s45",
+     "doc": "Escena de config.timeline que se muestra"
+    },
+    "duration": {
+     "type": "number",
+     "default": 1.1,
+     "min": 0.5,
+     "max": 6,
+     "doc": "Segundos de la demo"
+    }
+   },
+   "demo": {
+    "scene": "s45"
+   },
+   "preview": {
+    "t": 0.6
+   }
+  },
+  {
+   "name": "grunge-montage.texto",
+   "label": "Palabra con golpe",
+   "summary": "Texto condensado gastado que entra aplastándose (slam), con fantasma rojo y subrayado de pincel.",
+   "tags": [
+    "escena"
+   ],
+   "file": "player.js",
+   "params": {
+    "scene": {
+     "type": "string",
+     "default": "s15",
+     "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+     "type": "number",
+     "default": 2.0,
+     "doc": "Segundos de la demo",
+     "min": 0.5,
+     "max": 6
+    }
+   },
+   "demo": {
+    "scene": "s15"
+   },
+   "preview": {
+    "t": 1.2
+   }
+  },
+  {
+   "name": "grunge-montage.pila",
+   "label": "Pila que corre",
+   "summary": "Palabras gigantes que se empujan en vertical (LIKE, FOOT, IS ON THE, GAS) y filas repetidas.",
+   "tags": [
+    "escena"
+   ],
+   "file": "player.js",
+   "params": {
+    "scene": {
+     "type": "string",
+     "default": "s10",
+     "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+     "type": "number",
+     "default": 2.0,
+     "doc": "Segundos de la demo",
+     "min": 0.5,
+     "max": 6
+    }
+   },
+   "demo": {
+    "scene": "s10"
+   },
+   "preview": {
+    "t": 1.9
+   }
+  },
+  {
+   "name": "grunge-montage.rejilla",
+   "label": "Rejilla de frases",
+   "summary": "Frase repetida en celdas que aparecen en cascada, con deriva lateral.",
+   "tags": [
+    "escena"
+   ],
+   "file": "player.js",
+   "params": {
+    "scene": {
+     "type": "string",
+     "default": "s49",
+     "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+     "type": "number",
+     "default": 2.0,
+     "doc": "Segundos de la demo",
+     "min": 0.5,
+     "max": 6
+    }
+   },
+   "demo": {
+    "scene": "s49"
+   },
+   "preview": {
+    "t": 1.0
+   }
+  },
+  {
+   "name": "grunge-montage.tiza",
+   "label": "Garabatos de tiza y pincel",
+   "summary": "Flechas, triángulo, espiral, elipses, marcos y cruces que se dibujan solos con trazo seco.",
+   "tags": [
+    "escena"
+   ],
+   "file": "player.js",
+   "params": {
+    "scene": {
+     "type": "string",
+     "default": "s03",
+     "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+     "type": "number",
+     "default": 2.0,
+     "doc": "Segundos de la demo",
+     "min": 0.5,
+     "max": 6
+    }
+   },
+   "demo": {
+    "scene": "s03"
+   },
+   "preview": {
+    "t": 0.9
+   }
+  },
+  {
+   "name": "grunge-montage.papel",
+   "label": "Banda de papel en niebla",
+   "summary": "Fondo de niebla clara con banda de papel negro rasgado y texto dentro.",
+   "tags": [
+    "escena"
+   ],
+   "file": "player.js",
+   "params": {
+    "scene": {
+     "type": "string",
+     "default": "s25",
+     "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+     "type": "number",
+     "default": 2.0,
+     "doc": "Segundos de la demo",
+     "min": 0.5,
+     "max": 6
+    }
+   },
+   "demo": {
+    "scene": "s25"
+   },
+   "preview": {
+    "t": 0.6
+   }
+  },
+  {
+   "name": "grunge-montage.scan",
+   "label": "Corte scan",
+   "summary": "Franjas horizontales del propio cuadro desplazadas a los lados con estela roja tenue.",
+   "tags": [
+    "transicion"
+   ],
+   "file": "player.js",
+   "params": {
+    "scene": {
+     "type": "string",
+     "default": "s08",
+     "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+     "type": "number",
+     "default": 2.0,
+     "doc": "Segundos de la demo",
+     "min": 0.5,
+     "max": 6
+    }
+   },
+   "demo": {
+    "scene": "s08"
+   },
+   "preview": {
+    "t": 3.3
+   }
+  },
+  {
+   "name": "grunge-montage.resumen",
+   "label": "Resumen final",
+   "summary": "Collage de las frases y garabatos del video que aparecen y se desvanecen antes del cierre.",
+   "tags": [
+    "escena"
+   ],
+   "file": "player.js",
+   "params": {
+    "scene": {
+     "type": "string",
+     "default": "s51",
+     "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+     "type": "number",
+     "default": 2.0,
+     "doc": "Segundos de la demo",
+     "min": 0.5,
+     "max": 6
+    }
+   },
+   "demo": {
+    "scene": "s51"
+   },
+   "preview": {
+    "t": 1.2
+   }
+  }
+ ]
+}

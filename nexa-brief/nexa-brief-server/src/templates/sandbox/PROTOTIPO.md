@@ -5,6 +5,8 @@ Al delegar: [PLANTILLA-BRIEF.md](../../skills/PLANTILLA-BRIEF.md). Al entregar: 
 
 # PROTOTIPO — crear una plantilla nueva a partir de una referencia
 
+> **Excepción NodeMotion (vigente desde 2026-11-16):** las plantillas NodeMotion (letras y promos) no siguen esta guía. Ver el estándar en `AGENTS.md` de la raíz (sección «Estándar vigente…») y en `docs/nodemotion-template-authoring.md` (sección 2). Motor en `src/templates/nodemotion/<cat>/<id>/`, prototipos en `productions/nodemotion/<cat>/<id>/`.
+
 Punto de entrada único. Si te pasaron este archivo (o su URL) sos el **agente líder** de un
 prototipo: una plantilla NUEVA del sandbox de la que después salen cientos de videos. No es hacer
 un video con una plantilla que ya existe (para eso: `_tools/explainer-kit/AGENTS.md`).

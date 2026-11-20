@@ -30,6 +30,10 @@
             "type": "string",
             "minLength": 1
           },
+          "manual_selection": {
+            "type": "boolean",
+            "description": "Marca interna del host para una selección explícita de una persona."
+          },
           "orientation": {
             "enum": [
               "landscape",

@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-hologram-worlds",
+  "family": "lyrics",
+  "source_of_truth": "templates.json#templates/lyrics-hologram-worlds",
+  "config_json": "nodemotion/lyrics/lyrics-hologram-worlds/assets/config.json",
+  "config_prompt": null,
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "siluetas claras sobre fondo negro (look silhouette: se llenan de holografía) y planos de moda, retrato o baile (duotono holográfico)"
+      }
+    ],
+    "texts": [
+      {
+        "key": "intro.title",
+        "label": "Título de la canción",
+        "max": 40,
+        "default": "Give It Up"
+      },
+      {
+        "key": "intro.artist",
+        "label": "Artista",
+        "max": 40,
+        "default": "djlang59 ft. Snowflake"
+      },
+      {
+        "key": "outro.title",
+        "label": "Título del cierre",
+        "max": 30,
+        "default": "Gracias"
+      },
+      {
+        "key": "outro.sub",
+        "label": "Subtítulo del cierre",
+        "max": 40,
+        "default": "por escuchar"
+      },
+      {
+        "key": "outro.feats",
+        "label": "Créditos del cierre",
+        "max": 60,
+        "default": "Suscríbete · NodeMotion"
+      }
+    ],
+    "brief": true,
+    "defaults": {
+      "audio_asset_id": "a2548323",
+      "media": {
+        "clips": [
+          {
+            "asset_id": "dfdda265",
+            "kind": "video"
+          },
+          {
+            "asset_id": "a44ab496",
+            "kind": "video"
+          },
+          {
+            "asset_id": "26a7aa15",
+            "kind": "video"
+          },
+          {
+            "asset_id": "5c1b6abd",
+            "kind": "video"
+          },
+          {
+            "asset_id": "e934fbd3",
+            "kind": "video"
+          },
+          {
+            "asset_id": "85f18a8b",
+            "kind": "video"
+          }
+        ]
+      }
+    }
+  },
+  "sources": {
+    "template": "templates.json#templates/lyrics-hologram-worlds",
+    "config": "nodemotion/lyrics/lyrics-hologram-worlds/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-hologram-worlds/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-hologram-worlds/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-hologram-worlds/DESIGN.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

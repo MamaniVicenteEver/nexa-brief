@@ -77,3 +77,12 @@ def agents_status() -> list[dict]:
             available = False
         result.append({"name": name, "available": available})
     return result
+
+
+def precalentar_verificaciones() -> None:
+    """Verifica los agentes en un hilo al arrancar. La primera verificación del CLI
+    calcula su hash (varios segundos) y no debe correr en el bucle de eventos."""
+    try:
+        agents_status()
+    except Exception:  # solo precalienta: un fallo real aparece en el primer uso
+        return

@@ -13,7 +13,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field, field_validator
 
 from src.core.draft_details import DraftDetails
-from src.core.drafts import Draft, RenderOptions
+from src.core.drafts import Draft, RecordOutput, RenderOptions
 from src.core.job import SongInfo
 from src.core.template_inputs import TemplateInputs
 
@@ -21,7 +21,7 @@ DraftResponse = Draft
 
 
 class DraftRenderRequest(RenderOptions):
-    """POST /drafts/{id}/render — recorder_engine?, render_target?, publish_accounts?"""
+    """POST /drafts/{id}/render — outputs, recorder_engine?, render_target?, publish_accounts?"""
 
 
 class DraftCreateRequest(BaseModel):
@@ -66,6 +66,7 @@ class DraftRenderAcceptedResponse(BaseModel):
 
 class DraftThumbnailRequest(BaseModel):
     option: Literal["A", "B"]
+    output: RecordOutput | None = None
 
 
 class DraftThumbnailOptionUpdateRequest(BaseModel):

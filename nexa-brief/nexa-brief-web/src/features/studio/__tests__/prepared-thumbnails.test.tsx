@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { chooseDraftThumbnail, prepareDraftThumbnails } from "../api/studio-service";
 import { DraftThumbnailPicker } from "../components/record/DraftThumbnailPicker";
+import { useDraftThumbnailEditor } from "../hooks/useDraftThumbnailEditor";
 import type { Draft } from "../types";
 
 vi.mock("next-intl", () => ({
@@ -35,6 +36,13 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 describe("prepared NodeMotion thumbnails", () => {
+  it("offers one shared preparation and no per-destination captures", () => {
+    render(<DraftThumbnailPicker draft={prepared} />, { wrapper: Wrapper });
+    expect(screen.queryByRole("button", { name: "prepareDestinations" })).toBeNull();
+    expect(screen.queryByText("sharedFallback")).toBeNull();
+    expect(screen.queryByText("destinationLabel")).toBeNull();
+  });
+
   it("shows the two prepared images without starting any generation when opening", () => {
     render(<DraftThumbnailPicker draft={prepared} />, { wrapper: Wrapper });
     expect(screen.getAllByRole("img")).toHaveLength(2);

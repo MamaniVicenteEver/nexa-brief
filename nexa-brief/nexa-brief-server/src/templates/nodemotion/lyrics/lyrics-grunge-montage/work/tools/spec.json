@@ -1,0 +1,12 @@
+{
+ "title": "Grunge Montaje — Lyric Video",
+ "about": "variante de lyrics-grunge con línea de tiempo explícita: escenas dirigidas por datos (texto en tiza y pincel, glitch, papel rasgado, resumen final y cierre de marca).",
+ "fontLoads": [
+  "100px Anton",
+  "900 100px Archivo",
+  "300 100px Oswald",
+  "900 100px Archivo",
+  "400 100px Anton"
+ ],
+ "css": "  :root { --fCd: \"Anton\", sans-serif; --fEx: \"Archivo\", sans-serif; --fTh: \"Oswald\", sans-serif; }\n  .cd { font-family: var(--fCd); font-weight: 400; text-transform: uppercase; }\n  .ex { font-family: var(--fEx); font-weight: 900; font-stretch: 125%; text-transform: uppercase; }\n  .th { font-family: var(--fTh); font-weight: 300; text-transform: uppercase; }\n  .gr { -webkit-mask-image: var(--distress); mask-image: var(--distress); -webkit-mask-size: 220px 220px; mask-size: 220px 220px; }\n\n  .ar { font-family: var(--fEx); font-weight: 900; font-stretch: 100%; text-transform: uppercase; }\n"
+}

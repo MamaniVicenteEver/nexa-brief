@@ -5,15 +5,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { AccountFormatChoice } from "@/shared/components/publish/AccountFormatChoice";
 import { BrandAccountPicker } from "@/shared/components/publish/BrandAccountPicker";
-import { allowedFormatsFor, formatFor } from "@/shared/components/publish/brand-groups";
 import { prepareDraft } from "../../api/studio-service";
 import { draftKey, draftsKey, isDraftRunning } from "../../hooks/useDraft";
 import { useDraftThumbnailEditor } from "../../hooks/useDraftThumbnailEditor";
 import { usePublishCategoryGroups } from "../../hooks/usePublishCategoryGroups";
 import { isRecordable } from "../../hooks/useRecordPrototype";
 import type { TemplateStudioController } from "../../hooks/useTemplateStudio";
+import { DEFAULT_RECORD_OUTPUTS, type RecordOutput } from "../../types";
 import { DraftProgress } from "../DraftProgress";
 import { FieldShell } from "../FieldShell";
 import { SongNotesField } from "../sandbox/SongNotesField";
@@ -25,8 +24,6 @@ import { PrototypePicker } from "./PrototypePicker";
 export function RecordTab({ studio }: { studio: TemplateStudioController }) {
   const t = useTranslations("studio.record");
   const tr = useTranslations("studio.render");
-  const tx = useTranslations("explainer.studio");
-  const tp = useTranslations("templates.prep.format");
   const { recorder } = studio;
   const { groups, unavailable, isLoading, isError, retry } = usePublishCategoryGroups();
   const tt = useTranslations("studio.thumbnails");
@@ -42,7 +39,13 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
   const [originalNotes, setOriginalNotes] = useState("");
   const [dirtyArtistDraftId, setDirtyArtistDraftId] = useState<string | null>(null);
   const artistDirty = !!selected && dirtyArtistDraftId === selected.draftId;
-  const labels = { "16x9": tp("16x9"), "9x16": tp("9x16") };
+  const outputLabels: Record<RecordOutput, string> = {
+    tiktok: "TikTok",
+    instagram: "Instagram",
+    facebook: "Facebook",
+    youtube: t("youtubeNormal"),
+    youtube_shorts: "YouTube Shorts",
+  };
   const recording = recorder.render.isPending || isDraftRunning(selected);
   const queryClient = useQueryClient();
   const generateData = useMutation({
@@ -59,10 +62,9 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
   // Con datos pendientes se puede grabar sin cuentas; publicar espera a que estén generados.
   const blockedByPending = pending.length > 0 && recorder.accounts.length > 0;
   const busy = recording || thumbnailEditor.isSaving || thumbnailEditor.isSelecting;
-  const missingFormat = recorder.accounts.some((selector) => {
-    const account = accounts.find((a) => a.selector === selector);
-    return !account || formatFor(account, recorder.formats, recorder.accountFormats) === null;
-  });
+  const missingOutput = recorder.accounts.some((selector) =>
+    !accounts.some((account) => account.selector === selector) || !recorder.hasOutputForAccount(selector),
+  );
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -140,37 +142,27 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
         )}
 
         <FieldShell title={t("formats")} hint={t("formatsHint")}>
-          <div className="flex gap-2">
-            <label
-              className={cn(
-                "flex flex-1 cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-[12.5px]",
-                recorder.desktop ? "border-nb-ink bg-nb-bg-2" : "border-nb-line",
-              )}
-            >
-              <input
-                type="checkbox"
-                checked={recorder.desktop}
-                onChange={(e) => recorder.setDesktop(e.target.checked)}
-                className="size-4 accent-black"
-              />
-              {labels["16x9"]}
-            </label>
-            <label
-              className={cn(
-                "flex flex-1 items-center gap-2 rounded-xl border px-3 py-2 text-[12.5px]",
-                recorder.vertical ? "border-nb-ink bg-nb-bg-2" : "border-nb-line",
-                recorder.canVertical ? "cursor-pointer" : "opacity-50",
-              )}
-            >
-              <input
-                type="checkbox"
-                checked={recorder.vertical}
-                disabled={!recorder.canVertical}
-                onChange={(e) => recorder.setVertical(e.target.checked)}
-                className="size-4 accent-black"
-              />
-              {labels["9x16"]}
-            </label>
+          <div className="grid grid-cols-2 gap-2">
+            {DEFAULT_RECORD_OUTPUTS.map((output) => {
+              const checked = recorder.outputs.includes(output);
+              return (
+                <label
+                  key={output}
+                  className={cn(
+                    "flex cursor-pointer items-center gap-2 rounded-xl border px-3 py-2 text-[12.5px]",
+                    checked ? "border-nb-ink bg-nb-bg-2" : "border-nb-line",
+                  )}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={(event) => recorder.setOutput(output, event.target.checked)}
+                    className="size-4 accent-black"
+                  />
+                  {outputLabels[output]}
+                </label>
+              );
+            })}
           </div>
         </FieldShell>
 
@@ -199,18 +191,12 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
             }
             selected={recorder.accounts}
             onChange={recorder.setAccounts}
-            renderSelected={(account) => (
-              <AccountFormatChoice
-                name={`studio-format-${account.selector}`}
-                title={tx("channelFormats")}
-                allowed={allowedFormatsFor(account.platform, recorder.formats)}
-                value={formatFor(account, recorder.formats, recorder.accountFormats)}
-                labels={labels}
-                emptyLabel={tx("noFormatForAccount")}
-                onChange={(format) => recorder.setAccountFormat(account.selector, format)}
-              />
-            )}
           />
+          {missingOutput && (
+            <p role="alert" className="mt-2 text-[11.5px] text-nb-accent-coral">
+              {t("missingOutputForAccount")}
+            </p>
+          )}
         </FieldShell>
       </div>
 
@@ -249,7 +235,7 @@ export function RecordTab({ studio }: { studio: TemplateStudioController }) {
           disabled={
             !selected ||
             busy ||
-            missingFormat ||
+            missingOutput ||
             !recorder.ready ||
             thumbnailEditor.hasError ||
             artistDirty ||

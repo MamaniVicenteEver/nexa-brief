@@ -1,5 +1,6 @@
 """Contrato del chat con runner y pipeline controlados, sin red ni perfil real."""
 import asyncio
+import json
 from contextlib import asynccontextmanager
 from pathlib import Path
 from types import SimpleNamespace
@@ -333,3 +334,112 @@ async def test_retry_uses_saved_proposal_and_context_without_model(env, monkeypa
     rows.data[row['session_id']]['state'] = 'failed'
     rows.data[row['session_id']]['source_context'] = []
     with pytest.raises(ValueError, match='corrección'): await svc.retry(row['session_id'])
+
+
+@pytest.mark.asyncio
+async def test_replace_media_rejects_stale_revision_and_preserves_shared_slot(env, monkeypatch):
+    from src.config import profile_layout
+    from src.core import drafts as draft_service
+    from src.core.library import asset_library
+    from src.core.nodemotion.promo import reports
+
+    rows, drafts, root = env
+    sid = "d" * 32
+    current_draft = {"draft_id": "old-draft", "status": "prepared", "template_id": "promo-editorial"}
+    drafts.data["old-draft"] = current_draft
+    plan = {"items": [
+        {"scene": 1, "slot": "clip-01", "kind": "video", "query": "old horses", "asset_id": "old-video", "orientation": "landscape", "required_terms": ["horses"]},
+        {"scene": 3, "slot": "clip-01", "kind": "video", "query": "old horses", "asset_id": "old-video", "orientation": "landscape", "required_terms": ["horses"]},
+        {"scene": 2, "slot": "still-01", "kind": "image", "query": "old detail", "asset_id": "old-image", "orientation": "landscape", "required_terms": ["detail"]},
+    ]}
+    project = root / "nodemotion" / sid
+    target = root / "nodemotion" / f"{sid}-r1"
+    (project / "work").mkdir(parents=True)
+    (target / "assets").mkdir(parents=True)
+    (project / "work" / "content.json").write_text(json.dumps({"revision": 1, "project_id": f"{sid}-r1"}))
+    (target / "draft.json").write_text(json.dumps({"draft_id": "old-draft"}))
+    (target / "media-plan.json").write_text(json.dumps(plan))
+    (target / "assets" / "timeline.json").write_text(json.dumps({"segments": [
+        {"id": 1, "start": 0, "end": 4},
+        {"id": 2, "start": 4, "end": 7},
+        {"id": 3, "start": 7, "end": 12},
+    ]}))
+
+    profile_root = root / "profile"
+    resource_root = profile_root / "resources"
+    resource_dir = resource_root / "videos" / "replacement-clip"
+    resource_dir.mkdir(parents=True)
+    library_file = resource_dir / "replacement.mp4"
+    ready_file = resource_dir / "hyperframes.mp4"
+    library_file.write_bytes(b"video")
+    ready_file.write_bytes(b"prepared")
+    resource = {
+        "id": "replacement-clip", "type": "video", "category": "stock", "name": "City aerial",
+        "tags": ["city"], "description": "A city aerial from above", "source": "wikimedia",
+        "source_url": "https://commons.wikimedia.org/wiki/File:City_aerial.mp4",
+        "download_url": "https://upload.wikimedia.org/city_aerial.mp4", "author": "Photographer",
+        "license": "CC BY-SA 4.0", "license_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Photographer · CC BY-SA 4.0", "hash": "a" * 64,
+        "width": 1920, "height": 1080, "duration_seconds": 12.0, "fps": 25.0,
+        "orientation": "landscape", "query": "city skyline", "fetched_at": "2026-01-01T00:00:00+00:00",
+        "used_by": [], "file": "replacement.mp4", "ready_file": "hyperframes.mp4",
+    }
+    (resource_dir / "resource.json").write_text(json.dumps(resource))
+    monkeypatch.setattr(profile_layout, "layout_for_settings", lambda _: SimpleNamespace(resources_dir=resource_root))
+    monkeypatch.setattr(asset_library, "get_entry", lambda kind, ident: SimpleNamespace(asset_id=ident))
+    monkeypatch.setattr(asset_library, "resolve_asset_path", lambda kind, ident: library_file)
+    monkeypatch.setattr(draft_service, "is_running", lambda _: False)
+
+    initial = {
+        "session_id": sid, "template_id": "promo-editorial", "provider": "codex",
+        "state": "ready", "stage": "ready", "revision": 1, "draft_id": "old-draft",
+        "approved_revision": 1, "reviewed_fingerprint": str(current_draft),
+        "draft_history": [], "manual_media_slots": [],
+        "review_fingerprint": str(current_draft),
+        "proposal": {"reply": "Propuesta", "media_plan": plan},
+        "messages": [], "usage": {"steps": []}, "quality": {"passed": True},
+    }
+    rows.data[sid] = initial
+    prepared = []
+
+    async def prepare(session, project, proposal, progress):
+        prepared.append((session, proposal))
+        drafts.data["new-draft"] = {"draft_id": "new-draft", "status": "prepared"}
+        return {"draft_id": "new-draft", "quality": {"passed": True, "checks": [], "errors": [], "warnings": []}, "proposal": proposal}
+
+    svc = service.PromoChatService(lambda _: Runner(), prepare)
+    async def forbidden(*args, **kwargs):
+        raise AssertionError("El reemplazo explícito no debe invocar un agente")
+    monkeypatch.setattr(agents, "run", forbidden)
+
+    with pytest.raises(ValueError, match="revisión cambió"):
+        await svc.replace_media(sid, 2, 1, "clip-01", "replacement-clip")
+    assert rows.data[sid]["revision"] == 1 and rows.data[sid]["approved_revision"] == 1 and not svc.tasks
+
+    resource_path = resource_dir / "resource.json"
+    resource["approved"] = False
+    resource_path.write_text(json.dumps(resource))
+    with pytest.raises(ValueError, match="aprobada"):
+        await svc.replace_media(sid, 1, 1, "clip-01", "replacement-clip")
+    assert rows.data[sid]["revision"] == 1 and rows.data[sid]["approved_revision"] == 1
+    resource.pop("approved")
+    resource_path.write_text(json.dumps(resource))
+
+    queued = await svc.replace_media(sid, 1, 1, "clip-01", "replacement-clip")
+    assert queued["approved_revision"] is None and queued["reviewed_fingerprint"] is None
+    assert queued["quality"]["passed"] is False
+    assert queued["state"] == "queued" and queued["revision"] == 2
+    await asyncio.gather(*list(svc.tasks))
+
+    final = svc.get(sid)
+    assert final["state"] == "review" and final["revision"] == 2 and final["draft_id"] == "new-draft"
+    assert final["draft_history"] == ["old-draft"]
+    assert prepared[0][0]["resume_host"] is True
+    assert prepared[0][0]["manual_media_slots"] == [
+        {"scene": 1, "slot": "clip-01"}, {"scene": 3, "slot": "clip-01"}
+    ]
+    selected = prepared[0][1]["media_plan"]["items"]
+    assert [item["asset_id"] for item in selected if item["slot"] == "clip-01"] == [
+        "replacement-clip", "replacement-clip"
+    ]
+    assert next(item for item in selected if item["slot"] == "still-01")["asset_id"] == "old-image"

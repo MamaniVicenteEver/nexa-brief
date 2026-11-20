@@ -1,0 +1,4858 @@
+{
+ "activeId": "default",
+ "configs": [
+  {
+   "id": "default",
+   "description": "Lyric video grunge de rap con montaje dirigido: metraje B/N, papel rasgado, tiza y pincel, glitch y cierre de marca.",
+   "audio": {
+    "src": "assets/song.mp3"
+   },
+   "lyricsUrl": "assets/lyrics.json",
+   "lyricsFilter": {
+    "minLogprob": -0.4,
+    "drop": [
+     "audio ?jungle",
+     "envato",
+     "subt[ií]tulos",
+     "amara\\.org",
+     "oriel"
+    ]
+   },
+   "fonts": {
+    "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@62..125,100..900&family=Oswald:wght@300;500&display=swap"
+   },
+   "palette": {
+    "red": "#E8292E",
+    "white": "#F1F1EF",
+    "black": "#070707",
+    "paper": "#EDEDEA",
+    "ink": "#101010",
+    "chalk": "#F5F5F2"
+   },
+   "grades": {
+    "bw": {
+     "type": "duo",
+     "dark": "#040404",
+     "light": "#EDEDED",
+     "contrast": 1.55
+    }
+   },
+   "media": [
+    {
+     "id": "tunnel",
+     "type": "video",
+     "src": "assets/media/tunnel-dance.mp4",
+     "poster": "assets/media/tunnel-dance-1.jpg",
+     "graded": {
+      "bw": {
+       "src": "assets/media/graded/tunnel-dance.bw.mp4",
+       "poster": "assets/media/graded/tunnel-dance-1.bw.jpg"
+      }
+     }
+    },
+    {
+     "id": "street",
+     "type": "video",
+     "src": "assets/media/street-dance.mp4",
+     "poster": "assets/media/street-dance-1.jpg",
+     "graded": {
+      "bw": {
+       "src": "assets/media/graded/street-dance.bw.mp4",
+       "poster": "assets/media/graded/street-dance-1.bw.jpg"
+      }
+     }
+    },
+    {
+     "id": "hoodie",
+     "type": "video",
+     "src": "assets/media/hoodie.mp4",
+     "poster": "assets/media/hoodie-1.jpg",
+     "graded": {
+      "bw": {
+       "src": "assets/media/graded/hoodie.bw.mp4",
+       "poster": "assets/media/graded/hoodie-1.bw.jpg"
+      }
+     }
+    },
+    {
+     "id": "crowd",
+     "type": "video",
+     "src": "assets/media/crowd.mp4",
+     "poster": "assets/media/crowd-1.jpg",
+     "graded": {
+      "bw": {
+       "src": "assets/media/graded/crowd.bw.mp4",
+       "poster": "assets/media/graded/crowd-1.bw.jpg"
+      }
+     }
+    },
+    {
+     "id": "breakdance",
+     "type": "video",
+     "src": "assets/media/breakdance.mp4",
+     "poster": "assets/media/breakdance-1.jpg",
+     "graded": {
+      "bw": {
+       "src": "assets/media/graded/breakdance.bw.mp4",
+       "poster": "assets/media/graded/breakdance-1.bw.jpg"
+      }
+     }
+    },
+    {
+     "id": "night",
+     "type": "video",
+     "src": "assets/media/night-hoodie.mp4",
+     "poster": "assets/media/night-hoodie-1.jpg",
+     "graded": {
+      "bw": {
+       "src": "assets/media/graded/night-hoodie.bw.mp4",
+       "poster": "assets/media/graded/night-hoodie-1.bw.jpg"
+      }
+     }
+    }
+   ],
+   "intro": {
+    "enabled": true,
+    "title": "Double Control",
+    "artist": "Pista de demostración"
+   },
+   "outro": {
+    "enabled": true,
+    "version": "v1",
+    "title": "Gracias",
+    "sub": "por ver",
+    "feats": "Suscríbete · NodeMotion"
+   },
+   "texture": {
+    "grain": 0.1
+   },
+   "debug": {
+    "enabled": false
+   },
+   "seed": 13,
+   "timeOffsetSec": 0.22,
+   "look": {
+    "darkScale": 0.55,
+    "haze": 0.06,
+    "fogScale": 1.5,
+    "fogSize": 55,
+    "vignette": 0.42
+   },
+   "strokeScale": 2.3,
+   "timeline": [
+    {
+     "name": "s01",
+     "t0": 0.0,
+     "t1": 1.44,
+     "bg": {
+      "clip": "hoodie",
+      "off": 1,
+      "dark": 0.3,
+      "edges": [
+       {
+        "side": "tr",
+        "d": 0.62,
+        "dy": 0.14,
+        "j": 0.5,
+        "at": 0.2
+       },
+       {
+        "side": "bottom",
+        "d": 0.065,
+        "j": 0.5,
+        "at": 0.2
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "rect",
+       "x": 0,
+       "y": 0,
+       "w": 1,
+       "h": 1,
+       "color": "#cfcfcc",
+       "until": 0.22
+      },
+      {
+       "k": "text",
+       "s": "Roll up 20,",
+       "id": "l1",
+       "intro": "artist",
+       "font": "cd",
+       "color": "red",
+       "w": 0.86,
+       "h": 0.2,
+       "y": 0.29,
+       "ls": 0.005,
+       "in": "words",
+       "wt": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "gather": {
+        "dx": 0.05,
+        "dy": 0.11,
+        "at": 0,
+        "d": 0.3
+       },
+       "grow": {
+        "at": [
+         0.08,
+         0.2,
+         0.32,
+         0.44,
+         0.5,
+         0.55
+        ],
+        "d": 0.22,
+        "from": 0.5,
+        "ls0": 0.45
+       },
+       "glow": true,
+       "ghost": {
+        "color": "red",
+        "dx": -0.03,
+        "op": 0.5,
+        "blur": 2,
+        "delay": 0.5
+       }
+      },
+      {
+       "k": "text",
+       "s": "Deep",
+       "id": "deep",
+       "intro": "title",
+       "font": "ar",
+       "color": "white",
+       "w": 0.86,
+       "h": 0.38,
+       "y": 0.8,
+       "ls": 0,
+       "in": "spread",
+       "ls0": 1.1,
+       "d": 0.3,
+       "at": 0.6,
+       "move": {
+        "at": 0.78,
+        "d": 0.22,
+        "to": {
+         "y": 0.63
+        }
+       },
+       "weight": {
+        "from": 300,
+        "to": 900,
+        "delay": 0.35,
+        "d": 0.3
+       },
+       "distress": false
+      },
+      {
+       "k": "chalk",
+       "shape": "crown",
+       "ref": "deep",
+       "at": 1.0,
+       "d": 0.25,
+       "sw": 7,
+       "by": -0.17,
+       "cx": 0.04
+      },
+      {
+       "k": "chalk",
+       "shape": "path",
+       "color": "red",
+       "at": 0.95,
+       "d": 0.3,
+       "sw": 10,
+       "paths": [
+        [
+         [
+          0.8,
+          0.49
+         ],
+         [
+          0.8,
+          0.58
+         ]
+        ],
+        [
+         [
+          0.8,
+          0.49
+         ],
+         [
+          0.9,
+          0.49
+         ]
+        ],
+        [
+         [
+          0.8,
+          0.49
+         ],
+         [
+          0.97,
+          0.64
+         ]
+        ]
+       ]
+      }
+     ],
+     "type": "intro"
+    },
+    {
+     "name": "s02",
+     "t0": 1.44,
+     "t1": 3.08,
+     "bg": {
+      "clip": "breakdance",
+      "off": 2,
+      "dark": 0.3,
+      "edges": [
+       {
+        "side": "tr",
+        "d": 0.2,
+        "dy": 0.15,
+        "until": 1.15
+       },
+       {
+        "side": "bl",
+        "d": 0.3,
+        "dy": 0.28,
+        "color": "black",
+        "at": 1.15
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Low homie belt is",
+       "id": "l2",
+       "font": "cd",
+       "color": "white",
+       "w": 0.84,
+       "h": 0.215,
+       "y": 0.235,
+       "ls": 0.01,
+       "in": "words",
+       "wt": [
+        0.2,
+        0.2,
+        0.2,
+        0.2
+       ],
+       "grow": {
+        "at": [
+         0.45,
+         0.65,
+         0.85,
+         1.05
+        ],
+        "d": 0.2,
+        "from": 0.4
+       },
+       "at": 0.15
+      },
+      {
+       "k": "text",
+       "s": "Snapped.",
+       "id": "snap",
+       "font": "ar",
+       "color": "red",
+       "w": 0.67,
+       "h": 0.4,
+       "y": 0.72,
+       "ls": 0.04,
+       "in": "fade",
+       "d": 0.15,
+       "at": 1.05,
+       "until": 1.45,
+       "weight": {
+        "from": 200,
+        "to": 500,
+        "delay": 0.1,
+        "d": 0.3
+       },
+       "distress": false,
+       "move": {
+        "at": 1.45,
+        "d": 0.12,
+        "to": {
+         "y": 0.84
+        }
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "ellipse",
+       "ref": "snap",
+       "color": "white",
+       "sw": 14,
+       "at": 1.2,
+       "d": 0.3,
+       "rx": 0.66,
+       "ry": 0.7,
+       "until": 1.45
+      },
+      {
+       "k": "text",
+       "s": "Snapped.",
+       "font": "ar",
+       "color": "red",
+       "w": 0.86,
+       "h": 0.42,
+       "y": 0.86,
+       "ls": 0.01,
+       "in": "slam",
+       "from": 1.15,
+       "at": 1.45,
+       "d": 0.12,
+       "distress": false
+      }
+     ]
+    },
+    {
+     "name": "s03",
+     "t0": 3.08,
+     "t1": 4.64,
+     "bg": {
+      "clip": "street",
+      "off": 3,
+      "dark": 0.3
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Like",
+       "id": "like",
+       "font": "ex",
+       "color": "red",
+       "w": 0.62,
+       "h": 0.12,
+       "x": 0.55,
+       "y": 0.17,
+       "ls": 0.6,
+       "in": "slam",
+       "at": 0.12,
+       "until": 1.0,
+       "move": {
+        "at": 0.3,
+        "d": 0.25,
+        "to": {
+         "y": 0.5
+        }
+       }
+      },
+      {
+       "k": "text",
+       "s": "Whoa",
+       "id": "brawl",
+       "font": "ex",
+       "color": "white",
+       "w": 0.4,
+       "h": 0.1,
+       "y": 0.76,
+       "ls": 0.4,
+       "in": "spread",
+       "ls0": 0.9,
+       "d": 0.3,
+       "at": 0.18,
+       "until": 1.0,
+       "move": {
+        "at": 0.3,
+        "d": 0.25,
+        "to": {
+         "y": 0.55
+        }
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "arrowUp",
+       "box": {
+        "x": 0.045,
+        "y": 0.4,
+        "w": 0,
+        "h": 0.5
+       },
+       "at": 0.15,
+       "d": 0.3,
+       "sw": 10,
+       "until": 1.0
+      },
+      {
+       "k": "chalk",
+       "shape": "arrowDown",
+       "box": {
+        "x": 0.94,
+        "y": 0.05,
+        "w": 0,
+        "h": 0.55
+       },
+       "at": 0.2,
+       "d": 0.3,
+       "sw": 10,
+       "until": 1.0
+      },
+      {
+       "k": "chalk",
+       "shape": "arrowUp",
+       "box": {
+        "x": 0.88,
+        "y": 0.7,
+        "w": 0,
+        "h": 0.2
+       },
+       "at": 0.45,
+       "d": 0.25,
+       "sw": 6,
+       "until": 1.0
+      },
+      {
+       "k": "chalk",
+       "shape": "tri",
+       "box": {
+        "x": 0.5,
+        "y": 0.47
+       },
+       "size": 0.12,
+       "at": 0.4,
+       "d": 0.25,
+       "sw": 5,
+       "until": 1.0
+      },
+      {
+       "k": "text",
+       "s": "Put a hundred down",
+       "id": "put",
+       "font": "cd",
+       "color": "red",
+       "w": 0.8,
+       "h": 0.2,
+       "y": 0.55,
+       "ls": 0.01,
+       "in": "slam",
+       "at": 1.07,
+       "glow": true
+      },
+      {
+       "k": "chalk",
+       "shape": "spiral",
+       "ref": "put",
+       "color": "white",
+       "sw": 11,
+       "at": 0.95,
+       "d": 0.5,
+       "bw": 0.3,
+       "bx": 0.12,
+       "until": 1.55
+      }
+     ]
+    },
+    {
+     "name": "s04",
+     "t0": 4.64,
+     "t1": 5.0,
+     "bg": {
+      "clip": "night",
+      "off": 1,
+      "dark": 0.3,
+      "edges": [
+       {
+        "side": "top",
+        "d": 0.1,
+        "j": 0.5
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Put a hundred down",
+       "id": "put",
+       "font": "cd",
+       "color": "red",
+       "w": 0.8,
+       "h": 0.2,
+       "y": 0.55,
+       "ls": 0.01,
+       "glow": true,
+       "ghost": {
+        "color": "red",
+        "dx": 0.02,
+        "op": 0.4
+       },
+       "out": {
+        "at": 0.28,
+        "fx": "smear",
+        "d": 0.1
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "spiral",
+       "ref": "put",
+       "color": "white",
+       "sw": 11,
+       "at": -0.1,
+       "d": 0.2,
+       "bw": 0.3,
+       "bx": 0.12,
+       "until": 0.3
+      }
+     ]
+    },
+    {
+     "name": "s05",
+     "t0": 5.0,
+     "t1": 5.4,
+     "bg": {
+      "clip": "tunnel",
+      "off": 2,
+      "dark": 0.3,
+      "edges": [
+       {
+        "side": "tl",
+        "d": 0.45,
+        "dy": 0.2
+       },
+       {
+        "side": "br",
+        "d": 0.3,
+        "dy": 0.3
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Put a hundred down",
+       "id": "put",
+       "font": "cd",
+       "color": "red",
+       "w": 0.62,
+       "h": 0.07,
+       "x": 0.5,
+       "y": 0.6,
+       "ls": 0.01,
+       "glow": true,
+       "distress": true
+      },
+      {
+       "k": "text",
+       "s": "And",
+       "font": "cd",
+       "color": "white",
+       "w": 0.1,
+       "h": 0.07,
+       "x": 0.08,
+       "ax": 0,
+       "y": 0.7,
+       "in": "cut",
+       "at": 0.15
+      }
+     ]
+    },
+    {
+     "name": "s06",
+     "t0": 5.4,
+     "t1": 7.0,
+     "bg": {
+      "light": true,
+      "edges": [
+       {
+        "side": "top",
+        "d": 0.12,
+        "j": 0.6,
+        "color": "black"
+       },
+       {
+        "side": "br",
+        "d": 0.5,
+        "dy": 0.5,
+        "at": 0.8,
+        "color": "black"
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Put a hundred down",
+       "id": "put",
+       "font": "ex",
+       "color": "red",
+       "w": 0.86,
+       "h": 0.11,
+       "y": 0.46,
+       "ls": 0.08,
+       "glow": true
+      },
+      {
+       "k": "chalk",
+       "shape": "strike",
+       "ref": "put",
+       "color": "white",
+       "sw": 8,
+       "at": 0.1,
+       "d": 0.2,
+       "bw": 0.25,
+       "bx": 0.23
+      },
+      {
+       "k": "text",
+       "s": "And put us on the map.",
+       "id": "map",
+       "font": "cd",
+       "color": "white",
+       "w": 0.72,
+       "h": 0.11,
+       "y": 0.6,
+       "ls": 0.01,
+       "in": "words",
+       "step": 0.1,
+       "at": 0.2
+      },
+      {
+       "k": "chalk",
+       "shape": "underline",
+       "ref": "map",
+       "color": "white",
+       "sw": 5,
+       "at": 0.95,
+       "d": 0.3,
+       "bw": 0.2,
+       "bx": 0.6
+      },
+      {
+       "k": "chalk",
+       "shape": "swoosh",
+       "ref": "map",
+       "color": "white",
+       "sw": 5,
+       "at": 1.05,
+       "d": 0.3
+      },
+      {
+       "k": "glitch",
+       "at": 1.3,
+       "d": 0.25,
+       "y0": 0.3,
+       "y1": 0.7,
+       "n": 6
+      }
+     ]
+    },
+    {
+     "name": "s07",
+     "t0": 7.0,
+     "t1": 7.8,
+     "bg": {
+      "clip": "hoodie",
+      "off": 4,
+      "dark": 0.3
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Like",
+       "id": "like",
+       "font": "cd",
+       "color": "red",
+       "w": 0.4,
+       "h": 0.2,
+       "y": 0.5,
+       "ls": 0.01,
+       "in": "slam",
+       "at": 0.0,
+       "move": {
+        "at": 0.45,
+        "d": 0.15,
+        "to": {
+         "y": 0.3
+        }
+       },
+       "scale": {
+        "from": 1,
+        "to": 1.9,
+        "at": 0.45,
+        "d": 0.15
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "brush",
+       "ref": "like",
+       "color": "white",
+       "sw": 14,
+       "at": 0.05,
+       "d": 0.18,
+       "dy": 0.5,
+       "until": 0.55
+      },
+      {
+       "k": "text",
+       "s": "Whoa!",
+       "id": "wow",
+       "font": "cd",
+       "color": "white",
+       "w": 0.6,
+       "h": 0.45,
+       "y": 0.78,
+       "ls": 0.01,
+       "in": "rise",
+       "dy": 0.5,
+       "at": 0.45,
+       "d": 0.2
+      }
+     ]
+    },
+    {
+     "name": "s08",
+     "t0": 7.8,
+     "t1": 11.4,
+     "bg": {
+      "clip": "night",
+      "off": 0,
+      "dark": 0.15,
+      "fog": 0.8,
+      "edges": [
+       {
+        "side": "top",
+        "d": 0.07,
+        "j": 0.6,
+        "at": 1.6
+       },
+       {
+        "side": "bottom",
+        "d": 0.12,
+        "j": 0.6,
+        "at": 2.4
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Y'all ain't even know",
+       "id": "a",
+       "font": "cd",
+       "color": "white",
+       "w": 0.6,
+       "h": 0.1,
+       "y": 0.5,
+       "ls": 0.01,
+       "in": "words",
+       "step": 0.17,
+       "at": 0.4,
+       "distress": true,
+       "move": {
+        "at": 1.6,
+        "d": 0.2,
+        "to": {
+         "y": 0.3
+        }
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "prev",
+       "box": {
+        "x": 0.08,
+        "y": 0.5
+       },
+       "size": 0.05,
+       "at": 0.4,
+       "d": 0.25,
+       "sw": 5,
+       "until": 2.3
+      },
+      {
+       "k": "chalk",
+       "shape": "play",
+       "box": {
+        "x": 0.9,
+        "y": 0.5
+       },
+       "size": 0.08,
+       "at": 0.45,
+       "d": 0.25,
+       "sw": 5,
+       "until": 2.3
+      },
+      {
+       "k": "chalk",
+       "shape": "bolt",
+       "color": "red",
+       "box": {
+        "x": 0.62,
+        "y": 0.35,
+        "w": 0,
+        "h": 0.2
+       },
+       "at": 1.2,
+       "d": 0.25,
+       "sw": 11
+      },
+      {
+       "k": "text",
+       "s": "The place I had",
+       "id": "b",
+       "font": "cd",
+       "color": "red",
+       "w": 0.6,
+       "h": 0.09,
+       "y": 0.52,
+       "ls": 0.01,
+       "in": "slam",
+       "at": 1.4,
+       "ghost": {
+        "color": "red",
+        "dx": 0.03,
+        "op": 0.5
+       }
+      },
+      {
+       "k": "text",
+       "s": "to go,",
+       "id": "c",
+       "font": "cd",
+       "color": "white",
+       "w": 0.5,
+       "h": 0.16,
+       "y": 0.75,
+       "in": "rise",
+       "at": 2.3,
+       "d": 0.2
+      },
+      {
+       "k": "chalk",
+       "shape": "bolt",
+       "color": "white",
+       "box": {
+        "x": 0.75,
+        "y": 0.55,
+        "w": 0,
+        "h": 0.3
+       },
+       "at": 1.8,
+       "d": 0.25,
+       "sw": 11
+      },
+      {
+       "k": "glitch",
+       "at": 3.2,
+       "d": 0.35,
+       "y0": 0.1,
+       "y1": 0.8,
+       "n": 9
+      }
+     ]
+    },
+    {
+     "name": "s09",
+     "t0": 11.4,
+     "t1": 14.0,
+     "bg": {
+      "clip": "street",
+      "off": 1,
+      "dark": 0.1,
+      "edges": [
+       {
+        "side": "bottom",
+        "d": 0.07,
+        "j": 0.6,
+        "until": 1.5
+       },
+       {
+        "side": "top",
+        "d": 0.3,
+        "j": 0.4,
+        "until": 0.5,
+        "color": "paper"
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "In my cell lost a part of me but",
+       "id": "a",
+       "font": "cd",
+       "color": "red",
+       "w": 0.9,
+       "h": 0.16,
+       "y": 0.2,
+       "ls": 0.005,
+       "in": "words",
+       "step": 0.08,
+       "at": 0.25,
+       "glow": true,
+       "ghost": {
+        "color": "red",
+        "dx": 0.02,
+        "op": 0.5
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "line",
+       "color": "white",
+       "sw": 8,
+       "at": 0.5,
+       "d": 0.3,
+       "x0": 0.04,
+       "y0": 0.06,
+       "x1": 0.96,
+       "y1": 0.06,
+       "until": 1.5
+      },
+      {
+       "k": "text",
+       "s": "Now I won't lose control.",
+       "id": "b",
+       "font": "cd",
+       "color": "white",
+       "w": 0.8,
+       "h": 0.13,
+       "x": 0.07,
+       "ax": 0,
+       "y": 0.36,
+       "in": "words",
+       "step": 0.2,
+       "at": 1.1
+      },
+      {
+       "k": "chalk",
+       "shape": "frame",
+       "box": {
+        "x": 0.04,
+        "y": 0.08,
+        "w": 0.92,
+        "h": 0.38
+       },
+       "pad": 0,
+       "at": 1.2,
+       "d": 0.7,
+       "sw": 12
+      }
+     ]
+    },
+    {
+     "name": "s10",
+     "t0": 14.0,
+     "t1": 16.3,
+     "bg": {
+      "clip": "night",
+      "off": 2,
+      "dark": 0.1,
+      "fog": 1.2
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Like",
+       "font": "ex",
+       "color": "white",
+       "w": 0.9,
+       "h": 0.5,
+       "y": 0.5,
+       "ls": 0,
+       "in": "slam",
+       "at": 0.2,
+       "until": 1.2,
+       "from": 1.4,
+       "move": {
+        "at": 0.8,
+        "d": 0.12,
+        "to": {
+         "y": 0.02
+        }
+       }
+      },
+      {
+       "k": "text",
+       "s": "Foot",
+       "font": "ex",
+       "color": "red",
+       "w": 0.62,
+       "h": 0.3,
+       "y": 0.5,
+       "ls": 0.12,
+       "in": "slam",
+       "at": 0.8,
+       "until": 1.6,
+       "move": {
+        "at": 1.2,
+        "d": 0.12,
+        "to": {
+         "y": 0.08
+        }
+       }
+      },
+      {
+       "k": "text",
+       "s": "Is on the",
+       "font": "ex",
+       "color": "white",
+       "w": 0.92,
+       "h": 0.24,
+       "y": 0.5,
+       "ls": 0.08,
+       "in": "spread",
+       "ls0": 0.5,
+       "d": 0.18,
+       "at": 1.2,
+       "move": {
+        "at": 1.6,
+        "d": 0.12,
+        "to": {
+         "y": 0.95
+        }
+       },
+       "ghost": {
+        "color": "red",
+        "dx": 0.04,
+        "op": 0.6
+       }
+      },
+      {
+       "k": "text",
+       "s": "Gas,",
+       "id": "gas",
+       "font": "cd",
+       "color": "red",
+       "w": 0.5,
+       "h": 0.6,
+       "y": 0.5,
+       "ls": 0.08,
+       "in": "slam",
+       "at": 1.6,
+       "ghost": {
+        "color": "red",
+        "dx": 0.02,
+        "op": 0.5
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "bolt",
+       "box": {
+        "x": 0.12,
+        "y": 0.5,
+        "w": 0,
+        "h": 0.12
+       },
+       "at": 1.7,
+       "d": 0.2,
+       "sw": 6
+      },
+      {
+       "k": "chalk",
+       "shape": "bolt",
+       "box": {
+        "x": 0.84,
+        "y": 0.5,
+        "w": 0,
+        "h": 0.12
+       },
+       "at": 1.75,
+       "d": 0.2,
+       "sw": 6
+      },
+      {
+       "k": "glitch",
+       "at": 1.95,
+       "d": 0.3,
+       "n": 7
+      }
+     ]
+    },
+    {
+     "name": "s11",
+     "t0": 16.3,
+     "t1": 17.0,
+     "bg": {
+      "clip": "night",
+      "off": 3,
+      "dark": 0.1
+     },
+     "pieces": [
+      {
+       "k": "stack",
+       "s": "My whole crew",
+       "n": 5,
+       "y": 0.5,
+       "dy": 0.12,
+       "font": "ex",
+       "colors": [
+        "white",
+        "white",
+        "red",
+        "white",
+        "white"
+       ],
+       "w": 0.86,
+       "h": 0.1,
+       "ls": 0.04,
+       "step": 0.04,
+       "scales": [
+        0.9,
+        0.95,
+        1,
+        0.95,
+        0.9
+       ],
+       "at": 0.1,
+       "ghost": {
+        "color": "red",
+        "dx": 0.02,
+        "op": 0.5
+       }
+      }
+     ]
+    },
+    {
+     "name": "s12",
+     "t0": 17.0,
+     "t1": 18.6,
+     "bg": {
+      "clip": "night",
+      "off": 4,
+      "dark": 0.1
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "A hell risk.",
+       "id": "r",
+       "font": "cd",
+       "color": "red",
+       "w": 0.62,
+       "h": 0.12,
+       "y": 0.5,
+       "ls": 0.005,
+       "in": "slam",
+       "at": 0.2,
+       "glow": true,
+       "ghost": {
+        "color": "red",
+        "dx": -0.02,
+        "op": 0.5
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "cross",
+       "box": {
+        "x": 0.02,
+        "y": 0.6,
+        "w": 0.25,
+        "h": 0.25
+       },
+       "color": "white",
+       "sw": 5,
+       "at": 0.5,
+       "d": 0.2,
+       "n": 6
+      },
+      {
+       "k": "chalk",
+       "shape": "cross",
+       "box": {
+        "x": 0.75,
+        "y": 0.08,
+        "w": 0.22,
+        "h": 0.2
+       },
+       "color": "white",
+       "sw": 5,
+       "at": 0.7,
+       "d": 0.2,
+       "n": 6
+      }
+     ]
+    },
+    {
+     "name": "s13",
+     "t0": 18.6,
+     "t1": 19.8,
+     "bg": {
+      "clip": "night",
+      "off": 5,
+      "dark": 0.1
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "I want money,",
+       "font": "th",
+       "color": "white",
+       "w": 0.72,
+       "h": 0.15,
+       "y": 0.5,
+       "ls": 0.04,
+       "in": "words",
+       "step": 0.1,
+       "at": 0.05,
+       "out": {
+        "at": 0.75,
+        "fx": "smear",
+        "d": 0.15
+       },
+       "fw": 500
+      },
+      {
+       "k": "text",
+       "s": "Cash,",
+       "id": "cash",
+       "font": "cd",
+       "color": "red",
+       "w": 0.3,
+       "h": 0.12,
+       "y": 0.43,
+       "in": "slam",
+       "at": 0.95,
+       "glow": true
+      },
+      {
+       "k": "chalk",
+       "shape": "ellipse",
+       "ref": "cash",
+       "color": "white",
+       "sw": 12,
+       "at": 1.05,
+       "d": 0.3,
+       "rx": 0.7,
+       "ry": 0.85
+      }
+     ]
+    },
+    {
+     "name": "s14",
+     "t0": 19.8,
+     "t1": 20.9,
+     "bg": {
+      "clip": "night",
+      "off": 6,
+      "dark": 0.1
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Want it all,",
+       "id": "w",
+       "font": "cd",
+       "color": "white",
+       "w": 0.62,
+       "h": 0.36,
+       "x": 0.45,
+       "y": 0.32,
+       "ls": 0.01,
+       "in": "words",
+       "step": 0.2,
+       "at": 0.2,
+       "out": {
+        "at": 0.9,
+        "fx": "smear",
+        "d": 0.15
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "ellipse",
+       "ref": "w",
+       "color": "white",
+       "sw": 12,
+       "at": 0.0,
+       "d": 0.3,
+       "bw": 0.4,
+       "rx": 0.6,
+       "ry": 0.6,
+       "turns": 0.55,
+       "a0": -1.2,
+       "until": 0.6
+      }
+     ]
+    },
+    {
+     "name": "s15",
+     "t0": 20.9,
+     "t1": 22.3,
+     "bg": {
+      "clip": "hoodie",
+      "off": 1,
+      "dark": 0.1
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Selfish.",
+       "id": "s",
+       "font": "cd",
+       "color": "red",
+       "w": 0.86,
+       "h": 0.38,
+       "y": 0.65,
+       "ls": 0.01,
+       "in": "slam",
+       "at": 0.1,
+       "glow": true,
+       "ghost": {
+        "color": "red",
+        "dx": 0.03,
+        "op": 0.55
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "underline",
+       "ref": "s",
+       "color": "white",
+       "sw": 14,
+       "at": 0.7,
+       "d": 0.4,
+       "dy": 1.05
+      }
+     ]
+    },
+    {
+     "name": "s16",
+     "t0": 22.3,
+     "t1": 23.0,
+     "bg": {
+      "clip": "night",
+      "off": 7,
+      "dark": 0.15
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Never gave",
+       "id": "n",
+       "font": "cd",
+       "color": "white",
+       "w": 0.72,
+       "h": 0.5,
+       "y": 0.6,
+       "in": "rise",
+       "at": 0.05,
+       "d": 0.2
+      },
+      {
+       "k": "chalk",
+       "shape": "arrowUp",
+       "box": {
+        "x": 0.07,
+        "y": 0.5,
+        "w": 0,
+        "h": 0.2
+       },
+       "at": 0.1,
+       "d": 0.2,
+       "sw": 6
+      },
+      {
+       "k": "chalk",
+       "shape": "arrowUp",
+       "box": {
+        "x": 0.85,
+        "y": 0.58,
+        "w": 0,
+        "h": 0.2
+       },
+       "at": 0.2,
+       "d": 0.2,
+       "sw": 6
+      }
+     ]
+    },
+    {
+     "name": "s17",
+     "t0": 23.0,
+     "t1": 23.9,
+     "bg": {
+      "clip": "night",
+      "off": 2,
+      "dark": 0.65,
+      "fog": 0.3
+     },
+     "pieces": [
+      {
+       "k": "grid",
+       "s": "F×K",
+       "cols": 2,
+       "rows": 6,
+       "w": 0.5,
+       "h": 0.92,
+       "x0": 0.27,
+       "y0": 0.04,
+       "font": "ex",
+       "colors": [
+        "white",
+        "white"
+       ],
+       "fillW": 0.75,
+       "fillH": 0.42,
+       "ls": 0.2,
+       "step": 0.03,
+       "at": 0.15,
+       "stagger": {
+        "dir": "row"
+       }
+      }
+     ]
+    },
+    {
+     "name": "s18",
+     "t0": 23.9,
+     "t1": 26.5,
+     "bg": {
+      "clip": "tunnel",
+      "off": 3,
+      "dark": 1.2,
+      "vig": 0.9,
+      "fog": 0.15
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "I'm",
+       "font": "ex",
+       "color": "white",
+       "w": 0.3,
+       "h": 0.16,
+       "x": 0.03,
+       "ax": 0,
+       "y": 0.2,
+       "in": "slam",
+       "at": 0.0
+      },
+      {
+       "k": "text",
+       "s": "Better",
+       "font": "th",
+       "color": "red",
+       "w": 0.18,
+       "h": 0.12,
+       "x": 0.62,
+       "ax": 0,
+       "y": 0.2,
+       "at": 0.3,
+       "fw": 400
+      },
+      {
+       "k": "text",
+       "s": "Cannot help this",
+       "id": "h",
+       "font": "ex",
+       "color": "white",
+       "w": 0.66,
+       "h": 0.13,
+       "x": 0.3,
+       "ax": 0,
+       "y": 0.4,
+       "ls": 0.06,
+       "in": "slam",
+       "at": 0.6,
+       "ghost": {
+        "color": "white",
+        "dx": 0.03,
+        "op": 0.35
+       }
+      },
+      {
+       "k": "text",
+       "s": "Caught up",
+       "font": "cd",
+       "color": "white",
+       "w": 0.3,
+       "h": 0.18,
+       "x": 0.02,
+       "ax": 0,
+       "y": 0.62,
+       "in": "slam",
+       "at": 1.1,
+       "op": 0.75,
+       "ghost": {
+        "color": "white",
+        "dx": 0.02,
+        "op": 0.4
+       }
+      },
+      {
+       "k": "text",
+       "s": "in my ways",
+       "font": "th",
+       "color": "red",
+       "w": 0.5,
+       "h": 0.18,
+       "x": 0.42,
+       "ax": 0,
+       "y": 0.63,
+       "in": "slam",
+       "at": 1.3,
+       "fw": 500,
+       "glow": true
+      },
+      {
+       "k": "glitch",
+       "at": 2.3,
+       "d": 0.25,
+       "n": 6,
+       "redP": 0.2
+      }
+     ]
+    },
+    {
+     "name": "s19",
+     "t0": 26.5,
+     "t1": 28.0,
+     "bg": {
+      "clip": "hoodie",
+      "off": 0,
+      "dark": 0.1,
+      "edges": [
+       {
+        "side": "tl",
+        "d": 0.5,
+        "dy": 0.7,
+        "j": 0.4
+       },
+       {
+        "side": "br",
+        "d": 0.45,
+        "dy": 0.35,
+        "j": 0.4
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Counting days till I'm fit",
+       "id": "k",
+       "font": "cd",
+       "color": "white",
+       "w": 0.52,
+       "h": 0.07,
+       "y": 0.5,
+       "ls": 0.01,
+       "in": "wipe",
+       "d": 0.5,
+       "at": 0.2
+      },
+      {
+       "k": "chalk",
+       "shape": "arrowR",
+       "ref": "k",
+       "color": "red",
+       "sw": 7,
+       "at": 0.1,
+       "d": 0.3,
+       "len": 0.1
+      },
+      {
+       "k": "chalk",
+       "shape": "ellipse",
+       "ref": "k",
+       "color": "red",
+       "sw": 8,
+       "at": 0.9,
+       "d": 0.3,
+       "bw": 0.25,
+       "bx": 0.6,
+       "rx": 0.65,
+       "ry": 0.7
+      },
+      {
+       "k": "glitch",
+       "at": 1.3,
+       "d": 0.2,
+       "y0": 0.3,
+       "y1": 0.7,
+       "n": 4
+      }
+     ]
+    },
+    {
+     "name": "s20",
+     "t0": 28.0,
+     "t1": 28.35,
+     "bg": {
+      "clip": "street",
+      "off": 1,
+      "dark": 0.3,
+      "edges": [
+       {
+        "side": "left",
+        "d": 0.18,
+        "j": 0.6,
+        "at": 0.12
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "chalk",
+       "shape": "crown",
+       "box": {
+        "x": 0.35,
+        "y": 0.38,
+        "w": 0.1,
+        "h": 0.05
+       },
+       "at": 0.0,
+       "d": 0.2,
+       "sw": 6
+      }
+     ]
+    },
+    {
+     "name": "s21",
+     "t0": 28.35,
+     "t1": 28.75,
+     "bg": {
+      "clip": "night",
+      "off": 1,
+      "dark": 0.55
+     },
+     "pieces": [
+      {
+       "k": "chalk",
+       "shape": "xmark",
+       "box": {
+        "x": 0.5,
+        "y": 0.42
+       },
+       "size": 0.05,
+       "at": 0.0,
+       "d": 0.2,
+       "sw": 9
+      }
+     ]
+    },
+    {
+     "name": "s22",
+     "t0": 28.75,
+     "t1": 29.2,
+     "bg": {
+      "clip": "night",
+      "off": 2,
+      "dark": 0.55
+     },
+     "pieces": [
+      {
+       "k": "chalk",
+       "shape": "face",
+       "box": {
+        "x": 0.5,
+        "y": 0.55
+       },
+       "size": 0.1,
+       "at": 0.0,
+       "d": 0.3,
+       "sw": 5
+      },
+      {
+       "k": "chalk",
+       "shape": "line",
+       "x0": 0.5,
+       "y0": 0,
+       "x1": 0.5,
+       "y1": 0.4,
+       "at": 0,
+       "d": 0.25,
+       "sw": 6
+      }
+     ]
+    },
+    {
+     "name": "s23",
+     "t0": 29.2,
+     "t1": 29.85,
+     "bg": {
+      "clip": "hoodie",
+      "off": 3,
+      "dark": 0.1,
+      "edges": [
+       {
+        "side": "top",
+        "d": 0.1,
+        "j": 0.6,
+        "at": 0.4
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "chalk",
+       "shape": "eyes",
+       "box": {
+        "x": 0.5,
+        "y": 0.5
+       },
+       "size": 0.06,
+       "at": 0.0,
+       "d": 0.2,
+       "sw": 3
+      }
+     ]
+    },
+    {
+     "name": "s24",
+     "t0": 29.85,
+     "t1": 30.95,
+     "bg": {
+      "clip": "breakdance",
+      "off": 0,
+      "dark": 0.2,
+      "edges": [
+       {
+        "side": "bottom",
+        "d": 0.15,
+        "j": 0.6,
+        "at": 0.5
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Roll up 20,",
+       "id": "a",
+       "font": "ex",
+       "color": "red",
+       "w": 0.5,
+       "h": 0.13,
+       "y": 0.5,
+       "ls": 0.1,
+       "in": "slam",
+       "at": 0.15,
+       "out": {
+        "at": 0.4,
+        "fx": "cut"
+       }
+      },
+      {
+       "k": "text",
+       "s": "Deep low homie",
+       "font": "cd",
+       "color": "white",
+       "w": 0.55,
+       "h": 0.13,
+       "y": 0.5,
+       "in": "words",
+       "step": 0.12,
+       "at": 0.4
+      },
+      {
+       "k": "text",
+       "s": "Belt is snapped",
+       "font": "cd",
+       "color": "red",
+       "w": 0.4,
+       "h": 0.05,
+       "y": 0.6,
+       "in": "fade",
+       "at": 0.7,
+       "d": 0.2,
+       "glow": true
+      },
+      {
+       "k": "chalk",
+       "shape": "tri",
+       "box": {
+        "x": 0.1,
+        "y": 0.15
+       },
+       "size": 0.05,
+       "at": 0.3,
+       "sw": 4
+      },
+      {
+       "k": "chalk",
+       "shape": "next",
+       "box": {
+        "x": 0.92,
+        "y": 0.53
+       },
+       "size": 0.04,
+       "at": 0.4,
+       "sw": 4
+      },
+      {
+       "k": "chalk",
+       "shape": "prev",
+       "box": {
+        "x": 0.13,
+        "y": 0.9
+       },
+       "size": 0.03,
+       "at": 0.5,
+       "sw": 4
+      }
+     ]
+    },
+    {
+     "name": "s25",
+     "t0": 30.95,
+     "t1": 32.0,
+     "bg": {
+      "light": true
+     },
+     "pieces": [
+      {
+       "k": "paper",
+       "x": 0.0,
+       "y": 0.28,
+       "w": 1,
+       "h": 0.34,
+       "color": "black",
+       "at": 0,
+       "j": 0.05
+      },
+      {
+       "k": "text",
+       "s": "Deep low homie",
+       "font": "cd",
+       "color": "white",
+       "w": 0.5,
+       "h": 0.11,
+       "y": 0.39,
+       "in": "words",
+       "step": 0.08,
+       "at": 0.1
+      },
+      {
+       "k": "text",
+       "s": "Belt is snapped",
+       "font": "ex",
+       "color": "red",
+       "w": 0.56,
+       "h": 0.07,
+       "y": 0.5,
+       "ls": 0.06,
+       "in": "fade",
+       "d": 0.15,
+       "at": 0.2
+      },
+      {
+       "k": "text",
+       "s": "Belt is",
+       "font": "cd",
+       "color": "red",
+       "w": 0.5,
+       "h": 0.14,
+       "y": 0.45,
+       "in": "slam",
+       "at": 0.78,
+       "until": 0.78
+      }
+     ]
+    },
+    {
+     "name": "s26",
+     "t0": 32.0,
+     "t1": 33.1,
+     "bg": {
+      "light": true
+     },
+     "pieces": [
+      {
+       "k": "paper",
+       "x": 0,
+       "y": 0.25,
+       "w": 1,
+       "h": 0.4,
+       "color": "black",
+       "j": 0.05
+      },
+      {
+       "k": "text",
+       "s": "Belt is snapped",
+       "font": "ex",
+       "color": "white",
+       "w": 0.9,
+       "h": 0.25,
+       "y": 0.45,
+       "ls": 0.04,
+       "in": "slam",
+       "at": 0.2,
+       "until": 0.6,
+       "ghost": {
+        "color": "red",
+        "dx": 0.04,
+        "op": 0.6
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "slash",
+       "box": {
+        "x": 0.5,
+        "y": 0.4,
+        "w": 0.1,
+        "h": 0.4
+       },
+       "color": "red",
+       "sw": 26,
+       "at": 0.2,
+       "d": 0.15,
+       "until": 0.6,
+       "ang": -65
+      },
+      {
+       "k": "text",
+       "s": "Like",
+       "font": "cd",
+       "color": "red",
+       "w": 0.14,
+       "h": 0.1,
+       "y": 0.45,
+       "in": "cut",
+       "at": 0.62
+      },
+      {
+       "k": "chalk",
+       "shape": "slash",
+       "box": {
+        "x": 0.5,
+        "y": 0.45,
+        "w": 0.1,
+        "h": 0.4
+       },
+       "color": "white",
+       "sw": 26,
+       "at": 0.62,
+       "d": 0.15,
+       "ang": -62
+      }
+     ]
+    },
+    {
+     "name": "s27",
+     "t0": 33.1,
+     "t1": 34.0,
+     "bg": {
+      "clip": "night",
+      "off": 5,
+      "dark": 0.4
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Whoa",
+       "font": "ex",
+       "color": "red",
+       "w": 0.9,
+       "h": 0.55,
+       "y": 0.5,
+       "ls": 0,
+       "in": "slam",
+       "at": 0.15,
+       "scale": {
+        "from": 1,
+        "to": 1.18,
+        "at": 0.5,
+        "d": 0.3
+       },
+       "glow": true
+      }
+     ]
+    },
+    {
+     "name": "s28",
+     "t0": 34.0,
+     "t1": 34.8,
+     "bg": {
+      "clip": "street",
+      "off": 2,
+      "dark": 0.5,
+      "edges": [
+       {
+        "side": "left",
+        "d": 0.28,
+        "j": 0.5
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "stack",
+       "s": "Put a hundred down",
+       "n": 3,
+       "y": 0.5,
+       "dy": 0.22,
+       "x": 0.55,
+       "font": "cd",
+       "colors": [
+        "white"
+       ],
+       "w": 0.56,
+       "h": 0.2,
+       "step": 0.15,
+       "at": 0.2,
+       "scales": [
+        1,
+        1,
+        1
+       ]
+      }
+     ]
+    },
+    {
+     "name": "s29",
+     "t0": 34.8,
+     "t1": 36.7,
+     "bg": {
+      "light": true,
+      "edges": [
+       {
+        "side": "top",
+        "d": 0.2,
+        "j": 0.5,
+        "color": "black"
+       },
+       {
+        "side": "bottom",
+        "d": 0.1,
+        "j": 0.5,
+        "color": "black"
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "And",
+       "font": "ex",
+       "color": "white",
+       "w": 0.42,
+       "h": 0.3,
+       "x": 0.3,
+       "y": 0.36,
+       "ls": 0,
+       "in": "slam",
+       "at": 0.5,
+       "from": 1.3
+      },
+      {
+       "k": "text",
+       "s": "Put us on",
+       "font": "ex",
+       "color": "red",
+       "w": 0.78,
+       "h": 0.14,
+       "y": 0.56,
+       "ls": 0.05,
+       "in": "slam",
+       "at": 0.9
+      },
+      {
+       "k": "text",
+       "s": "The map",
+       "font": "ex",
+       "color": "white",
+       "w": 0.85,
+       "h": 0.09,
+       "y": 0.74,
+       "ls": 0.35,
+       "in": "spread",
+       "ls0": 0.8,
+       "at": 1.2,
+       "d": 0.3
+      },
+      {
+       "k": "glitch",
+       "at": 1.65,
+       "d": 0.25,
+       "n": 5
+      }
+     ]
+    },
+    {
+     "name": "s30",
+     "t0": 36.7,
+     "t1": 37.55,
+     "bg": {
+      "clip": "crowd",
+      "off": 1,
+      "dark": 0.3
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Like",
+       "font": "cd",
+       "color": "red",
+       "w": 0.62,
+       "h": 0.95,
+       "x": 0.35,
+       "y": 0.5,
+       "in": "slam",
+       "at": 0.1,
+       "glow": true
+      },
+      {
+       "k": "text",
+       "s": "Whoa!",
+       "font": "cd",
+       "color": "white",
+       "w": 0.5,
+       "h": 0.9,
+       "x": 0.74,
+       "y": 0.5,
+       "in": "slam",
+       "at": 0.5
+      }
+     ]
+    },
+    {
+     "name": "s31",
+     "t0": 37.55,
+     "t1": 38.45,
+     "bg": {
+      "clip": "street",
+      "off": 3,
+      "dark": 0.4
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Y'all",
+       "font": "cd",
+       "color": "red",
+       "w": 0.2,
+       "h": 0.12,
+       "x": 0.02,
+       "ax": 0,
+       "y": 0.5,
+       "in": "slam",
+       "at": 0.0
+      },
+      {
+       "k": "text",
+       "s": "Ain't even know",
+       "font": "cd",
+       "color": "white",
+       "w": 0.55,
+       "h": 0.1,
+       "x": 0.96,
+       "ax": 1,
+       "y": 0.5,
+       "in": "slam",
+       "at": 0.2
+      },
+      {
+       "k": "glitch",
+       "at": 0.65,
+       "d": 0.25,
+       "n": 5
+      }
+     ]
+    },
+    {
+     "name": "s32",
+     "t0": 38.45,
+     "t1": 40.45,
+     "bg": {
+      "clip": "breakdance",
+      "off": 4,
+      "dark": 0.35
+     },
+     "pieces": [
+      {
+       "k": "stack",
+       "s": "The",
+       "n": 4,
+       "y": 0.5,
+       "dy": 0.2,
+       "x": 0.03,
+       "ax": 0,
+       "font": "ex",
+       "colors": [
+        "white"
+       ],
+       "w": 0.25,
+       "h": 0.17,
+       "step": 0.04,
+       "at": 0.1
+      },
+      {
+       "k": "stack",
+       "s": "Place I had to go",
+       "n": 4,
+       "y": 0.5,
+       "dy": 0.2,
+       "x": 0.97,
+       "ax": 1,
+       "font": "th",
+       "fw": 500,
+       "colors": [
+        "red"
+       ],
+       "w": 0.6,
+       "h": 0.17,
+       "step": 0.04,
+       "at": 0.1
+      },
+      {
+       "k": "glitch",
+       "at": 1.0,
+       "d": 0.3,
+       "n": 7
+      },
+      {
+       "k": "glitch",
+       "at": 1.9,
+       "d": 0.1,
+       "n": 5
+      }
+     ]
+    },
+    {
+     "name": "s33",
+     "t0": 40.45,
+     "t1": 41.2,
+     "bg": {
+      "clip": "tunnel",
+      "off": 5,
+      "dark": 0.3
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Be my soul,",
+       "font": "cd",
+       "color": "red",
+       "w": 0.86,
+       "h": 0.45,
+       "y": 0.62,
+       "in": "slam",
+       "at": 0.1,
+       "glow": true
+      }
+     ]
+    },
+    {
+     "name": "s34",
+     "t0": 41.2,
+     "t1": 42.1,
+     "bg": {
+      "clip": "street",
+      "off": 5,
+      "dark": 0.2
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "In my cell",
+       "font": "cd",
+       "color": "white",
+       "w": 0.95,
+       "h": 0.62,
+       "y": 0.55,
+       "in": "slam",
+       "at": 0.0,
+       "until": 0.5
+      },
+      {
+       "k": "text",
+       "s": "Lost",
+       "font": "cd",
+       "color": "red",
+       "w": 0.55,
+       "h": 0.7,
+       "y": 0.55,
+       "in": "slam",
+       "at": 0.5,
+       "glow": true
+      }
+     ]
+    },
+    {
+     "name": "s35",
+     "t0": 42.1,
+     "t1": 42.8,
+     "bg": {
+      "clip": "tunnel",
+      "off": 6,
+      "dark": 0.3
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "A part of me but",
+       "font": "cd",
+       "color": "white",
+       "w": 0.98,
+       "h": 0.55,
+       "y": 0.45,
+       "in": "slam",
+       "at": 0.0,
+       "until": 0.4
+      },
+      {
+       "k": "glitch",
+       "at": 0.4,
+       "d": 0.3,
+       "n": 4
+      }
+     ]
+    },
+    {
+     "name": "s36",
+     "t0": 42.8,
+     "t1": 44.2,
+     "bg": {
+      "clip": "tunnel",
+      "off": 7,
+      "dark": 0.3
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Now I won't lose",
+       "font": "cd",
+       "color": "red",
+       "w": 0.92,
+       "h": 0.1,
+       "y": 0.4,
+       "ls": 0.1,
+       "at": 0.0,
+       "op": 0.8,
+       "glow": true
+      },
+      {
+       "k": "text",
+       "s": "Control",
+       "font": "th",
+       "color": "white",
+       "w": 0.66,
+       "h": 0.2,
+       "y": 0.58,
+       "ls": 0.2,
+       "in": "slam",
+       "at": 0.1,
+       "ghost": {
+        "color": "white",
+        "dx": 0.02,
+        "op": 0.3
+       },
+       "fw": 400
+      }
+     ]
+    },
+    {
+     "name": "s37",
+     "t0": 44.2,
+     "t1": 45.0,
+     "bg": {
+      "clip": "tunnel",
+      "off": 8,
+      "dark": 0.3
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "L",
+       "font": "cd",
+       "color": "red",
+       "w": 0.06,
+       "h": 0.11,
+       "x": 0.5,
+       "y": 0.2,
+       "in": "slam",
+       "at": 0.05,
+       "until": 0.45
+      },
+      {
+       "k": "text",
+       "s": "I",
+       "font": "cd",
+       "color": "red",
+       "w": 0.06,
+       "h": 0.11,
+       "x": 0.5,
+       "y": 0.39,
+       "in": "slam",
+       "at": 0.11,
+       "until": 0.45
+      },
+      {
+       "k": "text",
+       "s": "K",
+       "font": "cd",
+       "color": "red",
+       "w": 0.06,
+       "h": 0.11,
+       "x": 0.5,
+       "y": 0.5800000000000001,
+       "in": "slam",
+       "at": 0.16999999999999998,
+       "until": 0.45
+      },
+      {
+       "k": "text",
+       "s": "E",
+       "font": "cd",
+       "color": "red",
+       "w": 0.06,
+       "h": 0.11,
+       "x": 0.5,
+       "y": 0.77,
+       "in": "slam",
+       "at": 0.22999999999999998,
+       "until": 0.45
+      },
+      {
+       "k": "grid",
+       "s": "L",
+       "cols": 6,
+       "rows": 1,
+       "w": 0.9,
+       "h": 0.21,
+       "x0": 0.05,
+       "y0": 0.08,
+       "font": "cd",
+       "colors": [
+        "white",
+        "red",
+        "red"
+       ],
+       "fillW": 0.45,
+       "fillH": 0.8,
+       "step": 0.012,
+       "at": 0.45
+      },
+      {
+       "k": "grid",
+       "s": "I",
+       "cols": 6,
+       "rows": 1,
+       "w": 0.9,
+       "h": 0.21,
+       "x0": 0.05,
+       "y0": 0.29,
+       "font": "cd",
+       "colors": [
+        "red",
+        "red",
+        "white"
+       ],
+       "fillW": 0.45,
+       "fillH": 0.8,
+       "step": 0.012,
+       "at": 0.48
+      },
+      {
+       "k": "grid",
+       "s": "K",
+       "cols": 6,
+       "rows": 1,
+       "w": 0.9,
+       "h": 0.21,
+       "x0": 0.05,
+       "y0": 0.5,
+       "font": "cd",
+       "colors": [
+        "white",
+        "red",
+        "red"
+       ],
+       "fillW": 0.45,
+       "fillH": 0.8,
+       "step": 0.012,
+       "at": 0.51
+      },
+      {
+       "k": "grid",
+       "s": "E",
+       "cols": 6,
+       "rows": 1,
+       "w": 0.9,
+       "h": 0.21,
+       "x0": 0.05,
+       "y0": 0.71,
+       "font": "cd",
+       "colors": [
+        "red",
+        "red",
+        "white"
+       ],
+       "fillW": 0.45,
+       "fillH": 0.8,
+       "step": 0.012,
+       "at": 0.54
+      }
+     ]
+    },
+    {
+     "name": "s38",
+     "t0": 45.0,
+     "t1": 47.4,
+     "bg": {
+      "clip": "breakdance",
+      "off": 6,
+      "dark": 0.15,
+      "edges": [
+       {
+        "side": "bottom",
+        "d": 0.12,
+        "at": 1.8
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Roll",
+       "font": "ex",
+       "color": "white",
+       "w": 0.96,
+       "h": 0.1,
+       "y": 0.55,
+       "ls": 1.6,
+       "in": "spread",
+       "ls0": 2.2,
+       "d": 0.3,
+       "at": 0.0,
+       "until": 0.6
+      },
+      {
+       "k": "text",
+       "s": "Roll up 20,",
+       "font": "ex",
+       "color": "red",
+       "w": 0.62,
+       "h": 0.2,
+       "x": 0.5,
+       "y": 0.36,
+       "in": "slam",
+       "at": 0.75,
+       "glow": true
+      },
+      {
+       "k": "text",
+       "s": "Deep low",
+       "font": "cd",
+       "color": "white",
+       "w": 0.5,
+       "h": 0.16,
+       "x": 0.52,
+       "y": 0.56,
+       "in": "slam",
+       "at": 1.0
+      },
+      {
+       "k": "text",
+       "s": "Belt is snapped",
+       "font": "cd",
+       "color": "red",
+       "w": 0.48,
+       "h": 0.12,
+       "x": 0.52,
+       "y": 0.7,
+       "in": "slam",
+       "at": 1.4
+      }
+     ]
+    },
+    {
+     "name": "s39",
+     "t0": 47.4,
+     "t1": 48.3,
+     "bg": {
+      "clip": "crowd",
+      "off": 2,
+      "dark": 0.6
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Like",
+       "font": "ex",
+       "color": "red",
+       "w": 0.32,
+       "h": 0.14,
+       "y": 0.55,
+       "in": "slam",
+       "at": 0.15
+      },
+      {
+       "k": "glitch",
+       "at": 0.45,
+       "d": 0.3,
+       "n": 8,
+       "redP": 0.9
+      }
+     ]
+    },
+    {
+     "name": "s40",
+     "t0": 48.3,
+     "t1": 49.0,
+     "bg": {
+      "clip": "night",
+      "off": 4,
+      "dark": 0.6,
+      "edges": [
+       {
+        "side": "bottom",
+        "d": 0.3,
+        "j": 0.5,
+        "at": 0.3
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "stack",
+       "s": "Whoa",
+       "n": 5,
+       "y": 0.5,
+       "dy": 0.15,
+       "font": "ex",
+       "colors": [
+        "white"
+       ],
+       "w": 0.5,
+       "h": 0.12,
+       "ls": 0.5,
+       "step": 0.04,
+       "at": 0,
+       "scales": [
+        1,
+        0.9,
+        0.6,
+        0.9,
+        1
+       ],
+       "fitScale": true
+      }
+     ]
+    },
+    {
+     "name": "s41",
+     "t0": 49.0,
+     "t1": 49.6,
+     "bg": {
+      "light": true
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Put a hundred",
+       "font": "cd",
+       "color": "red",
+       "w": 0.5,
+       "h": 0.14,
+       "y": 0.5,
+       "in": "slam",
+       "at": 0.15,
+       "glow": true
+      }
+     ]
+    },
+    {
+     "name": "s42",
+     "t0": 49.6,
+     "t1": 51.4,
+     "bg": {
+      "clip": "crowd",
+      "off": 3,
+      "dark": 0.55,
+      "edges": [
+       {
+        "side": "bottom",
+        "d": 0.2,
+        "j": 0.5,
+        "at": 1.4
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Put a hundred down",
+       "font": "cd",
+       "color": "red",
+       "w": 0.6,
+       "h": 0.08,
+       "y": 0.14,
+       "glow": true
+      },
+      {
+       "k": "text",
+       "s": "And put us",
+       "font": "cd",
+       "color": "white",
+       "w": 0.86,
+       "h": 0.34,
+       "y": 0.45,
+       "in": "slam",
+       "at": 0.2
+      },
+      {
+       "k": "text",
+       "s": "on the map.",
+       "font": "cd",
+       "color": "red",
+       "w": 0.6,
+       "h": 0.08,
+       "y": 0.78,
+       "in": "slam",
+       "at": 0.7
+      },
+      {
+       "k": "glitch",
+       "at": 1.3,
+       "d": 0.3,
+       "n": 6
+      }
+     ]
+    },
+    {
+     "name": "s43",
+     "t0": 51.4,
+     "t1": 52.6,
+     "bg": {
+      "light": true
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Like",
+       "font": "ex",
+       "color": "red",
+       "w": 0.22,
+       "h": 0.14,
+       "x": 0.5,
+       "y": 0.3,
+       "in": "slam",
+       "at": 0.5
+      },
+      {
+       "k": "text",
+       "s": "Whoa!",
+       "font": "cd",
+       "color": "white",
+       "w": 0.2,
+       "h": 0.32,
+       "x": 0.5,
+       "y": 0.55,
+       "in": "slam",
+       "at": 0.7
+      },
+      {
+       "k": "chalk",
+       "shape": "cross",
+       "box": {
+        "x": 0.5,
+        "y": 0.4,
+        "w": 0.4,
+        "h": 0.3
+       },
+       "color": "white",
+       "sw": 3,
+       "at": 0.6,
+       "d": 0.2,
+       "n": 9
+      }
+     ]
+    },
+    {
+     "name": "s44",
+     "t0": 52.6,
+     "t1": 54.0,
+     "bg": {
+      "clip": "crowd",
+      "off": 5,
+      "dark": 0.35,
+      "edges": [
+       {
+        "side": "top",
+        "d": 0.15,
+        "j": 0.5
+       },
+       {
+        "side": "bottom",
+        "d": 0.15,
+        "j": 0.5
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Y'all ain't",
+       "font": "cd",
+       "color": "red",
+       "w": 0.55,
+       "h": 0.25,
+       "y": 0.4,
+       "in": "slam",
+       "at": 0.2
+      },
+      {
+       "k": "text",
+       "s": "even",
+       "font": "cd",
+       "color": "white",
+       "w": 0.16,
+       "h": 0.22,
+       "x": 0.2,
+       "y": 0.65,
+       "in": "slam",
+       "at": 0.5
+      },
+      {
+       "k": "text",
+       "s": "know",
+       "font": "cd",
+       "color": "red",
+       "w": 0.26,
+       "h": 0.18,
+       "x": 0.55,
+       "y": 0.65,
+       "in": "slam",
+       "at": 0.6
+      }
+     ]
+    },
+    {
+     "name": "s45",
+     "t0": 54.0,
+     "t1": 55.1,
+     "bg": {
+      "clip": "crowd",
+      "off": 1,
+      "dark": 0.4
+     },
+     "pieces": [
+      {
+       "k": "stack",
+       "s": "The place I had",
+       "n": 3,
+       "y": 0.5,
+       "dy": 0.36,
+       "font": "cd",
+       "colors": [
+        "white",
+        "red",
+        "white"
+       ],
+       "w": 0.98,
+       "h": 0.46,
+       "step": 0.1,
+       "at": 0.0,
+       "scales": [
+        1,
+        1.15,
+        1
+       ],
+       "fitScale": true
+      }
+     ]
+    },
+    {
+     "name": "s46",
+     "t0": 55.1,
+     "t1": 56.0,
+     "bg": {
+      "clip": "tunnel",
+      "off": 9,
+      "dark": 0.2,
+      "edges": [
+       {
+        "side": "tl",
+        "d": 0.35,
+        "dy": 0.4
+       },
+       {
+        "side": "br",
+        "d": 0.3,
+        "dy": 0.3
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "To go,",
+       "font": "ex",
+       "color": "white",
+       "w": 0.6,
+       "h": 0.26,
+       "y": 0.32,
+       "in": "slam",
+       "at": 0.15
+      },
+      {
+       "k": "text",
+       "s": "Be my soul,",
+       "font": "ex",
+       "color": "red",
+       "w": 0.82,
+       "h": 0.26,
+       "y": 0.64,
+       "in": "slam",
+       "at": 0.5,
+       "glow": true
+      }
+     ]
+    },
+    {
+     "name": "s47",
+     "t0": 56.0,
+     "t1": 56.6,
+     "bg": {
+      "clip": "street",
+      "off": 6,
+      "dark": 0.2
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "In my cell",
+       "font": "ex",
+       "color": "red",
+       "w": 0.9,
+       "h": 0.26,
+       "y": 0.5,
+       "in": "slam",
+       "at": 0.0,
+       "glow": true
+      },
+      {
+       "k": "glitch",
+       "at": 0.35,
+       "d": 0.2,
+       "n": 4
+      }
+     ]
+    },
+    {
+     "name": "s48",
+     "t0": 56.6,
+     "t1": 57.6,
+     "bg": {
+      "clip": "street",
+      "off": 7,
+      "dark": 0.2
+     },
+     "pieces": [
+      {
+       "k": "grid",
+       "s": "Lost a part of",
+       "cols": 3,
+       "rows": 3,
+       "w": 1.1,
+       "h": 0.84,
+       "x0": -0.05,
+       "y0": 0.08,
+       "font": "ar",
+       "colors": [
+        "red"
+       ],
+       "fillW": 0.95,
+       "fillH": 0.55,
+       "step": 0.05,
+       "at": 0.0,
+       "ls": 0.02,
+       "drift": -0.04
+      }
+     ]
+    },
+    {
+     "name": "s49",
+     "t0": 57.6,
+     "t1": 59.4,
+     "bg": {
+      "clip": "street",
+      "off": 8,
+      "dark": 0.3
+     },
+     "pieces": [
+      {
+       "k": "grid",
+       "s": "But now I won't lose",
+       "cols": 3,
+       "rows": 3,
+       "w": 1.1,
+       "h": 0.86,
+       "x0": -0.05,
+       "y0": 0.07,
+       "font": "cd",
+       "colors": [
+        "white"
+       ],
+       "fillW": 0.96,
+       "fillH": 0.6,
+       "step": 0.05,
+       "at": 0.0,
+       "drift": 0.04
+      },
+      {
+       "k": "glitch",
+       "at": 1.3,
+       "d": 0.4,
+       "n": 8,
+       "redP": 0
+      }
+     ]
+    },
+    {
+     "name": "s50",
+     "t0": 59.4,
+     "t1": 61.4,
+     "bg": {
+      "clip": "street",
+      "off": 9,
+      "dark": 0.35,
+      "edges": [
+       {
+        "side": "bottom",
+        "d": 0.1
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Control",
+       "font": "ex",
+       "color": "red",
+       "w": 0.8,
+       "h": 0.32,
+       "y": 0.45,
+       "in": "slam",
+       "at": 0.0,
+       "glow": true,
+       "op": 0.92,
+       "ghost": {
+        "color": "red",
+        "dx": 0.03,
+        "op": 0.45
+       }
+      },
+      {
+       "k": "glitch",
+       "at": 1.2,
+       "d": 0.3,
+       "n": 5
+      }
+     ]
+    },
+    {
+     "name": "s51",
+     "t0": 61.4,
+     "t1": 64.0,
+     "bg": {
+      "clip": "street",
+      "off": 10,
+      "dark": 0.25,
+      "fog": 0.8
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Roll up 20",
+       "font": "cd",
+       "color": "red",
+       "w": 0.13951935655656966,
+       "h": 0.05,
+       "x": 0.8893562497238041,
+       "y": 0.711110745771139,
+       "at": 0.0,
+       "out": {
+        "at": 2.2912549953315837,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Deep low",
+       "font": "cd",
+       "color": "white",
+       "w": 0.1375958567435717,
+       "h": 0.05,
+       "x": 0.2791663373343468,
+       "y": 0.10563086325520593,
+       "at": 0.02,
+       "out": {
+        "at": 1.2195918512231732,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Belt is snapped",
+       "font": "cd",
+       "color": "red",
+       "w": 0.08465728326198303,
+       "h": 0.05,
+       "x": 0.5385095561276187,
+       "y": 0.5650682453767286,
+       "at": 0.04,
+       "out": {
+        "at": 1.018359865424463,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Like",
+       "font": "cd",
+       "color": "white",
+       "w": 0.07820756637777787,
+       "h": 0.05,
+       "x": 0.823364002956736,
+       "y": 0.40270483419635666,
+       "at": 0.06,
+       "out": {
+        "at": 2.0666955986321405,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Whoa!",
+       "font": "cd",
+       "color": "white",
+       "w": 0.24349050409322331,
+       "h": 0.1,
+       "x": 0.17149532464423733,
+       "y": 0.061561878738230484,
+       "at": 0.08,
+       "out": {
+        "at": 2.219966642613995,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Put a hundred down",
+       "font": "cd",
+       "color": "white",
+       "w": 0.15601271002174996,
+       "h": 0.05,
+       "x": 0.2059536693075212,
+       "y": 0.2065063400163393,
+       "at": 0.1,
+       "out": {
+        "at": 1.439111914828935,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Do not",
+       "font": "cd",
+       "color": "white",
+       "w": 0.12778304772505922,
+       "h": 0.05,
+       "x": 0.24020597278973768,
+       "y": 0.888058880957439,
+       "at": 0.12,
+       "out": {
+        "at": 1.9668987175496715,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "On the map",
+       "font": "cd",
+       "color": "red",
+       "w": 0.09611899347223841,
+       "h": 0.05,
+       "x": 0.2060413302741761,
+       "y": 0.18821768039580059,
+       "at": 0.14,
+       "out": {
+        "at": 1.0911955987259467,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Y'all ain't even know",
+       "font": "cd",
+       "color": "red",
+       "w": 0.1186141258503371,
+       "h": 0.05,
+       "x": 0.5844614764793377,
+       "y": 0.682755014131585,
+       "at": 0.16,
+       "out": {
+        "at": 1.092431430771508,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "The place I had to go",
+       "font": "cd",
+       "color": "red",
+       "w": 0.1080745186630039,
+       "h": 0.05,
+       "x": 0.3378979331448707,
+       "y": 0.48347217988844016,
+       "at": 0.18,
+       "out": {
+        "at": 1.9865367877972728,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "To go",
+       "font": "cd",
+       "color": "white",
+       "w": 0.1539011804929864,
+       "h": 0.05,
+       "x": 0.8953140194700628,
+       "y": 0.37472677725177383,
+       "at": 0.2,
+       "out": {
+        "at": 1.5660117136336456,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Be my soul",
+       "font": "cd",
+       "color": "red",
+       "w": 0.11785188290568746,
+       "h": 0.05,
+       "x": 0.06798898040118502,
+       "y": 0.10111986445506854,
+       "at": 0.22,
+       "out": {
+        "at": 1.253287283131467,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "In my cell",
+       "font": "cd",
+       "color": "white",
+       "w": 0.16921735812672273,
+       "h": 0.1,
+       "x": 0.7811539866700661,
+       "y": 0.46674071716558924,
+       "at": 0.24,
+       "out": {
+        "at": 1.7174944169574267,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Lost a part of me",
+       "font": "cd",
+       "color": "red",
+       "w": 0.07080528690648329,
+       "h": 0.05,
+       "x": 0.7185902897065035,
+       "y": 0.7615594762803728,
+       "at": 0.26,
+       "out": {
+        "at": 2.203572046862612,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "But now I won't lose control",
+       "font": "cd",
+       "color": "white",
+       "w": 0.15783414907096316,
+       "h": 0.05,
+       "x": 0.24346538588294137,
+       "y": 0.51133444769329,
+       "at": 0.28,
+       "out": {
+        "at": 1.5076756811538492,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Foot is on the gas",
+       "font": "cd",
+       "color": "white",
+       "w": 0.15241976194277906,
+       "h": 0.05,
+       "x": 0.5397267526464502,
+       "y": 0.33495632502175804,
+       "at": 0.3,
+       "out": {
+        "at": 1.4435199799287282,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "My whole crew",
+       "font": "cd",
+       "color": "white",
+       "w": 0.12268057685261073,
+       "h": 0.05,
+       "x": 0.6945988354569197,
+       "y": 0.33218715188741377,
+       "at": 0.32,
+       "out": {
+        "at": 1.6773112835447581,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "A hell risk",
+       "font": "cd",
+       "color": "white",
+       "w": 0.24012984236110857,
+       "h": 0.1,
+       "x": 0.8727739980606843,
+       "y": 0.08800730503243356,
+       "at": 0.34,
+       "out": {
+        "at": 2.0367818924154664,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "I want money",
+       "font": "cd",
+       "color": "red",
+       "w": 0.10556651014906648,
+       "h": 0.05,
+       "x": 0.43114640808219856,
+       "y": 0.10902236328694621,
+       "at": 0.36,
+       "out": {
+        "at": 2.282497087818787,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Cash",
+       "font": "cd",
+       "color": "white",
+       "w": 0.09341852936031615,
+       "h": 0.05,
+       "x": 0.24221270408409232,
+       "y": 0.923544427781289,
+       "at": 0.38,
+       "out": {
+        "at": 1.7896666566261499,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Want it all",
+       "font": "cd",
+       "color": "white",
+       "w": 0.13880095497803568,
+       "h": 0.05,
+       "x": 0.15383493653358782,
+       "y": 0.4424085677283846,
+       "at": 0.4,
+       "out": {
+        "at": 1.208943482356361,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Selfish",
+       "font": "cd",
+       "color": "red",
+       "w": 0.10531549134999763,
+       "h": 0.05,
+       "x": 0.9393839543011318,
+       "y": 0.8099823503864936,
+       "at": 0.42,
+       "out": {
+        "at": 2.366410597645283,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Never gave",
+       "font": "cd",
+       "color": "red",
+       "w": 0.1288839046131857,
+       "h": 0.05,
+       "x": 0.33957798199025796,
+       "y": 0.3011512668140225,
+       "at": 0.44,
+       "out": {
+        "at": 1.6581131560005633,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "I'm better",
+       "font": "cd",
+       "color": "white",
+       "w": 0.2844110008901174,
+       "h": 0.1,
+       "x": 0.5279416331994382,
+       "y": 0.21786868387258918,
+       "at": 0.46,
+       "out": {
+        "at": 2.3120022989738835,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Cannot help this",
+       "font": "cd",
+       "color": "red",
+       "w": 0.10918620234154919,
+       "h": 0.05,
+       "x": 0.5133574078096201,
+       "y": 0.5423284664995996,
+       "at": 0.48,
+       "out": {
+        "at": 1.7039542936224992,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Caught up in my ways",
+       "font": "cd",
+       "color": "white",
+       "w": 0.13748980921186416,
+       "h": 0.05,
+       "x": 0.6712451395167871,
+       "y": 0.6443362315759085,
+       "at": 0.5,
+       "out": {
+        "at": 2.063494231015285,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Counting days",
+       "font": "cd",
+       "color": "red",
+       "w": 0.12683075448934142,
+       "h": 0.05,
+       "x": 0.7950045867815836,
+       "y": 0.2930754318637979,
+       "at": 0.52,
+       "out": {
+        "at": 2.3733392668309516,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "F×K",
+       "font": "cd",
+       "color": "red",
+       "w": 0.09400733891851615,
+       "h": 0.05,
+       "x": 0.21721146547035514,
+       "y": 0.8096033567949457,
+       "at": 0.54,
+       "out": {
+        "at": 1.6640253839327934,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Brawl",
+       "font": "cd",
+       "color": "red",
+       "w": 0.08736851085941418,
+       "h": 0.05,
+       "x": 0.3141673344275213,
+       "y": 0.5003072292338646,
+       "at": 0.56,
+       "out": {
+        "at": 1.9430933975925768,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Roll up 20",
+       "font": "cd",
+       "color": "red",
+       "w": 0.12440630729912358,
+       "h": 0.05,
+       "x": 0.7092880703882376,
+       "y": 0.7888060280639881,
+       "at": 0.58,
+       "out": {
+        "at": 1.4900632120018193,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Deep low",
+       "font": "cd",
+       "color": "white",
+       "w": 0.12883369568719272,
+       "h": 0.05,
+       "x": 0.9189875257057079,
+       "y": 0.9017344997392485,
+       "at": 0.6,
+       "out": {
+        "at": 1.725395202626299,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Belt is snapped",
+       "font": "cd",
+       "color": "white",
+       "w": 0.09620289186938233,
+       "h": 0.05,
+       "x": 0.8113922186193634,
+       "y": 0.30891521430354196,
+       "at": 0.62,
+       "out": {
+        "at": 1.1103714213338571,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Like",
+       "font": "cd",
+       "color": "red",
+       "w": 0.13803716282265246,
+       "h": 0.05,
+       "x": 0.5711438642030995,
+       "y": 0.645689481676067,
+       "at": 0.64,
+       "out": {
+        "at": 1.589108842788134,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Whoa!",
+       "font": "cd",
+       "color": "red",
+       "w": 0.06276220157414589,
+       "h": 0.05,
+       "x": 0.20082029965575351,
+       "y": 0.4481402056603371,
+       "at": 0.66,
+       "out": {
+        "at": 1.9101638887304055,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Put a hundred down",
+       "font": "cd",
+       "color": "white",
+       "w": 0.07805331455980626,
+       "h": 0.05,
+       "x": 0.6922468533876411,
+       "y": 0.9280921859666349,
+       "at": 0.68,
+       "out": {
+        "at": 2.371663937842396,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Do not",
+       "font": "cd",
+       "color": "white",
+       "w": 0.1467053769690228,
+       "h": 0.1,
+       "x": 0.33926874080168334,
+       "y": 0.2197615476305964,
+       "at": 0.7000000000000001,
+       "out": {
+        "at": 1.2707041425082761,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "On the map",
+       "font": "cd",
+       "color": "white",
+       "w": 0.09510998366795394,
+       "h": 0.05,
+       "x": 0.6430211172877154,
+       "y": 0.12333974807966251,
+       "at": 0.72,
+       "out": {
+        "at": 1.286112755037732,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Y'all ain't even know",
+       "font": "cd",
+       "color": "red",
+       "w": 0.20107514970318466,
+       "h": 0.1,
+       "x": 0.30510470236206166,
+       "y": 0.42083723695898867,
+       "at": 0.74,
+       "out": {
+        "at": 1.1611042139261771,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "The place I had to go",
+       "font": "cd",
+       "color": "red",
+       "w": 0.1149932931464643,
+       "h": 0.05,
+       "x": 0.32521655204477207,
+       "y": 0.3198475724443372,
+       "at": 0.76,
+       "out": {
+        "at": 1.7177067777151065,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "To go",
+       "font": "cd",
+       "color": "red",
+       "w": 0.1418521999785004,
+       "h": 0.05,
+       "x": 0.42880969554285436,
+       "y": 0.7754310680646428,
+       "at": 0.78,
+       "out": {
+        "at": 1.8992151584754877,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Be my soul",
+       "font": "cd",
+       "color": "red",
+       "w": 0.07567754491860988,
+       "h": 0.05,
+       "x": 0.3968168015494647,
+       "y": 0.47978754849990507,
+       "at": 0.8,
+       "out": {
+        "at": 1.278820341491667,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "In my cell",
+       "font": "cd",
+       "color": "white",
+       "w": 0.0951116082230466,
+       "h": 0.05,
+       "x": 0.8462509592045806,
+       "y": 0.06083378088497639,
+       "at": 0.8200000000000001,
+       "out": {
+        "at": 1.1510856751833782,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Lost a part of me",
+       "font": "cd",
+       "color": "white",
+       "w": 0.14764996967560184,
+       "h": 0.05,
+       "x": 0.5565791118945664,
+       "y": 0.43769678398878664,
+       "at": 0.84,
+       "out": {
+        "at": 2.36735260126643,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "But now I won't lose control",
+       "font": "cd",
+       "color": "red",
+       "w": 0.15724546276651213,
+       "h": 0.05,
+       "x": 0.39420686973500657,
+       "y": 0.90580240512169,
+       "at": 0.86,
+       "out": {
+        "at": 2.2792461739677066,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Foot is on the gas",
+       "font": "cd",
+       "color": "red",
+       "w": 0.09008027039193026,
+       "h": 0.05,
+       "x": 0.2809400883736663,
+       "y": 0.07731075794141165,
+       "at": 0.88,
+       "out": {
+        "at": 2.3232464907913437,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "My whole crew",
+       "font": "cd",
+       "color": "red",
+       "w": 0.08863983522600785,
+       "h": 0.05,
+       "x": 0.4797034157881284,
+       "y": 0.167259690916924,
+       "at": 0.9,
+       "out": {
+        "at": 1.870361271092022,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "A hell risk",
+       "font": "cd",
+       "color": "red",
+       "w": 0.06399765057988933,
+       "h": 0.05,
+       "x": 0.1800674033730377,
+       "y": 0.40530218848302135,
+       "at": 0.92,
+       "out": {
+        "at": 1.6724152307628877,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "I want money",
+       "font": "cd",
+       "color": "red",
+       "w": 0.10742780162536147,
+       "h": 0.05,
+       "x": 0.09235138696566932,
+       "y": 0.4913045537141403,
+       "at": 0.9400000000000001,
+       "out": {
+        "at": 2.1814795629432195,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Cash",
+       "font": "cd",
+       "color": "red",
+       "w": 0.12080375909245258,
+       "h": 0.05,
+       "x": 0.4776756541135368,
+       "y": 0.6274914327253684,
+       "at": 0.96,
+       "out": {
+        "at": 1.8453952136108556,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Want it all",
+       "font": "cd",
+       "color": "white",
+       "w": 0.14520646944744847,
+       "h": 0.1,
+       "x": 0.30846575133113685,
+       "y": 0.6830640224798548,
+       "at": 0.98,
+       "out": {
+        "at": 1.859000127133362,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Selfish",
+       "font": "cd",
+       "color": "white",
+       "w": 0.0961039382828485,
+       "h": 0.05,
+       "x": 0.7156151222819194,
+       "y": 0.5799081334217044,
+       "at": 1.0,
+       "out": {
+        "at": 1.0510004788932994,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Never gave",
+       "font": "cd",
+       "color": "red",
+       "w": 0.1285732885573605,
+       "h": 0.05,
+       "x": 0.15468855963191167,
+       "y": 0.6649301636228055,
+       "at": 1.02,
+       "out": {
+        "at": 1.2676510275929027,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "I'm better",
+       "font": "cd",
+       "color": "red",
+       "w": 0.10277315333105033,
+       "h": 0.05,
+       "x": 0.5665647718782367,
+       "y": 0.6831994709288751,
+       "at": 1.04,
+       "out": {
+        "at": 1.8851294838518664,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Cannot help this",
+       "font": "cd",
+       "color": "red",
+       "w": 0.14412003992905703,
+       "h": 0.05,
+       "x": 0.47863335627944614,
+       "y": 0.6604488166397304,
+       "at": 1.06,
+       "out": {
+        "at": 2.0074532171715456,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Caught up in my ways",
+       "font": "cd",
+       "color": "red",
+       "w": 0.1358196726933526,
+       "h": 0.05,
+       "x": 0.3272121162408977,
+       "y": 0.06283928194095863,
+       "at": 1.08,
+       "out": {
+        "at": 2.0905968115176865,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Counting days",
+       "font": "cd",
+       "color": "red",
+       "w": 0.10724496745368511,
+       "h": 0.05,
+       "x": 0.3336365810451066,
+       "y": 0.205595471419417,
+       "at": 1.1,
+       "out": {
+        "at": 1.973325875168543,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "F×K",
+       "font": "cd",
+       "color": "red",
+       "w": 0.11379447650427202,
+       "h": 0.05,
+       "x": 0.4344934639003125,
+       "y": 0.536437480407985,
+       "at": 1.12,
+       "out": {
+        "at": 1.0679757095559466,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "text",
+       "s": "Brawl",
+       "font": "cd",
+       "color": "white",
+       "w": 0.06851961954813487,
+       "h": 0.05,
+       "x": 0.11536747711873971,
+       "y": 0.8891062183863441,
+       "at": 1.1400000000000001,
+       "out": {
+        "at": 1.466272236493513,
+        "fx": "fade",
+        "d": 0.2
+       },
+       "distress": false,
+       "ls": 0.02,
+       "op": 0.9
+      },
+      {
+       "k": "chalk",
+       "shape": "tri",
+       "box": {
+        "x": 0.9308173914390365,
+        "y": 0.9485010300929285
+       },
+       "size": 0.025,
+       "at": 0.3,
+       "d": 0.2,
+       "sw": 3,
+       "until": 2.0414977802636423
+      },
+      {
+       "k": "chalk",
+       "shape": "xmark",
+       "box": {
+        "x": 0.1610375244755773,
+        "y": 0.16012084184072084
+       },
+       "size": 0.025,
+       "at": 0.35,
+       "d": 0.2,
+       "sw": 3,
+       "until": 1.9374666063106423
+      },
+      {
+       "k": "chalk",
+       "shape": "xmark",
+       "box": {
+        "x": 0.691199029276981,
+        "y": 0.17116330038493702
+       },
+       "size": 0.025,
+       "at": 0.4,
+       "d": 0.2,
+       "sw": 3,
+       "until": 1.5509914908329299
+      },
+      {
+       "k": "chalk",
+       "shape": "tri",
+       "box": {
+        "x": 0.18475700516087756,
+        "y": 0.5995507453885485
+       },
+       "size": 0.025,
+       "at": 0.45,
+       "d": 0.2,
+       "sw": 3,
+       "until": 1.6967234981243795
+      },
+      {
+       "k": "chalk",
+       "shape": "plus",
+       "box": {
+        "x": 0.11050514102104703,
+        "y": 0.241824923747827
+       },
+       "size": 0.025,
+       "at": 0.5,
+       "d": 0.2,
+       "sw": 3,
+       "until": 1.8666132698197488
+      },
+      {
+       "k": "chalk",
+       "shape": "next",
+       "box": {
+        "x": 0.3912791503293324,
+        "y": 0.11480354630860223
+       },
+       "size": 0.025,
+       "at": 0.55,
+       "d": 0.2,
+       "sw": 3,
+       "until": 1.2690734944144189
+      },
+      {
+       "k": "chalk",
+       "shape": "star",
+       "box": {
+        "x": 0.15651866546350607,
+        "y": 0.40867746092834617
+       },
+       "size": 0.025,
+       "at": 0.6000000000000001,
+       "d": 0.2,
+       "sw": 3,
+       "until": 1.9484637481063563
+      },
+      {
+       "k": "chalk",
+       "shape": "xmark",
+       "box": {
+        "x": 0.4385034522585123,
+        "y": 0.33311265794134726
+       },
+       "size": 0.025,
+       "at": 0.65,
+       "d": 0.2,
+       "sw": 3,
+       "until": 1.9202611549744941
+      },
+      {
+       "k": "chalk",
+       "shape": "tri",
+       "box": {
+        "x": 0.3680626075318768,
+        "y": 0.6405392589925109
+       },
+       "size": 0.025,
+       "at": 0.7,
+       "d": 0.2,
+       "sw": 3,
+       "until": 2.297753808400791
+      },
+      {
+       "k": "chalk",
+       "shape": "plus",
+       "box": {
+        "x": 0.6775666509959982,
+        "y": 0.18599828713970906
+       },
+       "size": 0.025,
+       "at": 0.75,
+       "d": 0.2,
+       "sw": 3,
+       "until": 1.9576151193196816
+      },
+      {
+       "k": "chalk",
+       "shape": "star",
+       "box": {
+        "x": 0.31121289893523063,
+        "y": 0.8977738402739299
+       },
+       "size": 0.025,
+       "at": 0.8,
+       "d": 0.2,
+       "sw": 3,
+       "until": 1.859860366173486
+      },
+      {
+       "k": "chalk",
+       "shape": "plus",
+       "box": {
+        "x": 0.2869220506911539,
+        "y": 0.5465077691679378
+       },
+       "size": 0.025,
+       "at": 0.8500000000000001,
+       "d": 0.2,
+       "sw": 3,
+       "until": 1.505028308921527
+      },
+      {
+       "k": "chalk",
+       "shape": "ring",
+       "box": {
+        "x": 0.5152961349307945,
+        "y": 0.17040276547689687
+       },
+       "size": 0.025,
+       "at": 0.9000000000000001,
+       "d": 0.2,
+       "sw": 3,
+       "until": 1.4813043760970468
+      },
+      {
+       "k": "chalk",
+       "shape": "ring",
+       "box": {
+        "x": 0.4580044035842835,
+        "y": 0.40001325727543485
+       },
+       "size": 0.025,
+       "at": 0.95,
+       "d": 0.2,
+       "sw": 3,
+       "until": 1.3574193720218208
+      }
+     ]
+    },
+    {
+     "name": "s52",
+     "t0": 64.0,
+     "t1": 68.2,
+     "bg": {
+      "paper": true
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "NodeMotion",
+       "id": "logo",
+       "font": "cd",
+       "color": "red",
+       "w": 0.14,
+       "h": 0.06,
+       "y": 0.55,
+       "in": "slam",
+       "at": 0.2,
+       "until": 2.45,
+       "distress": false
+      },
+      {
+       "k": "chalk",
+       "shape": "crown",
+       "ref": "logo",
+       "color": "white",
+       "sw": 4,
+       "at": 0.35,
+       "d": 0.3,
+       "up": 0.05,
+       "w": 0.04,
+       "h": 0.035,
+       "cx": 0.4
+      },
+      {
+       "k": "chalk",
+       "shape": "underline",
+       "ref": "logo",
+       "color": "white",
+       "sw": 4,
+       "at": 0.55,
+       "d": 0.3,
+       "until": 2.45
+      }
+     ],
+     "type": "outro"
+    }
+   ],
+   "outroDesigns": {
+    "v1": {
+     "name": "outro-v1",
+     "bg": {
+      "clip": "street",
+      "off": 9,
+      "dark": 0.25,
+      "cuts": false,
+      "edges": [
+       {
+        "side": "bottom",
+        "d": 0.1,
+        "j": 0.5
+       }
+      ]
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Gracias",
+       "id": "ot",
+       "outro": "title",
+       "font": "ex",
+       "color": "red",
+       "w": 0.84,
+       "h": 0.32,
+       "y": 0.42,
+       "in": "slam",
+       "from": 1.5,
+       "at": 0.1,
+       "d": 0.22,
+       "glow": true,
+       "op": 0.94,
+       "ghost": {
+        "color": "red",
+        "dx": 0.03,
+        "op": 0.45,
+        "delay": 0.1
+       },
+       "out": {
+        "at": -1.55,
+        "fx": "smear",
+        "d": 0.16,
+        "dx": 0.08
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "crown",
+       "ref": "ot",
+       "color": "white",
+       "sw": 7,
+       "at": 0.75,
+       "d": 0.3,
+       "up": 0.06,
+       "w": 0.07,
+       "h": 0.06,
+       "cx": 0.08,
+       "erase": {
+        "at": -2.05,
+        "d": 0.22
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "underline",
+       "ref": "ot",
+       "color": "white",
+       "sw": 12,
+       "at": 0.85,
+       "d": 0.35,
+       "dy": 1.02,
+       "erase": {
+        "at": -1.85,
+        "d": 0.25
+       }
+      },
+      {
+       "k": "text",
+       "s": "por ver",
+       "outro": "sub",
+       "font": "cd",
+       "color": "white",
+       "w": 0.5,
+       "h": 0.1,
+       "y": 0.66,
+       "in": "words",
+       "step": 0.12,
+       "at": 0.6,
+       "out": {
+        "at": -2.25,
+        "fx": "smear",
+        "d": 0.14
+       }
+      },
+      {
+       "k": "text",
+       "s": "Suscríbete · NodeMotion",
+       "outro": "feats",
+       "font": "th",
+       "color": "white",
+       "w": 0.5,
+       "h": 0.05,
+       "y": 0.8,
+       "ls": 0.2,
+       "in": "spread",
+       "ls0": 0.6,
+       "d": 0.35,
+       "at": 1.1,
+       "fw": 400,
+       "out": {
+        "at": -2.45,
+        "fx": "fade",
+        "d": 0.15
+       }
+      },
+      {
+       "k": "glitch",
+       "at": 1.7,
+       "d": 0.2,
+       "n": 5,
+       "redP": 0.5
+      },
+      {
+       "k": "glitch",
+       "at": -1.62,
+       "d": 0.14,
+       "n": 4,
+       "redP": 0.6
+      }
+     ]
+    },
+    "v2": {
+     "name": "outro-v2",
+     "bg": {
+      "paper": true
+     },
+     "pieces": [
+      {
+       "k": "text",
+       "s": "Gracias",
+       "id": "ot",
+       "outro": "title",
+       "font": "cd",
+       "color": "red",
+       "w": 0.32,
+       "h": 0.12,
+       "y": 0.5,
+       "in": "slam",
+       "at": 0.25,
+       "d": 0.2,
+       "distress": false,
+       "out": {
+        "at": -1.4,
+        "fx": "smear",
+        "d": 0.12,
+        "dx": 0.03
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "crown",
+       "ref": "ot",
+       "color": "white",
+       "sw": 6,
+       "at": 0.45,
+       "d": 0.3,
+       "up": 0.07,
+       "w": 0.06,
+       "h": 0.05,
+       "cx": 0.45,
+       "erase": {
+        "at": -2.3,
+        "d": 0.3,
+        "step": 0.08
+       }
+      },
+      {
+       "k": "chalk",
+       "shape": "underline",
+       "ref": "ot",
+       "color": "white",
+       "sw": 8,
+       "at": 0.65,
+       "d": 0.3,
+       "erase": {
+        "at": -1.95,
+        "d": 0.28
+       }
+      },
+      {
+       "k": "text",
+       "s": "por ver",
+       "outro": "sub",
+       "font": "th",
+       "color": "ink",
+       "w": 0.28,
+       "h": 0.06,
+       "y": 0.64,
+       "ls": 0.2,
+       "in": "spread",
+       "ls0": 0.6,
+       "d": 0.35,
+       "at": 0.9,
+       "fw": 500,
+       "distress": false,
+       "out": {
+        "at": -2.6,
+        "fx": "fade",
+        "d": 0.15
+       }
+      },
+      {
+       "k": "text",
+       "s": "Suscríbete · NodeMotion",
+       "outro": "feats",
+       "font": "cd",
+       "color": "ink",
+       "w": 0.32,
+       "h": 0.035,
+       "y": 0.72,
+       "ls": 0.12,
+       "in": "fade",
+       "d": 0.3,
+       "at": 1.2,
+       "op": 0.8,
+       "distress": false,
+       "out": {
+        "at": -2.8,
+        "fx": "fade",
+        "d": 0.15
+       }
+      },
+      {
+       "k": "glitch",
+       "at": -1.48,
+       "d": 0.1,
+       "n": 3,
+       "redP": 0.3
+      }
+     ]
+    }
+   },
+   "bgCuts": [
+    0.2,
+    1.28,
+    1.48,
+    2.12,
+    3.08,
+    4.64,
+    5.08,
+    6.2,
+    6.32,
+    7.44,
+    7.52,
+    7.84,
+    9.64,
+    10.12,
+    10.6,
+    10.72,
+    11.04,
+    11.16,
+    11.24,
+    11.32,
+    11.44,
+    11.52,
+    13.76,
+    13.96,
+    14.4,
+    14.8,
+    16.28,
+    16.52,
+    16.64,
+    16.8,
+    16.92,
+    20.04,
+    20.8,
+    24.56,
+    24.92,
+    25.04,
+    25.28,
+    25.44,
+    25.56,
+    25.64,
+    25.72,
+    26.04,
+    26.68,
+    28.04,
+    28.28,
+    29.24,
+    29.64,
+    29.8,
+    30.0,
+    30.84,
+    31.48,
+    31.84,
+    32.24,
+    32.56,
+    33.12,
+    33.68,
+    33.96,
+    34.08,
+    34.84,
+    35.2,
+    35.48,
+    35.56,
+    36.56,
+    37.16,
+    37.56,
+    40.04,
+    41.24,
+    41.4,
+    41.52,
+    41.64,
+    41.8,
+    42.16,
+    42.44,
+    42.52,
+    42.72,
+    43.12,
+    43.48,
+    43.6,
+    43.68,
+    44.12,
+    44.88,
+    45.16,
+    48.68,
+    48.76,
+    49.68,
+    49.88,
+    50.36,
+    51.56,
+    53.6,
+    53.88,
+    54.36,
+    55.48,
+    55.6,
+    55.92,
+    56.0,
+    56.2,
+    56.6,
+    57.28,
+    57.52,
+    58.04,
+    58.44,
+    58.8,
+    59.44,
+    60.4,
+    61.48,
+    61.72,
+    62.04,
+    62.4,
+    62.6,
+    64.0,
+    67.4
+   ]
+  }
+ ]
+}

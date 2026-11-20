@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram-worlds",
+  "id": "hw.compose",
+  "entry_id": "hw.compose",
+  "kind": "component",
+  "label": "Escena compuesta por datos",
+  "summary": "Mundo de fondo (void, holo, red, redflat, purple, violet, pale, ice, split) y lista de elementos: text, rep, col, box, img (arte propio con relleno holo, blanco, tinta, dorado o tal cual), media, shape, orn, lab, ring, diag, dots y flash, con entradas (slide, stamp, glitch, spread, scatter, words, wipe, pop, rise, fade) y movimiento (mv, zm, rv). Es la pieza de todas las escenas de la línea de tiempo.",
+  "component": {
+    "name": "hw.compose",
+    "label": "Escena compuesta por datos",
+    "summary": "Mundo de fondo (void, holo, red, redflat, purple, violet, pale, ice, split) y lista de elementos: text, rep, col, box, img (arte propio con relleno holo, blanco, tinta, dorado o tal cual), media, shape, orn, lab, ring, diag, dots y flash, con entradas (slide, stamp, glitch, spread, scatter, words, wipe, pop, rise, fade) y movimiento (mv, zm, rv). Es la pieza de todas las escenas de la línea de tiempo.",
+    "default": true,
+    "params": {
+      "bg": {
+        "type": "enum",
+        "values": [
+          "void",
+          "holo",
+          "red",
+          "redflat",
+          "purple",
+          "violet",
+          "pale",
+          "ice",
+          "split",
+          "media"
+        ],
+        "default": "void",
+        "doc": "Mundo de fondo"
+      },
+      "els": {
+        "type": "array",
+        "default": [],
+        "doc": "Elementos (ver cabecera de components/worlds.js)"
+      },
+      "duration": {
+        "type": "number",
+        "default": 3,
+        "min": 0.5,
+        "max": 10,
+        "doc": "Segundos de la demo"
+      }
+    },
+    "tags": [
+      "escena"
+    ],
+    "file": "components/worlds.js",
+    "demo": {
+      "bg": "void",
+      "els": [
+        {
+          "k": "img",
+          "s": "sil-lineup",
+          "x": 0.5,
+          "y": 0.62,
+          "h": 0.9,
+          "fill": "#040407"
+        },
+        {
+          "k": "box",
+          "x": 0.2,
+          "y": 0.42,
+          "w": 0.1,
+          "h": 0.17,
+          "fill": "white",
+          "in": "wipeL",
+          "at": 0.05
+        },
+        {
+          "k": "text",
+          "t": "THE",
+          "h": 0.03,
+          "x": 0.215,
+          "y": 0.455,
+          "ax": 0,
+          "fill": "ink",
+          "in": "cut",
+          "at": 0.1
+        },
+        {
+          "k": "text",
+          "t": "BADDEST",
+          "h": 1,
+          "maxw": 0.45,
+          "x": 0.555,
+          "y": 0.5,
+          "fill": "holo",
+          "in": "slide",
+          "at": 0.08
+        }
+      ]
+    },
+    "preview": {
+      "t": 1.2
+    }
+  },
+  "params": {
+    "bg": {
+      "type": "enum",
+      "values": [
+        "void",
+        "holo",
+        "red",
+        "redflat",
+        "purple",
+        "violet",
+        "pale",
+        "ice",
+        "split",
+        "media"
+      ],
+      "default": "void",
+      "doc": "Mundo de fondo"
+    },
+    "els": {
+      "type": "array",
+      "default": [],
+      "doc": "Elementos (ver cabecera de components/worlds.js)"
+    },
+    "duration": {
+      "type": "number",
+      "default": 3,
+      "min": 0.5,
+      "max": 10,
+      "doc": "Segundos de la demo"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram-worlds/showcase/components.json",
+      "pointer": "/components/3"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

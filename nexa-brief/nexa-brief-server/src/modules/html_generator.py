@@ -14,6 +14,7 @@ Two completely different behaviors depending on niche_cfg.pipeline_type:
 
 from __future__ import annotations
 
+import copy
 import json
 import time
 from pathlib import Path
@@ -31,6 +32,18 @@ from src.core.ports.ai_port import AIPort
 from src.modules.template_inputs_applier import apply_template_inputs
 
 logger = structlog.get_logger(__name__)
+
+
+def _restore_template_media(config_dict: dict, config_path: Path | None) -> None:
+    if "media" in config_dict or config_path is None or not config_path.is_file():
+        return
+    raw = json.loads(config_path.read_text(encoding="utf-8"))
+    if isinstance(raw, dict) and isinstance(raw.get("configs"), list):
+        configs = [item for item in raw["configs"] if isinstance(item, dict)]
+        active_id = raw.get("activeId")
+        raw = next((item for item in configs if item.get("id") == active_id), configs[0] if configs else {})
+    if isinstance(raw, dict) and isinstance(raw.get("media"), (dict, list)):
+        config_dict["media"] = copy.deepcopy(raw["media"])
 
 _SYSTEM = """\
 Soy un director creativo y programador experto especializado en visualizadores musicales
@@ -143,6 +156,8 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
         config_dict = await ai.complete_json(system_prompt, job.artifacts.prompt_text)
         if isinstance(config_dict, dict) and niche_cfg.template.locked_config_keys:
             _apply_locked_keys(config_dict, template_paths["config_json"], niche_cfg.template.locked_config_keys)
+        if isinstance(config_dict, dict):
+            _restore_template_media(config_dict, template_paths["config_json"])
 
     if not isinstance(config_dict, dict):
         raise AIGenerationError(f"Config Mapper no devolvió un objeto JSON: {type(config_dict).__name__}")
@@ -238,6 +253,24 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
     from src.core.nodemotion.lyrics.appearance import ensure_intro_title
     ensure_intro_title(config_dict, job, niche_cfg.template.template_id)
 
+    # Plantillas de letras con guion explícito (adaptacion.json en su carpeta): la demo conserva su
+    # guion; una canción nueva recibe una línea de tiempo generada desde su transcripción.
+    # Las plantillas sin adaptacion.json no se tocan.
+    song_report = None
+    if job.input.timed_content is None:
+        from src.core.nodemotion.lyrics.song_adapter import apply_song_lyrics
+        song_report = apply_song_lyrics(niche_cfg.template.template_id, config_dict, job)
+        if song_report is not None:
+            logger.info(
+                "song_adapter_applied",
+                job_id=job.job_id,
+                template=niche_cfg.template.template_id,
+                estado=song_report.get("estado"),
+                modo=song_report.get("modo"),
+                cobertura=song_report.get("cobertura"),
+                escenas=song_report.get("escenas"),
+            )
+
     written_config = (
         {"activeId": "active", "configs": [config_dict]}
         if niche_cfg.template.wrap_as_case_collection
@@ -269,6 +302,9 @@ async def _run_config_driven(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Jo
     logs_dir = job.artifacts.log_dir or output_dir / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
     (logs_dir / "04_config_generado.json").write_text(config_json_text, encoding="utf-8")
+    if song_report is not None:
+        (logs_dir / "05_reporte_cancion.json").write_text(
+            json.dumps(song_report, indent=2, ensure_ascii=False), encoding="utf-8")
 
     await asset_library.register_template_config(
         job.job_id,

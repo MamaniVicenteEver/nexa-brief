@@ -23,6 +23,8 @@ interface CommonProps {
   /** Muestra una zona de subida: lo subido queda elegido. */
   allowUpload?: boolean;
   className?: string;
+  /** Filtra canciones según si la plantilla exige letras o las admite opcionalmente. */
+  musicLyricsMode?: "required" | "optional" | "none";
 }
 
 interface SingleProps extends CommonProps {
@@ -39,11 +41,17 @@ interface MultipleProps extends CommonProps {
 
 export type ResourcePickerProps = SingleProps | MultipleProps;
 
+function resourceCategoryLabel(category: string): string {
+  if (category === "node_motion") return "NodeMotion";
+  if (category === "node_actualidad") return "NodeNews";
+  return category.replace(/_/g, " ");
+}
+
 /** Selector inline de recursos de la librería (para el Estudio): búsqueda,
  * selección y subida en el lugar. En modo simple, volver a tocar el elegido
  * lo deselecciona. */
 export function ResourcePicker(props: ResourcePickerProps) {
-  const { kind, allowUpload, className } = props;
+  const { kind, allowUpload, className, musicLyricsMode = "none" } = props;
   const t = useTranslations("resources.picker");
   const tr = useTranslations("resources");
   const apiKind = toApiKind(kind);
@@ -51,14 +59,33 @@ export function ResourcePicker(props: ResourcePickerProps) {
   const scope = useResourceScope();
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("");
+  const [lyricsFilter, setLyricsFilter] = useState<"all" | "with" | "without">("all");
   const [page, setPage] = useState(1);
   const debouncedQuery = useDebouncedValue(query);
+  const scopedMusic =
+    apiKind === "music" && scope.categoryId === "node_motion" && Boolean(scope.templateId);
+  const musicCategory = scopedMusic ? (scope.categoryId ?? "") : category;
+  const effectiveLyricsFilter =
+    musicLyricsMode === "required" ? "with" : musicLyricsMode === "optional" ? lyricsFilter : "all";
+  const hasLyrics =
+    effectiveLyricsFilter === "with"
+      ? true
+      : effectiveLyricsFilter === "without"
+        ? false
+        : undefined;
   // Las canciones se agrupan antes de paginar; las demás clases conservan su página habitual.
   const ordinaryPage = useLibraryPage(apiKind, debouncedQuery, category, page, apiKind !== "music");
   const musicPage = useQuery({
-    queryKey: [...libraryAssetsKey("music"), "groups", { q: debouncedQuery, category, page }],
+    queryKey: [
+      ...libraryAssetsKey("music"),
+      "groups",
+      { q: debouncedQuery, category: musicCategory, hasLyrics, page },
+    ],
     queryFn: ({ signal }) =>
-      getMusicGroupsPage({ q: debouncedQuery, category, page, pageSize: 12 }, signal),
+      getMusicGroupsPage(
+        { q: debouncedQuery, category: musicCategory, hasLyrics, page, pageSize: 12 },
+        signal,
+      ),
     enabled: apiKind === "music" && (!scope.templateId || Boolean(scope.categoryId)),
   });
   const activePage = apiKind === "music" ? musicPage : ordinaryPage;
@@ -109,22 +136,51 @@ export function ResourcePicker(props: ResourcePickerProps) {
           className="w-full rounded-full border border-nb-line bg-nb-surface py-2 pr-3 pl-8.5 text-[13px] text-nb-ink outline-none placeholder:text-nb-mute focus:border-nb-green-dark focus:ring-3 focus:ring-nb-green/30"
         />
       </div>
-      <select
-        value={category}
-        onChange={(e) => {
-          setCategory(e.target.value);
-          setPage(1);
-        }}
-        aria-label={tr("categoryLabel")}
-        className="min-w-0 rounded-xl border border-nb-line bg-nb-surface px-3 py-2 text-xs text-nb-ink"
-      >
-        <option value="">{tr("allCategories")}</option>
-        {categories?.map((c) => (
-          <option key={c} value={c}>
-            {c === "sound_effects" ? tr("tabs.sounds") : c}
-          </option>
-        ))}
-      </select>
+      {scopedMusic ? (
+        <p className="rounded-xl border border-nb-line bg-nb-bg px-3 py-2 text-xs text-nb-ink-soft">
+          {t("scopeCategory", { category: resourceCategoryLabel(scope.categoryId ?? "") })}
+        </p>
+      ) : (
+        <select
+          value={category}
+          onChange={(e) => {
+            setCategory(e.target.value);
+            setPage(1);
+          }}
+          aria-label={tr("categoryLabel")}
+          className="min-w-0 rounded-xl border border-nb-line bg-nb-surface px-3 py-2 text-xs text-nb-ink"
+        >
+          <option value="">{tr("allCategories")}</option>
+          {categories?.map((c) => (
+            <option key={c} value={c}>
+              {c === "sound_effects" ? tr("tabs.sounds") : c}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {apiKind === "music" && musicLyricsMode === "optional" && (
+        <label className="flex flex-col gap-1 text-[11px] font-semibold text-nb-ink-soft">
+          <span>{t("lyricsFilterLabel")}</span>
+          <select
+            value={lyricsFilter}
+            onChange={(event) => {
+              setLyricsFilter(event.target.value as "all" | "with" | "without");
+              setPage(1);
+            }}
+            className="min-w-0 rounded-xl border border-nb-line bg-nb-surface px-3 py-2 text-xs text-nb-ink"
+          >
+            <option value="all">{t("lyricsFilterAll")}</option>
+            <option value="with">{t("lyricsFilterReady")}</option>
+            <option value="without">{t("lyricsFilterMissing")}</option>
+          </select>
+        </label>
+      )}
+      {apiKind === "music" && musicLyricsMode === "required" && (
+        <p className="rounded-xl border border-nb-line bg-nb-bg px-3 py-2 text-xs text-nb-ink-soft">
+          {t("lyricsFilterRequired")}
+        </p>
+      )}
 
       {isLoading && <p className="py-4 text-center text-[12.5px] text-nb-mute">{t("loading")}</p>}
       {isError && (
@@ -138,7 +194,9 @@ export function ResourcePicker(props: ResourcePickerProps) {
       )}
       {!isLoading && !isError && data?.total === 0 && (
         <p className="py-4 text-center text-[12.5px] text-nb-mute">
-          {query || category ? t("noResults") : t("empty")}
+          {query || category || scopedMusic || hasLyrics !== undefined
+            ? t("noResults")
+            : t("empty")}
         </p>
       )}
 

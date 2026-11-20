@@ -1,0 +1,99 @@
+{
+ "version": 1,
+ "title": "Holograma Mundos",
+ "summary": "Lyric video de 175 s que replica la referencia escena por escena con tiempos de corte medidos: mundos negro azulado, rojo, morado, hielo y seda holográfica diagonal; siluetas, emblemas y objetos propios; versos que se arman palabra por palabra; BREAK que pasa de contorno a relleno; estribillo y verso repetidos como en el original. Variante de Holograma con línea de tiempo explícita y escenas por datos.",
+ "engine": "nodemotion/lyrics-hologram-worlds/_engine",
+ "based_on": "lyrics-hologram",
+ "is_new_design": true,
+ "status": "lista para revisar",
+ "created_at": "2026-11-16",
+ "libraries": [
+  {
+   "name": "Google Fonts: Anton, Noto Sans KR",
+   "version": "remota, sin versión fijada",
+   "purpose": "condensada gruesa (también inclinada) y coreano"
+  }
+ ],
+ "inputs": [
+  "assets/song.mp3 y assets/lyrics.json: canción y letra ya registradas en el perfil (174,94 s). La letra Whisper solo respalda la sincronía; el texto en pantalla es el visible en la referencia.",
+  "assets/media/art/: 17 imágenes ORIGINALES (8 siluetas, 6 emblemas, 3 objetos) generadas para esta plantilla; ninguna copia arte de personajes ni logotipos.",
+  "assets/media/: medios de la demo Holograma (Pixabay): siluetas en video y tomas glam, hair y glasses, usadas teñidas o en duotono.",
+  "La línea de tiempo (210 escenas) va dentro de assets/config.json (clave timeline), generada por work/tools/timeline.py con los cortes medidos en work/tools/cuts.json."
+ ],
+ "notes": [
+  "Base: lyrics-hologram, con motor propio (registro NexaPromo_lyrics_hologram_worlds). El motor base no se tocó.",
+  "Motor: config.timeline explícita, escena compose por datos (components/worlds.js) con elementos img (arte propio), ring, entradas scatter/words, barrido sweep, movimiento mv/zm/rv y medios teñidos; intro y outros por datos (config.intro, config.outro, ?outro=v1|v2); ?only=<pieza>&p=<JSON> para la galería.",
+  "Ensamblado: python work/tools/timeline.py y luego work/tools/build.py (index.html autocontenido con el núcleo común y el reloj HyperFrames).",
+  "Sin render de video. Comparado a 4 fps contra la referencia (704 instantes por lado) en 16:9; 9:16 revisado en 6 instantes (adapta la composición horizontal, no está recompuesto).",
+  "No se reproduce arte de personajes, logotipos ni tarjeta legal del original: siluetas, emblemas y objetos propios. Texto coreano leído de los fotogramas de la referencia: pendiente de verificación por un hablante."
+ ],
+ "reference": "referencias/nodemotion/hologram-worlds",
+ "components": [
+  {
+   "name": "hw.intro",
+   "label": "Intro",
+   "summary": "Apertura real del video (0 a 1,7 s): emblema, silueta de perfil en seda y título de config.intro; también es la portada.",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "hw.outrov1",
+   "label": "Outro v1",
+   "summary": "Palabra gigante holográfica y tarjeta de marca (cierre de 160 a 163 s).",
+   "group": "outro",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "hw.outrov2",
+   "label": "Outro v2",
+   "summary": "Tarjeta de título y seda holográfica final hasta el corte a negro (161 a 175 s).",
+   "group": "outro",
+   "params": {}
+  },
+  {
+   "name": "hw.compose",
+   "label": "Escenas por datos",
+   "summary": "Mundo de fondo y elementos (texto, arte propio, cajas, anillos, medios) con entradas y movimiento.",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "hw.worlds",
+   "label": "Mundos",
+   "summary": "Negro azulado, seda diagonal, rojo, rojo plano, morado, hielo y pantalla partida.",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "hw.verses",
+   "label": "Versos sobre seda",
+   "summary": "Frases en tinta que se arman palabra por palabra o letra por letra con un eco gigante en contorno.",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "hw.sweep",
+   "label": "Contorno a relleno",
+   "summary": "Palabra en contorno que se rellena con un barrido holográfico (BREAK).",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "hw.art",
+   "label": "Siluetas y emblemas",
+   "summary": "Arte propio con relleno holográfico, blanco, tinta o dorado.",
+   "default": true,
+   "params": {}
+  }
+ ],
+ "catalog": {
+  "components": "showcase/components.json",
+  "gallery": "showcase/index.html"
+ },
+ "thumbnail": {
+  "style": "thumbnail-style.json",
+  "frameSec": 12,
+  "note": "El fotograma de 12 s es «THE BADDEST» holográfico sobre la fila de siluetas: una escena real del video."
+ }
+}

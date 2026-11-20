@@ -4,6 +4,8 @@ Para crear cualquier contenido empieza por el [índice](../../skills/README.md),
 
 # AGENTS.md — Casa de pruebas (sandbox)
 
+> **Excepción NodeMotion (vigente desde 2026-11-16):** las plantillas NodeMotion (letras y promos) no siguen esta guía. Ver el estándar en `AGENTS.md` de la raíz (sección «Estándar vigente…») y en `docs/nodemotion-template-authoring.md` (sección 2). Motor en `src/templates/nodemotion/<cat>/<id>/`, prototipos en `productions/nodemotion/<cat>/<id>/`.
+
 > **Ubicación obligatoria (v2/v3):** esta carpeta del repositorio solo admite
 > motores compartidos experimentales, herramientas y documentación. Todos los
 > proyectos de prueba, prototipos y referencias, incluidos los históricos,
@@ -61,7 +63,7 @@ Consulta el catálogo para categorías reales: su ID puede diferir del nombre de
 
 | Querés… | Leé |
 |---|---|
-| una plantilla nueva de letras, promo o fondo (música) | `nodemotion/AGENTS.md` |
+| una plantilla nueva de letras, promo o fondo (música) | el estándar de `nexa-brief/AGENTS.md` (NodeMotion no usa Sandbox) |
 | un video explicativo de prueba (tech, historia, política, economía) | `EXPLAINER.md` → `<tema>/AGENTS.md` → `_tools/explainer-kit/AGENTS.md` |
 | un diseño nuevo para el motor explainer | `EXPLAINER.md` (sección de diseños nuevos) |
 | una escena de acción (batalla, enfrentamiento, disturbio…) con personajes | `nodeaction/AGENTS.md` |

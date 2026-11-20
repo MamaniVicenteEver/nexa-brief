@@ -12,9 +12,10 @@ import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { Niche } from "@/features/create-video/types";
 import type { Template } from "@/features/templates/types";
-import { deleteDraft } from "../api/studio-service";
+import { deleteDraft, renderDraft } from "../api/studio-service";
 import { PrototypePicker } from "../components/record/PrototypePicker";
 import { useRecordPrototype } from "../hooks/useRecordPrototype";
+import { DEFAULT_RECORD_OUTPUTS } from "../types";
 import type { Draft } from "../types";
 
 vi.mock("next-intl", () => ({ useTranslations: () => (key: string) => key }));
@@ -71,7 +72,7 @@ describe("NodeMotion recording choices", () => {
     fireEvent.click(screen.getByRole("button", { name: "delete: one" }));
     expect(deleteDraft).not.toHaveBeenCalled();
   });
-  it("starts with Desktop and resets the optional vertical format when reopening", () => {
+  it("defaults all five outputs and resets the choices when reopening", () => {
     const template = {
       id: "lyrics-caution",
       nicheId: "lyrics_video_caution",
@@ -82,11 +83,39 @@ describe("NodeMotion recording choices", () => {
       ({ open }) => useRecordPrototype(template, niche, [], null, open),
       { initialProps: { open: true }, wrapper: Wrapper },
     );
-    expect(result.current.formats).toEqual(["16x9"]);
-    act(() => result.current.setVertical(true));
+    expect(result.current.outputs).toEqual([...DEFAULT_RECORD_OUTPUTS]);
     expect(result.current.formats).toEqual(["16x9", "9x16"]);
+    act(() => {
+      for (const output of DEFAULT_RECORD_OUTPUTS) {
+        if (output !== "youtube_shorts") result.current.setOutput(output, false);
+      }
+    });
+    expect(result.current.outputs).toEqual(["youtube_shorts"]);
+    expect(result.current.formats).toEqual(["9x16"]);
     rerender({ open: false });
     rerender({ open: true });
-    expect(result.current.formats).toEqual(["16x9"]);
+    expect(result.current.outputs).toEqual([...DEFAULT_RECORD_OUTPUTS]);
+    expect(result.current.formats).toEqual(["16x9", "9x16"]);
+  });
+
+  it("sends output destinations separately from publish accounts", async () => {
+    vi.mocked(renderDraft).mockResolvedValue({ draft_id: "one", job_id: "job", status: "rendering" });
+    const template = {
+      id: "lyrics-caution",
+      nicheId: "lyrics_video_caution",
+      displayName: "Caution",
+    } as Template;
+    const niche = { supportedEngines: ["hyperframes"], recorderEngine: "hyperframes" } as Niche;
+    const { result } = renderHook(
+      () => useRecordPrototype(template, niche, [], null),
+      { wrapper: Wrapper },
+    );
+    await act(async () => {
+      await result.current.render.mutateAsync(draft("one"));
+    });
+    expect(renderDraft).toHaveBeenCalledWith("one", expect.objectContaining({
+      outputs: [...DEFAULT_RECORD_OUTPUTS],
+      publishAccounts: [],
+    }));
   });
 });

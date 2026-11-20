@@ -189,7 +189,7 @@ class TemplateConfigEntryResponse(BaseModel):
     image_asset_id: str | None = None
     music_asset_id: str | None = None
     created_at: str = ""
-    texts: dict[str, str] = {}
+    texts: dict[str, Any] = Field(default_factory=dict)
 
 
 class TemplateConfigDetailResponse(BaseModel):

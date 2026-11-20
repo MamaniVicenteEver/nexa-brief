@@ -301,6 +301,8 @@ class JobArtifacts(BaseModel):
     tiktok_video_path: Path | None = None   # 9:16 clip 61s (TikTok)
     reels_video_path: Path | None = None    # 9:16 duración completa (Reels/Shorts)
     thumbnail_path: Path | None = None
+    # Capturas elegidas por destino para revisión/paquete; no todas las APIs permiten subir portada.
+    thumbnail_paths_by_output: dict[str, Path] = Field(default_factory=dict)
     summary: VideoSummary | None = None
     output_dir: Path | None = None
     assets_dir: Path | None = None

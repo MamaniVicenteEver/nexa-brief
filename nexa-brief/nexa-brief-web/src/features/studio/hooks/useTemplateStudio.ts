@@ -31,18 +31,32 @@ export function useTemplateStudio(template: Template, open: boolean) {
   // El «Video original» vive aparte: no es un prototipo del Sandbox.
   const prototypes = drafts.filter((d) => !d.original);
   const original = useOriginalDraft(template, drafts);
+  const latestPrototype = prototypes.reduce<typeof original.draft>((latest, candidate) =>
+    !latest || candidate.updatedAt > latest.updatedAt ? candidate : latest, null);
+  const resourceDefaultsDraft = original.draft ?? latestPrototype;
 
   const [tab, setTab] = useState<StudioTab>("original");
   // Prototipo abierto en el Sandbox: su id, "new" (sin carpeta todavía) o null (la lista).
   const [editing, setEditing] = useState<string | null>(null);
+  const [newPrototypeSession, setNewPrototypeSession] = useState(0);
   const [previewing, setPreviewing] = useState<string | null>(null);
   const [previewPlaybackRequest, setPreviewPlaybackRequest] = useState(0);
   const editor = usePrototypeEditor({
     template,
     requirements: requirements.data,
     draftId: editing === "new" || editing === "__demo" ? null : editing,
+    sessionKey: editing === "new"
+      ? `new:${newPrototypeSession}`
+      : editing && editing !== "__demo"
+        ? editing
+        : null,
+    initialResourcesDraft: resourceDefaultsDraft,
+    initialResourcesReady: !draftsQuery.isLoading,
     defaultName: t("defaultName", { n: prototypes.length + 1 }),
-    onCreated: setEditing,
+    onCreated: (draftId) => {
+      setEditing(draftId);
+      setPreviewPlaybackRequest((request) => request + 1);
+    },
   });
   const isPromo = PROMO_IDS.has(template.id);
   const promoSessions = useQuery({ queryKey: promoSessionsKey(template.id), queryFn: ({ signal }) => listPromoSessions(template.id, signal), enabled: open && isPromo });
@@ -80,6 +94,7 @@ export function useTemplateStudio(template: Template, open: boolean) {
     setTab,
     editing,
     openPrototype: (id: string | "new") => {
+      if (id === "new") setNewPrototypeSession((session) => session + 1);
       setEditing(id);
       setTab("sandbox");
     },

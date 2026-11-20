@@ -2,31 +2,41 @@
   "schema_version": 1,
   "generated": true,
   "design_id": "promo-mono",
-  "id": "scene.intro",
-  "entry_id": "scene.intro",
-  "name": "intro",
+  "id": "scene.codeinput",
+  "entry_id": "scene.codeinput",
+  "name": "codeinput",
   "kind": "scene",
-  "label": "intro",
-  "summary": "Existing scene configuration: intro.",
-  "params": {
-    "type": {
-      "default": "intro"
+  "label": "codeinput",
+  "summary": "Existing scene type: codeinput.",
+  "variants": [
+    {
+      "type": "codeinput",
+      "trans": "cut",
+      "max_text_lines": 3
     }
-  },
-  "example": {
-    "type": "intro"
+  ],
+  "scene_cycle": [
+    {
+      "scene": 19,
+      "type": "codeinput",
+      "max_text_lines": 3
+    }
+  ],
+  "notes": {
+    "script": "Un segmento por escena, en el orden de la plantilla. La primera escena es la intro y la última el cierre. Adapta el texto al tema; no uses el texto de la demo. Sigue max_text_lines por tipo: null indica que el componente no impone un límite a sus líneas de entrada; pattern y outro pueden usar el segmento como paso visual sin mostrar ese texto."
   },
   "sources": [
     {
-      "path": "nodemotion/commercial/promo-mono/assets/config.json",
-      "pointer": "/configs/0/scenes/0"
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/default_scenes/18"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/scene_cycle/18"
     }
   ],
-  "constraints_status": "observed_defaults_only",
+  "constraints_status": "documented_per_variant",
   "unknown": [
-    "validation bounds",
-    "supported options beyond the example",
-    "text capacity"
-  ],
-  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+    "validation rules not explicitly present in the cited source"
+  ]
 }

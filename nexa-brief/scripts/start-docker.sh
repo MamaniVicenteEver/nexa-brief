@@ -41,8 +41,6 @@ wait_healthy() {
   return 1
 }
 
-./scripts/start-connections.sh
-
 echo 'Iniciando la API de Docker...'
 docker start "$api_container" >/dev/null
 wait_healthy "$api_container" api

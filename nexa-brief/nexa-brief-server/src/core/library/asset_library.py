@@ -173,7 +173,7 @@ class TemplateConfigEntry(BaseModel):
     music_asset_id: str | None = None
     video_asset_id: str | None = None
     created_at: str = ""
-    texts: dict[str, str] = Field(default_factory=dict)
+    texts: dict[str, Any] = Field(default_factory=dict)
 
 
 # ── Nombres lógicos en el DataStore ──────────────────────────────────────────
@@ -585,7 +585,7 @@ async def register_template_config(
     music_asset_id: str | None = None,
     video_asset_id: str | None = None,
 ) -> TemplateConfigEntry:
-    documents("template_config_files").put(job_id, config_json)
+    await documents("template_config_files").aput(job_id, config_json)
 
     texts = config_json.get("texts")
     entry = TemplateConfigEntry(
@@ -891,7 +891,8 @@ async def attach_resource_origin(kind: str, asset_id: str, category: str = "", t
 
 
 def page_music_groups(*, page: int = 1, page_size: int = 12,
-                      q: str | None = None, category: str | None = None) -> tuple[list[list[MusicLibraryEntry]], int]:
+                      q: str | None = None, category: str | None = None,
+                      has_lyrics: bool | None = None) -> tuple[list[list[MusicLibraryEntry]], int]:
     """Agrupa versiones por título y artista antes de paginar, sin fusionar IDs.
 
     El orden se deriva del registro más reciente de cada grupo y es estable;
@@ -899,6 +900,8 @@ def page_music_groups(*, page: int = 1, page_size: int = 12,
     identifica una canción, por eso sus registros no se agrupan entre sí.
     """
     entries = search_assets("music", q=q, category=category)
+    if has_lyrics is not None:
+        entries = [entry for entry in entries if entry.has_lyrics_cache is has_lyrics]
     entries.sort(key=lambda entry: (entry.added_at, entry.asset_id), reverse=True)
     groups: dict[tuple[str, str], list[MusicLibraryEntry]] = {}
     for entry in entries:
@@ -1119,7 +1122,11 @@ async def download_url_to(url: str, dest_path: Path) -> None:
         pool=10.0,
     )
     try:
-        async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as client:
+        async with httpx.AsyncClient(
+            timeout=timeout,
+            follow_redirects=True,
+            headers={"User-Agent": "NexaBrief/1.0 (+https://nexa-brief.everdev.space)"},
+        ) as client:
             async with client.stream("GET", url) as response:
                 if response.status_code != 200:
                     raise AssetDownloadError(

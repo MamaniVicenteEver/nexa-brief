@@ -367,6 +367,35 @@ async def _terminate_process_tree(process, identity, handles) -> None:
         handles.clear()
 
 
+# La verificación de Codex hashea dos binarios de cientos de MB y se repetía en cada
+# consulta, dentro del bucle de eventos. Un resultado verdadero se guarda por firma de los
+# archivos que verifica (inodo, tamaño, mtime y ctime: el ctime no lo fija quien modifica
+# el archivo). Vive fuera de las funciones de la huella de política (_policy_digest).
+_CODEX_VERIFICADO: dict[tuple, bool] = {}
+_EDAD_MINIMA_CACHE_NS = 2_000_000_000  # una firma reciente puede repetirse dentro de la misma marca de tiempo
+
+
+def _firma_archivo(path: Path) -> tuple:
+    info = path.stat()
+    return (str(path), info.st_dev, info.st_ino, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
+
+
+def _clave_verificacion_codex(binary) -> tuple | None:
+    try:
+        archivos = [Path(binary).resolve(strict=True)]
+        for build in APPROVED_BUILDS:
+            archivos.append(build.executable.resolve(strict=True))
+            archivos.append(build.native_binary.resolve(strict=True))
+        return (tuple(_firma_archivo(a) for a in archivos), platform.release())
+    except (OSError, ValueError, RuntimeError, TypeError):
+        return None
+
+
+def _clave_antigua(clave: tuple) -> bool:
+    ahora = time.time_ns()
+    return all(ahora - firma[5] >= _EDAD_MINIMA_CACHE_NS for firma in clave[0])
+
+
 class IsolatedCodexRunner(AgentRunnerPort):
     name = "codex"
 
@@ -374,11 +403,17 @@ class IsolatedCodexRunner(AgentRunnerPort):
         self._binary = binary if binary is not None else find_binary("codex", settings.agent_codex_bin)
 
     def available(self) -> bool:
+        clave = _clave_verificacion_codex(self._binary)
+        if clave is not None and clave in _CODEX_VERIFICADO:
+            return True
         try:
             _verified_build(self._binary)
-            return True
         except AgentIsolationUnavailableError:
             return False
+        if clave is not None and _clave_verificacion_codex(self._binary) == clave and _clave_antigua(clave):
+            _CODEX_VERIFICADO.clear()
+            _CODEX_VERIFICADO[clave] = True
+        return True
 
     async def run(self, prompt: str, *, cwd: Path, log_path: Path, timeout_seconds: float,
                   scope: AgentScope | None = None) -> AgentRunResult:

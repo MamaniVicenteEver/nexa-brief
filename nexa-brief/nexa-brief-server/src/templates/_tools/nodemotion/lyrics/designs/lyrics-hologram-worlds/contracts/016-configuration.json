@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram-worlds",
+  "id": "config.look",
+  "entry_id": "config.look",
+  "name": "look",
+  "kind": "configuration",
+  "label": "look",
+  "summary": "Existing configuration configuration: look.",
+  "params": {
+    "holoSpeed": {
+      "default": 1
+    },
+    "labels": {
+      "default": 0
+    },
+    "labelText": {
+      "default": ""
+    },
+    "ornaments": {
+      "default": 1
+    },
+    "frame": {
+      "default": 0
+    },
+    "glitch": {
+      "default": 1
+    },
+    "mediaHolo": {
+      "default": 0.65
+    },
+    "glow": {
+      "default": 0.5
+    }
+  },
+  "example": {
+    "holoSpeed": 1,
+    "labels": 0,
+    "labelText": "",
+    "ornaments": 1,
+    "frame": 0,
+    "glitch": 1,
+    "mediaHolo": 0.65,
+    "glow": 0.5
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram-worlds/assets/config.json",
+      "pointer": "/configs/0/look"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

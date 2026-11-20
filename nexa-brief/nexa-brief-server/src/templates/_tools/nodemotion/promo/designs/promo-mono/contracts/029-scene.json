@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "scene.pattern",
+  "entry_id": "scene.pattern",
+  "name": "pattern",
+  "kind": "scene",
+  "label": "pattern",
+  "summary": "Existing scene type: pattern.",
+  "variants": [
+    {
+      "type": "pattern",
+      "icon": "pause",
+      "trans": "cut",
+      "max_text_lines": null
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 13,
+      "type": "pattern",
+      "max_text_lines": null
+    }
+  ],
+  "notes": {
+    "script": "Un segmento por escena, en el orden de la plantilla. La primera escena es la intro y la última el cierre. Adapta el texto al tema; no uses el texto de la demo. Sigue max_text_lines por tipo: null indica que el componente no impone un límite a sus líneas de entrada; pattern y outro pueden usar el segmento como paso visual sin mostrar ese texto."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/default_scenes/12"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/scene_cycle/12"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "grunge-montage.texto",
+  "entry_id": "grunge-montage.texto",
+  "kind": "component",
+  "label": "Palabra con golpe",
+  "summary": "Texto condensado gastado que entra aplastándose (slam), con fantasma rojo y subrayado de pincel.",
+  "component": {
+    "name": "grunge-montage.texto",
+    "label": "Palabra con golpe",
+    "summary": "Texto condensado gastado que entra aplastándose (slam), con fantasma rojo y subrayado de pincel.",
+    "default": true,
+    "params": {
+      "scene": {
+        "type": "string",
+        "default": "s15",
+        "doc": "Nombre de la escena de config.timeline que se muestra"
+      },
+      "duration": {
+        "type": "number",
+        "default": 2.0,
+        "doc": "Segundos de la demo",
+        "min": 0.5,
+        "max": 6
+      }
+    },
+    "tags": [
+      "escena"
+    ],
+    "file": "player.js",
+    "demo": {
+      "scene": "s15"
+    },
+    "preview": {
+      "t": 1.2
+    }
+  },
+  "params": {
+    "scene": {
+      "type": "string",
+      "default": "s15",
+      "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+      "type": "number",
+      "default": 2.0,
+      "doc": "Segundos de la demo",
+      "min": 0.5,
+      "max": 6
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json",
+      "pointer": "/components/4"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-kinetic-noir",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-kinetic-noir",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/background.js": "runtime/components/background.js",
+    "components/core.js": "runtime/components/core.js",
+    "components/intro.js": "runtime/components/intro.js",
+    "components/noir.css": "runtime/components/noir.css",
+    "components/outro-v1.js": "runtime/components/outro-v1.js",
+    "components/outro-v2.js": "runtime/components/outro-v2.js",
+    "components/scenes.js": "runtime/components/scenes.js",
+    "player.js": "runtime/player.js",
+    "showcase/index.html": "runtime/showcase/index.html"
+  },
+  "runtime_assets": [
+    "player.js",
+    "components",
+    "assets/fonts"
+  ],
+  "source_sha256": "94c5d20c9a1f9f3ef9c131e02868a36c17ace069cc85734c3cfbd38929ac2dd9",
+  "migration_source_sha256": "94c5d20c9a1f9f3ef9c131e02868a36c17ace069cc85734c3cfbd38929ac2dd9",
+  "migration_runtime_sha256": {
+    "components/background.js": "301994380e65cbc8dfed395be7685175ac03d7fc554b91e2984a3135db40b180",
+    "components/core.js": "a16374ac99a1f2d86b1e8d735361aa8d5beaf659790fe6a3f9faf4fc442fa7ab",
+    "components/intro.js": "052e026d20717235fc4caf3bd41dbbc4b3e28aa591434596bd293499579b3c06",
+    "components/noir.css": "531651b16db33f99a2ef4c98b6aa91d9d6f59602f5dee124a4315ca650bb8720",
+    "components/outro-v1.js": "9eccd4e76c164ba5f3fd455226ff1c8ccc805591864a6546889fc32bc6154010",
+    "components/outro-v2.js": "d102e43d48fa18299ea81b4feb81107259830973c0a77c1587c3372c2d1a0402",
+    "components/scenes.js": "d8e753b1b268dd29aae271327231d9199241da1f3e127688a20183a35953d13a",
+    "player.js": "72878f20ff506f0c91eb8da308e4d6da4cf14b8c6db24a8d9e48676408fe7533",
+    "showcase/index.html": "e341e4fa70c0a76868c4aba246526d1de5df16281ad1a2e9df67b147ad00003a"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-kinetic-noir",
+    "config": "nodemotion/lyrics/lyrics-kinetic-noir/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-kinetic-noir/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-kinetic-noir/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-kinetic-noir/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-kinetic-noir/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/fonts/AlfaSlabOne-Regular.woff2": "48a110c7fda81f9921a6437e1a813dcea56df5a9f52f778c7b2f2151e36e4f2c.woff2",
+    "assets/fonts/Anton-Regular.woff2": "0180a387b34d6e492bb9eda6dd9cd85930644b8e3ee1c4a7c2d51d9ea5b9294c.woff2",
+    "assets/fonts/Archivo.woff2": "94bb484c81334fff433b6ba5c592b96c643e50c25a27fb33321a227e49b4f726.woff2",
+    "assets/fonts/ArchivoExpanded-Black.woff2": "6545449dd4b802cb5f53fa6cdd56473bcf29e51474f1f8fa6b5e614e4d0bce6d.woff2",
+    "assets/fonts/KaushanScript-Regular.woff2": "addcc80ddcc170ff8c97140ab37ac380ac4e6d0b8fd14e5d107b4cb87ffd778f.woff2",
+    "assets/song.mp3": "407837f06173884ea15df55f33f194870876e1d9675f02f0256fb233ba23d3a5.mp3",
+    "assets/card-poster.webp": "9cbea766945b38b0809671272b0d779df4d9fd89a4312ef19d50f7095db4f179.webp"
+  }
+}

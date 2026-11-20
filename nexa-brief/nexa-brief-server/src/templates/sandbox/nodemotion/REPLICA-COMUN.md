@@ -1,5 +1,7 @@
 # Réplicas NodeMotion · contrato común para chat directo
 
+> **Excepción NodeMotion (vigente desde 2026-11-16):** la plantilla nueva de letras o de promo no se prototipa en `sandbox/nodemotion/`. Rige el «Estándar vigente para plantillas NodeMotion nuevas» del AGENTS.md raíz: motor en `src/templates/nodemotion/<cat>/<id>/` (solo código y JSON, sin medios) y prototipo y datos en `$NEXA_PROFILE_DIR/productions/nodemotion/<cat>/<id>/`. Las rutas y pasos de Sandbox de esta guía quedan por actualizar; mientras tanto, esa norma manda.
+
 Este documento acompaña a `REPLICA-LETRAS.md` y `REPLICA-PROMO.md`. El usuario
 entrega un video de referencia y pide una **plantilla reutilizable nueva**, no un
 video final. El chat que recibe el encargo analiza, diseña, implementa y revisa

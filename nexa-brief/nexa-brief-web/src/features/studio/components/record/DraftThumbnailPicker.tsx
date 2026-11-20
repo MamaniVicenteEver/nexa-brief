@@ -57,6 +57,7 @@ export function DraftThumbnailPicker({
   const locked = disabled || preparing || draft.status === "rendered";
   const error = prepare.error?.message || editor.error || draft.thumbnailError;
   const editorial = draft.templateId === "promo-editorial";
+  const hasManifest = editor.hasManifest;
   const wordLimit =
     editor.editingOption === "A" || !editorial
       ? 5
@@ -74,7 +75,7 @@ export function DraftThumbnailPicker({
               : event.target.value,
           )
         }
-        disabled={locked || !draft.thumbnails}
+        disabled={locked || !hasManifest}
         maxLength={200}
         aria-label={song("song")}
         className="w-full rounded-xl border border-nb-line bg-nb-surface px-3 py-2 text-[12.5px] text-nb-ink focus:border-nb-ink focus:outline-none disabled:opacity-60"
@@ -112,7 +113,7 @@ export function DraftThumbnailPicker({
           <DraftThumbnailArtwork
             manifest={editor.manifest}
             option={option}
-            fallbackUrl={draft.thumbnails?.urls[option]}
+            fallbackUrl={editor.manifest.urls[option]}
             retryKey={rendererRetryKey}
             onRendererError={markRendererFailed}
             className="rounded-t-xl"
@@ -147,7 +148,7 @@ export function DraftThumbnailPicker({
     <div className="flex flex-col gap-2">
       <p className="text-[12px] font-bold text-nb-ink">{t("title")}</p>
 
-      {draft.thumbnails && (
+      {hasManifest && (
         <>
           <fieldset aria-label={t("title")} className="grid grid-cols-2 gap-2">
             {OPTIONS.map((option) => optionCard(option))}
@@ -162,10 +163,10 @@ export function DraftThumbnailPicker({
               ? t("shortPromoHint", { words: wordLimit })
               : t(editor.editingOption === "A" ? "shortCopyHint" : "longCopyHint")}
           </p>
-          <DraftThumbnailControls editor={editor} disabled={locked || !draft.thumbnails} />
+          <DraftThumbnailControls editor={editor} disabled={locked || !hasManifest} />
         </>
       )}
-      {!draft.thumbnails && artistField}
+      {!hasManifest && artistField}
 
       {editor.hasLocalChanges && !editor.isSaving && (
         <p className="text-[10.5px] text-nb-mute">
@@ -210,7 +211,7 @@ export function DraftThumbnailPicker({
           )}
         </div>
       )}
-      {!draft.thumbnails && (
+      {!hasManifest && (
         <button
           type="button"
           disabled={locked}

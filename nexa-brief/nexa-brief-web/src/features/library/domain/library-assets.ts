@@ -41,6 +41,8 @@ export interface LibraryAsset {
   recommendedUses: string[];
   approvalStatus: "pending" | "approved" | "rejected" | null;
   provider: string;
+  /** Origen del recurso: "upload", "stock", "template" o "production" (los de producción no se completan aquí). */
+  source?: string;
   licenseNote: string;
   licenseUrl: string;
 }
@@ -115,6 +117,11 @@ export interface LibraryPageParams extends LibrarySearchParams {
   pageSize?: number;
 }
 
+export interface MusicGroupPageParams extends LibraryPageParams {
+  /** Filtra por disponibilidad de transcripción antes de agrupar y paginar. */
+  hasLyrics?: boolean;
+}
+
 /** Un grupo visual; cada versión conserva su propio identificador y letra. */
 export interface MusicGroup {
   title: string;
@@ -127,4 +134,12 @@ export interface MusicGroupPage {
   total: number;
   page: number;
   pageSize: number;
+}
+
+/** Resultado de «Completar datos»: qué campos se rellenaron y qué fuentes abiertas se usaron. */
+export interface EnrichMusicResult {
+  status: "actualizado" | "sin_cambios" | "completo" | "no_encontrada" | "error";
+  fields: string[];
+  sources: string[];
+  asset: LibraryAsset;
 }

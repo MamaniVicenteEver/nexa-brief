@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "id": "lyrics-kinetic-noir",
+  "title": "Cinético Noir",
+  "summary": "Tipografía cinética en blanco sobre azul casi negro: cada frase de la letra en una composición (barra, pila, cita, eco, subtítulo, marco, caja, resaltado), con tecleo y mezcla de caracteres, cortes en bandas, trazos de luz y humo generados.",
+  "engine": "lyrics-kinetic-noir (player.js + components/*.js, DOM + canvas, reloj = audio.currentTime)",
+  "based_on": null,
+  "is_new_design": true,
+  "reference": "Video de Klickpin «Vision Journal Ideas Everyone Is Loving» (pin 810999845419237013), entregado por el usuario el 2026-11-19. Solo referencia visual: no se usa su audio, su texto ni su fondo.",
+  "created_at": "2026-11-19",
+  "libraries": [],
+  "state": "en revisión",
+  "inputs": {
+    "audio": "song.mp3",
+    "lyrics": "lyrics.json (Whisper)",
+    "config": "config.json"
+  },
+  "components": [
+    {
+      "name": "noir.intro",
+      "label": "Intro",
+      "summary": "Título en grotesca extendida dentro del marco y artista sobre el borde.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "noir.outrov1",
+      "label": "Outro v1",
+      "summary": "Título slab con cursor rojo, subtítulo espaciado y fundido.",
+      "group": "outro",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "noir.outrov2",
+      "label": "Outro v2",
+      "summary": "Caja blanca invertida, humo bajo y fundido.",
+      "group": "outro",
+      "params": {}
+    },
+    {
+      "name": "noir.glitch",
+      "label": "Cortes en bandas",
+      "summary": "Corte horizontal al entrar cada palabra y al cerrar cada escena.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "noir.smoke",
+      "label": "Humo",
+      "summary": "Humo gris en la parte baja en algunas frases.",
+      "default": true,
+      "params": {}
+    }
+  ]
+}

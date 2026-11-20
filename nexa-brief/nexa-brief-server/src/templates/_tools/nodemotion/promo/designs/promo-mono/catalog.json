@@ -248,13 +248,157 @@
       "contract": "contracts/019-component.json"
     },
     {
+      "entry_id": "scene.intro",
+      "kind": "scene",
+      "label": "intro",
+      "summary": "Existing scene type: intro.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.intro",
+      "contract": "contracts/020-scene.json"
+    },
+    {
+      "entry_id": "scene.playline",
+      "kind": "scene",
+      "label": "playline",
+      "summary": "Existing scene type: playline.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.playline",
+      "contract": "contracts/021-scene.json"
+    },
+    {
+      "entry_id": "scene.cardfan",
+      "kind": "scene",
+      "label": "cardfan",
+      "summary": "Existing scene type: cardfan.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.cardfan",
+      "contract": "contracts/022-scene.json"
+    },
+    {
+      "entry_id": "scene.wordgrid",
+      "kind": "scene",
+      "label": "wordgrid",
+      "summary": "Existing scene type: wordgrid.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.wordgrid",
+      "contract": "contracts/023-scene.json"
+    },
+    {
+      "entry_id": "scene.chips",
+      "kind": "scene",
+      "label": "chips",
+      "summary": "Existing scene type: chips.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.chips",
+      "contract": "contracts/024-scene.json"
+    },
+    {
+      "entry_id": "scene.linetext",
+      "kind": "scene",
+      "label": "linetext",
+      "summary": "Existing scene type: linetext.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.linetext",
+      "contract": "contracts/025-scene.json"
+    },
+    {
+      "entry_id": "scene.pin",
+      "kind": "scene",
+      "label": "pin",
+      "summary": "Existing scene type: pin.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.pin",
+      "contract": "contracts/026-scene.json"
+    },
+    {
+      "entry_id": "scene.footage",
+      "kind": "scene",
+      "label": "footage",
+      "summary": "Existing scene type: footage.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.footage",
+      "contract": "contracts/027-scene.json"
+    },
+    {
+      "entry_id": "scene.numbers",
+      "kind": "scene",
+      "label": "numbers",
+      "summary": "Existing scene type: numbers.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.numbers",
+      "contract": "contracts/028-scene.json"
+    },
+    {
+      "entry_id": "scene.pattern",
+      "kind": "scene",
+      "label": "pattern",
+      "summary": "Existing scene type: pattern.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.pattern",
+      "contract": "contracts/029-scene.json"
+    },
+    {
+      "entry_id": "scene.spaced",
+      "kind": "scene",
+      "label": "spaced",
+      "summary": "Existing scene type: spaced.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.spaced",
+      "contract": "contracts/030-scene.json"
+    },
+    {
+      "entry_id": "scene.phonechat",
+      "kind": "scene",
+      "label": "phonechat",
+      "summary": "Existing scene type: phonechat.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.phonechat",
+      "contract": "contracts/031-scene.json"
+    },
+    {
+      "entry_id": "scene.coupon",
+      "kind": "scene",
+      "label": "coupon",
+      "summary": "Existing scene type: coupon.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.coupon",
+      "contract": "contracts/032-scene.json"
+    },
+    {
+      "entry_id": "scene.codeinput",
+      "kind": "scene",
+      "label": "codeinput",
+      "summary": "Existing scene type: codeinput.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.codeinput",
+      "contract": "contracts/033-scene.json"
+    },
+    {
+      "entry_id": "scene.contact",
+      "kind": "scene",
+      "label": "contact",
+      "summary": "Existing scene type: contact.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.contact",
+      "contract": "contracts/034-scene.json"
+    },
+    {
+      "entry_id": "scene.outro",
+      "kind": "scene",
+      "label": "outro",
+      "summary": "Existing scene type: outro.",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.outro",
+      "contract": "contracts/035-scene.json"
+    },
+    {
       "entry_id": "config.fonts",
       "kind": "configuration",
       "label": "fonts",
       "summary": "Existing configuration configuration: fonts.",
       "constraints_status": "observed_defaults_only",
       "id": "config.fonts",
-      "contract": "contracts/020-configuration.json"
+      "contract": "contracts/036-configuration.json"
     },
     {
       "entry_id": "config.palette",
@@ -263,7 +407,7 @@
       "summary": "Existing configuration configuration: palette.",
       "constraints_status": "observed_defaults_only",
       "id": "config.palette",
-      "contract": "contracts/021-configuration.json"
+      "contract": "contracts/037-configuration.json"
     },
     {
       "entry_id": "config.brand",
@@ -272,7 +416,7 @@
       "summary": "Existing configuration configuration: brand.",
       "constraints_status": "observed_defaults_only",
       "id": "config.brand",
-      "contract": "contracts/022-configuration.json"
+      "contract": "contracts/038-configuration.json"
     },
     {
       "entry_id": "config.chips",
@@ -281,7 +425,7 @@
       "summary": "Existing configuration configuration: chips.",
       "constraints_status": "observed_defaults_only",
       "id": "config.chips",
-      "contract": "contracts/023-configuration.json"
+      "contract": "contracts/039-configuration.json"
     },
     {
       "entry_id": "config.grades",
@@ -290,7 +434,7 @@
       "summary": "Existing configuration configuration: grades.",
       "constraints_status": "observed_defaults_only",
       "id": "config.grades",
-      "contract": "contracts/024-configuration.json"
+      "contract": "contracts/040-configuration.json"
     },
     {
       "entry_id": "config.look",
@@ -299,7 +443,7 @@
       "summary": "Existing configuration configuration: look.",
       "constraints_status": "observed_defaults_only",
       "id": "config.look",
-      "contract": "contracts/025-configuration.json"
+      "contract": "contracts/041-configuration.json"
     },
     {
       "entry_id": "config.anim",
@@ -308,7 +452,7 @@
       "summary": "Existing configuration configuration: anim.",
       "constraints_status": "observed_defaults_only",
       "id": "config.anim",
-      "contract": "contracts/026-configuration.json"
+      "contract": "contracts/042-configuration.json"
     },
     {
       "entry_id": "config.intro",
@@ -317,7 +461,7 @@
       "summary": "Existing configuration configuration: intro.",
       "constraints_status": "observed_defaults_only",
       "id": "config.intro",
-      "contract": "contracts/027-configuration.json"
+      "contract": "contracts/043-configuration.json"
     },
     {
       "entry_id": "config.outro",
@@ -326,7 +470,7 @@
       "summary": "Existing configuration configuration: outro.",
       "constraints_status": "observed_defaults_only",
       "id": "config.outro",
-      "contract": "contracts/028-configuration.json"
+      "contract": "contracts/044-configuration.json"
     },
     {
       "entry_id": "config.transition",
@@ -335,7 +479,7 @@
       "summary": "Existing configuration configuration: transition.",
       "constraints_status": "observed_defaults_only",
       "id": "config.transition",
-      "contract": "contracts/029-configuration.json"
+      "contract": "contracts/045-configuration.json"
     },
     {
       "entry_id": "config.hud",
@@ -344,7 +488,7 @@
       "summary": "Existing configuration configuration: hud.",
       "constraints_status": "observed_defaults_only",
       "id": "config.hud",
-      "contract": "contracts/030-configuration.json"
+      "contract": "contracts/046-configuration.json"
     },
     {
       "entry_id": "config.texture",
@@ -353,7 +497,7 @@
       "summary": "Existing configuration configuration: texture.",
       "constraints_status": "observed_defaults_only",
       "id": "config.texture",
-      "contract": "contracts/031-configuration.json"
+      "contract": "contracts/047-configuration.json"
     },
     {
       "entry_id": "config.render",
@@ -362,151 +506,7 @@
       "summary": "Existing configuration configuration: render.",
       "constraints_status": "observed_defaults_only",
       "id": "config.render",
-      "contract": "contracts/032-configuration.json"
-    },
-    {
-      "entry_id": "scene.intro",
-      "kind": "scene",
-      "label": "intro",
-      "summary": "Existing scene configuration: intro.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.intro",
-      "contract": "contracts/033-scene.json"
-    },
-    {
-      "entry_id": "scene.playline",
-      "kind": "scene",
-      "label": "playline",
-      "summary": "Existing scene configuration: playline.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.playline",
-      "contract": "contracts/034-scene.json"
-    },
-    {
-      "entry_id": "scene.cardfan",
-      "kind": "scene",
-      "label": "cardfan",
-      "summary": "Existing scene configuration: cardfan.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.cardfan",
-      "contract": "contracts/035-scene.json"
-    },
-    {
-      "entry_id": "scene.wordgrid",
-      "kind": "scene",
-      "label": "wordgrid",
-      "summary": "Existing scene configuration: wordgrid.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.wordgrid",
-      "contract": "contracts/036-scene.json"
-    },
-    {
-      "entry_id": "scene.chips",
-      "kind": "scene",
-      "label": "chips",
-      "summary": "Existing scene configuration: chips.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.chips",
-      "contract": "contracts/037-scene.json"
-    },
-    {
-      "entry_id": "scene.linetext",
-      "kind": "scene",
-      "label": "linetext",
-      "summary": "Existing scene configuration: linetext.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.linetext",
-      "contract": "contracts/038-scene.json"
-    },
-    {
-      "entry_id": "scene.pin",
-      "kind": "scene",
-      "label": "pin",
-      "summary": "Existing scene configuration: pin.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.pin",
-      "contract": "contracts/039-scene.json"
-    },
-    {
-      "entry_id": "scene.footage",
-      "kind": "scene",
-      "label": "footage",
-      "summary": "Existing scene configuration: footage.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.footage",
-      "contract": "contracts/040-scene.json"
-    },
-    {
-      "entry_id": "scene.numbers",
-      "kind": "scene",
-      "label": "numbers",
-      "summary": "Existing scene configuration: numbers.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.numbers",
-      "contract": "contracts/041-scene.json"
-    },
-    {
-      "entry_id": "scene.pattern",
-      "kind": "scene",
-      "label": "pattern",
-      "summary": "Existing scene configuration: pattern.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.pattern",
-      "contract": "contracts/042-scene.json"
-    },
-    {
-      "entry_id": "scene.spaced",
-      "kind": "scene",
-      "label": "spaced",
-      "summary": "Existing scene configuration: spaced.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.spaced",
-      "contract": "contracts/043-scene.json"
-    },
-    {
-      "entry_id": "scene.phonechat",
-      "kind": "scene",
-      "label": "phonechat",
-      "summary": "Existing scene configuration: phonechat.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.phonechat",
-      "contract": "contracts/044-scene.json"
-    },
-    {
-      "entry_id": "scene.coupon",
-      "kind": "scene",
-      "label": "coupon",
-      "summary": "Existing scene configuration: coupon.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.coupon",
-      "contract": "contracts/045-scene.json"
-    },
-    {
-      "entry_id": "scene.codeinput",
-      "kind": "scene",
-      "label": "codeinput",
-      "summary": "Existing scene configuration: codeinput.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.codeinput",
-      "contract": "contracts/046-scene.json"
-    },
-    {
-      "entry_id": "scene.contact",
-      "kind": "scene",
-      "label": "contact",
-      "summary": "Existing scene configuration: contact.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.contact",
-      "contract": "contracts/047-scene.json"
-    },
-    {
-      "entry_id": "scene.outro",
-      "kind": "scene",
-      "label": "outro",
-      "summary": "Existing scene configuration: outro.",
-      "constraints_status": "observed_defaults_only",
-      "id": "scene.outro",
-      "contract": "contracts/048-scene.json"
+      "contract": "contracts/048-configuration.json"
     }
   ]
 }

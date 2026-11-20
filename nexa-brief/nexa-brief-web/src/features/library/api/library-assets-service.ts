@@ -15,6 +15,7 @@ export const updateLibraryAsset = resources.update.bind(resources);
 export const deleteLibraryAsset = resources.remove.bind(resources);
 export const getLyrics = resources.lyrics.bind(resources);
 export const retranscribe = resources.retranscribe.bind(resources);
+export const enrichLibraryMusic = resources.enrichMusic.bind(resources);
 export const resolveAssetFileUrl = resources.fileUrl.bind(resources);
 
 export const resolveAssetPreviewUrl = resources.previewUrl.bind(resources);

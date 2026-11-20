@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["identified", "artist", "description", "genre", "tags", "confidence"],
+  "properties": {
+    "identified": {"type": "boolean"},
+    "artist": {"type": "string", "maxLength": 120},
+    "description": {"type": "string", "maxLength": 600},
+    "genre": {"type": "string", "maxLength": 60},
+    "tags": {"type": "array", "maxItems": 8, "items": {"type": "string", "maxLength": 32}},
+    "confidence": {"type": "string", "enum": ["alta", "media", "baja"]}
+  }
+}

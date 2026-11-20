@@ -45,16 +45,42 @@ logger = structlog.get_logger(__name__)
 INPUTS_DIR = "assets/inputs"
 
 
-def _set_dotted(config: dict[str, Any], dotted_key: str, value: Any) -> None:
-    node = config
+def _dotted_parent(config: dict[str, Any], dotted_key: str, *, create: bool = False) -> tuple[object, str]:
     *parents, leaf = dotted_key.split(".")
+    node: object = config
     for part in parents:
-        child = node.get(part)
-        if not isinstance(child, dict):
-            child = {}
-            node[part] = child
-        node = child
-    node[leaf] = value
+        if isinstance(node, dict):
+            child = node.get(part)
+            if child is None and create:
+                child = {}
+                node[part] = child
+            node = child
+        elif isinstance(node, list) and part.isdigit() and int(part) < len(node):
+            node = node[int(part)]
+        else:
+            return None, leaf
+    return node, leaf
+
+
+def _delete_dotted(config: dict[str, Any], dotted_key: str) -> bool:
+    parent, leaf = _dotted_parent(config, dotted_key)
+    if isinstance(parent, dict) and leaf in parent:
+        del parent[leaf]
+        return True
+    if isinstance(parent, list) and leaf.isdigit() and int(leaf) < len(parent):
+        parent[int(leaf)] = None  # preservar los índices de las demás escenas
+        return True
+    return False
+
+
+def _set_dotted(config: dict[str, Any], dotted_key: str, value: Any) -> None:
+    parent, leaf = _dotted_parent(config, dotted_key, create=True)
+    if isinstance(parent, dict):
+        parent[leaf] = value
+    elif isinstance(parent, list) and leaf.isdigit() and int(leaf) < len(parent):
+        parent[int(leaf)] = value
+    else:
+        raise ValueError(f"Invalid configuration path: {dotted_key}")
 
 
 def _resolve_asset(kind: str, asset_id: str) -> tuple[str, Path]:
@@ -112,18 +138,52 @@ async def _apply_media_slot(
     references: dict | None = None,
 ) -> int:
     entries = config.get("media")
-    if not isinstance(entries, list):
-        logger.warning("template_inputs_no_media_list", slot=slot["slot"])
+    if not isinstance(entries, (list, dict)):
+        logger.warning("template_inputs_no_media_collection", slot=slot["slot"])
         return 0
     asset_ids = asset_ids[: slot["max"]]
     wanted = {"image", "video"} if slot["kind"] == "image|video" else {slot["kind"]}
-    targets = [entry for entry in entries if isinstance(entry, dict) and entry.get("type") in wanted]
+
+    if isinstance(entries, list):
+        targets = [
+            (index, entry) for index, entry in enumerate(entries)
+            if isinstance(entry, dict) and entry.get("type") in wanted
+        ]
+        if not asset_ids:
+            if slot.get("min", 1) != 0:
+                return 0
+            config["media"] = [
+                entry for entry in entries
+                if not (isinstance(entry, dict) and entry.get("type") in wanted)
+            ]
+            return len(targets)
+    else:
+        def entry_kind(value: object) -> str | None:
+            if isinstance(value, dict) and value.get("type") in {"image", "video"}:
+                return value["type"]
+            raw_path = value.get("src") if isinstance(value, dict) else value
+            if not isinstance(raw_path, str):
+                return None
+            suffix = Path(raw_path).suffix.lower()
+            if suffix in {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif", ".svg"}:
+                return "image"
+            if suffix in {".mp4", ".webm", ".mov"}:
+                return "video"
+            return None
+
+        targets = [(key, value) for key, value in entries.items() if entry_kind(value) in wanted]
+        if not asset_ids:
+            if slot.get("min", 1) != 0:
+                return 0
+            for key, _ in targets:
+                entries.pop(key, None)
+            return len(targets)
+
     if not targets or not asset_ids:
         return 0
 
     dest_dir = output_dir / INPUTS_DIR
     dest_dir.mkdir(parents=True, exist_ok=True)
-    # Cada asset se copia una sola vez aunque se reparta en varias entradas.
     copied: dict[str, dict[str, str]] = {}
     for index, asset_id in enumerate(asset_ids):
         if asset_id in copied:
@@ -153,23 +213,49 @@ async def _apply_media_slot(
                     spec["poster"] = poster_rel
         copied[asset_id] = spec
 
-    for position, entry in enumerate(targets):
+    for position, (key, entry) in enumerate(targets):
         spec = copied[asset_ids[position % len(asset_ids)]]
-        entry["type"] = spec["type"]
-        entry["src"] = spec["src"]
-        if "poster" in spec:
-            entry["poster"] = spec["poster"]
+        if isinstance(entries, list):
+            entry["type"] = spec["type"]
+            entry["src"] = spec["src"]
+            if "poster" in spec:
+                entry["poster"] = spec["poster"]
+            else:
+                entry.pop("poster", None)
+            entry.pop("graded", None)
+        elif isinstance(entry, dict):
+            entry["type"] = spec["type"]
+            entry["src"] = spec["src"]
         else:
-            entry.pop("poster", None)
-        # Las variantes pre-gradadas eran del material de demo: sin ellas la
-        # plantilla aplica el mismo grade en vivo (idéntico, solo más lento).
-        entry.pop("graded", None)
+            entries[key] = spec["src"]
     return len(targets)
 
 
 def _apply_config_slot(config: dict[str, Any], slot: dict, asset_ids: list[str], output_dir: Path, references: dict | None = None) -> bool:
-    if not asset_ids or not slot.get("path"):
+    if not slot.get("path"):
         return False
+    parent, leaf = _dotted_parent(config, slot["path"])
+    current = parent.get(leaf) if isinstance(parent, dict) else (
+        parent[int(leaf)] if isinstance(parent, list) and leaf.isdigit() and int(leaf) < len(parent) else None
+    )
+    if isinstance(current, list) and slot.get("max", 1) > 1:
+        if not asset_ids and slot.get("min", 1) > 0:
+            return False
+        selected = []
+        for index, asset_id in enumerate(asset_ids[:slot["max"]]):
+            real_kind, source = _resolve_asset(slot["kind"], asset_id)
+            relative = f"{INPUTS_DIR}/{slot['slot']}-{index}{source.suffix.lower()}"
+            (output_dir / INPUTS_DIR).mkdir(parents=True, exist_ok=True)
+            if references is None:
+                shutil.copy2(source, output_dir / relative)
+            else:
+                from src.core.nodemotion.service import asset_ref
+                references[relative] = asset_ref(real_kind, asset_id)
+            selected.append(relative)
+        _set_dotted(config, slot["path"], selected)
+        return True
+    if not asset_ids:
+        return _delete_dotted(config, slot["path"]) if slot.get("min", 1) == 0 else False
     real_kind, source = _resolve_asset(slot["kind"], asset_ids[0])
     relative = f"{INPUTS_DIR}/{slot['slot']}{source.suffix.lower()}"
     (output_dir / INPUTS_DIR).mkdir(parents=True, exist_ok=True)
@@ -179,10 +265,7 @@ def _apply_config_slot(config: dict[str, Any], slot: dict, asset_ids: list[str],
         from src.core.nodemotion.service import asset_ref
         references[relative] = asset_ref(real_kind, asset_ids[0])
     _set_dotted(config, slot["path"], relative)
-    parent_path, _, _ = slot["path"].rpartition(".")
-    parent = config
-    for part in parent_path.split(".") if parent_path else []:
-        parent = parent.get(part) if isinstance(parent, dict) else None
+    parent, _ = _dotted_parent(config, slot["path"])
     if isinstance(parent, dict) and "type" in parent:
         parent["type"] = real_kind
     return True

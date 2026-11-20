@@ -5,6 +5,7 @@ keyed documents coexist without exposing physical paths to the domain ports.
 """
 from __future__ import annotations
 
+import asyncio
 import copy
 import json
 import os
@@ -88,10 +89,15 @@ class Section:
     async def mutate_async(self, fn: Callable[[dict[str, Any]], Any]) -> Any:
         path = self.path
         async with AsyncFileLock(lock_path(path)):
-            data = self.read_path(path)
-            before = copy.deepcopy(data)
-            result = fn(data)
-            if data != before:
-                data["revision"] += 1
-                self.write_path(path, data)
-            return result
+            # Leer, copiar y escribir el archivo entero va en un hilo: el bucle de
+            # eventos sigue atendiendo peticiones mientras se guarda.
+            return await asyncio.to_thread(self._mutate_bajo_lock, path, fn)
+
+    def _mutate_bajo_lock(self, path: Path, fn: Callable[[dict[str, Any]], Any]) -> Any:
+        data = self.read_path(path)
+        before = copy.deepcopy(data)
+        result = fn(data)
+        if data != before:
+            data["revision"] += 1
+            self.write_path(path, data)
+        return result

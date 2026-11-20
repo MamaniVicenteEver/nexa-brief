@@ -13,6 +13,10 @@ class WorkerTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
+        # La reserva real (20 GiB) no cabe en un /tmp pequeño; los tests de copia la desactivan.
+        reserve = patch.object(w, "MIN_FREE_BYTES", 0)
+        reserve.start()
+        self.addCleanup(reserve.stop)
         self.root = Path(self.tmp.name)
         self.mount = self.root / "hdd"
         self.mount.mkdir()
@@ -71,6 +75,20 @@ class WorkerTests(unittest.TestCase):
             os.stat(self.bundle() / "16x9/video.mp4").st_ino,
             os.stat(self.bundle() / "9x16/video.mp4").st_ino,
         )
+
+    def test_low_space_pauses_queue_then_resumes(self):
+        self.assertTrue(w.enqueue(self.db, self.spec))
+        with patch.object(w, "MIN_FREE_BYTES", 10**18):
+            self.process()
+        self.assertEqual(self.status(), ("queued", 0))
+        self.assertFalse(self.bundle().exists())
+        with contextlib.closing(sqlite3.connect(self.db)) as db:
+            error = db.execute("select error from backups").fetchone()[0]
+        self.assertTrue(error.startswith("StorageFull:"))
+        self.process()
+        self.assertEqual(self.status(), ("done", 1))
+        with contextlib.closing(sqlite3.connect(self.db)) as db:
+            self.assertIsNone(db.execute("select error from backups").fetchone()[0])
 
     def test_absent_wrong_uuid(self):
         with patch.object(w.subprocess, "run", side_effect=OSError("absent")):

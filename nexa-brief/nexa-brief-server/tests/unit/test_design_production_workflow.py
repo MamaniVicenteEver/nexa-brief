@@ -570,3 +570,18 @@ async def test_completed_shared_demo_inspection_uses_its_registered_catalog(work
     assert after['issues'] == []
     assert after['component_count'] == 1
     assert after['design_id'] == 'mapas-satelitales'
+
+
+def test_review_ignores_symlinks_inside_work_but_not_elsewhere(tmp_path):
+    from src.adapters.showcase.technical_review import review_files
+    source = tmp_path / "demo"
+    cache = source / "work/sonido/hf/snapshots"
+    cache.mkdir(parents=True)
+    (cache / "model.bin").symlink_to("/tmp")
+    (source / "index.html").write_text("<html></html>")
+    report = review_files(source, "nodepolitics", "demo", tmp_path / "destino", lambda text, *a, **k: text)
+    assert not [i for i in report["issues"] if "simb" in i]
+    (source / "assets").mkdir()
+    (source / "assets/unsafe").symlink_to("/tmp")
+    report = review_files(source, "nodepolitics", "demo", tmp_path / "destino", lambda text, *a, **k: text)
+    assert any("assets/unsafe" in i for i in report["issues"])

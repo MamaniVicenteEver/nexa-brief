@@ -88,3 +88,63 @@ def test_slow_download_is_cancelled_and_failure_logged(tmp_path, monkeypatch):
     assert cancelled == [True] and len(rows) == 1
     assert rows[0]['step'] == 'download' and rows[0]['ok'] is False
     assert rows[0]['input_tokens'] is None
+
+
+def test_manual_media_selection_uses_exact_id_without_ai_terms(tmp_path, monkeypatch):
+    target = tmp_path / "project"
+    write(target / "media-plan.json", {"items": [
+        {"scene": 1, "slot": "hero", "kind": "image", "query": "manual-selection-id",
+         "asset_id": "selected-image", "orientation": "landscape", "manual_selection": True}
+    ]})
+    seen = []
+
+    def find(root, kind, **kwargs):
+        seen.append((root, kind, kwargs))
+        return (target / "resource.json", {"id": kwargs["ident"], "used_by": [], "orientation": "landscape"})
+
+    monkeypatch.setattr(media, "find", find)
+    monkeypatch.setattr(media, "use", lambda found, project_id, write_json: found[1])
+    monkeypatch.setattr(media, "timeline", lambda *_: {"segments": [{"id": 1, "start": 0, "end": 2}]})
+
+    result = asyncio.run(media.fetch(
+        tmp_path, target, "a" * 32 + "-r1",
+        lambda path: json.loads(path.read_text(encoding="utf-8")), write,
+        lambda *_: None,
+    ))
+
+    plan = json.loads((target / "media-plan.json").read_text(encoding="utf-8"))
+    assert result == 0
+    assert seen[0][1] == "image"
+    assert seen[0][2]["ident"] == "selected-image" and seen[0][2]["required_terms"] is None
+    assert plan["items"][0]["asset_id"] == "selected-image"
+
+
+def test_manual_media_selection_fails_closed_when_selected_id_disappears(tmp_path, monkeypatch):
+    target = tmp_path / "project"
+    write(target / "media-plan.json", {"items": [
+        {"scene": 1, "slot": "hero", "kind": "image", "query": "manual-selection-id",
+         "asset_id": "selected-image", "orientation": "landscape", "manual_selection": True}
+    ]})
+    seen = []
+
+    def find(root, kind, **kwargs):
+        seen.append((kind, kwargs))
+        return None
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("una selección directa no debe buscar medios alternativos")
+
+    monkeypatch.setattr(media, "find", find)
+    monkeypatch.setattr(media, "build_providers", forbidden)
+    monkeypatch.setattr(media, "timeline", lambda *_: {"segments": [{"id": 1, "start": 0, "end": 2}]})
+
+    result = asyncio.run(media.fetch(
+        tmp_path, target, "a" * 32 + "-r1",
+        lambda path: json.loads(path.read_text(encoding="utf-8")), write,
+        lambda *_: None,
+    ))
+
+    plan = json.loads((target / "media-plan.json").read_text(encoding="utf-8"))
+    assert result == 1
+    assert seen == [("image", {"ident": "selected-image", "required_terms": None})]
+    assert "asset_id" not in plan["items"][0]

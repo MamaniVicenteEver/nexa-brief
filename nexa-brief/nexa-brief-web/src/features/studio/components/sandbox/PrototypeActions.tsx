@@ -25,6 +25,7 @@ export function PrototypeActions({
   const { editor } = studio;
   const req = studio.requirements.data;
   const draft = editor.draft;
+  const missingThumbnails = !!draft && (!!draft.thumbnailError || !draft.thumbnails?.urls?.[draft.thumbnails.selected]);
 
   if (editor.step === "busy") {
     return (
@@ -84,6 +85,7 @@ export function PrototypeActions({
         {editor.step === "prepared" && draft && (
           <button
             type="button"
+            disabled={missingThumbnails}
             onClick={() => studio.recordPrototype(draft.draftId)}
             className={`${PRIMARY} bg-nb-accent-coral text-white`}
           >
@@ -92,6 +94,9 @@ export function PrototypeActions({
           </button>
         )}
       </div>
+      {editor.step === "prepared" && missingThumbnails && (
+        <p role="status" className="text-[11.5px] text-nb-mute">Prepara las miniaturas de los cinco destinos para habilitar la grabación.</p>
+      )}
       {editor.step === "prepared" && (
         <SongNotesField value={editor.songNotes} onChange={editor.setSongNotes} />
       )}

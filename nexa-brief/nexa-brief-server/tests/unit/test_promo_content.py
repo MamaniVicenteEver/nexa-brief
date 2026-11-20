@@ -36,6 +36,7 @@ def test_content_uses_revision_files_and_whitelists_fields(tmp_path,monkeypatch)
     service,row,draft,project,target=setup(tmp_path,monkeypatch)
     result=content.read_content(service,SID)
     assert result['title']=='Tema' and result['copies']['youtube']['description']=='Texto'
+    assert result['copies']['youtube_shorts'] == {'title': 'Título #Shorts', 'description': 'Texto'}
     assert result['guion']['segments'][0]['lines']==['HOLA'] and result['media']==[]
     assert result['music']['name']=='Tema musical' and 'file' not in result['music'] and 'download_url' not in result['music']
     assert set(result['availability'].values())=={'available'}
@@ -125,3 +126,50 @@ def test_legacy_derived_music_uses_safe_library_metadata(tmp_path,monkeypatch):
     assert result['availability']['music']=='available'
     assert result['music']=={'id':'derived','type':'music','name':'Undaunted','author':'Autor','source':'stock','license':'CC BY [enlace omitido]'}
     assert '/private' not in json.dumps(result) and 'token=secret' not in json.dumps(result)
+
+
+def test_resolved_media_reports_the_real_scene_and_slot_uses(tmp_path, monkeypatch):
+    service, row, draft, project, target = setup(tmp_path, monkeypatch)
+    put(target / "media-plan.json", {"items": [
+        {"scene": 1, "slot": "horses", "kind": "video", "asset_id": "video1"},
+        {"scene": 3, "slot": "horses", "kind": "video", "asset_id": "video1"},
+    ]})
+    visual = {"id": "video1", "type": "video", "name": "Material real", "author": "Autora", "source": "Wikimedia", "license": "CC BY", "file": "/private/file"}
+    soundtrack = {"id": "m1", "type": "music", "name": "Tema musical", "author": "Compositora", "source": "Biblioteca", "license": "CC BY"}
+    monkeypatch.setattr(content, "_resource_rows", lambda _: [visual, soundtrack])
+
+    result = content.read_content(service, SID)
+
+    assert result["media_basis"] == "resolved_plan"
+    assert result["media"] == [{
+        "id": "video1", "type": "video", "name": "Material real", "author": "Autora",
+        "source": "Wikimedia", "license": "CC BY",
+        "scene_uses": [{"scene": 1, "slot": "horses"}, {"scene": 3, "slot": "horses"}],
+    }]
+    assert "/private" not in json.dumps(result)
+
+
+def test_legacy_configured_media_includes_defaults_and_missing_refs(tmp_path, monkeypatch):
+    monkeypatch.setattr(content, 'active_config', lambda config: config)
+    root = tmp_path / 'resources'
+    put(root / 'videos/v1/resource.json', {'id': 'v1', 'name': 'Video real', 'type': 'video', 'license': 'CC'})
+    put(root / 'images/i1/resource.json', {'id': 'i1', 'name': 'Imagen real', 'type': 'image', 'license': 'CC'})
+    config = {'media': [
+        {'id': 'clip', 'type': 'video', 'src': 'assets/media/clip.mp4'},
+        {'id': 'photo', 'type': 'image', 'src': 'assets/inputs/photo.jpg'},
+        {'id': 'missing', 'type': 'video', 'src': 'assets/media/missing.mp4'},
+    ]}
+    project = {'assets': {
+        'assets/media/clip.mp4': {'kind': 'video', 'asset_id': 'v1'},
+        'assets/inputs/photo.jpg': {'kind': 'image', 'asset_id': 'i1'},
+    }}
+    items, complete = content._configured_project_media(config, project, root)
+    assert [(x['id'], x['name']) for x in items] == [('v1', 'Video real'), ('i1', 'Imagen real'), (None, 'missing')]
+    assert not complete
+    assert str(tmp_path) not in json.dumps(items)
+
+
+def test_content_preserves_explicit_shorts_copy(tmp_path, monkeypatch):
+    service, row, draft, project, target = setup(tmp_path, monkeypatch)
+    draft['details']['copies']['youtube_shorts'] = {'title': 'Corto propio', 'description': 'Texto propio'}
+    assert content.read_content(service, SID)['copies']['youtube_shorts'] == {'title': 'Corto propio', 'description': 'Texto propio'}

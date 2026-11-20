@@ -20,7 +20,7 @@ def prompt_filename(name: str) -> str:
     return STAGE_FILES.get(name, name)
 
 
-TEMPLATES = frozenset(f"promo-{name}" for name in ("editorial", "dynamic", "kinetic", "sports", "trendy", "urban", "breaking", "pulse"))
+TEMPLATES = frozenset(f"promo-{name}" for name in ("editorial", "dynamic", "kinetic", "sports", "trendy", "urban", "breaking", "pulse", "mono"))
 
 
 def reference(version: str | None = None) -> dict:

@@ -31,7 +31,6 @@ case "${1:---help}" in
     ;;
   --restart)
     backup_images
-    ./scripts/start-connections.sh
     docker compose up -d --build --force-recreate --wait --wait-timeout 180 api web
     docker compose ps
     bash ./scripts/docker-clean-images.sh
@@ -39,7 +38,6 @@ case "${1:---help}" in
   --fresh)
     backup_images
     docker compose build --no-cache
-    ./scripts/start-connections.sh
     docker compose up -d --force-recreate --wait --wait-timeout 180 api web
     docker compose ps
     bash ./scripts/docker-clean-images.sh

@@ -4,6 +4,8 @@ Para crear cualquier contenido empieza por el [índice](../../../skills/README.m
 
 # AGENTS.md — NodeMotion: prototipos de plantillas de música
 
+> **Excepción NodeMotion (vigente desde 2026-11-16):** esta guía no se usa para plantillas nuevas de letras o promos. Rige el «Estándar vigente para plantillas NodeMotion nuevas» del AGENTS.md raíz: motor en `src/templates/nodemotion/<cat>/<id>/` (solo código y JSON), prototipo y datos en `$NEXA_PROFILE_DIR/productions/nodemotion/<cat>/<id>/` y medios compartidos en recursos. Lo que aquí dice sobre `sandbox/nodemotion/`, la promoción desde el Sandbox y las pruebas de prototipo queda por actualizar; mientras tanto, esa norma manda. Las recetas técnicas (motores, HyperFrames, rendimiento) siguen siendo válidas como consulta.
+
 ## Entrada breve para un chat directo
 
 Para replicar una referencia entregada por el usuario, usa las guías breves:

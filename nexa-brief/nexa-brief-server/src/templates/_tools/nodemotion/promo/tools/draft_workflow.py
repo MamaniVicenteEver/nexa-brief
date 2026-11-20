@@ -236,10 +236,10 @@ def prepare(target,read_json, ident=None):
     details=d.get('details') or {}; credit_text='Créditos:\n'+'\n'.join(credits)
     base_research=details.get('research','').split('\n\nCréditos:\n',1)[0].strip()
     desired_research=(base_research+'\n\n'+credit_text).strip()
-    from src.core.nodemotion.promo.credits import apply_credits
+    from src.core.nodemotion.promo.credits import strip_credits
     original_details=copy.deepcopy(details)
     details['research']=desired_research
-    details=apply_credits(details, resource_fichas, music_edited=bool(music.get('ready_file')))
+    details=strip_credits(details)
     if details != original_details:
         d=call(target,'PUT',f'/drafts/{ident}/details',details)
     # Guardar detalles puede sustituir la intro por el título de la canción.

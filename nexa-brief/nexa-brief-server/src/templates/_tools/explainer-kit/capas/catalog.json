@@ -2160,6 +2160,406 @@
         "Textura JPEG del original. Altura de uso aproximada de hasta 300 px.",
         "Licencia desconocida. Autor y procedencia externa sin documentar."
       ]
+    },
+    {
+      "id": "copa-propuesta",
+      "version": 1,
+      "type": "objeto",
+      "name": "Copa de vino · propuesta",
+      "description": "Reconstrucción generada para revisión visual de Copa de vino extraída de la cabina, útil como detalle de privilegio.",
+      "tags": [
+        "lujo",
+        "privilegio",
+        "copa"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-15",
+        "sheet": "review/propuestas-estilo-2026-11-15/estilo-comparacion.png",
+        "notes": "Propuesta generada con IA a partir de la referencia y del estilo del apretón; pendiente de revisión y aprobación humana. Las zonas de color y anclas requieren revisión visual en escena."
+      },
+      "source": {
+        "resource_id": "titanes-ref-7e623cb52d36",
+        "original": "edeefa1bb0d189c32c545664bedced99.jpg",
+        "origin": "Reconstrucción generada con IA a partir de la colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Derivada de copa; conserva la referencia original y su licencia desconocida. La imagen generada no sustituye el maestro de origen."
+      },
+      "master": null,
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 920,
+      "poses": {
+        "original": {
+          "file": "assets/copa-propuesta/original.webp",
+          "sha256": "43be738b654dc2d69e90caee3d6a621d5f4e2457de3db3b6268b84aa6983418e",
+          "anchors": {
+            "centro": [
+              512,
+              400
+            ],
+            "agarre": [
+              512,
+              550
+            ]
+          },
+          "masks": {
+            "vino": "assets/copa-propuesta/original.vino.png"
+          },
+          "notes": "Reconstrucción generada con IA; pose y geometría aproximadas, conservar el original hasta la elección humana."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre"
+      ],
+      "color_zones": {
+        "vino": {
+          "default": "#202020",
+          "doc": "Superficie roja del vino dentro del cáliz."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Propuesta pendiente de revisión y aprobación humana; las anclas y tintes deben confirmarse en escena.",
+        "Derivada de referencia de licencia desconocida; no lista para publicación."
+      ]
+    },
+    {
+      "id": "llave-cuerda-propuesta",
+      "version": 1,
+      "type": "objeto",
+      "name": "Llave de cuerda · propuesta",
+      "description": "Reconstrucción generada para revisión visual de Llave mecánica separada del muñeco para representar dependencia o automatismo.",
+      "tags": [
+        "automatismo",
+        "llave",
+        "control"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-15",
+        "sheet": "review/propuestas-estilo-2026-11-15/estilo-comparacion.png",
+        "notes": "Propuesta generada con IA a partir de la referencia y del estilo del apretón; pendiente de revisión y aprobación humana. Las zonas de color y anclas requieren revisión visual en escena."
+      },
+      "source": {
+        "resource_id": "titanes-ref-55cb7dc771d3",
+        "original": "0d02f1918f4409f3ec5e4bd9410dcf13.jpg",
+        "origin": "Reconstrucción generada con IA a partir de la colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Derivada de llave-cuerda; conserva la referencia original y su licencia desconocida. La imagen generada no sustituye el maestro de origen."
+      },
+      "master": null,
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 895,
+      "poses": {
+        "original": {
+          "file": "assets/llave-cuerda-propuesta/original.webp",
+          "sha256": "e4df0e34c4a01fb1eb164b4af453b64b8d94a10867c7e682b63d8a5d0d94e801",
+          "anchors": {
+            "centro": [
+              510,
+              500
+            ],
+            "agarre": [
+              805,
+              230
+            ]
+          },
+          "masks": {
+            "brillo": "assets/llave-cuerda-propuesta/original.brillo.png"
+          },
+          "notes": "Reconstrucción generada con IA; pose y geometría aproximadas, conservar el original hasta la elección humana."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#D0D0D0",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Propuesta pendiente de revisión y aprobación humana; las anclas y tintes deben confirmarse en escena.",
+        "Derivada de referencia de licencia desconocida; no lista para publicación."
+      ]
+    },
+    {
+      "id": "muneco-cuerda-propuesta",
+      "version": 1,
+      "type": "objeto",
+      "name": "Muñeco de cuerda · propuesta",
+      "description": "Reconstrucción generada para revisión visual de Figura que cae con su llave incorporada, para representar automatismo y pérdida de control.",
+      "tags": [
+        "caida",
+        "automatismo",
+        "control"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-15",
+        "sheet": "review/propuestas-estilo-2026-11-15/estilo-comparacion.png",
+        "notes": "Propuesta generada con IA a partir de la referencia y del estilo del apretón; pendiente de revisión y aprobación humana. Las zonas de color y anclas requieren revisión visual en escena."
+      },
+      "source": {
+        "resource_id": "titanes-ref-55cb7dc771d3",
+        "original": "0d02f1918f4409f3ec5e4bd9410dcf13.jpg",
+        "origin": "Reconstrucción generada con IA a partir de la colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Derivada de muneco-cuerda; conserva la referencia original y su licencia desconocida. La imagen generada no sustituye el maestro de origen."
+      },
+      "master": null,
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 908,
+      "poses": {
+        "original": {
+          "file": "assets/muneco-cuerda-propuesta/original.webp",
+          "sha256": "742e726807b5cc1102f772e7bef7b48c4f9bf95d856b9f391cf5c2e9a92652ca",
+          "anchors": {
+            "centro": [
+              520,
+              400
+            ],
+            "agarre": [
+              490,
+              190
+            ],
+            "cabeza": [
+              650,
+              130
+            ],
+            "mano-der": [
+              410,
+              500
+            ],
+            "pies": [
+              350,
+              920
+            ]
+          },
+          "masks": {
+            "brillo": "assets/muneco-cuerda-propuesta/original.brillo.png"
+          },
+          "notes": "Reconstrucción generada con IA; pose y geometría aproximadas, conservar el original hasta la elección humana."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre",
+        "cabeza",
+        "mano-der",
+        "pies"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#D0D0D0",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Propuesta pendiente de revisión y aprobación humana; las anclas y tintes deben confirmarse en escena.",
+        "Derivada de referencia de licencia desconocida; no lista para publicación."
+      ]
+    },
+    {
+      "id": "pieza-clara-propuesta",
+      "version": 1,
+      "type": "objeto",
+      "name": "Fragmento de pieza clara · propuesta",
+      "description": "Reconstrucción generada para revisión visual de Superficie visible de una pieza de ajedrez parcialmente ocluida por la mano de origen.",
+      "tags": [
+        "ajedrez",
+        "estrategia",
+        "fragmento"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-15",
+        "sheet": "review/propuestas-estilo-2026-11-15/estilo-comparacion.png",
+        "notes": "Propuesta generada con IA a partir de la referencia y del estilo del apretón; pendiente de revisión y aprobación humana. Las zonas de color y anclas requieren revisión visual en escena."
+      },
+      "source": {
+        "resource_id": "titanes-ref-e0def8be8429",
+        "original": "81da35c101e2899f6aabda50e90ac0d3.jpg",
+        "origin": "Reconstrucción generada con IA a partir de la colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Derivada de pieza-clara; conserva la referencia original y su licencia desconocida. La imagen generada no sustituye el maestro de origen."
+      },
+      "master": null,
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 916,
+      "poses": {
+        "original": {
+          "file": "assets/pieza-clara-propuesta/original.webp",
+          "sha256": "2a4daffd671983fdfce80b1999cef73dbcc95075cfcb46b778806ace680de71d",
+          "anchors": {
+            "centro": [
+              500,
+              500
+            ],
+            "agarre": [
+              680,
+              270
+            ]
+          },
+          "masks": {},
+          "notes": "Reconstrucción generada con IA; pose y geometría aproximadas, conservar el original hasta la elección humana."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre"
+      ],
+      "color_zones": {},
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Propuesta pendiente de revisión y aprobación humana; las anclas y tintes deben confirmarse en escena.",
+        "Derivada de referencia de licencia desconocida; no lista para publicación."
+      ]
     }
   ]
 }

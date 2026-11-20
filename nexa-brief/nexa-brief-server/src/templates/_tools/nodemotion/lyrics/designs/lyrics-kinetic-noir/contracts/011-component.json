@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "noir.frame",
+  "entry_id": "noir.frame",
+  "kind": "component",
+  "label": "Marco",
+  "summary": "Grotesca extendida, recuadro que se traza alrededor y subtítulo sobre el borde; sale borrando letras de derecha a izquierda.",
+  "component": {
+    "name": "noir.frame",
+    "label": "Marco",
+    "summary": "Grotesca extendida, recuadro que se traza alrededor y subtítulo sobre el borde; sale borrando letras de derecha a izquierda.",
+    "tags": [
+      "scene"
+    ],
+    "file": "components/scenes.js",
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "ABSTRACTO TÍTULOS EN MOVIMIENTO",
+        "doc": "Texto de la frase (en el video sale de la letra)"
+      },
+      "smoke": {
+        "type": "boolean",
+        "default": false,
+        "doc": "Humo bajo en la demo"
+      }
+    },
+    "demo": {
+      "text": "ABSTRACTO TÍTULOS EN MOVIMIENTO"
+    },
+    "preview": {
+      "t": 2.2
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "ABSTRACTO TÍTULOS EN MOVIMIENTO",
+      "doc": "Texto de la frase (en el video sale de la letra)"
+    },
+    "smoke": {
+      "type": "boolean",
+      "default": false,
+      "doc": "Humo bajo en la demo"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/showcase/components.json",
+      "pointer": "/components/8"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

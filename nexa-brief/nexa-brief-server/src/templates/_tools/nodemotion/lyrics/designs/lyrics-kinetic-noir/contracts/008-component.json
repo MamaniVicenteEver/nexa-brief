@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "noir.quote",
+  "entry_id": "noir.quote",
+  "kind": "component",
+  "label": "Cita",
+  "summary": "Condensada centrada; las palabras entran en gris y se encienden; crédito manuscrito opcional arriba.",
+  "component": {
+    "name": "noir.quote",
+    "label": "Cita",
+    "summary": "Condensada centrada; las palabras entran en gris y se encienden; crédito manuscrito opcional arriba.",
+    "tags": [
+      "scene"
+    ],
+    "file": "components/scenes.js",
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "LA GENTE OLVIDA LO QUE NO LE HABLA",
+        "doc": "Texto de la frase (en el video sale de la letra)"
+      },
+      "credit": {
+        "type": "string",
+        "default": "NodeMotion",
+        "doc": "Crédito manuscrito (config.credit.text o el artista)"
+      },
+      "smoke": {
+        "type": "boolean",
+        "default": false,
+        "doc": "Humo bajo en la demo"
+      }
+    },
+    "demo": {
+      "text": "LA GENTE OLVIDA LO QUE NO LE HABLA"
+    },
+    "preview": {
+      "t": 2.6
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "LA GENTE OLVIDA LO QUE NO LE HABLA",
+      "doc": "Texto de la frase (en el video sale de la letra)"
+    },
+    "credit": {
+      "type": "string",
+      "default": "NodeMotion",
+      "doc": "Crédito manuscrito (config.credit.text o el artista)"
+    },
+    "smoke": {
+      "type": "boolean",
+      "default": false,
+      "doc": "Humo bajo en la demo"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/showcase/components.json",
+      "pointer": "/components/5"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

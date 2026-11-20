@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "noir.highlight",
+  "entry_id": "noir.highlight",
+  "kind": "component",
+  "label": "Resaltado",
+  "summary": "Condensada alineada a la izquierda; la palabra cantada va en bloque blanco.",
+  "component": {
+    "name": "noir.highlight",
+    "label": "Resaltado",
+    "summary": "Condensada alineada a la izquierda; la palabra cantada va en bloque blanco.",
+    "tags": [
+      "scene"
+    ],
+    "file": "components/scenes.js",
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "LA VIDA PASA MIENTRAS HACES OTROS PLANES",
+        "doc": "Texto de la frase (en el video sale de la letra)"
+      },
+      "smoke": {
+        "type": "boolean",
+        "default": false,
+        "doc": "Humo bajo en la demo"
+      }
+    },
+    "demo": {
+      "text": "LA VIDA PASA MIENTRAS HACES OTROS PLANES"
+    },
+    "preview": {
+      "t": 2.0
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "LA VIDA PASA MIENTRAS HACES OTROS PLANES",
+      "doc": "Texto de la frase (en el video sale de la letra)"
+    },
+    "smoke": {
+      "type": "boolean",
+      "default": false,
+      "doc": "Humo bajo en la demo"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/showcase/components.json",
+      "pointer": "/components/10"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

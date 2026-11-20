@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "noir.bar",
+  "entry_id": "noir.bar",
+  "kind": "component",
+  "label": "Barra",
+  "summary": "Barra blanca que se abre y cruza la línea condensada; el texto se invierte sobre la barra.",
+  "component": {
+    "name": "noir.bar",
+    "label": "Barra",
+    "summary": "Barra blanca que se abre y cruza la línea condensada; el texto se invierte sobre la barra.",
+    "tags": [
+      "scene"
+    ],
+    "file": "components/scenes.js",
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "ARTE QUE SE MUEVE",
+        "doc": "Texto de la frase (en el video sale de la letra)"
+      },
+      "smoke": {
+        "type": "boolean",
+        "default": false,
+        "doc": "Humo bajo en la demo"
+      }
+    },
+    "demo": {
+      "text": "ARTE QUE SE MUEVE"
+    },
+    "preview": {
+      "t": 1.6
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "ARTE QUE SE MUEVE",
+      "doc": "Texto de la frase (en el video sale de la letra)"
+    },
+    "smoke": {
+      "type": "boolean",
+      "default": false,
+      "doc": "Humo bajo en la demo"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/showcase/components.json",
+      "pointer": "/components/3"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

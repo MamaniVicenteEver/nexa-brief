@@ -155,7 +155,8 @@ def pending_resources(draft: Any) -> list[str]:
         if found is None:
             continue
         kind, entry = found
-        gaps = lib.metadata_gaps(kind, entry)
+        # La licencia es un dato de derechos que no se genera; no se avisa como pendiente.
+        gaps = [gap for gap in lib.metadata_gaps(kind, entry) if gap != "licencia"]
         if gaps:
             name = getattr(entry, "track_name", "") or getattr(entry, "label", "") or asset_id
             pending.append(f"{name}: falta {', '.join(gaps)}")

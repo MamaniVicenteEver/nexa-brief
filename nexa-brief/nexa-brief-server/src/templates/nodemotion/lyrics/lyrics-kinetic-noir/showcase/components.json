@@ -1,0 +1,337 @@
+{
+  "design": "lyrics-kinetic-noir",
+  "gallery": "showcase/index.html",
+  "query": {
+    "only": "name",
+    "aspect": "16:9|9:16",
+    "p": "JSON de params",
+    "t": "segundos (congela)",
+    "loop": "0|1",
+    "dur": "segundos de la demo"
+  },
+  "components": [
+    {
+      "name": "noir.intro",
+      "label": "Intro marco",
+      "summary": "Título en grotesca extendida dentro del marco y artista sobre el borde.",
+      "tags": [
+        "intro"
+      ],
+      "file": "components/intro.js",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "Let Out The Beast",
+          "doc": "config.intro.title"
+        },
+        "artist": {
+          "type": "string",
+          "default": "Ombré ft. KTHLN",
+          "doc": "config.intro.artist"
+        }
+      },
+      "demo": {
+        "title": "Let Out The Beast",
+        "artist": "Ombré ft. KTHLN"
+      },
+      "preview": {
+        "t": 2.2
+      }
+    },
+    {
+      "name": "noir.outrov1",
+      "label": "Outro v1",
+      "summary": "Título slab con cursor rojo, subtítulo espaciado y fundido.",
+      "tags": [
+        "outro"
+      ],
+      "file": "components/outro-v1.js",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "Gracias",
+          "doc": "config.outro.title"
+        },
+        "sub": {
+          "type": "string",
+          "default": "por escuchar",
+          "doc": "config.outro.sub"
+        },
+        "feats": {
+          "type": "string",
+          "default": "Suscríbete · NodeMotion",
+          "doc": "config.outro.feats"
+        }
+      },
+      "demo": {},
+      "preview": {
+        "t": 2.4
+      }
+    },
+    {
+      "name": "noir.outrov2",
+      "label": "Outro v2",
+      "summary": "Caja blanca invertida, humo bajo y fundido.",
+      "tags": [
+        "outro"
+      ],
+      "file": "components/outro-v2.js",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "Gracias",
+          "doc": "config.outro.title"
+        },
+        "sub": {
+          "type": "string",
+          "default": "por escuchar",
+          "doc": "config.outro.sub"
+        },
+        "feats": {
+          "type": "string",
+          "default": "Suscríbete · NodeMotion",
+          "doc": "config.outro.feats"
+        }
+      },
+      "demo": {},
+      "preview": {
+        "t": 2.4
+      }
+    },
+    {
+      "name": "noir.bar",
+      "label": "Barra",
+      "summary": "Barra blanca que se abre y cruza la línea condensada; el texto se invierte sobre la barra.",
+      "tags": [
+        "scene"
+      ],
+      "file": "components/scenes.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "ARTE QUE SE MUEVE",
+          "doc": "Texto de la frase (en el video sale de la letra)"
+        },
+        "smoke": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Humo bajo en la demo"
+        }
+      },
+      "demo": {
+        "text": "ARTE QUE SE MUEVE"
+      },
+      "preview": {
+        "t": 1.6
+      }
+    },
+    {
+      "name": "noir.stack",
+      "label": "Pila",
+      "summary": "Palabras en renglones cortos de grotesca extendida, sangrías alternas y tecleo con mezcla de caracteres.",
+      "tags": [
+        "scene"
+      ],
+      "file": "components/scenes.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "LO SIMPLE SIEMPRE QUEDA PARA EL FINAL",
+          "doc": "Texto de la frase (en el video sale de la letra)"
+        },
+        "smoke": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Humo bajo en la demo"
+        }
+      },
+      "demo": {
+        "text": "LO SIMPLE SIEMPRE QUEDA PARA EL FINAL"
+      },
+      "preview": {
+        "t": 2.8
+      }
+    },
+    {
+      "name": "noir.quote",
+      "label": "Cita",
+      "summary": "Condensada centrada; las palabras entran en gris y se encienden; crédito manuscrito opcional arriba.",
+      "tags": [
+        "scene"
+      ],
+      "file": "components/scenes.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "LA GENTE OLVIDA LO QUE NO LE HABLA",
+          "doc": "Texto de la frase (en el video sale de la letra)"
+        },
+        "credit": {
+          "type": "string",
+          "default": "NodeMotion",
+          "doc": "Crédito manuscrito (config.credit.text o el artista)"
+        },
+        "smoke": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Humo bajo en la demo"
+        }
+      },
+      "demo": {
+        "text": "LA GENTE OLVIDA LO QUE NO LE HABLA"
+      },
+      "preview": {
+        "t": 2.6
+      }
+    },
+    {
+      "name": "noir.ghost",
+      "label": "Eco",
+      "summary": "Palabra slab enorme que entra inclinada con dos copias tenues desplazadas debajo (1-2 palabras).",
+      "tags": [
+        "scene"
+      ],
+      "file": "components/scenes.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "MODERNO",
+          "doc": "Texto de la frase (en el video sale de la letra)"
+        },
+        "smoke": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Humo bajo en la demo"
+        }
+      },
+      "demo": {
+        "text": "MODERNO"
+      },
+      "preview": {
+        "t": 1.4
+      }
+    },
+    {
+      "name": "noir.subtitle",
+      "label": "Subtítulo",
+      "summary": "Línea slab tecleada con cursor rojo y el resto pequeño y espaciado debajo.",
+      "tags": [
+        "scene"
+      ],
+      "file": "components/scenes.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "TODO PASA EL ESTILO QUEDA",
+          "doc": "Texto de la frase (en el video sale de la letra)"
+        },
+        "smoke": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Humo bajo en la demo"
+        }
+      },
+      "demo": {
+        "text": "TODO PASA EL ESTILO QUEDA"
+      },
+      "preview": {
+        "t": 2.4
+      }
+    },
+    {
+      "name": "noir.frame",
+      "label": "Marco",
+      "summary": "Grotesca extendida, recuadro que se traza alrededor y subtítulo sobre el borde; sale borrando letras de derecha a izquierda.",
+      "tags": [
+        "scene"
+      ],
+      "file": "components/scenes.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "ABSTRACTO TÍTULOS EN MOVIMIENTO",
+          "doc": "Texto de la frase (en el video sale de la letra)"
+        },
+        "smoke": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Humo bajo en la demo"
+        }
+      },
+      "demo": {
+        "text": "ABSTRACTO TÍTULOS EN MOVIMIENTO"
+      },
+      "preview": {
+        "t": 2.2
+      }
+    },
+    {
+      "name": "noir.box",
+      "label": "Caja",
+      "summary": "Primer renglón en caja blanca invertida que se abre; el resto debajo con mezcla de caracteres.",
+      "tags": [
+        "scene"
+      ],
+      "file": "components/scenes.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "CREAR ES SOLO TAN RARO COMO LO QUE MIRAS",
+          "doc": "Texto de la frase (en el video sale de la letra)"
+        },
+        "smoke": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Humo bajo en la demo"
+        }
+      },
+      "demo": {
+        "text": "CREAR ES SOLO TAN RARO COMO LO QUE MIRAS"
+      },
+      "preview": {
+        "t": 2.8
+      }
+    },
+    {
+      "name": "noir.highlight",
+      "label": "Resaltado",
+      "summary": "Condensada alineada a la izquierda; la palabra cantada va en bloque blanco.",
+      "tags": [
+        "scene"
+      ],
+      "file": "components/scenes.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "LA VIDA PASA MIENTRAS HACES OTROS PLANES",
+          "doc": "Texto de la frase (en el video sale de la letra)"
+        },
+        "smoke": {
+          "type": "boolean",
+          "default": false,
+          "doc": "Humo bajo en la demo"
+        }
+      },
+      "demo": {
+        "text": "LA VIDA PASA MIENTRAS HACES OTROS PLANES"
+      },
+      "preview": {
+        "t": 2.0
+      }
+    },
+    {
+      "name": "noir.pause",
+      "label": "Pausa",
+      "summary": "Línea que barre el centro y recuadro vacío que parpadea en los silencios.",
+      "tags": [
+        "interlude"
+      ],
+      "file": "components/scenes.js",
+      "params": {},
+      "demo": {},
+      "preview": {
+        "t": 1.5
+      }
+    }
+  ]
+}

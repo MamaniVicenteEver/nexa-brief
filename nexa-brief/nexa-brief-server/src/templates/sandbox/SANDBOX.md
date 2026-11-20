@@ -4,6 +4,8 @@ Para crear cualquier contenido empieza por el [índice](../../skills/README.md),
 
 # Sandbox: guía rápida
 
+> **Excepción NodeMotion (vigente desde 2026-11-16):** las plantillas NodeMotion (letras y promos) no siguen esta guía. Ver el estándar en `AGENTS.md` de la raíz (sección «Estándar vigente…») y en `docs/nodemotion-template-authoring.md` (sección 2). Motor en `src/templates/nodemotion/<cat>/<id>/`, prototipos en `productions/nodemotion/<cat>/<id>/`.
+
 > En perfiles v2/v3, `sandbox/<categoría>/<id>` significa
 > `$NEXA_PROFILE_DIR/sandbox/<categoría>/<id>`. Antes de usar las herramientas
 > heredadas exporta `NEXA_SANDBOX_DIR="$NEXA_PROFILE_DIR/sandbox"`; las rutas de

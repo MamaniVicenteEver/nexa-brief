@@ -1,5 +1,7 @@
 # Flujo estándar: verificar, pasar a producción y completar preparación
 
+> **Excepción NodeMotion (vigente desde 2026-11-16):** las plantillas NodeMotion (letras y promos) no siguen esta guía. Ver el estándar en `AGENTS.md` de la raíz (sección «Estándar vigente…») y en `docs/nodemotion-template-authoring.md` (sección 2). Motor en `src/templates/nodemotion/<cat>/<id>/`, prototipos en `productions/nodemotion/<cat>/<id>/`.
+
 Desde el 11 de noviembre de 2026, la verificación y el traslado de Sandbox son operaciones técnicas sin IA. La generación editorial se inicia explícitamente desde la categoría de producción.
 
 ## 1. Preparar para producción — Sandbox

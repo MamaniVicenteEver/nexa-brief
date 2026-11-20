@@ -35,11 +35,15 @@ import structlog
 from fastapi import APIRouter, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi import Response as FastAPIResponse
 from pydantic import BaseModel
-from starlette.responses import Response
+from starlette.responses import FileResponse, Response
 
+from src.adapters.library.music_researcher import ask_music_researcher
+from src.adapters.library.music_sources import MusicSourcesHttp
 from src.adapters.lyrics.factory import get_lyrics_transcriber
 from src.config.exceptions import AssetNotFoundError
-from src.core.library import asset_library, transcription, sound_library
+from src.config.profile_layout import layout_for_settings
+from src.config.settings import settings
+from src.core.library import asset_library, music_enrichment, research_library, transcription, sound_library
 from src.presentation.api.file_streaming import serve_file_with_range
 from src.presentation.api.schemas.library_schema import (
     ImageLibraryEntryResponse,
@@ -53,6 +57,15 @@ from src.presentation.api.schemas.library_schema import (
     TemplateConfigDetailResponse,
     TemplateConfigEntryResponse,
     VideoLibraryEntryResponse,
+)
+from src.presentation.api.schemas.research_schema import (
+    ResearchCardResponse,
+    ResearchCountsResponse,
+    ResearchDetailResponse,
+    ResearchFileResponse,
+    ResearchImageResponse,
+    ResearchPageResponse,
+    ResearchSyncResponse,
 )
 from src.presentation.api.upload_helpers import clean_filename_label, save_upload_to_temp
 
@@ -272,6 +285,174 @@ async def transcribe_music(asset_id: str, body: TranscribeRequest | None = None)
         await asset_library.update_asset_metadata("music", asset_id, {"language": body.language})
     entry = await transcription.enqueue(asset_id, get_lyrics_transcriber, force=True)
     return _music_response(entry)
+
+
+class EnrichMusicResponse(BaseModel):
+    status: Literal["actualizado", "sin_cambios", "completo", "no_encontrada", "error"]
+    fields: list[str] = []
+    sources: list[str] = []
+    asset: MusicLibraryEntryResponse
+
+
+@lru_cache(maxsize=1)
+def _music_sources() -> MusicSourcesHttp:
+    # Una sola instancia: el límite de una consulta por segundo de MusicBrainz es compartido.
+    return MusicSourcesHttp()
+
+
+_ENRICH_LOCKS: dict[str, asyncio.Lock] = {}
+
+
+class EnrichMusicRequest(BaseModel):
+    # «Regenerar» (overwrite) reemplaza descripción y etiquetas aunque ya existan.
+    overwrite: bool = False
+
+
+@router.post("/music/{asset_id}/enrich", response_model=EnrichMusicResponse)
+async def enrich_music(asset_id: str, body: EnrichMusicRequest | None = None) -> EnrichMusicResponse:
+    """«Completar datos» y «Regenerar»: busca la canción en MusicBrainz y Wikipedia. Sin `overwrite`
+    rellena solo los campos vacíos; con `overwrite` reemplaza descripción y etiquetas. Título, categoría
+    y licencia no cambian nunca."""
+    entry = _get_or_404("music", asset_id)
+    if entry.source == "production":
+        raise HTTPException(status_code=409, detail="El recurso pertenece a una producción")
+    overwrite = bool(body and body.overwrite)
+    async with _ENRICH_LOCKS.setdefault(asset_id, asyncio.Lock()):
+        try:
+            report = await music_enrichment.enrich_music(
+                asset_id, sources=_music_sources(), ask=ask_music_researcher, overwrite=overwrite
+            )
+        except Exception as exc:  # noqa: BLE001 — la ficha sigue válida si la investigación falla
+            logger.warning("music_enrichment_failed", asset_id=asset_id, error=str(exc)[:300])
+            report = music_enrichment.EnrichmentReport(status="error")
+    return EnrichMusicResponse(
+        status=report.status,
+        fields=list(report.fields),
+        sources=list(report.sources),
+        asset=_music_response(asset_library.get_music_entry(asset_id)),
+    )
+
+
+# ── Investigaciones de los videos (pestaña Investigaciones de Recursos) ──────
+
+
+def _research_file_url(research_id: str, path: str) -> str:
+    return f"/api/v1/library/research/{research_id}/file/{path}"
+
+
+def _research_card(item: dict[str, Any]) -> ResearchCardResponse:
+    cover = item.get("cover_path")
+    return ResearchCardResponse(
+        research_id=item["research_id"],
+        topic=item["topic"],
+        researched_at=item["researched_at"],
+        origin_root=item["origin_root"],
+        origin_category=item["origin_category"],
+        origin_video_id=item["origin_video_id"],
+        origin_path=item["origin_path"],
+        revision=item["revision"],
+        version_count=item["version_count"],
+        tags=item["tags"],
+        counts=ResearchCountsResponse(**{**item["counts"], "videos": item["videos"]}),
+        cover_url=_research_file_url(item["research_id"], cover) if cover else None,
+    )
+
+
+@router.post("/research/sync", response_model=ResearchSyncResponse)
+async def sync_research() -> ResearchSyncResponse:
+    """Registra las investigaciones de producciones y sandbox que aún no están en la librería.
+    Es idempotente: lo ya registrado no se vuelve a copiar, y las carpetas originales no se tocan."""
+    layout = layout_for_settings(settings)
+    report = await research_library.sync(
+        roots=[("production", layout.productions_dir), ("sandbox", layout.sandbox_dir)],
+        profile_root=layout.root,
+        resources_dir=layout.resources_dir,
+    )
+    return ResearchSyncResponse(
+        folders=report.folders,
+        created=report.created,
+        merged=report.merged,
+        skipped=report.skipped,
+        errors=report.errors,
+    )
+
+
+@router.get("/research/categories", response_model=list[str])
+async def list_research_categories() -> list[str]:
+    return research_library.categories()
+
+
+@router.get("/research", response_model=ResearchPageResponse)
+async def list_research(
+    q: str | None = None,
+    category: str | None = None,
+    page: int = Query(1, ge=1),
+    page_size: int = Query(12, ge=1, le=48),
+) -> ResearchPageResponse:
+    items, total = research_library.list_cards(
+        q=q or "", category=category or "", page=page, page_size=page_size
+    )
+    return ResearchPageResponse(
+        items=[_research_card(item) for item in items], total=total, page=page, page_size=page_size
+    )
+
+
+@router.get("/research/{research_id}", response_model=ResearchDetailResponse)
+async def get_research(research_id: str) -> ResearchDetailResponse:
+    layout = layout_for_settings(settings)
+    detail = research_library.read_detail(research_id, layout.resources_dir)
+    if detail is None:
+        raise HTTPException(status_code=404, detail="Investigación no encontrada")
+    origin = detail["origins"][0]
+    used_by = detail.get("used_by") or []
+    return ResearchDetailResponse(
+        research_id=research_id,
+        topic=detail["topic"],
+        researched_at=detail["researched_at"],
+        origin_root=origin["root"],
+        origin_category=origin["category"],
+        origin_video_id=origin["video_id"],
+        origin_path=origin["path"],
+        revision=detail.get("revision", ""),
+        tags=detail.get("tags") or [],
+        counts=ResearchCountsResponse(**{**detail["counts"], "videos": len(used_by)}),
+        summary=detail["summary"],
+        findings=detail["findings"],
+        discarded=detail["discarded"],
+        images=[
+            ResearchImageResponse(
+                path=image["path"],
+                url=_research_file_url(research_id, image["path"]),
+                source_url=image.get("source_url", ""),
+                license=image.get("license", ""),
+                credit=image.get("credit", ""),
+            )
+            for image in detail.get("images") or []
+        ],
+        files=[
+            ResearchFileResponse(
+                path=item["path"],
+                url=_research_file_url(research_id, item["path"]),
+                bytes=item.get("bytes", 0),
+            )
+            for item in detail.get("files") or []
+        ],
+        versions=detail["versions"],
+        used_by=used_by,
+    )
+
+
+@router.get("/research/{research_id}/file/{file_path:path}")
+async def get_research_file(research_id: str, file_path: str) -> FileResponse:
+    layout = layout_for_settings(settings)
+    target = research_library.file_location(research_id, file_path, layout.resources_dir)
+    if target is None:
+        raise HTTPException(status_code=404, detail="Archivo no encontrado")
+    # Archivos de fuentes externas (p. ej. SVG): sin scripts si se abren directamente en el navegador.
+    return FileResponse(
+        target,
+        headers={"Content-Security-Policy": "sandbox", "X-Content-Type-Options": "nosniff"},
+    )
 
 
 # ── Videos ───────────────────────────────────────────────────────────────────
@@ -526,10 +707,13 @@ async def delete_asset(kind: ApiKind, asset_id: str) -> LibraryDeleteResponse:
 async def list_music_group_page(page: int = Query(1, ge=1),
                                 page_size: int = Query(12, ge=1, le=48),
                                 category: str | None = None,
-                                q: str | None = None) -> MusicGroupPageResponse:
+                                q: str | None = None,
+                                has_lyrics: bool | None = None) -> MusicGroupPageResponse:
     """Lista grupos de versiones sin alterar ni eliminar los recursos originales."""
     await _reconcile_transcriptions()
-    groups, total = asset_library.page_music_groups(page=page, page_size=page_size, q=q, category=category)
+    groups, total = asset_library.page_music_groups(
+        page=page, page_size=page_size, q=q, category=category, has_lyrics=has_lyrics
+    )
     return MusicGroupPageResponse(
         items=[MusicGroupResponse(title=group[0].track_name, artist=group[0].artist,
                                   items=[_music_response(entry) for entry in group])

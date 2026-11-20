@@ -1,0 +1,514 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "config.outroDesigns",
+  "entry_id": "config.outroDesigns",
+  "name": "outroDesigns",
+  "kind": "configuration",
+  "label": "outroDesigns",
+  "summary": "Existing configuration configuration: outroDesigns.",
+  "params": {
+    "v1": {
+      "default": {
+        "name": "outro-v1",
+        "bg": {
+          "clip": "street",
+          "off": 9,
+          "dark": 0.25,
+          "cuts": false,
+          "edges": [
+            {
+              "side": "bottom",
+              "d": 0.1,
+              "j": 0.5
+            }
+          ]
+        },
+        "pieces": [
+          {
+            "k": "text",
+            "s": "Gracias",
+            "id": "ot",
+            "outro": "title",
+            "font": "ex",
+            "color": "red",
+            "w": 0.84,
+            "h": 0.32,
+            "y": 0.42,
+            "in": "slam",
+            "from": 1.5,
+            "at": 0.1,
+            "d": 0.22,
+            "glow": true,
+            "op": 0.94,
+            "ghost": {
+              "color": "red",
+              "dx": 0.03,
+              "op": 0.45,
+              "delay": 0.1
+            },
+            "out": {
+              "at": -1.55,
+              "fx": "smear",
+              "d": 0.16,
+              "dx": 0.08
+            }
+          },
+          {
+            "k": "chalk",
+            "shape": "crown",
+            "ref": "ot",
+            "color": "white",
+            "sw": 7,
+            "at": 0.75,
+            "d": 0.3,
+            "up": 0.06,
+            "w": 0.07,
+            "h": 0.06,
+            "cx": 0.08,
+            "erase": {
+              "at": -2.05,
+              "d": 0.22
+            }
+          },
+          {
+            "k": "chalk",
+            "shape": "underline",
+            "ref": "ot",
+            "color": "white",
+            "sw": 12,
+            "at": 0.85,
+            "d": 0.35,
+            "dy": 1.02,
+            "erase": {
+              "at": -1.85,
+              "d": 0.25
+            }
+          },
+          {
+            "k": "text",
+            "s": "por ver",
+            "outro": "sub",
+            "font": "cd",
+            "color": "white",
+            "w": 0.5,
+            "h": 0.1,
+            "y": 0.66,
+            "in": "words",
+            "step": 0.12,
+            "at": 0.6,
+            "out": {
+              "at": -2.25,
+              "fx": "smear",
+              "d": 0.14
+            }
+          },
+          {
+            "k": "text",
+            "s": "Suscríbete · NodeMotion",
+            "outro": "feats",
+            "font": "th",
+            "color": "white",
+            "w": 0.5,
+            "h": 0.05,
+            "y": 0.8,
+            "ls": 0.2,
+            "in": "spread",
+            "ls0": 0.6,
+            "d": 0.35,
+            "at": 1.1,
+            "fw": 400,
+            "out": {
+              "at": -2.45,
+              "fx": "fade",
+              "d": 0.15
+            }
+          },
+          {
+            "k": "glitch",
+            "at": 1.7,
+            "d": 0.2,
+            "n": 5,
+            "redP": 0.5
+          },
+          {
+            "k": "glitch",
+            "at": -1.62,
+            "d": 0.14,
+            "n": 4,
+            "redP": 0.6
+          }
+        ]
+      }
+    },
+    "v2": {
+      "default": {
+        "name": "outro-v2",
+        "bg": {
+          "paper": true
+        },
+        "pieces": [
+          {
+            "k": "text",
+            "s": "Gracias",
+            "id": "ot",
+            "outro": "title",
+            "font": "cd",
+            "color": "red",
+            "w": 0.32,
+            "h": 0.12,
+            "y": 0.5,
+            "in": "slam",
+            "at": 0.25,
+            "d": 0.2,
+            "distress": false,
+            "out": {
+              "at": -1.4,
+              "fx": "smear",
+              "d": 0.12,
+              "dx": 0.03
+            }
+          },
+          {
+            "k": "chalk",
+            "shape": "crown",
+            "ref": "ot",
+            "color": "white",
+            "sw": 6,
+            "at": 0.45,
+            "d": 0.3,
+            "up": 0.07,
+            "w": 0.06,
+            "h": 0.05,
+            "cx": 0.45,
+            "erase": {
+              "at": -2.3,
+              "d": 0.3,
+              "step": 0.08
+            }
+          },
+          {
+            "k": "chalk",
+            "shape": "underline",
+            "ref": "ot",
+            "color": "white",
+            "sw": 8,
+            "at": 0.65,
+            "d": 0.3,
+            "erase": {
+              "at": -1.95,
+              "d": 0.28
+            }
+          },
+          {
+            "k": "text",
+            "s": "por ver",
+            "outro": "sub",
+            "font": "th",
+            "color": "ink",
+            "w": 0.28,
+            "h": 0.06,
+            "y": 0.64,
+            "ls": 0.2,
+            "in": "spread",
+            "ls0": 0.6,
+            "d": 0.35,
+            "at": 0.9,
+            "fw": 500,
+            "distress": false,
+            "out": {
+              "at": -2.6,
+              "fx": "fade",
+              "d": 0.15
+            }
+          },
+          {
+            "k": "text",
+            "s": "Suscríbete · NodeMotion",
+            "outro": "feats",
+            "font": "cd",
+            "color": "ink",
+            "w": 0.32,
+            "h": 0.035,
+            "y": 0.72,
+            "ls": 0.12,
+            "in": "fade",
+            "d": 0.3,
+            "at": 1.2,
+            "op": 0.8,
+            "distress": false,
+            "out": {
+              "at": -2.8,
+              "fx": "fade",
+              "d": 0.15
+            }
+          },
+          {
+            "k": "glitch",
+            "at": -1.48,
+            "d": 0.1,
+            "n": 3,
+            "redP": 0.3
+          }
+        ]
+      }
+    }
+  },
+  "example": {
+    "v1": {
+      "name": "outro-v1",
+      "bg": {
+        "clip": "street",
+        "off": 9,
+        "dark": 0.25,
+        "cuts": false,
+        "edges": [
+          {
+            "side": "bottom",
+            "d": 0.1,
+            "j": 0.5
+          }
+        ]
+      },
+      "pieces": [
+        {
+          "k": "text",
+          "s": "Gracias",
+          "id": "ot",
+          "outro": "title",
+          "font": "ex",
+          "color": "red",
+          "w": 0.84,
+          "h": 0.32,
+          "y": 0.42,
+          "in": "slam",
+          "from": 1.5,
+          "at": 0.1,
+          "d": 0.22,
+          "glow": true,
+          "op": 0.94,
+          "ghost": {
+            "color": "red",
+            "dx": 0.03,
+            "op": 0.45,
+            "delay": 0.1
+          },
+          "out": {
+            "at": -1.55,
+            "fx": "smear",
+            "d": 0.16,
+            "dx": 0.08
+          }
+        },
+        {
+          "k": "chalk",
+          "shape": "crown",
+          "ref": "ot",
+          "color": "white",
+          "sw": 7,
+          "at": 0.75,
+          "d": 0.3,
+          "up": 0.06,
+          "w": 0.07,
+          "h": 0.06,
+          "cx": 0.08,
+          "erase": {
+            "at": -2.05,
+            "d": 0.22
+          }
+        },
+        {
+          "k": "chalk",
+          "shape": "underline",
+          "ref": "ot",
+          "color": "white",
+          "sw": 12,
+          "at": 0.85,
+          "d": 0.35,
+          "dy": 1.02,
+          "erase": {
+            "at": -1.85,
+            "d": 0.25
+          }
+        },
+        {
+          "k": "text",
+          "s": "por ver",
+          "outro": "sub",
+          "font": "cd",
+          "color": "white",
+          "w": 0.5,
+          "h": 0.1,
+          "y": 0.66,
+          "in": "words",
+          "step": 0.12,
+          "at": 0.6,
+          "out": {
+            "at": -2.25,
+            "fx": "smear",
+            "d": 0.14
+          }
+        },
+        {
+          "k": "text",
+          "s": "Suscríbete · NodeMotion",
+          "outro": "feats",
+          "font": "th",
+          "color": "white",
+          "w": 0.5,
+          "h": 0.05,
+          "y": 0.8,
+          "ls": 0.2,
+          "in": "spread",
+          "ls0": 0.6,
+          "d": 0.35,
+          "at": 1.1,
+          "fw": 400,
+          "out": {
+            "at": -2.45,
+            "fx": "fade",
+            "d": 0.15
+          }
+        },
+        {
+          "k": "glitch",
+          "at": 1.7,
+          "d": 0.2,
+          "n": 5,
+          "redP": 0.5
+        },
+        {
+          "k": "glitch",
+          "at": -1.62,
+          "d": 0.14,
+          "n": 4,
+          "redP": 0.6
+        }
+      ]
+    },
+    "v2": {
+      "name": "outro-v2",
+      "bg": {
+        "paper": true
+      },
+      "pieces": [
+        {
+          "k": "text",
+          "s": "Gracias",
+          "id": "ot",
+          "outro": "title",
+          "font": "cd",
+          "color": "red",
+          "w": 0.32,
+          "h": 0.12,
+          "y": 0.5,
+          "in": "slam",
+          "at": 0.25,
+          "d": 0.2,
+          "distress": false,
+          "out": {
+            "at": -1.4,
+            "fx": "smear",
+            "d": 0.12,
+            "dx": 0.03
+          }
+        },
+        {
+          "k": "chalk",
+          "shape": "crown",
+          "ref": "ot",
+          "color": "white",
+          "sw": 6,
+          "at": 0.45,
+          "d": 0.3,
+          "up": 0.07,
+          "w": 0.06,
+          "h": 0.05,
+          "cx": 0.45,
+          "erase": {
+            "at": -2.3,
+            "d": 0.3,
+            "step": 0.08
+          }
+        },
+        {
+          "k": "chalk",
+          "shape": "underline",
+          "ref": "ot",
+          "color": "white",
+          "sw": 8,
+          "at": 0.65,
+          "d": 0.3,
+          "erase": {
+            "at": -1.95,
+            "d": 0.28
+          }
+        },
+        {
+          "k": "text",
+          "s": "por ver",
+          "outro": "sub",
+          "font": "th",
+          "color": "ink",
+          "w": 0.28,
+          "h": 0.06,
+          "y": 0.64,
+          "ls": 0.2,
+          "in": "spread",
+          "ls0": 0.6,
+          "d": 0.35,
+          "at": 0.9,
+          "fw": 500,
+          "distress": false,
+          "out": {
+            "at": -2.6,
+            "fx": "fade",
+            "d": 0.15
+          }
+        },
+        {
+          "k": "text",
+          "s": "Suscríbete · NodeMotion",
+          "outro": "feats",
+          "font": "cd",
+          "color": "ink",
+          "w": 0.32,
+          "h": 0.035,
+          "y": 0.72,
+          "ls": 0.12,
+          "in": "fade",
+          "d": 0.3,
+          "at": 1.2,
+          "op": 0.8,
+          "distress": false,
+          "out": {
+            "at": -2.8,
+            "fx": "fade",
+            "d": 0.15
+          }
+        },
+        {
+          "k": "glitch",
+          "at": -1.48,
+          "d": 0.1,
+          "n": 3,
+          "redP": 0.3
+        }
+      ]
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/assets/config.json",
+      "pointer": "/configs/0/outroDesigns"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,360 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Promo «Mono» (demo ficticia Rutalia): interfaz minimalista en blanco y negro con píldoras de texto, metraje en semitono, cifras, móvil con chat, cupón y contacto. — metadata, la plantilla no la usa.",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+        "display": "Inter",
+        "label": "Inter"
+      },
+      "palette": {
+        "bg": "#000000",
+        "fg": "#FFFFFF",
+        "muted": "#8A8A8A",
+        "chip": "#FFFFFF",
+        "chipText": "#111111"
+      },
+      "brand": {
+        "name": "Rutalia",
+        "cta": "Míralo y ve",
+        "url": "@rutalia.demo"
+      },
+      "chips": [
+        "Vamos a la playa",
+        "Vamos al cine",
+        "Vamos por tacos",
+        "Vamos a bailar",
+        "Vamos de camping",
+        "Vamos al estadio",
+        "Vamos por un café",
+        "Vamos a patinar",
+        "Vamos al concierto",
+        "Vamos a correr",
+        "Vamos de compras",
+        "Vamos a la montaña",
+        "Vamos al karaoke",
+        "Vamos por pizza",
+        "Vamos a surfear",
+        "Vamos al museo",
+        "Vamos de picnic",
+        "Vamos al parque",
+        "Vamos a pescar",
+        "Vamos por helado",
+        "Vamos a la feria",
+        "Vamos a nadar",
+        "Vamos de viaje",
+        "Vamos al teatro",
+        "Vamos a pedalear",
+        "Vamos al mercado",
+        "Vamos al gimnasio",
+        "Vamos a ver el mar"
+      ],
+      "grades": {
+        "mono": {
+          "type": "duo",
+          "dark": "#050505",
+          "light": "#F2F2F2",
+          "contrast": 1.3
+        }
+      },
+      "look": {
+        "dotScale": 1,
+        "dotContrast": 1.25,
+        "chipScale": 1,
+        "stroke": 1
+      },
+      "anim": {
+        "textIn": "type",
+        "speed": 1,
+        "intensity": 1
+      },
+      "intro": {
+        "enabled": true,
+        "title": "Rutalia",
+        "sub": ""
+      },
+      "outro": {
+        "enabled": true,
+        "version": "v1",
+        "minSec": 4,
+        "title": "Rutalia",
+        "cta": "Míralo y ve"
+      },
+      "transition": {
+        "overlapSec": 0.3,
+        "duration": 0.32,
+        "weights": {
+          "cut": 4,
+          "dots": 1,
+          "lineSweep": 1,
+          "blink": 1,
+          "fade": 1
+        }
+      },
+      "hud": {
+        "enabled": false
+      },
+      "texture": {
+        "grain": 0
+      },
+      "render": {
+        "kbVideo": false
+      },
+      "media": [
+        {
+          "id": "horses",
+          "type": "video",
+          "src": "assets/media/horses.mp4",
+          "poster": "assets/media/horses-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/horses.mono.mp4",
+              "poster": "assets/media/graded/horses-1.mono.jpg"
+            }
+          }
+        },
+        {
+          "id": "dirtbike",
+          "type": "video",
+          "src": "assets/media/dirtbike.mp4",
+          "poster": "assets/media/dirtbike-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/dirtbike.mono.mp4",
+              "poster": "assets/media/graded/dirtbike-1.mono.jpg"
+            }
+          }
+        },
+        {
+          "id": "cyclist-night",
+          "type": "video",
+          "src": "assets/media/cyclist-night.mp4",
+          "poster": "assets/media/cyclist-night-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/cyclist-night.mono.mp4",
+              "poster": "assets/media/graded/cyclist-night-1.mono.jpg"
+            }
+          }
+        },
+        {
+          "id": "cyclist-lake",
+          "type": "video",
+          "src": "assets/media/cyclist-lake.mp4",
+          "poster": "assets/media/cyclist-lake-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/cyclist-lake.mono.mp4",
+              "poster": "assets/media/graded/cyclist-lake-1.mono.jpg"
+            }
+          }
+        },
+        {
+          "id": "skater",
+          "type": "video",
+          "src": "assets/media/skater.mp4",
+          "poster": "assets/media/skater-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/skater.mono.mp4",
+              "poster": "assets/media/graded/skater-1.mono.jpg"
+            }
+          }
+        },
+        {
+          "id": "roadtrip",
+          "type": "video",
+          "src": "assets/media/roadtrip.mp4",
+          "poster": "assets/media/roadtrip-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/roadtrip.mono.mp4",
+              "poster": "assets/media/graded/roadtrip-1.mono.jpg"
+            }
+          }
+        },
+        {
+          "id": "concert",
+          "type": "video",
+          "src": "assets/media/concert.mp4",
+          "poster": "assets/media/concert-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/concert.mono.mp4",
+              "poster": "assets/media/graded/concert-1.mono.jpg"
+            }
+          }
+        },
+        {
+          "id": "couple",
+          "type": "video",
+          "src": "assets/media/couple.mp4",
+          "poster": "assets/media/couple-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/couple.mono.mp4",
+              "poster": "assets/media/graded/couple-1.mono.jpg"
+            }
+          }
+        },
+        {
+          "id": "crowd",
+          "type": "video",
+          "src": "assets/media/crowd.mp4",
+          "poster": "assets/media/crowd-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/crowd.mono.mp4",
+              "poster": "assets/media/graded/crowd-1.mono.jpg"
+            }
+          }
+        },
+        {
+          "id": "boat",
+          "type": "video",
+          "src": "assets/media/boat.mp4",
+          "poster": "assets/media/boat-1.jpg",
+          "graded": {
+            "mono": {
+              "src": "assets/media/graded/boat.mono.mp4",
+              "poster": "assets/media/graded/boat-1.mono.jpg"
+            }
+          }
+        }
+      ],
+      "scenes": [
+        {
+          "type": "intro"
+        },
+        {
+          "type": "playline",
+          "trans": "cut"
+        },
+        {
+          "type": "cardfan",
+          "media": [
+            "concert",
+            "couple",
+            "skater",
+            "horses",
+            "boat",
+            "crowd",
+            "roadtrip"
+          ],
+          "trans": "blink"
+        },
+        {
+          "type": "wordgrid",
+          "media": [
+            "horses",
+            "couple",
+            "concert",
+            "skater",
+            "boat"
+          ],
+          "trans": "cut"
+        },
+        {
+          "type": "chips",
+          "mode": "float",
+          "count": 30,
+          "trans": "cut"
+        },
+        {
+          "type": "chips",
+          "mode": "pile",
+          "count": 72,
+          "trans": "cut"
+        },
+        {
+          "type": "linetext",
+          "squiggle": true,
+          "trans": "lineSweep"
+        },
+        {
+          "type": "pin",
+          "trans": "cut"
+        },
+        {
+          "type": "footage",
+          "media": [
+            "horses"
+          ],
+          "dotsIn": true,
+          "icon": "none",
+          "trans": "cut"
+        },
+        {
+          "type": "footage",
+          "media": [
+            "dirtbike"
+          ],
+          "icon": "bars",
+          "trans": "dots"
+        },
+        {
+          "type": "footage",
+          "media": [
+            "cyclist-lake"
+          ],
+          "trans": "blink"
+        },
+        {
+          "type": "numbers",
+          "trans": "dots"
+        },
+        {
+          "type": "pattern",
+          "icon": "pause",
+          "trans": "cut"
+        },
+        {
+          "type": "footage",
+          "media": [
+            "concert"
+          ],
+          "style": "squares",
+          "cell": 8,
+          "icon": "play",
+          "trans": "dots"
+        },
+        {
+          "type": "spaced",
+          "echo": 3,
+          "trans": "blink"
+        },
+        {
+          "type": "phonechat",
+          "trans": "cut"
+        },
+        {
+          "type": "phonechat",
+          "squiggle": true,
+          "trans": "cut"
+        },
+        {
+          "type": "coupon",
+          "count": 4,
+          "trans": "blink"
+        },
+        {
+          "type": "codeinput",
+          "trans": "cut"
+        },
+        {
+          "type": "contact",
+          "trans": "pillPop"
+        },
+        {
+          "type": "outro"
+        }
+      ]
+    }
+  ]
+}

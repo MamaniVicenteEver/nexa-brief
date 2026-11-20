@@ -29,35 +29,35 @@ An `observed_defaults_only` contract lists real example values. Validation bound
 | `mono.codeinput` | component | Móvil con campo donde se escribe un código y dos botones (renglón 1 = código, 2 y 3 = botones) | [mono.codeinput](contracts/017-component.json) |
 | `mono.contact` | component | Móvil grande punteado con encabezado y un número o contacto enorme (renglón 1 = encabezado, 2+ = número) | [mono.contact](contracts/018-component.json) |
 | `mono.transitions` | component | dots (rejilla de puntos que se encoge), lineSweep (línea que barre), blink (cuadro negro), pillPop (sale de una píldora); además las del núcleo: fade, blur, iris, wipeL/R/Up/Down, bars, flash, zoomIn, zoomOut, slice, cut. | [mono.transitions](contracts/019-component.json) |
-| `config.fonts` | configuration | Existing configuration configuration: fonts. | [config.fonts](contracts/020-configuration.json) |
-| `config.palette` | configuration | Existing configuration configuration: palette. | [config.palette](contracts/021-configuration.json) |
-| `config.brand` | configuration | Existing configuration configuration: brand. | [config.brand](contracts/022-configuration.json) |
-| `config.chips` | configuration | Existing configuration configuration: chips. | [config.chips](contracts/023-configuration.json) |
-| `config.grades` | configuration | Existing configuration configuration: grades. | [config.grades](contracts/024-configuration.json) |
-| `config.look` | configuration | Existing configuration configuration: look. | [config.look](contracts/025-configuration.json) |
-| `config.anim` | configuration | Existing configuration configuration: anim. | [config.anim](contracts/026-configuration.json) |
-| `config.intro` | configuration | Existing configuration configuration: intro. | [config.intro](contracts/027-configuration.json) |
-| `config.outro` | configuration | Existing configuration configuration: outro. | [config.outro](contracts/028-configuration.json) |
-| `config.transition` | configuration | Existing configuration configuration: transition. | [config.transition](contracts/029-configuration.json) |
-| `config.hud` | configuration | Existing configuration configuration: hud. | [config.hud](contracts/030-configuration.json) |
-| `config.texture` | configuration | Existing configuration configuration: texture. | [config.texture](contracts/031-configuration.json) |
-| `config.render` | configuration | Existing configuration configuration: render. | [config.render](contracts/032-configuration.json) |
-| `scene.intro` | scene | Existing scene configuration: intro. | [scene.intro](contracts/033-scene.json) |
-| `scene.playline` | scene | Existing scene configuration: playline. | [scene.playline](contracts/034-scene.json) |
-| `scene.cardfan` | scene | Existing scene configuration: cardfan. | [scene.cardfan](contracts/035-scene.json) |
-| `scene.wordgrid` | scene | Existing scene configuration: wordgrid. | [scene.wordgrid](contracts/036-scene.json) |
-| `scene.chips` | scene | Existing scene configuration: chips. | [scene.chips](contracts/037-scene.json) |
-| `scene.linetext` | scene | Existing scene configuration: linetext. | [scene.linetext](contracts/038-scene.json) |
-| `scene.pin` | scene | Existing scene configuration: pin. | [scene.pin](contracts/039-scene.json) |
-| `scene.footage` | scene | Existing scene configuration: footage. | [scene.footage](contracts/040-scene.json) |
-| `scene.numbers` | scene | Existing scene configuration: numbers. | [scene.numbers](contracts/041-scene.json) |
-| `scene.pattern` | scene | Existing scene configuration: pattern. | [scene.pattern](contracts/042-scene.json) |
-| `scene.spaced` | scene | Existing scene configuration: spaced. | [scene.spaced](contracts/043-scene.json) |
-| `scene.phonechat` | scene | Existing scene configuration: phonechat. | [scene.phonechat](contracts/044-scene.json) |
-| `scene.coupon` | scene | Existing scene configuration: coupon. | [scene.coupon](contracts/045-scene.json) |
-| `scene.codeinput` | scene | Existing scene configuration: codeinput. | [scene.codeinput](contracts/046-scene.json) |
-| `scene.contact` | scene | Existing scene configuration: contact. | [scene.contact](contracts/047-scene.json) |
-| `scene.outro` | scene | Existing scene configuration: outro. | [scene.outro](contracts/048-scene.json) |
+| `scene.intro` | scene | Existing scene type: intro. | [scene.intro](contracts/020-scene.json) |
+| `scene.playline` | scene | Existing scene type: playline. | [scene.playline](contracts/021-scene.json) |
+| `scene.cardfan` | scene | Existing scene type: cardfan. | [scene.cardfan](contracts/022-scene.json) |
+| `scene.wordgrid` | scene | Existing scene type: wordgrid. | [scene.wordgrid](contracts/023-scene.json) |
+| `scene.chips` | scene | Existing scene type: chips. | [scene.chips](contracts/024-scene.json) |
+| `scene.linetext` | scene | Existing scene type: linetext. | [scene.linetext](contracts/025-scene.json) |
+| `scene.pin` | scene | Existing scene type: pin. | [scene.pin](contracts/026-scene.json) |
+| `scene.footage` | scene | Existing scene type: footage. | [scene.footage](contracts/027-scene.json) |
+| `scene.numbers` | scene | Existing scene type: numbers. | [scene.numbers](contracts/028-scene.json) |
+| `scene.pattern` | scene | Existing scene type: pattern. | [scene.pattern](contracts/029-scene.json) |
+| `scene.spaced` | scene | Existing scene type: spaced. | [scene.spaced](contracts/030-scene.json) |
+| `scene.phonechat` | scene | Existing scene type: phonechat. | [scene.phonechat](contracts/031-scene.json) |
+| `scene.coupon` | scene | Existing scene type: coupon. | [scene.coupon](contracts/032-scene.json) |
+| `scene.codeinput` | scene | Existing scene type: codeinput. | [scene.codeinput](contracts/033-scene.json) |
+| `scene.contact` | scene | Existing scene type: contact. | [scene.contact](contracts/034-scene.json) |
+| `scene.outro` | scene | Existing scene type: outro. | [scene.outro](contracts/035-scene.json) |
+| `config.fonts` | configuration | Existing configuration configuration: fonts. | [config.fonts](contracts/036-configuration.json) |
+| `config.palette` | configuration | Existing configuration configuration: palette. | [config.palette](contracts/037-configuration.json) |
+| `config.brand` | configuration | Existing configuration configuration: brand. | [config.brand](contracts/038-configuration.json) |
+| `config.chips` | configuration | Existing configuration configuration: chips. | [config.chips](contracts/039-configuration.json) |
+| `config.grades` | configuration | Existing configuration configuration: grades. | [config.grades](contracts/040-configuration.json) |
+| `config.look` | configuration | Existing configuration configuration: look. | [config.look](contracts/041-configuration.json) |
+| `config.anim` | configuration | Existing configuration configuration: anim. | [config.anim](contracts/042-configuration.json) |
+| `config.intro` | configuration | Existing configuration configuration: intro. | [config.intro](contracts/043-configuration.json) |
+| `config.outro` | configuration | Existing configuration configuration: outro. | [config.outro](contracts/044-configuration.json) |
+| `config.transition` | configuration | Existing configuration configuration: transition. | [config.transition](contracts/045-configuration.json) |
+| `config.hud` | configuration | Existing configuration configuration: hud. | [config.hud](contracts/046-configuration.json) |
+| `config.texture` | configuration | Existing configuration configuration: texture. | [config.texture](contracts/047-configuration.json) |
+| `config.render` | configuration | Existing configuration configuration: render. | [config.render](contracts/048-configuration.json) |
 
 Refresh: `python3 src/templates/_tools/nodemotion/shared/refresh_catalogs.py`.
 Engine changes use the shared compiler or implementation, then the extraction integrity check and NodeMotion tests.

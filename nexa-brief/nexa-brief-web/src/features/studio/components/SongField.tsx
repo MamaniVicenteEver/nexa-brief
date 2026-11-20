@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useId, useState } from "react";
-import { getLibraryAsset } from "@/features/library/api/library-assets-service";
+import { getLibraryAsset, type LibraryAsset } from "@/features/library/api/library-assets-service";
 import { libraryAssetsKey } from "@/features/library/hooks/useLibraryAssets";
 import { LyricsViewer, ResourcePicker } from "@/features/resources";
 import { AudioResourceOption } from "@/features/resources/components/AudioResourceOption";
@@ -22,7 +22,7 @@ export function SongField({
   compact?: boolean;
   audio: TemplateRequirements["audio"];
   value: string | null;
-  onChange: (assetId: string | null) => void;
+  onChange: (assetId: string | null, asset: LibraryAsset | null) => void;
 }) {
   if (compact)
     return <CompactSongField key={value} audio={audio} value={value} onChange={onChange} />;
@@ -37,7 +37,7 @@ function SongChooser({
 }: {
   audio: TemplateRequirements["audio"];
   value: string | null;
-  onChange: (assetId: string | null) => void;
+  onChange: (assetId: string | null, asset: LibraryAsset | null) => void;
   showLyrics: boolean;
 }) {
   const t = useTranslations("studio.song");
@@ -50,7 +50,15 @@ function SongChooser({
         </span>
       }
     >
-      <ResourcePicker kind="music" allowUpload value={value} onChange={(id) => onChange(id)} />
+      <ResourcePicker
+        kind="music"
+        allowUpload
+        value={value}
+        onChange={(id, asset) => onChange(id, asset)}
+        musicLyricsMode={
+          audio.lyrics === "auto" ? "required" : audio.lyrics === "optional" ? "optional" : "none"
+        }
+      />
       {showLyrics && value && audio.lyrics !== "none" && (
         <LyricsSection key={value} assetId={value} />
       )}
@@ -88,7 +96,7 @@ function CompactSongField({
 }: {
   audio: TemplateRequirements["audio"];
   value: string | null;
-  onChange: (assetId: string | null) => void;
+  onChange: (assetId: string | null, asset: LibraryAsset | null) => void;
 }) {
   const t = useTranslations("studio.song");
   const [expanded, setExpanded] = useState(!value);

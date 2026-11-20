@@ -17,7 +17,7 @@ Punto de entrada de **cualquier agente** (Claude Code, Codex, otro) al que le pi
 | Un video con el estilo Imperio (mapa histórico, sol/rayos y archivo documental; distinto de Atlas en Movimiento) | `explainer/produce/SKILL.md` y `../templates/_tools/explainer-kit/guides/imperio-production.md` | Identidad cinematográfica, aperturas A/B/C, paletas históricas y plan musical compartidos |
 | Un video con Atlas Cinemático (mapas 3D) | `../templates/nodeatlas/atlas-cinematico/_atlas/SKILL.md` | Episodio en producción del perfil |
 | Un video con Atlas en Movimiento | `../templates/nodeatlas/atlas-en-movimiento/SKILL.md` | Un único motor compartido |
-| Una plantilla o diseño **nuevo**, o una réplica de un video de referencia | `../templates/sandbox/PROTOTIPO.md` | Coste alto: estudio y motor |
+| Una plantilla o diseño **nuevo**, o una réplica de un video de referencia | Letras y promos NodeMotion: «Estándar vigente para plantillas NodeMotion nuevas» del AGENTS.md raíz. Otras categorías: `../templates/sandbox/PROTOTIPO.md` | Coste alto: estudio y motor |
 | Publicaciones de imagen (Facebook, Instagram) | `image_posts/SKILL.md` | |
 | Textos de publicación (títulos, descripción, miniaturas) | `explainer/strategies/` y `output/copy/` | Lo usa el backend; respeta CALIDAD §6 |
 | Qué modelo hace cada rol | `models/roles.json` | Fuente única |

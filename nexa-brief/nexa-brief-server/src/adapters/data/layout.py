@@ -50,6 +50,8 @@ COLLECTIONS: dict[str, tuple[str, str | None]] = {
     "published_videos": ("canales/published_videos.json", None),
     # Archivo de publicaciones de imagen: esta lista es una proyección derivada.
     "publication_index": ("publicaciones/index.json", "publication_id"),
+    # Investigaciones de los videos (pestaña Investigaciones de Recursos); ver core/library/research_library.py
+    "research_assets": ("library/research.json", "research_id"),
 }
 
 # name → carpeta relativa a data/ (un .json por clave)

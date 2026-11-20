@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import type { LibraryAsset } from "@/features/library/api/library-assets-service";
 import { ResourceScopeProvider } from "@/features/resources/ResourceScope";
 import type { TemplateRequirements } from "@/features/templates/types";
 import type { MediaRef, StudioValue } from "../types";
@@ -27,6 +28,8 @@ export interface RequirementsFormProps {
    * apiladas, como en Crear video. */
   section?: RequirementsSection;
   compactSong?: boolean;
+  /** Permite al editor de prototipos consultar la canción y completar título/artista. */
+  onSongChange?: (assetId: string | null, asset: LibraryAsset | null) => void;
 }
 
 /** Formulario controlado armado desde GET /templates/{id}/requirements:
@@ -39,6 +42,7 @@ export function RequirementsForm({
   onChange,
   section,
   compactSong = false,
+  onSongChange,
 }: RequirementsFormProps) {
   const t = useTranslations("studio.media");
   const show = (s: RequirementsSection) => section === undefined || section === s;
@@ -57,7 +61,11 @@ export function RequirementsForm({
             compact={compactSong}
             audio={requirements.audio}
             value={value.musicAssetId}
-            onChange={(musicAssetId) => onChange({ ...value, musicAssetId })}
+            onChange={(musicAssetId, asset) =>
+              onSongChange
+                ? onSongChange(musicAssetId, asset)
+                : onChange({ ...value, musicAssetId })
+            }
           />
         )}
         {show("song") && !hasSong && section === "song" && (
@@ -76,7 +84,9 @@ export function RequirementsForm({
                       <label className="flex flex-col gap-1 text-[12px] font-semibold text-nb-ink">
                         <span className="flex justify-between">
                           <span>{t("backgroundVisibility")}</span>
-                          <span>{Math.round((1 - (value.mediaOpacity?.[slot.slot] ?? 0.8)) * 100)}%</span>
+                          <span>
+                            {Math.round((1 - (value.mediaOpacity?.[slot.slot] ?? 0.8)) * 100)}%
+                          </span>
                         </span>
                         <input
                           type="range"
@@ -104,12 +114,26 @@ export function RequirementsForm({
                       filled={value.media}
                       allowAddingBackground={templateId === "lyrics-impact"}
                       onAccept={(media) => {
-                        const background = templateId === "lyrics-impact" && media.background
-                          ? [...(value.media.background ?? []), ...media.background].filter(
-                              (ref, i, all) => all.findIndex((other) => other.kind === ref.kind && other.assetId === ref.assetId) === i,
-                            ).slice(0, slot.max)
-                          : media.background;
-                        onChange({ ...value, media: { ...value.media, ...media, ...(background ? { background } : {}) } });
+                        const background =
+                          templateId === "lyrics-impact" && media.background
+                            ? [...(value.media.background ?? []), ...media.background]
+                                .filter(
+                                  (ref, i, all) =>
+                                    all.findIndex(
+                                      (other) =>
+                                        other.kind === ref.kind && other.assetId === ref.assetId,
+                                    ) === i,
+                                )
+                                .slice(0, slot.max)
+                            : media.background;
+                        onChange({
+                          ...value,
+                          media: {
+                            ...value.media,
+                            ...media,
+                            ...(background ? { background } : {}),
+                          },
+                        });
                       }}
                     />
                   )}
@@ -120,13 +144,15 @@ export function RequirementsForm({
                   />
                 </div>
               ))}
-              {!requirements.media.some((slot) => slot.slot === "background") && <AiMediaPanel
-                templateId={templateId}
-                brief={value.brief}
-                onBriefChange={(brief) => onChange({ ...value, brief })}
-                filled={value.media}
-                onAccept={(media) => onChange({ ...value, media: { ...value.media, ...media } })}
-              />}
+              {!requirements.media.some((slot) => slot.slot === "background") && (
+                <AiMediaPanel
+                  templateId={templateId}
+                  brief={value.brief}
+                  onBriefChange={(brief) => onChange({ ...value, brief })}
+                  filled={value.media}
+                  onAccept={(media) => onChange({ ...value, media: { ...value.media, ...media } })}
+                />
+              )}
             </>
           ))}
 

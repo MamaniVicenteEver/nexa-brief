@@ -26,7 +26,7 @@ interface DraftDetailsDto {
   song_name: string;
   artist: string;
   language: string | null;
-  copies: Record<string, { title: string; description: string; tags: string[]; strategy: string }>;
+  copies: Record<string, { title: string; description: string; tags: string[]; strategy: string; pinned_comment?: string }>;
   generated_at: string | null;
   edited: boolean;
   research?: string;
@@ -82,6 +82,16 @@ function detailsDto(details: DraftDetails): DraftDetailsDto {
   };
 }
 
+function mapThumbnails(value: DraftThumbnails | null | undefined): DraftThumbnails | null {
+  if (!value) return null;
+  return {
+    ...value,
+    urls: Object.fromEntries(
+      Object.entries(value.urls ?? {}).map(([option, url]) => [option, resolveApiUrl(url)]),
+    ),
+  };
+}
+
 export function mapDraft(dto: DraftDto): Draft {
   return {
     draftId: dto.draft_id,
@@ -102,17 +112,7 @@ export function mapDraft(dto: DraftDto): Draft {
     jobId: dto.job_id,
     recoverable: dto.recoverable,
     details: dto.details ? mapDetails(dto.details) : null,
-    thumbnails: dto.thumbnails
-      ? {
-          ...dto.thumbnails,
-          urls: Object.fromEntries(
-            Object.entries(dto.thumbnails.urls).map(([option, url]) => [
-              option,
-              resolveApiUrl(url),
-            ]),
-          ),
-        }
-      : null,
+    thumbnails: mapThumbnails(dto.thumbnails),
     thumbnailError: dto.thumbnail_error ?? null,
     pending: dto.pending ?? [],
     createdAt: dto.created_at,
@@ -150,6 +150,7 @@ export async function renderDraft(draftId: string, options: RenderOptions) {
         recorder_engine: options.recorderEngine,
         background_opacity: options.backgroundOpacity,
         publish_accounts: options.publishAccounts,
+        outputs: options.outputs,
         formats: options.formats,
         account_formats: options.accountFormats ?? {},
       },

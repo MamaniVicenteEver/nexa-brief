@@ -18,4 +18,4 @@ Read [template authoring](../../../../docs/nodemotion-template-authoring.md) and
 - A reference or example is a guide, not a source to copy. Start from the approved base's structure, then adapt song, text, identity and timing to the request. Copy a part literally only when it fits the request, and list each copied part in REPORT.md.
 - Never blend two designs into one. Pick one base, name it in REPORT.md, and give the variant its own id and display_name.
 - Every template needs a unique id and display_name in templates.json (case and extra spaces ignored). Check before creating; the catalog refuses duplicates.
-- Variant ids follow `<family>-<change>` (e.g. `lyrics-grunge`, `lyrics-grunge-rojo`). The display_name keeps the family name and ends with a word naming the change.
+- Template ids: the base is `lyrics-<template>`; a new version is `lyrics-<template>-<change>` (e.g. `lyrics-grunge-glitch`, `lyrics-hologram-neon`). The display_name is '<Template> <Change>' in Spanish and unique. The family term reuses the existing id (`hologram`, not `holograma`); the change is lowercase ASCII.

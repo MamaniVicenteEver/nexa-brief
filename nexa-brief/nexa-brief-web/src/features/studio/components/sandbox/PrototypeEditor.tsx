@@ -54,7 +54,9 @@ export function PrototypeEditor({ studio }: { studio: TemplateStudioController }
 
       <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
         <div className="p-3">
-          {showDetails && details && editor.draft ? (
+          {editor.initializing ? (
+            <p className="text-[12.5px] text-nb-mute">{t("loading")}</p>
+          ) : showDetails && details && editor.draft ? (
             <DetailsEditor
               key={`${editor.draft.draftId}:${JSON.stringify(details)}`}
               details={details}
@@ -69,6 +71,7 @@ export function PrototypeEditor({ studio }: { studio: TemplateStudioController }
               requirements={req}
               value={editor.value}
               onChange={editor.setValue}
+              onSongChange={editor.selectSong}
             />
           )}
         </div>

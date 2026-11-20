@@ -59,4 +59,4 @@ def test_both_options_use_template_colors_and_fonts(template, config, foreground
         assert design["palette"]["subtitle"] == subtitle
         assert design["typography"]["font"]
         assert design["subtitle"] == "LETRAS"
-        assert design["background"]["overlay"] == .2
+        assert design["background"]["overlay"] == (.6 if design["background"]["kind"] == "design" and not design["background"]["bare"] else .2)

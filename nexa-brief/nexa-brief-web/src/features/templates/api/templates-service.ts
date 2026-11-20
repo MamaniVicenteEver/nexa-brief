@@ -1,4 +1,5 @@
 import type { JobStage } from "@/features/create-video/types";
+import { ApiError } from "@/infrastructure/api/api-error";
 import { httpClient, resolveApiUrl } from "@/infrastructure/api/http-client";
 import { appendResourceSourceFields, type ResourceSelection } from "@/shared/lib/resource-source";
 import type {
@@ -188,10 +189,21 @@ export async function getTemplateRequirements(
   templateId: string,
   signal?: AbortSignal,
 ): Promise<TemplateRequirements> {
-  const dto = await httpClient<TemplateRequirementsDto>(
-    `/api/v1/templates/${templateId}/requirements`,
-    { signal },
-  );
+  let dto: TemplateRequirementsDto;
+  try {
+    dto = await httpClient<TemplateRequirementsDto>(
+      `/api/v1/templates/${templateId}/requirements`,
+      { method: "POST", signal },
+    );
+  } catch (error) {
+    // Older servers expose the read-only GET contract until the explicit
+    // idempotent registration endpoint is deployed.
+    if (!(error instanceof ApiError) || (error.status !== 404 && error.status !== 405)) throw error;
+    dto = await httpClient<TemplateRequirementsDto>(
+      `/api/v1/templates/${templateId}/requirements`,
+      { signal },
+    );
+  }
   return {
     resourceContext: dto.resource_context
       ? {

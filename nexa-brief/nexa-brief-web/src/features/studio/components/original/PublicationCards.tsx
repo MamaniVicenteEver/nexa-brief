@@ -1,13 +1,14 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { DETAILS_PLATFORMS, type DraftDetails } from "../../types";
+import { DRAFT_DETAILS_PLATFORMS, type DraftCopyPlatform, type DraftDetails } from "../../types";
 
-const LABEL = {
-  youtube: "YouTube",
-  facebook: "Facebook",
-  instagram: "Instagram",
+const LABEL: Record<DraftCopyPlatform, string> = {
   tiktok: "TikTok",
+  instagram: "Instagram",
+  facebook: "Facebook",
+  youtube: "YouTube · video normal",
+  youtube_shorts: "YouTube Shorts",
 };
 
 /** Cómo queda la publicación en cada red: título, descripción completa y etiquetas. */
@@ -27,7 +28,7 @@ export function PublicationCards({ details }: { details: DraftDetails }) {
           <p className="text-[11.5px] whitespace-pre-line text-nb-ink-soft">{details.research}</p>
         </div>
       )}
-      {DETAILS_PLATFORMS.map((platform) => {
+      {DRAFT_DETAILS_PLATFORMS.map((platform) => {
         const copy = details.copies[platform];
         if (!copy) return null;
         return (

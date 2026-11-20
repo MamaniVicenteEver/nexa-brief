@@ -49,8 +49,15 @@ export function buildDraftRequest(
   const media: Record<string, string[]> = {};
   const mediaKinds: Record<string, MediaAssetKind[]> = {};
   for (const slot of requirements.media) {
+    const explicitlySelected = Object.prototype.hasOwnProperty.call(value.media, slot.slot);
     const refs = (value.media[slot.slot] ?? []).slice(0, slot.max);
-    if (refs.length === 0) continue;
+    if (refs.length === 0) {
+      if (slot.min === 0 && explicitlySelected && slot.target !== "source") {
+        media[slot.slot] = [];
+        mediaKinds[slot.slot] = [];
+      }
+      continue;
+    }
     media[slot.slot] = refs.map((ref) => ref.assetId);
     mediaKinds[slot.slot] = refs.map((ref) => ref.kind);
     if (slot.target === "source") {
@@ -113,6 +120,9 @@ export function studioValueFromDraft(
         // Sin más datos, el tipo sale del id de fondo o del tipo del lugar.
         kind: inputs?.media_kinds?.[slot.slot]?.[index] ?? (assetId === draft.inputs.videoAssetId || slot.kind === "video" ? "video" : "image"),
       }));
+    } else if (Object.prototype.hasOwnProperty.call(inputs?.media ?? {}, slot.slot)) {
+      // Mantener un borrado explícito al reabrir y volver a previsualizar.
+      media[slot.slot] = [];
     } else if (slot.target === "source") {
       if (draft.inputs.imageAssetId && slot.kind !== "video") {
         media[slot.slot] = [{ assetId: draft.inputs.imageAssetId, kind: "image" }];

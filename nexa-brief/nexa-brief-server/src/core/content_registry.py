@@ -132,8 +132,8 @@ async def update_video_details(video_id: str, patch: dict[str, Any]) -> dict:
         if collection("content_videos").get(video_id) is None:
             raise ValueError("video no registrado")
         store = documents("content_video_details")
-        details = {**(store.get(video_id) or {}), **patch}
-        store.put(video_id, details)
+        details = {**((await store.aget(video_id)) or {}), **patch}
+        await store.aput(video_id, details)
         return details
 
 

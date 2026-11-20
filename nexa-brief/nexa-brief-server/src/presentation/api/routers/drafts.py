@@ -29,7 +29,7 @@ from starlette.responses import Response
 from src.config.niche_config import NicheConfig, find_niche_by_template_id, get_niche_config
 from src.core import draft_publishing, drafts, job_tracker, template_original
 from src.modules.copy_writer import copy_profile
-from src.core.drafts import Draft, DraftInputs, RenderOptions, effective_record_formats
+from src.core.drafts import Draft, DraftInputs, RecordOutput, RenderOptions, effective_record_formats
 from src.core.job import DurationConfig, DurationMode, Job, JobPublishingConfig, JobStage, SongInfo
 from src.core.orchestrator import Orchestrator
 from src.presentation.api.file_streaming import serve_file_with_range
@@ -94,14 +94,14 @@ async def thumbnail_font(font_id: str) -> Response:
 
 
 @router.get("/drafts/{draft_id}/thumbnail-background", include_in_schema=False)
-async def thumbnail_background(draft_id: str, kind: str = Query("frame", pattern="^(frame|image|solid)$"), time: float = Query(12, ge=0, le=86400), asset: str = Query("", max_length=24), source: str = Query("auto", pattern="^(auto|image|video)$")) -> Response:
+async def thumbnail_background(draft_id: str, kind: str = Query("frame", pattern="^(frame|image|solid|design)$"), time: float = Query(12, ge=0, le=86400), at: float = Query(0.5, ge=0, le=1), t: float = Query(-1, ge=-1, le=86400), z: float = Query(1, ge=1, le=2.5), phrase: str = Query("", max_length=200), asset: str = Query("", max_length=24), source: str = Query("auto", pattern="^(auto|image|video)$")) -> Response:
     from src.core.draft_thumbnail_assets import background_file
     draft = await drafts.get(draft_id)
     job = drafts.load_job(draft_id) if draft else None
     if job is None:
         raise HTTPException(status_code=404, detail="Prototipo no disponible")
     try:
-        path = await background_file(job, {"kind": kind, "time": time, "asset": asset, "mediaSource": source})
+        path = await background_file(job, {"kind": kind, "time": time, "at": at, "seconds": t, "zoom": z, "phrase": phrase, "asset": asset, "mediaSource": source})
     except ValueError as error:
         raise HTTPException(status_code=422, detail=str(error)) from error
     if path is None:
@@ -153,20 +153,38 @@ async def _validate_render_options(niche_cfg: NicheConfig, options: RenderOption
     ))
     if options.formats is not None and not options.formats:
         raise HTTPException(status_code=400, detail="Elegí al menos un formato")
-    formats = effective_record_formats(options)
-    for selector in options.publish_accounts:
-        selected_format = options.account_formats.get(selector)
-        if selected_format is not None and (selected_format not in formats or
-                (selector.startswith("youtube:") and selected_format != "16x9")):
-            raise HTTPException(status_code=400, detail=f"El formato elegido para {selector} no está disponible")
+    if options.outputs is not None:
+        if not options.outputs:
+            raise HTTPException(status_code=400, detail="Elegí al menos una salida")
+        if len(set(options.outputs)) != len(options.outputs):
+            raise HTTPException(status_code=400, detail="No repitas destinos de salida")
+        formats = effective_record_formats(options)
+        if options.formats is not None and set(options.formats) != set(formats):
+            raise HTTPException(status_code=400, detail="Los destinos elegidos ya determinan los formatos")
+        if options.account_formats:
+            raise HTTPException(status_code=400, detail="Con salidas explícitas no se envían formatos por cuenta")
+        for selector in options.publish_accounts:
+            if not draft_publishing.publication_destinations(selector, options):
+                raise HTTPException(status_code=400, detail=f"La cuenta {selector} no tiene una salida elegida")
+    else:
+        formats = effective_record_formats(options)
+        for selector in options.publish_accounts:
+            selected_format = options.account_formats.get(selector)
+            if selected_format is not None and (selected_format not in formats or
+                    (selector.startswith("youtube:") and selected_format != "16x9")):
+                raise HTTPException(status_code=400, detail=f"El formato elegido para {selector} no está disponible")
     engine = options.recorder_engine or niche_cfg.recorder_engine
     if "9x16" in formats and engine == "remotion":
         raise HTTPException(status_code=400, detail="Remotion solo graba en Desktop 16:9")
     if "16x9" not in formats:
         if engine == "remotion":
             raise HTTPException(status_code=400, detail="Remotion solo graba en Desktop 16:9")
-        if any(account.startswith("youtube:") for account in options.publish_accounts):
-            raise HTTPException(status_code=400, detail="YouTube requiere Desktop 16:9")
+        requires_youtube_desktop = (
+            any(account.startswith("youtube:") for account in options.publish_accounts)
+            if options.outputs is None else "youtube" in options.outputs
+        )
+        if requires_youtube_desktop:
+            raise HTTPException(status_code=400, detail="YouTube normal requiere Desktop 16:9")
         if engine == "hyperframes":
             from src.adapters.recorder.infrastructure.hyperframes_adapter import _resolve_composition_dir
             if _resolve_composition_dir(niche_cfg) is not None:
@@ -176,7 +194,9 @@ async def _validate_render_options(niche_cfg: NicheConfig, options: RenderOption
 
 
 async def _render_then_publish(draft_id: str, job: Job, options: RenderOptions) -> None:
-    result = await drafts.run_render(draft_id, job, on_stage=_job_on_stage)
+    result = await drafts.run_render(
+        draft_id, job, on_stage=_job_on_stage, outputs=options.outputs,
+    )
     if result.stage in (JobStage.PACKAGED, JobStage.PUBLISHED):
         await draft_publishing.publish_rendered(result.job_id, options)
 
@@ -503,7 +523,9 @@ async def choose_thumbnail(draft_id: str, request: DraftThumbnailRequest) -> Dra
     if draft.status not in ("preview_ready", "prepared"):
         raise HTTPException(status_code=409, detail="No se puede cambiar la miniatura en este estado")
     try:
-        updated = await drafts.select_thumbnail(draft, request.option)
+        updated = await drafts.select_thumbnail(
+            draft, request.option, output=request.output,
+        )
         _export_original(updated)
         return updated
     except ValueError as exc:
@@ -513,6 +535,7 @@ async def choose_thumbnail(draft_id: str, request: DraftThumbnailRequest) -> Dra
 @router.put("/drafts/{draft_id}/thumbnails/{option}", response_model=DraftResponse)
 async def update_thumbnail_option(
     draft_id: str, option: str, request: DraftThumbnailOptionUpdateRequest,
+    output: RecordOutput | None = Query(None),
 ) -> DraftResponse:
     """Edita texto/diseño de A o B. La captura se hace solamente dentro de Grabar."""
     draft = await _get_or_404(draft_id)
@@ -520,7 +543,7 @@ async def update_thumbnail_option(
         raise HTTPException(status_code=409, detail="No se puede editar la miniatura en este estado")
     try:
         updated = await drafts.update_thumbnail_option(
-            draft, option, text=request.text, design=request.design,
+            draft, option, text=request.text, design=request.design, output=output,
         )
         _export_original(updated)
         return updated
@@ -529,13 +552,17 @@ async def update_thumbnail_option(
 
 
 @router.get("/drafts/{draft_id}/thumbnails/{option}")
-async def thumbnail_image(draft_id: str, option: str, request: Request):
+async def thumbnail_image(
+    draft_id: str, option: str, request: Request, output: RecordOutput | None = Query(None),
+):
     from src.core.draft_thumbnails import image_path
     draft = await _get_or_404(draft_id)
     job = drafts.load_job(draft_id)
-    if option not in ("A", "B") or draft.thumbnails is None or job is None:
+    manifest = None  # una sola miniatura A/B para todos los destinos
+    manifest = manifest or draft.thumbnails
+    if option not in ("A", "B") or manifest is None or job is None:
         raise HTTPException(status_code=404, detail="Miniatura no disponible")
-    path = image_path(job, draft.thumbnails, option)
+    path = image_path(job, manifest, option)
     if not path.is_file():
         raise HTTPException(status_code=404, detail="Miniatura no disponible")
     response = serve_file_with_range(path, request.headers.get("range"), "image/jpeg")
@@ -547,7 +574,7 @@ async def thumbnail_image(draft_id: str, option: str, request: Request):
 async def render_draft(draft_id: str, request: DraftRenderRequest) -> DraftRenderAcceptedResponse:
     """Retoma el MISMO job del preview (sin re-transcribir ni regenerar el
     HTML): graba → títulos/descripciones/hashtags por plataforma → empaqueta
-    → publica si se eligieron cuentas. Devuelve el job_id de Biblioteca."""
+    → publica solo si se eligieron cuentas explícitas. Devuelve el job_id de Biblioteca."""
     draft = await drafts.get(draft_id)
     if draft is None:
         raise HTTPException(status_code=404, detail=f"Draft '{draft_id}' not found")

@@ -32,12 +32,13 @@ def test_original_style_and_media_for_both_options(tid, family, weight, slant, b
     config_path = root / 'assets/config.json'
     config = json.loads(config_path.read_text())
     designs = thumbnails._build_designs(tid, config)
-    for d in designs.values():
+    for option, d in designs.items():
         t, p = d['typography'], d['palette']
+        bg_option = (thumbnails._thumbnail_style(tid).get('palettes') or {}).get(option, {}).get('background', bg)
         assert (t['display'], t['weight'], t['slant']) == (family, weight, slant)
         assert t['font'] and assets.font_path(t['font']['url'].rsplit('/', 1)[-1]).is_file()
-        assert (p['background'], p['foreground'], p['subtitle']) == (bg, fg, sub)
-        assert d['background']['overlay'] == .2
+        assert (p['background'], p['foreground'], p['subtitle']) == (bg_option, fg, sub)
+        assert d['background']['overlay'] == (.6 if d['background']['kind'] == 'design' and not d['background']['bare'] else .2)
         assert d['subtitle'] == 'LETRAS'
     job = Job(input=JobInput(category_name=tid), artifacts=JobArtifacts(output_dir=root, config_json_path=config_path))
     assert assets.background_kind(job) == (kind or 'none')

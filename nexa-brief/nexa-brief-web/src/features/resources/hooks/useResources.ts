@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
   type AssetPatch,
   deleteLibraryAsset,
+  enrichLibraryMusic,
   getLibraryCategories,
   getLibraryPage,
   getLyrics,
@@ -57,11 +58,12 @@ export function useLibraryList(kind: ResourceKind, q = "", category?: string, en
   });
 }
 
-export function useLibraryCategories(kind: ResourceKind) {
+export function useLibraryCategories(kind: ResourceKind, enabled = true) {
   const apiKind = toApiKind(kind);
   return useQuery({
     queryKey: ["library-categories", apiKind],
     queryFn: ({ signal }) => getLibraryCategories(apiKind, signal),
+    enabled,
   });
 }
 
@@ -138,6 +140,19 @@ export function useRetranscribe() {
   return useMutation({
     mutationFn: ({ assetId, language }: { assetId: string; language?: string }) =>
       retranscribe(assetId, language),
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: libraryAssetsKey("music") });
+    },
+  });
+}
+
+/** «Completar datos» rellena artista, género, descripción y etiquetas vacíos con fuentes abiertas.
+ * «Regenerar» (overwrite) además reemplaza descripción y etiquetas aunque ya existan. */
+export function useEnrichMusic() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ assetId, overwrite = false }: { assetId: string; overwrite?: boolean }) =>
+      enrichLibraryMusic(assetId, overwrite),
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: libraryAssetsKey("music") });
     },

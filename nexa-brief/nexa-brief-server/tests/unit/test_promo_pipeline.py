@@ -238,3 +238,28 @@ def test_sports_panels3_requires_exactly_three_lines():
         pipeline.prepare_data({'template_id':'promo-sports'},data)
     segment['lines']=['UNO', 'DOS', 'TRES']
     pipeline.prepare_data({'template_id':'promo-sports'},data)
+
+
+def test_manual_media_selection_is_host_owned():
+    data = proposal("promo-editorial")
+    contract = json.loads((SKILL / "templates" / "promo-editorial.json").read_text())
+    scene_number = next(
+        index for index, scene in enumerate(contract["default_scenes"], 1) if scene.get("media")
+    )
+    first_scene = contract["default_scenes"][scene_number - 1]
+    slot = first_scene["media"][0]
+    kind = next(item["type"] for item in contract["default_media"] if item["id"] == slot)
+    data["media_plan"]["items"] = [
+        {"scene": scene_number, "slot": slot, "kind": kind, "query": "tema", "manual_selection": True}
+    ]
+
+    _, _, _, plan = pipeline.prepare_data({"template_id": "promo-editorial"}, data)
+    assert all("manual_selection" not in item for item in plan["items"])
+
+    marked = pipeline._mark_manual_media(plan, [{"scene": scene_number, "slot": slot}])
+    assert next(item for item in marked["items"] if item["scene"] == scene_number and item["slot"] == slot)["manual_selection"] is True
+    assert all(
+        not item.get("manual_selection")
+        for item in marked["items"]
+        if (item["scene"], item["slot"]) != (scene_number, slot)
+    )

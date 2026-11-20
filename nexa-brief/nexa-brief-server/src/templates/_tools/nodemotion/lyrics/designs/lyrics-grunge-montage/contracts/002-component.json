@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "grunge-montage.outrov1",
+  "entry_id": "grunge-montage.outrov1",
+  "kind": "component",
+  "label": "Outro v1 Marca gigante",
+  "summary": "Palabra roja gigante sobre metraje (toma 59,4-61,4 s) que se desarma: la corona y el subrayado se borran trazo a trazo, el subtítulo y la línea final se corren y desaparecen y el título sale con un barrido; queda solo el metraje.",
+  "component": {
+    "name": "grunge-montage.outrov1",
+    "label": "Outro v1 Marca gigante",
+    "summary": "Palabra roja gigante sobre metraje (toma 59,4-61,4 s) que se desarma: la corona y el subrayado se borran trazo a trazo, el subtítulo y la línea final se corren y desaparecen y el título sale con un barrido; queda solo el metraje.",
+    "group": "outro",
+    "default": true,
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "Gracias",
+        "doc": "config.outro.title"
+      },
+      "sub": {
+        "type": "string",
+        "default": "por ver",
+        "doc": "config.outro.sub"
+      },
+      "feats": {
+        "type": "string",
+        "default": "Suscríbete · NodeMotion",
+        "doc": "config.outro.feats"
+      },
+      "duration": {
+        "type": "number",
+        "default": 4.2,
+        "doc": "Segundos de la demo",
+        "min": 1.5,
+        "max": 8
+      }
+    },
+    "tags": [
+      "outro"
+    ],
+    "file": "player.js",
+    "demo": {},
+    "preview": {
+      "t": 2.2
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "Gracias",
+      "doc": "config.outro.title"
+    },
+    "sub": {
+      "type": "string",
+      "default": "por ver",
+      "doc": "config.outro.sub"
+    },
+    "feats": {
+      "type": "string",
+      "default": "Suscríbete · NodeMotion",
+      "doc": "config.outro.feats"
+    },
+    "duration": {
+      "type": "number",
+      "default": 4.2,
+      "doc": "Segundos de la demo",
+      "min": 1.5,
+      "max": 8
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json",
+      "pointer": "/components/1"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

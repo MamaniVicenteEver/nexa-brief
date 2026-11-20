@@ -23,6 +23,7 @@ adivinar ahora.
 from __future__ import annotations
 
 import asyncio
+from dataclasses import replace
 
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -192,7 +193,11 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
         video_path_str = file_paths.get("youtube") or file_paths.get("reels")
     else:
         video_path_str = file_paths.get("youtube")
-    copy = copy_for_platform(summary, entry.platform)
+    is_youtube_short = entry.platform == "youtube" and entry.format == "9x16"
+    copy = copy_for_platform(summary, "youtube_shorts" if is_youtube_short else entry.platform)
+    if is_youtube_short and copy.title and "#shorts" not in copy.title.casefold():
+        marker = " #Shorts"
+        copy = replace(copy, title=copy.title[:100 - len(marker)].rstrip() + marker)
     extra_kwargs = {"language": copy.language} if entry.platform == "youtube" and copy.language else {}
     if entry.platform == "youtube" and summary.get("youtube_category_id") is not None:
         extra_kwargs["youtube_category_id"] = summary["youtube_category_id"]
@@ -202,12 +207,22 @@ async def publish_entry(facade: PublisherFacadeLike, entry: QueueEntry) -> Queue
         extra_kwargs["idempotency_key"] = entry.idempotency_key or f"schedule:{entry.entry_id}"
     if entry.privacy is not None:
         extra_kwargs["privacy"] = entry.privacy
-    # miniatura propia (explainer: la intro elegida; NodeMotion: el final de la intro); solo YouTube por API
-    # (si el video se grabó sin ella, se saca ahora del final de su intro; thumbnails.set: solo JPEG/PNG)
+    # Solo el uploader existente de YouTube recibe portada. Los JPEG por destino
+    # quedan en el paquete; no se envían automáticamente a TikTok/Instagram/Facebook.
     if entry.platform == "youtube":
-        from src.modules.thumbnail_maker import ensure_for_job
+        prepared_thumbnails = job_record.get("thumbnail_paths_by_output", {}) or {}
+        if is_youtube_short and prepared_thumbnails.get("youtube_shorts"):
+            # Conservamos la captura específica de Shorts para revisión; el contrato
+            # del uploader no distingue portada Shorts de portada normal.
+            thumbnail = None
+        else:
+            selected_path = prepared_thumbnails.get("youtube")
+            if selected_path and Path(selected_path).is_file():
+                thumbnail = selected_path
+            else:
+                from src.modules.thumbnail_maker import ensure_for_job
 
-        thumbnail = await ensure_for_job(file_paths)
+                thumbnail = await ensure_for_job(file_paths)
         if thumbnail is not None:
             extra_kwargs["thumbnail_path"] = thumbnail
     if entry.platform == "youtube" and summary.get("pinned_comment"):

@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
 import { resolveApiUrl } from "@/infrastructure/api/http-client";
 import type { Draft, DraftThumbnailOptionId } from "../../types";
+import { DraftThumbnailArtwork } from "../record/DraftThumbnailArtwork";
 import {
 	getPromoContent,
 	type PromoContentAvailability,
@@ -19,6 +20,7 @@ const missing: Record<PromoContentAvailability, string> = {
 };
 const platform: Record<string, string> = {
 	youtube: "YouTube",
+	youtube_shorts: "YouTube Shorts",
 	facebook: "Facebook",
 	instagram: "Instagram",
 	tiktok: "TikTok",
@@ -91,6 +93,9 @@ export function PromoReview({ session, draft }: { session: PromoSession; draft?:
 	);
 	return (
 		<div className="space-y-3">
+			<p role="note" className="rounded-xl border border-nb-line bg-nb-bg-2 p-3 text-xs text-nb-ink-soft">
+				Revisa el guion, los títulos, las descripciones y las miniaturas antes de confirmar. Si quieres cambiar el contenido, usa «Sugerir cambios».
+			</p>
 			<Section title="Título">
 				<p className="whitespace-pre-wrap font-semibold">
 					{(avail?.draft === "available" && data.title) || missing[avail?.draft ?? "missing"]}
@@ -131,7 +136,7 @@ export function PromoReview({ session, draft }: { session: PromoSession; draft?:
 						{data.guion.segments.map((segment, index) => (
 							<li key={`${segment.n}-${index}`}>
 								<span className="mr-2 text-nb-mute">
-									{segment.n || index + 1}.
+									Escena {segment.n || index + 1}{segment.scene ? ` · ${segment.scene}` : " "}.
 								</span>
 								{(segment.lines ?? []).join(" · ")}
 							</li>
@@ -141,54 +146,27 @@ export function PromoReview({ session, draft }: { session: PromoSession; draft?:
 					<p>{missing[avail?.guion ?? "missing"]}</p>
 				)}
 			</Section>
-			<Section title={data.media_basis === "draft_inputs" ? "Recursos asignados" : "Fondos, imágenes y videos"}>
-				{data.media_basis === "draft_inputs" && <p>Estos recursos están asignados; podrían no aparecer en el resultado.</p>}
-				{avail?.media === "available" && data.media?.length ? (
-					<ul className="space-y-1">
-						{data.media.map((item, index) => (
-							<li key={`${item.id}-${index}`}>
-								<span className="font-semibold">
-									{item.name || "Recurso visual"}
-								</span>
-								<span className="text-nb-mute">
-									{item.type === "video"
-										? " · Video"
-										: item.type === "image"
-											? " · Imagen"
-											: ""}
-									{item.author ? ` · ${item.author}` : ""}
-									{item.source ? ` · ${item.source}` : ""}
-									{item.license ? ` · ${item.license}` : ""}
-								</span>
-							</li>
-						))}
-					</ul>
-				) : (
-					<p>{missing[avail?.media ?? "missing"]}</p>
-				)}
-			</Section>
 			<Section title="Miniaturas">
                 {draft?.draftId === session.draft_id && draft.thumbnails && avail?.draft === "available" ? <div className="grid grid-cols-2 gap-3">
                   {(["A", "B"] as const).map((option) => {
-                    const url = draft.thumbnails!.urls?.[option] || resolveApiUrl(`/api/v1/drafts/${encodeURIComponent(draft.draftId)}/thumbnails/${option}`);
-                    return <Thumbnail key={`${draft.draftId}-${option}-${url}-${draft.thumbnails!.fingerprint}`} option={option} url={url} selected={draft.thumbnails!.selected === option} text={draft.thumbnails!.options?.[option]?.text} />;
+                    const thumbnails = draft.thumbnails;
+                    if (!thumbnails) return null;
+                    const a = thumbnails.options?.A;
+                    const b = thumbnails.options?.B;
+                    if (a && b) {
+                      const manifest = { ...thumbnails, draftId: draft.draftId, artist: draft.details?.artist ?? "", options: { A: a, B: b } };
+                      const text = manifest.options[option].text;
+                      return <figure key={`${draft.draftId}-${option}`} className="min-w-0 space-y-1">
+                        <DraftThumbnailArtwork manifest={manifest} option={option} fallbackUrl={thumbnails.urls?.[option]} className="rounded" />
+                        <figcaption>Opción {option}{thumbnails.selected === option ? " · Seleccionada" : ""}{text ? ` · ${text}` : ""}</figcaption>
+                      </figure>;
+                    }
+                    const url = thumbnails.urls?.[option] || resolveApiUrl(`/api/v1/drafts/${encodeURIComponent(draft.draftId)}/thumbnails/${option}`);
+                    return <Thumbnail key={`${draft.draftId}-${option}-${url}-${thumbnails.fingerprint}`} option={option} url={url} selected={thumbnails.selected === option} text={thumbnails.options?.[option]?.text} />;
                   })}
                 </div> : <p>Miniaturas no disponibles.</p>}
             </Section>
-            <Section title="Sonido">
-				{avail?.music === "available" && data.music ? (
-					<p>
-						<span className="font-semibold">
-							{data.music.name || "Música seleccionada"}
-						</span>
-						{data.music.author ? ` · ${data.music.author}` : ""}
-						{data.music.source ? ` · ${data.music.source}` : ""}
-						{data.music.license ? ` · ${data.music.license}` : ""}
-					</p>
-				) : (
-					<p>{missing[avail?.music ?? "missing"]}</p>
-				)}
-			</Section>
+
 		</div>
 	);
 }

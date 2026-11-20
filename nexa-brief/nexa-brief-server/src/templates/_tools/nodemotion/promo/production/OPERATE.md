@@ -1,6 +1,6 @@
 # Operar las promos
 
-Editorial, Sports, Dynamic, Kinetic, Trendy, Urban, Breaking y Pulse comparten el chat de preparación, la API y las instrucciones versionadas. Para un pedido de **plantilla y tema**, inicia una sesión desde la interfaz o desde el cliente de terminal: ambos usan `/api/v1/promos` y el mismo historial. El servicio obtiene contexto, propone el guion, prepara los medios y el borrador y lo deja para revisión. No graba ni publica.
+Editorial, Sports, Dynamic, Kinetic, Trendy, Urban, Breaking, Pulse y Mono comparten el chat de preparación, la API y las instrucciones versionadas. Para un pedido de **plantilla y tema**, inicia una sesión desde la interfaz o desde el cliente de terminal: ambos usan `/api/v1/promos` y el mismo historial. El servicio obtiene contexto, propone el guion, prepara los medios y el borrador y lo deja para revisión. No graba ni publica.
 
 ## Iniciar y revisar una sesión
 

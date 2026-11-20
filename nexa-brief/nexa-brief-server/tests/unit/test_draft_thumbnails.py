@@ -102,7 +102,7 @@ def test_each_template_gets_its_own_composition_palette_and_copy(tmp_path: Path,
     assert a["design"]["layout"] == b["design"]["layout"] == EXPECTED_LAYOUT[template_id]
     assert a["design"]["composition"] == b["design"]["composition"] == "center"
     assert a["design"]["palette"] == b["design"]["palette"]
-    assert a["design"]["background"]["kind"] == b["design"]["background"]["kind"] == "frame"
+    assert a["design"]["background"]["kind"] == b["design"]["background"]["kind"] == ("design" if template_id in ("lyrics-caution", "lyrics-rasgado") else "frame")  # con captura propia
     assert set(a["design"]["palette"].values()) <= known_colors
     assert a["design"]["typography"]["display"] == thumbs._design_tokens()[template_id]["display"]
     assert a["design"]["badges"] == []
@@ -160,7 +160,7 @@ def test_background_and_subtitle_persist_independently_while_old_designs_migrate
     result = thumbs.preview_manifest(job, details, options)["options"]
     assert result["A"]["design"]["background"]["asset"] == "a" * 24
     assert result["A"]["design"]["subtitle"] == "LETRAS"
-    assert result["B"]["design"]["background"]["kind"] == "frame"
+    assert result["B"]["design"]["background"]["kind"] == "design"  # Caution declara captura propia
     assert result["B"]["design"]["palette"]["background"] == "#000000"
     assert result["B"]["design"]["badges"] == []
 

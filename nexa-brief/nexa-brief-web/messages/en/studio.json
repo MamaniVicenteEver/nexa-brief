@@ -112,7 +112,7 @@
     },
     "render": {
       "engineUnavailable": "Not available for now",
-      "hyperframesUnsupported": "HyperFrames is not available for this category.",
+      "hyperframesUnsupported": "HyperFrames is not enabled for this template yet.",
       "engine": "Recording engine",
       "engines": {
         "remotion": "Remotion",
@@ -202,7 +202,8 @@
         "prepareAgain": "Prepare the texts again",
         "prepareAgainConfirm": "You edited the details: preparing again replaces them. Continue?",
         "missingSong": "Pick a song to preview.",
-        "missingMedia": "Fill the highlighted media to preview."
+        "missingMedia": "Fill the highlighted media to preview.",
+        "loadingSongDetails": "Loading song details…"
       },
       "play": "Preview {name}",
       "previewUnavailable": "Generate a preview to play this prototype.",
@@ -248,8 +249,10 @@
       "goSandbox": "Go to Sandbox",
       "prototype": "Prototype",
       "prototypeHint": "The original video or one of your prepared prototypes.",
-      "formats": "Formats",
-      "formatsHint": "Choose one or both.",
+      "formats": "Outputs",
+      "formatsHint": "Select the outputs to prepare; choose accounts below to publish.",
+      "youtubeNormal": "YouTube · standard video",
+      "missingOutputForAccount": "Each account needs a matching output selected.",
       "publish": "Publish when done",
       "publishHint": "Optional. With no accounts selected, the video stays in the Library.",
       "record": "Record",
@@ -276,6 +279,17 @@
     },
     "thumbnails": {
       "stopViewing": "Stop viewing",
+      "destinationLabel": "Thumbnail destination",
+      "sharedFallback": "Showing this draft’s shared A/B thumbnail. Prepare destinations to create independent choices and capture each selected image before recording.",
+      "prepareDestinations": "Prepare thumbnails for all five destinations",
+      "preparingDestinations": "Preparing previews and selected captures…",
+      "destinations": {
+        "tiktok": "TikTok",
+        "instagram": "Instagram",
+        "facebook": "Facebook",
+        "youtube": "YouTube normal",
+        "youtube_shorts": "YouTube Shorts"
+      },
       "title": "Thumbnail options",
       "hint": "Two options styled like the video. Each keeps its own text and background.",
       "option": "Option {option}",

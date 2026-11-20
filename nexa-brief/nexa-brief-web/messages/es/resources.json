@@ -7,7 +7,8 @@
       "music": "Canciones",
       "images": "Imágenes",
       "videos": "Videos",
-      "sounds": "Efectos de sonido"
+      "sounds": "Efectos de sonido",
+      "research": "Investigaciones"
     },
     "searchPlaceholder": {
       "music": "Buscá por nombre, artista o etiqueta…",
@@ -55,7 +56,30 @@
         "approved": "Aprobado",
         "rejected": "Descartado"
       },
-      "soundCategory": "Efectos de sonido"
+      "soundCategory": "Efectos de sonido",
+      "enrich": {
+        "action": "Completar datos",
+        "running": "Investigando…",
+        "complete": "Datos completos",
+        "missing": "Falta: {fields}",
+        "done": "Datos completados: {fields}",
+        "unchanged": "Las fuentes no tienen datos nuevos para esta canción.",
+        "notFound": "No encontré esta canción en MusicBrainz ni en Wikipedia. Completala a mano.",
+        "error": "No se pudo investigar ahora. Probá de nuevo en un rato.",
+        "regenerate": "Regenerar",
+        "regenerating": "Regenerando…",
+        "regenerateHint": "Reemplaza la descripción y las etiquetas con lo que encuentre en MusicBrainz y Wikipedia.",
+        "regenerateTitle": "¿Regenerar la ficha de «{title}»?",
+        "regenerateBody": "Reemplaza la descripción y las etiquetas actuales con lo que encuentre en MusicBrainz y Wikipedia. Si las escribiste tú, se pierden. El título, la categoría y la licencia no cambian.",
+        "regenerateConfirm": "Regenerar",
+        "cancel": "Cancelar",
+        "fields": {
+          "artist": "artista",
+          "genre": "género",
+          "description": "descripción",
+          "tags": "etiquetas"
+        }
+      }
     },
     "transcription": {
       "pending": "Pendiente",
@@ -104,12 +128,70 @@
       "loading": "Cargando…",
       "empty": "Tu librería está vacía.",
       "noResults": "Sin resultados.",
+      "scopeCategory": "Ámbito: {category}",
+      "lyricsFilterLabel": "Disponibilidad de letra",
+      "lyricsFilterAll": "Con y sin letra",
+      "lyricsFilterReady": "Solo letra lista",
+      "lyricsFilterMissing": "Solo sin letra lista",
+      "lyricsFilterRequired": "Solo canciones con letra lista",
       "versions": "{count} versiones",
       "version": "Versión {number}"
     },
     "typeLabel": "Tipo de recurso",
     "retry": "Reintentar",
     "retryCategories": "No se cargaron las categorías. Reintentar",
+    "research": {
+      "sync": "Actualizar desde carpetas",
+      "syncing": "Actualizando…",
+      "syncDone": "Investigaciones actualizadas: {created} nuevas y {merged} ya registradas.",
+      "syncError": "No se pudo actualizar. Probá de nuevo en un rato.",
+      "searchPlaceholder": "Buscá por tema, carpeta o etiqueta…",
+      "clearSearch": "Limpiar búsqueda",
+      "categoryLabel": "Carpeta",
+      "allCategories": "Todas las carpetas",
+      "summary": "{total, plural, one {# investigación} other {# investigaciones}}",
+      "empty": "Todavía no hay investigaciones registradas",
+      "emptyFiltered": "No hay investigaciones con esos filtros",
+      "emptyHint": "Usá «Actualizar desde carpetas» para registrar las que ya existen en tus videos.",
+      "error": "No pudimos cargar las investigaciones.",
+      "retry": "Reintentar",
+      "noCover": "Sin imágenes",
+      "view": "Ver investigación",
+      "versions": "{count, plural, one {# versión} other {# versiones}}",
+      "origin": {
+        "production": "Producción",
+        "sandbox": "Sandbox"
+      },
+      "counts": {
+        "findings": "{count, plural, one {# hallazgo} other {# hallazgos}}",
+        "sources": "{count, plural, one {# fuente} other {# fuentes}}",
+        "images": "{count, plural, one {# imagen} other {# imágenes}}",
+        "videos": "{count, plural, one {# video} other {# videos}}"
+      },
+      "detail": {
+        "loading": "Cargando investigación…",
+        "error": "No pudimos abrir esta investigación.",
+        "versions": "Versiones",
+        "baseVersion": "base",
+        "tabs": {
+          "summary": "Resumen",
+          "findings": "Hallazgos",
+          "images": "Imágenes",
+          "videos": "Videos",
+          "files": "Archivos"
+        },
+        "noSummary": "Esta investigación no tiene resumen en texto.",
+        "noFindings": "No tiene hallazgos estructurados: revisá el resumen.",
+        "strength": "Fuerza {value}",
+        "discarded": "Descartado",
+        "noImages": "No hay imágenes guardadas en esta investigación.",
+        "licenseUnverified": "Licencia sin verificar",
+        "author": "Autor",
+        "source": "Fuente",
+        "noVideos": "Ningún video la usa todavía. Cuando un video la use, aparecerá aquí.",
+        "download": "Descargar"
+      }
+    },
     "pagination": {
       "label": "Páginas de recursos",
       "previous": "Página anterior",

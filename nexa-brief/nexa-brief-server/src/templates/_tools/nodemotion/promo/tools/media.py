@@ -261,17 +261,26 @@ async def candidates(root, target, project_id, provider, query, kind, orientatio
 
 async def fetch(root,target,project_id,read_json,write_json,validate):
     path=target/'media-plan.json'; plan=read_json(path); validate('media-plan',plan); downloads=0; failures=[]
-    if re.fullmatch(r'[a-f0-9]{32}-r[1-9][0-9]*',project_id) and any(not item.get('required_terms') for item in plan['items']):
+    if re.fullmatch(r'[a-f0-9]{32}-r[1-9][0-9]*',project_id) and any(
+        not item.get('required_terms') and item.get('manual_selection') is not True for item in plan['items']
+    ):
         print(json.dumps({'downloads':0,'resolved':0,'errors':['El plan del chat requiere required_terms por slot antes de adquirir medios']}));return 1
     for slot in plan['items']:
-        kind=slot['kind']; query=slot['query']; orientation=slot.get('orientation','landscape'); required_terms=slot.get('required_terms')
+        kind=slot['kind']; query=slot['query']; orientation=slot.get('orientation','landscape')
+        required_terms=None if slot.get('manual_selection') is True else slot.get('required_terms')
         segment=next((x for x in timeline(target, read_json)['segments'] if x.get('id')==slot['scene']),None)
         if not segment:
             slot.pop('asset_id',None); failures.append(f"{slot['slot']}: escena inexistente"); write_json(path,plan); continue
         minimum=max(slot.get('minimum_duration_seconds',0),float(segment['end'])-float(segment['start']))
+        manual_selection=slot.get('manual_selection') is True
         existing=find(root,kind,ident=slot.get('asset_id'),required_terms=required_terms) if slot.get('asset_id') else None
-        existing=existing or (find(root,kind,digest=slot['sha256'],required_terms=required_terms) if slot.get('sha256') else None) or (find(root,kind,query=query,required_terms=required_terms) if not slot.get('provider_id') else None)
+        if not manual_selection:
+            existing=existing or (find(root,kind,digest=slot['sha256'],required_terms=required_terms) if slot.get('sha256') else None) or (find(root,kind,query=query,required_terms=required_terms) if not slot.get('provider_id') else None)
         if existing and (existing[1].get('orientation') != orientation or (kind=='video' and (existing[1].get('duration_seconds') or 0)<minimum)): existing=None
+        if manual_selection and existing is None:
+            slot.pop('asset_id',None); write_json(path,plan)
+            failures.append(f"{slot['slot']}: el recurso seleccionado ya no está disponible o no coincide con orientación/duración")
+            continue
         if existing:
             d=use(existing,project_id,write_json); slot['asset_id']=d['id']; write_json(path,plan); continue
         slot.pop('asset_id',None); write_json(path,plan)

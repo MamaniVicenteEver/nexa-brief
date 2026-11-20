@@ -116,3 +116,23 @@ def apply_credits(
             )
         copy_item["description"] = description
     return result
+
+
+def remove_credit_block(description):
+    """Quita el bloque «Créditos de medios» de una descripción. Las licencias quedan en licencias.json y LICENCIAS.md."""
+    if not isinstance(description, str) or BEGIN not in description:
+        return description
+    start = description.index(BEGIN)
+    end = description.find(END, start)
+    before = description[:start].rstrip()
+    after = "" if end < 0 else description[end + len(END):].strip()
+    return "\n\n".join(part for part in (before, after) if part)
+
+
+def strip_credits(details: dict) -> dict:
+    """Copia de los detalles sin bloque de créditos en ninguna plataforma de promo."""
+    result = copy.deepcopy(details)
+    for copy_item in (result.get("copies") or {}).values():
+        if isinstance(copy_item, dict) and isinstance(copy_item.get("description"), str):
+            copy_item["description"] = remove_credit_block(copy_item["description"])
+    return result
