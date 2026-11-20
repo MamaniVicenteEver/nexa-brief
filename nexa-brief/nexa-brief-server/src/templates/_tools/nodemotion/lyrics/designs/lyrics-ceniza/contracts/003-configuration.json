@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-ceniza",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "charcoal": {
+      "default": "#0E0C0B"
+    },
+    "bone": {
+      "default": "#E6E1DA"
+    },
+    "ashText": {
+      "default": "#9A948E"
+    },
+    "emberText": {
+      "default": "#E07A48"
+    },
+    "ember": {
+      "default": "#D9602F"
+    }
+  },
+  "example": {
+    "charcoal": "#0E0C0B",
+    "bone": "#E6E1DA",
+    "ashText": "#9A948E",
+    "emberText": "#E07A48",
+    "ember": "#D9602F"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-ceniza/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

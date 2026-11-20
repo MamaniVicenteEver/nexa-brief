@@ -1,0 +1,33 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "gratitude_rotation_v1",
+  "piece": "gratitude",
+  "locale": "pt-BR",
+  "status": "draft",
+  "intent": "Alternar identidade, reciprocidade, pertencimento e impacto, pedindo no máximo uma ação, sem culpa nem urgência falsa.",
+  "templates": {
+    "identity": "Valeu por acompanhar os detalhes.",
+    "reciprocity": "Se ajudou, mande para alguém que se interessa por {topic}.",
+    "belonging": "Inscreva-se para acompanhar a próxima investigação.",
+    "impact": "Seu apoio dá espaço para a gente continuar checando os fatos."
+  },
+  "examples": [
+    "Valeu por ficar até o fim. Se você conhece alguém que trabalha com {topic}, mande este vídeo."
+  ],
+  "conventions": [
+    "Conversa calorosa e sóbria, sem prometer resultados do algoritmo.",
+    "Mantenha uma ação por variante e os identificadores G1–G4."
+  ],
+  "sounds_false": [
+    "Só você pode salvar este canal.",
+    "Assistir até o fim garante que o YouTube vai divulgar."
+  ],
+  "overrides": {
+    "variants": {
+      "G1_identidad": "Valeu por acompanhar os detalhes. É a curiosidade que mantém essas investigações andando.",
+      "G2_reciprocidad": "Valeu por assistir. Se ajudou, compartilhe com alguém que se interessa por {topic}.",
+      "G3_pertenencia": "Valeu por ficar. Inscreva-se para acompanhar a próxima investigação.",
+      "G4_impacto": "Obrigado pelo seu tempo. Seu apoio ajuda a gente a continuar checando os fatos."
+    }
+  }
+}

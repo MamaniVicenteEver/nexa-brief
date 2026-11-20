@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "family": "dinero",
+  "title": "Por qué los billetes de euro tienen puentes y ventanas imaginarios",
+  "defaults": {
+    "offset": -0.12
+  },
+  "beats": [
+    {
+      "t": 0,
+      "use": "dinero.introv2",
+      "params": {
+        "text": "PUENTES\nIMAGINARIOS", "kicker": "EUROPA · 1996"
+      }
+    },
+    {"at":"Hay que diseñar","use":"dinero.note","params":{"text":"UNA MONEDA\nCOMPARTIDA","bg":"sage"}},
+    {"at":"Pero ¿qué edificios","use":"dinero.block","params":{"text":"¿CÓMO\nREPRESENTAR\nA TODOS?"}},
+    {"at":"La respuesta está","use":"dinero.introv2","params":{"text":"EN TU\nBOLSILLO","bg":"image","src":"assets/media/euro-series.jpg","dim":0.15},"shows":"Anversos de billetes con ventanas y puertas impresas","query":"euro banknote front windows","media_review":"Aprobada: abanico de anversos; arquitectura impresa, no un edificio localizado."},
+    {"at":"El diseñador austríaco","use":"dinero.note","params":{"text":"ROBERT\nKALINA","bg":"white"}},
+    {"at":"Su propuesta recorre","use":"dinero.serif","params":{"text":"ÉPOCAS\nY ESTILOS"}},
+    {"at":"La arquitectura permite","use":"dinero.block","params":{"text":"UNA HISTORIA\nCOMÚN"}},
+    {"at":"El encargo tenía","use":"dinero.note","params":{"text":"LA CONDICIÓN:\nNEUTRALIDAD","bg":"black"}},
+    {"at":"No bastaba con","use":"dinero.block","params":{"text":"SIN UN PAÍS\nFAVORITO"}},
+    {"at":"Mira el frente","use":"dinero.introv2","params":{"text":"APERTURA Y\nCOOPERACIÓN","bg":"image","src":"assets/media/euro-series.jpg","dim":0.15},"shows":"Ventanas y puertas de los anversos","query":"euro banknote front windows","media_review":"Aprobada: ventanas y portales impresos, pertinentes a la frase; no ventanas de seguridad."},
+    {"at":"presentan una idea","use":"dinero.note","params":{"text":"CÓMO\nRELACIONARSE","bg":"sage"}},
+    {"at":"Ahora dale la vuelta","use":"dinero.introv2","params":{"text":"AL REVERSO:\nCOMUNICACIÓN","bg":"image","src":"assets/media/euro-reverso.jpg","focus":[0.4,0.15],"dim":0.1},"shows":"Reverso de veinte euros con puente y mapa","query":"euro banknote reverse bridge","media_review":"Aprobada: puente de arcos apuntados impreso en veinte euros; conservar SPECIMEN."},
+    {"at":"y también entre Europa","use":"dinero.block","params":{"text":"EUROPA\nY EL MUNDO"}},
+    {"at":"Ese es el giro","use":"dinero.note","params":{"text":"UNA TRADICIÓN,\nNO UNA DIRECCIÓN","bg":"black"}},
+    {"at":"Según el Banco Central Europeo","use":"dinero.introv2","params":{"text":"MONUMENTOS\nIMAGINARIOS","kicker":"BANCO CENTRAL EUROPEO","bg":"image","src":"assets/media/euro-reverso.jpg","focus":[0.4,0.15],"dim":0.1},"shows":"Puente dibujado en veinte euros","query":"euro banknote reverse bridge","media_review":"Aprobada: reverso con puente dibujado; su carácter imaginario procede de la fuente BCE."},
+    {"at":"ilustraciones de estilos","use":"dinero.serif","params":{"text":"ESTILOS\nCOMPARTIDOS"}},
+    {"at":"Por ejemplo","use":"dinero.note","params":{"text":"5 EUROS\nCLÁSICO","bg":"white"}},
+    {"at":"el de 20","use":"dinero.note","params":{"text":"20 EUROS\nGÓTICO","bg":"sage"}},
+    {"at":"el de 50","use":"dinero.introv1","params":{"text":"50 EUROS\nRENACIMIENTO","bg":"paper"}},
+    {"at":"Cambia el lenguaje","use":"dinero.block","params":{"text":"CAMBIA EL ESTILO.\nSIGUE EL MENSAJE."}},
+    {"at":"La próxima vez","use":"dinero.introv2","params":{"text":"UNIR\nLUGARES REALES","bg":"image","src":"assets/media/euro-veinte.jpg","dim":0.15},"shows":"Billetes de veinte con puente impreso al reverso","query":"twenty euro banknote reverse bridge","media_review":"Aprobada: abanico de reversos sobre una mesa, puente visible en primer billete; no se presenta como anverso."},
+    {"at":"¿Qué historia compartida","use":"dinero.note","params":{"text":"UNA HISTORIA\nCOMPARTIDA","bg":"sage"}},
+    {"at":"¿Qué historia compartida","use":"common.question","params":{"text":"¿Qué historia compartida\npondrías en un billete?"}}
+  ]
+}

@@ -1,0 +1,124 @@
+"""Prueba de WebAudio + Proto + bridge, sin grabar MP4. Ejecutar una copia en /tmp."""
+import sys
+sys.dont_write_bytecode=True
+import functools,http.server,json,socketserver,threading,time
+from pathlib import Path
+from playwright.sync_api import sync_playwright
+print('start',flush=True)
+root=Path.cwd();out=root/'work/sonido';errors=[]
+class Handler(http.server.SimpleHTTPRequestHandler):
+ def do_GET(self):
+  target=Path(self.translate_path(self.path))
+  if target.is_file() and self.headers.get('Range'):
+   raw=target.read_bytes();spec=self.headers['Range'].split('=')[-1].split('-');start=int(spec[0] or 0);end=min(len(raw)-1,int(spec[1]) if spec[1] else len(raw)-1)
+   self.send_response(206);self.send_header('Content-Type',self.guess_type(str(target)));self.send_header('Accept-Ranges','bytes');self.send_header('Content-Range',f'bytes {start}-{end}/{len(raw)}');self.send_header('Content-Length',str(end-start+1));self.end_headers();self.wfile.write(raw[start:end+1]);return
+  return super().do_GET()
+ def log_message(self,*args):
+  if len(args)>1 and str(args[1])=='404': print('HTTP404',args,flush=True)
+ def translate_path(self,path):
+  target=super().translate_path(path)
+  if not Path(target).exists():
+   relative=Path(target).relative_to(root.parents[2])
+   fallback=Path('/home/university/Documentos/Proyectos/nexa-brief/nexa-brief/nexa-brief-server/src/templates')/relative
+   if fallback.exists(): return str(fallback)
+  return target
+class Server(socketserver.ThreadingTCPServer):
+ allow_reuse_address=True
+ daemon_threads=True
+server=Server(('127.0.0.1',0),functools.partial(Handler,directory=str(root.parents[2])))
+threading.Thread(target=server.serve_forever,daemon=True).start()
+origin=f'http://127.0.0.1:{server.server_address[1]}'
+url=origin+'/sandbox/nodehistory/atlas-en-movimiento/'
+report={'checks':{},'errors':errors}
+def save(): (out/'browser-qa.json').write_text(json.dumps(report,indent=2)+'\n')
+try:
+ print('server',origin,flush=True)
+ with sync_playwright() as p:
+  print('playwright ready',flush=True)
+  browser=p.chromium.launch(headless=True,args=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--autoplay-policy=no-user-gesture-required'])
+  print('browser launched',flush=True)
+  page=browser.new_page(viewport={'width':270,'height':480})
+  page.set_default_timeout(25000)
+  page.on('console',lambda m:print('console',m.type,m.text[:200],flush=True) if m.type in ('error','warning') else None)
+  page.on('pageerror',lambda e:errors.append(str(e)))
+  page.goto(url+'work/sonido/index.new.html?controls=1&headless=1',wait_until='domcontentloaded',timeout=45000)
+  print('page loaded',flush=True)
+  page.wait_for_function('window.__tacticoAudio && window.__nexaProtoControl',timeout=45000)
+  print('audio ready',flush=True)
+  page.evaluate('__atlas.ready')
+  report['chromium']=browser.version
+  report['initial']=page.evaluate('__tacticoAudio.stats()')
+  report['runtime_plan']=page.evaluate('__tacticoAudio.plan')
+  print('unlock',flush=True)
+  page.evaluate('''async()=>{await __tacticoAudio.unlock();window.media=document.querySelector('audio');await new Promise(r=>{if(media.readyState>=3)r();else media.addEventListener('canplay',r,{once:true});});}''')
+  print('start media',flush=True)
+  page.evaluate('''async()=>{media.currentTime=1;await new Promise(r=>media.addEventListener('seeked',r,{once:true}));__promo.release();await media.play();}''')
+  page.wait_for_timeout(250)
+  print('media playing',flush=True)
+  report['playing']=page.evaluate('({time:media.currentTime,...__tacticoAudio.stats()})')
+  page.evaluate('media.pause()');page.wait_for_timeout(150)
+  report['paused']=page.evaluate('__tacticoAudio.stats()')
+  report['checks']['pause_stops_all']=report['paused']['active']==0
+  page.set_viewport_size({'width':1080,'height':1920})
+  for t in [.18,12.2,28.2]:
+   page.evaluate('(t)=>__promo.seek(t)',t)
+   page.screenshot(path=str(out/f'preview-{t:05.2f}.png'))
+  page.set_viewport_size({'width':270,'height':480})
+  page.evaluate('''async()=>{for(const t of [29,0,18,8,12,2,26,1,0])await __promo.seek(t);}''')
+  report['after_paused_seeks']=page.evaluate('__tacticoAudio.stats()')
+  report['checks']['paused_seek_silent']=report['after_paused_seeks']['active']==0
+  resumed=[]
+  for t in [5,1,12.4,18.2,21.2,28.2,5]:
+   page.evaluate('''async t=>{media.pause();media.currentTime=t;await new Promise(r=>media.addEventListener('seeked',r,{once:true}));__promo.release();await media.play();}''',t)
+   page.wait_for_timeout(130)
+   resumed.append(page.evaluate('({time:media.currentTime,...__tacticoAudio.stats()})'))
+  print('native seeks complete',flush=True)
+  report['resume_seeks']=resumed
+  report['checks']['seek_does_not_accumulate']=all(r['active']<=2 for r in resumed)
+  report['checks']['backward_seek_restarts']=resumed[0]['sources'][0]['offset']>=4.99 and resumed[-1]['sources'][0]['offset']>=4.99 and resumed[1]['sources'][0]['offset']<2
+  page.evaluate('media.volume=.25;media.muted=true');page.wait_for_timeout(80)
+  # SFX bus: comprueba salida nula con mute, no solo el estado del elemento de voz.
+  report['muted']=page.evaluate('''async()=>{const analyser=__tacticoAudio.context.createAnalyser();analyser.fftSize=2048; // Conectar fuente sintética no sería prueba del bus real.
+  return {volume:media.volume,muted:media.muted,stats:__tacticoAudio.stats()};}''')
+  page.evaluate('media.pause();media.muted=false;media.volume=1')
+  # Misma API de bridge que usa Sandbox, con el Proto real en otra navegación de la misma página.
+  page.add_init_script('window.NexaPlayerBridge={attach(adapter){window.__testAdapter=adapter;}}')
+  page.goto(url+'work/sonido/index.new.html?controls=1&headless=1',wait_until='domcontentloaded',timeout=45000)
+  page.wait_for_function('window.__testAdapter && window.__tacticoAudio',timeout=45000)
+  page.evaluate('''async()=>{await __tacticoAudio.unlock();await __testAdapter.seek(5);await __testAdapter.play();}''')
+  page.wait_for_timeout(180)
+  print('bridge playing',flush=True)
+  report['bridge_play']=page.evaluate('__tacticoAudio.stats()')
+  page.evaluate('()=>__testAdapter.pause()');page.wait_for_timeout(100)
+  report['bridge_pause']=page.evaluate('__tacticoAudio.stats()')
+  page.evaluate('''async()=>{await __testAdapter.seek(12.3);await __testAdapter.play();}''')
+  page.wait_for_timeout(180)
+  page.evaluate('()=>__testAdapter.seek(21.2)');page.wait_for_timeout(150)
+  report['bridge_seek_while_playing']=page.evaluate('__tacticoAudio.stats()')
+  page.evaluate('__testAdapter.setVolume(.35,true)');page.wait_for_timeout(100)
+  report['bridge_volume']=page.evaluate('({v:document.querySelector("audio").volume,m:document.querySelector("audio").muted,master:__tacticoAudio.stats().master_gain})')
+  report['checks']['bridge_play_pause']=report['bridge_play']['active']>0 and report['bridge_pause']['active']==0
+  report['checks']['bridge_seek_while_playing']=report['bridge_seek_while_playing']['active']==1 and not report['bridge_seek_while_playing']['frozen']
+  report['checks']['bridge_volume']=report['bridge_volume']['v']==.35 and report['bridge_volume']['m'] and report['bridge_volume']['master']==0
+  page.evaluate('__testAdapter.pause()')
+  report['loop_seek']=page.evaluate("""async()=>{
+    const {createAudio}=await import('../../../_tactico/audio.js');
+    const media=document.querySelector('audio');
+    const c=await createAudio({scene:{duration:30,items:[],sound:{cues:[{sfx:'industrial-hum',at:0,dur:30,source_in:2}]}},media,duration:30});
+    await c.unlock();await __testAdapter.seek(24);await __testAdapter.play();c.release();await new Promise(r=>setTimeout(r,130));const stats=c.stats();c.dispose();await __testAdapter.pause();return stats;
+  }""")
+  report['checks']['loop_seek_offset']=report['loop_seek']['active']==1 and 8.2<report['loop_seek']['sources'][0]['offset']<8.8
+  report['volume_nonzero_detail']=page.evaluate("""async()=>{const m=document.querySelector('audio');m.muted=false;m.volume=.4;await new Promise(r=>setTimeout(r,80));return {media:{volume:m.volume,muted:m.muted},stats:__tacticoAudio.stats()};}""")
+  report['checks']['volume_nonzero']=abs(report['volume_nonzero_detail']['stats']['master_gain']-.4)<1e-6
+  report['checks']['decoded_all']=not report['initial']['errors'] and report['initial']['decoded']==7
+  report['checks']['no_page_errors']=not errors
+  # Entrada real de la plantilla (Atlas 3D provisional), sin modificar su motor.
+  page.goto(url+'index.new.html?controls=1&headless=1',wait_until='domcontentloaded',timeout=45000)
+  page.wait_for_function('window.__tacticoAudio && window.__testAdapter',timeout=45000)
+  report['main_entry']=page.evaluate('({stats:__tacticoAudio.stats(),cues:__tacticoAudio.plan.cues.length,total:__promo.total})')
+  report['checks']['main_entry_loaded']=report['main_entry']['cues']==2 and report['main_entry']['stats']['decoded']==1
+  browser.close()
+finally:
+ server.shutdown();save()
+print(json.dumps(report['checks'],indent=2),flush=True)
+assert all(report['checks'].values()),report['checks']

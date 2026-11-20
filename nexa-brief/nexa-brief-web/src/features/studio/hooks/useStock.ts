@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useResourceScope } from "@/features/resources/ResourceScope";
 import { importStockItem, type StockSearchParams, searchStock } from "../api/studio-service";
 
 /** Búsqueda en Pexels/Pixabay/Unsplash. Los proveedores limitan búsquedas por
@@ -15,5 +16,9 @@ export function useStockSearch(params: StockSearchParams | null) {
 }
 
 export function useImportStock() {
-  return useMutation({ mutationFn: importStockItem });
+  const scope = useResourceScope();
+  return useMutation({
+    mutationFn: (item: Parameters<typeof importStockItem>[0]) =>
+      importStockItem(item, scope.templateId, scope.categoryId),
+  });
 }

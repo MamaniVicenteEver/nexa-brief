@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.codeinput",
+  "entry_id": "mono.codeinput",
+  "kind": "component",
+  "label": "Móvil con campo donde se escribe un código y dos botones (re",
+  "summary": "Móvil con campo donde se escribe un código y dos botones (renglón 1 = código, 2 y 3 = botones)",
+  "component": {
+    "name": "mono.codeinput",
+    "label": "Móvil con campo donde se escribe un código y dos botones (re",
+    "summary": "Móvil con campo donde se escribe un código y dos botones (renglón 1 = código, 2 y 3 = botones)",
+    "tags": [
+      "escena"
+    ],
+    "scene_type": "codeinput",
+    "params": {
+      "ticket": {
+        "type": "boolean",
+        "default": true
+      },
+      "size": {
+        "type": "number",
+        "min": 0.5,
+        "max": 1.2,
+        "default": 0.8
+      }
+    },
+    "demo": {
+      "time": 45.4
+    },
+    "preview": {
+      "t": 45.4
+    }
+  },
+  "params": {
+    "ticket": {
+      "type": "boolean",
+      "default": true
+    },
+    "size": {
+      "type": "number",
+      "min": 0.5,
+      "max": 1.2,
+      "default": 0.8
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/13"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

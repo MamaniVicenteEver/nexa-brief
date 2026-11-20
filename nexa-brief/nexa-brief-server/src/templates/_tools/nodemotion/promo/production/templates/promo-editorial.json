@@ -1,0 +1,466 @@
+{
+  "template_id": "promo-editorial",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "fútbol: estadio, partido, festejo del equipo"
+      },
+      {
+        "slot": "photos",
+        "kind": "image",
+        "min": 1,
+        "max": 3,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Fotos",
+        "hint": "jugadores y entrenador, primer plano"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.name",
+        "label": "Liga o marca",
+        "max": 30,
+        "default": "Liga Nexa"
+      },
+      {
+        "key": "brand.round",
+        "label": "Instancia",
+        "max": 30,
+        "default": "Gran Final"
+      },
+      {
+        "key": "brand.left",
+        "label": "Equipo local",
+        "max": 20,
+        "default": "Leones"
+      },
+      {
+        "key": "brand.right",
+        "label": "Equipo visitante",
+        "max": 20,
+        "default": "Halcones"
+      }
+    ],
+    "brief": true
+  },
+  "default_brand": {
+    "left": "Leones",
+    "right": "Halcones",
+    "round": "Gran Final",
+    "name": "Liga Nexa",
+    "logo": ""
+  },
+  "default_media": [
+    {
+      "id": "stadium",
+      "type": "video"
+    },
+    {
+      "id": "match",
+      "type": "video"
+    },
+    {
+      "id": "trophy",
+      "type": "video"
+    },
+    {
+      "id": "team-win",
+      "type": "video"
+    },
+    {
+      "id": "coach",
+      "type": "video"
+    },
+    {
+      "id": "soccer",
+      "type": "video"
+    },
+    {
+      "id": "coach-2",
+      "type": "image"
+    },
+    {
+      "id": "team-win-2",
+      "type": "image"
+    },
+    {
+      "id": "soccer-2",
+      "type": "image"
+    }
+  ],
+  "default_scenes": [
+    {
+      "type": "title",
+      "max_text_lines": 3
+    },
+    {
+      "type": "mediaWord",
+      "media": [
+        "trophy"
+      ],
+      "cover": false,
+      "max_text_lines": 1
+    },
+    {
+      "type": "blocks",
+      "max_text_lines": 2
+    },
+    {
+      "type": "mediaWord",
+      "media": [
+        "match"
+      ],
+      "coverFrom": "right",
+      "max_text_lines": 1
+    },
+    {
+      "type": "nameCut",
+      "max_text_lines": 1
+    },
+    {
+      "type": "mediaWord",
+      "media": [
+        "stadium"
+      ],
+      "cover": false,
+      "max_text_lines": 1
+    },
+    {
+      "type": "nameCut",
+      "bg": "black",
+      "max_text_lines": 1
+    },
+    {
+      "type": "outlineName",
+      "max_text_lines": 1
+    },
+    {
+      "type": "player",
+      "media": [
+        "team-win"
+      ],
+      "side": "left",
+      "max_text_lines": 2
+    },
+    {
+      "type": "player",
+      "media": [
+        "soccer"
+      ],
+      "side": "right",
+      "max_text_lines": 2
+    },
+    {
+      "type": "assemble",
+      "max_text_lines": 1
+    },
+    {
+      "type": "versus",
+      "media": [
+        "coach",
+        "coach-2"
+      ],
+      "max_text_lines": 2,
+      "text_source": "brand"
+    },
+    {
+      "type": "bigNumber",
+      "max_text_lines": null
+    },
+    {
+      "type": "stack",
+      "align": "center",
+      "max_text_lines": null
+    },
+    {
+      "type": "stack",
+      "align": "left",
+      "y": 0.28,
+      "max_text_lines": null
+    },
+    {
+      "type": "stack",
+      "align": "right",
+      "small": [
+        2,
+        3,
+        4
+      ],
+      "max_text_lines": null
+    },
+    {
+      "type": "logo",
+      "max_text_lines": 2
+    }
+  ],
+  "media_slot_order": {
+    "clips": [
+      "stadium",
+      "match",
+      "trophy",
+      "team-win",
+      "coach",
+      "soccer"
+    ],
+    "photos": [
+      "coach-2",
+      "team-win-2",
+      "soccer-2"
+    ]
+  },
+  "scene_cycle": [
+    {
+      "scene": 1,
+      "type": "title",
+      "shows": "título principal y dos líneas posibles",
+      "lines_used": 3,
+      "max_characters_per_line_recommended": 16,
+      "media": [],
+      "line_usage": "Usa hasta las primeras 3 líneas.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 2,
+      "type": "mediaWord",
+      "shows": "palabra sobre medio",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "trophy",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 3,
+      "type": "blocks",
+      "shows": "dos renglones entre bloques",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 16,
+      "media": [],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 4,
+      "type": "mediaWord",
+      "shows": "palabra sobre medio",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "match",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 5,
+      "type": "nameCut",
+      "shows": "nombre con corte y contorno",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 6,
+      "type": "mediaWord",
+      "shows": "palabra sobre medio",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "stadium",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 7,
+      "type": "nameCut",
+      "shows": "nombre con corte y contorno",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 8,
+      "type": "outlineName",
+      "shows": "nombre con contorno",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 9,
+      "type": "player",
+      "shows": "medio con placa de nombre y dato",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 16,
+      "media": [
+        {
+          "slot": "team-win",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 10,
+      "type": "player",
+      "shows": "medio con placa de nombre y dato",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 16,
+      "media": [
+        {
+          "slot": "soccer",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 11,
+      "type": "assemble",
+      "shows": "palabra con polos laterales al final",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 12,
+      "type": "versus",
+      "shows": "polos de marca, VS y dos medios; no usa líneas",
+      "lines_used": 0,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "coach",
+          "kind": "video"
+        },
+        {
+          "slot": "coach-2",
+          "kind": "image"
+        }
+      ],
+      "line_usage": "No usa líneas del segmento.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 13,
+      "type": "bigNumber",
+      "shows": "cifra o texto gigante apilado",
+      "lines_used": 3,
+      "max_characters_per_line_recommended": 16,
+      "media": [],
+      "line_usage": "Usa todas las líneas; se recomiendan hasta 3.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 14,
+      "type": "stack",
+      "shows": "líneas apiladas",
+      "lines_used": 5,
+      "max_characters_per_line_recommended": 16,
+      "media": [],
+      "line_usage": "Usa todas las líneas; se recomiendan hasta 5.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 15,
+      "type": "stack",
+      "shows": "líneas apiladas",
+      "lines_used": 5,
+      "max_characters_per_line_recommended": 16,
+      "media": [],
+      "line_usage": "Usa todas las líneas; se recomiendan hasta 5.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 16,
+      "type": "stack",
+      "shows": "líneas apiladas",
+      "lines_used": 5,
+      "max_characters_per_line_recommended": 16,
+      "media": [],
+      "line_usage": "Usa todas las líneas; se recomiendan hasta 5.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 17,
+      "type": "logo",
+      "shows": "cierre de texto y subtítulo",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 16,
+      "media": [],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    }
+  ],
+  "default_duration_seconds": 33.43,
+  "target_duration_seconds": {
+    "min": 60,
+    "max": 120
+  },
+  "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+  "thumbnail": {
+    "title": "brand.round; si está vacío, brand.name y luego el título del draft. Máximo cinco palabras",
+    "plate": "brand.name si difiere del título; brand.left + vs + brand.right cuando ambos existen, o brand.tagline",
+    "A": "título entre ventanas a la foto, marca y placa",
+    "B": "foto lateral, contorno y placa",
+    "common": "A y B parten del mismo título por defecto; fondo configurable cuando la composición lo usa. Revisar ambas en pequeño."
+  },
+  "rhythm": {
+    "recommended_seconds_per_segment": {
+      "min": 1.4,
+      "max": 2.4
+    },
+    "typical_duration_seconds": {
+      "min": 60,
+      "max": 120
+    },
+    "note": "Un segmento por escena; el ciclo se repite. La duración original del ejemplo está en default_duration_seconds; elegir ciclos completos que quepan en el rango y revisar el pulso."
+  },
+  "brand_texts": {
+    "brand.name": "nombre del tema o marca; reserva del cierre",
+    "brand.round": "episodio, etapa o contexto del tema",
+    "brand.left": "primer polo real de una oposición",
+    "brand.right": "segundo polo real de esa oposición",
+    "brand.tagline": "frase secundaria de miniatura si no hay polos; no se dibuja en el video",
+    "brand.logo": "gráfico opcional del config; build no lo acepta como texto ni añade logos",
+    "sin_oposicion": "Dejar brand.left y brand.right vacíos y sustituir versus por otra escena mediante scene-overrides; adaptar el plan. Assemble no muestra los polos vacíos. Si se conserva versus, build exige ambos porque el motor mostraría A VS B."
+  },
+  "inputs_note": "Copia literal del catálogo: las etiquetas y ejemplos históricos deportivos no limitan los temas. Interpretar los campos según brand_texts y scene_cycle.",
+  "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+  "design_limitations": "Las escenas nameCut imprimen BEST como decoración fija; si desentona o sugiere una afirmación injustificada, sustituirlas en scene-overrides o elegir otra plantilla. La escena title puede solaparse en vertical; revisarla.",
+  "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos. En versus, los renglones deben coincidir con brand.left, brand.right o brand.round: el motor dibuja esos campos de marca."
+}

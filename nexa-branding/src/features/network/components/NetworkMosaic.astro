@@ -1,0 +1,57 @@
+---
+import type { Locale } from '@/shared/lib/locale';
+
+interface Props { locale: Locale; }
+
+// Secondary identities are independent of the seven main channel seals.
+// Positions and colors are composed explicitly for a balanced, stable mosaic.
+const tiles = [
+  { name: 'NodeScience', logo: 'nodescience-cocodrilo.png', x: 6, y: 67, w: 9, h: 7, tone: 'light' },
+  { name: 'NodeNature', logo: 'nodenature-colibri.png', x: 6, y: 75, w: 9, h: 7, tone: 'sage' },
+  { name: 'NodeOcean', logo: 'nodeocean-ballena.png', x: 16, y: 75, w: 9, h: 7, tone: 'light' },
+  { name: 'NodeBusiness', logo: 'nodebusiness-leon.png', x: 6, y: 83, w: 9, h: 7, tone: 'sage' },
+  { name: 'NodeEngineering', logo: 'nodeengineering-castor.png', x: 16, y: 83, w: 9, h: 7, tone: 'dark' },
+  { name: 'NodeMoney', logo: 'nodemoney-hormiga.png', x: 26, y: 83, w: 9, h: 7, tone: 'light' },
+  { name: 'NodeJustice', logo: 'nodejustice-dama.png', x: 36, y: 83, w: 9, h: 7, tone: 'sage' },
+  { name: 'NodeSports', logo: 'nodesports-atleta.png', x: 85, y: 83, w: 9, h: 7, tone: 'dark' },
+  { name: 'NodeSpace', logo: 'nodespace-cohete.png', x: 75, y: 67, w: 9, h: 7, tone: 'sage' },
+  { name: 'NodeNews', logo: 'nodenews-elefante.png', x: 85, y: 75, w: 9, h: 7, tone: 'light' },
+  { name: 'NodeTravel', logo: 'nodetravel-avion.png', x: 75, y: 75, w: 9, h: 7, tone: 'dark' },
+  { name: 'NodeCulture', logo: 'nodeculture-pavo.png', x: 65, y: 75, w: 9, h: 7, tone: 'light' },
+  { name: 'NodeHealth', logo: 'nodehealth-vida.png', x: 55, y: 83, w: 9, h: 7, tone: 'sage' },
+  { name: 'NodeGaming', logo: 'nodegaming-poliedro.png', x: 65, y: 83, w: 9, h: 7, tone: 'dark' },
+  { name: 'NodeVersus', logo: 'nodeversus-vs.png', x: 75, y: 83, w: 9, h: 7, tone: 'light' },
+];
+---
+
+<div class="network-mosaic" data-emblem-mosaic>
+  {tiles.map(({ name, logo, x, y, w, h, tone }, index) => (
+    <button
+      type="button"
+      aria-label={name}
+      aria-expanded="false"
+      aria-controls={`mosaic-label-${index}`}
+      data-mosaic-tile
+      class:list={['network-mosaic__tile', 'network-mosaic__tile--logo', `network-mosaic__tile--${tone}`, { 'network-mosaic__tile--right': x >= 50 }]}
+      style={`--tile-x:${x}%;--tile-y:${y}%;--tile-w:${w}%;--tile-h:${h}%;`}
+    >
+      <img class="network-mosaic__logo" src={`/assets/secondary/${logo}`} alt="" width="96" height="96" />
+      <span id={`mosaic-label-${index}`} class="network-mosaic__tooltip" role="tooltip">
+        <img class="network-mosaic__tooltip-logo" src={`/assets/secondary/${logo}`} alt="" width="96" height="96" />
+        <span>{name}</span>
+      </span>
+    </button>
+  ))}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-mosaic-tile]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const open = button.getAttribute('aria-expanded') !== 'true';
+      document.querySelectorAll<HTMLButtonElement>('[data-mosaic-tile]').forEach((tile) => {
+        tile.setAttribute('aria-expanded', 'false');
+      });
+      button.setAttribute('aria-expanded', String(open));
+    });
+  });
+</script>

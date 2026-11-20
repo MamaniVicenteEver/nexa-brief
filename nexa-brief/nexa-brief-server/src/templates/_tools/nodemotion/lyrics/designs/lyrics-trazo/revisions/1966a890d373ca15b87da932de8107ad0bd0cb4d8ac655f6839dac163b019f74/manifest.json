@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-trazo",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-trazo",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    }
+  ],
+  "runtime_aliases": {
+    "components/core.js": "runtime/components/core.js",
+    "components/escenas.js": "runtime/components/scenes.js",
+    "components/garabatos.js": "runtime/components/scribbles.js",
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro-v1.js": "runtime/components/outro-v1.js",
+    "components/outro-v2.js": "runtime/components/outro-v2.js",
+    "components/transiciones.js": "runtime/components/transitions.js",
+    "components/trazo.css": "runtime/components/stroke.css",
+    "player.js": "runtime/player.js",
+    "showcase/index.html": "runtime/showcase/index.html"
+  },
+  "runtime_assets": [
+    "player.js",
+    "components",
+    "assets/fonts"
+  ],
+  "source_sha256": "d01679527b75d40e44db507d50a786d9074d0f4dd16b69af6b4bc4bd5285e08c",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-trazo",
+    "config": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-trazo/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-trazo/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-trazo/DESIGN.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "cd85dee934f9c572e8bdf7e0bff7c55895a6a22afb920d1a17cd6d2af643189c.webp",
+    "assets/fonts/AmaticSC-Bold.woff2": "5bb84e335a86ca063c86d1596f86240fe0f34864d64b892f92d37bcb43dc2bc8.woff2",
+    "assets/fonts/CabinSketch-Bold.woff2": "df3426aefa7999e38ff4faae0152c9dde218f19ab4daf2600e20002f79bcb226.woff2",
+    "assets/fonts/CaveatBrush-Regular.woff2": "b32b21bb7713d9bf56be158857d7d180c4b0b5453f8370fede44472d5214a1b0.woff2",
+    "assets/fonts/FrederickatheGreat-Regular.woff2": "c51d35da9d24d1cc1c49cc92d1f59632cde2b1ce0c12fd411e7f001b10fa3e38.woff2",
+    "assets/fonts/Knewave-Regular.woff2": "a24cd8b052ac5bd48df1be908540451ba27aa924c18489f434bd27bcf1948f8d.woff2",
+    "assets/fonts/LondrinaSketch-Regular.woff2": "d2b4bc5412624405dfb193f61873a6b994bfba9acee78631e029f1bf0580a6dc.woff2",
+    "assets/fonts/LondrinaSolid-Black.woff2": "a4c01f19e99a42a43d154bedeecaab7e6eaab1fa20a34028a9cf985e8d9c5769.woff2",
+    "assets/fonts/Mansalva-Regular.woff2": "f8f96da6e7d46e5081096c447b5648fa62254e6a36f39f0e1e97bb2d08f0ae08.woff2",
+    "assets/fonts/MrsSaintDelafield-Regular.woff2": "c471ad3bf63315f0c8a85242e0b511a38589bdf7abad2efb3f64f5eaac6fb1dc.woff2",
+    "assets/fonts/PermanentMarker-Regular.woff2": "7830a3621b2e1d419fe0048a6b1715f5fe098638651e76ce1b1a60e6b44aba4f.woff2",
+    "assets/fonts/RockSalt-Regular.woff2": "f25ab53f44ec4473dea7f12e54e094b1b4230fa9b7529c995e1b570d70317537.woff2",
+    "assets/fonts/RubikBubbles-Regular.woff2": "78af9475b02425ba786dadf711e6535a2f53ba17f7a6bf28595f1d7d6e7fda46.woff2",
+    "assets/fonts/RubikDoodleShadow-Regular.woff2": "705a03facf05c6657546d64a8bb7cf8df364797969d9195d3bf067a66826658a.woff2",
+    "assets/fonts/RubikMarkerHatch-Regular.woff2": "faa3e2da7bda5614691732da643e0ca15873fcf4a34b4f2357844b7606a8a42d.woff2",
+    "assets/fonts/RubikScribble-Regular.woff2": "8a02a85dcad7fcff78302572945f323aefa76f8be8c40258c808ff9648fe259f.woff2",
+    "assets/fonts/SedgwickAveDisplay-Regular.woff2": "dc4c4108d83d0ebc964172eff6db3927c4e872d992942594d23e949e4a8a91ff.woff2",
+    "assets/song.mp3": "407837f06173884ea15df55f33f194870876e1d9675f02f0256fb233ba23d3a5.mp3"
+  },
+  "revision": "1966a890d373ca15b87da932de8107ad0bd0cb4d8ac655f6839dac163b019f74"
+}

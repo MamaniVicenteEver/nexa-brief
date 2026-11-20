@@ -24,10 +24,15 @@
     "designs/pelicula/components/_pelicula.js",
     "designs/pelicula/components/scenes.js",
     "designs/pelicula/components/fx.js",
+    "designs/common/text.js",
     "designs/common/outro-v1.js",
     "designs/common/hook.js",
+    "designs/common/logo.js",
+    "designs/common/clip.js",
     "designs/pelicula/components/intros.js",
-    "designs/pelicula/components/outro.js"
+    "designs/pelicula/components/outro.js",
+    "designs/common/tabloid.js",
+    "designs/common/question.js"
   ],
   "defaults": {
     "family": "pelicula",
@@ -73,6 +78,11 @@
       "support": "apoya el canal · comparte el video",
       "handle": "youtube.com/@nodehistory",
       "use": "pelicula.outro"
+    },
+    "clip": {
+      "filter": "sepia(0.85) contrast(1.1) brightness(0.9)",
+      "frame": "palette.ink",
+      "dim": 0.18
     }
   },
   "voice": {

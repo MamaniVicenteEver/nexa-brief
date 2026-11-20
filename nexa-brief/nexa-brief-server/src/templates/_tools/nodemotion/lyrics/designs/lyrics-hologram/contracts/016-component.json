@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "outroV1",
+  "entry_id": "outroV1",
+  "kind": "component",
+  "label": "Outro v1 · tarjeta holográfica",
+  "summary": "Outro v1 (por defecto): tarjeta casi negra con emblema, título holográfico itálico, subtítulo, créditos y fundido.",
+  "component": {
+    "name": "outroV1",
+    "label": "Outro v1 · tarjeta holográfica",
+    "summary": "Outro v1 (por defecto): tarjeta casi negra con emblema, título holográfico itálico, subtítulo, créditos y fundido.",
+    "group": "outro",
+    "tags": [
+      "lyrics-hologram",
+      "outro"
+    ],
+    "params": {
+      "fadeSec": {
+        "type": "number",
+        "min": 0,
+        "max": 3,
+        "default": 0.8
+      },
+      "emblem": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "t": 134.2,
+      "query": "outro=v1",
+      "layout": null
+    },
+    "preview": {
+      "gallery": "gallery.html?only=outroV1"
+    },
+    "default": true
+  },
+  "params": {
+    "fadeSec": {
+      "type": "number",
+      "min": 0,
+      "max": 3,
+      "default": 0.8
+    },
+    "emblem": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/15"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "pinned_fact_two_questions_v1",
+  "piece": "pinned",
+  "locale": "en-US",
+  "status": "draft",
+  "intent": "Offer one sourced extra fact and two questions: one about the subject and one about what to cover next.",
+  "templates": {
+    "comment": "One more detail: {verified extra fact}. {question about the subject}? {question about a future topic}?"
+  },
+  "examples": [
+    "One more detail: {sourced detail omitted from the video}. What would make you trust a chatbot with a work file? What should we investigate next?"
+  ],
+  "conventions": [
+    "Sound like the person who made the video; stay under 420 characters.",
+    "Repeat the story’s central question when the narrative requires it; make the second question open."
+  ],
+  "sounds_false": [
+    "Dear community, thank you for joining this incredible journey.",
+    "Do not forget to like and subscribe!"
+  ],
+  "overrides": {
+    "opener": "One more detail:",
+    "forbidden_openers": [
+      "Dear community",
+      "In this video",
+      "Do not forget",
+      "We invite you"
+    ],
+    "tone": [
+      "Short sentences, everyday words, one person talking to another."
+    ]
+  }
+}

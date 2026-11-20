@@ -1,0 +1,24 @@
+import json,io,base64,hashlib,fcntl
+from pathlib import Path
+from PIL import Image,ImageChops,ImageDraw
+from playwright.sync_api import sync_playwright
+root=Path.cwd();out=root/'work/texto';lock=open('/tmp/atlas-tactico-chromium.lock','w');fcntl.flock(lock,fcntl.LOCK_EX)
+base='http://127.0.0.1:8000/api/v1/explainer/files/sandbox/nodehistory/atlas-en-movimiento/'
+times=[1.23,13.5,233.9];r={'errors':[],'frames':[],'tolerance':{'pixelsDifferent':0,'maxChannelDifference':0},'composition':'index.caption-propio.html: HUD after Atlas look/blur'};images={}
+with sync_playwright() as p:
+ browser=p.chromium.launch(headless=True,args=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--renderer-process-limit=1','--num-raster-threads=2'])
+ try:
+  page=browser.new_page(viewport={'width':1080,'height':1920},device_scale_factor=1);page.on('pageerror',lambda e:r['errors'].append(str(e)))
+  for version,entry in [('proto','index.html'),('propio','index.caption-propio.html')]:
+   page.goto(base+entry+'?headless=1',wait_until='domcontentloaded');page.wait_for_function('window.__promo && window.__tactico',timeout=60000);page.evaluate('async()=>{await __atlas.ready;await document.fonts.ready;await __promo.prepare?.()}')
+   images[version]={}
+   for t in times:
+    page.evaluate('t=>__promo.seek(t)',t);uri=page.evaluate('document.querySelector("#stage canvas").toDataURL()');images[version][t]=Image.open(io.BytesIO(base64.b64decode(uri.split(',')[1]))).convert('RGBA')
+    print(version,t,hashlib.sha256(images[version][t].tobytes()).hexdigest(),flush=True)
+  sheet=Image.new('RGB',(1080,3*180),'#111820');d=ImageDraw.Draw(sheet)
+  for n,t in enumerate(times):
+   a=images['proto'][t];bim=images['propio'][t];diff=ImageChops.difference(a,bim);count=sum(1 for px in diff.getdata() if any(px));maxdiff=max(max(px) for px in diff.getdata());r['frames'].append({'t':t,'pixelsDifferent':count,'maxChannelDifference':maxdiff,'protoSHA256':hashlib.sha256(a.tobytes()).hexdigest(),'propioSHA256':hashlib.sha256(bim.tobytes()).hexdigest()})
+   for col,(name,im) in enumerate([('Proto',a),('caption.transcript',bim)]):
+    crop=im.crop((0,1640,1080,1810)).resize((540,85));sheet.paste(crop,(col*540,n*180+28));d.text((col*540+8,n*180+7),f'{name} / {t} s',fill='white')
+  sheet.save(out/'capturas/10-paridad-transcripcion.png');r['ok']=all(e['pixelsDifferent']==0 for e in r['frames']) and not r['errors']
+ finally:browser.close();(out/'paridad-escena.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2),flush=True)

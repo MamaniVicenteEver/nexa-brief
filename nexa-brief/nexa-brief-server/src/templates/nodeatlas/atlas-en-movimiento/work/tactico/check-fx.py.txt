@@ -1,0 +1,169 @@
+"""Ejecutar la copia en /tmp; una página Chromium, sin MP4 ni servicios persistentes."""
+import sys
+sys.dont_write_bytecode = True
+import argparse
+import base64
+import functools
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+import io
+import json
+import signal
+import time
+from pathlib import Path
+import threading
+from urllib.parse import urlparse
+from PIL import Image, ImageDraw
+from playwright.sync_api import sync_playwright
+
+PROJECT = Path.cwd()
+OUT = PROJECT / 'work/tactico'
+parser = argparse.ArgumentParser()
+parser.add_argument('--mode', choices=['all','shots','bench','gallery'], default='all')
+parser.add_argument('--cases', default='')
+parser.add_argument('--report', default='fx-check.json')
+args = parser.parse_args()
+def save_report():
+    (OUT/args.report).write_text(json.dumps(report, indent=2)+'\n')
+FLAGS = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--num-raster-threads=1', '--renderer-process-limit=1', '--disable-dev-shm-usage']
+def deadline(*args):
+    raise TimeoutError('Operación Chromium sin respuesta en 60 s')
+signal.signal(signal.SIGALRM, deadline)
+
+class Handler(SimpleHTTPRequestHandler):
+    def translate_path(self, path):
+        # The copied workspace lacks this shared font. FX use no text; only
+        # the unrelated labels module's top-level load needs a local substitute.
+        if urlparse(path).path == '/_tools/explainer-kit/vendor/fonts/Archivo-900.ttf':
+            return str(PROJECT/'assets/fonts/AtlasEditorial.ttf')
+        return super().translate_path(path)
+    def log_message(self, *args):
+        pass
+
+def sheet(rows, output):
+    if not rows:
+        return
+    width, height, label = 180, 320, 24
+    image = Image.new('RGB', (width * 6, (height + label) * len(rows)), '#081e2c')
+    draw = ImageDraw.Draw(image)
+    for row, shots in enumerate(rows):
+        for column, (name, shot) in enumerate(shots):
+            x, y = column * width, row * (height + label)
+            draw.text((x + 3, y + 5), name, fill='#e9e3ba')
+            with Image.open(shot) as frame:
+                image.paste(frame.convert('RGB').resize((width, height), Image.Resampling.LANCZOS), (x, y + label))
+    image.save(output, quality=93)
+
+BENCH = """async ({id,phase}) => {
+ const original=__fx.cases.find(c=>c.id===id), scene=structuredClone(__fx.scene());
+ scene.duration=12;scene.items=[];
+ for(let i=0;i<20;i++){
+   const item=structuredClone(original.item),dx=(i%5-2)*1.15,dy=(Math.floor(i/5)-1.5)*1.5;
+   const shift=p=>[p[0]+dx,p[1]+dy];
+   item.id='measure-'+i;item.seed='measure-'+i;item.sfx=false;
+   if(Array.isArray(item.at))item.at=shift(item.at);
+   if(item.from)item.from=shift(item.from);if(item.to)item.to=shift(item.to);
+   if(item.path)item.path.via=item.path.via.map(shift);
+   for(const source of original.support||[]){const s=structuredClone(source);s.id+='-'+i;s.at=shift(s.at);s.path.via=s.path.via.map(shift);scene.items.push(s);item.follow=s.id;}
+   scene.items.push(item);
+ }
+ const runtime=await __fx.setScene(scene),g=__fx.canvas.getContext('2d'),view=__fx.view,W=1080,H=1920;
+ const base=original.times[phase],raw=[],baseline=[],command=[];
+ for(let i=0;i<38;i++){
+   const t=base+.025*Math.sin(i*.7);
+   let start=performance.now();g.clearRect(0,0,W,H);g.getImageData(0,0,W,H);const empty=performance.now()-start;
+   g.clearRect(0,0,W,H);start=performance.now();runtime.draw(g,view,t);const commands=performance.now()-start;
+   g.getImageData(0,0,W,H);const elapsed=performance.now()-start;
+   if(i>=8){raw.push(elapsed);baseline.push(empty);command.push(commands);}
+ }
+ const summary=a=>{a=a.slice().sort((a,b)=>a-b);return {mean:a.reduce((s,x)=>s+x,0)/a.length,p95:a[Math.ceil(a.length*.95)-1],max:a.at(-1)};};
+ const total=summary(raw),empty=summary(baseline),submit=summary(command);
+ return {id,phase:phase===1?'pleno':'salida/impacto',instances:20,frames:raw.length,totalMs:total,emptyReadbackMs:empty,submitMs:submit,incrementalMs:total.mean-empty.mean};
+}"""
+
+server = ThreadingHTTPServer(('127.0.0.1', 0), functools.partial(Handler, directory=str(PROJECT.parents[2])))
+threading.Thread(target=server.serve_forever, daemon=True).start()
+root = f'http://127.0.0.1:{server.server_port}'
+url = root + '/sandbox/nodehistory/atlas-en-movimiento/work/tactico/fx.new.html?shot=1'
+report = {'viewport': [1080, 1920], 'flags': FLAGS, 'errors': [], 'externalRequests': [], 'determinism': [], 'benchmarks': [], 'fontSubstitution': 'Archivo-900.ttf missing in shared workspace; QA server serves local assets/fonts/AtlasEditorial.ttf for labels.js import only. FX draw no text.'}
+try:
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(executable_path='/home/university/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome', headless=True, args=FLAGS)
+        report['chromium'] = browser.version
+        page = browser.new_page(viewport={'width':1080, 'height':1920}, device_scale_factor=1)
+        page.on('pageerror', lambda error: report['errors'].append(str(error)))
+        page.on('console', lambda msg: print('Browser:', msg.type, msg.text, flush=True) if msg.type == 'error' else None)
+        page.on('requestfailed', lambda req: print('Request failed:', req.url, req.failure, flush=True))
+        def route(req):
+            if urlparse(req.request.url).hostname in ('127.0.0.1', None):
+                req.continue_()
+            else:
+                report['externalRequests'].append(req.request.url)
+                req.abort()
+        page.route('**/*', route)
+        page.goto(url, wait_until='domcontentloaded')
+        page.wait_for_function('window.__fx?.ready || window.__fxError', timeout=120000)
+        if page.evaluate('window.__fxError || null'):
+            raise RuntimeError(page.evaluate('window.__fxError'))
+        cases=page.evaluate('__fx.cases')
+        if args.cases:
+            cases=[c for c in cases if c['id'] in args.cases.split(',')]
+        groups={'fx': [], 'fx-variants': [], 'strike': []}
+        for entry in cases if args.mode in ['all','shots'] else []:
+            signal.alarm(60)
+            print('Preparando',entry['id'],flush=True)
+            page.goto(url,wait_until='domcontentloaded')
+            page.wait_for_function('window.__fx?.ready || window.__fxError',timeout=30000)
+            page.evaluate('id=>__fx.useCase(id)', entry['id'])
+            family='fx' if entry['id'].startswith('fx.') else 'strike'
+            group='fx-variants' if family=='fx' and '-' in entry['id'] else family
+            row=[]
+            for background in ['dark', 'light']:
+                page.evaluate('value=>__fx.setBackground(value)', background)
+                hashes={}
+                for index, t in enumerate(entry['times']):
+                    print('Cuadro',entry['id'],background,index,flush=True)
+                    page.evaluate('t=>__fx.draw(t)', t)
+                    digest=page.evaluate('''async()=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',__fx.canvas.getContext('2d').getImageData(0,0,1080,1920).data)),x=>x.toString(16).padStart(2,'0')).join('')''')
+                    hashes[str(t)]=digest
+                    path=OUT/'shots'/family/(entry['id'].replace('.', '-')+f'-{background}-{index}.png')
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_bytes(base64.b64decode(page.evaluate('__fx.canvas.toDataURL().split(",")[1]')))
+                    row.append((f'{entry["id"]} {t:.2f} {background[0]}', path))
+                for t in reversed(entry['times']):
+                    page.evaluate('t=>__fx.draw(t)', t)
+                    actual=page.evaluate('''async()=>Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',__fx.canvas.getContext('2d').getImageData(0,0,1080,1920).data)),x=>x.toString(16).padStart(2,'0')).join('')''')
+                    if actual!=hashes[str(t)]:
+                        replay=OUT/'shots'/family/(entry['id'].replace('.', '-')+f'-{background}-replay.png')
+                        replay.write_bytes(base64.b64decode(page.evaluate('__fx.canvas.toDataURL().split(",")[1]')))
+                        raise AssertionError(f'Determinismo: {entry["id"]} {t}')
+                report['determinism'].append({'case':entry['id'],'background':background,'hashes':hashes,'reverseSeek':True})
+            groups[group].append(row)
+            save_report()
+            signal.alarm(0)
+            print('Capturas', entry['id'], flush=True)
+        (OUT/'sheets').mkdir(parents=True, exist_ok=True)
+        for name, rows in groups.items():
+            sheet(rows, OUT/'sheets'/f'{name}.jpg')
+        report['missing']=page.evaluate('__fx.missing()')
+        for entry in [c for c in cases if '-' not in c['id']] if args.mode in ['all','bench'] else []:
+            phases=[1,2] if entry['id'].startswith('strike.') else [1]
+            for phase in phases:
+                signal.alarm(60)
+                result=page.evaluate(BENCH, {'id':entry['id'],'phase':phase})
+                signal.alarm(0)
+                report['benchmarks'].append(result)
+                save_report()
+                print('20 instancias',result['id'],result['phase'],round(result['incrementalMs'],3),'ms',flush=True)
+        # Smoke de la galería compartida, en la misma y única página.
+        if args.mode in ['all','gallery']:
+            page.goto(root+'/sandbox/nodehistory/atlas-en-movimiento/work/tactico/demo.new.html?items=scene-fx.json',wait_until='domcontentloaded')
+            page.wait_for_function('window.__tacticoContext?.tactico && window.__promo?.seek',timeout=60000)
+            page.evaluate('async()=>{await __atlas.ready;await __promo.seek(1.1)}')
+            report['sharedGallery']={'url':'work/tactico/demo.new.html?items=scene-fx.json','title':page.title(),'body':page.locator('body').inner_text()[:1000], 'items':page.evaluate('__tacticoContext.scene.items.length'), 'missing':page.evaluate('__tacticoContext.tactico.missing()')}
+            gallery=OUT/'shots/fx/gallery-scene-fx.png'
+            gallery.write_bytes(base64.b64decode(page.evaluate('document.querySelector("#stage canvas").toDataURL().split(",")[1]')))
+        browser.close()
+finally:
+    server.shutdown()
+    save_report()
+print('Informe:',args.report,flush=True)

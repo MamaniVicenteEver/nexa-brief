@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram-worlds",
+  "id": "hw.outrov1",
+  "entry_id": "hw.outrov1",
+  "kind": "component",
+  "label": "Outro v1 · palabra gigante y marca",
+  "summary": "Basada en el cierre de la referencia (160 a 163 s): título gigante holográfico con filas del subtítulo, filas de rótulos que corren y tarjeta de marca con emblema y nombre en contorno fino extendido; fundido a negro.",
+  "component": {
+    "name": "hw.outrov1",
+    "label": "Outro v1 · palabra gigante y marca",
+    "summary": "Basada en el cierre de la referencia (160 a 163 s): título gigante holográfico con filas del subtítulo, filas de rótulos que corren y tarjeta de marca con emblema y nombre en contorno fino extendido; fundido a negro.",
+    "group": "outro",
+    "default": true,
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "GRACIAS",
+        "doc": "config.outro.title"
+      },
+      "sub": {
+        "type": "string",
+        "default": "POR VER",
+        "doc": "config.outro.sub"
+      },
+      "feats": {
+        "type": "string",
+        "default": "SUSCRÍBETE · NODEMOTION",
+        "doc": "config.outro.feats"
+      },
+      "split": {
+        "type": "number",
+        "default": 0.18,
+        "min": 0.1,
+        "max": 0.7,
+        "doc": "Fracción del cierre con la palabra gigante"
+      },
+      "fadeSec": {
+        "type": "number",
+        "default": 0.8,
+        "min": 0,
+        "max": 3,
+        "doc": "Fundido final a negro"
+      },
+      "duration": {
+        "type": "number",
+        "default": 7,
+        "min": 2,
+        "max": 20,
+        "doc": "Segundos de la demo"
+      }
+    },
+    "tags": [
+      "outro"
+    ],
+    "file": "components/outro-v1.js",
+    "demo": {},
+    "preview": {
+      "t": 1.0
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "GRACIAS",
+      "doc": "config.outro.title"
+    },
+    "sub": {
+      "type": "string",
+      "default": "POR VER",
+      "doc": "config.outro.sub"
+    },
+    "feats": {
+      "type": "string",
+      "default": "SUSCRÍBETE · NODEMOTION",
+      "doc": "config.outro.feats"
+    },
+    "split": {
+      "type": "number",
+      "default": 0.18,
+      "min": 0.1,
+      "max": 0.7,
+      "doc": "Fracción del cierre con la palabra gigante"
+    },
+    "fadeSec": {
+      "type": "number",
+      "default": 0.8,
+      "min": 0,
+      "max": 3,
+      "doc": "Fundido final a negro"
+    },
+    "duration": {
+      "type": "number",
+      "default": 7,
+      "min": 2,
+      "max": 20,
+      "doc": "Segundos de la demo"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram-worlds/showcase/components.json",
+      "pointer": "/components/1"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

@@ -1,5 +1,5 @@
 const React = require('react');
-const {useCurrentFrame, AbsoluteFill, Audio, interpolate} = require('remotion');
+const {useCurrentFrame, AbsoluteFill, Audio, Html5Video, interpolate} = require('remotion');
 const {loadFont: loadAnton} = require('@remotion/google-fonts/Anton');
 const {loadFont: loadPermanentMarker} = require('@remotion/google-fonts/PermanentMarker');
 const {
@@ -173,12 +173,17 @@ function LetrasSuaves({configData, lyricsData, audioSrc, bgSrc}) {
   const grainStep = Math.floor(frame / fps / 0.275) % 4;
   const [grainX, grainY] = GRAIN_STEPS[grainStep];
 
+  const hasCustomOpacity = typeof C.bg?.opacity === 'number' && Number.isFinite(C.bg.opacity);
+  const bgOpacity = hasCustomOpacity ? Math.max(0, Math.min(1, C.bg.opacity)) : 1;
+  const bgIsVideo = C.bg?.type === 'video';
+
   return React.createElement(
     AbsoluteFill,
     {style: {background: '#0a0a0b', overflow: 'hidden'}},
     React.createElement(Audio, {src: resolveMediaSrc(audioSrc)}),
     bgSrc &&
-      React.createElement('img', {
+      React.createElement(bgIsVideo ? Html5Video : 'img', {
+        ...(bgIsVideo ? {loop: true, muted: true} : {}),
         src: resolveMediaSrc(bgSrc),
         style: {
           position: 'absolute',
@@ -186,9 +191,9 @@ function LetrasSuaves({configData, lyricsData, audioSrc, bgSrc}) {
           width: '112%',
           height: '112%',
           objectFit: 'cover',
-          filter: C.bg?.filter || '',
+          filter: hasCustomOpacity ? 'none' : C.bg?.filter || '',
           transform: `scale(${bgScale}) translate(${bgTX}%, ${bgTY}%)`,
-          opacity: worldDim,
+          opacity: worldDim * bgOpacity,
         },
       }),
     React.createElement('div', {
@@ -228,6 +233,7 @@ function LetrasSuaves({configData, lyricsData, audioSrc, bgSrc}) {
         inset: 0,
         pointerEvents: 'none',
         background: 'radial-gradient(ellipse at 50% 46%, transparent 40%, rgba(0,0,0,0.72) 100%)',
+        opacity: hasCustomOpacity ? 0.35 : 1,
       },
     }),
     React.createElement('div', {

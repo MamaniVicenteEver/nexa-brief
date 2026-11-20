@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.headline",
+  "entry_id": "mono.headline",
+  "kind": "component",
+  "label": "Titular centrado (+ renglón 2 pequeño)",
+  "summary": "Titular centrado (+ renglón 2 pequeño)",
+  "component": {
+    "name": "mono.headline",
+    "label": "Titular centrado (+ renglón 2 pequeño)",
+    "summary": "Titular centrado (+ renglón 2 pequeño)",
+    "tags": [
+      "escena"
+    ],
+    "scene_type": "headline",
+    "params": {
+      "size": {
+        "type": "number",
+        "min": 0.5,
+        "max": 1.6,
+        "default": 1.0
+      },
+      "underline": {
+        "type": "boolean",
+        "default": false
+      },
+      "textIn": {
+        "type": "string",
+        "options": [
+          "type",
+          "rise",
+          "pop",
+          "fade",
+          "wipe",
+          "cut"
+        ],
+        "default": "type"
+      }
+    },
+    "demo": {},
+    "preview": {
+      "t": null
+    }
+  },
+  "params": {
+    "size": {
+      "type": "number",
+      "min": 0.5,
+      "max": 1.6,
+      "default": 1.0
+    },
+    "underline": {
+      "type": "boolean",
+      "default": false
+    },
+    "textIn": {
+      "type": "string",
+      "options": [
+        "type",
+        "rise",
+        "pop",
+        "fade",
+        "wipe",
+        "cut"
+      ],
+      "default": "type"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/0"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

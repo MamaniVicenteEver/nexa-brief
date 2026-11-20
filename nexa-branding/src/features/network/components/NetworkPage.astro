@@ -1,0 +1,190 @@
+---
+import { ArrowRight, ArrowUpRight } from '@lucide/astro';
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import Button from '@/shared/ui/Button.astro';
+import NetworkEmblem from './NetworkEmblem.astro';
+import ChannelCard from '@/features/channels/components/ChannelCard.astro';
+import PreviewDialog from '@/features/profiles/components/PreviewDialog.astro';
+import { getNetworkChannels, networks } from '@/features/channels/model/registry';
+import { text, type Locale } from '@/shared/lib/locale';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const channels = getNetworkChannels('node');
+const count = String(channels.length).padStart(2, '0');
+const network = networks.find((n) => n.id === 'node')!;
+const principles =
+  locale === 'es'
+    ? [
+        [
+          'Una intención clara',
+          'Cada canal nace de una pregunta y de una razón para contar. Su propósito guía lo que publicamos.',
+        ],
+        [
+          'Una voz propia',
+          'La música no se cuenta igual que la historia. Cada especialidad tiene su lenguaje, su ritmo y su identidad.',
+        ],
+        [
+          'Una mirada compartida',
+          'Contexto, claridad y cuidado por quien está al otro lado de la pantalla. Ese es nuestro punto de encuentro.',
+        ],
+      ]
+    : [
+        [
+          'A clear intention',
+          'Each channel begins with a question and a reason to tell a story. Its purpose guides what we publish.',
+        ],
+        [
+          'A distinct voice',
+          'Music and history need different approaches. Each specialty has its own language, rhythm and identity.',
+        ],
+        [
+          'A shared perspective',
+          'Context, clarity and care for the person on the other side of the screen. That is our common ground.',
+        ],
+      ];
+---
+
+<SiteLayout
+  locale={locale}
+  title={text(
+    locale,
+    'NODE Media Network — Ideas que conectan',
+    'NODE Media Network — Ideas that connect',
+  )}
+  description={network.purpose[locale]}
+>
+  <section class="hero container" id="red" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <span class="eyebrow">
+        {text(locale, 'UNA RED DE MEDIOS CON PROPÓSITO', 'A MEDIA NETWORK WITH PURPOSE')}
+      </span>
+      <h1 id="hero-title">
+        {text(locale, 'Ideas que merecen', 'Ideas worth')}
+        <br />
+        <em>{text(locale, 'ser contadas.', 'telling.')}</em>
+      </h1>
+      <p class="hero-intro">
+        {text(
+          locale,
+          `${channels.length} canales. Distintas formas de explorar el mundo. Una misma intención: crear algo que valga tu tiempo.`,
+          `${channels.length} channels. Different ways to explore the world. One shared intention: create something worth your time.`,
+        )}
+      </p>
+      <div class="hero-actions">
+        <Button href="#canales">
+          {text(locale, 'Explorar canales', 'Explore channels')}
+          <ArrowRight size={18} />
+        </Button>
+        <a class="text-button" href="#mirada">
+          {text(locale, 'Nuestra mirada', 'Our perspective')}
+          <ArrowUpRight size={17} />
+        </a>
+      </div>
+      <div class="hero-facts">
+        <div>
+          <strong>{count}</strong>
+          <span>{text(locale, 'canales especializados', 'specialist channels')}</span>
+        </div>
+        <div>
+          <strong>01</strong>
+          <span>{text(locale, 'identidad compartida', 'shared identity')}</span>
+        </div>
+        <div class="hero-facts__note">
+          <span>
+            {text(
+              locale,
+              'Elige un emblema para descubrir su historia.',
+              'Choose an emblem to discover its story.',
+            )}
+          </span>
+        </div>
+      </div>
+    </div>
+    <NetworkEmblem locale={locale} channels={channels} />
+  </section>
+  <div class="network-strip">
+    <div class="container">
+      <span>{text(locale, 'UN UNIVERSO DE IDEAS', 'A UNIVERSE OF IDEAS')}</span>
+      <p>
+        {text(
+          locale,
+          'Sonido. Tecnología. Historia. Poder. Economía. Territorio. Mente.',
+          'Sound. Technology. History. Power. Economics. Territory. Mind.',
+        )}
+      </p>
+    </div>
+  </div>
+  <section
+    class="channels-section container section-space"
+    id="canales"
+    aria-labelledby="channels-title"
+  >
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">01 / {text(locale, 'NUESTROS CANALES', 'OUR CHANNELS')}</span>
+        <h2 id="channels-title">
+          {text(locale, 'Una red.', 'One network.')}
+          <br />
+          <em>{text(locale, 'Voces propias.', 'Distinct voices.')}</em>
+        </h2>
+      </div>
+      <p>
+        {text(
+          locale,
+          'Cada especialidad tiene su espacio. Descubre qué nos mueve, qué contamos y dónde encontrarnos.',
+          'Every specialty has its own space. Discover what drives us, what we tell and where to find us.',
+        )}
+      </p>
+    </div>
+    <div class="channel-grid">
+      {channels.map((channel, i) => (
+        <ChannelCard channel={channel} locale={locale} wide={i === channels.length - 1} />
+      ))}
+    </div>
+  </section>
+  <section
+    class="perspective-section section-space"
+    id="mirada"
+    aria-labelledby="perspective-title"
+  >
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">02 / {text(locale, 'NUESTRA MIRADA', 'OUR PERSPECTIVE')}</span>
+          <h2 id="perspective-title">
+            {text(locale, 'El tema cambia.', 'The subject changes.')}
+            <br />
+            <em>{text(locale, 'La intención permanece.', 'The intention remains.')}</em>
+          </h2>
+        </div>
+        <p>{network.purpose[locale]}</p>
+      </div>
+      <div class="principles">
+        {principles.map(([title, description], i) => (
+          <article>
+            <span class="principle-number">0{i + 1}</span>
+            <h3>{title}</h3>
+            <p>{description}</p>
+          </article>
+        ))}
+      </div>
+      <div class="network-note">
+        <span class="eyebrow">NODE MEDIA NETWORK</span>
+        <p>
+          {text(
+            locale,
+            'Creemos en el valor de conectar disciplinas. Una historia puede empezar en un mapa, continuar en una decisión y terminar en una pregunta personal.',
+            'We believe in connecting disciplines. A story can begin on a map, continue through a decision and end with a personal question.',
+          )}
+        </p>
+        <a href="#canales" class="text-button">
+          {text(locale, 'Encuentra tu próxima perspectiva', 'Find your next perspective')}
+          <ArrowRight size={17} />
+        </a>
+      </div>
+    </div>
+  </section>
+  <PreviewDialog locale={locale} />
+</SiteLayout>

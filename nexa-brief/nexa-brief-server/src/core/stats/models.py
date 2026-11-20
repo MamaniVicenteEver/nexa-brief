@@ -2,8 +2,7 @@
 
 Una sección = un modelo acá + una función en `sections/` + una línea en
 `registry.py`. Las secciones públicas (landing) solo exponen agregados y
-datos que el dueño aceptó mostrar (nombre, avatar y enlace público de cada
-canal); nunca tokens, errores ni configuración interna.
+datos que el dueño aceptó mostrar (nombre y enlace público de cada canal); nunca tokens, errores ni configuración interna.
 """
 
 from __future__ import annotations
@@ -12,7 +11,7 @@ from typing import Literal
 
 from pydantic import BaseModel
 
-Platform = Literal["youtube", "tiktok", "facebook"]
+Platform = Literal["youtube", "tiktok", "facebook", "instagram"]
 
 
 # ── Videos ───────────────────────────────────────────────────────────────────
@@ -43,14 +42,15 @@ class PublicationStats(BaseModel):
 # ── Canales ──────────────────────────────────────────────────────────────────
 
 class PublicChannel(BaseModel):
-    platform: Platform
     name: str
-    avatar: str | None = None
     public_url: str | None = None
-    published_count: int = 0
 
 
 class ChannelDetail(PublicChannel):
+    id: str
+    platform: Platform
+    avatar: str | None = None
+    published_count: int = 0
     alias: str
     label: str = ""
     status: str = "ok"                    # "ok" | "requires_reauth"
@@ -72,7 +72,7 @@ class CatalogStats(BaseModel):
     visual_templates: int = 0
     active_niches: int = 0
     engines: list[str] = []
-    platforms_supported: list[Platform] = ["youtube", "tiktok", "facebook"]
+    platforms_supported: list[Platform] = ["youtube", "tiktok", "facebook", "instagram"]
 
 
 # ── Rendimiento ──────────────────────────────────────────────────────────────

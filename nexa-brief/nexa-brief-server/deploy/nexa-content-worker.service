@@ -1,0 +1,19 @@
+[Unit]
+Description=Nexa Brief persistent content preparation worker
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server
+ExecStart=%h/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/.venv/bin/python -m src.core.explainer.batch_cli worker
+Restart=on-failure
+RestartSec=5
+KillMode=control-group
+MemoryHigh=5G
+MemoryMax=6G
+MemorySwapMax=512M
+TimeoutStopSec=30
+
+[Install]
+WantedBy=default.target

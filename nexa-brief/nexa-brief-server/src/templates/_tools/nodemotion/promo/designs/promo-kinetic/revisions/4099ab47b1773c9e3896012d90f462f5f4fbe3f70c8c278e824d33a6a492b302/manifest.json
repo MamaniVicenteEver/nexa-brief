@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-kinetic",
+  "family": "promo",
+  "demo_folder": "nodemotion/commercial/promo-kinetic",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "source_sha256": "deed2c7022e1884b6adbfd9680d65e9baec74faeba65777a9ce414617be94dfe",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/promo-kinetic",
+    "config": "nodemotion/commercial/promo-kinetic/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-kinetic/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-kinetic/README.md"
+  },
+  "revision": "4099ab47b1773c9e3896012d90f462f5f4fbe3f70c8c278e824d33a6a492b302"
+}

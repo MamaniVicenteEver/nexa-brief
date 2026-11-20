@@ -1,0 +1,44 @@
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* tema — defaults idénticos al caso actual; config.json puede pisarlos */
+  :root {
+    --fExt: "Archivo", sans-serif; --fCond: "Anton", sans-serif; --fCond2: "Oswald", sans-serif;
+    --red: #C80202; --dark: #000000; --light: #FFFFFF;
+  }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #000; cursor: pointer; }
+
+  /* escenario: cada escena es un "cartón" a pantalla completa con corte duro */
+  #stage { position: fixed; inset: 0; overflow: hidden; z-index: 1; }
+  .scene { position: absolute; left: 0; top: 0; overflow: hidden; }
+  .layer { position: absolute; inset: 0; transform-origin: 50% 50%; }
+  .patch { position: absolute; pointer-events: none; }
+
+  /* texto: .bx posiciona (left/top + translate por ancla), .tx es lo que se anima */
+  .bx { position: absolute; left: 0; top: 0; white-space: nowrap; line-height: 0.86; }
+  .tx { display: inline-block; white-space: nowrap; line-height: 0.86; text-transform: uppercase; }
+  .ch { display: inline-block; white-space: pre; }
+  .ext  { font-family: var(--fExt); font-weight: 900; font-stretch: 125%; }
+  .sans { font-family: var(--fExt); font-weight: 900; font-stretch: 100%; }
+  .nar  { font-family: var(--fExt); font-weight: 900; font-stretch: 70%; }
+  .lite { font-family: var(--fExt); font-weight: 500; font-stretch: 100%; text-transform: none; }
+  .cond { font-family: var(--fCond); font-weight: 400; }
+  .cond2 { font-family: var(--fCond2); font-weight: 700; }
+  .lab { position: absolute; overflow: hidden; }
+  .lab > div { padding: 0.18em 0.45em 0.12em; white-space: nowrap; line-height: 1; text-transform: uppercase;
+               font-family: var(--fExt); font-weight: 900; font-stretch: 100%; }
+
+  #measure { position: absolute; left: -99999px; top: 0; visibility: hidden; white-space: nowrap;
+             font-size: 100px; line-height: 0.86; }
+
+  #hud {
+    position: fixed; left: 8px; top: 8px; z-index: 50; display: none; padding: 6px 8px;
+    font: 11px/1.4 ui-monospace, monospace; color: #0f0; background: rgba(0,0,0,0.7); pointer-events: none;
+  }
+  #hint { display: none !important;
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: var(--fExt); font-weight: 900; font-size: 1.5vh; letter-spacing: 0.5em; color: #fff;
+    opacity: 0.55; animation: hintPulse 2s ease infinite; pointer-events: none;
+  }
+  @keyframes hintPulse { 0%,100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+
+  body.headless #hint { display: none !important; }

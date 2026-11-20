@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-mixtas",
+  "id": "config.lyricsFilter",
+  "entry_id": "config.lyricsFilter",
+  "name": "lyricsFilter",
+  "kind": "configuration",
+  "label": "lyricsFilter",
+  "summary": "Existing configuration configuration: lyricsFilter.",
+  "params": {
+    "minLogprob": {
+      "default": -0.4
+    },
+    "drop": {
+      "default": [
+        "audio ?jungle",
+        "envato",
+        "subt[ií]tulos",
+        "amara\\.org"
+      ]
+    }
+  },
+  "example": {
+    "minLogprob": -0.4,
+    "drop": [
+      "audio ?jungle",
+      "envato",
+      "subt[ií]tulos",
+      "amara\\.org"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+      "pointer": "/configs/0/lyricsFilter"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,405 @@
+"""Pipeline — ejecuta los 8 stages secuencialmente para un Job."""
+
+from __future__ import annotations
+
+import time
+from typing import Awaitable, Callable
+
+import structlog
+
+from src.adapters.ai.factory import get_analysis_ai, get_codegen_ai, get_copy_ai
+from src.config.exceptions import NexaBriefError
+from src.config.niche_config import NicheConfig, get_niche_config
+from src.config.settings import settings
+from src.core.categories import output_dir_for_niche
+from src.core.job import DurationConfig, DurationMode, Job, JobStage, VisualDesign
+from src.core.video_usage import for_video
+from src.core.progress import (
+    ProgressTracker,
+    bind_tracker,
+    get_or_create_tracker,
+    recorder_key,
+    release_tracker,
+)
+from src.modules import (
+    html_generator,
+    input_analyzer,
+    lyrics_transcriber,
+    packager,
+    prompt_architect,
+    resource_fetcher,
+    result_summarizer,
+    video_recorder,
+    visual_designer,
+)
+
+logger = structlog.get_logger(__name__)
+
+# JobStage en que deja el Job cada stage al terminar bien. Es lo que permite
+# retomar (`resume=True`): el orden de los stages cambia según la rama (en
+# config_driven_template resource_fetcher va antes que visual_designer), así
+# que no alcanza con comparar el orden del enum — se busca en la lista REAL de
+# stages de esta corrida cuál produjo `job.stage` y se sigue desde el próximo.
+_STAGE_RESULT: dict[str, JobStage] = {
+    "input_analyzer": JobStage.INPUT_ANALYZED,
+    "visual_designer": JobStage.DESIGN_COMPLETE,
+    "lyrics_transcriber": JobStage.DESIGN_COMPLETE,
+    "resource_fetcher": JobStage.RESOURCES_FETCHED,
+    "prompt_architect": JobStage.PROMPT_BUILT,
+    "html_generator": JobStage.HTML_GENERATED,
+    "video_recorder": JobStage.VIDEO_RECORDED,
+    "result_summarizer": JobStage.SUMMARY_GENERATED,
+    "packager": JobStage.PACKAGED,
+    "social_publisher": JobStage.PUBLISHED,
+}
+
+Stage = tuple[str, Callable[[Job], Awaitable[Job]]]
+
+
+def _publication_ai(job: Job):
+    if job.artifacts.summary is not None and job.artifacts.summary.platform_copies:
+        return None
+    return for_video(get_copy_ai(), job, "publication_copy")
+
+
+def _remaining_stages(stages: list[Stage], current: JobStage) -> list[Stage]:
+    """Los stages que faltan para un Job que ya llegó a `current`."""
+    if current == JobStage.PENDING:
+        return stages
+    # PUBLISHING = quedó a mitad de publicar: se reintenta social_publisher.
+    if current == JobStage.PUBLISHING:
+        current = JobStage.PACKAGED
+    for index, (name, _) in enumerate(stages):
+        if _STAGE_RESULT.get(name) == current:
+            return stages[index + 1:]
+    raise ValueError(f"No se puede retomar un Job en stage '{current.value}' con estos stages")
+
+
+async def run(
+    job: Job,
+    on_stage: Callable[[Job], Awaitable[None]] | None = None,
+    stop_after: JobStage | None = None,
+    resume: bool = False,
+) -> Job:
+    """Ejecuta el pipeline completo de 8 stages para un video job.
+
+    `on_stage`, si se da, se llama con el Job actualizado después de cada
+    stage (y en caso de fallo) — usado por el job tracker (fire-and-forget)
+    para persistir el progreso mientras el pipeline corre en background.
+
+    `stop_after`, si se da, corta la ejecución apenas el Job llega a ese
+    stage — usado por el preview de plantillas para parar en HTML_GENERATED,
+    antes de video_recorder/packager (ver `src/presentation/api/routers/templates.py`).
+
+    `resume=True` retoma un Job que ya avanzó (ej. un draft que quedó en
+    HTML_GENERATED, ver `src/core/drafts.py`): saltea los stages ya hechos —
+    sus artifacts viajan en el Job — y sigue con video_recorder → ... →
+    social_publisher. Sin `resume` el Job siempre corre desde el primer stage.
+    Un Job FAILED no se retoma (no se sabe qué quedó a medias): ValueError.
+
+    Retorna el Job final (stage=PACKAGED en éxito, FAILED en error, o el
+    stage indicado en `stop_after` si se cortó ahí).
+    """
+    if resume and job.stage == JobStage.FAILED:
+        raise ValueError(f"Job '{job.job_id}' está FAILED: retomar desde el último stage sano")
+
+    # ── Directorio de salida ──────────────────────────────────────────────────
+    # output/<categoría>/<subcategoría>/<job_id> (ej. output/node_motion/letras/ab12cd34).
+    # Un job retomado conserva la carpeta donde empezó.
+    from src.config.profile_layout import layout_for_settings
+    layout = layout_for_settings(settings)
+    if layout.schema_version >= 2:
+        import re
+        if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}", job.job_id) or not re.fullmatch(
+            r"[A-Za-z0-9][A-Za-z0-9_-]{0,127}", job.input.category_name
+        ):
+            raise ValueError("Identificador de job o nicho inválido")
+        if layout.schema_version >= 3:
+            from src.config.media_paths import category_folder
+            from src.core.categories import category_for_niche
+            category = category_for_niche(job.input.category_name)
+            if not category:
+                raise ValueError("El nicho no tiene una categoría de producción")
+            output_dir = layout.productions_dir / category_folder(category) / job.job_id
+        else:
+            output_dir = output_dir_for_niche(layout.productions_dir, job.input.category_name) / job.job_id
+        render_dir = (layout.renders_dir / "videos" / output_dir.relative_to(layout.productions_dir).parts[0] / job.job_id
+                      if layout.schema_version >= 3 else layout.renders_dir / job.job_id / job.job_id)
+        log_dir = layout.logs_dir / "jobs" / job.job_id
+        for path, root in ((output_dir, layout.productions_dir), (render_dir, layout.renders_dir), (log_dir, layout.logs_dir)):
+            if not path.resolve().is_relative_to(root.resolve()):
+                raise ValueError("Ruta del job fuera del perfil")
+            path.mkdir(parents=True, exist_ok=True)
+        if job.artifacts.output_dir and job.artifacts.output_dir.resolve() != output_dir.resolve():
+            raise ValueError("El job retomado pertenece a otro directorio o perfil")
+        from src.core.content_registry import upsert_video, get_video
+        if get_video(job.job_id) is None:
+            await upsert_video(job.job_id, job.job_id, details={"niche_id": job.input.category_name, "status": job.stage.value})
+        # Los trabajos v2 existentes sin assets_dir conservan su layout al reanudar.
+        # Para nuevos jobs el HTML queda en la raíz y los recursos en assets/.
+        assets_dir = job.artifacts.assets_dir
+        if assets_dir is None:
+            new_assets = output_dir / "assets"
+            markers = ("config.json", "song.mp3", "lyrics.json")
+            has_old_files = any(path.name != "assets" and not path.name.startswith(".") for path in output_dir.iterdir())
+            has_old_markers = any((output_dir / name).exists() for name in markers)
+            has_new_markers = any((new_assets / name).exists() for name in markers)
+            old_layout = has_old_markers or (not has_new_markers and (job.stage != JobStage.PENDING or has_old_files))
+            assets_dir = output_dir if old_layout else new_assets
+        if assets_dir not in (output_dir, output_dir / "assets") or assets_dir.is_symlink():
+            raise ValueError("Directorio de recursos inválido")
+        if not assets_dir.resolve().is_relative_to(output_dir.resolve()):
+            raise ValueError("Directorio de recursos fuera del job")
+        assets_dir.mkdir(parents=True, exist_ok=True)
+        artifact_paths = {"output_dir": output_dir, "assets_dir": assets_dir, "render_dir": render_dir, "log_dir": log_dir}
+    else:
+        output_dir = job.artifacts.output_dir or (
+            output_dir_for_niche(settings.output_dir, job.input.category_name) / job.job_id
+        )
+        output_dir.mkdir(parents=True, exist_ok=True)
+        (output_dir / "logs").mkdir(exist_ok=True)
+        artifact_paths = {"output_dir": output_dir}
+
+    artifacts = job.artifacts.model_copy(update=artifact_paths)
+    job = job.model_copy(update={"artifacts": artifacts})
+    if on_stage is not None:
+        await on_stage(job)
+    if stop_after is not None and job.stage == stop_after:
+        return job
+
+    # ── Cargar configuración del nicho ────────────────────────────────────────
+    from src.core.library.background_source import with_selected_background
+    niche_cfg = with_selected_background(restrict_formats(get_niche_config(job.input.category_name), job.input.formats), job)
+    if layout.schema_version >= 2:
+        from src.core.content_registry import update_video_details
+        song = job.input.song_info
+        await update_video_details(job.job_id, {"title": song.song_name if song and song.song_name else niche_cfg.display_name})
+
+    # Nichos con video.duration_locked_to_music=True (ej. lyrics_video_*): la
+    # duración del video TIENE que ser la duración real de la canción — nunca
+    # loop, nunca manual, nunca el default de 60s — o la letra queda cortada o
+    # desincronizada. Se fuerza ACÁ, antes de que resource_fetcher la use,
+    # ignorando cualquier duration_config que haya venido en el request (así
+    # un request mal formado no puede saltarse la regla).
+    if niche_cfg.video.duration_locked_to_music:
+        job = job.model_copy(update={
+            "input": job.input.model_copy(update={
+                "duration_config": DurationConfig(mode=DurationMode.AUTO, repeat_count=1)
+            })
+        })
+        if resume and job.artifacts.music_path is not None and job.artifacts.analyzed_input is not None:
+            # Refresh older previews that used the generic 60–300 s clamp.
+            # The saved track already includes its outro; do not pad it again.
+            logs_dir = job.artifacts.log_dir or job.artifacts.output_dir / "logs"
+            seconds = await resource_fetcher._resolve_duration_seconds(
+                job, job.artifacts.music_path, logs_dir, locked_to_music=True,
+            )
+            analyzed = job.artifacts.analyzed_input.model_copy(update={"duration_seconds": seconds})
+            job = job.model_copy(update={"artifacts": job.artifacts.model_copy(update={"analyzed_input": analyzed})})
+            (logs_dir / "01_input_completado.json").write_text(analyzed.model_dump_json(indent=2), encoding="utf-8")
+            if on_stage is not None:
+                await on_stage(job)
+
+    # ── Resolver adaptadores AI una sola vez por job ──────────────────────────
+    analysis_ai = get_analysis_ai()
+    codegen_ai = get_codegen_ai()
+
+    t_start = time.monotonic()
+    logger.info(
+        "pipeline_start",
+        job_id=job.job_id,
+        category=job.input.category_name,
+        niche=niche_cfg.display_name,
+        has_reels=niche_cfg.has_reels_format(),
+        image_validation=niche_cfg.image.validation.enabled,
+    )
+
+    # ── Construcción de la lista de stages (3 ramas) ──────────────────────────
+    if niche_cfg.pipeline_type == "config_driven_template":
+        # Plantilla estática registrada en templates.json + config.json.
+        # resource_fetcher se adelanta: visual_designer necesita la imagen REAL
+        # (ya descargada/provista) para poder analizarla con el Vision Extractor —
+        # a diferencia del orden por defecto, donde visual_designer corre primero
+        # sobre un diseño abstracto sin ninguna imagen todavía.
+        if niche_cfg.template.requires_lyrics:
+            # Nichos de letras (lyrics_video_*): no hay imagen que analizar — en
+            # el lugar del Vision Extractor va lyrics_transcriber, que transcribe
+            # la canción real ya resuelta por resource_fetcher.
+            analysis_stage = ("lyrics_transcriber", lambda j: lyrics_transcriber.run(j, niche_cfg))
+        else:
+            analysis_stage = ("visual_designer", lambda j: visual_designer.run(j, for_video(analysis_ai, j, "visual_design"), niche_cfg))
+        stages = [
+            ("input_analyzer",    lambda j: input_analyzer.run(j, for_video(get_copy_ai(), j, "input_analyzer"), niche_cfg)),
+            ("resource_fetcher",  lambda j: resource_fetcher.run(j, niche_cfg, for_video(analysis_ai, j, "media_validation"))),
+            analysis_stage,
+            ("prompt_architect",  lambda j: prompt_architect.run(j, niche_cfg)),
+            ("html_generator",    lambda j: html_generator.run(j, for_video(codegen_ai, j, "composition"), niche_cfg)),
+            ("video_recorder",    lambda j: video_recorder.run(j, niche_cfg)),
+            ("result_summarizer", lambda j: result_summarizer.run(j, _publication_ai(j), niche_cfg)),
+            ("packager",          lambda j: packager.run(j, niche_cfg)),
+        ]
+        logger.info(
+            "pipeline_config_driven_template",
+            job_id=job.job_id,
+            niche=niche_cfg.id,
+            template=niche_cfg.template.template_id,
+            requires_lyrics=niche_cfg.template.requires_lyrics,
+        )
+    else:
+        # Orden por defecto (sin cambios): visual_designer corre ANTES que
+        # resource_fetcher porque produce un diseño abstracto independiente
+        # de cualquier imagen real.
+        if niche_cfg.skip_visual_design:
+            # Cuando skip_visual_design=True, inyectamos un VisualDesign mínimo y salteamos Gemini
+            _static_design = VisualDesign(
+                genre="ambient",
+                style="image_only",
+                colors=["#000000", "#FFFFFF"],
+                fonts=["Inter"],
+                animation="none",
+                background_style="full_screen_cover",
+            )
+
+            async def _inject_design(j: Job) -> Job:
+                a = j.artifacts.model_copy(update={"visual_design": _static_design})
+                return j.model_copy(update={"artifacts": a}).advance(JobStage.DESIGN_COMPLETE)
+
+            visual_designer_stage = ("visual_designer", _inject_design)
+            logger.info("pipeline_skip_visual_design", job_id=job.job_id, niche=niche_cfg.id)
+        else:
+            visual_designer_stage = (
+                "visual_designer", lambda j: visual_designer.run(j, for_video(analysis_ai, j, "visual_design"), niche_cfg)
+            )
+
+        stages = [
+            ("input_analyzer",    lambda j: input_analyzer.run(j, for_video(get_copy_ai(), j, "input_analyzer"), niche_cfg)),
+            visual_designer_stage,
+            ("resource_fetcher",  lambda j: resource_fetcher.run(j, niche_cfg, for_video(analysis_ai, j, "media_validation"))),
+            ("prompt_architect",  lambda j: prompt_architect.run(j, niche_cfg)),
+            ("html_generator",    lambda j: html_generator.run(j, for_video(codegen_ai, j, "composition"), niche_cfg)),
+            ("video_recorder",    lambda j: video_recorder.run(j, niche_cfg)),
+            ("result_summarizer", lambda j: result_summarizer.run(j, _publication_ai(j), niche_cfg)),
+            ("packager",          lambda j: packager.run(j, niche_cfg)),
+        ]
+
+    # ── Stage 9 — Publicación (opcional) ─────────────────────────────────────
+    # El request puede desactivar publishing aunque ENABLE_AUTO_PUBLISHING=true en .env
+    request_explicitly_disabled = (
+        job.input.publishing and not job.input.publishing.enabled
+    )
+    is_publishing_enabled = (
+        settings.enable_auto_publishing or job.input.publishing.enabled
+    ) and not request_explicitly_disabled
+    if is_publishing_enabled:
+        from src.modules import social_publisher
+        from src.adapters.publishing.factory import get_publisher_facade
+        stages.append(
+            ("social_publisher", lambda j: social_publisher.run(j, get_publisher_facade()))
+        )
+        logger.info(
+            "pipeline_publishing_enabled",
+            job_id=job.job_id,
+            active_account=settings.active_account,
+        )
+    else:
+        logger.info("pipeline_publishing_disabled", job_id=job.job_id)
+
+    if resume:
+        stages = _remaining_stages(stages, job.stage)
+        logger.info(
+            "pipeline_resume",
+            job_id=job.job_id,
+            from_stage=job.stage.value,
+            remaining=[name for name, _ in stages],
+        )
+
+    tracker = get_or_create_tracker(job.job_id)
+    engine = job.input.recorder_engine_override or niche_cfg.recorder_engine
+    tracker.set_plan(
+        [(name, recorder_key(engine) if name == "video_recorder" else name) for name, _ in stages],
+        video_seconds=job.input.duration_seconds,
+    )
+
+    try:
+        for stage_name, stage_fn in stages:
+            try:
+                logger.info("stage_start", stage=stage_name, job_id=job.job_id)
+                await tracker.start_step(stage_name)
+                with bind_tracker(tracker):
+                    job = await stage_fn(job)
+                logger.info("stage_done", stage=stage_name, job_id=job.job_id, stage_state=job.stage)
+                if layout.schema_version >= 2:
+                    from src.core.content_registry import update_video_details
+                    await update_video_details(job.job_id, {"status": job.stage.value})
+                    await _index_job_logs(job)
+                if job.artifacts.analyzed_input is not None:
+                    tracker.update_video_seconds(job.artifacts.analyzed_input.duration_seconds)
+                if on_stage is not None:
+                    await on_stage(job)
+                if stop_after is not None and job.stage == stop_after:
+                    logger.info("pipeline_stopped_early", job_id=job.job_id, stop_after=stop_after.value)
+                    await tracker.finish(success=True)
+                    return job
+            except NexaBriefError as exc:
+                logger.error("stage_failed", stage=stage_name, job_id=job.job_id, error=str(exc))
+                return await _fail(job, tracker, on_stage, f"[{stage_name}] {exc}")
+            except Exception as exc:
+                logger.exception("stage_unexpected_error", stage=stage_name, job_id=job.job_id)
+                return await _fail(job, tracker, on_stage, f"[{stage_name}] Unexpected: {exc}")
+        await tracker.finish(success=True)
+    finally:
+        release_tracker(job.job_id)
+
+    elapsed = round(time.monotonic() - t_start, 2)
+    logger.info(
+        "pipeline_complete",
+        job_id=job.job_id,
+        elapsed=elapsed,
+        output=str(job.artifacts.output_dir),
+    )
+    return job
+
+
+_ASPECT = {"16x9": "16:9", "9x16": "9:16"}
+
+
+def restrict_formats(niche_cfg: NicheConfig, formats: list[str] | None) -> NicheConfig:
+    """Solo los formatos elegidos al grabar (recorder y packager trabajan sobre video.formats).
+    None o una lista que no deja ninguno = los del nicho, como siempre."""
+    if not formats:
+        return niche_cfg
+    wanted = {_ASPECT[f] for f in formats if f in _ASPECT}
+    kept = [fmt for fmt in niche_cfg.video.formats if fmt.aspect_ratio in wanted]
+    if not kept or len(kept) == len(niche_cfg.video.formats):
+        return niche_cfg
+    return niche_cfg.model_copy(update={"video": niche_cfg.video.model_copy(update={"formats": kept})})
+
+
+async def _fail(job: Job, tracker: ProgressTracker, on_stage: Callable[[Job], Awaitable[None]] | None, error: str) -> Job:
+    failed_job = job.fail(error)
+    from src.config.profile_layout import layout_for_settings
+    if layout_for_settings(settings).schema_version >= 2:
+        from src.core.content_registry import update_video_details
+        await update_video_details(job.job_id, {"status": failed_job.stage.value})
+        await _index_job_logs(failed_job)
+    await tracker.finish(success=False)
+    if on_stage is not None:
+        await on_stage(failed_job)
+    return failed_job
+
+
+async def _index_job_logs(job: Job) -> None:
+    """Indexa metadata de logs reales sin leer sus contenidos ni duplicar IDs."""
+    from src.config.profile_layout import layout_for_settings
+    from src.core.data import collection
+    from src.core.execution_logs import register_execution_log
+    layout = layout_for_settings(settings)
+    if layout.schema_version < 2 or job.artifacts.log_dir is None:
+        return
+    existing = {r.get("key") for r in collection("execution_logs").list(where={"video_id": job.job_id})}
+    for path in job.artifacts.log_dir.iterdir():
+        if path.is_symlink() or not path.is_file() or path.name.startswith("."):
+            continue
+        key = path.relative_to(layout.root).as_posix()
+        if key not in existing:
+            await register_execution_log(key, kind="job", production_id=job.job_id, video_id=job.job_id)

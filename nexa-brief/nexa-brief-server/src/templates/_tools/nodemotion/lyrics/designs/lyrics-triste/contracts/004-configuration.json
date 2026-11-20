@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-triste",
+  "id": "config.layout",
+  "entry_id": "config.layout",
+  "name": "layout",
+  "kind": "configuration",
+  "label": "layout",
+  "summary": "Existing configuration configuration: layout.",
+  "params": {
+    "groupGapSec": {
+      "default": 0.32
+    },
+    "maxRowChars": {
+      "default": 16
+    },
+    "rowGapVh": {
+      "default": 3.4
+    },
+    "anchorVhFrac": {
+      "default": 0.52
+    },
+    "typeChanceSolo": {
+      "default": 0.6
+    },
+    "typeChanceMulti": {
+      "default": 0.2
+    },
+    "dyingChance": {
+      "default": 0.3
+    },
+    "sideAlignChance": {
+      "default": 0.3
+    },
+    "maxTiltDeg": {
+      "default": 1.8
+    },
+    "oldAfter": {
+      "default": 3
+    }
+  },
+  "example": {
+    "groupGapSec": 0.32,
+    "maxRowChars": 16,
+    "rowGapVh": 3.4,
+    "anchorVhFrac": 0.52,
+    "typeChanceSolo": 0.6,
+    "typeChanceMulti": 0.2,
+    "dyingChance": 0.3,
+    "sideAlignChance": 0.3,
+    "maxTiltDeg": 1.8,
+    "oldAfter": 3
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-triste/assets/config.json",
+      "pointer": "/configs/0/layout"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -94,3 +94,7 @@ Note: "anchorPreference" must be one of "top", "middle", "bottom" —
 passthrough from safe_typography_zones.preferred_anchor, defaulting to
 "bottom". The template engine tries this zone first and falls back on its own
 if it doesn't fit — this field is a recommendation, not a hard guarantee.
+
+## Calidad
+
+Map only supplied inputs. Never invent facts, figures, results, quotations or names; retain supplied context and date for any figure. Preserve supplied lyrics verbatim. Do not add generic labels such as «UNA IDEA» or «EN MOVIMIENTO»; a topic-specific label such as «DARTMOUTH · 1956» is acceptable only when supplied. No emojis, «LETRAS» or unrelated labels. Keep the exact JSON schema and its documented defaults; credits belong in the publication description, not invented config fields.

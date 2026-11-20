@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-night-journey",
+  "id": "scene.path",
+  "entry_id": "scene.path",
+  "name": "path",
+  "kind": "scene",
+  "label": "path",
+  "summary": "Existing scene configuration: path.",
+  "params": {
+    "type": {
+      "default": "path"
+    },
+    "weight": {
+      "default": 0.28
+    },
+    "video": {
+      "default": {
+        "src": "assets/path.mp4",
+        "playbackRate": 0.72,
+        "filter": "saturate(1.9) contrast(1.25) brightness(0.74) hue-rotate(-8deg)"
+      }
+    },
+    "palette": {
+      "default": {
+        "night": "#0B2B4F",
+        "sky": "#1E8BFF",
+        "textTop": "#FFF3DC",
+        "textBottom": "#F0955A",
+        "glow": "#FFB070",
+        "butterfly": "#F2861B"
+      }
+    }
+  },
+  "example": {
+    "type": "path",
+    "weight": 0.28,
+    "video": {
+      "src": "assets/path.mp4",
+      "playbackRate": 0.72,
+      "filter": "saturate(1.9) contrast(1.25) brightness(0.74) hue-rotate(-8deg)"
+    },
+    "palette": {
+      "night": "#0B2B4F",
+      "sky": "#1E8BFF",
+      "textTop": "#FFF3DC",
+      "textBottom": "#F0955A",
+      "glow": "#FFB070",
+      "butterfly": "#F2861B"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-night-journey/assets/config.json",
+      "pointer": "/configs/0/scenes/1"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,29 @@
+/* lyrics-kinetic-noir · estilos del motor */
+:root { --bg: #05070C; --ink: #FFFFFF; --dim: #7D8698; --accent: #E5332A; --credit: #7FD3FF; }
+html, body { margin: 0; height: 100%; background: var(--bg); overflow: hidden; }
+#stage { position: fixed; inset: 0; overflow: hidden; background: var(--bg); }
+#stage[data-aspect="16:9"] { aspect-ratio: 16 / 9; width: min(100vw, calc(100vh * 16 / 9)); height: auto; inset: 0; margin: auto; }
+#stage[data-aspect="9:16"] { aspect-ratio: 9 / 16; height: min(100vh, calc(100vw * 16 / 9)); width: auto; inset: 0; margin: auto; }
+#bg { position: absolute; inset: 0; }
+#type { position: absolute; inset: 0; }
+#fade { position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none; }
+#hud { position: absolute; left: 8px; bottom: 8px; font: 12px/1.3 monospace; color: #6f6; display: none; z-index: 9; }
+
+.nz-scene { position: absolute; inset: 0; isolation: isolate; pointer-events: none; }
+.nz-block { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: var(--ink); white-space: nowrap; }
+.nz-line { display: block; white-space: nowrap; }
+.nz-w { display: inline-block; white-space: nowrap; transform-origin: 50% 60%; }
+.nz-c, .nz-sp { display: inline-block; text-align: center; }
+.nz-diff { mix-blend-mode: difference; }
+.nz-bar { position: absolute; background: var(--ink); }
+.nz-frame { position: absolute; border: 2px solid var(--ink); box-sizing: border-box; }
+.nz-credit { position: absolute; left: 50%; transform: translateX(-50%) rotate(-4deg); white-space: nowrap; color: var(--credit); }
+.nz-hl { background: var(--ink); color: var(--bg); box-shadow: 0 0 0 0.05em var(--ink); }
+.nz-boxed { background: var(--ink); color: var(--bg); padding: 0.03em 0.14em 0.06em; }
+.nz-sub { color: var(--ink); }
+.nz-onframe { background: var(--bg); padding: 0 0.5em; }
+.nz-cursor { position: absolute; left: 0; top: 0; background: var(--accent); }
+.nz-ghost { color: rgba(255, 255, 255, 0.16); }
+.nz-g2 { color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3); }
+.nz-sweep { position: absolute; background: var(--ink); transform-origin: left center; }
+.nz-feats { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; color: var(--dim); letter-spacing: 0.3em; }

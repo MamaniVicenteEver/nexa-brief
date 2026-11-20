@@ -1,0 +1,15 @@
+{
+  "id": "gibs-bluemarble-bathymetry",
+  "kind": "raster",
+  "url": "https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default/GoogleMapsCompatible_Level8/{z}/{y}/{x}.jpeg",
+  "ext": "jpg",
+  "min_zoom": 0,
+  "max_zoom": 8,
+  "tile_size": 256,
+  "license": "NASA imagery, uso editorial e informativo según NASA Media Usage Guidelines; datos GEBCO",
+  "commercial_ok": true,
+  "attribution": "NASA GIBS / Blue Marble · NASA Earth Observatory · GEBCO / BODC",
+  "attribution_url": "https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/topography-bathymetry-maps/",
+  "requires_key": false,
+  "notes": "Propuesta, no instalada. Identificador, formato y matriz Level8 verificados en WMTSCapabilities EPSG3857. Uso comercial editorial con atribución y sin sugerir respaldo de NASA. No es una capa temporal: no agregar 2004-08."
+}

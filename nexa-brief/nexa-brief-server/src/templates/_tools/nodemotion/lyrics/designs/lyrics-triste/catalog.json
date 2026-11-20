@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-triste",
+  "family": "lyrics",
+  "display_name": "Bajo la Lluvia",
+  "description": "Lluvia real cae sobre el texto, que se hunde y se difumina con el tiempo — paleta fría, tipografía de máquina de escribir, para baladas tristes o de pérdida.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "background",
+        "kind": "image|video",
+        "count": 1,
+        "orientation": "portrait",
+        "target": "source",
+        "label": "Fondo",
+        "hint": "lluvia, ventana, ambiente melancólico"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/lyrics/lyrics-triste/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-triste/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/bg.jpg"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-triste",
+    "config": "nodemotion/lyrics/lyrics-triste/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-triste/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-triste/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-triste/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.bg",
+      "kind": "configuration",
+      "label": "bg",
+      "summary": "Existing configuration configuration: bg.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.bg",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.layout",
+      "kind": "configuration",
+      "label": "layout",
+      "summary": "Existing configuration configuration: layout.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.layout",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.rain",
+      "kind": "configuration",
+      "label": "rain",
+      "summary": "Existing configuration configuration: rain.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.rain",
+      "contract": "contracts/005-configuration.json"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "trazo.trama",
+  "entry_id": "trazo.trama",
+  "kind": "component",
+  "label": "Fondo rayado",
+  "summary": "Trama de rayas a mano detrás de la palabra, con halo para que se lea.",
+  "component": {
+    "name": "trazo.trama",
+    "label": "Fondo rayado",
+    "summary": "Trama de rayas a mano detrás de la palabra, con halo para que se lea.",
+    "default": true,
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "witness",
+        "doc": "Texto"
+      }
+    },
+    "tags": [
+      "fondo"
+    ],
+    "file": "components/escenas.js",
+    "demo": {},
+    "preview": {
+      "t": 0.6
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "witness",
+      "doc": "Texto"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/showcase/components.json",
+      "pointer": "/components/8"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

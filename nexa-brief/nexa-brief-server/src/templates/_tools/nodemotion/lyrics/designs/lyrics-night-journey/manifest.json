@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-night-journey",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-night-journey",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/cover.jpg",
+    "assets/moon.png",
+    "assets/path.mp4",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "67f4eecddfef451974b8b3acf9e34e9d9b966328cc1c3e6e55ac3a60ec6736b9",
+  "migration_source_sha256": "67f4eecddfef451974b8b3acf9e34e9d9b966328cc1c3e6e55ac3a60ec6736b9",
+  "migration_runtime_sha256": {
+    "components/intro.js": "cd88126ce0252287fc89e1198642b7fdbdd6b988feab5f8922a01ac070701ff9",
+    "components/outro.js": "fd143707b0ff356b052432432c0829d382056dd68a291b7f9ae99f2159e926ef"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-night-journey",
+    "config": "nodemotion/lyrics/lyrics-night-journey/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-night-journey/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-night-journey/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "3af26e8e71b9dd3b0d04c44c6baeda8687ca1117d05f9f4991a92150d12ecfbd.webp",
+    "assets/cover.jpg": "db04e2526fe6fa760b23584ac797e99bd42c82b4a04a430ccc3a38c71d39eb60.jpg",
+    "assets/moon.png": "8cf44dc616b83b64f339dc72b263506047e4f821821731fb396a4d247b25edbf.png",
+    "assets/path.mp4": "0462c04c47a9babf254438a611a2481ba86a0395a0e9728a0b97322471a24c0e.mp4",
+    "assets/song.mp3": "84fa49015ac891d6f7bb5ebc8513885cb620239c280267b51cadaafa32755e96.mp3"
+  }
+}

@@ -10,7 +10,7 @@ from __future__ import annotations
 import uuid
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -181,6 +181,9 @@ class JobInput(BaseModel):
     # Medios por slot, textos y brief elegidos en el Estudio / Crear video
     # (ver src/core/template_inputs.py). None = la plantilla usa sus defaults.
     template_inputs: TemplateInputs | None = None
+    # Promo scene timings belong to the project, never to the music cache.
+    promo_timeline: dict | None = None
+    timed_content: dict | None = None
     publishing: JobPublishingConfig = Field(default_factory=JobPublishingConfig)
     render_target: str | None = Field(
         default=None,
@@ -196,6 +199,13 @@ class JobInput(BaseModel):
             "Override por job de qué recorder usar ('remotion'/'playwright') en vez del "
             "recorder_engine default del niche. None = usa el default del niche. Validado "
             "contra remotion_adapter.supports_niche() en el router antes de aceptar el job."
+        ),
+    )
+    formats: list[Literal["16x9", "9x16"]] | None = Field(
+        default=None,
+        description=(
+            "Formatos a grabar ('16x9', '9x16'). None = todos los de video.formats del nicho. "
+            "El pipeline filtra video.formats con esta lista al cargar el nicho."
         ),
     )
 
@@ -236,6 +246,7 @@ class PlatformCopyText(BaseModel):
     description: str
     tags: list[str] = Field(default_factory=list)
     strategy: str = ""              # id de la estrategia usada, ej. "yt_theme_question_v1"
+    pinned_comment: str = ""        # YouTube: comentario que se publica y se fija
 
 
 class VideoSummary(BaseModel):
@@ -243,11 +254,14 @@ class VideoSummary(BaseModel):
     youtube_title: str
     youtube_description: str
     youtube_tags: list[str]
+    youtube_category_id: str | None = Field(default=None, pattern=r"^[0-9]+$")
     tiktok_caption: str
     tiktok_hashtags: list[str]
     language: str | None = None     # "es" | "en" — idioma en que se escribió el copy
     # Fuente de verdad para publicar: un texto por plataforma, cada uno con su estrategia.
     platform_copies: dict[str, PlatformCopyText] = Field(default_factory=dict)
+    # El comentario fijado de YouTube (lo publica core/schedule/engine.publish_entry).
+    pinned_comment: str = ""
 
 
 # ── Stage 9 — Publish Result ─────────────────────────────────────────────────
@@ -287,12 +301,23 @@ class JobArtifacts(BaseModel):
     tiktok_video_path: Path | None = None   # 9:16 clip 61s (TikTok)
     reels_video_path: Path | None = None    # 9:16 duración completa (Reels/Shorts)
     thumbnail_path: Path | None = None
+    # Capturas elegidas por destino para revisión/paquete; no todas las APIs permiten subir portada.
+    thumbnail_paths_by_output: dict[str, Path] = Field(default_factory=dict)
     summary: VideoSummary | None = None
     output_dir: Path | None = None
+    assets_dir: Path | None = None
+    render_dir: Path | None = None
+    log_dir: Path | None = None
+    recording_log_id: str | None = None
     recording_stats: dict[str, Any] = Field(default_factory=dict)
     # Stage 9 — populated only when ENABLE_AUTO_PUBLISHING=true
     publish_result: PublishResult | None = None
     publish_results: dict[str, PublishResult] = Field(default_factory=dict)
+
+    @property
+    def content_dir(self) -> Path | None:
+        """Recursos del job; jobs antiguos los conservan junto al HTML."""
+        return self.assets_dir or self.output_dir
 
     model_config = {"arbitrary_types_allowed": True}
 

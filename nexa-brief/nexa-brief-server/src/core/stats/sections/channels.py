@@ -1,15 +1,19 @@
-"""Canales conectados. Lo público es nombre, avatar, enlace y cuántos videos
-lleva; el estado del token y demás detalles solo van al dashboard."""
+"""Canales conectados. Solo nombre y URL son públicos; los detalles van al dashboard."""
 
 from __future__ import annotations
+
+from hashlib import sha256
 
 from src.core.stats.context import StatsContext
 from src.core.stats.models import ChannelDetail, ChannelStats, PublicChannel
 
 
-def public_url(platform: str, target_id: str | None) -> str | None:
-    """Enlace público al canal. TikTok no da el @usuario por OAuth (solo un
-    open_id), así que no hay forma fiable de armarlo."""
+def public_url(platform: str, target_id: str | None, handle: str | None = None) -> str | None:
+    """Enlace público; para TikTok se requiere un handle conocido, nunca el ID OAuth."""
+    if platform == "instagram" and handle:
+        return f"https://www.instagram.com/{handle.lstrip('@').strip('/')}"
+    if platform == "tiktok" and handle:
+        return f"https://www.tiktok.com/@{handle.lstrip('@').strip('/')}"
     if not target_id:
         return None
     if platform == "youtube":
@@ -36,12 +40,15 @@ def details(ctx: StatsContext) -> list[ChannelDetail]:
     result = []
     for account in ctx.accounts:
         times = published.get((account["platform"], account["alias"]), [])
+        account_platform = account["platform"]
+        account_alias = account["alias"]
         result.append(ChannelDetail(
-            platform=account["platform"],
-            alias=account["alias"],
+            id=sha256(f'{account_platform}:{account_alias}'.encode()).hexdigest()[:24],
+            platform=account_platform,
+            alias=account_alias,
             name=account.get("name") or account["alias"],
             avatar=account.get("avatar"),
-            public_url=public_url(account["platform"], account.get("target_id")),
+            public_url=public_url(account["platform"], account.get("target_id"), account.get("handle")),
             published_count=len(times),
             label=account.get("label", ""),
             status=account.get("status", "ok"),
@@ -54,4 +61,9 @@ def details(ctx: StatsContext) -> list[ChannelDetail]:
 
 
 def public_list(ctx: StatsContext) -> list[PublicChannel]:
-    return [PublicChannel(**c.model_dump(include=set(PublicChannel.model_fields))) for c in details(ctx)]
+    # Allowlist explícita: nunca serializar la cuenta o los detalles privados.
+    names = {(a["platform"], a["alias"]): a.get("name") or "Canal" for a in ctx.accounts}
+    return [
+        PublicChannel(name=names[(c.platform, c.alias)], public_url=c.public_url)
+        for c in details(ctx)
+    ]

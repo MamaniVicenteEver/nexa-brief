@@ -1,44 +1,112 @@
-import { CalendarClock } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { PlatformIcon } from "@/features/channels/components/PlatformIcon";
-import type { UpcomingPublication } from "@/features/stats";
+import type { AgendaEvent } from "@/features/schedule/lib/agenda";
 import { Link } from "@/i18n/navigation";
-import { EmptyNote, Panel } from "./Panel";
+import { timestamp } from "../lib/operations";
+import styles from "./dashboard.module.css";
+import { Panel } from "./Panel";
 
-export function UpcomingPanel({ upcoming }: { upcoming: UpcomingPublication[] }) {
-  const t = useTranslations("dashboard.upcoming");
+function UpcomingRow({ event, zone, now }: { event: AgendaEvent; zone: string; now: number }) {
+  const t = useTranslations("dashboard.next");
   const locale = useLocale();
+  const date = event.at ? new Date(event.at) : null;
+  const overdue = date && date.getTime() < now && event.status === "scheduled";
   return (
-    <Panel title={t("title")} action={{ label: t("schedule"), href: "/programacion" }}>
-      {upcoming.length === 0 ? (
-        <EmptyNote>{t("empty")}</EmptyNote>
+    <li className={styles.row}>
+      <span className={styles.icon}>
+        <CalendarDays size={15} aria-hidden />
+      </span>
+      <div className={styles.grow}>
+        <Link href="/programacion" className={styles.rowTitle}>
+          {event.title}
+        </Link>
+        <span className={styles.rowMeta}>
+          {t(`kinds.${event.kind}`)}
+          {event.publication
+            ? ` · ${event.publication.platform} · @${event.publication.accountAlias}`
+            : event.category
+              ? ` · ${event.category}`
+              : ""}
+        </span>
+        {overdue && <span className={styles.rowMeta}>{t("overdue")}</span>}
+      </div>
+      <time
+        dateTime={event.at ?? undefined}
+        title={timestamp(event.at, locale, zone)}
+        className={styles.time}
+      >
+        <strong>
+          {date
+            ? new Intl.DateTimeFormat(locale, {
+                timeZone: zone,
+                hour: "2-digit",
+                minute: "2-digit",
+                hourCycle: "h23",
+              }).format(date)
+            : "—"}
+        </strong>
+        {date
+          ? new Intl.DateTimeFormat(locale, {
+              timeZone: zone,
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            }).format(date)
+          : "—"}
+      </time>
+    </li>
+  );
+}
+export function UpcomingPanel({
+  events,
+  zone,
+  zoneLabel,
+  now,
+  loading,
+  hasError,
+}: {
+  events: AgendaEvent[];
+  zone: string;
+  zoneLabel: string;
+  now: number;
+  loading: boolean;
+  hasError: boolean;
+}) {
+  const t = useTranslations("dashboard.next");
+  return (
+    <Panel
+      title={t("title")}
+      action={{ label: t("schedule"), href: "/programacion" }}
+      className={styles.operationPanel}
+    >
+      {loading ? (
+        <p className={styles.compactEmpty}>{t("loading")}</p>
+      ) : events.length === 0 ? (
+        <p className={styles.compactEmpty}>{t(hasError ? "unavailable" : "empty")}</p>
       ) : (
-        <ul className="flex flex-col gap-2">
-          {upcoming.map((item) => (
-            <li key={item.entryId}>
-              <Link
-                href={`/biblioteca/${item.jobId}`}
-                className="flex items-center gap-3 rounded-xl px-2 py-2 no-underline hover:bg-nb-ink/[0.04]"
-              >
-                <PlatformIcon platform={item.platform} className="size-7 shrink-0" />
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-[13px] font-semibold text-nb-ink">
-                    {item.title}
-                  </span>
-                  <span className="text-[11.5px] text-nb-mute">@{item.accountAlias}</span>
-                </span>
-                <span className="inline-flex shrink-0 items-center gap-1 text-[11.5px] font-semibold text-nb-ink-soft">
-                  <CalendarClock className="size-3.5" />
-                  {new Date(item.scheduledAt).toLocaleString(locale, {
-                    weekday: "short",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <>
+          <ul className={styles.list}>
+            {events.slice(0, 4).map((event) => (
+              <UpcomingRow key={event.id} event={event} zone={zone} now={now} />
+            ))}
+          </ul>
+          {events.length > 4 && (
+            <details className={styles.disclosure}>
+              <summary>{t("more", { count: events.length - 4 })}</summary>
+              <ul className={styles.list}>
+                {events.slice(4).map((event) => (
+                  <UpcomingRow key={event.id} event={event} zone={zone} now={now} />
+                ))}
+              </ul>
+            </details>
+          )}
+        </>
+      )}
+      {events.length > 0 && (
+        <p className={`${styles.description} mt-3`}>{t("zone", { zone: zoneLabel })}</p>
+      )}
+      {events.some((e) => e.kind === "plan") && (
+        <p className={styles.description}>{t("editorialHint")}</p>
       )}
     </Panel>
   );

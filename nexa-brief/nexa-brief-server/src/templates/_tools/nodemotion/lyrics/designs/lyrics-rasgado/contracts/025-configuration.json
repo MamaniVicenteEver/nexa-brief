@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-rasgado",
+  "id": "config.transition",
+  "entry_id": "config.transition",
+  "name": "transition",
+  "kind": "configuration",
+  "label": "transition",
+  "summary": "Existing configuration configuration: transition.",
+  "params": {
+    "overlapSec": {
+      "default": 0.35
+    },
+    "duration": {
+      "default": 0.32
+    },
+    "weights": {
+      "default": {
+        "tear": 3,
+        "cut": 2,
+        "rip": 1,
+        "slam": 1
+      }
+    }
+  },
+  "example": {
+    "overlapSec": 0.35,
+    "duration": 0.32,
+    "weights": {
+      "tear": 3,
+      "cut": 2,
+      "rip": 1,
+      "slam": 1
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-rasgado/assets/config.json",
+      "pointer": "/configs/0/transition"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,166 @@
+---
+import { medallionUrl } from '@/shared/lib/images';
+import { ArrowLeft, ArrowUpRight, Download, ArrowRight } from '@lucide/astro';
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import Button from '@/shared/ui/Button.astro';
+import SocialIcon from '@/shared/ui/SocialIcon.astro';
+import PreviewDialog from '@/features/profiles/components/PreviewDialog.astro';
+import { platforms, type Channel } from '../model/types';
+import { channels } from '../model/registry';
+import { text, homePath, channelPath, type Locale } from '@/shared/lib/locale';
+interface Props {
+  channel: Channel;
+  locale: Locale;
+}
+const { channel, locale } = Astro.props;
+const related = channels.filter((c) => c.id !== channel.id).slice(0, 3);
+const labels = {
+  youtube: 'YouTube',
+  instagram: 'Instagram',
+  facebook: 'Facebook',
+  tiktok: 'TikTok',
+};
+---
+
+<SiteLayout
+  locale={locale}
+  title={`${channel.name} — NODE Media Network`}
+  description={channel.description[locale]}
+>
+  <section
+    class="channel-hero container section-space"
+    style={`--channel-accent:${channel.accent}`}
+  >
+    <a class="text-button back-link" href={`${homePath(locale)}#canales`}>
+      <ArrowLeft size={16} />
+      {text(locale, 'Todos los canales', 'All channels')}
+    </a>
+    <div class="channel-hero__grid">
+      <div>
+        <span class="eyebrow">NODE / {channel.category[locale]}</span>
+        <h1>{channel.name}</h1>
+        <p class="channel-hero__headline">{channel.headline[locale]}</p>
+        <p class="channel-hero__description">{channel.description[locale]}</p>
+        <div class="hero-actions">
+          <Button href={channel.socials.youtube.url!} target="_blank" rel="noopener noreferrer">
+            <SocialIcon platform="youtube" size={18} />
+            {text(locale, 'Visitar canal', 'Visit channel')}
+            <ArrowUpRight size={17} />
+          </Button>
+          <Button variant="secondary" data-open-channel={channel.id}>
+            {text(locale, 'Ver identidad', 'View identity')}
+          </Button>
+        </div>
+      </div>
+      <div class="channel-hero__art">
+        <span class="eyebrow">{channel.number} / NODE MEDIA NETWORK</span>
+        <img
+          src={medallionUrl(channel.id)}
+          alt={text(locale, `Emblema de ${channel.name}`, `${channel.name} emblem`)}
+          width="560"
+          height="560"
+        />
+      </div>
+    </div>
+  </section>
+  <section class="container purpose-section section-space">
+    <span class="eyebrow">{text(locale, 'EL PROPÓSITO', 'THE PURPOSE')}</span>
+    <div class="purpose-grid">
+      <h2>
+        {text(locale, 'Una razón', 'A reason')}
+        <br />
+        <em>{text(locale, 'para contar.', 'to tell.')}</em>
+      </h2>
+      <div>
+        <p class="purpose-copy">{channel.purpose[locale]}</p>
+        <ul class="topic-list">
+          {channel.topics[locale].map((topic) => (
+            <li>{topic}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+  <section class="container resources-section section-space" id="recursos">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">{text(locale, 'IDENTIDAD Y PRESENCIA', 'IDENTITY & PRESENCE')}</span>
+        <h2>{text(locale, 'Una voz reconocible.', 'A recognizable voice.')}</h2>
+      </div>
+      <p>
+        {text(
+          locale,
+          'Los recursos de la marca y sus perfiles públicos, en un solo lugar.',
+          'Brand resources and public profiles, all in one place.',
+        )}
+      </p>
+    </div>
+    <div class="resources-grid">
+      <div class="resource-card">
+        <span class="eyebrow">{text(locale, 'RECURSOS DE MARCA', 'BRAND RESOURCES')}</span>
+        <h3>{text(locale, 'La identidad del canal', 'The channel identity')}</h3>
+        <div class="asset-preview">
+          <img
+            src={channel.symbol}
+            alt={text(locale, 'Símbolo sin fondo', 'Transparent symbol')}
+            width="200"
+            height="200"
+            loading="lazy"
+          />
+        </div>
+        <div class="resource-actions">
+          <Button variant="secondary" href={channel.medallion} download={`${channel.id}-logo.png`}>
+            <Download size={16} />
+            {text(locale, 'Logo', 'Logo')}
+          </Button>
+          <Button
+            variant="secondary"
+            href={channel.symbol}
+            download={`${channel.id}-transparent.png`}
+          >
+            <Download size={16} />
+            {text(locale, 'Sin fondo', 'Transparent')}
+          </Button>
+        </div>
+      </div>
+      <div class="resource-card">
+        <span class="eyebrow">{text(locale, 'DÓNDE ENCONTRARNOS', 'WHERE TO FIND US')}</span>
+        <h3>{text(locale, 'Cada red, su espacio', 'A place on every platform')}</h3>
+        <div class="social-directory">
+          {platforms.map((platform) => (
+            <div>
+              <span>
+                <SocialIcon platform={platform} />
+                <strong>{labels[platform]}</strong>
+              </span>
+              {channel.socials[platform].url ? (
+                <a href={channel.socials[platform].url!} target="_blank" rel="noopener noreferrer">
+                  {channel.socials[platform].handle}
+                  <ArrowUpRight size={16} />
+                </a>
+              ) : (
+                <span class="muted">{text(locale, 'Próximamente', 'Coming soon')}</span>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="container related-section">
+    <span class="eyebrow">{text(locale, 'SIGUE EXPLORANDO', 'KEEP EXPLORING')}</span>
+    <div>
+      {related.map((c) => (
+        <a href={channelPath(c.id, locale)}>
+          <img src={medallionUrl(c.id)} alt="" width="54" height="54" loading="lazy" />
+          <span>
+            {c.name}
+            <small>{c.category[locale]}</small>
+          </span>
+          <ArrowRight size={19} />
+        </a>
+      ))}
+    </div>
+  </section>
+  <PreviewDialog locale={locale} />
+</SiteLayout>

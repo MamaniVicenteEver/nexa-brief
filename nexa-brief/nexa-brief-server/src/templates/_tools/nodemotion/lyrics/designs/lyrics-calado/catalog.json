@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-calado",
+  "family": "lyrics",
+  "display_name": "Letras Caladas",
+  "description": "Texto que es una ventana transparente a un video de fondo real — 3 composiciones (calado, sólido, mixto) elegidas al azar por frase, con filtro cinematográfico y grano de película.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "background",
+        "kind": "video",
+        "count": 1,
+        "orientation": "portrait",
+        "target": "source",
+        "label": "Fondo",
+        "hint": "textura en movimiento lento, ambiente oscuro"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/lyrics/lyrics-calado/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-calado/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/bg.mp4",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-calado",
+    "config": "nodemotion/lyrics/lyrics-calado/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-calado/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-calado/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-calado/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.video",
+      "kind": "configuration",
+      "label": "video",
+      "summary": "Existing configuration configuration: video.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.video",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.colors",
+      "kind": "configuration",
+      "label": "colors",
+      "summary": "Existing configuration configuration: colors.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.colors",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.phrase",
+      "kind": "configuration",
+      "label": "phrase",
+      "summary": "Existing configuration configuration: phrase.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.phrase",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.laminas",
+      "kind": "configuration",
+      "label": "laminas",
+      "summary": "Existing configuration configuration: laminas.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.laminas",
+      "contract": "contracts/006-configuration.json"
+    }
+  ]
+}

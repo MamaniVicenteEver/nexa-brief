@@ -1,0 +1,806 @@
+{
+  "_leeme": "Propuesta de paquete de publicación por video (estudio, no implementado). Ver paquete-publicacion-node-2026-10.md. Los títulos YouTube A/B/C son para Test & Compare. Los capítulos se calcularon alineando el guion con lyrics.json: verificarlos contra el mp4 final. Los marcados ⚠️ necesitan algo antes de publicar.",
+  "mensajes_de_agradecimiento": {
+    "G1_identidad": "Si llegaste hasta aquí, eres de las personas que se quedan hasta el final de una historia. Gracias de verdad. Cada minuto que le dedicas le dice a YouTube que estas historias valen la pena, y eso nos permite seguir investigando y contando la próxima.",
+    "G2_reciprocidad": "Gracias por ver el video completo. Cada historia la armamos con fuentes que puedes revisar abajo, y tu tiempo es lo que la hace posible. Si te dejó algo, un solo gesto ayuda muchísimo: compártelo con una persona a la que le encante {tema}.",
+    "G3_pertenencia": "Gracias por quedarte. Esta comunidad la forma gente curiosa como tú, que prefiere entender a solo enterarse. Si quieres que sigamos, suscríbete: así la próxima historia te encuentra primero.",
+    "G4_impacto": "Gracias por llegar al final. Ver un video completo es la mejor forma de apoyarnos: ayuda a que YouTube lo muestre a más personas y nos permite seguir trayendo historias como esta."
+  },
+  "criterios_imagen_opcion_b": [
+    "1. Fiel al video: la persona, el objeto o el lugar aparece en el video o es exactamente lo que el video cuenta. Editar (recorte, contraste, círculo) sin cambiar el hecho.",
+    "2. Reconocible a 210 px (prueba de silueta): un solo sujeto que ocupe 40 % o más del cuadro.",
+    "3. Dice el tema sin texto: un ícono conocido le gana a un objeto técnico desconocido.",
+    "4. Rostro o emoción, si existe: un rostro capta la mirada antes que un objeto.",
+    "5. Imagen y texto se reparten el trabajo: la imagen dice DE QUÉ trata, el texto QUÉ PASÓ; el texto nunca describe lo que ya se ve.",
+    "6. Espacio limpio para el texto: recortar dejando un tercio libre (cielo, fondo oscuro).",
+    "7. Tratamiento de la plantilla: binary en blanco y negro de alto contraste; rough con contorno a mano y verde lima.",
+    "8. Limpia y con licencia: sin logos ni textos ajenos; crédito en la descripción si es CC BY-SA.",
+    "9. Respeto: nada de víctimas ni de muerte.",
+    "10. Mejor del momento que de después: una foto posterior sirve para identificar a la persona; un objeto de la época cuenta mejor la historia."
+  ],
+  "videos": [
+    {
+      "video_id": "apolo-1202",
+      "carpeta": "src/templates/nodetech/apolo-1202",
+      "categoria": "node_tech",
+      "diseno": "rough",
+      "duracion": "3:53",
+      "titulo_actual": "El error que llevó a la humanidad a la Luna",
+      "miniatura": {
+        "estilo_plantilla": "rough · trazo a mano, verde lima sobre negro",
+        "opcion_a_solo_texto": {
+          "modo": "solo_texto",
+          "parte_del_cerebro": "Lectura rápida: sin imagen, la frase entera tiene que entenderse en un vistazo y abrir una pregunta que el título empieza a contestar.",
+          "lineas": [
+            "LA COMPUTADORA",
+            "DEL APOLO 11",
+            "SE RINDIÓ"
+          ],
+          "texto": "LA COMPUTADORA DEL APOLO 11 SE RINDIÓ",
+          "resaltar": "SE RINDIÓ",
+          "par_con_titulo": "A · La alarma que casi aborta la llegada a la Luna",
+          "por_que": "Ancla (Apolo 11) + tensión (se rindió). El título explica qué pasó: una alarma que casi aborta la llegada."
+        },
+        "opcion_b_texto_imagen": {
+          "modo": "texto_imagen",
+          "parte_del_cerebro": "Visión rápida: la imagen se reconoce antes de leer y dice el tema; el texto corto agrega la tensión.",
+          "imagen": "assets/media/hamilton.jpg (Margaret Hamilton junto a la pila de listados de su código)",
+          "composicion": "Hamilton de cuerpo entero con la pila de papeles, en la mitad derecha; el texto en la mitad izquierda, sobre fondo oscuro.",
+          "texto": "ELLA LO PREVIÓ",
+          "par_con_titulo": "A · La alarma que casi aborta la llegada a la Luna",
+          "por_que": "Rostro + la pila de código dicen «la persona que escribió el programa»; el texto adelanta que anticipó algo, y el título dice qué: la alarma que casi aborta la llegada a la Luna.",
+          "evaluacion_de_imagenes": [
+            {
+              "imagen": "dsky.jpg",
+              "veredicto": "débil",
+              "motivo": "Objeto técnico que el público no reconoce; la pantalla está en blanco (criterios 3 y 1)."
+            },
+            {
+              "imagen": "hamilton.jpg",
+              "veredicto": "elegida",
+              "motivo": "Foto icónica, rostro + la pila de su código; aparece en el video."
+            }
+          ]
+        }
+      },
+      "titulos": {
+        "youtube": [
+          {
+            "opcion": "A",
+            "texto": "La alarma que casi aborta la llegada a la Luna",
+            "estrategia": "4 Casi no pasa",
+            "emocion": "Ansiedad"
+          },
+          {
+            "opcion": "B",
+            "texto": "Tenía 26 años y segundos para decidir si se pisaba la Luna",
+            "estrategia": "9 Decisión bajo presión",
+            "emocion": "Tensión"
+          },
+          {
+            "opcion": "C",
+            "texto": "Programó para el error, y eso salvó al Apolo 11",
+            "estrategia": "1 Paradoja",
+            "emocion": "Asombro"
+          }
+        ],
+        "facebook": {
+          "titulo": "La alarma que casi aborta la llegada a la Luna",
+          "primera_linea": "A 10 km de la Luna, la computadora del Apolo 11 mostró el error 1202. Houston tenía segundos para decidir."
+        },
+        "tiktok": {
+          "texto_pantalla_0_3s": "QUEDABAN 30 SEGUNDOS",
+          "caption": "La alarma que casi aborta el Apolo 11 🚀 Y la mujer que la había previsto. ¿La conocías?"
+        }
+      },
+      "tags": {
+        "youtube": [
+          "Apolo 11",
+          "Apollo 11",
+          "alarma 1202",
+          "error 1202",
+          "Margaret Hamilton",
+          "llegada a la Luna",
+          "alunizaje",
+          "computadora del Apolo",
+          "ingeniería de software",
+          "historia de la tecnología",
+          "NASA",
+          "Steve Bales",
+          "documental corto"
+        ],
+        "tiktok_hashtags": [
+          "#apolo11",
+          "#historiadelatecnologia",
+          "#nasa",
+          "#sabiasque"
+        ],
+        "facebook_hashtags": [
+          "#Apolo11",
+          "#Tecnología"
+        ],
+        "youtube_caracteres": 204
+      },
+      "comentario_fijado": "Gracias por llegar hasta el final 🚀 Dato que no entró en el video: la palabra que decidió todo fue una sola, «Go». ¿Qué otro momento de la carrera espacial quieres que contemos?",
+      "canal": "NodeTech",
+      "descripcion": {
+        "youtube": "A 10 kilómetros de la Luna, la computadora del Apolo 11 mostró un número que nadie a bordo entendía: 1202. En Houston, un controlador de 26 años tenía segundos para decidir si abortaban.\n\nUna computadora con unos 4 kilobytes de memoria y un programa tejido a mano con alambre de cobre. Detrás, Margaret Hamilton y una idea que pocos tomaban en serio: diseñar para el error. Vas a ver por qué la máquina se saturó, cómo eligió qué soltar y por qué ese día no ganó una computadora potente, sino un software que sabía fallar.\n\nCAPÍTULOS\n0:00 20 de julio de 1969: la computadora se rinde\n0:29 Una computadora de 4 KB tejida a mano\n1:05 Margaret Hamilton y la obsesión por el error\n1:40 El radar que saturó la máquina\n2:11 Abortar o seguir: la decisión de Houston\n2:36 30 segundos de combustible\n3:05 El día que nació la ingeniería de software\n\nLa próxima vez que tu teléfono cierre una aplicación para no congelarse, acuérdate de esa tarde de julio: innovar no es construir algo que nunca falle, es construir algo que sepa qué hacer cuando falla.\n\nSi llegaste hasta aquí, eres de las personas que se quedan hasta el final de una historia. Gracias de verdad. Cada minuto que le dedicas le dice a YouTube que estas historias valen la pena, y eso nos permite seguir investigando y contando la próxima.\n\n¿Tú habrías dicho «Go» o habrías abortado? Te leemos en los comentarios.\n\nFUENTES\n- ⚠️ Este video no tiene fuentes registradas en PLAN.md: completar antes de publicar (sugeridas, sin verificar: NASA Apollo 11 Lunar Surface Journal; Draper Laboratory)\n\nIMÁGENES (Wikimedia Commons)\n- Margaret Hamilton (restauración) — Draper Laboratory / Adam Cuerden — dominio público\n- Lunar Module Eagle (AS11-44-6581) — NASA — dominio público\n- Apollo DSKY — NASA / Dennis Taylor — dominio público\n- Core rope tester — ArnoldReinhold — CC BY-SA 4.0\n- Mission Control (S69-39593), Aldrin (AS11-40-5903), Mar de la Tranquilidad (AS11-37-5448) — NASA — dominio público\n\n#Apolo11 #MargaretHamilton #NodeTech",
+        "youtube_visible_antes_de_mas": "A 10 kilómetros de la Luna, la computadora del Apolo 11 mostró un número que nadie a bordo entendía: 1202. En Houston, un controlador de 26 años tenía",
+        "facebook": "A 10 kilómetros de la Luna, la computadora del Apolo 11 mostró un número que nadie a bordo entendía: 1202. En Houston, un controlador de 26 años tenía segundos para decidir si abortaban.\n\nLa próxima vez que tu teléfono cierre una aplicación para no congelarse, acuérdate de esa tarde de julio: innovar no es construir algo que nunca falle, es construir algo que sepa qué hacer cuando falla.\n\n¿Tú habrías dicho «Go» o habrías abortado? Te leemos en los comentarios.\n\n#Apolo11 #Tecnología",
+        "mensaje_agradecimiento_usado": "G1_identidad"
+      }
+    },
+    {
+      "video_id": "codex-ariane-501",
+      "carpeta": "src/templates/nodetech/codex-ariane-501",
+      "categoria": "node_tech",
+      "diseno": "rough",
+      "duracion": "3:34",
+      "titulo_actual": "Ariane 5: el número que no cabía y desvió un cohete",
+      "miniatura": {
+        "estilo_plantilla": "rough · trazo a mano, verde lima sobre negro",
+        "opcion_a_solo_texto": {
+          "modo": "solo_texto",
+          "parte_del_cerebro": "Lectura rápida: sin imagen, la frase entera tiene que entenderse en un vistazo y abrir una pregunta que el título empieza a contestar.",
+          "lineas": [
+            "NO FUE EL MOTOR:",
+            "UN NÚMERO",
+            "DESTRUYÓ EL COHETE"
+          ],
+          "texto": "NO FUE EL MOTOR: UN NÚMERO DESTRUYÓ EL COHETE",
+          "resaltar": "UN NÚMERO",
+          "par_con_titulo": "B · El cohete iba perfecto… hasta el segundo 37",
+          "por_que": "Ancla (cohete) + giro (no fue el motor, fue un número). El título agrega el momento exacto: iba perfecto hasta el segundo 37."
+        },
+        "opcion_b_texto_imagen": {
+          "modo": "texto_imagen",
+          "parte_del_cerebro": "Visión rápida: la imagen se reconoce antes de leer y dice el tema; el texto corto agrega la tensión.",
+          "imagen": "⚠️ Falta: foto diurna del Ariane 5 despegando, o la de la explosión del vuelo 501 (verificar licencia de la ESA). Las imágenes actuales no pasan la prueba de 210 px.",
+          "composicion": "El cohete y su llama ocupando el centro, de arriba abajo; el texto a un costado, sobre el cielo.",
+          "texto": "UN NÚMERO NO CABÍA",
+          "par_con_titulo": "A · Un solo número destruyó un cohete en 39 segundos",
+          "por_que": "El cohete dice el tema; el texto da la causa extraña, y el título la cuantifica: 39 segundos.",
+          "evaluacion_de_imagenes": [
+            {
+              "imagen": "launch.jpg",
+              "veredicto": "no pasa",
+              "motivo": "Lanzamiento de noche: a 210 px el cohete es un punto de luz (criterio 2). Además es otro vuelo (VA258), no el 501."
+            },
+            {
+              "imagen": "fragment.jpg",
+              "veredicto": "no pasa",
+              "motivo": "Parece una caja en una vitrina de museo: no se reconoce como cohete (criterios 2 y 3)."
+            },
+            {
+              "imagen": "⚠️ pendiente",
+              "veredicto": "conseguir",
+              "motivo": "Foto diurna del Ariane 5 despegando o de la explosión del vuelo 501, con licencia verificada."
+            }
+          ]
+        }
+      },
+      "titulos": {
+        "youtube": [
+          {
+            "opcion": "A",
+            "texto": "Un solo número destruyó un cohete en 39 segundos",
+            "estrategia": "3 Causa pequeña",
+            "emocion": "Asombro"
+          },
+          {
+            "opcion": "B",
+            "texto": "El cohete iba perfecto… hasta el segundo 37",
+            "estrategia": "2 Reloj en marcha",
+            "emocion": "Tensión"
+          },
+          {
+            "opcion": "C",
+            "texto": "El número que no cabía y destruyó un cohete",
+            "estrategia": "3 Causa pequeña",
+            "emocion": "Curiosidad"
+          }
+        ],
+        "facebook": {
+          "titulo": "Un solo número destruyó un cohete en 39 segundos",
+          "primera_linea": "No falló un motor. Falló un número que no cabía en el espacio que le dieron. 39 segundos después, el cohete ya no existía."
+        },
+        "tiktok": {
+          "texto_pantalla_0_3s": "TODO IBA BIEN HASTA EL SEGUNDO 37",
+          "caption": "Un número demasiado grande destruyó el primer Ariane 5 🚀 ¿Sabías que un error de software puede hacer esto?"
+        }
+      },
+      "tags": {
+        "youtube": [
+          "Ariane 5",
+          "Ariane 501",
+          "vuelo 501",
+          "error de software",
+          "desbordamiento de enteros",
+          "integer overflow",
+          "Agencia Espacial Europea",
+          "ESA",
+          "satélites Cluster",
+          "cohete",
+          "ingeniería de software",
+          "documental corto"
+        ],
+        "tiktok_hashtags": [
+          "#ariane5",
+          "#programacion",
+          "#historiadelatecnologia",
+          "#sabiasque"
+        ],
+        "facebook_hashtags": [
+          "#Ariane5",
+          "#Tecnología"
+        ],
+        "youtube_caracteres": 195
+      },
+      "comentario_fijado": "Gracias por verlo completo. La frase del video que más nos quedó: «el número no era enorme para el universo». ¿Qué error de la tecnología quieres que contemos después?",
+      "canal": "NodeTech",
+      "descripcion": {
+        "youtube": "Durante 36 segundos, el primer Ariane 5 voló perfecto. Luego un número que no cabía en el espacio que le habían reservado hizo que el cohete corrigiera un giro que nunca ocurrió.\n\n4 de junio de 1996, Kourou. Una función heredada de Ariane 4, que ya no hacía falta, siguió corriendo. Intentó guardar un número de 64 bits en un espacio de 16, y las dos computadoras de navegación, idénticas, fallaron por la misma causa. Con el vuelo se perdieron los cuatro satélites Cluster de la Agencia Espacial Europea.\n\nCAPÍTULOS\n0:00 4 de junio de 1996: despegue en Kourou\n0:28 Dos computadoras idénticas\n0:38 La función que nadie necesitaba\n0:58 64 bits en un espacio de 16\n1:34 El cohete corrige un giro que nunca ocurrió\n2:08 Segundo 39\n2:33 Qué falló de verdad\n2:59 La lección\n\nEl número no era enorme para el universo: solo era demasiado grande para el espacio que le habían reservado. Cuántas veces un problema no es el tamaño de la idea, sino el lugar donde la quisimos meter.\n\nGracias por ver el video completo. Cada historia la armamos con fuentes que puedes revisar abajo, y tu tiempo es lo que la hace posible. Si te dejó algo, un solo gesto ayuda muchísimo: compártelo con una persona a la que le encante la ingeniería.\n\n¿Conocías otro error de software que haya costado tan caro? Cuéntanos.\n\nFUENTES\n- ESA — Flight 501 failure: first information (esa.int)\n- ESA — Ariane 501: Presentation of Inquiry Board report (esa.int)\n- Informe de la Junta de Investigación del Ariane 501 (texto completo)\n\nIMÁGENES (Wikimedia Commons)\n- Ariane 5 ECA VA258 — Don-vip — CC BY-SA 4.0\n- Ariane 501 Fragment — Deadpan — dominio público\n- Belgian components for the Ariane 5 rocket — SpaceMusk — CC BY-SA 4.0\n- Ariane 5 Payload Fairing Test — NASA — dominio público\n- Ariane 5 launch pad — Philippe Semanaz / Philou.cn — CC BY-SA 2.0\n\n#Ariane5 #ErrorDeSoftware #NodeTech",
+        "youtube_visible_antes_de_mas": "Durante 36 segundos, el primer Ariane 5 voló perfecto. Luego un número que no cabía en el espacio que le habían reservado hizo que el cohete corrigier",
+        "facebook": "Durante 36 segundos, el primer Ariane 5 voló perfecto. Luego un número que no cabía en el espacio que le habían reservado hizo que el cohete corrigiera un giro que nunca ocurrió.\n\nEl número no era enorme para el universo: solo era demasiado grande para el espacio que le habían reservado. Cuántas veces un problema no es el tamaño de la idea, sino el lugar donde la quisimos meter.\n\n¿Conocías otro error de software que haya costado tan caro? Cuéntanos.\n\n#Ariane5 #Tecnología",
+        "mensaje_agradecimiento_usado": "G2_reciprocidad"
+      }
+    },
+    {
+      "video_id": "nacimiento-ia-dartmouth",
+      "carpeta": "src/templates/nodetech/nacimiento-ia-dartmouth",
+      "categoria": "node_tech",
+      "diseno": "binary",
+      "duracion": "3:34",
+      "titulo_actual": "El verano de 1956 en que nació la inteligencia artificial",
+      "miniatura": {
+        "estilo_plantilla": "binary · letras sólidas en blanco; los unos y ceros solo como textura de fondo",
+        "opcion_a_solo_texto": {
+          "modo": "solo_texto",
+          "parte_del_cerebro": "Lectura rápida: sin imagen, la frase entera tiene que entenderse en un vistazo y abrir una pregunta que el título empieza a contestar.",
+          "lineas": [
+            "NOMBRARON",
+            "LA IA ANTES DE",
+            "QUE EXISTIERA"
+          ],
+          "texto": "NOMBRARON LA IA ANTES DE QUE EXISTIERA",
+          "resaltar": "ANTES",
+          "par_con_titulo": "A · Creyeron que en 2 meses harían pensar a una máquina",
+          "por_que": "Ancla (la IA) + paradoja (nombre antes que la cosa). El título agrega la apuesta: creyeron que bastaban 2 meses."
+        },
+        "opcion_b_texto_imagen": {
+          "modo": "texto_imagen",
+          "parte_del_cerebro": "Visión rápida: la imagen se reconoce antes de leer y dice el tema; el texto corto agrega la tensión.",
+          "imagen": "assets/media/mccarthy.jpg (John McCarthy)",
+          "composicion": "McCarthy en primer plano a un lado, mirando al centro; el texto al otro lado.",
+          "texto": "INVENTÓ LA PALABRA «IA»",
+          "par_con_titulo": "A · Creyeron que en 2 meses harían pensar a una máquina",
+          "por_que": "Un rostro + «inventó la palabra IA» dicen quién y de qué trata; el título agrega la ironía de los 2 meses.",
+          "evaluacion_de_imagenes": [
+            {
+              "imagen": "mccarthy.jpg",
+              "veredicto": "elegida",
+              "motivo": "Rostro claro con expresión. Es de años después de 1956: sirve para identificarlo (criterio 10)."
+            }
+          ]
+        }
+      },
+      "titulos": {
+        "youtube": [
+          {
+            "opcion": "A",
+            "texto": "Creyeron que en 2 meses harían pensar a una máquina",
+            "estrategia": "7 Apuesta imposible",
+            "emocion": "Ironía"
+          },
+          {
+            "opcion": "B",
+            "texto": "Le pusieron nombre a la IA antes de que existiera",
+            "estrategia": "1 Paradoja",
+            "emocion": "Asombro"
+          },
+          {
+            "opcion": "C",
+            "texto": "La IA nació en un verano… y casi muere dos veces",
+            "estrategia": "4 Casi no pasa",
+            "emocion": "Tensión"
+          }
+        ],
+        "facebook": {
+          "titulo": "Creyeron que en 2 meses harían pensar a una máquina",
+          "primera_linea": "Prometieron que con dos meses y diez personas harían pensar a una máquina. Le pusieron nombre a algo que aún no existía."
+        },
+        "tiktok": {
+          "texto_pantalla_0_3s": "2 MESES PARA CREAR LA IA",
+          "caption": "Le pusieron nombre a la IA antes de que existiera 🤯 Todo empezó con una apuesta en 1956."
+        }
+      },
+      "tags": {
+        "youtube": [
+          "inteligencia artificial",
+          "historia de la inteligencia artificial",
+          "cómo nació la IA",
+          "conferencia de Dartmouth",
+          "Dartmouth 1956",
+          "John McCarthy",
+          "Marvin Minsky",
+          "Claude Shannon",
+          "invierno de la IA",
+          "Logic Theorist",
+          "IA",
+          "historia de la tecnología"
+        ],
+        "tiktok_hashtags": [
+          "#inteligenciaartificial",
+          "#ia",
+          "#historiadelatecnologia",
+          "#sabiasque"
+        ],
+        "facebook_hashtags": [
+          "#InteligenciaArtificial",
+          "#Tecnología"
+        ],
+        "youtube_caracteres": 235
+      },
+      "comentario_fijado": "Gracias por quedarte hasta el final 🤖 Pidieron 13.500 dólares y les dieron 7.500. Con eso nació un campo entero. ¿Qué parte de la historia de la IA quieres que contemos?",
+      "canal": "NodeTech",
+      "descripcion": {
+        "youtube": "En 1955, cuatro investigadores prometieron algo enorme: con dos meses y diez personas, resolverían cómo hacer que una máquina aprenda y razone. No existía ninguna máquina capaz de pensar. Ni siquiera un nombre.\n\nEsta es la historia del verano de Dartmouth: los 13.500 dólares que pidieron (les dieron 7.500), las dos palabras que eligió John McCarthy y la euforia que vino después. Y también los dos inviernos que casi la entierran, hasta que en 2012 la vieja promesa por fin se cumplió.\n\nCAPÍTULOS\n0:00 Dartmouth, verano de 1956\n0:18 La propuesta: 2 meses y 10 personas\n0:58 13.500 dólares para crear un campo\n1:22 Dos palabras: inteligencia artificial\n1:55 La euforia\n2:17 Los inviernos de la IA\n2:45 2012: la promesa se cumple\n2:59 Hoy, en tu bolsillo\n\nLa inteligencia artificial no empezó con un gran invento. Empezó con una apuesta: el valor de ponerle nombre a algo que todavía no sabían construir. ¿Qué idea tuya todavía no tiene nombre?\n\nGracias por quedarte. Esta comunidad la forma gente curiosa como tú, que prefiere entender a solo enterarse. Si quieres que sigamos, suscríbete: así la próxima historia te encuentra primero.\n\nSi hoy alguien prometiera algo así en dos meses, ¿le creerías? Te leemos.\n\nFUENTES\n- Dartmouth workshop (Wikipedia, con enlaces a la propuesta original)\n- Rockefeller Foundation — Seventy years after the birth of AI\n- Computer History Museum — 1956 Dartmouth Workshop\n\nIMÁGENES (Wikimedia Commons)\n- John McCarthy (Stanford) — «null0» — CC BY-SA 2.0\n- Dartmouth Hall — Kane5187 — dominio público\n\n#InteligenciaArtificial #HistoriaDeLaIA #NodeTech",
+        "youtube_visible_antes_de_mas": "En 1955, cuatro investigadores prometieron algo enorme: con dos meses y diez personas, resolverían cómo hacer que una máquina aprenda y razone. No exi",
+        "facebook": "En 1955, cuatro investigadores prometieron algo enorme: con dos meses y diez personas, resolverían cómo hacer que una máquina aprenda y razone. No existía ninguna máquina capaz de pensar. Ni siquiera un nombre.\n\nLa inteligencia artificial no empezó con un gran invento. Empezó con una apuesta: el valor de ponerle nombre a algo que todavía no sabían construir. ¿Qué idea tuya todavía no tiene nombre?\n\nSi hoy alguien prometiera algo así en dos meses, ¿le creerías? Te leemos.\n\n#InteligenciaArtificial #Tecnología",
+        "mensaje_agradecimiento_usado": "G3_pertenencia"
+      }
+    },
+    {
+      "video_id": "vago-pero-emocionante",
+      "carpeta": "src/templates/nodetech/vago-pero-emocionante",
+      "categoria": "node_tech",
+      "diseno": "rough",
+      "duracion": "3:11",
+      "titulo_actual": "Vago, pero emocionante: las 3 palabras que crearon la Web",
+      "miniatura": {
+        "estilo_plantilla": "rough · trazo a mano, verde lima sobre negro",
+        "opcion_a_solo_texto": {
+          "modo": "solo_texto",
+          "parte_del_cerebro": "Lectura rápida: sin imagen, la frase entera tiene que entenderse en un vistazo y abrir una pregunta que el título empieza a contestar.",
+          "lineas": [
+            "PUDO COBRAR",
+            "POR CADA PÁGINA",
+            "DE INTERNET"
+          ],
+          "texto": "PUDO COBRAR POR CADA PÁGINA DE INTERNET",
+          "resaltar": "CADA PÁGINA",
+          "par_con_titulo": "B · Inventó la Web y nunca la patentó",
+          "por_que": "Ancla (internet) + tensión (pudo cobrar… ¿y?). El título contesta a medias: inventó la Web y nunca la patentó."
+        },
+        "opcion_b_texto_imagen": {
+          "modo": "texto_imagen",
+          "parte_del_cerebro": "Visión rápida: la imagen se reconoce antes de leer y dice el tema; el texto corto agrega la tensión.",
+          "imagen": "assets/media/next-servidor.jpg (la NeXT del CERN con su etiqueta escrita a mano «no la apaguen»)",
+          "composicion": "La computadora ocupa 2/3 del cuadro; la etiqueta escrita a mano encerrada en un círculo rojo; el texto en el tercio libre.",
+          "texto": "TODA LA WEB VIVÍA AQUÍ",
+          "par_con_titulo": "A · Su jefe llamó «vaga» a la idea que creó la Web",
+          "por_que": "Una computadora vieja con una nota a mano dice «un aparato histórico»; el texto revela que era toda la Web, y el título cuenta que la idea casi se descarta por «vaga».",
+          "evaluacion_de_imagenes": [
+            {
+              "imagen": "portada de la propuesta de 1989",
+              "veredicto": "no disponible",
+              "motivo": "No está entre los medios del video y su licencia (CERN) está sin verificar."
+            },
+            {
+              "imagen": "tim.jpg",
+              "veredicto": "no pasa",
+              "motivo": "Fondo rosa con logos y textos de un evento (criterio 8)."
+            },
+            {
+              "imagen": "next-servidor.jpg",
+              "veredicto": "elegida",
+              "motivo": "Objeto de la época con una nota escrita a mano; aparece en el video («toda la web vivía en esa caja»)."
+            }
+          ]
+        }
+      },
+      "titulos": {
+        "youtube": [
+          {
+            "opcion": "A",
+            "texto": "Su jefe llamó «vaga» a la idea que creó la Web",
+            "estrategia": "1 Paradoja",
+            "emocion": "Asombro"
+          },
+          {
+            "opcion": "B",
+            "texto": "Inventó la Web y nunca la patentó",
+            "estrategia": "10 Generosidad sorprendente",
+            "emocion": "Asombro positivo"
+          },
+          {
+            "opcion": "C",
+            "texto": "La Web nació de una propuesta que casi nadie entendió",
+            "estrategia": "4 Casi no pasa",
+            "emocion": "Curiosidad"
+          }
+        ],
+        "facebook": {
+          "titulo": "Inventó la Web y nunca la patentó",
+          "primera_linea": "Su jefe escribió «vago, pero emocionante» en la portada. Esa propuesta se convirtió en la Web, y su autor la regaló al mundo."
+        },
+        "tiktok": {
+          "texto_pantalla_0_3s": "SU JEFE ESCRIBIÓ: «VAGO»",
+          "caption": "La idea que su jefe llamó «vaga» hoy es la Web. Y nunca la patentó. ¿Lo sabías?"
+        }
+      },
+      "tags": {
+        "youtube": [
+          "World Wide Web",
+          "cómo nació la Web",
+          "historia de internet",
+          "Tim Berners-Lee",
+          "Tim Berners Lee",
+          "CERN",
+          "vague but exciting",
+          "primer sitio web",
+          "Mike Sendall",
+          "Robert Cailliau",
+          "historia de la tecnología",
+          "documental corto"
+        ],
+        "tiktok_hashtags": [
+          "#internet",
+          "#historiadelatecnologia",
+          "#timbernerslee",
+          "#sabiasque"
+        ],
+        "facebook_hashtags": [
+          "#Internet",
+          "#Tecnología"
+        ],
+        "youtube_caracteres": 209
+      },
+      "comentario_fijado": "Gracias por verlo hasta el final 🌐 Pudo cobrar por cada página del planeta y eligió que la Web fuera de todos. ¿Qué invento quieres que contemos después?",
+      "canal": "NodeTech",
+      "descripcion": {
+        "youtube": "Marzo de 1989. Un jefe del CERN leyó la propuesta de uno de sus ingenieros y escribió tres palabras en la portada: «vago, pero emocionante». Esa propuesta se convirtió en la Web.\n\nTim Berners-Lee tenía 33 años y estaba cansado de que la información del laboratorio se perdiera. Su jefe, Mike Sendall, no la entendió del todo, pero le dio tiempo. Vas a ver la NeXT que nadie podía apagar, el primer sitio web de la historia y la decisión del 30 de abril de 1993 que hizo la Web libre, sin patentes ni licencias.\n\nCAPÍTULOS\n0:00 Marzo de 1989: tres palabras en una portada\n0:20 El caos de información del CERN\n0:44 La pregunta de Tim Berners-Lee\n1:10 «Vago, pero emocionante»\n1:23 El primer sitio web de la historia\n1:48 ¿Quién sería el dueño?\n2:12 30 de abril de 1993: la Web libre\n2:43 De una idea vaga a casi 6.000 millones de personas\n\nA veces la idea que cambia el mundo no llega clara ni perfecta. Llega vaga, pero emocionante. Y alguien tiene el valor de no tirarla a la basura.\n\nGracias por llegar al final. Ver un video completo es la mejor forma de apoyarnos: ayuda a que YouTube lo muestre a más personas y nos permite seguir trayendo historias como esta.\n\n¿Qué idea «vaga» tienes guardada que todavía no te animaste a mostrar?\n\nFUENTES\n- CERN — Information Management: A Proposal (info.cern.ch/Proposal.html)\n- CNBC (2019) — la nota que el inventor de la Web recibió de su jefe\n- ITU — estadísticas de uso de internet\n\nIMÁGENES (Wikimedia Commons)\n- Sir Tim Berners-Lee — Amy Martin Photography — CC BY-SA 4.0\n- First Web Server — Coolcaesar (en.wikipedia) — CC BY-SA 3.0\n- CERN first server — Rama — CC BY-SA 2.0 fr\n- CERN aerial — Brücke-Osteuropa — CC0\n- Robert Cailliau (TNW 2010) — Julia de Boer / The Next Web — CC BY-SA 2.0\n\n#WorldWideWeb #TimBernersLee #NodeTech",
+        "youtube_visible_antes_de_mas": "Marzo de 1989. Un jefe del CERN leyó la propuesta de uno de sus ingenieros y escribió tres palabras en la portada: «vago, pero emocionante». Esa propu",
+        "facebook": "Marzo de 1989. Un jefe del CERN leyó la propuesta de uno de sus ingenieros y escribió tres palabras en la portada: «vago, pero emocionante». Esa propuesta se convirtió en la Web.\n\nA veces la idea que cambia el mundo no llega clara ni perfecta. Llega vaga, pero emocionante. Y alguien tiene el valor de no tirarla a la basura.\n\n¿Qué idea «vaga» tienes guardada que todavía no te animaste a mostrar?\n\n#Internet #Tecnología",
+        "mensaje_agradecimiento_usado": "G4_impacto"
+      }
+    },
+    {
+      "video_id": "codex-titanic",
+      "carpeta": "src/templates/nodehistory/codex-titanic",
+      "categoria": "node_history",
+      "diseno": "binary",
+      "duracion": "4:12",
+      "titulo_actual": "Titanic: los 37 segundos que dejaron tantos botes vacíos",
+      "miniatura": {
+        "estilo_plantilla": "binary · letras sólidas en blanco; los unos y ceros solo como textura de fondo",
+        "opcion_a_solo_texto": {
+          "modo": "solo_texto",
+          "parte_del_cerebro": "Lectura rápida: sin imagen, la frase entera tiene que entenderse en un vistazo y abrir una pregunta que el título empieza a contestar.",
+          "lineas": [
+            "TITANIC:",
+            "1.178 LUGARES,",
+            "706 SALVADOS"
+          ],
+          "texto": "TITANIC: 1.178 LUGARES, 706 SALVADOS",
+          "resaltar": "706 SALVADOS",
+          "par_con_titulo": "A · Había botes en el Titanic. Salieron medio vacíos",
+          "por_que": "Ancla (Titanic) + dos cifras con su etiqueta que no cierran. El título explica la diferencia: los botes salieron medio vacíos."
+        },
+        "opcion_b_texto_imagen": {
+          "modo": "texto_imagen",
+          "parte_del_cerebro": "Visión rápida: la imagen se reconoce antes de leer y dice el tema; el texto corto agrega la tensión.",
+          "imagen": "assets/media/titanic.jpg (el Titanic de perfil)",
+          "composicion": "El barco de perfil ocupando el ancho en la mitad inferior; el texto arriba, sobre el cielo.",
+          "texto": "SOBRABAN LUGARES EN LOS BOTES",
+          "par_con_titulo": "C · Pudieron volver por los que estaban en el agua. No volvieron",
+          "por_que": "El barco es un ícono que dice el tema al instante; el texto genera indignación, y el título la confirma: pudieron volver y no volvieron.",
+          "evaluacion_de_imagenes": [
+            {
+              "imagen": "lifeboat.jpg",
+              "veredicto": "no pasa",
+              "motivo": "El bote se ve lleno y pequeño: contradice «sobraban lugares» (criterios 1 y 2)."
+            },
+            {
+              "imagen": "carpathia.jpg",
+              "veredicto": "no pasa",
+              "motivo": "Botes vacíos colgados en el Carpathia: estaban vacíos porque ya habían desembarcado; sugeriría algo falso (criterio 1)."
+            },
+            {
+              "imagen": "titanic.jpg",
+              "veredicto": "elegida",
+              "motivo": "El barco es un ícono reconocible al instante."
+            }
+          ]
+        }
+      },
+      "titulos": {
+        "youtube": [
+          {
+            "opcion": "A",
+            "texto": "Había botes en el Titanic. Salieron medio vacíos",
+            "estrategia": "1 Paradoja",
+            "emocion": "Indignación"
+          },
+          {
+            "opcion": "B",
+            "texto": "37 segundos para esquivar el iceberg. No alcanzaron",
+            "estrategia": "2 Reloj en marcha",
+            "emocion": "Tensión"
+          },
+          {
+            "opcion": "C",
+            "texto": "Pudieron volver por los que estaban en el agua. No volvieron",
+            "estrategia": "5 Injusticia",
+            "emocion": "Empatía"
+          }
+        ],
+        "facebook": {
+          "titulo": "Había botes en el Titanic. Salieron medio vacíos",
+          "primera_linea": "Los botes del Titanic podían llevar a 1.178 personas. Se salvaron 706. ¿Qué pasó con el resto de las plazas?"
+        },
+        "tiktok": {
+          "texto_pantalla_0_3s": "HABÍA BOTES",
+          "caption": "Muchos botes del Titanic salieron sin llenarse. ¿Por qué? La respuesta no fue el iceberg."
+        }
+      },
+      "tags": {
+        "youtube": [
+          "Titanic",
+          "historia del Titanic",
+          "botes salvavidas del Titanic",
+          "hundimiento del Titanic",
+          "Titanic 1912",
+          "iceberg",
+          "Carpathia",
+          "por qué se hundió el Titanic",
+          "historia real",
+          "documental corto",
+          "Titanik"
+        ],
+        "tiktok_hashtags": [
+          "#titanic",
+          "#historia",
+          "#historiareal",
+          "#sabiasque"
+        ],
+        "facebook_hashtags": [
+          "#Titanic",
+          "#Historia"
+        ],
+        "youtube_caracteres": 190
+      },
+      "comentario_fijado": "Gracias por acompañarnos hasta el final. Más de 1.500 personas no alcanzaron una plaza esa noche; esta historia la contamos con respeto por ellas. ¿Qué otro momento de la historia quieres que investiguemos?",
+      "canal": "NodeHistory",
+      "descripcion": {
+        "youtube": "Los botes del Titanic tenían capacidad para 1.178 personas. La investigación estadounidense contó solo 706 personas salvadas. Esta es la historia de las plazas que se hundieron con el barco.\n\nEl iceberg apareció a 37 segundos del choque y explica cómo empezó la tragedia. Pero las muertes se explican después: veinte botes que no alcanzaban para todos, ningún simulacro, órdenes que se daban con las manos por el ruido del vapor y botes que pudieron regresar por personas en el agua y no lo hicieron.\n\nCAPÍTULOS\n0:00 Faltaban 37 segundos\n0:23 Virar a tiempo\n0:35 El choque de las 11:40\n0:56 Veinte botes para más de 2.200 personas\n1:24 Sin simulacro\n1:49 El primer bote\n2:06 Botes lejos de llenarse\n2:39 No fue igual para todos\n2:58 Pudieron volver\n3:35 Lo que cambió después\n\nLa seguridad del Titanic cumplía una regla de papel, no la realidad de un barco lleno. La lección no era llenar una tabla: era practicar antes de que la tabla se volviera una noche real.\n\nSi llegaste hasta aquí, eres de las personas que se quedan hasta el final de una historia. Gracias de verdad. Cada minuto que le dedicas le dice a YouTube que estas historias valen la pena, y eso nos permite seguir investigando y contando la próxima.\n\n¿Conocías esta parte de la historia del Titanic? ¿Qué te sorprendió más?\n\nFUENTES\n- Investigación británica del Titanic (1912) — informe sobre la colisión y los botes (titanicinquiry.org)\n- Investigación del Senado de EE. UU. (1912) — informe final (titanicinquiry.org)\n\nIMÁGENES (Wikimedia Commons)\n- RMS Titanic — Francis Godolphin Osbourne Stuart — dominio público\n- Posible iceberg del Titanic (SS Birma) — dominio público\n- Capitán Edward Smith y el comisario McElroy — dominio público\n- Bote con sobrevivientes del Titanic (NARA 278337) — Louis Ogden — dominio público\n- Botes del Titanic junto al Carpathia — The New York Times — dominio público\n\n#Titanic #HistoriaReal #NodeHistory",
+        "youtube_visible_antes_de_mas": "Los botes del Titanic tenían capacidad para 1.178 personas. La investigación estadounidense contó solo 706 personas salvadas. Esta es la historia de l",
+        "facebook": "Los botes del Titanic tenían capacidad para 1.178 personas. La investigación estadounidense contó solo 706 personas salvadas. Esta es la historia de las plazas que se hundieron con el barco.\n\nLa seguridad del Titanic cumplía una regla de papel, no la realidad de un barco lleno. La lección no era llenar una tabla: era practicar antes de que la tabla se volviera una noche real.\n\n¿Conocías esta parte de la historia del Titanic? ¿Qué te sorprendió más?\n\n#Titanic #Historia",
+        "mensaje_agradecimiento_usado": "G1_identidad"
+      }
+    },
+    {
+      "video_id": "turing-enigma",
+      "carpeta": "src/templates/nodehistory/turing-enigma",
+      "categoria": "node_history",
+      "diseno": "binary",
+      "duracion": "4:22",
+      "titulo_actual": "El hombre que rompió Enigma con una máquina de lógica",
+      "miniatura": {
+        "estilo_plantilla": "binary · letras sólidas en blanco; los unos y ceros solo como textura de fondo",
+        "opcion_a_solo_texto": {
+          "modo": "solo_texto",
+          "parte_del_cerebro": "Lectura rápida: sin imagen, la frase entera tiene que entenderse en un vistazo y abrir una pregunta que el título empieza a contestar.",
+          "lineas": [
+            "EL CÓDIGO NAZI",
+            "CAMBIABA CADA",
+            "MEDIANOCHE"
+          ],
+          "texto": "EL CÓDIGO NAZI CAMBIABA CADA MEDIANOCHE",
+          "resaltar": "CADA MEDIANOCHE",
+          "par_con_titulo": "A · Ayudó a ganar la guerra y su país lo condenó",
+          "por_que": "Ancla (código nazi) + reto (cambiaba cada noche). El título agrega a la persona y el giro: ayudó a ganar y su país lo condenó."
+        },
+        "opcion_b_texto_imagen": {
+          "modo": "texto_imagen",
+          "parte_del_cerebro": "Visión rápida: la imagen se reconoce antes de leer y dice el tema; el texto corto agrega la tensión.",
+          "imagen": "assets/media/turing.jpg + assets/media/enigma.jpg",
+          "composicion": "Rostro de Turing a la izquierda en alto contraste, la máquina Enigma iluminada a la derecha. Nada sobre su muerte.",
+          "texto": "HÉROE… Y CONDENADO",
+          "par_con_titulo": "C · Cómo un matemático acortó la Segunda Guerra Mundial",
+          "por_que": "Rostro + Enigma dicen «la persona que rompió el código»; el texto adelanta el giro, y el título dice cuánto importó: acortó la guerra.",
+          "evaluacion_de_imagenes": [
+            {
+              "imagen": "turing.jpg + enigma.jpg",
+              "veredicto": "elegida",
+              "motivo": "Retrato claro y una máquina inconfundible."
+            }
+          ]
+        }
+      },
+      "titulos": {
+        "youtube": [
+          {
+            "opcion": "A",
+            "texto": "Ayudó a ganar la guerra y su país lo condenó",
+            "estrategia": "5 Protagonista castigado",
+            "emocion": "Injusticia"
+          },
+          {
+            "opcion": "B",
+            "texto": "El código que cambiaba cada día y la máquina que lo rompió",
+            "estrategia": "2 Reloj en marcha",
+            "emocion": "Asombro"
+          },
+          {
+            "opcion": "C",
+            "texto": "Cómo un matemático acortó la Segunda Guerra Mundial",
+            "estrategia": "3 Causa pequeña",
+            "emocion": "Asombro"
+          }
+        ],
+        "facebook": {
+          "titulo": "Ayudó a ganar la guerra y su país lo condenó",
+          "primera_linea": "Alan Turing rompió el código más seguro de los nazis. Años después, el país al que ayudó a salvar lo condenó."
+        },
+        "tiktok": {
+          "texto_pantalla_0_3s": "EL CÓDIGO CAMBIABA CADA MEDIANOCHE",
+          "caption": "Rompió Enigma con una máquina. Su país lo condenó años después. La historia de Alan Turing."
+        }
+      },
+      "tags": {
+        "youtube": [
+          "Alan Turing",
+          "Enigma",
+          "máquina Enigma",
+          "Bletchley Park",
+          "cómo se rompió Enigma",
+          "Segunda Guerra Mundial",
+          "la Bomba de Turing",
+          "historia de la computación",
+          "Turing Enigma",
+          "historia real",
+          "documental corto"
+        ],
+        "tiktok_hashtags": [
+          "#alanturing",
+          "#historia",
+          "#segundaguerramundial",
+          "#sabiasque"
+        ],
+        "facebook_hashtags": [
+          "#AlanTuring",
+          "#Historia"
+        ],
+        "youtube_caracteres": 194
+      },
+      "comentario_fijado": "Gracias por quedarte hasta el final. Hoy su rostro está en el billete de 50 libras. ¿Qué otra historia de alguien que el mundo tardó en reconocer quieres que contemos?",
+      "canal": "NodeHistory",
+      "descripcion": {
+        "youtube": "En 1940, el código más seguro del planeta cambiaba cada medianoche. Un matemático de 28 años, Alan Turing, estaba convencido de que podía romperlo.\n\nEnigma tenía 159 trillones de combinaciones posibles. En Bletchley Park, partiendo del trabajo de tres matemáticos polacos, Turing diseñó la Bomba y usó las frases repetidas de los alemanes como llave. Muchos historiadores estiman que ese trabajo acortó la guerra al menos dos años. Y también contamos lo que vino después: la condena de 1952 y el perdón que tardó 55 años.\n\nCAPÍTULOS\n0:00 1940: un código que cambiaba cada medianoche\n0:30 159 trillones de combinaciones\n0:57 Bletchley Park y la idea de la máquina\n1:23 La llave: frases previsibles\n1:43 Los mensajes navales se abren\n2:11 Un secreto que no podía contar\n2:22 ¿Pueden pensar las máquinas?\n2:59 El país que le dio la espalda\n3:41 El perdón, 55 años después\n\nTuring rompió un código imposible con una máquina hecha de lógica. Pero el código más difícil no estaba en Enigma: estaba en nosotros.\n\nGracias por ver el video completo. Cada historia la armamos con fuentes que puedes revisar abajo, y tu tiempo es lo que la hace posible. Si te dejó algo, un solo gesto ayuda muchísimo: compártelo con una persona a la que le encante la historia.\n\n¿Conocías el final de la historia de Turing? Cuéntanos qué sentiste.\n\nFUENTES\n- ⚠️ Este video no tiene fuentes registradas en PLAN.md: completar antes de publicar\n\nIMÁGENES (Wikimedia Commons)\n- Alan Turing a los 16 años — posiblemente Arthur Reginald Chaffin — dominio público\n- Enigma — Rama — CC BY-SA 2.0 FR\n- Rotores de Enigma y Bomba reconstruida — TedColes — CC0\n- Mansión de Bletchley Park — DeFacto — CC BY-SA 4.0\n- U-249 y convoy WS-12 — U.S. Navy — dominio público\n\n#AlanTuring #Enigma #NodeHistory",
+        "youtube_visible_antes_de_mas": "En 1940, el código más seguro del planeta cambiaba cada medianoche. Un matemático de 28 años, Alan Turing, estaba convencido de que podía romperlo.\n\nE",
+        "facebook": "En 1940, el código más seguro del planeta cambiaba cada medianoche. Un matemático de 28 años, Alan Turing, estaba convencido de que podía romperlo.\n\nTuring rompió un código imposible con una máquina hecha de lógica. Pero el código más difícil no estaba en Enigma: estaba en nosotros.\n\n¿Conocías el final de la historia de Turing? Cuéntanos qué sentiste.\n\n#AlanTuring #Historia",
+        "mensaje_agradecimiento_usado": "G2_reciprocidad"
+      }
+    },
+    {
+      "video_id": "muro-de-berlin",
+      "carpeta": "src/templates/nodehistory/muro-de-berlin",
+      "categoria": "node_history",
+      "diseno": "binary",
+      "duracion": "3:29",
+      "titulo_actual": "La conferencia de prensa que derribó el Muro de Berlín",
+      "miniatura": {
+        "estilo_plantilla": "binary · letras sólidas en blanco; los unos y ceros solo como textura de fondo",
+        "opcion_a_solo_texto": {
+          "modo": "solo_texto",
+          "parte_del_cerebro": "Lectura rápida: sin imagen, la frase entera tiene que entenderse en un vistazo y abrir una pregunta que el título empieza a contestar.",
+          "lineas": [
+            "DOS PALABRAS",
+            "SIN PERMISO",
+            "ABRIERON EL MURO"
+          ],
+          "texto": "DOS PALABRAS SIN PERMISO ABRIERON EL MURO",
+          "resaltar": "DOS PALABRAS",
+          "par_con_titulo": "A · La conferencia de prensa que derribó el Muro de Berlín",
+          "por_que": "Ancla (el muro) + causa mínima (dos palabras sin permiso). El título dice dónde: en una conferencia de prensa."
+        },
+        "opcion_b_texto_imagen": {
+          "modo": "texto_imagen",
+          "parte_del_cerebro": "Visión rápida: la imagen se reconoce antes de leer y dice el tema; el texto corto agrega la tensión.",
+          "imagen": "assets/media/mauerspecht.jpg (un joven dentro de un agujero del muro, con un martillo). Alternativa: muro-gente.jpg (multitud sobre el muro frente a la Puerta de Brandeburgo)",
+          "composicion": "El joven y el agujero del muro al centro, recortados para que ocupen la mitad del cuadro; el texto arriba, sobre el muro.",
+          "texto": "«DE INMEDIATO»",
+          "par_con_titulo": "B · Leyó un papel que no conocía y el Muro de Berlín cayó",
+          "por_que": "Rostro, martillo y muro con grafitis dicen «la caída del Muro de Berlín»; la cita es la palabra que lo provocó, y el título cuenta cómo: un papel leído sin conocerlo.",
+          "evaluacion_de_imagenes": [
+            {
+              "imagen": "nota.jpg",
+              "veredicto": "no pasa",
+              "motivo": "A 210 px la nota manuscrita son garabatos (criterio 2)."
+            },
+            {
+              "imagen": "schabowski.jpg",
+              "veredicto": "no pasa",
+              "motivo": "Sala de conferencias con personas diminutas: no hay un solo sujeto (criterio 2)."
+            },
+            {
+              "imagen": "mauerspecht.jpg",
+              "veredicto": "elegida",
+              "motivo": "Rostro, emoción, martillo y muro: se entiende al instante."
+            },
+            {
+              "imagen": "muro-gente.jpg",
+              "veredicto": "alternativa",
+              "motivo": "Multitud sobre el muro frente a la Puerta de Brandeburgo: ícono fuerte."
+            }
+          ]
+        }
+      },
+      "titulos": {
+        "youtube": [
+          {
+            "opcion": "A",
+            "texto": "La conferencia de prensa que derribó el Muro de Berlín",
+            "estrategia": "3 Causa pequeña (actual)",
+            "emocion": "Asombro"
+          },
+          {
+            "opcion": "B",
+            "texto": "Leyó un papel que no conocía y el Muro de Berlín cayó",
+            "estrategia": "3 Causa pequeña",
+            "emocion": "Asombro"
+          },
+          {
+            "opcion": "C",
+            "texto": "El oficial que abrió el Muro en vez de disparar",
+            "estrategia": "9 Decisión bajo presión",
+            "emocion": "Tensión"
+          }
+        ],
+        "facebook": {
+          "titulo": "Leyó un papel que no conocía y el Muro de Berlín cayó",
+          "primera_linea": "Le preguntaron cuándo entraba en vigor la nueva regla. Buscó en sus papeles, no encontró la respuesta y dijo: «de inmediato»."
+        },
+        "tiktok": {
+          "texto_pantalla_0_3s": "DOS PALABRAS ABRIERON EL MURO",
+          "caption": "Un papel leído antes de tiempo derribó el Muro de Berlín. ¿Lo sabías?"
+        }
+      },
+      "tags": {
+        "youtube": [
+          "Muro de Berlín",
+          "caída del Muro de Berlín",
+          "9 de noviembre de 1989",
+          "Günter Schabowski",
+          "Schabowski",
+          "Harald Jäger",
+          "Bornholmer Strasse",
+          "Alemania del Este",
+          "Guerra Fría",
+          "historia real",
+          "documental corto"
+        ],
+        "tiktok_hashtags": [
+          "#murodeberlin",
+          "#historia",
+          "#guerrafria",
+          "#sabiasque"
+        ],
+        "facebook_hashtags": [
+          "#MuroDeBerlín",
+          "#Historia"
+        ],
+        "youtube_caracteres": 194
+      },
+      "comentario_fijado": "Gracias por llegar hasta el final. Esa noche, personas que llevaban 28 años sin pisar el otro lado caminaron por su propia ciudad. ¿Qué momento de la historia quieres que contemos después?",
+      "canal": "NodeHistory",
+      "descripcion": {
+        "youtube": "9 de noviembre de 1989, casi las siete de la tarde. Un funcionario leyó en voz alta un papel que casi no conocía. Cuando le preguntaron desde cuándo valía, respondió dos palabras que nadie había autorizado: «de inmediato».\n\nDurante 28 años, Berlín estuvo partida en dos y al menos 140 personas murieron en el muro. Esa noche, la televisión del Oeste repitió que las fronteras estaban abiertas y miles de personas fueron a los puestos fronterizos. En Bornholmer Strasse, el oficial Harald Jäger tenía una multitud enfrente y ninguna orden clara.\n\nCAPÍTULOS\n0:00 9 de noviembre de 1989, 7 de la tarde\n0:17 28 años de una ciudad partida\n0:58 Una regla nueva y una nota\n1:39 «¿Cuándo entra en vigor?»\n1:57 Todos a la frontera\n2:25 El oficial que abrió la barrera, y los martillos\n2:57 Lo que mueve la historia\n\nLa historia suele contar grandes batallas y grandes líderes. Este muro de hormigón cayó por un papel leído antes de tiempo y por un oficial que eligió abrir en lugar de disparar.\n\nGracias por quedarte. Esta comunidad la forma gente curiosa como tú, que prefiere entender a solo enterarse. Si quieres que sigamos, suscríbete: así la próxima historia te encuentra primero.\n\n¿Conocías esta historia? Si tienes familia que vivió algo así, nos encantaría leerla.\n\nFUENTES\n- Fall of the Berlin Wall y Günter Schabowski (Wikipedia, con fuentes primarias)\n- ZZF Potsdam — víctimas del Muro de Berlín\n\nIMÁGENES (Wikimedia Commons)\n- Construcción del muro (Bundesarchiv 173-1321) — Helmut J. Wolf — CC BY-SA 3.0 de\n- Schabowski en la conferencia de prensa (Bundesarchiv 183-1989-1109-030) — Thomas Lehmann — CC BY-SA 3.0 de\n- Nota de Schabowski — Günter Schabowski — CC BY-SA 3.0\n- Paso fronterizo de Bornholmer Strasse (Bundesarchiv 183-1989-1118-017) — Robert Roeske — CC BY-SA 3.0 de\n- Muro y Puerta de Brandeburgo — Sue Ream — CC BY 3.0\n- «Mauerspecht» en noviembre de 1989 — Werdersen — CC BY-SA 4.0\n- Manifestación de los lunes en Leipzig (Bundesarchiv 183-1989-1023-022) — Friedrich Gahlbeck — CC BY-SA 3.0 de\n\n#MuroDeBerlín #HistoriaReal #NodeHistory",
+        "youtube_visible_antes_de_mas": "9 de noviembre de 1989, casi las siete de la tarde. Un funcionario leyó en voz alta un papel que casi no conocía. Cuando le preguntaron desde cuándo v",
+        "facebook": "9 de noviembre de 1989, casi las siete de la tarde. Un funcionario leyó en voz alta un papel que casi no conocía. Cuando le preguntaron desde cuándo valía, respondió dos palabras que nadie había autorizado: «de inmediato».\n\nLa historia suele contar grandes batallas y grandes líderes. Este muro de hormigón cayó por un papel leído antes de tiempo y por un oficial que eligió abrir en lugar de disparar.\n\n¿Conocías esta historia? Si tienes familia que vivió algo así, nos encantaría leerla.\n\n#MuroDeBerlín #Historia",
+        "mensaje_agradecimiento_usado": "G3_pertenencia"
+      }
+    }
+  ]
+}

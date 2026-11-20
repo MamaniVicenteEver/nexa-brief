@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-stylish-kinetic",
+  "id": "config.scenes",
+  "entry_id": "config.scenes",
+  "name": "scenes",
+  "kind": "configuration",
+  "label": "scenes",
+  "summary": "Existing configuration configuration: scenes.",
+  "params": {
+    "minWords": {
+      "default": 3
+    },
+    "maxWords": {
+      "default": 10
+    },
+    "minSec": {
+      "default": 1.4
+    },
+    "maxSec": {
+      "default": 5.5
+    },
+    "signature": {
+      "default": [
+        "arc",
+        "slide",
+        "type",
+        "tilt",
+        "slide"
+      ]
+    },
+    "cooldown": {
+      "default": 2
+    },
+    "stopwords": {
+      "default": []
+    }
+  },
+  "example": {
+    "minWords": 3,
+    "maxWords": 10,
+    "minSec": 1.4,
+    "maxSec": 5.5,
+    "signature": [
+      "arc",
+      "slide",
+      "type",
+      "tilt",
+      "slide"
+    ],
+    "cooldown": 2,
+    "stopwords": []
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
+      "pointer": "/configs/0/scenes"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

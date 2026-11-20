@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-night-journey",
+  "id": "config.song",
+  "entry_id": "config.song",
+  "name": "song",
+  "kind": "configuration",
+  "label": "song",
+  "summary": "Existing configuration configuration: song.",
+  "params": {
+    "title": {
+      "default": "Hola"
+    },
+    "artist": {
+      "default": "Dalex"
+    },
+    "cover": {
+      "default": "assets/cover.jpg"
+    }
+  },
+  "example": {
+    "title": "Hola",
+    "artist": "Dalex",
+    "cover": "assets/cover.jpg"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-night-journey/assets/config.json",
+      "pointer": "/configs/0/song"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "layout.giantOutline",
+  "entry_id": "layout.giantOutline",
+  "name": "giantOutline",
+  "kind": "layout",
+  "label": "giantOutline",
+  "summary": "Existing layout configuration: giantOutline.",
+  "params": {
+    "weight": {
+      "default": 1.0
+    },
+    "bgs": {
+      "default": [
+        "void",
+        "red"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.0,
+    "bgs": [
+      "void",
+      "red"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+      "pointer": "/configs/0/layouts/giantOutline"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

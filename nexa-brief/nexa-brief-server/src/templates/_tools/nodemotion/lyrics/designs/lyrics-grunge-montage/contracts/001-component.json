@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "grunge-montage.intro",
+  "entry_id": "grunge-montage.intro",
+  "kind": "component",
+  "label": "Intro de apertura",
+  "summary": "Primera toma del video: fondo de niebla, artista en rojo cuyas palabras se juntan y engordan, título blanco ancho y fino que baja al centro y engorda, corona de tiza y flecha roja.",
+  "component": {
+    "name": "grunge-montage.intro",
+    "label": "Intro de apertura",
+    "summary": "Primera toma del video: fondo de niebla, artista en rojo cuyas palabras se juntan y engordan, título blanco ancho y fino que baja al centro y engorda, corona de tiza y flecha roja.",
+    "default": true,
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "Double Control",
+        "doc": "Título (config.intro.title)"
+      },
+      "artist": {
+        "type": "string",
+        "default": "Pista de demostración",
+        "doc": "Artista (config.intro.artist)"
+      },
+      "duration": {
+        "type": "number",
+        "default": 1.44,
+        "doc": "Segundos de la demo",
+        "min": 1,
+        "max": 4
+      }
+    },
+    "tags": [
+      "intro"
+    ],
+    "file": "player.js",
+    "demo": {
+      "title": "Double Control",
+      "artist": "Pista de demostración"
+    },
+    "preview": {
+      "t": 1.2
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "Double Control",
+      "doc": "Título (config.intro.title)"
+    },
+    "artist": {
+      "type": "string",
+      "default": "Pista de demostración",
+      "doc": "Artista (config.intro.artist)"
+    },
+    "duration": {
+      "type": "number",
+      "default": 1.44,
+      "doc": "Segundos de la demo",
+      "min": 1,
+      "max": 4
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json",
+      "pointer": "/components/0"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

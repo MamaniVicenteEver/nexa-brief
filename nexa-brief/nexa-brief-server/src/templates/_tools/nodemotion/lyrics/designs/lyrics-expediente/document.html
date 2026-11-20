@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script data-nb-hf-clock="075fd9c8e584"><!-- nodemotion-fragment:scripts/01-hyperframes-clock.js --></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HILO ROJO — Flyday Chinatown</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Oswald:wght@500;700&family=Caveat:wght@700&display=swap" rel="stylesheet">
+<style><!-- nodemotion-fragment:styles/01-design.css --></style>
+</head>
+<body>
+<!-- filtro de tinta rugosa para los sellos de goma -->
+<svg width="0" height="0" style="position:fixed">
+  <filter id="rough">
+    <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="5"/>
+  </filter>
+</svg>
+<div id="wall"></div>
+<img id="bg" alt="">
+<div id="viewport"><div id="world">
+  <svg id="threads" width="1" height="1"></svg>
+</div></div>
+<div id="lamp"></div>
+<div id="vignette"></div>
+<canvas id="dust"></canvas>
+<div id="grain"></div>
+<div id="flash"></div>
+<div id="intro" class="cardScreen"><div class="folder">
+  <div class="artist"></div>
+  <div class="title"></div>
+  <div class="sub"></div>
+  <div class="feats"></div>
+</div></div>
+<div id="outro" class="cardScreen"><div class="folder">
+  <div class="artist"></div>
+  <div class="title"></div>
+  <div class="sub"></div>
+  <div class="feats"></div>
+</div></div>
+<div id="hint">CLICK PARA ABRIR EL CASO</div>
+<audio id="audio" preload="auto"></audio>
+
+<script src="./components/intro.js"></script>
+<script src="./components/outro.js"></script>
+<script type="module"><!-- nodemotion-fragment:scripts/02-runtime.js --></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "config.doodles",
+  "entry_id": "config.doodles",
+  "name": "doodles",
+  "kind": "configuration",
+  "label": "doodles",
+  "summary": "Existing configuration configuration: doodles.",
+  "params": {
+    "chance": {
+      "default": 0.2
+    },
+    "deck": {
+      "default": {
+        "rays": 2,
+        "star": 2,
+        "underline": 1,
+        "circle": 1,
+        "arrow": 0.5
+      }
+    }
+  },
+  "example": {
+    "chance": 0.2,
+    "deck": {
+      "rays": 2,
+      "star": 2,
+      "underline": 1,
+      "circle": 1,
+      "arrow": 0.5
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "pointer": "/configs/0/doodles"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -3,6 +3,8 @@
 import { ChevronDown, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { RecordingTrayCard } from "@/features/explainer/components/RecordingTrayCard";
+import { useRecordingTrayStore } from "@/features/explainer/store/recording-tray-store";
 import { cn } from "@/lib/utils";
 import { useJobsTrayStore } from "@/shared/store";
 import { useTrackedJobsSummary } from "../hooks/useTrackedJobsSummary";
@@ -25,20 +27,24 @@ export function JobsTray() {
   const jobs = useJobsTrayStore((state) => state.jobs);
   const removeJobs = useJobsTrayStore((state) => state.removeJobs);
   const drafts = useDraftsTrayStore((state) => state.drafts);
+  const recordings = useRecordingTrayStore((state) => state.recordings);
   const removeDraft = useDraftsTrayStore((state) => state.removeDraft);
   const summary = useTrackedJobsSummary(jobs.map((j) => j.jobId));
 
   useEffect(() => {
     useJobsTrayStore.persist.rehydrate();
     useDraftsTrayStore.persist.rehydrate();
+    useRecordingTrayStore.persist.rehydrate();
     setHasHydrated(true);
   }, []);
 
-  if (!hasHydrated || (jobs.length === 0 && drafts.length === 0)) return null;
+  if (!hasHydrated || (jobs.length === 0 && drafts.length === 0 && recordings.length === 0))
+    return null;
 
   const finished = [...summary.done, ...summary.failed];
   const parts = [
     drafts.length && tFlow("preparingCount", { count: drafts.length }),
+    recordings.length && `${recordings.length} Plantillas`,
     summary.running.length && t("running", { count: summary.running.length }),
     summary.queued.length && t("queued", { count: summary.queued.length }),
     summary.done.length && t("done", { count: summary.done.length }),
@@ -102,10 +108,14 @@ export function JobsTray() {
               }
             />
           ))}
+          {[...recordings].reverse().map((recording) => (
+            <RecordingTrayCard key={recording.jobId} tracked={recording} />
+          ))}
           {[...jobs].reverse().map((job) => (
             <JobProgressCard
               key={job.jobId}
               job={{ jobId: job.jobId, category: job.category, stage: "pending" }}
+              label={job.label}
               actions={
                 <button
                   type="button"

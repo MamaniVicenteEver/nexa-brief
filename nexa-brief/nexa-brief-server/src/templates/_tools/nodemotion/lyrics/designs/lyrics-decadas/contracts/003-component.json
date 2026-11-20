@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "decadas.outrov2",
+  "entry_id": "decadas.outrov2",
+  "kind": "component",
+  "label": "Outro v2 Contador",
+  "summary": "Título azul rodante sobre celeste, rótulos verticales, fragmentos y barra final.",
+  "component": {
+    "name": "decadas.outrov2",
+    "label": "Outro v2 Contador",
+    "summary": "Título azul rodante sobre celeste, rótulos verticales, fragmentos y barra final.",
+    "group": "outro",
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "Gracias",
+        "doc": "config.outro.title"
+      },
+      "sub": {
+        "type": "string",
+        "default": "por ver",
+        "doc": "config.outro.sub"
+      },
+      "feats": {
+        "type": "string",
+        "default": "Suscríbete · NodeMotion",
+        "doc": "config.outro.feats"
+      }
+    },
+    "tags": [
+      "outro"
+    ],
+    "file": "components/outro-v2.js",
+    "demo": {},
+    "preview": {
+      "t": 3.5
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "Gracias",
+      "doc": "config.outro.title"
+    },
+    "sub": {
+      "type": "string",
+      "default": "por ver",
+      "doc": "config.outro.sub"
+    },
+    "feats": {
+      "type": "string",
+      "default": "Suscríbete · NodeMotion",
+      "doc": "config.outro.feats"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/showcase/components.json",
+      "pointer": "/components/2"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

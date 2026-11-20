@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-mixtas",
+  "id": "layout.blackStack",
+  "entry_id": "layout.blackStack",
+  "name": "blackStack",
+  "kind": "layout",
+  "label": "blackStack",
+  "summary": "Existing layout configuration: blackStack.",
+  "params": {
+    "weight": {
+      "default": 0.9
+    },
+    "bgs": {
+      "default": [
+        "black"
+      ]
+    }
+  },
+  "example": {
+    "weight": 0.9,
+    "bgs": [
+      "black"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+      "pointer": "/configs/0/layouts/blackStack"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

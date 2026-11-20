@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-night-journey",
+  "id": "config.fonts",
+  "entry_id": "config.fonts",
+  "name": "fonts",
+  "kind": "configuration",
+  "label": "fonts",
+  "summary": "Existing configuration configuration: fonts.",
+  "params": {
+    "googleUrl": {
+      "default": "https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;800;900&family=Noto+Serif+Display:wdth,wght@62.5..100,300..800&family=Alegreya+Sans:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400..500&display=swap"
+    },
+    "ui": {
+      "default": "\"Figtree\", system-ui, sans-serif"
+    },
+    "display": {
+      "default": "\"Noto Serif Display\", \"Times New Roman\", serif"
+    },
+    "humanist": {
+      "default": "\"Alegreya Sans\", \"Gill Sans\", sans-serif"
+    },
+    "book": {
+      "default": "\"Newsreader\", Georgia, serif"
+    }
+  },
+  "example": {
+    "googleUrl": "https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;800;900&family=Noto+Serif+Display:wdth,wght@62.5..100,300..800&family=Alegreya+Sans:wght@400;500;700&family=Newsreader:opsz,wght@6..72,400..500&display=swap",
+    "ui": "\"Figtree\", system-ui, sans-serif",
+    "display": "\"Noto Serif Display\", \"Times New Roman\", serif",
+    "humanist": "\"Alegreya Sans\", \"Gill Sans\", sans-serif",
+    "book": "\"Newsreader\", Georgia, serif"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-night-journey/assets/config.json",
+      "pointer": "/configs/0/fonts"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

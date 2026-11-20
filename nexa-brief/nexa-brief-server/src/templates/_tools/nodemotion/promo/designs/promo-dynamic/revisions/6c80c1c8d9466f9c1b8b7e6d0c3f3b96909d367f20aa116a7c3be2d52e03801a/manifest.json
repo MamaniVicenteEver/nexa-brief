@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-dynamic",
+  "family": "promo",
+  "demo_folder": "nodemotion/commercial/promo-dynamic",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "source_sha256": "f3f36df2161a88bbcaac9616028f31a37dd0a0e0fff2daa509f68f16059c23ac",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/promo-dynamic",
+    "config": "nodemotion/commercial/promo-dynamic/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-dynamic/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-dynamic/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "44a9d5c18c32072639d9b87527cd4eb58fe7fb01de8e1d5a15b6ed5082d70183.webp",
+    "assets/media/basketball-1.jpg": "d71e945a69ccb615ed749c48df4374e7f3c54fc54a9041e5d02c4e9c30b4d58b.jpg",
+    "assets/media/basketball-2.jpg": "8038d74197644035ced79e14e39abf0dff7d9d61a97107754721ac3b38af167a.jpg",
+    "assets/media/basketball.mp4": "e975fdd83a8f4ced914f0d03577f2c391e186329ec095d59d27fa09ade070cf4.mp4",
+    "assets/media/battle-ropes-1.jpg": "ad948d802994076e9cb24843f2b6dce4e1632a3e275f31848f8adf02c40ccbf5.jpg",
+    "assets/media/battle-ropes-2.jpg": "a1dc7e10b119d7e2c56b022fe944054d34a3c54e522e605c5f81428a9d93635c.jpg",
+    "assets/media/battle-ropes.mp4": "c88cf7cc535db1bd909cc42fd986936cc193376ef785f09607d79d3fbc68e43f.mp4",
+    "assets/media/boxing-1.jpg": "61e15c7fd9de0b798c0f56450f82c33416b624562e43087786e43c17904db086.jpg",
+    "assets/media/boxing-2.jpg": "178f4e96e8a4b3c3379b4f1de8df06e671b1676ea71933a5702379f791fe2fe6.jpg",
+    "assets/media/boxing.mp4": "e423efb995012fc5c1db453d7dd18a04e4d4352b29220c19fd3d9a330659d81b.mp4",
+    "assets/media/skate-1.jpg": "6e0b015ec780c815c9883a250ca866e05fd8270302d2bb63a96ff9926a30d4c8.jpg",
+    "assets/media/skate-2.jpg": "17d94b77c0a18655e8e7b31b211517e4a4efa487bc3ebf8eb5d1511087ce2611.jpg",
+    "assets/media/skate.mp4": "695ff98f1a05699932df95dcd9c10120c6ee72ff55a19ed5f7fb4b5db0d60f5c.mp4",
+    "assets/media/soccer-1.jpg": "c62897fef52e3484e9ec5aeab137ef4f046c6ec55834bc8bb360af57e43004bf.jpg",
+    "assets/media/soccer-2.jpg": "6d2a26279086c0ad23ab7334303b2316358b9e95014bb6301f241e406de6d60c.jpg",
+    "assets/media/soccer.mp4": "a6b6e586f6cdc31a4b57c63e751cc815176d4109b98f487221bec63005081a2d.mp4",
+    "assets/media/sprinter-1.jpg": "b9166bf33c5f7e3e509cc5b833042a8025e796efca7b9d95ab7faa9f799f3600.jpg",
+    "assets/media/sprinter-2.jpg": "9bd90fdd2e928325b15c9166f978f7a5426fd14f54f84005981b8a9ac5f1652d.jpg",
+    "assets/media/sprinter.mp4": "da8181384d6e9bd969b4e357340a1058f52475e0066af4ff0f1be8c0e0c08a19.mp4",
+    "assets/song.mp3": "d873df2afad2edfe6db20afc4a10e11374ba5393cbf569d805bb062b23986a17.mp3"
+  },
+  "revision": "6c80c1c8d9466f9c1b8b7e6d0c3f3b96909d367f20aa116a7c3be2d52e03801a"
+}

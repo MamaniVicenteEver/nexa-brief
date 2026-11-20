@@ -1,0 +1,44 @@
+{
+  "character_id": "alma",
+  "provider": "Gemini TTS",
+  "model": "gemini-3.8-flash-tts",
+  "voice": "Sulafat",
+  "request_hash": "54898c81c502fc848f5ea290610ef47610e25421e5fad1778a1495cce3a3f3e0",
+  "profile_hash": "b99978d3d133cb7561f89e901682b68635d3379006ff985be801ee350e2a6451",
+  "script_hash": "9daeb7b3554a17b09fc54552a2518861cf91af6e665e7699618441652181b7b9",
+  "usage": {
+    "promptTokenCount": 156,
+    "candidatesTokenCount": 428,
+    "totalTokenCount": 584,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 156
+      }
+    ],
+    "candidatesTokensDetails": [
+      {
+        "modality": "AUDIO",
+        "tokenCount": 428
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "elapsed_seconds": 7.996,
+  "duration_seconds": 17.247458333333334,
+  "provider_attempts": [
+    {
+      "credential_label": "GEMINI_API_KEY1#d381",
+      "http_status": 200,
+      "status": "ok"
+    }
+  ],
+  "word_count": 43,
+  "opening_words": 13,
+  "self_intro_words": 0,
+  "closing_words": 3,
+  "monetary_cost": null,
+  "cost_status": "not_reported",
+  "editorial_review": "pending",
+  "postprocess": "MP3 encoding only; no tempo change, no padding, no clipping"
+}

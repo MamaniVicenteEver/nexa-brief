@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cinético Noir · componentes</title>
+<!-- Galería de piezas de lyrics-kinetic-noir. Muestra SOLO la pieza pedida, sin audio, en bucle:
+     ?only=<nombre> (ver components.json)  ?aspect=16:9|9:16  ?p=<JSON de parámetros>
+     ?t=<s> congela  ?loop=0 no repite  ?dur=<s> duración de la demo. -->
+<link rel="stylesheet" href="../components/noir.css">
+<script src="../components/core.js"></script>
+<script src="../components/background.js"></script>
+<script src="../components/scenes.js"></script>
+<script src="../components/intro.js"></script>
+<script src="../components/outro-v1.js"></script>
+<script src="../components/outro-v2.js"></script>
+<script>
+  window.__NOIR_BASE = "../";
+  (function () {
+    const q = new URLSearchParams(location.search);
+    if (!q.get("only")) { q.set("only", "noir.stack"); history.replaceState(null, "", "?" + q.toString()); }
+    if (!q.get("aspect")) { q.set("aspect", "16:9"); history.replaceState(null, "", "?" + q.toString()); }
+  })();
+</script>
+</head>
+<body>
+<audio id="audio" preload="none"></audio>
+<div id="stage"><canvas id="bg"></canvas><div id="type"></div><div id="fade"></div><div id="hud"></div></div>
+<script src="../player.js"></script>
+</body>
+</html>

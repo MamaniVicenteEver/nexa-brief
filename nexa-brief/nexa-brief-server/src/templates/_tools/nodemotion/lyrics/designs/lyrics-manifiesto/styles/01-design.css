@@ -1,0 +1,152 @@
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --paper: #F4F2EE; --ink: #0A0A0A; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #060607; cursor: pointer; }
+  body { opacity: 0; transition: opacity 0.7s ease; }
+  body.ready { opacity: 1; }
+
+  /* fondo: video del auto (CONFIG.bg) muy oscurecido; si no hay src, negro editorial puro */
+  #bgFallback {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 70vw 50vh at 22% 12%, rgba(255,255,255,0.035), transparent 65%),
+      radial-gradient(ellipse 60vw 60vh at 82% 88%, rgba(255,255,255,0.02), transparent 70%),
+      linear-gradient(160deg, #101012 0%, #070708 55%, #030304 100%);
+  }
+  #bgMedia {
+    position: fixed; inset: -4%; width: 108%; height: 108%; object-fit: cover; z-index: 0;
+    display: none; animation: bgDrift 52s ease-in-out infinite alternate; will-change: transform;
+  }
+  @keyframes bgDrift {
+    0%   { transform: scale(1.0); }
+    100% { transform: scale(1.06) translate(0.7%, -0.6%); }
+  }
+  /* velo para que el video nunca compita con el tipo */
+  #veil {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 50%, rgba(3,3,4,0.30) 0%, rgba(3,3,4,0.66) 78%, rgba(2,2,3,0.85) 100%);
+  }
+
+  /* metadata viva en las 4 esquinas (V2: sin marco de hairlines alrededor) */
+  .meta {
+    position: fixed; z-index: 6; pointer-events: none;
+    font-family: "Space Grotesk", sans-serif; font-weight: 400;
+    font-size: 1.25vh; letter-spacing: 0.32em; color: rgba(244,242,238,0.55);
+    text-transform: uppercase; white-space: nowrap;
+  }
+  #metaTL { top: 1.1vh; left: 2.4vw; }
+  #metaTR { top: 1.1vh; right: 2.4vw; font-variant-numeric: tabular-nums; }
+  #metaBL { bottom: 1.1vh; left: 2.4vw; font-variant-numeric: tabular-nums; }
+  #metaBR { bottom: 1.1vh; right: 2.4vw; font-variant-numeric: tabular-nums; }
+  body.contraActive .meta { color: rgba(10,10,10,0.62); }
+
+  /* mundo del tipo: push-in lentísimo por lámina (el corte lo resetea en seco) */
+  #world { position: fixed; inset: 0; z-index: 3; will-change: transform; }
+
+  /* LÁMINA: composición editorial a pantalla completa; entra a CORTE (sin transición) */
+  .lamina {
+    position: absolute; inset: 0; display: flex;
+    align-items: center; justify-content: center;
+    color: var(--paper); text-transform: uppercase;
+  }
+  .lamina .inner { transform: scale(var(--fit, 1)); }
+  /* cada palabra se revela EN SECO en su timestamp: visible o no, sin fade */
+  .lamina span.w { visibility: hidden; }
+  .lamina span.w.on { visibility: visible; }
+
+  /* PLENO: la palabra dominante a lo ancho, el resto en línea técnica debajo */
+  .lamina.pleno .inner { display: flex; flex-direction: column; align-items: center; gap: 2.4vh; text-align: center; }
+  .lamina.pleno .big { font-family: "Archivo", sans-serif; font-weight: 900; line-height: 0.86; letter-spacing: -0.015em; white-space: nowrap; }
+  .lamina.pleno .rest { display: flex; gap: 0.5em; font-family: "Space Grotesk", sans-serif; font-weight: 500; font-size: 1.9vh; letter-spacing: 0.44em; white-space: nowrap; }
+
+  /* COLUMNA: bloque a la izquierda con hairline e índice de lámina */
+  .lamina.columna { justify-content: flex-start; }
+  .lamina.columna .inner {
+    margin-left: 9vw; padding-left: 2.2vw; border-left: 1px solid rgba(244,242,238,0.34);
+    display: flex; flex-direction: column; gap: 0.6vh; transform-origin: left center;
+  }
+  .lamina.columna .idx {
+    font-family: "Space Grotesk", sans-serif; font-weight: 400; font-size: 1.5vh;
+    letter-spacing: 0.5em; color: rgba(244,242,238,0.5); margin-bottom: 2.2vh;
+  }
+  .lamina.columna .w { font-family: "Archivo", sans-serif; font-weight: 700; line-height: 1.02; letter-spacing: -0.005em; display: block; white-space: nowrap; }
+
+  /* CONTRA: frame invertido completo — papel pleno, tinta negra (frase clave) */
+  .lamina.contra { background: var(--paper); color: var(--ink); }
+  .lamina.contra .inner { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 0.28em; text-align: center; padding: 0 6vw; }
+  .lamina.contra .w { font-family: "Archivo", sans-serif; font-weight: 900; line-height: 0.9; letter-spacing: -0.01em; white-space: nowrap; }
+
+  /* MICRO: susurro técnico centrado con marcas de registro */
+  .lamina.micro .inner { position: relative; padding: 3.4vh 3.2vw; }
+  .lamina.micro .txt { display: flex; gap: 0.6em; font-family: "Space Grotesk", sans-serif; font-weight: 500; font-size: 2.5vh; letter-spacing: 0.6em; white-space: nowrap; }
+  .lamina.micro .c { position: absolute; width: 1.6vh; height: 1.6vh; border-color: rgba(244,242,238,0.75); border-style: solid; border-width: 0; }
+  .lamina.micro .c1 { top: 0; left: 0; border-top-width: 1px; border-left-width: 1px; }
+  .lamina.micro .c2 { top: 0; right: 0; border-top-width: 1px; border-right-width: 1px; }
+  .lamina.micro .c3 { bottom: 0; left: 0; border-bottom-width: 1px; border-left-width: 1px; }
+  .lamina.micro .c4 { bottom: 0; right: 0; border-bottom-width: 1px; border-right-width: 1px; }
+
+  /* BORDE: palabra sangrada que el margen corta, estilo póster */
+  .lamina.borde { overflow: hidden; }
+  .lamina.borde .inner { position: absolute; inset: 0; transform: none; }
+  .lamina.borde .big {
+    position: absolute; left: 50%; font-family: "Archivo", sans-serif; font-weight: 900;
+    line-height: 0.8; letter-spacing: -0.02em; white-space: nowrap;
+  }
+  /* El modo BORDE conserva la composición pegada al extremo, pero con margen
+     seguro para que el push-in no corte la palabra en móvil ni en desktop. */
+  .lamina.borde .big.abajo { bottom: 2.2vh; transform: translate(-50%, 0) scale(var(--fit, 1)); transform-origin: bottom center; }
+  .lamina.borde .big.arriba { top: 2.2vh; transform: translate(-50%, 0) scale(var(--fit, 1)); transform-origin: top center; }
+  .lamina.borde .rest {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 0.55em; font-family: "Space Grotesk", sans-serif; font-weight: 500;
+    font-size: 1.8vh; letter-spacing: 0.44em; white-space: nowrap;
+  }
+  .lamina.borde .rest.abajo { top: 12vh; }
+  .lamina.borde .rest.arriba { bottom: 12vh; }
+
+  /* corte a blanco de 2 frames cuando entra una CONTRA */
+  #cut { position: fixed; inset: 0; z-index: 7; background: var(--paper); opacity: 0; pointer-events: none; }
+
+  /* grano finísimo — filmico pero casi invisible (minimal) */
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 5; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.035; mix-blend-mode: overlay; animation: gsh 1.1s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+
+  /* intro / outro: claqueta editorial en negro */
+  .cardScreen {
+    position: fixed; inset: 0; z-index: 8; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 2.6vh; text-align: center;
+    transition: opacity 0.9s ease; text-transform: uppercase; background: #060607;
+  }
+  .cardScreen .reg { font-family: "Space Grotesk", sans-serif; font-weight: 400; font-size: 2.4vh; color: rgba(244,242,238,0.5); }
+  .cardScreen .artist { font-family: "Space Grotesk", sans-serif; font-weight: 400; font-size: 1.7vh; letter-spacing: 0.55em; padding-left: 0.55em; color: rgba(244,242,238,0.72); }
+  .cardScreen .title { font-family: "Archivo", sans-serif; font-weight: 900; font-size: 15vh; line-height: 0.9; letter-spacing: -0.015em; color: var(--paper); }
+  .cardScreen .sub { font-family: "Space Grotesk", sans-serif; font-weight: 500; font-size: 2vh; letter-spacing: 0.44em; padding-left: 0.44em; color: var(--paper); }
+  .cardScreen .feats { font-family: "Space Grotesk", sans-serif; font-weight: 400; font-size: 1.3vh; letter-spacing: 0.34em; color: rgba(244,242,238,0.5); margin-top: 2.6vh; }
+  #intro .title { font-size: 23.25vh; }
+  #intro.gone { opacity: 0; pointer-events: none; }
+  #outro { opacity: 0; pointer-events: none; }
+  #outro.show { opacity: 1; pointer-events: auto; }
+  /* La última lámina no debe leerse debajo del cierre. */
+  body.outroActive #world { display: none; }
+
+  /* responsive móvil (solo orientación vertical — desktop queda intacto) */
+  @media (orientation: portrait) {
+    .cardScreen .title { font-size: min(15vh, 17vw); }
+    #intro .title { font-size: min(23.25vh, 26.35vw); }
+    .cardScreen .artist { font-size: min(1.7vh, 3.4vw); letter-spacing: 0.34em; }
+    .cardScreen .sub { font-size: min(2vh, 3.8vw); letter-spacing: 0.3em; }
+    .cardScreen .feats { font-size: min(1.3vh, 2.8vw); letter-spacing: 0.22em; }
+    .lamina.pleno .rest { font-size: min(1.9vh, 3vw); letter-spacing: 0.26em; }
+    .lamina.columna .inner { margin-left: 6vw; padding-left: 3.2vw; }
+    .lamina.columna .idx { font-size: min(1.5vh, 2.8vw); letter-spacing: 0.34em; }
+    .lamina.micro .txt { font-size: min(2.5vh, 3.6vw); letter-spacing: 0.4em; }
+    .lamina.borde .rest { font-size: min(1.8vh, 3vw); letter-spacing: 0.26em; }
+    .lamina.borde .big.abajo { bottom: 10vh; }
+    .lamina.borde .big.arriba { top: 10vh; }
+    .meta { font-size: min(1.25vh, 2.4vw); letter-spacing: 0.2em; }
+  }
+

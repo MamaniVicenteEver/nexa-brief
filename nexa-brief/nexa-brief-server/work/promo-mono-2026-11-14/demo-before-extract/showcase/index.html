@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Promo Mono · componentes</title>
+<!-- Galería de promo-mono. Cada vista es el index.html real congelado (?t=) en el
+     instante de la demo donde se ve el componente. ?only=<name> muestra solo uno;
+     ?aspect=16:9|9:16 fija la proporción. Fuente de las piezas: components.json. -->
+<style>
+  html, body { margin: 0; background: #0d0d0d; color: #ddd; font: 14px/1.4 system-ui, sans-serif; }
+  body { padding: 16px; } body.only { padding: 0; }
+  .g { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+  body.v .g { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+  figure { margin: 0; } .f { position: relative; aspect-ratio: 16 / 9; background: #000; overflow: hidden; border-radius: 6px; }
+  body.v .f { aspect-ratio: 9 / 16; }
+  body.only .g { display: block; } body.only .f { border-radius: 0; width: 100vw; height: 100vh; aspect-ratio: auto; }
+  body.only figcaption { display: none; }
+  iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  figcaption { margin-top: 6px; color: #aaa; }
+</style></head><body>
+<div class="g" id="g"></div>
+<script>
+(async () => {
+  const q = new URLSearchParams(location.search), only = q.get("only"), aspect = q.get("aspect") || "16:9";
+  if (aspect === "9:16") document.body.classList.add("v");
+  if (only) document.body.classList.add("only");
+  const cat = await (await fetch("components.json")).json();
+  const list = cat.components.filter(c => c.preview && c.preview.t != null && (!only || c.name === only));
+  if (only && !list.length) console.warn("componente desconocido o sin vista:", only);
+  const g = document.getElementById("g");
+  for (const c of list) {
+    const extra = c.demo && c.demo.outro ? `&outro=${c.demo.outro}` : "";
+    g.insertAdjacentHTML("beforeend", `<figure><div class="f"><iframe loading="lazy" title="${c.name}" src="../index.html?headless=1&t=${c.preview.t}${extra}"></iframe></div><figcaption><b>${c.name}</b> · ${c.label}</figcaption></figure>`);
+  }
+})();
+</script></body></html>

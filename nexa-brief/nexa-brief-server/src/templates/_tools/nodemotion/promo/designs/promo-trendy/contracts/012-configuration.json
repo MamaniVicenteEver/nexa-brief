@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-trendy",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "lime": {
+      "default": "#A6EB35"
+    },
+    "limeDark": {
+      "default": "#0E1A06"
+    },
+    "paper": {
+      "default": "#F2EFE6"
+    },
+    "ink": {
+      "default": "#101114"
+    },
+    "navy": {
+      "default": "#000012"
+    },
+    "navy2": {
+      "default": "#0B0B24"
+    }
+  },
+  "example": {
+    "lime": "#A6EB35",
+    "limeDark": "#0E1A06",
+    "paper": "#F2EFE6",
+    "ink": "#101114",
+    "navy": "#000012",
+    "navy2": "#0B0B24"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-trendy/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-caution",
+  "id": "config.intro",
+  "entry_id": "config.intro",
+  "name": "intro",
+  "kind": "configuration",
+  "label": "intro",
+  "summary": "Existing configuration configuration: intro.",
+  "params": {
+    "artist": {
+      "default": "Ombré ft. KTHLN"
+    },
+    "title": {
+      "default": "Let Out The Beast"
+    },
+    "album": {
+      "default": ""
+    },
+    "labels": {
+      "default": {
+        "artist": "Artist",
+        "title": "Sound",
+        "album": "Album"
+      }
+    },
+    "cardSec": {
+      "default": 1.0
+    }
+  },
+  "example": {
+    "artist": "Ombré ft. KTHLN",
+    "title": "Let Out The Beast",
+    "album": "",
+    "labels": {
+      "artist": "Artist",
+      "title": "Sound",
+      "album": "Album"
+    },
+    "cardSec": 1.0
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-caution/assets/config.json",
+      "pointer": "/configs/0/intro"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

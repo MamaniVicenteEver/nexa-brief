@@ -1,0 +1,243 @@
+"""Publishing Scheduler — runs token maintenance and, when enabled, publishing:
+
+  1. Token refresh   — proactively refreshes near-expiry tokens, every 15 min.
+  2. Schedule tick    — drives `src.core.schedule.engine.process_tick()`, every
+                         `settings.schedule_tick_interval_seconds` (default 60s):
+                         recovers stale 'publishing' entries, auto-fills gaps
+                         in recurring schedule slots, and publishes anything
+                         whose `scheduled_at` is due.
+
+Why not asyncio-based APScheduler?
+  The FastAPI event loop is not accessible from background threads without
+  a reference.  We pass the loop explicitly at startup via lifespan.
+
+Structured log events:
+  scheduler_started            — APScheduler started (both jobs registered)
+  scheduler_refresh_tick       — scheduled token-refresh cycle begun
+  scheduler_refresh_done       — token-refresh cycle completed
+  scheduler_refresh_error      — exception during a refresh cycle (non-fatal)
+  scheduler_schedule_tick      — scheduled process_tick cycle begun
+  scheduler_schedule_tick_done — process_tick cycle completed
+  scheduler_schedule_tick_error— exception during a process_tick cycle (non-fatal)
+  scheduler_channel_sync_done  — daily channel sync completed (per-account results)
+"""
+
+from __future__ import annotations
+
+import asyncio
+from typing import TYPE_CHECKING
+
+import structlog
+from apscheduler.schedulers.background import BackgroundScheduler
+
+from src.config.settings import settings
+from src.core.schedule import engine
+
+if TYPE_CHECKING:
+    from src.adapters.publishing.publisher_facade import PublisherFacade
+
+logger = structlog.get_logger(__name__)
+
+_REFRESH_INTERVAL_MINUTES = 15
+
+
+async def _refresh_and_notify(facade: "PublisherFacade") -> dict:
+    """Corre `facade.refresh_all_tokens()` y, para cualquier cuenta que haya
+    quedado en `requires_reauth`, crea una notificación de "token vencido" —
+    solo si no hay ya una sin leer para esa cuenta (evita re-notificar en
+    cada tick de 15 min mientras el token siga sin renovarse)."""
+    from src.core import notification_tracker
+    from src.core.notification import Notification
+
+    results = await facade.refresh_all_tokens()
+
+    for account in facade.list_accounts():
+        if account["status"] != "requires_reauth":
+            continue
+        selector = f"{account['platform']}:{account['alias']}"
+        if notification_tracker.exists_unresolved("token_expired", selector):
+            continue
+        await notification_tracker.create(Notification(
+            type="token_expired",
+            severity="warning",
+            title="Token vencido",
+            message=f"La cuenta '{selector}' ({account.get('name', selector)}) necesita reautenticarse.",
+            account_alias=selector,
+        ))
+
+    return results
+
+
+def _register_token_refresh(
+    scheduler: BackgroundScheduler,
+    facade: "PublisherFacade",
+    loop: asyncio.AbstractEventLoop,
+) -> None:
+    """Register the proactive token-refresh job — logic unchanged from before
+    the schedule-engine integration."""
+
+    def _refresh_tick() -> None:
+        """Run one refresh cycle: check all tokens and refresh expiring ones."""
+        logger.info("scheduler_refresh_tick")
+        try:
+            future = asyncio.run_coroutine_threadsafe(
+                _refresh_and_notify(facade), loop
+            )
+            results = future.result(timeout=120)  # Wait up to 2 min for all refreshes
+            logger.info(
+                "scheduler_refresh_done",
+                results=results,
+                accounts_checked=len(results),
+                errors=sum(1 for v in results.values() if v.startswith("error:")),
+            )
+        except Exception as exc:
+            logger.error(
+                "scheduler_refresh_error",
+                error=str(exc),
+                error_type=type(exc).__name__,
+            )
+
+    scheduler.add_job(
+        _refresh_tick,
+        trigger="interval",
+        minutes=_REFRESH_INTERVAL_MINUTES,
+        id="token_refresh",
+        replace_existing=True,
+    )
+
+
+async def _automation_tick() -> dict:
+    """Producción automática del plan + pregrabación (src/core/automation.py)."""
+    from src.core.automation import autoproduce_due, prerecord_due
+    from src.core.schedule.planner import link_production
+    from src.presentation.api.routers.explainer import get_producer, get_recorder
+
+    from datetime import datetime, timezone
+
+    now = datetime.now(timezone.utc)
+    producer = get_producer()
+    await producer.recover_interrupted()
+    produced = await autoproduce_due(now, producer, link_production)
+    recorded = await prerecord_due(now, get_recorder())
+    return {"autoproduced": produced, "prerecorded": recorded}
+
+
+def _register_schedule_tick(
+    scheduler: BackgroundScheduler,
+    facade: "PublisherFacade",
+    loop: asyncio.AbstractEventLoop,
+) -> None:
+    """Register the schedule-engine tick: recovers stale entries, auto-fills
+    recurring slots, and publishes anything due — see
+    `src.core.schedule.engine.process_tick`."""
+
+    def _schedule_tick() -> None:
+        logger.info("scheduler_schedule_tick")
+        try:
+            # Piloto automático (producir planificados + pregrabar) antes de publicar.
+            auto = asyncio.run_coroutine_threadsafe(_automation_tick(), loop).result(timeout=120)
+            if auto["autoproduced"] or auto["prerecorded"]:
+                logger.info("scheduler_automation_done", **auto)
+        except Exception as exc:
+            logger.error("scheduler_automation_error", error=str(exc), error_type=type(exc).__name__)
+        try:
+            future = asyncio.run_coroutine_threadsafe(
+                engine.process_tick(facade), loop
+            )
+            result = future.result(timeout=180)
+            logger.info("scheduler_schedule_tick_done", **result)
+        except Exception as exc:
+            logger.error(
+                "scheduler_schedule_tick_error",
+                error=str(exc),
+                error_type=type(exc).__name__,
+            )
+
+    scheduler.add_job(
+        _schedule_tick,
+        trigger="interval",
+        seconds=settings.schedule_tick_interval_seconds,
+        id="schedule_tick",
+        replace_existing=True,
+        max_instances=1,
+        coalesce=True,
+        misfire_grace_time=55,
+    )
+
+
+def _register_channel_sync(
+    scheduler: BackgroundScheduler,
+    facade: "PublisherFacade",
+    loop: asyncio.AbstractEventLoop,
+) -> None:
+    """Sincronización diaria de Canales (src/core/channel_sync.py): trae los videos nuevos que no
+    publicó Nexa y actualiza vistas/likes y los totales de cada cuenta."""
+
+    def _sync_tick() -> None:
+        logger.info("scheduler_channel_sync_tick")
+        try:
+            results = asyncio.run_coroutine_threadsafe(facade.sync_all_channels(), loop).result(timeout=900)
+            logger.info("scheduler_channel_sync_done", results=results)
+        except Exception as exc:
+            logger.error("scheduler_channel_sync_error", error=str(exc), error_type=type(exc).__name__)
+
+    scheduler.add_job(
+        _sync_tick,
+        trigger="interval",
+        hours=settings.channel_sync_interval_hours,
+        id="channel_sync",
+        replace_existing=True,
+        max_instances=1,
+        coalesce=True,
+    )
+
+
+def start_publishing_scheduler(
+    facade: "PublisherFacade",
+    loop: asyncio.AbstractEventLoop,
+) -> BackgroundScheduler:
+    """Start a background scheduler running both the token-refresh job and the
+    schedule-engine tick.
+
+    Args:
+        facade: The singleton PublisherFacade (must already be initialised).
+        loop:   The asyncio event loop from FastAPI's lifespan context.
+                Pass `asyncio.get_event_loop()` from within the lifespan.
+
+    Returns:
+        The started BackgroundScheduler instance (call .shutdown() on app exit).
+    """
+    scheduler = BackgroundScheduler(daemon=True)
+    _register_token_refresh(scheduler, facade, loop)   # lógica existente, sin cambios
+    _register_schedule_tick(scheduler, facade, loop)
+    if settings.channel_sync_interval_hours > 0:
+        _register_channel_sync(scheduler, facade, loop)
+    scheduler.start()
+
+    logger.info(
+        "scheduler_started",
+        token_refresh_interval_minutes=_REFRESH_INTERVAL_MINUTES,
+        token_refresh_next_run=str(scheduler.get_job("token_refresh").next_run_time),
+        schedule_tick_interval_seconds=settings.schedule_tick_interval_seconds,
+        schedule_tick_next_run=str(scheduler.get_job("schedule_tick").next_run_time),
+    )
+
+    return scheduler
+
+
+def start_token_refresh_scheduler(
+    facade: "PublisherFacade",
+    loop: asyncio.AbstractEventLoop,
+) -> BackgroundScheduler:
+    """Keep refreshable OAuth tokens current without enabling auto-publishing."""
+    scheduler = BackgroundScheduler(daemon=True)
+    _register_token_refresh(scheduler, facade, loop)
+    scheduler.start()
+
+    logger.info(
+        "token_refresh_scheduler_started",
+        token_refresh_interval_minutes=_REFRESH_INTERVAL_MINUTES,
+        token_refresh_next_run=str(scheduler.get_job("token_refresh").next_run_time),
+        auto_publishing=False,
+    )
+    return scheduler

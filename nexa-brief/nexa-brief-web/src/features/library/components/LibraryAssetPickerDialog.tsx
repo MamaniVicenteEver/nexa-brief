@@ -17,6 +17,7 @@ const KIND_LABEL_KEY: Record<LibraryAssetKind, string> = {
   images: "images",
   music: "music",
   videos: "videos",
+  sounds: "sounds",
 };
 
 export function LibraryAssetPickerDialog({
@@ -57,7 +58,7 @@ export function LibraryAssetPickerDialog({
         )}
         <div className="grid max-h-[60vh] grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-3 overflow-y-auto py-1">
           {assets?.map((asset) =>
-            kind === "music" ? (
+            kind === "music" || kind === "sounds" ? (
               <div
                 key={asset.assetId}
                 className="flex flex-col gap-2 rounded-xl border border-nb-line bg-nb-surface p-3"

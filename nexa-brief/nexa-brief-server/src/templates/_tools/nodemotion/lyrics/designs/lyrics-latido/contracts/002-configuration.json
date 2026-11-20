@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-latido",
+  "id": "config.outro",
+  "entry_id": "config.outro",
+  "name": "outro",
+  "kind": "configuration",
+  "label": "outro",
+  "summary": "Existing configuration configuration: outro.",
+  "params": {
+    "leadSec": {
+      "default": 8
+    },
+    "songTitle": {
+      "default": ""
+    },
+    "title": {
+      "default": "Gracias"
+    },
+    "sub": {
+      "default": "Por sentir"
+    },
+    "feats": {
+      "default": "Suscríbete · NEXA BRIEF"
+    }
+  },
+  "example": {
+    "leadSec": 8,
+    "songTitle": "",
+    "title": "Gracias",
+    "sub": "Por sentir",
+    "feats": "Suscríbete · NEXA BRIEF"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-latido/assets/config.json",
+      "pointer": "/configs/0/outro"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

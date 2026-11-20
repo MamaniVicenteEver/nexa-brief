@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-resaltado",
+  "id": "config.book",
+  "entry_id": "config.book",
+  "name": "book",
+  "kind": "configuration",
+  "label": "book",
+  "summary": "Existing configuration configuration: book.",
+  "params": {
+    "markerColors": {
+      "default": [
+        "#FFE066",
+        "#FFE066",
+        "#FFE066",
+        "#FFD24A",
+        "#FFB4A8",
+        "#8ED6C0",
+        "#9FC9FF"
+      ]
+    },
+    "fillerBeforeRange": {
+      "default": [
+        6,
+        9
+      ]
+    },
+    "fillerAfterRange": {
+      "default": [
+        6,
+        9
+      ]
+    },
+    "hlScaleBase": {
+      "default": 1.14
+    },
+    "hlScaleRange": {
+      "default": 0.5
+    },
+    "hlScalePow": {
+      "default": 2.2
+    },
+    "hlTiltMaxDeg": {
+      "default": 1.6
+    },
+    "turnMs": {
+      "default": 520
+    },
+    "turnMsJitter": {
+      "default": 0.18
+    }
+  },
+  "example": {
+    "markerColors": [
+      "#FFE066",
+      "#FFE066",
+      "#FFE066",
+      "#FFD24A",
+      "#FFB4A8",
+      "#8ED6C0",
+      "#9FC9FF"
+    ],
+    "fillerBeforeRange": [
+      6,
+      9
+    ],
+    "fillerAfterRange": [
+      6,
+      9
+    ],
+    "hlScaleBase": 1.14,
+    "hlScaleRange": 0.5,
+    "hlScalePow": 2.2,
+    "hlTiltMaxDeg": 1.6,
+    "turnMs": 520,
+    "turnMsJitter": 0.18
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-resaltado/assets/config.json",
+      "pointer": "/configs/0/book"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

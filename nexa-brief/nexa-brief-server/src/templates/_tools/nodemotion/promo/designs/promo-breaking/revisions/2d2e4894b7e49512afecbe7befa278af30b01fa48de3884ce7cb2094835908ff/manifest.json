@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-breaking",
+  "family": "promo",
+  "demo_folder": "nodemotion/commercial/promo-breaking",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/escenas.js": "runtime/components/scenes.js",
+    "components/intro.js": "runtime/components/intro.js",
+    "components/kit.js": "runtime/components/kit.js",
+    "components/outro-v1.js": "runtime/components/outro-v1.js",
+    "components/outro-v2.js": "runtime/components/outro-v2.js",
+    "components/transiciones.js": "runtime/components/transitions.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "source_sha256": "7adb50047fb6242b1acde8e7627a050ce4cd83d0b7c24e6a1a0dedcf6c6ae3f3",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/promo-breaking",
+    "config": "nodemotion/commercial/promo-breaking/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-breaking/DESIGN.md"
+  },
+  "revision": "2d2e4894b7e49512afecbe7befa278af30b01fa48de3884ce7cb2094835908ff"
+}

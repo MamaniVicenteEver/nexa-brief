@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-sports",
+  "id": "scene.frameWord",
+  "entry_id": "scene.frameWord",
+  "name": "frameWord",
+  "kind": "scene",
+  "label": "frameWord",
+  "summary": "palabra en marco sobre medio",
+  "variants": [
+    {
+      "type": "frameWord",
+      "media": [
+        "sprint"
+      ],
+      "max_text_lines": 1
+    },
+    {
+      "type": "frameWord",
+      "media": [
+        "soccer"
+      ],
+      "wide": true,
+      "max_text_lines": 1
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 9,
+      "type": "frameWord",
+      "shows": "palabra en marco sobre medio",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "sprint",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 11,
+      "type": "frameWord",
+      "shows": "palabra en marco sobre medio",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "soccer",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+    "brand_texts": {},
+    "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-sports.json",
+      "pointer": "/default_scenes/8"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-sports.json",
+      "pointer": "/default_scenes/10"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-sports.json",
+      "pointer": "/scene_cycle/8"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-sports.json",
+      "pointer": "/scene_cycle/10"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

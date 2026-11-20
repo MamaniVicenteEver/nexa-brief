@@ -1,0 +1,33 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "gratitude_rotation_v1",
+  "piece": "gratitude",
+  "locale": "en-US",
+  "status": "draft",
+  "intent": "Rotate identity, reciprocity, belonging and impact; ask for one action at most and never guilt the viewer.",
+  "templates": {
+    "identity": "Thanks for sticking with the details.",
+    "reciprocity": "If this helped, send it to someone who follows {topic}.",
+    "belonging": "Subscribe if you want the next investigation.",
+    "impact": "Your support gives us room to keep checking the facts."
+  },
+  "examples": [
+    "Thanks for staying to the end. If you know someone who works with {topic}, send them this one."
+  ],
+  "conventions": [
+    "Warm and understated; do not make promises about the recommendation algorithm.",
+    "Keep one request per variant and the G1–G4 rotation IDs."
+  ],
+  "sounds_false": [
+    "You are the only reason this channel can survive.",
+    "Watching to the end guarantees YouTube will promote us."
+  ],
+  "overrides": {
+    "variants": {
+      "G1_identidad": "Thanks for sticking with the details. Curiosity is what keeps these investigations going.",
+      "G2_reciprocidad": "Thanks for watching. If this helped, share it with someone who follows {topic}.",
+      "G3_pertenencia": "Thanks for staying. Subscribe if you want to catch the next investigation.",
+      "G4_impacto": "Thanks for giving this your time. Your support helps us keep checking the facts."
+    }
+  }
+}

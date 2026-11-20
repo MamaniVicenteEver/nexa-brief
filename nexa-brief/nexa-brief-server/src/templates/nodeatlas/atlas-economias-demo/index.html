@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es" data-atlas-manual="true"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Las ocho mayores economías · DEMO</title>
+<link rel="stylesheet" href="/api/v1/explainer/files/sandbox/nodehistory/_atlas/assets/fonts/fonts.css">
+<link rel="stylesheet" href="/api/v1/explainer/files/sandbox/nodehistory/_atlas/vendor/maplibre-gl.css">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#stage,#stage>canvas{position:fixed;inset:0;display:block}</style>
+</head><body><audio id="audio" preload="auto"></audio><div id="stage"></div>
+<script src="/api/v1/explainer/files/sandbox/_proto/proto.js"></script><script type="module">
+import {runAtlas} from '/api/v1/explainer/files/sandbox/nodehistory/_atlas/atlas.js';
+const episodeBase = new URL('./', location.href);
+async function readJSON(path) {
+  const url = new URL(path, episodeBase);
+  if (url.origin !== location.origin || !url.pathname.startsWith(episodeBase.pathname)) throw Error('Ruta JSON fuera del episodio');
+  const response = await fetch(url, {cache:'no-cache'});
+  if (!response.ok) throw Error(`Atlas host: HTTP ${response.status} en ${url.pathname}`);
+  return response.json();
+}
+runAtlas({loadData: async () => {
+  const config = await readJSON('assets/config.json');
+  const active = config.configs?.[0];
+  if (!active) throw Error('Atlas host: falta configs[0]');
+  const [scene, lyrics, info] = await Promise.all([
+    readJSON(active.sceneUrl || 'assets/scene.json'),
+    active.lyricsUrl ? readJSON(active.lyricsUrl) : Promise.resolve({segments:[]}),
+    readJSON('info.json')
+  ]);
+  return {config, scene, lyrics, info};
+}}).catch(error => console.error('[atlas-host]', error));
+</script></body></html>

@@ -1,0 +1,28 @@
+from pathlib import Path
+import json
+HERE=Path(__file__).resolve().parent
+p=HERE/'postprocess.py.txt';s=p.read_text()
+a=s.index(' ar=np.array(im);a=ar[:,:,3]');b=s.index('\n return normal,tint,dict',a)
+s=s[:a]+''' # Preserve the PBR paint RGB. The previous batch's grayscale conversion is removed.
+ outer=im.getchannel('A').filter(ImageFilter.MaxFilter(7))
+ border=Image.new('RGBA',size,(10,14,11,0));border.putalpha(outer);border.alpha_composite(im)
+ ar=np.array(border);ar[ar[:,:,3]==0,:3]=0;normal=Image.fromarray(ar)
+ # No identity recoloring: baked military liveries and medical marks must remain intact.
+ tint=Image.new('L',size,0)'''+s[b:]
+s=s.replace("'hoja2", "'hoja3").replace("'sprites2'","'sprites3'").replace("'sprites2.json'","'sprites3.json'")
+s=s.replace('version=2','version=3').replace('samples=16','samples=8').replace('source_size=[1280,1280]','source_size=[1152,1152]')
+s=s.replace('24 variantes · Blender MCP','50 libreas militares · Blender MCP')
+s=s.replace('ATLAS / VEHÍCULOS, FLOTA Y AVIACIÓN','ATLAS / TODO MILITAR')
+s=s.replace("variant=spec['variant'],family=", "variant=spec['variant'],livery=spec['livery'],family=")
+# Build 50 specs, retaining exact scale metadata for every old geometry.
+old=(HERE/'catalog.py.txt').read_text()
+ns={};exec(old,ns)
+specs={}
+for j in json.loads((HERE/'jobs.json').read_text()):
+ spec=dict(ns['SPECS'][j['source']]);spec['livery']=j['livery']
+ if j['base']=='ship-landing-craft':spec['variant']='landing-craft'
+ if j['base']=='ship-oiler':spec['variant']='naval-replenishment'
+ if j['base']=='ship-support-platform':spec['variant']='naval-support-base'
+ specs[j['id']]=spec
+(HERE/'catalog.py.txt').write_text("STATES=('normal','detected','burning','wrecked')\nSPECS="+repr(specs)+'\n')
+p.write_text(s)

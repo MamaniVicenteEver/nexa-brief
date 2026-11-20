@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hoja de control de banderas</title>
+  <style>
+    html, body { margin: 0; background: #e9edf2; font: 15px/1.35 system-ui, sans-serif; }
+    main { width: max-content; margin: 0 auto; padding: 18px; }
+    h1 { margin: 0 0 12px; color: #172033; font-size: 20px; }
+    canvas { display: block; background: #e9edf2; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Mapas · banderas registradas</h1>
+  <canvas id="sheet"></canvas>
+</main>
+<script src="../flags.js"></script>
+<script>
+(() => {
+  const ids = window.Mapas.flags.ids();
+  const cols = 8, cellW = 154, cellH = 100, padX = 12, padY = 10;
+  const canvas = document.getElementById("sheet"), g = canvas.getContext("2d");
+  canvas.width = cols * cellW + 2 * padX;
+  canvas.height = Math.ceil(ids.length / cols) * cellH + 2 * padY;
+  g.fillStyle = "#e9edf2"; g.fillRect(0, 0, canvas.width, canvas.height);
+  ids.forEach((id, i) => {
+    const x = padX + (i % cols) * cellW, y = padY + Math.floor(i / cols) * cellH;
+    g.fillStyle = "#ffffff"; g.strokeStyle = "#cbd2dc"; g.lineWidth = 1;
+    g.beginPath(); g.roundRect(x, y, cellW - 8, cellH - 8, 7); g.fill(); g.stroke();
+    window.Mapas.flags.draw(g, id, x + 13, y + 10, 120, 70);
+    g.strokeStyle = "rgba(20,31,50,.35)"; g.strokeRect(x + 13, y + 10, 120, 70);
+    g.fillStyle = "#172033"; g.font = "600 13px ui-monospace, monospace";
+    g.textAlign = "center"; g.textBaseline = "middle"; g.fillText(id, x + 73, y + 87);
+  });
+  document.body.dataset.flagCount = String(ids.length);
+})();
+</script>
+</body>
+</html>

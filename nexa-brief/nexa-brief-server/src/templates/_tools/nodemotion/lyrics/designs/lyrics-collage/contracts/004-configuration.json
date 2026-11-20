@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-collage",
+  "id": "config.figures",
+  "entry_id": "config.figures",
+  "name": "figures",
+  "kind": "configuration",
+  "label": "figures",
+  "summary": "Existing configuration configuration: figures.",
+  "params": {
+    "items": {
+      "default": [
+        "assets/figures/figure-01.png",
+        "assets/figures/figure-02.png",
+        "assets/figures/figure-03.png",
+        "assets/figures/figure-04.png",
+        "assets/figures/figure-05.png",
+        "assets/figures/figure-06.png",
+        "assets/figures/figure-07.png",
+        "assets/figures/figure-08.png"
+      ]
+    }
+  },
+  "example": {
+    "items": [
+      "assets/figures/figure-01.png",
+      "assets/figures/figure-02.png",
+      "assets/figures/figure-03.png",
+      "assets/figures/figure-04.png",
+      "assets/figures/figure-05.png",
+      "assets/figures/figure-06.png",
+      "assets/figures/figure-07.png",
+      "assets/figures/figure-08.png"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-collage/assets/config.json",
+      "pointer": "/configs/0/figures"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

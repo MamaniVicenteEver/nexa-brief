@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.outroV1",
+  "entry_id": "mono.outroV1",
+  "kind": "component",
+  "label": "Outro v1: logotipo + llamado en píldora",
+  "summary": "Outro v1: logotipo + llamado en píldora",
+  "component": {
+    "name": "mono.outroV1",
+    "label": "Outro v1: logotipo + llamado en píldora",
+    "summary": "Outro v1: logotipo + llamado en píldora",
+    "group": "outro",
+    "default": true,
+    "params": {
+      "size": {
+        "type": "number",
+        "min": 0.5,
+        "max": 1.6,
+        "default": 1.0
+      }
+    },
+    "tags": [
+      "outro"
+    ],
+    "scene_type": "outro",
+    "demo": {
+      "time": 54.0,
+      "outro": "v1"
+    },
+    "preview": {
+      "t": 54.0
+    }
+  },
+  "params": {
+    "size": {
+      "type": "number",
+      "min": 0.5,
+      "max": 1.6,
+      "default": 1.0
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/16"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

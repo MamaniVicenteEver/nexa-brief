@@ -1,0 +1,1 @@
+"""Lyrics project strategy."""

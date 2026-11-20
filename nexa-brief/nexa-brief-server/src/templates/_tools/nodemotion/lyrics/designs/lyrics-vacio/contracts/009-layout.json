@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-vacio",
+  "id": "layout.lonely",
+  "entry_id": "layout.lonely",
+  "name": "lonely",
+  "kind": "layout",
+  "label": "lonely",
+  "summary": "Existing layout configuration: lonely.",
+  "params": {
+    "weight": {
+      "default": 1.8
+    },
+    "media": {
+      "default": [
+        "ocean-figure",
+        "fog-walk",
+        "window-silhouette"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.8,
+    "media": [
+      "ocean-figure",
+      "fog-walk",
+      "window-silhouette"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-vacio/assets/config.json",
+      "pointer": "/configs/0/layouts/lonely"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

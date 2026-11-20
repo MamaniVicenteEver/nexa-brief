@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "grunge-montage.movimiento",
+  "entry_id": "grunge-montage.movimiento",
+  "kind": "component",
+  "label": "Movimiento a cuadros",
+  "summary": "Lenguaje de toda la plantilla: cada 2 cuadros la letra, la tiza y los bordes de papel saltan (temblor tipo stop-motion), ecos desplazados y borrosos detrás de cada palabra, erosión de fotocopia que cambia por cuadros, cortes de toma dentro de la frase (a veces por un agujero de papel), barrido scan al cambiar de escena, polvo, grano y parpadeo de exposición. Se regula con config.fx.",
+  "component": {
+    "name": "grunge-montage.movimiento",
+    "label": "Movimiento a cuadros",
+    "summary": "Lenguaje de toda la plantilla: cada 2 cuadros la letra, la tiza y los bordes de papel saltan (temblor tipo stop-motion), ecos desplazados y borrosos detrás de cada palabra, erosión de fotocopia que cambia por cuadros, cortes de toma dentro de la frase (a veces por un agujero de papel), barrido scan al cambiar de escena, polvo, grano y parpadeo de exposición. Se regula con config.fx.",
+    "default": true,
+    "params": {
+      "scene": {
+        "type": "string",
+        "default": "s45",
+        "doc": "Escena de config.timeline que se muestra"
+      },
+      "duration": {
+        "type": "number",
+        "default": 1.1,
+        "min": 0.5,
+        "max": 6,
+        "doc": "Segundos de la demo"
+      }
+    },
+    "tags": [
+      "escena",
+      "efecto"
+    ],
+    "file": "player.js",
+    "demo": {
+      "scene": "s45"
+    },
+    "preview": {
+      "t": 0.6
+    }
+  },
+  "params": {
+    "scene": {
+      "type": "string",
+      "default": "s45",
+      "doc": "Escena de config.timeline que se muestra"
+    },
+    "duration": {
+      "type": "number",
+      "default": 1.1,
+      "min": 0.5,
+      "max": 6,
+      "doc": "Segundos de la demo"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json",
+      "pointer": "/components/3"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

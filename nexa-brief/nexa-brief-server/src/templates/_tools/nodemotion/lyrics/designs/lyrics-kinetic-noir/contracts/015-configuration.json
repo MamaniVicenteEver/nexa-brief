@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "config.lyricsFilter",
+  "entry_id": "config.lyricsFilter",
+  "name": "lyricsFilter",
+  "kind": "configuration",
+  "label": "lyricsFilter",
+  "summary": "Existing configuration configuration: lyricsFilter.",
+  "params": {
+    "dropPatterns": {
+      "default": [
+        "(?i)subt[ií]tulos",
+        "(?i)amara\\.org",
+        "(?i)thanks for watching",
+        "(?i)music licensing"
+      ]
+    },
+    "maxWordSec": {
+      "default": 3.5
+    }
+  },
+  "example": {
+    "dropPatterns": [
+      "(?i)subt[ií]tulos",
+      "(?i)amara\\.org",
+      "(?i)thanks for watching",
+      "(?i)music licensing"
+    ],
+    "maxWordSec": 3.5
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/assets/config.json",
+      "pointer": "/configs/0/lyricsFilter"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

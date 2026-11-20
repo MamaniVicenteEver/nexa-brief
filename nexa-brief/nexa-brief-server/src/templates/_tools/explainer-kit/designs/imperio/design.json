@@ -1,0 +1,200 @@
+{
+  "id": "imperio",
+  "family": "imperio",
+  "name": "NODEPOLITICS",
+  "tagline": "Atlas cinematográfico: decisiones, tensión y consecuencias humanas sobre mapas; paletas nacionales por país y archivo documental.",
+  "topics": [
+    "política",
+    "geopolítica",
+    "imperios",
+    "guerras",
+    "siglo XX",
+    "historia",
+    "expansión territorial",
+    "doctrinas",
+    "documental"
+  ],
+  "channel": {
+    "name": "NODEPOLITICS",
+    "handle": "youtube.com/@nodepolitics",
+    "language": "es-419",
+    "note": "nombre y handle provisionales: el usuario confirma el canal real"
+  },
+  "fontsCss": "https://fonts.googleapis.com/css2?family=Fjalla+One&family=Montserrat:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Noto+Sans+JP:wght@700&display=swap",
+  "scripts": [
+    "vendor/geo/d3-array.min.js",
+    "vendor/geo/d3-geo.min.js",
+    "vendor/geo/topojson-client.min.js",
+    "vendor/geo/countries-50m.js",
+    "designs/common/text.js",
+    "designs/imperio/components/_imperio.js",
+    "designs/imperio/components/scenes.js",
+    "designs/imperio/components/type.js",
+    "designs/common/hook.js",
+    "designs/common/logo.js",
+    "designs/common/clip.js",
+    "designs/imperio/components/intros.js",
+    "designs/imperio/components/outro.js",
+    "designs/common/tabloid.js",
+    "designs/common/question.js",
+    "designs/imperio/components/campaign.js",
+    "designs/imperio/components/elements.js"
+  ],
+  "defaults": {
+    "family": "imperio",
+    "palette": {
+      "bg": "#7f9bab",
+      "ink": "#f6f6f8",
+      "muted": "#c9ced2",
+      "accent": "#b3122f",
+      "accentInk": "#ffffff",
+      "ocean": "#7f9bab",
+      "land": "#d6d7d2",
+      "sun": "#6c001b",
+      "ray": "#8a0f2a",
+      "native": "#4d5a66",
+      "sub": "#0f1a24"
+    },
+    "fonts": {
+      "main": "Fjalla One",
+      "load": [
+        "400 40px 'Fjalla One'",
+        "500 40px Montserrat",
+        "600 40px Montserrat",
+        "700 40px Montserrat",
+        "800 40px Montserrat",
+        "italic 500 40px Montserrat",
+        "700 40px 'Noto Sans JP'"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 5,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "transition": {
+      "overlap": 0.6
+    },
+    "outro": {
+      "enabled": true,
+      "dur": 5,
+      "thanks": "GRACIAS POR VER",
+      "channel": "NODEPOLITICS",
+      "cta": "SUSCRÍBETE",
+      "support": "Apoya el canal y comparte el video.",
+      "handle": "youtube.com/@nodepolitics",
+      "use": "imperio.outro"
+    },
+    "clip": {
+      "filter": "grayscale(1) contrast(1.35)",
+      "frame": "palette.ink",
+      "dim": 0.18
+    }
+  },
+  "voice": {
+    "voice": "Charon",
+    "alternatives": [
+      "Algenib",
+      "Orus",
+      "Sadaltager"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Narrador de documental geopolítico, voz masculina madura, grave y serena, español latinoamericano neutro (sin ceceo). Firme y neutral: explica, no toma partido. No imitar a ninguna persona real. Ritmo pausado, alrededor de 122 palabras por minuto, con peso en los nombres de países y fechas.",
+    "target_wpm": [
+      115,
+      130
+    ]
+  },
+  "media": {
+    "photos": "fotos de archivo reales (barcos, ejércitos, líderes, firmas, ciudades): se pasan a blanco y negro contrastado y se funden en multiplicar con el mapa; las de cielo claro arriba funcionan mejor (el mapa se ve a través)",
+    "portrait_tip": "imperio.archive recorta 'cover' a pantalla completa: usar focus=[x,y] para el sujeto; lo oscuro de la foto oscurece el mapa",
+    "per_video": [
+      4,
+      8
+    ]
+  },
+  "showcase": {
+    "components": [
+      "imperio.title",
+      "imperio.map",
+      "imperio.expansion",
+      "imperio.archive",
+      "imperio.word",
+      "imperio.native",
+      "imperio.introv1",
+      "imperio.introv2",
+      "imperio.outro",
+      "imperio.outrov2",
+      "imperio.campaign",
+      "imperio.footage",
+      "imperio.date",
+      "imperio.country",
+      "imperio.flag",
+      "imperio.city",
+      "imperio.arrow",
+      "imperio.territory",
+      "imperio.caption",
+      "imperio.sun",
+      "imperio.rays",
+      "imperio.ships",
+      "imperio.compass",
+      "common.flash",
+      "common.lyric"
+    ],
+    "catalog": "designs/imperio/catalog.json",
+    "referenceVideo": "nodeatlas/japon-expansion-prueba",
+    "note": "Componentes del diseño y de los dos videos de referencia; los componentes propios nuevos se incorporan desde la biblioteca de videos.",
+    "backgrounds": {
+      "imperio.date": "#304653",
+      "imperio.caption": "#304653",
+      "imperio.compass": "#304653",
+      "imperio.word": "#304653"
+    }
+  },
+  "editorial": {
+    "id": "imperio-narrador-cinematico-v1",
+    "version": 1,
+    "identity": "Un testigo cercano que reconstruye decisiones sobre el mapa: grave, curioso, preciso y con tensión contenida. Tiene criterio y sensibilidad por el coste humano; habla a una sola persona.",
+    "voice": "Conservar la voz del diseño (Charon) y su español latinoamericano. La personalidad nace de las palabras, las pausas y la intención; no cambiar locutor ni imitar personas reales.",
+    "script_rules": [
+      "Abrir con una acción concreta o su consecuencia verificable y una pregunta dramática. Fecha y lugar entran cuando orientan la escena; no comenzar por rutina con año, efeméride o biografía.",
+      "Construir cada secuencia con situación visible, decisión, obstáculo y consecuencia. El siguiente bloque cambia lo que está en juego; no encadenar una lista de hechos o fechas.",
+      "Alternar frases breves en el peligro con frases más amplias al explicar. Usar presente escénico cuando ayude, con tiempos coherentes. Las pausas dramáticas no cortan ni ralentizan artificialmente la voz.",
+      "La identidad se mantiene en cada video. Permitir un aparte breve cuando una decisión lo merezca: «Fíjate en esa orden» o «Aquí se les acaba el margen». Variar la formulación; no convertirlo en muletilla, chiste sobre víctimas o autopresentación.",
+      "El narrador puede mostrar asombro, duda razonada o una observación humana sin atribuir pensamientos, diálogos, sonidos históricos ni intenciones que las fuentes no documenten.",
+      "Evitar voz de manual escolar, biografías cronológicas, «en este video veremos», moralejas prefabricadas y cadenas repetidas de «pero». El dramatismo procede de decisiones y consecuencias documentadas.",
+      "No reducir una guerra a un solo disparo ni una catástrofe a una sola persona. Mostrar los eslabones de la escalada. Un gancho abre una pregunta cuya respuesta llega con pruebas.",
+      "Antes de TTS, leer el guion en voz alta y revisar cada segmento: qué veo, qué decisión avanza, qué cambia, dónde respira el narrador. Guardar voice_direction y delivery_note sin incluir instrucciones escénicas dentro del texto hablado."
+    ],
+    "openings": [
+      "A / imperio.introv1: solo letras sobre el mapa mundial completo y legible, como el outro. Sin bandera, sol ni rayos detrás del titular.",
+      "B / imperio.introv2: texto grande y fotografía real relevante, sujeto reconocible y palabra clave roja. Ajustar focus y lado de imagen en ambos formatos.",
+      "C / common.tabloid (tercera apertura, no introv3): SIEMPRE texto e imagen real potente. Titular crema sobre tinta oscura, palabra clave carmesí; el rojo editorial no depende de la bandera del país.",
+      "Elegir imágenes que se entiendan a 320 px: rostro, acción u objeto claros. Un cartel lleno de letras no es la imagen principal si hay un sujeto documental pertinente. Registrar image_review y crédito."
+    ],
+    "geography": [
+      "Paleta nacional según el país del plano: map/sun/rays usan flag; campaign/footage/country usan flagColors. auto usa colores actuales; una época histórica exige paleta explícita verificada y SVG real de esa época.",
+      "No usar flag:none/classic como solución genérica: conserva intencionalmente el carmesí japonés. Usar neutral cuando no corresponda una identidad nacional o falte una paleta verificada.",
+      "Separar el rojo editorial (palabra clave, marcador, impacto) de los colores nacionales (bandera, sol y rayos). Ningún efecto convierte colores decorativos en una bandera auténtica.",
+      "Cada giro utiliza una pieza que lo explica: city para el lugar, arrow para avance/orden, country/flag para actores, territory para control, date para plazo, campaign para la cadena de decisiones. Añadir piezas compartidas con contrato y demo solo si falta una función; nunca duplicar motor por episodio."
+    ],
+    "sound": [
+      "Dirigir música por actos: intriga, escalada, clímax y coste humano. Usar pistas de biblioteca con licencia, a nivel bajo con ducking, entradas y salidas de 2–3 s y silencios deliberados. La música acompaña varios tramos, no queda relegada al outro.",
+      "Reservar efectos breves para una marca, llegada, orden, giro o impacto narrado. Los ambientes de una foto/clip cubren toda su ventana; los golpes puntuales siguen el instante de la acción. No añadir whoosh a todas las piezas.",
+      "Conservar voz limpia en audio.narrationSrc. Mezclar voz + stem SFX + stem musical una sola vez; nunca reutilizar como voz una mezcla anterior. Registrar planes, recursos, licencias, créditos y escucha de palabras inteligibles.",
+      "En fase storyboard, el agente aislado declara work/music-plan.json con este esquema: {\"version\":1,\"cues\":[{\"music_asset_id\":\"auto\",\"mood\":\"cinematic\",\"start\":0,\"source_in\":0,\"duration\":20,\"gain_db\":-24,\"fade_in\":2,\"fade_out\":3,\"purpose\":\"intriga\"}]}. Los segundos salen de lyrics.json. auto resuelve una pista instrumental con licencia del perfil. El host ejecuta el plan al crear manifest y bloquea con un error claro si no hay recurso válido; el agente no ejecuta CLI ni descarga. Cambiar mood a tension, suspense, drama, epic o reflective según la escena."
+    ],
+    "review": [
+      "Revisar aperturas A/B/C a 320 px y ambos formatos; B/C requieren foto real reconocible y acento rojo.",
+      "Muestrear planos de Alemania y otros países: los colores nacionales no deben volver al rojo/blanco japonés por un valor forzado.",
+      "Escuchar transiciones y puntos clave con música/SFX: voz inteligible, sin clipping ni huecos añadidos; conservar pruebas y consumo conocido."
+    ]
+  }
+}

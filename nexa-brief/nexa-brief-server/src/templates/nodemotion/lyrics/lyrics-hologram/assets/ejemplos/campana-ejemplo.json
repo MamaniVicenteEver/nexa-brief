@@ -1,0 +1,15 @@
+{
+  "activeId": "campana",
+  "configs": [
+    {
+      "id": "campana",
+      "description": "Ejemplo de campaña: holografía dorada y coral, sección turquesa, Outro v2 y más versos sobre seda.",
+      "palette": { "void": "#0B0907", "night": "#241A10", "red": "#0E7C86", "violet": "#7A2E12", "pale": "#EFE8DC",
+                   "h1": "#FFD98A", "h2": "#FFB3A1", "h3": "#FFF1C9", "h4": "#F08A5D", "h5": "#FFFFFF" },
+      "look": { "labelText": "NODEMOTION LIVE", "glitch": 0.6, "holoSpeed": 1.4 },
+      "layouts": { "verse": { "weight": 3, "bgs": ["holo"] }, "chrome": { "weight": 2, "bgs": ["void"] }, "trio": { "weight": 0 } },
+      "outro": { "version": "v2", "title": "Hasta pronto", "sub": "sigue escuchando", "feats": "NodeMotion" },
+      "seed": 5
+    }
+  ]
+}

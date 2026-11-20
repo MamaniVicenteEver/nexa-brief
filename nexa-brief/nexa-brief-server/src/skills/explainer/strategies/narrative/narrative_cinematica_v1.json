@@ -1,0 +1,313 @@
+{
+  "id": "narrative_cinematica_v1",
+  "label": "Cinematográfica",
+  "name": "CINEMATOGRÁFICA · decisiones que cambian el mapa",
+  "description": "Escenas con identidad narrativa: acción, decisiones, tensión, giro y coste humano; hechos verificables y la misma voz del diseño.",
+  "status": "active",
+  "acts": [
+    {
+      "id": "gancho",
+      "name": "La escena imposible",
+      "weight": "apertura",
+      "intensity": "alta",
+      "function": "Abrir dentro de una acción o consecuencia verificada; dejar una pregunta que exige seguir.",
+      "rules": [
+        "Sin apertura automática con año o biografía. El espectador debe ver el conflicto en la primera frase.",
+        "Adoptar la identidad del diseño; conservar su voz y permitir un aparte breve, natural y pertinente."
+      ]
+    },
+    {
+      "id": "contexto",
+      "name": "Lo que está en juego",
+      "weight": "corto",
+      "intensity": "media",
+      "function": "Dar solo el contexto que hace comprensible la decisión que viene.",
+      "rules": [
+        "Presentar personas, lugares y límites dentro de la acción, sin enumerar antecedentes."
+      ]
+    },
+    {
+      "id": "escalada",
+      "name": "Cada decisión estrecha la salida",
+      "weight": "mayor_parte",
+      "intensity": "alta",
+      "function": "Encadenar decisiones, obstáculos y consecuencias concretas.",
+      "rules": [
+        "Cada secuencia cambia el mapa, el plazo o el riesgo. Alternar presión y respiración; no acumular alarmas vacías.",
+        "Abrir y resolver dudas parciales, variando las transiciones. Fechas y cifras sirven al conflicto."
+      ]
+    },
+    {
+      "id": "giro",
+      "name": "La pieza que faltaba",
+      "weight": "corto",
+      "intensity": "media",
+      "function": "Revelar el dato que cambia cómo entendemos la escena inicial.",
+      "rules": [
+        "Apoyar el giro en fuentes, sin fingir una conspiración ni atribuir pensamientos."
+      ]
+    },
+    {
+      "id": "climax",
+      "name": "El punto sin retorno",
+      "weight": "corto",
+      "intensity": "maxima",
+      "function": "Resolver la pregunta dramática mediante la decisión y sus consecuencias.",
+      "rules": [
+        "Frases cortas y hechos precisos; la música y las marcas siguen el instante narrado."
+      ]
+    },
+    {
+      "id": "consecuencia",
+      "name": "El coste humano",
+      "weight": "medio",
+      "intensity": "baja",
+      "function": "Mostrar quién paga el precio y qué cambia después.",
+      "rules": [
+        "Contención y respeto. No convertir víctimas en un remate ni forzar una moraleja."
+      ]
+    },
+    {
+      "id": "pregunta",
+      "name": "Volver al espectador",
+      "weight": "cierre",
+      "intensity": "media",
+      "function": "Volver a la imagen inicial y plantear una sola pregunta concreta.",
+      "rules": [
+        "Una pregunta corta y abierta; el cierre del canal lo aporta el host."
+      ]
+    },
+    {
+      "id": "outro",
+      "name": "Outro",
+      "weight": "cierre",
+      "intensity": "baja",
+      "spoken": false,
+      "function": "Cierre del canal aportado por el host."
+    }
+  ],
+  "hook": {
+    "rules": [
+      "Comenzar por lo que sucede y por qué importa; las fechas orientan después si hacen falta.",
+      "Solo consecuencias documentadas. La escala dramática no demuestra una causa única.",
+      "La acción debe poder mostrarse con un componente o un medio pertinente."
+    ],
+    "allowed_techniques": [
+      "Acción interrumpida por un obstáculo real",
+      "Consecuencia seguida de una pregunta causal",
+      "Decisión documentada cuyo coste se revela más adelante"
+    ],
+    "prohibited": [
+      "Inventar diálogos, pensamientos, cifras o ruidos de archivo auténticos",
+      "Muletillas de suspenso sin una revelación concreta",
+      "Apertura escolar con año y listado de antecedentes"
+    ]
+  },
+  "retention": [
+    {
+      "id": "decisiones",
+      "name": "Decisión y consecuencia",
+      "act": "escalada",
+      "how": "Cada respuesta abre un obstáculo distinto; alternar escenas y contexto sin repetir una fórmula.",
+      "example": "Una orden llega a la capital. El mapa muestra al destinatario; después, la consecuencia de aceptarla."
+    }
+  ],
+  "voice": {
+    "allowed_tones": {
+      "gancho": [
+        "intriga",
+        "suspenso"
+      ],
+      "escalada": [
+        "tensión",
+        "tensión creciente",
+        "urgencia"
+      ],
+      "climax": [
+        "clímax"
+      ],
+      "consecuencia": [
+        "peso",
+        "dolor contenido"
+      ],
+      "pregunta": [
+        "cercano"
+      ]
+    }
+  },
+  "title": {
+    "image_criteria": [
+      "Prioriza un rostro humano con emoción reconocible, una persona con su caja, escritorios vacíos o un objeto icónico del tema.",
+      "La imagen debe representar el tema sin insinuar que una foto de stock documenta a una persona o un despido real.",
+      "Elige una foto legible a tamaño pequeño, con un sujeto claro y espacio para superponer el titular."
+    ],
+    "default_level": "negro",
+    "levels": {
+      "basico": {
+        "name": "Básico",
+        "description": "Alarma con explicación.",
+        "rules": [
+          "Se entiende sin saber del tema.",
+          "Puede llevar contexto («la IA ya está…»)."
+        ],
+        "examples": {
+          "node_tech": [
+            "La IA ya está dejando sin trabajo a los programadores",
+            "¿Para qué te van a necesitar si la IA programa?"
+          ],
+          "node_history": [
+            "La noche en que Japón casi no se rinde",
+            "La caída de Japón que no te contaron en la escuela"
+          ],
+          "node_politics": [
+            "La próxima elección se puede ganar con un audio falso",
+            "¿Le creerías a este audio de tu candidato?"
+          ]
+        },
+        "script_rules": [
+          "Conservar la precisión y la identidad cinematográfica del diseño: decisiones, tensión y consecuencias, sin convertir el nivel del titular en una sucesión de amenazas.",
+          "El gancho mantiene el alcance exacto de las fuentes; no inventar hechos ni callar un límite que cambie su significado."
+        ]
+      },
+      "medio": {
+        "name": "Medio",
+        "description": "Amenaza directa con «tú».",
+        "rules": [
+          "Segunda persona.",
+          "Una consecuencia que le toca al espectador."
+        ],
+        "examples": {
+          "node_tech": [
+            "La IA te va a reemplazar (y ya empezó)"
+          ],
+          "node_history": [
+            "Japón iba a pelear hasta el último hombre"
+          ],
+          "node_politics": [
+            "Una voz falsa intenta influir en tu voto"
+          ]
+        },
+        "script_rules": [
+          "Conservar la precisión y la identidad cinematográfica del diseño: decisiones, tensión y consecuencias, sin convertir el nivel del titular en una sucesión de amenazas.",
+          "El gancho mantiene el alcance exacto de las fuentes; no inventar hechos ni callar un límite que cambie su significado."
+        ]
+      },
+      "alto": {
+        "name": "Alto",
+        "description": "Sentencia corta, sin salida, que causa miedo e incomodidad; con una cifra o una empresa real cuando la hay.",
+        "rules": [
+          "Frases cortas y secas; nada de «¿sabías que…?» ni «descubre…».",
+          "Amenazas y predicciones en «tú» permitidas («te vas a quedar sin empleo», «tú eres el siguiente»).",
+          "Los hechos concretos (empresa, cifra, fecha) son reales: el más duro que exista, nunca uno inventado.",
+          "Máximo 60 caracteres (title_alarmista_v1)."
+        ],
+        "examples": {
+          "node_tech": [
+            "Te vas a quedar sin empleo",
+            "Miles de despidos. Tú eres el siguiente",
+            "Amazon despidió programadores. ¿Y la IA?"
+          ],
+          "node_history": [
+            "Casi medio millón de medallas sin entregar",
+            "Japón casi no se rinde. Nadie te lo contó"
+          ],
+          "node_politics": [
+            "Una voz falsa apareció antes de la elección",
+            "Te van a hacer votar con una mentira"
+          ]
+        },
+        "script_rules": [
+          "Conservar la precisión y la identidad cinematográfica del diseño: decisiones, tensión y consecuencias, sin convertir el nivel del titular en una sucesión de amenazas.",
+          "El gancho mantiene el alcance exacto de las fuentes; no inventar hechos ni callar un límite que cambie su significado."
+        ]
+      },
+      "negro": {
+        "name": "Negro",
+        "description": "Golpe visceral con brecha de curiosidad; usa hechos comprobables y no pasa de 60 caracteres.",
+        "rules": [
+          "Usa MAYÚSCULAS solo en la palabra clave o fórmula clave («Los están DESPIDIENDO», «LO HICIERON: …»).",
+          "Elige léxico visceral y concreto: fin, despedidos, borrados, trampa.",
+          "No uses condicionales.",
+          "Abre una brecha de curiosidad ocultando quién o qué («¿Quién lo hizo?», «LO HICIERON: …»).",
+          "Usa una pregunta tramposa que exprese el miedo sin presentar una conjetura como hecho.",
+          "Conecta un caso real con una inquietud general sin afirmar que el resultado afecta a todos ni insinuar una causa que no está probada.",
+          "Empresas, cifras, fechas y citas deben estar verificadas y conservar su alcance y atribución; no inventes hechos ni sugieras causalidad sin pruebas.",
+          "Máximo 60 caracteres, incluidos espacios."
+        ],
+        "examples": {
+          "node_tech": [
+            "Amazon DESPIDIÓ a unos 250. ¿Eres el siguiente?",
+            "¿Qué AMENAZA el primer empleo de programador?",
+            "Programador: ¿ya empezó el FIN?"
+          ],
+          "node_history": [
+            "La grabación OCULTA que buscaron en palacio",
+            "¿Quién intentó FRENAR la rendición de Japón?",
+            "Japón: buscaron el disco para FRENAR la rendición"
+          ],
+          "node_politics": [
+            "Un audio FALSO apareció antes de votar en Eslovaquia",
+            "¿Un audio FALSO puede cambiar tu voto?",
+            "¿Quién puso esa voz FALSA a llamar antes de votar?"
+          ]
+        },
+        "script_rules": [
+          "Conservar la precisión y la identidad cinematográfica del diseño: decisiones, tensión y consecuencias, sin convertir el nivel del titular en una sucesión de amenazas.",
+          "El gancho mantiene el alcance exacto de las fuentes; no inventar hechos ni callar un límite que cambie su significado."
+        ]
+      }
+    }
+  },
+  "thumbnail": {
+    "preferred_option": "C",
+    "max_words": 6,
+    "rules": [
+      "C siempre combina titular e imagen real legible a 320 px.",
+      "Conservar tipografía y paleta del diseño. En imperio: tinta oscura, crema y una palabra clave roja.",
+      "Usar accent para la palabra exacta del titular.",
+      "El bullet, si se usa, cita un dato real de la narración.",
+      "Revisar sujeto, recorte y licencia de la imagen y guardar image_review.",
+      "A/B siguen disponibles como alternativas."
+    ],
+    "require_bullet": false,
+    "require_image_review": true
+  },
+  "question": {
+    "act": "pregunta",
+    "screen_max_words": 10,
+    "tone": "cercano",
+    "delivery_note": "Cercana, con peso y una pausa breve; sin tono de promoción.",
+    "do": [
+      "Una pregunta precisa sobre la decisión central del episodio.",
+      "Permitir una observación breve del narrador sin dictar la respuesta."
+    ],
+    "dont": [
+      "Repetir «en serio» o «yo tengo mi opinión» por obligación.",
+      "Like, suscripción y moraleja (pertenecen al outro)."
+    ]
+  },
+  "checks": {
+    "opening_intensity": "alta",
+    "required_acts": [
+      "gancho",
+      "contexto",
+      "escalada",
+      "giro",
+      "climax",
+      "consecuencia",
+      "pregunta"
+    ],
+    "order": [
+      "gancho",
+      "contexto",
+      "escalada",
+      "giro",
+      "climax",
+      "consecuencia",
+      "pregunta"
+    ],
+    "question_on_screen": true,
+    "pinned_repeats_question": true
+  },
+  "examples": {}
+}

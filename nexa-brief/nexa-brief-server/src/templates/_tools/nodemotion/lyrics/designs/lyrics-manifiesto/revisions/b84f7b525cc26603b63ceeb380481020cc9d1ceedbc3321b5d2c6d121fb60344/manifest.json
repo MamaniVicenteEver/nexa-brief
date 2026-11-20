@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-manifiesto",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-manifiesto",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "d1fadcac0eaefc044816f7a5facf984d295642669f815243d222fa9fb880edd1",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-manifiesto",
+    "config": "nodemotion/lyrics/lyrics-manifiesto/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-manifiesto/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-manifiesto/README.md"
+  },
+  "revision": "b84f7b525cc26603b63ceeb380481020cc9d1ceedbc3321b5d2c6d121fb60344"
+}

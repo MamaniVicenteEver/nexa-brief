@@ -1,0 +1,44 @@
+{
+  "manifest_version": 3,
+  "name": "Nexa Connect",
+  "version": "1.0.0",
+  "description": "Conecta una sesión de TikTok abierta con Nexa Brief.",
+  "permissions": ["cookies"],
+  "host_permissions": [
+    "https://*.tiktok.com/*",
+    "https://dev-nexa-brief.everdev.space/*",
+    "https://nexa-brief.everdev.space/*",
+    "http://192.168.20.3:3000/*",
+    "http://localhost:3000/*",
+    "http://127.0.0.1:3000/*"
+  ],
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://dev-nexa-brief.everdev.space/*",
+        "https://nexa-brief.everdev.space/*",
+        "http://192.168.20.3:3000/*",
+        "http://localhost:3000/*",
+        "http://127.0.0.1:3000/*"
+      ],
+      "js": ["content-script.js"],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_title": "Nexa Connect",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}

@@ -1,0 +1,164 @@
+"""QC local secuencial: Whisper CPU int8 + Praat + FFmpeg. No llama TTS.
+nice -n 15 ../../../../../.venv/bin/python -B work/voz/muestras/medir.py.txt
+"""
+import os
+os.environ.update(OMP_NUM_THREADS='2', OPENBLAS_NUM_THREADS='1', MKL_NUM_THREADS='1',
+                  HF_HUB_OFFLINE='1', TOKENIZERS_PARALLELISM='false')
+import sys
+sys.path.insert(0, '/tmp/voz-malvinas-libs')
+import difflib
+import hashlib
+import json
+import math
+from pathlib import Path
+import re
+import subprocess
+import unicodedata
+import numpy as np
+import parselmouth
+from faster_whisper import WhisperModel
+
+R = Path('work/voz/muestras')
+script = json.loads((R / 'script.muestra.json').read_text())
+reference = re.sub(r'<[^>]*>', ' ', ' '.join(s['text'] for s in script['segments']))
+def norm(t):
+    t = ''.join(c for c in unicodedata.normalize('NFD', t.lower()) if not unicodedata.combining(c))
+    return re.findall(r'\b\w+\b', t)
+def dump(p, data):
+    p.write_text(json.dumps(data, ensure_ascii=False, indent=2, allow_nan=False) + '\n')
+def stat(a):
+    a = np.asarray(a, dtype=float)
+    a = a[np.isfinite(a)]
+    return {'n': len(a), 'p10': float(np.percentile(a, 10)), 'median': float(np.median(a)),
+            'p90': float(np.percentile(a, 90)), 'min': float(np.min(a)), 'max': float(np.max(a))} if len(a) else {'n': 0}
+transcripts = {}
+model = None
+for voice in ['algenib', 'orus']:
+    dest = R / f'transcripcion-{voice}.json'
+    if dest.exists():
+        tr = json.loads(dest.read_text())
+    else:
+        if model is None:
+            model = WhisperModel('large-v3', device='cpu', compute_type='int8',
+                                 cpu_threads=2, num_workers=1, local_files_only=True)
+        segs, info = model.transcribe(str(R / f'malvinas-{voice}.wav'), language='es',
+            beam_size=5, word_timestamps=True, vad_filter=False, condition_on_previous_text=False,
+            initial_prompt='Ascensión, Vulcan, Stanley, Super Étendard, Sheffield, Exocet.')
+        tr = {'model': 'faster-whisper large-v3', 'device': 'cpu int8, 2 hilos',
+              'initial_prompt': 'Solo nombres propios, sin guion completo.', 'segments': []}
+        for s in segs:
+            tr['segments'].append({'start': s.start, 'end': s.end, 'text': s.text,
+                'words': [{'word': w.word, 'start': w.start, 'end': w.end,
+                           'probability': w.probability} for w in s.words]})
+        dump(dest, tr)
+    words = [w for s in tr['segments'] for w in s['words']]
+    text = ' '.join(s['text'].strip() for s in tr['segments'])
+    hyp = norm(text)
+    changes = [{'op': op, 'reference': norm(reference)[a:b], 'asr': hyp[c:d]}
+               for op, a, b, c, d in difflib.SequenceMatcher(
+                   a=norm(reference), b=hyp, autojunk=False).get_opcodes() if op != 'equal']
+    gaps = [{'start': a['end'], 'end': b['start'], 'seconds': max(0, b['start'] - a['end']),
+             'after': a['word'], 'before': b['word'],
+             'punctuation': 'sentence' if re.search(r'[.!?]$', a['word'].strip()) else
+                            'comma' if a['word'].strip().endswith(',') else 'none'}
+            for a, b in zip(words, words[1:])]
+    transcripts[voice] = {'text': text, 'word_objects': len(words), 'lexical_words': len(hyp),
+        'reference_words': len(norm(reference)), 'differences': changes, 'gaps': gaps,
+        'word_start': words[0]['start'], 'word_end': words[-1]['end'],
+        'short_word_objects_under_20ms': [w for w in words if round(w['end'] - w['start'], 5) < .02]}
+    print(voice, text, 'diferencias:', changes, flush=True)
+del model
+
+results = {'reference_words': len(norm(reference)), 'reference_text': reference,
+    'method': {'pitch': 'Praat AC, 60–400 Hz, paso 10 ms, voicing threshold 0.5; sin corregir octavas; contraste 75–500 Hz',
+        'pauses': 'Huecos ASR >=120 ms; incluyen aire. Silencio acústico independiente -40 dBFS, mínimo 120 ms.',
+        'ppm_file': '27 palabras del guion / segundos PCM decodificados * 60; comprobar texto ASR.',
+        'ppm_narration': '27 palabras / (fin última palabra - inicio primera), con pausas internas y sin márgenes.',
+        'loudness': 'FFmpeg loudnorm, input_i e input_tp medidos después de decodificar cada archivo.',
+        'subjective_listening': 'No realizada. Edad percibida y aspereza quedan para escucha humana.'},
+    'transcripts': transcripts, 'files': []}
+for voice in ['algenib', 'orus']:
+    tr = transcripts[voice]
+    # WAV originales, MP3 crudos del kit y MP3 procesados: seis mediciones, cuatro comparables.
+    for suffix in ['.wav', '.mp3', '-fx.mp3']:
+        path = R / f'malvinas-{voice}{suffix}'
+        raw = subprocess.check_output(['ffmpeg', '-v', 'error', '-threads', '1', '-i', str(path),
+            '-ac', '1', '-ar', '16000', '-f', 'f32le', '-'])
+        x = np.frombuffer(raw, dtype='<f4').astype(float)
+        duration = len(x) / 16000
+        snd = parselmouth.Sound(x, sampling_frequency=16000)
+        pitch = snd.to_pitch_ac(time_step=.01, pitch_floor=60, pitch_ceiling=400, voicing_threshold=.5)
+        f0 = pitch.selected_array['frequency']
+        f0v = f0[f0 > 0]
+        alt = snd.to_pitch_ac(time_step=.01, pitch_floor=75, pitch_ceiling=500, voicing_threshold=.5)
+        af = np.interp(pitch.xs(), alt.xs(), alt.selected_array['frequency'])
+        valid = (f0 > 0) & (af > 0)
+        delta = 12 * np.log2(af[valid] / f0[valid])
+        command = ['ffmpeg', '-hide_banner', '-nostdin', '-threads', '1', '-i', str(path),
+                   '-af', 'loudnorm=I=-16:TP=-1.5:LRA=9:print_format=json', '-f', 'null', '-']
+        proc = subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, check=True)
+        loud = json.loads(re.search(r'\{\s*"input_i".*?\}', proc.stderr.decode(), re.S).group())
+        silence = subprocess.run(['ffmpeg', '-hide_banner', '-nostdin', '-threads', '1', '-i', str(path),
+            '-af', 'silencedetect=noise=-40dB:d=0.12', '-f', 'null', '-'],
+            stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, check=True).stderr.decode()
+        (R / (path.name + '.silencios.log')).write_text(silence)
+        (R / (path.name + '.volumen.log')).write_text(proc.stderr.decode())
+        starts = [float(v) for v in re.findall(r'silence_start: ([\d.]+)', silence)]
+        ends = [float(v) for v in re.findall(r'silence_end: ([\d.]+)', silence)]
+        silences = [{'start': a, 'end': b, 'seconds': b - a} for a, b in zip(starts, ends)]
+        internal = [g for g in silences if g['start'] > .02 and g['end'] < duration - .02]
+        frames = np.lib.stride_tricks.sliding_window_view(x, 480)[::160]
+        rms = 20 * np.log10(np.maximum(np.sqrt(np.mean(frames**2, axis=1)), 1e-10))
+        times = (np.arange(len(frames)) * 160 + 240) / 16000
+        mask = np.zeros(len(times), dtype=bool)
+        for s in json.loads((R / f'transcripcion-{voice}.json').read_text())['segments']:
+            for w in s['words']:
+                mask |= (times >= w['start']) & (times <= w['end'])
+        span = tr['word_end'] - tr['word_start']
+        gaps = [g['seconds'] for g in tr['gaps'] if g['seconds'] >= .12]
+        long = [g for g in tr['gaps'] if .7 <= g['seconds'] <= 1.1]
+        out = {'file': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(),
+            'duration_decoded_seconds': duration, 'ppm_file': 27 * 60 / duration,
+            'ppm_narration': 27 * 60 / span, 'narration_span_seconds': span,
+            'ASR_pauses_ge120ms': stat(gaps), 'ASR_long_pauses_700_1100ms': len(long),
+            'ASR_long_pauses_per_minute': len(long) * 60 / span,
+            'ASR_sentence_gaps': [g for g in tr['gaps'] if g['punctuation'] == 'sentence'],
+            'ASR_comma_gaps': [g for g in tr['gaps'] if g['punctuation'] == 'comma'],
+            'internal_acoustic_silences': internal, 'all_acoustic_silences': silences,
+            'f0_hz': stat(f0v), 'f0_p10_p90_semitones': float(12 * np.log2(np.percentile(f0v,90)/np.percentile(f0v,10))),
+            'pitch_alt_disagreement_gt9st_percent': float(np.mean(np.abs(delta)>9)*100) if len(delta) else None,
+            'lufs_i': float(loud['input_i']), 'true_peak_dbTP': float(loud['input_tp']),
+            'loudness_range_LU': float(loud['input_lra']),
+            'speech_frame_rms_dbfs': stat(rms[mask]),
+            'clipped_samples_at_16k': int(np.sum(np.abs(x) >= 1)),
+            'within_20_seconds': duration <= 20}
+        results['files'].append(out)
+        print(path.name, 'dur', round(duration,3), 'ppm', round(out['ppm_narration'],1),
+              'F0', round(out['f0_hz']['median'],1), 'span', round(out['f0_p10_p90_semitones'],1),
+              'LUFS', out['lufs_i'], 'dBTP', out['true_peak_dbTP'], flush=True)
+results['method']['acoustic_summary'] = ('Se unen silencios separados por <=40 ms de actividad. '
+    'Se excluyen márgenes. Span acústico: fin del silencio inicial a inicio del silencio final, '
+    'umbral -40 dBFS. ASR puede absorber silencios dentro de palabras; se conserva sin corregir.')
+for f in results['files']:
+    merged = []
+    for x in f['all_acoustic_silences']:
+        if merged and x['start'] - merged[-1]['end'] <= .04:
+            merged[-1]['end'] = x['end']
+            merged[-1]['seconds'] = x['end'] - merged[-1]['start']
+        else:
+            merged.append(dict(x))
+    internal = [x for x in merged if x['start'] > .02 and x['end'] < f['duration_decoded_seconds'] - .02]
+    start = merged[0]['end'] if merged and merged[0]['start'] <= .02 else 0
+    end = merged[-1]['start'] if merged and merged[-1]['end'] >= f['duration_decoded_seconds'] - .02 else f['duration_decoded_seconds']
+    span = end - start
+    lengths = sorted(x['seconds'] for x in internal)
+    longs = [x for x in internal if .7 <= x['seconds'] <= 1.1]
+    f['acoustic_summary'] = {'activity_start': start, 'activity_end': end,
+        'narration_span_seconds': span, 'ppm_narration': 27 * 60 / span,
+        'pause_count_ge120ms': len(lengths), 'pauses': internal,
+        'median_pause_seconds': float(np.median(lengths)) if lengths else None,
+        'sum_pause_seconds': sum(lengths), 'long_700_1100ms': longs,
+        'longs_per_minute': len(longs) * 60 / span,
+        'approx_articulation_ppm_excluding_silences': 27 * 60 / (span - sum(lengths)),
+        'warning': 'Umbral acústico orientativo; fricativas bajas pueden parecer silencio. No prueba respiraciones ni suspiros.'}
+dump(R / 'mediciones.json', results)

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "config.texts",
+  "entry_id": "config.texts",
+  "name": "texts",
+  "kind": "configuration",
+  "label": "texts",
+  "summary": "Existing configuration configuration: texts.",
+  "params": {
+    "label": {
+      "default": "Dueles"
+    },
+    "tags": {
+      "default": [
+        "DIC-97",
+        "NOV-86",
+        "ENE-MAR",
+        "LADO A"
+      ]
+    },
+    "credit": {
+      "default": "Bruses"
+    }
+  },
+  "example": {
+    "label": "Dueles",
+    "tags": [
+      "DIC-97",
+      "NOV-86",
+      "ENE-MAR",
+      "LADO A"
+    ],
+    "credit": "Bruses"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+      "pointer": "/configs/0/texts"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

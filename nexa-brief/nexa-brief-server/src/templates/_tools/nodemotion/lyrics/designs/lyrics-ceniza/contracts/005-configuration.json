@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-ceniza",
+  "id": "config.render",
+  "entry_id": "config.render",
+  "name": "render",
+  "kind": "configuration",
+  "label": "render",
+  "summary": "Existing configuration configuration: render.",
+  "params": {
+    "kbVideo": {
+      "default": true
+    }
+  },
+  "example": {
+    "kbVideo": true
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-ceniza/assets/config.json",
+      "pointer": "/configs/0/render"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

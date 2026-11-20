@@ -4,15 +4,8 @@ import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { flattenCategories, useCategories } from "@/features/categories";
-import { type ProductionState, ProductionStateBadge } from "@/features/explainer";
 import { cn } from "@/lib/utils";
-import {
-  useDeletePlanItemMutation,
-  usePlanItems,
-  usePlannerChatMutation,
-  useProducePlanItemMutation,
-  useSavePlanMutation,
-} from "../hooks/usePlanner";
+import { usePlannerChatMutation, useSavePlanMutation } from "../hooks/usePlanner";
 import type { PlanItem, PlannerMessage, PlannerProvider } from "../types";
 
 const PROVIDERS: PlannerProvider[] = ["deepseek", "claude", "codex"];
@@ -53,96 +46,6 @@ interface Proposal {
   id: number;
   item: PlanItem;
   checked: boolean;
-}
-
-function SavedPlan() {
-  const t = useTranslations("schedule");
-  const [fromDate] = useState(() => toIsoDate(new Date()));
-  const { data: items = [], isLoading } = usePlanItems(fromDate);
-  const produce = useProducePlanItemMutation();
-  const remove = useDeletePlanItemMutation();
-  const lookup = useCategoryLookup();
-
-  return (
-    <div className="flex flex-col gap-2">
-      <h3 className="text-[14px] font-bold text-nb-ink">{t("planner.savedHeading")}</h3>
-      {isLoading && <p className="text-[12.5px] text-nb-mute">{t("planner.loadingSaved")}</p>}
-      {!isLoading && items.length === 0 && (
-        <p className="text-[12.5px] text-nb-mute">{t("planner.savedEmpty")}</p>
-      )}
-      {items.length > 0 && (
-        <div className="overflow-x-auto rounded-2xl border border-nb-line">
-          <table className="w-full min-w-[720px]">
-            <thead className="border-b border-nb-line">
-              <tr>
-                <th className={TH_CLASS}>{t("planner.colDate")}</th>
-                <th className={TH_CLASS}>{t("planner.colCategory")}</th>
-                <th className={TH_CLASS}>{t("planner.colDesign")}</th>
-                <th className={TH_CLASS}>{t("planner.colTopic")}</th>
-                <th className={TH_CLASS}>{t("planner.colProduction")}</th>
-                <th className={TH_CLASS}>
-                  <span className="sr-only">{t("planner.colActions")}</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => {
-                const explainer = lookup.isExplainer(item.categoryPath);
-                const producing = produce.isPending && produce.variables?.itemId === item.itemId;
-                return (
-                  <tr key={item.itemId} className="border-b border-nb-line last:border-0">
-                    <td className={cn(TD_CLASS, "whitespace-nowrap")}>
-                      {item.date} · {item.time}
-                    </td>
-                    <td className={TD_CLASS}>{lookup.label(item.categoryPath)}</td>
-                    <td className={TD_CLASS}>{item.design ?? "—"}</td>
-                    <td className={TD_CLASS}>
-                      <p className="font-semibold text-nb-ink">{item.topic}</p>
-                      {item.angle && <p className="text-[11.5px] text-nb-mute">{item.angle}</p>}
-                    </td>
-                    <td className={TD_CLASS}>
-                      {item.productionState ? (
-                        <ProductionStateBadge state={item.productionState as ProductionState} />
-                      ) : explainer ? (
-                        <span className="text-nb-mute">{t("planner.notProduced")}</span>
-                      ) : (
-                        <span className="text-nb-mute">{t("planner.informational")}</span>
-                      )}
-                    </td>
-                    <td className={cn(TD_CLASS, "whitespace-nowrap text-right")}>
-                      {explainer && !item.productionId && (
-                        <button
-                          type="button"
-                          disabled={producing}
-                          onClick={() =>
-                            produce.mutate(
-                              { itemId: item.itemId },
-                              { onSuccess: () => toast.success(t("planner.produceStarted")) },
-                            )
-                          }
-                          className="mr-2 rounded-full border border-nb-ink px-3 py-1 text-[11.5px] font-semibold text-nb-ink disabled:opacity-50"
-                        >
-                          {producing ? t("planner.producing") : t("planner.produce")}
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        disabled={remove.isPending && remove.variables === item.itemId}
-                        onClick={() => remove.mutate(item.itemId)}
-                        className="text-[11.5px] font-semibold text-red-600 underline-offset-2 hover:underline disabled:opacity-50"
-                      >
-                        {t("slots.delete")}
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </div>
-  );
 }
 
 /** "Planificador con IA": conversa con la IA y guarda el plan de la semana. */
@@ -377,8 +280,6 @@ export function PlannerSection() {
           </div>
         </div>
       )}
-
-      <SavedPlan />
     </section>
   );
 }

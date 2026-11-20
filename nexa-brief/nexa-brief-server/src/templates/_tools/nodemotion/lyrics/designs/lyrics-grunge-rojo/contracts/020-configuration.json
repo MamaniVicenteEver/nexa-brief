@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "config.scenes",
+  "entry_id": "config.scenes",
+  "name": "scenes",
+  "kind": "configuration",
+  "label": "scenes",
+  "summary": "Existing configuration configuration: scenes.",
+  "params": {
+    "deck": {
+      "default": {
+        "linea": 3,
+        "espaciada": 1.2,
+        "gigante": 1.4,
+        "hud": 0.8,
+        "pila": 1,
+        "marco": 0.8,
+        "eco": 0.9,
+        "ancho": 1,
+        "dupla": 1,
+        "flecha": 0.8,
+        "rojo": 1
+      }
+    },
+    "cooldown": {
+      "default": 2
+    }
+  },
+  "example": {
+    "deck": {
+      "linea": 3,
+      "espaciada": 1.2,
+      "gigante": 1.4,
+      "hud": 0.8,
+      "pila": 1,
+      "marco": 0.8,
+      "eco": 0.9,
+      "ancho": 1,
+      "dupla": 1,
+      "flecha": 0.8,
+      "rojo": 1
+    },
+    "cooldown": 2
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/assets/config.json",
+      "pointer": "/configs/0/scenes"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

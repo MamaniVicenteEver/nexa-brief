@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-rasgado",
+  "id": "layout.circle",
+  "entry_id": "layout.circle",
+  "name": "circle",
+  "kind": "layout",
+  "label": "circle",
+  "summary": "Existing layout configuration: circle.",
+  "params": {
+    "weight": {
+      "default": 1.2
+    },
+    "bgs": {
+      "default": [
+        "media",
+        "ink"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.2,
+    "bgs": [
+      "media",
+      "ink"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-rasgado/assets/config.json",
+      "pointer": "/configs/0/layouts/circle"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

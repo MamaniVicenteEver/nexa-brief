@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.date",
+  "description": "Fecha o rango de años blanco con subrayado carmesí; es el sello de la esquina del video, ahora reutilizable por JSON.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Texto de la fecha o del pie de archivo; puede ser un rango de años.",
+      "default": null
+    },
+    "at": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo de entrada, relativo al beat; acepta @palabra.",
+      "default": 0.2
+    },
+    "size": {
+      "type": "number",
+      "minimum": 0.5,
+      "maximum": 2,
+      "description": "Escala respecto al tamaño del video original.",
+      "default": 1
+    },
+    "x": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Posición horizontal normalizada; vacío = la posición original del diseño.",
+      "default": null
+    },
+    "y": {
+      "anyOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Posición vertical normalizada; vacío = la posición original del diseño.",
+      "default": null
+    }
+  },
+  "required": [
+    "text"
+  ],
+  "$defs": {},
+  "examples": [
+    {
+      "text": "1940–41"
+    }
+  ],
+  "x-layer": "overlay",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

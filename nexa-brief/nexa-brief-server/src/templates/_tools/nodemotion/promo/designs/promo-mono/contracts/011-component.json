@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.footage",
+  "entry_id": "mono.footage",
+  "kind": "component",
+  "label": "Metraje a pantalla completa en semitono (o gris) + subtítulo",
+  "summary": "Metraje a pantalla completa en semitono (o gris) + subtítulo + icono",
+  "component": {
+    "name": "mono.footage",
+    "label": "Metraje a pantalla completa en semitono (o gris) + subtítulo",
+    "summary": "Metraje a pantalla completa en semitono (o gris) + subtítulo + icono",
+    "tags": [
+      "escena"
+    ],
+    "scene_type": "footage",
+    "params": {
+      "style": {
+        "type": "string",
+        "options": [
+          "dots",
+          "squares",
+          "gray"
+        ],
+        "default": "dots"
+      },
+      "cell": {
+        "type": "number",
+        "min": 3.0,
+        "max": 20.0,
+        "default": 7.0
+      },
+      "dotsIn": {
+        "type": "boolean",
+        "default": false
+      },
+      "icon": {
+        "type": "string",
+        "options": [
+          "none",
+          "bars",
+          "pause",
+          "play"
+        ],
+        "default": "none"
+      },
+      "subtitle": {
+        "type": "string",
+        "options": [
+          "dash",
+          "plain",
+          "none"
+        ],
+        "default": "dash"
+      },
+      "zoom": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "time": 23.6
+    },
+    "preview": {
+      "t": 23.6
+    }
+  },
+  "params": {
+    "style": {
+      "type": "string",
+      "options": [
+        "dots",
+        "squares",
+        "gray"
+      ],
+      "default": "dots"
+    },
+    "cell": {
+      "type": "number",
+      "min": 3.0,
+      "max": 20.0,
+      "default": 7.0
+    },
+    "dotsIn": {
+      "type": "boolean",
+      "default": false
+    },
+    "icon": {
+      "type": "string",
+      "options": [
+        "none",
+        "bars",
+        "pause",
+        "play"
+      ],
+      "default": "none"
+    },
+    "subtitle": {
+      "type": "string",
+      "options": [
+        "dash",
+        "plain",
+        "none"
+      ],
+      "default": "dash"
+    },
+    "zoom": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/7"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

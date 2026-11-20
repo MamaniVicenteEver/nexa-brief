@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "layout.assemble",
+  "entry_id": "layout.assemble",
+  "name": "assemble",
+  "kind": "layout",
+  "label": "assemble",
+  "summary": "Existing layout configuration: assemble.",
+  "params": {
+    "weight": {
+      "default": 0.8
+    },
+    "bgs": {
+      "default": [
+        "void"
+      ]
+    }
+  },
+  "example": {
+    "weight": 0.8,
+    "bgs": [
+      "void"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+      "pointer": "/configs/0/layouts/assemble"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

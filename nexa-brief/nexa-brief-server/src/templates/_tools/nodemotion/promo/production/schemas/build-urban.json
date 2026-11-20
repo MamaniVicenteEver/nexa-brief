@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/schemas/nodemotion-promo/build-urban.json",
+  "type": "object",
+  "properties": {
+    "template": {
+      "const": "promo-urban"
+    },
+    "texts": {
+      "type": "object",
+      "properties": {
+        "brand.tagTop": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "brand.tagRight": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "brand.year": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8
+        },
+        "brand.blurb": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160
+        }
+      },
+      "required": [
+        "brand.tagTop",
+        "brand.tagRight",
+        "brand.year",
+        "brand.blurb"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "template",
+    "texts"
+  ]
+}

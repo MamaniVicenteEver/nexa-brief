@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "id": "mapas-satelitales",
+  "name": "Mapas satelitales",
+  "category": "nodehistory",
+  "state": "produccion",
+  "family": "mapas-satelitales",
+  "engine_id": "nodehistory/_mapas",
+  "description": "Mapas satelitales, rutas, flechas, banderas y medios para videos.",
+  "revision": "0591c045b23fd42fa79273810ca3fc6d9a2d215cd0c25957b8078f526b331005",
+  "preview_url": "/api/v1/explainer/files/bundled/nodeatlas/mapas-satelitales/_mapas/showcase/index.html?only=map.layer.arrow",
+  "episodes": [],
+  "source_type": "legacy_catalog",
+  "definition_source": "legacy",
+  "visual_styles": {
+    "index": "nodeatlas/mapas-satelitales/_mapas/estilos/index.json",
+    "episode_defaults": {
+      "bolivia-mar": "documentary",
+      "fronteras-demo": "dynamic"
+    }
+  },
+  "production_template": {
+    "folder": "nodeatlas/fronteras-demo",
+    "demo": true,
+    "origin_folder": "nodehistory",
+    "project_id": "fronteras-demo",
+    "title": "Fronteras · prototipo de mapas satelitales",
+    "preview_url": "/api/v1/explainer/files/bundled/nodeatlas/fronteras-demo/index.html"
+  },
+  "engine_root": "nodeatlas/mapas-satelitales/_mapas",
+  "legacy_engine_roots": [
+    "sandbox/nodehistory/_mapas"
+  ]
+}

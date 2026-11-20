@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "id": "lyrics-grunge-rojo",
+  "title": "Grunge Rojo",
+  "summary": "Video de letras grunge: metraje urbano en blanco y negro duro, papel gris rasgado, letra condensada blanca y roja que entra con estela, palabras gigantes con eco, filas repetidas, bloques anchos sobre papel, tiza y pincel rojo, glitch y destellos.",
+  "engine": "lyrics-grunge-rojo (player.js + components/*.js, DOM/SVG/canvas + <video> B/N reutilizados, reloj = audio.currentTime)",
+  "based_on": null,
+  "is_new_design": true,
+  "reference": "Video de Klickpin «Viral Natural Makeup Looks for a Cozy Vibe» (pin 862017184941081840), vista previa de una plantilla grunge con la misma canción que lyrics-grunge. Solo referencia visual: no se copian su metraje ni la marca de su cierre.",
+  "created_at": "2026-11-14",
+  "libraries": [],
+  "state": "lista para revisar",
+  "inputs": {
+    "audio": "song.mp3",
+    "lyrics": "lyrics.json (Whisper)",
+    "config": "config.json",
+    "media": "config.media (videos/imágenes)"
+  },
+  "components": [
+    {
+      "name": "grunge.intro",
+      "label": "Intro",
+      "summary": "Título rojo con estela sobre metraje y papel.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "grunge.outrov1",
+      "label": "Outro v1",
+      "summary": "Rasgado: título gigante con eco.",
+      "group": "outro",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "grunge.outrov2",
+      "label": "Outro v2",
+      "summary": "Collage de frases y franja roja.",
+      "group": "outro",
+      "params": {}
+    },
+    {
+      "name": "grunge.papel",
+      "label": "Papel rasgado",
+      "summary": "Tiras rasgadas arriba y abajo.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "grunge.garabatos",
+      "label": "Tiza y pincel",
+      "summary": "Garabatos sobre las palabras.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "grunge.niebla",
+      "label": "Niebla",
+      "summary": "Neblina sobre el metraje.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "grunge.grano",
+      "label": "Grano",
+      "summary": "Grano de película.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "grunge.desgaste",
+      "label": "Desgaste",
+      "summary": "Tinta gastada en las letras.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "grunge.repaso",
+      "label": "Repaso",
+      "summary": "Frases ya cantadas en silencios largos.",
+      "default": true,
+      "params": {}
+    }
+  ],
+  "catalog": {
+    "components": "showcase/components.json",
+    "gallery": "showcase/index.html"
+  },
+  "notes": "Creada directamente en producción por instrucción expresa del usuario. Canción y transcripción reutilizadas de lyrics-grunge (sin transcribir de nuevo). No habilitada para HyperFrames hasta pasar render_demo.py."
+}

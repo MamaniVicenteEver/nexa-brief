@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "title": "DEMO · Las ocho mayores economías",
+  "design": "atlas-cinematico",
+  "engine": "nodehistory/_atlas",
+  "status": "lista para revisar",
+  "created_at": "2026-11-09",
+  "summary": "Recorrido narrado de Rusia a Estados Unidos por las ocho mayores economías según PIB nominal proyectado2026. Banderas sobre territorios reales, dirigentes persistentes y16regiones con sus actividades económicas.",
+  "based_on": "atlas-cinematico",
+  "is_new_design": true,
+  "libraries": [
+    {
+      "name": "MapLibre GL JS",
+      "version": "6.16.0",
+      "purpose": "Mapa3D y geografía compartida"
+    }
+  ],
+  "inputs": [
+    "research.json:46hechos con fuentes primarias",
+    "assets/script.json:guion revisado,935palabras",
+    "assets/song.mp3:Orus,385.52segundos",
+    "assets/regions.json:16geometrías documentadas"
+  ],
+  "notes": [
+    "Preparación sin render ni publicación, según encargo",
+    "Orus predeterminada; Sulafat alternativa en assets/voice-profile.json",
+    "Auditoría inicial/final y evidencias en work/results/test; usage-report.json",
+    "No atribuir desempeño económico exclusivamente al dirigente mostrado"
+  ],
+  "production_ready": false,
+  "rendered": false,
+  "publication": false,
+  "subjective_listening": false,
+  "subjective_listening_verified": false,
+  "review_notes": [
+    {
+      "operation": "delete",
+      "script_atoms": [
+        65,
+        66
+      ],
+      "transcript_atoms": [
+        65,
+        65
+      ],
+      "expected": "coma",
+      "recognized": "",
+      "start": null,
+      "end": null,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    },
+    {
+      "operation": "delete",
+      "script_atoms": [
+        197,
+        198
+      ],
+      "transcript_atoms": [
+        196,
+        196
+      ],
+      "expected": "coma",
+      "recognized": "",
+      "start": null,
+      "end": null,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    },
+    {
+      "operation": "delete",
+      "script_atoms": [
+        313,
+        315
+      ],
+      "transcript_atoms": [
+        311,
+        311
+      ],
+      "expected": "coma cero",
+      "recognized": "",
+      "start": null,
+      "end": null,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    },
+    {
+      "operation": "delete",
+      "script_atoms": [
+        421,
+        422
+      ],
+      "transcript_atoms": [
+        417,
+        417
+      ],
+      "expected": "coma",
+      "recognized": "",
+      "start": null,
+      "end": null,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    },
+    {
+      "operation": "insert",
+      "script_atoms": [
+        474,
+        474
+      ],
+      "transcript_atoms": [
+        469,
+        470
+      ],
+      "expected": "",
+      "recognized": "veinticinco",
+      "start": 185.35,
+      "end": 185.59,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    },
+    {
+      "operation": "delete",
+      "script_atoms": [
+        512,
+        513
+      ],
+      "transcript_atoms": [
+        508,
+        508
+      ],
+      "expected": "coma",
+      "recognized": "",
+      "start": null,
+      "end": null,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    },
+    {
+      "operation": "replace",
+      "script_atoms": [
+        521,
+        522
+      ],
+      "transcript_atoms": [
+        516,
+        517
+      ],
+      "expected": "takaichi",
+      "recognized": "takeichi",
+      "start": 209.65,
+      "end": 210.21,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    },
+    {
+      "operation": "insert",
+      "script_atoms": [
+        601,
+        601
+      ],
+      "transcript_atoms": [
+        596,
+        597
+      ],
+      "expected": "",
+      "recognized": "para",
+      "start": 241.79,
+      "end": 241.83,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    },
+    {
+      "operation": "delete",
+      "script_atoms": [
+        620,
+        621
+      ],
+      "transcript_atoms": [
+        616,
+        616
+      ],
+      "expected": "coma",
+      "recognized": "",
+      "start": null,
+      "end": null,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    },
+    {
+      "operation": "replace",
+      "script_atoms": [
+        637,
+        638
+      ],
+      "transcript_atoms": [
+        632,
+        633
+      ],
+      "expected": "westfalia",
+      "recognized": "huesfalia",
+      "start": 257.19,
+      "end": 257.57,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    },
+    {
+      "operation": "replace",
+      "script_atoms": [
+        660,
+        661
+      ],
+      "transcript_atoms": [
+        655,
+        656
+      ],
+      "expected": "westfalia",
+      "recognized": "huesfalia",
+      "start": 264.35,
+      "end": 264.85,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    },
+    {
+      "operation": "delete",
+      "script_atoms": [
+        714,
+        715
+      ],
+      "transcript_atoms": [
+        709,
+        709
+      ],
+      "expected": "coma",
+      "recognized": "",
+      "start": null,
+      "end": null,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    },
+    {
+      "operation": "delete",
+      "script_atoms": [
+        802,
+        803
+      ],
+      "transcript_atoms": [
+        796,
+        796
+      ],
+      "expected": "coma",
+      "recognized": "",
+      "start": null,
+      "end": null,
+      "interpretation": "Diferencia RAW ASR para escucha; no demuestra por sí sola una omisión/error del TTS"
+    }
+  ]
+}

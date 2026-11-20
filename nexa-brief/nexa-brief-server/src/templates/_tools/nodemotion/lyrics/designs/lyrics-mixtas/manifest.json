@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-mixtas",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-mixtas",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "d1fef0bdb4a3b4ea0fcf9b99ea01eaa784a3e971d6ccb01d4ec79915bb70b103",
+  "migration_source_sha256": "d1fef0bdb4a3b4ea0fcf9b99ea01eaa784a3e971d6ccb01d4ec79915bb70b103",
+  "migration_runtime_sha256": {
+    "components/intro.js": "6a97cf1ccdebdc009539adc177d728c92c0779d3bc182dba01607fe944e2034f",
+    "components/outro.js": "a55378f1ddbc0e0c0ad3eb40a93dbe87320b24316aaa3b5a486ab42ed2f61092"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-mixtas",
+    "config": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-mixtas/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-mixtas/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "032ef6c4137d79af0a6a55e0439a44fdb308e02a4dc9d057dbb8a6b01c34a4fa.webp",
+    "assets/media/beach-walk-1.jpg": "cda0766346c5a521ee968ed4e4cc75ef18fda50f2dd705ff241d89453c13314d.jpg",
+    "assets/media/beach-walk-2.jpg": "48b87d03737d1a30f9894ed24a16baf4a5c59ea810cf4558f5d67ff9562f9ef4.jpg",
+    "assets/media/beach-walk.mp4": "bc467bccdce1486b514327e8af90a84e51e1b6ff62dec652034ea696077b913e.mp4",
+    "assets/media/graded/beach-walk-1.cine.jpg": "4fda352a3a282db6da318a74c0ce0e9511ff4aac252bd4ea582b30ca1ad1285d.jpg",
+    "assets/media/graded/beach-walk.cine.mp4": "8f6b3a4fa829da3b5e1684d95bb99f7906de6bd9f81697d8876217a43bfe60f9.mp4",
+    "assets/media/graded/match-1.cine.jpg": "b3234897045976d8a8f8f3c4d59b581ffe3eb7396f9aa94ff91f48b8a50f5671.jpg",
+    "assets/media/graded/match.cine.mp4": "73be18454a3b76785f0093e49abb5f81be541a0437a8dfcbc379b42ea8b3be33.mp4",
+    "assets/media/graded/nebula-1.cine.jpg": "e59a3cc9c4feed2aafe78e9366e75b37b3a69e9e4349ffde49900cd4743921f1.jpg",
+    "assets/media/graded/nebula-pink-1.cine.jpg": "e0eceb7987c3277b6c2d04961ea0b321bc7cd195a2e6d0db00d6f5c8aa24fa38.jpg",
+    "assets/media/graded/nebula-pink.cine.mp4": "86229b099e32398b472c6ab97ce054e42b7479b47bc5b3a38bd9180bb200b7c0.mp4",
+    "assets/media/graded/nebula.cine.mp4": "a5de67d1373cd619af6db683af70972ee234a2d100a625fb015895ffc5c1ccbe.mp4",
+    "assets/media/graded/night-walk-1.cine.jpg": "e0850b19ccde0ec0397414a23488eefcd7d2a0e094871dc63c4f10585c4ea474.jpg",
+    "assets/media/graded/night-walk.cine.mp4": "1da0531124bd1e2bc84726c3e62b428f24d99423b8650a14e83eab83fcc0f143.mp4",
+    "assets/media/graded/ocean-1.cine.jpg": "8ffce8d2307c2e6d3b5818b634907e3b03202217f789ff22a6023fc6d077bca2.jpg",
+    "assets/media/graded/ocean.cine.mp4": "6dc25b654c708abc369e84a36c0ec73344de0d54de24aa82b041f845fc3598ed.mp4",
+    "assets/media/match-1.jpg": "af4a69485e44aba79884f6468fdb2f877e4ab60db6a16e5c38559d9557317cbc.jpg",
+    "assets/media/match-2.jpg": "3aa0edc1599ac5a76dcfd7b5122d9b48353411dd80fa717862f074e50212c535.jpg",
+    "assets/media/match.mp4": "bee771fedf9006a4d4964fc55866afe64a79a0cc2fa08d87725bd719c772298f.mp4",
+    "assets/media/nebula-1.jpg": "cc79b0bf4f01475517e5727eba55a279c4467cad51b82aa40b4a2e65e1c4003f.jpg",
+    "assets/media/nebula-2.jpg": "ee49bb028e955d738b49ab4acca307c62378b668956ee3392ea460f12dfae092.jpg",
+    "assets/media/nebula-pink-1.jpg": "dfdaa1e2b4af4ad5486498e5930970b6c188d6f8433c77b39ef032d7aa463cfe.jpg",
+    "assets/media/nebula-pink-2.jpg": "cb58cd5870d6328ee43e5b83473c56b360e753ef8a7dd57b3409216930199eb6.jpg",
+    "assets/media/nebula-pink.mp4": "0ce594fdfcd877df3620d31d06c9a1549e0507b711c68f90c3552bc6169ae09b.mp4",
+    "assets/media/nebula.mp4": "c0fc88660eb07e6db0b38bce20f5ab3081df29549a58cc82dcb0368603a2cb12.mp4",
+    "assets/media/night-walk-1.jpg": "347f8f603c71aabcfcc6768cbceb11e22c8d9901765528258193a7e9ca19c041.jpg",
+    "assets/media/night-walk-2.jpg": "3deb3b9076f41617d063a11460b36db2f5ca934a9f87f344d463ac6fc2c84920.jpg",
+    "assets/media/night-walk.mp4": "43f4b2c50594e4469def002151ac41a227a85f938a157b3242c5a05b71f54930.mp4",
+    "assets/media/ocean-1.jpg": "0c6105df16d893b181660822d76f2c93beac26839e50b2145c4a07619d7e766c.jpg",
+    "assets/media/ocean-2.jpg": "22c32c8e3cda9551df6b0d33b901a56e076cb53edd719c6d8f7e24bd360c6984.jpg",
+    "assets/media/ocean.mp4": "0765416934b9880f51d30ed3e80c924991bc09ff67a4b443db2f58e039f10aba.mp4",
+    "assets/song.mp3": "f57a042edb8411f95dfb167dec304f06f78bef73080db34cbae1f3f80f638b18.mp3"
+  }
+}

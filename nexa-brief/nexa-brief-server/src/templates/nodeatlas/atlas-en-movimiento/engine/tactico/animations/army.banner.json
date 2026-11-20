@@ -1,0 +1,134 @@
+{
+  "name": "army.banner",
+  "family": "army",
+  "estilo": {
+    "usa": [
+      "escalas.ejercito",
+      "estilos.unidad.bandera",
+      "estilos.unidad.guia",
+      "estilos.unidad.marcador",
+      "estilos.unidad.nombre",
+      "estilos.unidad.principal",
+      "estilos.unidad.tipo",
+      "fijos"
+    ]
+  },
+  "description": "Estandarte ondeante con banda biselada, nombre de ejército y fecha. Úsala para representar formaciones de tropas.",
+  "duration": 8.6,
+  "loop": true,
+  "layer": 70,
+  "states": [
+    "normal",
+    "engaged",
+    "routed",
+    "destroyed"
+  ],
+  "params": {
+    "at": {
+      "default": null,
+      "type": "place",
+      "range": null,
+      "description": "Posición: coordenadas [longitud, latitud], lugar o id de otro item."
+    },
+    "path": {
+      "type": "object",
+      "default": null,
+      "range": null,
+      "description": "Trayectoria: puntos via, inicio t, duración dur y curva."
+    },
+    "heading": {
+      "default": "auto",
+      "type": "number|auto",
+      "range": null,
+      "description": "Rumbo en grados; auto sigue la trayectoria."
+    },
+    "flag": {
+      "type": "string",
+      "default": "IQ",
+      "range": null,
+      "description": "Código de país para la bandera."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.35,
+      "max": 2.5,
+      "step": 0.05,
+      "range": {
+        "min": 0.35,
+        "max": 2.5
+      },
+      "description": "Multiplicador del tamaño visual."
+    },
+    "label": {
+      "type": "string",
+      "default": "EJÉRCITO",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "date": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Fecha documentada visible."
+    },
+    "seed": {
+      "default": 23,
+      "type": "number|string",
+      "range": null,
+      "description": "Semilla para que las partículas y variaciones sean reproducibles."
+    },
+    "losses": {
+      "type": "array",
+      "default": [],
+      "doc": "Bajas [{at: segundos relativos, count: entero positivo}]; retira las últimas unidades.",
+      "range": null,
+      "description": "Bajas [{at: segundos relativos, count: entero positivo}]; retira las últimas unidades."
+    },
+    "reinforce": {
+      "type": "array",
+      "default": [],
+      "doc": "Refuerzos [{at: segundos relativos, count: entero positivo}]; entran por el borde.",
+      "range": null,
+      "description": "Refuerzos [{at: segundos relativos, count: entero positivo}]; entran por el borde."
+    },
+    "persist": {
+      "type": "boolean",
+      "default": false,
+      "doc": "Conserva las unidades estacionadas hasta out o fin de escena.",
+      "range": null,
+      "description": "Conserva las unidades estacionadas hasta out o fin de escena."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "army-banner",
+    "t": 0,
+    "type": "army.banner",
+    "at": [
+      48.45,
+      31.2
+    ],
+    "flag": "IQ",
+    "dur": 8,
+    "fade": 0.6,
+    "count": 24,
+    "columns": 6,
+    "radius": 25,
+    "spacing": 59,
+    "wave": 5,
+    "label": "EJÉRCITO",
+    "date": "SEPTIEMBRE · 1980"
+  },
+  "usedBy": [
+    "work/tactico/items-terrestre.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/army.banner.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/sprites/sprites.json"
+  ]
+}

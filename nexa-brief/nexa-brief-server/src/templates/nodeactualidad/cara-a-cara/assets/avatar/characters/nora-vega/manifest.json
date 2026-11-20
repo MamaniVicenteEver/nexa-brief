@@ -1,0 +1,58 @@
+{
+  "id": "nora-vega",
+  "sheets": [
+    {
+      "file": "poses-01.png",
+      "rows": 2,
+      "columns": 2,
+      "width": 1233,
+      "height": 1275
+    },
+    {
+      "file": "poses-02.png",
+      "rows": 2,
+      "columns": 2,
+      "width": 1233,
+      "height": 1276
+    }
+  ],
+  "poses": {
+    "talk": {
+      "sheet": "poses-01.png",
+      "crop": [0.10219, 0.000784, 0.261152, 0.487843]
+    },
+    "point-left": {
+      "sheet": "poses-01.png",
+      "crop": [0.579886, 0.001569, 0.268451, 0.487059]
+    },
+    "point-right": {
+      "sheet": "poses-01.png",
+      "crop": [0.143552, 0.507451, 0.272506, 0.489412]
+    },
+    "think": {
+      "sheet": "poses-01.png",
+      "crop": [0.665856, 0.511373, 0.163017, 0.48549]
+    },
+    "explain": {
+      "sheet": "poses-02.png",
+      "crop": [0.090024, 0.000784, 0.336577, 0.487461]
+    },
+    "surprise": {
+      "sheet": "poses-02.png",
+      "crop": [0.646391, 0.000784, 0.182482, 0.487461]
+    },
+    "celebrate": {
+      "sheet": "poses-02.png",
+      "crop": [0.150041, 0.507837, 0.211679, 0.489028]
+    },
+    "question": {
+      "sheet": "poses-02.png",
+      "crop": [0.585564, 0.508621, 0.310624, 0.489812]
+    }
+  },
+  "crop_measurement": {
+    "method": "Cada figura se delimitó en la imagen original por componentes visibles, con margen de 10 px, y se normalizó respecto al ancho y alto completos.",
+    "review": "Se revisaron visualmente los ocho gestos y se comprobó que cada recorte queda dentro de su celda."
+  },
+  "source": "Generación original con image_gen, 2026-11-04."
+}

@@ -61,7 +61,9 @@ export interface RequirementMediaSlot {
   min: number;
   max: number;
   orientation: "landscape" | "portrait" | "square" | null;
-  target: "source" | "media";
+  /** "config": fondo opcional que va a la ruta `path` del config (si no se sube, queda el de la plantilla). */
+  target: "source" | "media" | "config";
+  path?: string | null;
   label: string;
   hint: string;
 }
@@ -75,8 +77,21 @@ export interface RequirementText {
 }
 
 export interface TemplateRequirements {
+  resourceContext?: {
+    categoryId: string;
+    categoryName: string;
+    templateId: string;
+    templateName: string;
+  };
   audio: { required: boolean; lyrics: "auto" | "optional" | "none" };
   media: RequirementMediaSlot[];
   texts: RequirementText[];
   brief: boolean;
+  /** Lo que la plantilla trae puesto: canción y medios por lugar, en el orden de la plantilla. */
+  defaults?: TemplateRequirementsDefaults;
+}
+
+export interface TemplateRequirementsDefaults {
+  audioAssetId: string | null;
+  media: Record<string, { assetId: string; kind: "image" | "video" }[]>;
 }

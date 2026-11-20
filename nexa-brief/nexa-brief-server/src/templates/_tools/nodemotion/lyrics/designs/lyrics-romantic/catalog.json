@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-romantic",
+  "family": "lyrics",
+  "display_name": "Carta de Amor",
+  "description": "Una carta escrita a mano: líneas que aparecen carácter por carácter, partículas bokeh cálidas y un pulso suave tipo latido en los versos de énfasis.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "background",
+        "kind": "image|video",
+        "count": 1,
+        "orientation": "portrait",
+        "target": "source",
+        "label": "Fondo",
+        "hint": "pareja, atardecer cálido, ambiente romántico"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/lyrics/lyrics-romantic/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-romantic/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/Bruses Dueles Tan Bien Audio.mp3",
+    "assets/bruses_desktop.jpg",
+    "assets/lyrics-bruses-dueles-tan-bien.json",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-romantic",
+    "config": "nodemotion/lyrics/lyrics-romantic/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-romantic/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-romantic/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-romantic/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.bg",
+      "kind": "configuration",
+      "label": "bg",
+      "summary": "Existing configuration configuration: bg.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.bg",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.colors",
+      "kind": "configuration",
+      "label": "colors",
+      "summary": "Existing configuration configuration: colors.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.colors",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.layout",
+      "kind": "configuration",
+      "label": "layout",
+      "summary": "Existing configuration configuration: layout.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.layout",
+      "contract": "contracts/006-configuration.json"
+    },
+    {
+      "entry_id": "config.bokeh",
+      "kind": "configuration",
+      "label": "bokeh",
+      "summary": "Existing configuration configuration: bokeh.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.bokeh",
+      "contract": "contracts/007-configuration.json"
+    }
+  ]
+}

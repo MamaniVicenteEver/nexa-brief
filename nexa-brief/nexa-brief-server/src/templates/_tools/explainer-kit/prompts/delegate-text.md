@@ -1,0 +1,8 @@
+Redacta títulos y descripciones cortas a partir del guion, sin inventar promesas ni hechos.
+TikTok: solo un título breve. Instagram y Facebook: título más una descripción de una o dos frases. YouTube: título y descripción breve. Prioriza claridad, curiosidad y lenguaje cotidiano; nada de presentaciones del personaje, emojis o relleno. En la descripción incluye fuentes y créditos de recursos y música cuando se hayan proporcionado; marca lo que falte.
+Para diálogos usa el contrato editorial y la personalidad adjuntos: pregunta sencilla en divulgación, respuesta temprana y ejemplos visuales cotidianos. Un boletín abre con fecha y cinco a siete noticias verificadas. Escribe para hablar, no como una enciclopedia.
+Devuelve el formato solicitado, con los datos faltantes como pendientes. Conserva cifras y fechas de las fuentes y no generes audios ni vídeos.
+
+## Calidad
+
+Usa solo hechos aportados por la investigación o el guion: no inventes cifras, partidos, finales, declaraciones ni citas. Para cifras, usa la fecha actual proporcionada, prioriza datos verificados de los últimos 12 meses y acompaña cada cifra de su contexto y fecha; si falta evidencia o actualidad, omítela y avisa. Cuando el idioma solicitado sea español, usa español natural; sin emojis, «LETRAS» ni etiquetas ajenas. No rellenes: evita «una historia que continúa» y «un momento increíble»; sí, si consta en los datos: «Dartmouth, 1956: científicos propusieron estudiar la inteligencia artificial». No copies el ejemplo. Si se pide descripción, incorpora créditos aportados de recursos y música: autor, licencia, URL y modificaciones; avisa lo ausente.

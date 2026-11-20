@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-grunge-montage",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-grunge-montage",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "player.js": "runtime/player.js",
+    "showcase/index.html": "runtime/showcase/index.html"
+  },
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "source_sha256": "250b535ffe96833a6d0f54f748b947ca8a6bd3190bf8aa223019154f95cb7733",
+  "migration_source_sha256": "250b535ffe96833a6d0f54f748b947ca8a6bd3190bf8aa223019154f95cb7733",
+  "migration_runtime_sha256": {
+    "player.js": "1d1d296c3270725ff599ede160eade26c5ed1a6f42e9931353a86f6c9b2667d0",
+    "showcase/index.html": "7a47c60ba461063722ba86548c4691521147e0fba361b8f4ecfe6ab3218e4652"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-grunge-montage",
+    "config": "nodemotion/lyrics/lyrics-grunge-montage/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-grunge-montage/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json"
+  }
+}

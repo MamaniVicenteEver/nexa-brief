@@ -1,0 +1,84 @@
+{
+  "design": "lyrics-hologram-worlds",
+  "gallery": "showcase/index.html",
+  "query": {
+    "only": "name",
+    "aspect": "16:9|9:16",
+    "p": "JSON de params",
+    "t": "segundos (congela)"
+  },
+  "components": [
+    {
+      "name": "hw.intro",
+      "label": "Intro · apertura del video",
+      "summary": "Réplica de la apertura (0 a 1,7 s), también portada: emblema blanco, ventana de seda con silueta de perfil enorme y el título en condensada blanca con ecos en contorno, artista en rótulos y tres emblemas holográficos apilados.",
+      "tags": ["intro"],
+      "file": "components/intro.js",
+      "params": {
+        "title": { "type": "string", "default": "THE BADDEST", "doc": "Título (config.intro.title); la palabra más larga va grande y el resto en una placa blanca" },
+        "artist": { "type": "string", "default": "K/DA", "doc": "Artista (config.intro.artist), en rótulos diminutos" },
+        "emblem": { "type": "enum", "values": ["emb-crest", "emb-blades", "emb-star"], "default": "emb-crest", "doc": "Emblema propio" },
+        "silhouette": { "type": "enum", "values": ["sil-profile", "sil-spiky", "sil-bun", "sil-ponytail"], "default": "sil-profile", "doc": "Silueta propia" },
+        "duration": { "type": "number", "default": 1.7, "min": 1, "max": 6, "doc": "Segundos de la demo; las fases se reparten según la duración" }
+      },
+      "demo": { "title": "THE BADDEST", "artist": "K/DA" },
+      "preview": { "t": 0.9 }
+    },
+    {
+      "name": "hw.outrov1",
+      "label": "Outro v1 · palabra gigante y marca",
+      "summary": "Basada en el cierre de la referencia (160 a 163 s): título gigante holográfico con filas del subtítulo, filas de rótulos que corren y tarjeta de marca con emblema y nombre en contorno fino extendido; fundido a negro.",
+      "tags": ["outro"],
+      "file": "components/outro-v1.js",
+      "params": {
+        "title": { "type": "string", "default": "GRACIAS", "doc": "config.outro.title" },
+        "sub": { "type": "string", "default": "POR VER", "doc": "config.outro.sub" },
+        "feats": { "type": "string", "default": "SUSCRÍBETE · NODEMOTION", "doc": "config.outro.feats" },
+        "split": { "type": "number", "default": 0.18, "min": 0.1, "max": 0.7, "doc": "Fracción del cierre con la palabra gigante" },
+        "fadeSec": { "type": "number", "default": 0.8, "min": 0, "max": 3, "doc": "Fundido final a negro" },
+        "duration": { "type": "number", "default": 7, "min": 2, "max": 20, "doc": "Segundos de la demo" }
+      },
+      "demo": {},
+      "preview": { "t": 1.0 }
+    },
+    {
+      "name": "hw.outrov2",
+      "label": "Outro v2 · tarjeta y seda",
+      "summary": "Basada en el final de la referencia (161 a 175 s): título en contorno fino extendido sobre el negro azulado y una pared de seda holográfica que entra desde la derecha y queda a pantalla completa con la línea final en tinta, hasta el corte a negro.",
+      "tags": ["outro"],
+      "file": "components/outro-v2.js",
+      "params": {
+        "title": { "type": "string", "default": "GRACIAS", "doc": "config.outro.title" },
+        "sub": { "type": "string", "default": "POR VER", "doc": "config.outro.sub" },
+        "feats": { "type": "string", "default": "SUSCRÍBETE · NODEMOTION", "doc": "config.outro.feats" },
+        "split": { "type": "number", "default": 0.32, "min": 0.15, "max": 0.6, "doc": "Momento en que entra la seda (fracción)" },
+        "blackSec": { "type": "number", "default": 0.12, "min": 0, "max": 1, "doc": "Corte a negro final" },
+        "duration": { "type": "number", "default": 7, "min": 2, "max": 20, "doc": "Segundos de la demo" }
+      },
+      "demo": {},
+      "preview": { "t": 4.5 }
+    },
+    {
+      "name": "hw.compose",
+      "label": "Escena compuesta por datos",
+      "summary": "Mundo de fondo (void, holo, red, redflat, purple, violet, pale, ice, split) y lista de elementos: text, rep, col, box, img (arte propio con relleno holo, blanco, tinta, dorado o tal cual), media, shape, orn, lab, ring, diag, dots y flash, con entradas (slide, stamp, glitch, spread, scatter, words, wipe, pop, rise, fade) y movimiento (mv, zm, rv). Es la pieza de todas las escenas de la línea de tiempo.",
+      "tags": ["escena"],
+      "file": "components/worlds.js",
+      "params": {
+        "bg": { "type": "enum", "values": ["void", "holo", "red", "redflat", "purple", "violet", "pale", "ice", "split", "media"], "default": "void", "doc": "Mundo de fondo" },
+        "els": { "type": "array", "default": [], "doc": "Elementos (ver cabecera de components/worlds.js)" },
+        "duration": { "type": "number", "default": 3, "min": 0.5, "max": 10, "doc": "Segundos de la demo" }
+      },
+      "demo": {
+        "bg": "void",
+        "els": [
+          { "k": "img", "s": "sil-lineup", "x": 0.5, "y": 0.62, "h": 0.9, "fill": "#040407" },
+          { "k": "box", "x": 0.2, "y": 0.42, "w": 0.1, "h": 0.17, "fill": "white", "in": "wipeL", "at": 0.05 },
+          { "k": "text", "t": "THE", "h": 0.03, "x": 0.215, "y": 0.455, "ax": 0, "fill": "ink", "in": "cut", "at": 0.1 },
+          { "k": "text", "t": "BADDEST", "h": 1, "maxw": 0.45, "x": 0.555, "y": 0.5, "fill": "holo", "in": "slide", "at": 0.08 }
+        ]
+      },
+      "preview": { "t": 1.2 }
+    }
+  ]
+}

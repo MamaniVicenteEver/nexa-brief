@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-romantic",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-romantic",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/Bruses Dueles Tan Bien Audio.mp3",
+    "assets/bruses_desktop.jpg",
+    "assets/lyrics-bruses-dueles-tan-bien.json",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "88974837eb4b7f38980115e2fffb6ae6f03d753b818f95f2b37d2f29760f48cc",
+  "migration_source_sha256": "88974837eb4b7f38980115e2fffb6ae6f03d753b818f95f2b37d2f29760f48cc",
+  "migration_runtime_sha256": {
+    "components/intro.js": "ffb8f6d7970a931a8b6bc5d50a3522c21355fe93ab1aaf98452802045ecbb08a",
+    "components/outro.js": "f4e68c1543473cbd29e99746de062716b7f7ff7e850202fc1621870ca7fff24c"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-romantic",
+    "config": "nodemotion/lyrics/lyrics-romantic/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-romantic/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-romantic/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/Bruses Dueles Tan Bien Audio.mp3": "7879c27751e8902bbfc5d07c8d10261645b3625ca85203a9aef9121f0a7d01b5.mp3",
+    "assets/bruses_desktop.jpg": "9fca4ff9374e1490daee9498e2434696edb9d27bc3d51b6ad8c4edb5f00443a7.jpg",
+    "assets/bruses_movil.jpg": "ee920f95e19191e2a2927e94b84864e1cf8c161d33abc95d68f036397ac3b695.jpg",
+    "assets/card-poster.webp": "e824b1ad7bfd411080f2d389a4fa81eec7146f3118a937ff383a6c155d369024.webp"
+  }
+}

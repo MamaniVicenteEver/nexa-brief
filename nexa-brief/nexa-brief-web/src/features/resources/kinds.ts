@@ -14,6 +14,7 @@ export function toApiKind(kind: ResourceKind): LibraryAssetKind {
 export const ACCEPT_BY_KIND: Record<LibraryAssetKind, string> = {
   images: "image/*",
   music: "audio/*,.mp3,.wav,.m4a,.ogg,.flac,.aac",
+  sounds: "audio/*,.mp3,.wav,.m4a,.ogg,.flac,.aac",
   videos: "video/*,.mp4,.mov,.webm,.mkv",
 };
 

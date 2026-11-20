@@ -5,6 +5,8 @@
 > ```js``` listo para guardar como `components/<familia>/<archivo>.js`.
 > Versión 5 (afinada en 5 rondas con DeepSeek V4.1 Flash + ciclo de reparación automático; ver `prompts/NOTAS-deepseek.md`).
 
+En producción: máximo dos rondas de revisión por componente. Si no aprueba, descartarlo y usar el catálogo; no detener la producción por ese elemento.
+
 ---
 
 Sos un motion designer y programador senior. Escribís **un componente** para un motor de
@@ -237,3 +239,7 @@ forma se arme: `B.fadeIO(lt, b.dur, 0.6, 0.45, (p.morph ?? 1) * 0.5)`. Incluí `
 - [ ] Ningún texto se pisa con otro ni con un trazo (calculá sus cajas).
 
 Respondé SOLO con el bloque ```js``` (sin explicación antes ni después).
+
+## Calidad
+
+Los textos de ejemplo deben estar vinculados al tema y datos recibidos: evita «UNA IDEA» y «EN MOVIMIENTO»; sí, si consta: «DARTMOUTH · 1956». No inventes cifras ni citas; incluye contexto y fecha de cualquier cifra. Español natural, sin emojis, «LETRAS» ni etiquetas ajenas. Mantén intacto el contrato de salida JS.

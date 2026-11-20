@@ -1,0 +1,570 @@
+{
+  "quality": {
+    "icon_share": 0.0,
+    "distinct_components": 4,
+    "custom_components_used": 2,
+    "media_per_min": 0.999,
+    "hedge_hits_hook": 0,
+    "lyric_cuts": 0,
+    "style_media": {
+      "version": 1,
+      "design": "imperio",
+      "media": [
+        {
+          "beat": 1,
+          "component": "imperio.footage",
+          "slot": "video",
+          "kind": "video",
+          "src": "assets/media/plate-bandera.mp4",
+          "start": 10.23,
+          "end": 19.79,
+          "duration": 9.56
+        },
+        {
+          "beat": 3,
+          "component": "imperio.campaign",
+          "slot": "plates[0]",
+          "kind": "video",
+          "src": "assets/media/plate-ejercito.mp4",
+          "start": 52.17,
+          "end": 60.17,
+          "duration": 8.0
+        },
+        {
+          "beat": 3,
+          "component": "imperio.campaign",
+          "slot": "plates[1]",
+          "kind": "video",
+          "src": "assets/media/plate-china.mp4",
+          "start": 61.27,
+          "end": 69.27,
+          "duration": 8.0
+        },
+        {
+          "beat": 3,
+          "component": "imperio.campaign",
+          "slot": "plates[2]",
+          "kind": "photo",
+          "src": "assets/media/foto-camiones-ejercito.jpg",
+          "start": 70.0,
+          "end": 77.0,
+          "duration": 7.0
+        },
+        {
+          "beat": 3,
+          "component": "imperio.campaign",
+          "slot": "plates[3]",
+          "kind": "video",
+          "src": "assets/media/plate-java.mp4",
+          "start": 92.37,
+          "end": 101.37,
+          "duration": 9.0
+        },
+        {
+          "beat": 3,
+          "component": "imperio.campaign",
+          "slot": "plates[4]",
+          "kind": "photo",
+          "src": "assets/media/foto-tropas-java-1942.jpg",
+          "start": 103.5,
+          "end": 111.5,
+          "duration": 8.0
+        }
+      ],
+      "coverage": "main media and imperio.campaign plates; graphics excluded",
+      "audio": {
+        "supports": [
+          {
+            "asset_id": "4d548e2e527a45acbb9f013555c3f881",
+            "start": 52.17,
+            "end": 60.17,
+            "duration": 8.0,
+            "complete": true
+          },
+          {
+            "asset_id": "6c8600a9bee845d7b93b4203ff5d0e83",
+            "start": 61.27,
+            "end": 69.27000000000001,
+            "duration": 8.000000000000007,
+            "complete": true
+          },
+          {
+            "asset_id": "4d548e2e527a45acbb9f013555c3f881",
+            "start": 70.0,
+            "end": 77.0,
+            "duration": 7.0,
+            "complete": true
+          },
+          {
+            "asset_id": "52c9ba704dc94209af5874ea54b9b669",
+            "start": 92.37,
+            "end": 101.37,
+            "duration": 9.0,
+            "complete": true
+          },
+          {
+            "asset_id": "52c9ba704dc94209af5874ea54b9b669",
+            "start": 103.5,
+            "end": 111.5,
+            "duration": 8.0,
+            "complete": true
+          }
+        ],
+        "status": "checked"
+      }
+    },
+    "media_relevance": {
+      "policy_version": 4,
+      "required": false,
+      "media_beats": 2,
+      "reviewed": 0,
+      "generic_beats": 0,
+      "reused_sources": 0,
+      "status": "legacy"
+    }
+  },
+  "video_id": "japon-expansion-prueba",
+  "design": "imperio",
+  "design_name": "NODEPOLITICS",
+  "channel": "NODEATLAS",
+  "pipeline_type": "explainer_kit",
+  "title": "LA EXPANSIÓN DEL IMPERIO JAPONÉS",
+  "kicker": "ASIA Y EL PACÍFICO · 1868–1942",
+  "language": "es-419",
+  "duration_seconds": 120.14,
+  "script": {
+    "segments": 13,
+    "words": 254,
+    "arc": [
+      {
+        "id": "s01",
+        "tone": "intriga",
+        "intensity": 0.6
+      },
+      {
+        "id": "s02",
+        "tone": "explicativo",
+        "intensity": 0.55
+      },
+      {
+        "id": "s03",
+        "tone": "explicativo",
+        "intensity": 0.58
+      },
+      {
+        "id": "s04",
+        "tone": "explicativo",
+        "intensity": 0.62
+      },
+      {
+        "id": "s05",
+        "tone": "explicativo",
+        "intensity": 0.6
+      },
+      {
+        "id": "s06",
+        "tone": "explicativo",
+        "intensity": 0.55
+      },
+      {
+        "id": "s07",
+        "tone": "tensión",
+        "intensity": 0.72
+      },
+      {
+        "id": "s08",
+        "tone": "tensión",
+        "intensity": 0.75
+      },
+      {
+        "id": "s09",
+        "tone": "tensión",
+        "intensity": 0.76
+      },
+      {
+        "id": "s10",
+        "tone": "clímax",
+        "intensity": 0.9
+      },
+      {
+        "id": "s11",
+        "tone": "tensión",
+        "intensity": 0.85
+      },
+      {
+        "id": "s12",
+        "tone": "tensión",
+        "intensity": 0.85
+      },
+      {
+        "id": "s13",
+        "tone": "conclusión",
+        "intensity": 0.7
+      }
+    ]
+  },
+  "voice": {
+    "voice": "Charon",
+    "provenance": [
+      {
+        "part": 0,
+        "model": "gemini-3.8-flash-tts",
+        "voice": "Charon",
+        "dur": 112.92
+      }
+    ],
+    "wpm": 135,
+    "wer_aprox": 0.008,
+    "faltan": [
+      "sajalin"
+    ],
+    "sobran": [
+      "sahalin"
+    ]
+  },
+  "transcript": {
+    "words": 220,
+    "fake": false
+  },
+  "storyboard": {
+    "beats": 5,
+    "moments": 25,
+    "components": {
+      "imperio.title": 1,
+      "imperio.footage": 1,
+      "imperio.word": 2,
+      "imperio.campaign": 1
+    },
+    "lyrics_moments": 0
+  },
+  "media": [
+    "plate-bandera.mp4 — Video — doktorkleinmusic (Pixabay) — Pixabay Content License — https://pixabay.com/videos/id-373890/",
+    "plate-ejercito.mp4 — Djawa Baharoe (6).webm — Djawa Eiga Kosha (producer) — Public domain — https://commons.wikimedia.org/wiki/File:Djawa_Baharoe_(6).webm",
+    "plate-china.mp4 — Why We Fight- The Battle of China.webm — US National Archives — Public domain — https://commons.wikimedia.org/wiki/File:Why_We_Fight-_The_Battle_of_China.webm",
+    "plate-java.mp4 — Chabar Dai Toa (31).webm — Nippon Eigasha (producer) — Public domain — https://commons.wikimedia.org/wiki/File:Chabar_Dai_Toa_(31).webm",
+    "foto-camiones-ejercito.jpg — Fotograma a 00:03 de plate-ejercito.mp4 (Djawa Baharoe (6).webm) — Djawa Eiga Kosha (producer) — Public domain — https://commons.wikimedia.org/wiki/File:Djawa_Baharoe_(6).webm — Material ilustrativo del Ejército Imperial; no se atribuye a una batalla o territorio específico.",
+    "foto-tropas-java-1942.jpg — Fotograma a 00:03 de plate-java.mp4 (Chabar Dai Toa (31).webm) — Nippon Eigasha (producer) — Public domain — https://commons.wikimedia.org/wiki/File:Chabar_Dai_Toa_(31).webm — Material ilustrativo de tropas japonesas en Java, 1942; no se presenta como registro de Indochina."
+  ],
+  "video_formats": [
+    {
+      "id": "reels",
+      "aspect_ratio": "9:16",
+      "width": 1080,
+      "height": 1920,
+      "output_filename": "render/japon-expansion-prueba-9x16.mp4"
+    },
+    {
+      "id": "youtube",
+      "aspect_ratio": "16:9",
+      "width": 1920,
+      "height": 1080,
+      "output_filename": "render/japon-expansion-prueba-16x9.mp4"
+    }
+  ],
+  "files": {
+    "PLAN.md": 5675,
+    "assets/audio-poc/biblioteca-demo.html": 9474,
+    "assets/audio-poc/comparacion-gemini.mp3": 217590,
+    "assets/audio-poc/comparacion-original.mp3": 649551,
+    "assets/audio-poc/comparacion-sfxmint.mp3": 649551,
+    "assets/audio-poc/comparacion-soundza.mp3": 649551,
+    "assets/audio-poc/evaluacion-automatica.txt": 1137,
+    "assets/audio-poc/gemini-experimento.mp3": 193580,
+    "assets/audio-poc/gemini-experimento.wav": 1536044,
+    "assets/audio-poc/gemini-result.json": 507,
+    "assets/audio-poc/index.html": 6396,
+    "assets/audio-poc/integrated-result-v2.json": 1666,
+    "assets/audio-poc/integrated-result-v3.json": 3392,
+    "assets/audio-poc/integrated-result-v4.json": 3056,
+    "assets/audio-poc/integrated-result.json": 1144,
+    "assets/audio-poc/integrated-verification.json": 514,
+    "assets/audio-poc/library-preview.json": 8398,
+    "assets/audio-poc/library-registered.json": 913,
+    "assets/audio-poc/manifest-poc.json": 1625,
+    "assets/audio-poc/mezcla-sfxmint.mp3": 2884588,
+    "assets/audio-poc/mezcla-soundza.mp3": 2884588,
+    "assets/audio-poc/sfxmint-aviones.mp3": 137132,
+    "assets/audio-poc/sfxmint-aviones.wav": 998714,
+    "assets/audio-poc/sfxmint-pasos.mp3": 136556,
+    "assets/audio-poc/sfxmint-pasos.wav": 992554,
+    "assets/audio-poc/sfxmint-result.json": 1098,
+    "assets/audio-poc/sfxmint-vehiculos.mp3": 172844,
+    "assets/audio-poc/sfxmint-vehiculos.wav": 1257966,
+    "assets/audio-poc/sound-catalog.json": 5439,
+    "assets/audio-poc/soundza-aviones.mp3": 169964,
+    "assets/audio-poc/soundza-aviones.wav": 1859060,
+    "assets/audio-poc/soundza-pasos.mp3": 126764,
+    "assets/audio-poc/soundza-pasos.wav": 1378394,
+    "assets/audio-poc/soundza-result.json": 994,
+    "assets/audio-poc/soundza-vehiculos.mp3": 189548,
+    "assets/audio-poc/soundza-vehiculos.wav": 2076494,
+    "assets/components/catalog.json": 20029,
+    "assets/components/japon.js": 36352,
+    "assets/config.json": 2121,
+    "assets/flags/france.svg": 225,
+    "assets/flags/germany-empire.svg": 221,
+    "assets/flags/japan.svg": 161,
+    "assets/flags/korean-empire.svg": 1031,
+    "assets/flags/manchukuo.svg": 361,
+    "assets/flags/netherlands.svg": 233,
+    "assets/flags/philippines-commonwealth.svg": 703,
+    "assets/flags/qing.svg": 807,
+    "assets/flags/roc.svg": 483,
+    "assets/flags/russia.svg": 221,
+    "assets/flags/thailand.svg": 222,
+    "assets/flags/union-jack.svg": 479,
+    "assets/flags/usa.svg": 8118,
+    "assets/lyrics.json": 24863,
+    "assets/media/CREDITS.md": 1270,
+    "assets/media/foto-camiones-ejercito.jpg": 50701,
+    "assets/media/foto-tropas-java-1942.jpg": 37836,
+    "assets/media/plate-bandera.mp4": 1763364,
+    "assets/media/plate-china.mp4": 1973296,
+    "assets/media/plate-ejercito.mp4": 2995258,
+    "assets/media/plate-java.mp4": 2507003,
+    "assets/script.json": 3752,
+    "assets/song.mp3": 2884588,
+    "assets/sound-design/17619e07e83b4d6cbc272a8c812e91a4/mix-effects.flac": 3358025,
+    "assets/sound-design/17619e07e83b4d6cbc272a8c812e91a4/mix-effects.wav": 34594662,
+    "assets/sound-design/17619e07e83b4d6cbc272a8c812e91a4/mix.mp3": 2884076,
+    "assets/sound-design/17619e07e83b4d6cbc272a8c812e91a4/mix.wav": 34594662,
+    "assets/sound-design/17619e07e83b4d6cbc272a8c812e91a4/plan.json": 1529,
+    "assets/sound-design/61db86f118aa4f2d912c0d3e9c71e028/mix-effects.flac": 2054235,
+    "assets/sound-design/61db86f118aa4f2d912c0d3e9c71e028/mix-effects.wav": 34594662,
+    "assets/sound-design/61db86f118aa4f2d912c0d3e9c71e028/mix.mp3": 2884076,
+    "assets/sound-design/61db86f118aa4f2d912c0d3e9c71e028/mix.wav": 34594662,
+    "assets/sound-design/61db86f118aa4f2d912c0d3e9c71e028/plan.json": 1080,
+    "assets/sound-design/75dcca1a349146aeaa9cc7d109658800/mix-effects.flac": 4632296,
+    "assets/sound-design/75dcca1a349146aeaa9cc7d109658800/mix-effects.wav": 34594662,
+    "assets/sound-design/75dcca1a349146aeaa9cc7d109658800/mix.mp3": 2884076,
+    "assets/sound-design/75dcca1a349146aeaa9cc7d109658800/mix.wav": 34594662,
+    "assets/sound-design/75dcca1a349146aeaa9cc7d109658800/plan.json": 2644,
+    "assets/sound-design/b97187f1fbe04ec885f11c12f40cb6d3/mix-effects.flac": 29442,
+    "assets/sound-design/b97187f1fbe04ec885f11c12f40cb6d3/mix-effects.wav": 34594662,
+    "assets/sound-design/b97187f1fbe04ec885f11c12f40cb6d3/mix.mp3": 2884076,
+    "assets/sound-design/b97187f1fbe04ec885f11c12f40cb6d3/mix.wav": 34594662,
+    "assets/sound-design/b97187f1fbe04ec885f11c12f40cb6d3/plan.json": 1080,
+    "assets/sound-design/cc1e21991a6645a89735b86ce95b2cd1/mix-effects.flac": 4599351,
+    "assets/sound-design/cc1e21991a6645a89735b86ce95b2cd1/mix-effects.wav": 34594662,
+    "assets/sound-design/cc1e21991a6645a89735b86ce95b2cd1/mix.mp3": 2884076,
+    "assets/sound-design/cc1e21991a6645a89735b86ce95b2cd1/mix.wav": 34594662,
+    "assets/sound-design/cc1e21991a6645a89735b86ce95b2cd1/plan.json": 2588,
+    "assets/storyboard.json": 13565,
+    "index.html": 3822,
+    "info.json": 4632,
+    "manifest.json": 19470,
+    "publish.json": 11788,
+    "render/.thumbnails.lock": 0,
+    "render/japon-expansion-prueba-16x9.mp4": 59232970,
+    "render/japon-expansion-prueba-9x16.mp4": 60884358,
+    "render/poster.jpg": 50145,
+    "render/thumbnail-A-9x16.jpg": 189480,
+    "render/thumbnail-A-9x16.sha256": 64,
+    "render/thumbnail-A-9x16.webp": 48664,
+    "render/thumbnail-A.jpg": 190830,
+    "render/thumbnail-A.sha256": 64,
+    "render/thumbnail-A.webp": 50652,
+    "render/thumbnail-B-9x16.jpg": 130152,
+    "render/thumbnail-B-9x16.sha256": 64,
+    "render/thumbnail-B-9x16.webp": 18914,
+    "render/thumbnail-B.jpg": 135592,
+    "render/thumbnail-B.sha256": 64,
+    "render/thumbnail-B.webp": 21418,
+    "render/thumbnail-C-9x16.jpg": 166889,
+    "render/thumbnail-C-9x16.sha256": 64,
+    "render/thumbnail-C-9x16.webp": 38264,
+    "render/thumbnail-C.jpg": 159459,
+    "render/thumbnail-C.sha256": 64,
+    "render/thumbnail-C.webp": 33132,
+    "usage.json": 11820
+  },
+  "updated": "2026-11-03T01:04:04",
+  "target_minutes": null,
+  "status": "renderizado",
+  "media_review": [
+    {
+      "beat": 1,
+      "anchor": "Todo empezó",
+      "source": "assets/media/plate-bandera.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/qing.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/russia.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/korean-empire.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/germany-empire.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/roc.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/manchukuo.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/france.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/usa.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/union-jack.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/philippines-commonwealth.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/flags/netherlands.svg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/media/plate-ejercito.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/media/plate-china.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/media/plate-java.mp4",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/media/foto-camiones-ejercito.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    },
+    {
+      "beat": 3,
+      "anchor": "1895",
+      "source": "assets/media/foto-tropas-java-1942.jpg",
+      "shows": "",
+      "query": "",
+      "review": ""
+    }
+  ],
+  "category": "node_atlas",
+  "shared_categories": [],
+  "demo": false,
+  "chapters": [
+    {
+      "at": "0:00",
+      "title": "De archipiélago a imperio"
+    },
+    {
+      "at": "0:18",
+      "title": "Taiwán, Sajalín y Corea"
+    },
+    {
+      "at": "0:40",
+      "title": "Islas del Pacífico y Manchuria"
+    },
+    {
+      "at": "0:56",
+      "title": "China y el avance al sur"
+    },
+    {
+      "at": "1:43",
+      "title": "La máxima extensión"
+    }
+  ],
+  "youtube_title": "Japón: el avance que cambió el Pacífico",
+  "youtube_description": "Un archipiélago extendió su poder por Asia y el Pacífico. Este mapa sigue los pasos de esa expansión.\n\nDesde la restauración Meiji hasta el avance japonés de la Segunda Guerra Mundial, recorremos Taiwán, Sajalín, Corea, Manchuria y el sudeste asiático. Distinguimos anexiones, ocupaciones y mandatos: Japón nunca controló toda China. Las flechas muestran direcciones de avance; los polígonos son aproximaciones explicativas, no límites catastrales.\n\nCAPÍTULOS\n0:00 De archipiélago a imperio\n0:18 Taiwán, Sajalín y Corea\n0:40 Islas del Pacífico y Manchuria\n0:56 China y el avance al sur\n1:43 La máxima extensión\n\nLos mapas ayudan a distinguir el tamaño de un imperio de la forma en que ejercía su control. El metraje de tropas se usa como archivo ilustrativo y los efectos son de biblioteca, no grabaciones históricas auténticas.\n\nGracias por quedarte. Esta comunidad la forma gente curiosa como tú, que prefiere entender a solo enterarse. Si quieres que sigamos, suscríbete: así la próxima historia te encuentra primero.\n\n¿Qué etapa de esta expansión te gustaría que expliquemos con más detalle?\n\nFUENTES\n- https://www.ndl.go.jp/modern/e/utility/chronology.html\n- https://archives.ith.sinica.edu.tw/collections_con2_en.php?no=175\n- https://history.state.gov/milestones/1899-1913/portsmouth-treaty\n- https://history.state.gov/historicaldocuments/frus1910/d705\n- https://www.jacar.go.jp/exhibition/glossary/gaichitonaichi/table/history3.html\n- https://history.state.gov/milestones/1921-1936/mukden-incident\n- https://history.state.gov/milestones/1937-1945/pearl-harbor\n- https://www.nam.ac.uk/explore/far-east-campaign\n- https://history.state.gov/historicaldocuments/frus1941v04/d697\n- https://home.nps.gov/articles/wwii-nhl-aleu-campaign.htm\n- https://anzacportal.dva.gov.au/resources/japanese-thrust-map\n\nIMÁGENES (Wikimedia Commons)\n- plate-bandera.mp4 — Video — doktorkleinmusic (Pixabay) — Pixabay Content License — https://pixabay.com/videos/id-373890/\n- plate-ejercito.mp4 — Djawa Baharoe (6).webm — Djawa Eiga Kosha (producer) — Public domain — https://commons.wikimedia.org/wiki/File:Djawa_Baharoe_(6).webm\n- plate-china.mp4 — Why We Fight- The Battle of China.webm — US National Archives — Public domain — https://commons.wikimedia.org/wiki/File:Why_We_Fight-_The_Battle_of_China.webm\n- plate-java.mp4 — Chabar Dai Toa (31).webm — Nippon Eigasha (producer) — Public domain — https://commons.wikimedia.org/wiki/File:Chabar_Dai_Toa_(31).webm\n- foto-camiones-ejercito.jpg — Fotograma a 00:03 de plate-ejercito.mp4 (Djawa Baharoe (6).webm) — Djawa Eiga Kosha (producer) — Public domain — https://commons.wikimedia.org/wiki/File:Djawa_Baharoe_(6).webm — Material ilustrativo del Ejército Imperial; no se atribuye a una batalla o territorio específico.\n- foto-tropas-java-1942.jpg — Fotograma a 00:03 de plate-java.mp4 (Chabar Dai Toa (31).webm) — Nippon Eigasha (producer) — Public domain — https://commons.wikimedia.org/wiki/File:Chabar_Dai_Toa_(31).webm — Material ilustrativo de tropas japonesas en Java, 1942; no se presenta como registro de Indochina.\n\n#NodeAtlas #Historia #Geopolitica",
+  "youtube_tags": [
+    "imperio japonés",
+    "expansión japonesa",
+    "historia de Japón",
+    "mapa de Japón",
+    "guerra del Pacífico",
+    "restauración Meiji",
+    "Taiwán",
+    "Manchuria",
+    "Pearl Harbor",
+    "sudeste asiático",
+    "NodeAtlas"
+  ],
+  "tiktok_caption": "Así avanzó Japón de Taiwán al sudeste asiático. Un mapa de anexiones, ocupaciones y campañas. ¿Dónde cambió el rumbo?",
+  "tiktok_hashtags": [
+    "#historia",
+    "#NodeAtlas",
+    "#geopolitica",
+    "#Japon"
+  ],
+  "thumbnail_text": "UNAS ISLAS CAMBIARON EL MAPA DE ASIA"
+}

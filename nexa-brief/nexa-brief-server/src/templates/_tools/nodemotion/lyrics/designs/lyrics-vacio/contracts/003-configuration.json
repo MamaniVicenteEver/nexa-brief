@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-vacio",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "black": {
+      "default": "#08090A"
+    },
+    "white": {
+      "default": "#ECEDEE"
+    },
+    "fog": {
+      "default": "#8F969A"
+    }
+  },
+  "example": {
+    "black": "#08090A",
+    "white": "#ECEDEE",
+    "fog": "#8F969A"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-vacio/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

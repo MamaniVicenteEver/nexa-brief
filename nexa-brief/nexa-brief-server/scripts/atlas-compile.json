@@ -1,0 +1,95 @@
+{
+  "purpose": "Compilador host determinista: script.plan + dataset + transcripción de MP3 real a escena Atlas, sin modificar motor ni llamar modelos.",
+  "commands": [
+    ".venv/bin/python scripts/atlas_compile.py --self-test",
+    ".venv/bin/python scripts/atlas_compile.py --episode ID",
+    ".venv/bin/python scripts/atlas_compile.py --episode ID --force"
+  ],
+  "profile": "Mismo perfil efectivo y slug/category de atlas_factory.py; sandbox v2/v3 exclusivamente. Lock compartido por episodio.",
+  "required": [
+    "assets/script.json",
+    "assets/episode-data.json",
+    "research.json",
+    "assets/lyrics.json",
+    "assets/song.mp3",
+    "assets/regions.json",
+    "assets/config.json",
+    "work/results/test/transcript-raw.json",
+    "work/results/test/stage-voice.json",
+    "assets/media/credits.json",
+    "_atlas/orchestration.json (shared)"
+  ],
+  "dataset_extensions": {
+    "country": [
+      "center:[lon,lat]",
+      "span:positive number",
+      "flag_src and portrait_src: local relative to assets/",
+      "leader.name/title/as_of/fact_ids/term_note",
+      "leader.term_display optional one or two compact lines; display_role optional",
+      "gdp.value/unit/year/fact_ids",
+      "flag_fit:global(default)|landmass for disconnected territories; preserves all boundaries",
+      "cinematic_frame:{center,span} optional countrywide oblique frame; never region zoom"
+    ],
+    "ranking": [
+      "metric",
+      "year",
+      "kind:projection",
+      "source:research source ID",
+      "source_label:optional concise display credit"
+    ],
+    "region": [
+      "id",
+      "name",
+      "geometry_id:optional source key",
+      "criterion",
+      "fact_ids",
+      "center:[lon,lat] or regions entry label",
+      "photo:{src,caption,focus} real local regional photo with SHA-matched media credit"
+    ],
+    "assets/regions.json": {
+      "regions": {
+        "geometry-id": {
+          "geometry": {
+            "type": "Polygon|MultiPolygon",
+            "coordinates": []
+          },
+          "label": [
+            0,
+            0
+          ],
+          "bbox": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "source": {
+            "url": "primary geometry source",
+            "license": "license"
+          }
+        }
+      }
+    }
+  },
+  "alignment": "Global monotonic difflib on normalized Spanish words, numeric expansion including leading decimal zeros, and explicit PIB/FMI/EE.UU. aliases. All real words remain in comparison; words below30ms cannot independently anchor visuals and are listed separately without calling them omissions. Only equal blocks of >=3 atoms produce anchors. Coverage >=0.68 and unmatched boundary <=8 atoms per segment; failures stop before scene write. No interpolated times, invented anchors or inserted words. Uncertainty remains visible in alignment.json.",
+  "timing": "Real aligned word boundaries anchor country, insight, region and outro. A real word end4–5s after flag reveal ends vivid hold, then a later real word starts portrait. Flag persists through chapter and reaches4% at first region. Country handoff starts at the NEXT country aligned segment, overview0.9s, arrow+.95s, arrival at a real word at least3.4s after chapterstart. Never remove a region/photo or move camera before its spoken text ends. Effect durations are visual design, not speech estimates.",
+  "output": [
+    "assets/scene.json",
+    "work/results/test/alignment.json",
+    "work/results/test/compile-report.json",
+    "work/results/test/stage-compile.json",
+    "work/component-plan.json"
+  ],
+  "scene": "Ranking8→1. Exact16regional geometries in red. Original tilted satellite Mercator look atpitch60; countrywide pose held through both regions. Persistent local flag94%→12%→4%, HUDphoto130% andname/cargo/mandate120%, GDPnominal/source/year. 16documentary regional photos use panel,circular,hexagonal with geographic connectors and screen-safe placement.7country transitionarrows show editorial itinerary, no economic flow claims. Captions fromfinal real MP3. No globe restyling. Closing uses atlas.outrov2 from the shared catalog: rotating Earth below the title through the actual audio end.",
+  "verification": "Runs only fixed local Node Atlas check --ready. No browser, downloads, render, TTS, publication, agent or model. Successful ready check establishes schema/media/research references, not factual truth, word omissions, image rights or visual quality. Report leaves listening, portrait/landscape QA and tile verification to supervisor.",
+  "resume": "Existing scene reused only when input hashes, compiler version, scene hash and prior ready success agree. Otherwise requires explicit --force. Changed inputs during compilation fail before scene write. Shared orchestration hash and all regional media/credits are bound too. Compiler SHA, component-plan SHA and current geo.resolved SHA must match. Geometry is regenerated from current scene preserving original layerindices before ready validation.",
+  "usage": "Local kit/storyboard/atlas-compile usage entry; no token meter, usage_known=false. Never present unknown as zero cost.",
+  "country_presentation": "Shared _atlas/orchestration.json is mandatory. Country frames use cinematic_frame or center/span; originalpitch60,bearing4,satelite-realista. No regioncamera key; transitionoverview exposes bothends before arrival. Inspect country coverage, arrows, regionalconnections,media and all text in native16:9 and9:16.",
+  "closing": {
+    "component": "atlas.outrov2",
+    "source": "_atlas/components.json demo; data-driven camera/look/title recipe",
+    "timing": "Start at aligned outro segment, finish at actual MP3 duration. Transition to space/globe only during the closing; keep country chapters oblique.",
+    "checks": "Capture entry, midpoint and duration−0.05s in both native formats. A final title over the satellite map is not the Atlas outro.",
+    "generic_proto_cta": "scene.outro=false deliberately suppresses the generic subscription overlay; atlas.outrov2 is a composed camera/look/layers recipe."
+  }
+}

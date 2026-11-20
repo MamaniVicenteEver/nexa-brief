@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-mono",
+  "family": "promo",
+  "demo_folder": "nodemotion/commercial/promo-mono",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/kit.js": "runtime/components/kit.js",
+    "components/outro-v1.js": "runtime/components/outro-v1.js",
+    "components/outro-v2.js": "runtime/components/outro-v2.js",
+    "components/scenes.js": "runtime/components/scenes.js",
+    "components/transitions.js": "runtime/components/transitions.js",
+    "showcase/index.html": "runtime/showcase/index.html"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "source_sha256": "a19a8f7666feec7ddbe83d6d3759ba7b832b96a2ff0066ef39e9aea114e267fa",
+  "migration_source_sha256": "a19a8f7666feec7ddbe83d6d3759ba7b832b96a2ff0066ef39e9aea114e267fa",
+  "migration_runtime_sha256": {
+    "components/intro.js": "cd2040390ee9589aad24e6308fc63df1297ba4a5527062ae6f7be7d02f16fbca",
+    "components/kit.js": "c7ef0643ed1c5946ee532dfb71e7b803b1072a19573ffaa8ba6ce1f95a18964b",
+    "components/outro-v1.js": "1a40f26a9a1b4b8b9a6c5f6628cc9120ea84cce5ef942be5310cf1f51d9ccae0",
+    "components/outro-v2.js": "e5a34702da26c47da927e3b961777dd6f20c6b907dda3f587f2e64df9b5c0568",
+    "components/scenes.js": "a306134ca6769b31936a838d5abcefa86dd7e3a0361707ad4726b585b09d841a",
+    "components/transitions.js": "bf846bafd9230bb2d16931e3510b085a4521e67b1fa81cd8db637b29815c971b",
+    "showcase/index.html": "b3ba4a999a60a626ee3ff717edbaddb9fb38c503382e333c29fc57bb0e111a86"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/promo-mono",
+    "config": "nodemotion/commercial/promo-mono/assets/config.json",
+    "info.json": "nodemotion/commercial/promo-mono/info.json",
+    "showcase/components.json": "nodemotion/commercial/promo-mono/showcase/components.json",
+    "DESIGN.md": "nodemotion/commercial/promo-mono/DESIGN.md"
+  },
+  "demo_resource_aliases": {
+    "assets/media/boat-1.jpg": "cf41ca73c2037f07934c8f0394a639f0d6b82083227f9b521cc4c8d3a40e1d7f.jpg",
+    "assets/media/boat.mp4": "d5f1082c4db17961756719e4257c203008c5389850faddf627095fc39f66e822.mp4",
+    "assets/media/concert-1.jpg": "eb3508a5ff490d261aa8920e29c4627feaf708499d7d1abaff1387892097db22.jpg",
+    "assets/media/concert.mp4": "0bf44cef9f61542f91704af1c6e915ac3905e0a7da9a9d1ddf348f3a69f82c40.mp4",
+    "assets/media/couple-1.jpg": "dd9204d9ebcd37dd5578133ee978ea3467cff008b51507222612343ef58b1f97.jpg",
+    "assets/media/couple.mp4": "8aef9b6acfd52eb14f0685f5f273d621b6919dd1b61ebd45cda867b05450f80c.mp4",
+    "assets/media/crowd-1.jpg": "ce9e71b5b9ef6a59021361b7ab8f52c0f692d0c85bd7cb326e704edf3b09b470.jpg",
+    "assets/media/crowd.mp4": "040db091a7238a0b0069915768a2596297dfca11bdc56e8741b0f815d06504cc.mp4",
+    "assets/media/cyclist-lake-1.jpg": "6451608c79906473ddab76dd9d0dc508dc5c3abbe91831e8b6a3302d54c5743a.jpg",
+    "assets/media/cyclist-lake.mp4": "fa14b141695477baec9e109f3af0e29fd8c5126dff86eb7169d0ef3b74a7291c.mp4",
+    "assets/media/cyclist-night-1.jpg": "450cf3cb0e5ec01d1af1e4493c115249aabe63f79b773bda19be6de62943c5c5.jpg",
+    "assets/media/cyclist-night.mp4": "da7ec5c9fab27e6e50618c784f065b704195f68b8a0720b1541ab89a90ec7877.mp4",
+    "assets/media/dirtbike-1.jpg": "1246e30f995d8b63e65d5184d33ea0e92ae38347b25aebe658d831e901425daf.jpg",
+    "assets/media/dirtbike.mp4": "ad9e4167ac43b3c9b3ec8a8540e59eb150a4988dafc3d7198f07d6899fc0ba45.mp4",
+    "assets/media/graded/boat-1.mono.jpg": "2cbef52945ee9c0a3b421db64a057b62b8ea29ca156a6b20377743d2c0670303.jpg",
+    "assets/media/graded/boat.mono.mp4": "7c1b59028959682d135591e930267489aaa058cd79cee3bf6bfce6dc25c89c4f.mp4",
+    "assets/media/graded/concert-1.mono.jpg": "12d6fa9b435ee8965084bc0b254960484b68c6d6700af6d2aeb8aa27faa65b8c.jpg",
+    "assets/media/graded/concert.mono.mp4": "29e223a60e14effb5055cda0e7355b882e2a6af75068d05cd873e3d88b6bd5c3.mp4",
+    "assets/media/graded/couple-1.mono.jpg": "e1fb7a2087ffa238cf25af79e5a70c0da7786435005408c0a33d63bdeceadd46.jpg",
+    "assets/media/graded/couple.mono.mp4": "fc2c674aa3a9e5a4647ce0c4f533809134c226e44d841712f7829f29bd7394cb.mp4",
+    "assets/media/graded/crowd-1.mono.jpg": "ee33a8d61a7d10e1105d9582cdaa199c1074b9fe17bfa505654bdf371141a05d.jpg",
+    "assets/media/graded/crowd.mono.mp4": "a5c7128b8210bed59ce456fd5ffded1a99ae2a0c3cce8efa9d9b448bc1046e41.mp4",
+    "assets/media/graded/cyclist-lake-1.mono.jpg": "d48b5a3e442eabc69cb3bb364093da8fb9fde2e2cba1d3ceffb32b30259ee592.jpg",
+    "assets/media/graded/cyclist-lake.mono.mp4": "33a03ec7aef390b23a251e36556ed57bdaa69808c6e8b20eef9ef7b8e2cc1fe7.mp4",
+    "assets/media/graded/cyclist-night-1.mono.jpg": "da9415eb54f7e61db0f855d24058c4cfe328f02d8e33749c17838098c1a448c2.jpg",
+    "assets/media/graded/cyclist-night.mono.mp4": "5b891c1532866ece232b5688cd0a1ecb707c36c2691e75fc294aceb40e3aa3cb.mp4",
+    "assets/media/graded/dirtbike-1.mono.jpg": "66112fde2931440242b5e1620c14b631b31da780d7cbfb2e352f97cd6a4053e8.jpg",
+    "assets/media/graded/dirtbike.mono.mp4": "4dc7d526a5706d1cbab6d0cf02ec5c1d1d1ffa7d1aaec92a9e28fa14c1c5a69c.mp4",
+    "assets/media/graded/horses-1.mono.jpg": "987de58a71148a245df73796503e4c09da8f411a4c97ecb9dae6cd9533f4f634.jpg",
+    "assets/media/graded/horses.mono.mp4": "3172149e4a0ca43aa838ed792f9d36eb1755fd871b666f437d459d988114c34a.mp4",
+    "assets/media/graded/roadtrip-1.mono.jpg": "8cec6e0e4585b445e8b211c2c926a2485a61c510a232e5180b11e6ff1d30cb66.jpg",
+    "assets/media/graded/roadtrip.mono.mp4": "9a6f183e4955db783a102c8da107f8d39f089ba0dc7ed26a82e327c014f3db0e.mp4",
+    "assets/media/graded/skater-1.mono.jpg": "c3679154a0bca62c551f8176d4a7de12d6fce8546f6b678a2ae7a3a9b11935d8.jpg",
+    "assets/media/graded/skater.mono.mp4": "349a8999785421ee5b3cfcdb74edfb62b7c040af78ace54340ffef1522268c6a.mp4",
+    "assets/media/horses-1.jpg": "1c906e63b47504692894485930fdd7443f1ab52d33eecc2aa450c547781a5a9c.jpg",
+    "assets/media/horses.mp4": "157fc9c0db0a991f3aed6152b3427d643c8e25c724ffe027be89e2950ee69f6c.mp4",
+    "assets/media/roadtrip-1.jpg": "6afd535e4282874e55cca49dda12b0eb2770d62651f59e4097e31404a767de05.jpg",
+    "assets/media/roadtrip.mp4": "0bdb0a075db35be12a2ede3a2396e00e960bc595afef47fe5d1b212b6092b8ba.mp4",
+    "assets/media/skater-1.jpg": "e15bbfe0eeb9b7adb9c100ce93b2e31edf1595c9b10e0661b02cb636f0af3154.jpg",
+    "assets/media/skater.mp4": "4873fb734835c1c8de73910ad73b712176371ceea26d590e52d094d6f4762c58.mp4",
+    "assets/song.mp3": "77ee6c6263db62f5a14ecfdf9e8f758c61683a9d139e611a64790800bd9ea24f.mp3"
+  }
+}

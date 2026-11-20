@@ -21,7 +21,7 @@ import { useCreateScheduleSlotMutation } from "../hooks/useCreateScheduleSlotMut
 import { useUpdateScheduleSlotMutation } from "../hooks/useUpdateScheduleSlotMutation";
 import type { ChannelPlatform, ScheduleSlot, Weekday } from "../types";
 
-const PLATFORMS: ChannelPlatform[] = ["youtube", "tiktok", "facebook"];
+const PLATFORMS: ChannelPlatform[] = ["youtube", "tiktok", "facebook", "instagram"];
 
 const WEEKDAY_KEY: Record<Weekday, string> = {
   0: "mon",

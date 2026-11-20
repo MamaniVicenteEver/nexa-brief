@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "decadas.etiquetas",
+  "entry_id": "decadas.etiquetas",
+  "kind": "component",
+  "label": "Etiquetas azules",
+  "summary": "Rótulos pequeños que parpadean sobre el título (texts.tags).",
+  "component": {
+    "name": "decadas.etiquetas",
+    "label": "Etiquetas azules",
+    "summary": "Rótulos pequeños que parpadean sobre el título (texts.tags).",
+    "default": true,
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "Decades",
+        "doc": "Texto"
+      }
+    },
+    "tags": [
+      "adorno"
+    ],
+    "file": "components/escenas.js",
+    "demo": {
+      "text": "Decades"
+    },
+    "preview": {
+      "t": 1.2
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "Decades",
+      "doc": "Texto"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/showcase/components.json",
+      "pointer": "/components/6"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

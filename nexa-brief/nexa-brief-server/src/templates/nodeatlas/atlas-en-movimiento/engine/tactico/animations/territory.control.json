@@ -1,0 +1,132 @@
+{
+  "name": "territory.control",
+  "family": "territory",
+  "estilo": {
+    "usa": [
+      "territorios"
+    ]
+  },
+  "description": "Control territorial: el lado del frente donde está el atacante se tiñe de su color y el otro lado del suyo (verde por defecto); la zona cambia de color a medida que el frente avanza o retrocede. Úsala para explicar control territorial y cambios de frontera.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 11,
+  "states": [
+    "advance",
+    "retreat"
+  ],
+  "params": {
+    "via": {
+      "type": "array",
+      "default": [],
+      "range": null,
+      "description": "Waypoints de la trayectoria en orden."
+    },
+    "region": {
+      "type": "string",
+      "default": "IR",
+      "range": null,
+      "description": "Código o nombre de la región geográfica."
+    },
+    "ancho": {
+      "type": "number",
+      "default": 3,
+      "min": 0.5,
+      "max": 20,
+      "step": 0.5,
+      "range": {
+        "min": 0.5,
+        "max": 20
+      },
+      "description": "Valor de ancho para la composición de territory.control."
+    },
+    "atacante": {
+      "type": "string",
+      "default": null,
+      "range": null,
+      "description": "Valor de atacante para la composición de territory.control."
+    },
+    "otro": {
+      "type": "string",
+      "default": null,
+      "range": null,
+      "description": "Valor de otro para la composición de territory.control."
+    },
+    "opacity": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Opacidad de 0 a 1."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-territory-control",
+    "t": 0,
+    "type": "territory.control",
+    "region": "IR",
+    "via": [
+      [
+        45.58,
+        34.52
+      ],
+      [
+        46.17,
+        33.12
+      ],
+      [
+        48.12,
+        32.35
+      ],
+      [
+        48.45,
+        31.43
+      ],
+      [
+        48.18,
+        30.44
+      ]
+    ],
+    "states": [
+      {
+        "at": 3,
+        "state": "retreat",
+        "via": [
+          [
+            45.4,
+            34.5
+          ],
+          [
+            45.85,
+            33.3
+          ],
+          [
+            47.1,
+            32.5
+          ],
+          [
+            47.45,
+            31.35
+          ],
+          [
+            47.95,
+            30.55
+          ]
+        ],
+        "dur": 1.5
+      }
+    ],
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "assets/scene.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/territory.control.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "../_atlas/data/geo/admin0.geojson"
+  ]
+}

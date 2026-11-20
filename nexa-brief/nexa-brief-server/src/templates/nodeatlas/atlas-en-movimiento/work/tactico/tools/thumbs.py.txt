@@ -1,0 +1,144 @@
+"""Copiar a /tmp y ejecutar con nice -n 15 y el Python del servidor.
+Una página Chromium, SwiftShader, sin video ni cambios de escenas/motores.
+Reutiliza capturas plenas; --recapture nombre,... rehace las indicadas en demo.html.
+"""
+import sys
+sys.dont_write_bytecode = True
+import argparse, base64, fcntl, io, json, math
+from pathlib import Path
+from PIL import Image, ImageDraw, ImageChops, ImageStat
+import numpy as np
+from playwright.sync_api import sync_playwright
+
+ROOT = Path.cwd()
+OUT = ROOT / 'work/tactico/thumbs'
+SHOTS = ROOT / 'work/tactico/shots'
+FLAGS = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--renderer-process-limit=1', '--num-raster-threads=1', '--disable-dev-shm-usage']
+parser = argparse.ArgumentParser()
+parser.add_argument('--recapture', default='')
+parser.add_argument('--recrop', action='store_true', help='Recalcula recortes de las capturas reutilizadas.')
+parser.add_argument('--base', default='http://127.0.0.1:8000/api/v1/explainer/files/sandbox/nodehistory/atlas-en-movimiento/')
+args = parser.parse_args()
+OUT.mkdir(parents=True, exist_ok=True)
+components = json.loads((ROOT / 'engine/tactico/components.json').read_text())['components']
+pleno = {}
+for file, key in [('cases-unidades.json','cases'),('cases-terrestre.json','cases'),('cases-territorios.json','components')]:
+    for case in json.loads((ROOT/'work/tactico'/file).read_text())[key]:
+        pleno[case.get('type',case.get('name'))]=case['times'][1]
+for case in json.loads((ROOT/'work/tactico/cases-fx.json').read_text()): pleno[case['id']]=case['times'][1]
+report_file = OUT / 'provenance.json'
+report = json.loads(report_file.read_text()) if report_file.exists() else {}
+
+def crop_subject(im, bounds):
+    left, top, right, bottom = bounds
+    side = max(160, right-left, bottom-top) * 1.22
+    cx, cy = (left+right)/2, (top+bottom)/2
+    # Pad to a square rather than distorting the subject or clipping its edges.
+    square = Image.new('RGB', (math.ceil(side), math.ceil(side)), '#081e2c')
+    x, y = round(cx-side/2), round(cy-side/2)
+    area = (max(0,x), max(0,y), min(im.width,x+square.width), min(im.height,y+square.height))
+    square.paste(im.crop(area), (area[0]-x,area[1]-y))
+    return square.resize((480,480), Image.Resampling.LANCZOS)
+
+def reuse(component):
+    name = component['name']; slug = name.replace('.', '-')
+    # QA captures for these include large headers or a counter mid-transition.
+    # The gallery's transparent runtime gives a tighter and clearer subject crop.
+    if name.startswith(('air.','naval.')) or name in ['badge.count','fx.clash','fx.dust']: return None
+    matches = list(SHOTS.glob(f'*/{name}-pleno.png')) + list(SHOTS.glob(f'*/{slug}-pleno.png'))
+    matches += list(SHOTS.glob(f'*/{slug}-1.png')) + list(SHOTS.glob(f'*/{slug}-dark-1.png'))
+    if not matches: return None
+    source = matches[0]; im = Image.open(source).convert('RGB')
+    first = Path(str(source).replace('-pleno.png','-entrada.png').replace('-1.png','-0.png'))
+    if im.width == im.height:
+        bounds = (0,0,im.width,im.height)
+    elif first.exists() and first != source:
+        earlier=Image.open(first).convert('RGB')
+        pixels=np.max(np.abs(np.asarray(im).astype(np.int16)-np.asarray(earlier).astype(np.int16)),axis=2)
+        pixels[:320]=0;pixels[1700:]=0
+        mask=Image.fromarray((pixels>20).astype(np.uint8)*255)
+        bounds=mask.getbbox() or (200,500,880,1300)
+    elif name.startswith(('territory.', 'route.', 'arrow.', 'front.', 'range.')):
+        bounds = (40,240,1040,1550)
+    else:
+        # Locate exact palette ink in the subject, excluding QA headers/attribution.
+        # Satellite colors vary continuously, whereas overlay strokes use flat ink.
+        colors = [(233,227,186),(238,232,208),(244,241,218),(245,216,111),(91,225,232),(102,198,227),(230,155,69),(246,237,180)]
+        if name.startswith('fx.'):
+            background = Image.new('RGB',im.size,im.getpixel((0,0)))
+            mask = ImageChops.difference(im, background).convert('L').point(lambda x:255 if x>18 else 0)
+        else:
+            pixels=np.asarray(im).astype(np.int16); found=np.zeros((im.height,im.width),dtype=bool)
+            for color in colors: found |= np.max(np.abs(pixels-color),axis=2)<5
+            found[:180]=False;found[min(1680,im.height):]=False
+            mask=Image.fromarray(found.astype(np.uint8)*255)
+        bounds = mask.getbbox() or (200,500,880,1300)
+    shot_time=pleno.get(name)
+    for shot in json.loads((ROOT/'work/tactico/editorial-qa.json').read_text())['shots']:
+        if shot['file']==str(source.relative_to(ROOT/'work/tactico')): shot_time=shot['t']
+    return crop_subject(im,bounds), {'source':str(source.relative_to(ROOT)), 'time':shot_time,'crop':bounds,'method':'existing-full-content-shot'}
+
+def save(name, im, meta):
+    im.save(OUT / f'{name}.jpg', quality=85, optimize=True)
+    meta['dimensions']=[480,480]; meta['stddev']=ImageStat.Stat(im).stddev
+    report[name]=meta
+    report_file.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
+    print(name,meta['method'],flush=True)
+
+pending=[]; recapture=set(args.recapture.split(','))
+for component in components:
+    name=component['name']
+    if (OUT/f'{name}.jpg').exists() and name not in recapture and not (args.recrop and report.get(name,{}).get('method')!='gallery-seek'): continue
+    reused=reuse(component) if name not in recapture else None
+    if reused: save(name,*reused)
+    else: pending.append(component)
+
+if pending:
+    lock=open('/tmp/atlas-tactico-chromium.lock','w');fcntl.flock(lock,fcntl.LOCK_EX)
+    with sync_playwright() as p:
+        browser=p.chromium.launch(headless=True,args=FLAGS)
+        try:
+            page=browser.new_page(viewport={'width':1080,'height':1920},device_scale_factor=1)
+            page.set_default_timeout(90000)
+            errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+            for component in pending:
+                name=component['name'];demo=component['demo'];start=demo.get('t',0);duration=demo.get('dur',6)
+                # Recorded pleno phases: units 2.8, terrestrial 3.3, map/text 2.4;
+                # short effects are captured before their energy dissipates.
+                time=start+pleno.get(name,min(2.4,duration*.38))
+                if name.startswith(('naval.', 'air.', 'unit.')): time=start+min(2.8,duration*.5)
+                if name=='badge.count': time=3.2
+                if name=='fx.clash': time=.65
+                if name=='intro.title': time=start+2.4
+                if name=='outro.channel': time=start+7
+                if name=='caption.transcript': time=4.2
+                if name.startswith('strike.'): time=start+demo.get('flightDur',2.4)*.65
+                if name=='fx.flash': time=start+.08
+                page.goto(args.base+f'work/tactico/demo.html?only={name}&bare=1&headless=1&t={time}',wait_until='domcontentloaded')
+                page.wait_for_function('window.__tacticoContext?.tactico && window.__promo && window.__atlas')
+                page.evaluate('async t=>{await __atlas.ready;await document.fonts.ready;await __promo.seek(t)}',time)
+                # Render only the existing tactical runtime to a transparent surface
+                # to measure subject bounds; keep the actual map in the thumbnail.
+                raw=page.evaluate('''t=>{const c=__tacticoContext,canvas=document.createElement('canvas');canvas.width=c.st.W;canvas.height=c.st.H;
+                  c.tactico.draw(canvas.getContext('2d'),__atlas.view(t),t);return canvas.toDataURL('image/png').split(',')[1]}''',time)
+                overlay=Image.open(io.BytesIO(base64.b64decode(raw))).convert('RGBA')
+                bounds=overlay.getchannel('A').point(lambda a:255 if a>24 else 0).getbbox()
+                if not bounds: raise RuntimeError(f'{name}: sujeto vacío a {time}s')
+                if name=='intro.title': bounds=(60,900,1020,1440)
+                if name=='outro.channel': bounds=(60,560,1020,1160)
+                raw=page.evaluate("document.querySelector('canvas').toDataURL('image/png').split(',')[1]")
+                im=Image.open(io.BytesIO(base64.b64decode(raw))).convert('RGB')
+                save(name,crop_subject(im,bounds),{'method':'gallery-seek','time':time,'crop':bounds,'url':page.url,'errors':errors.copy(),'missing':page.evaluate('__tacticoContext.tactico.missing()')})
+                errors.clear()
+        finally: browser.close();lock.close()
+
+manifest={c['name']:f"{c['name']}.jpg" for c in components}
+assert all((OUT/f).exists() for f in manifest.values())
+(OUT/'thumbs.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+sheet=Image.new('RGB',(8*180,math.ceil(len(components)/8)*208),'#132a38');draw=ImageDraw.Draw(sheet)
+for i,c in enumerate(components):
+    x,y=i%8*180,i//8*208
+    sheet.paste(Image.open(OUT/manifest[c['name']]).resize((176,176)),(x+2,y))
+    draw.text((x+4,y+182),c['name'],fill='white')
+sheet.save(OUT/'hoja.jpg',quality=90)
+print(f'{len(manifest)} miniaturas completas',flush=True)

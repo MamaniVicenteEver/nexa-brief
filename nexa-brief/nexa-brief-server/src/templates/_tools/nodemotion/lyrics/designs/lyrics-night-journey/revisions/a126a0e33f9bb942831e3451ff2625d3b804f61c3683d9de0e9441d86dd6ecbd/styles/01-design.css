@@ -1,0 +1,203 @@
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* tema — defaults idénticos a config.json; applyTheme() los pisa */
+  :root {
+    --ui: "Figtree", system-ui, sans-serif;
+    --display: "Noto Serif Display", "Times New Roman", serif;
+    --humanist: "Alegreya Sans", "Gill Sans", sans-serif;
+    --book: "Newsreader", Georgia, serif;
+    --fw: 540px;   /* ancho del "cuadro" vertical 9:16 — lo fija JS en cada resize */
+  }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #000; cursor: pointer; }
+
+  #world { position: fixed; inset: 0; transition: filter 1.8s ease, opacity 1.8s ease; }
+  .scene { position: absolute; inset: 0; overflow: hidden; visibility: hidden; }
+  .scene.on { visibility: visible; }
+  /* columna vertical centrada: todo lo tipográfico vive acá, los fondos ocupan toda la pantalla */
+  .frame { position: absolute; top: 0; bottom: 0; left: 50%; width: var(--fw); margin-left: calc(var(--fw) / -2); }
+
+  /* ============ ESCENA 1 — tarjeta de letras 3D ámbar ============ */
+  #sc-card { background: var(--bg); }
+  .c-warm {
+    position: absolute; inset: -10%; opacity: 0.3;
+    background:
+      radial-gradient(ellipse 55% 40% at 50% 58%, color-mix(in srgb, var(--glow) 50%, transparent), transparent 70%),
+      radial-gradient(ellipse 95% 75% at 50% 62%, var(--warm), transparent 78%);
+  }
+  .c-bloom {
+    position: absolute; left: 50%; top: 56%; width: 140vmax; height: 70vmax; transform: translate(-50%, -50%);
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--glow) 32%, transparent), transparent);
+    mix-blend-mode: screen; opacity: 0;
+  }
+  .c-cam { position: absolute; inset: 0; perspective: calc(var(--fw) * 1.5); perspective-origin: 50% 45%; }
+  .c-rig { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; }
+  .c-panel {
+    position: absolute; width: calc(var(--fw) * 0.84); height: var(--cardH, 80vh); left: calc(var(--fw) * -0.42); top: calc(var(--cardH, 80vh) / -2);
+    overflow: hidden; perspective: calc(var(--fw) * 1.5);  /* las letras quedan recortadas dentro de la tarjeta */
+    border-radius: calc(var(--fw) * 0.05); transform-style: preserve-3d;
+    background: linear-gradient(180deg,
+      color-mix(in srgb, var(--warm) 34%, transparent),
+      color-mix(in srgb, var(--warm) 18%, transparent) 50%,
+      color-mix(in srgb, var(--warm) 34%, transparent));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ember) 10%, transparent), 0 0 90px rgba(0,0,0,0.55);
+  }
+  .c-side { filter: brightness(0.42) blur(1.4px); transform-origin: 50% 50%; }
+  .c-side.l { transform: translateX(calc(var(--fw) * -0.93)) translateZ(calc(var(--fw) * -0.32)) rotateY(40deg); }
+  .c-side.r { transform: translateX(calc(var(--fw) * 0.93)) translateZ(calc(var(--fw) * -0.32)) rotateY(-40deg); }
+  .c-lines { position: absolute; left: calc(var(--fw) * 0.07); right: calc(var(--fw) * 0.07); top: 0; transform-style: preserve-3d; will-change: transform; }
+  .c-line {
+    font-family: var(--ui); font-weight: 800; font-size: calc(var(--fw) * 0.074); line-height: 1.12;
+    letter-spacing: -0.012em; color: var(--ember); padding-bottom: calc(var(--fw) * 0.052);
+    transform-origin: 30% 50%; will-change: transform, filter, opacity;
+    --a: 0; --litc: color-mix(in srgb, var(--lit) calc(var(--a) * 100%), var(--ember));
+  }
+  .c-main .c-line .w {
+    --p: 0;
+    background: linear-gradient(90deg, var(--litc) calc(var(--p) * 120% - 12%), var(--ember) calc(var(--p) * 120% + 2%));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .c-head {
+    position: absolute; left: calc(var(--fw) * 0.06); right: calc(var(--fw) * 0.05); top: 0;
+    display: flex; align-items: center; gap: calc(var(--fw) * 0.035); transform: translateZ(2px);
+  }
+  .c-head::before {
+    content: ""; position: absolute; left: -8%; right: -8%; top: -70%; bottom: -80%; z-index: -1;
+    background: linear-gradient(180deg, transparent,
+      color-mix(in srgb, var(--bg) 62%, var(--warm)) 32%, color-mix(in srgb, var(--bg) 62%, var(--warm)) 64%, transparent);
+  }
+  .c-cover { width: calc(var(--fw) * 0.15); aspect-ratio: 1; border-radius: calc(var(--fw) * 0.014); object-fit: cover;
+    box-shadow: 0 calc(var(--fw) * 0.012) calc(var(--fw) * 0.035) rgba(0,0,0,0.55); background: var(--warm); }
+  .c-meta { min-width: 0; }
+  .c-meta b { display: block; font: 700 calc(var(--fw) * 0.039) / 1.25 var(--ui); color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .c-meta span { display: block; font: 500 calc(var(--fw) * 0.032) / 1.25 var(--ui); color: color-mix(in srgb, #fff 55%, var(--ember)); white-space: nowrap; }
+  .c-btn {
+    flex: none; width: calc(var(--fw) * 0.068); height: calc(var(--fw) * 0.068); border-radius: 50%;
+    display: grid; place-items: center; background: rgba(255,255,255,0.11); color: #fff;
+  }
+  .c-btn:first-of-type { margin-left: auto; }
+  .c-btn svg { width: 52%; height: 52%; }
+
+  /* ============ ESCENA 2 — camino nocturno con video ============ */
+  #sc-path { background: #01060b; }
+  .p-cam { position: absolute; inset: -5%; will-change: transform; }
+  .p-cam video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .p-night { position: absolute; inset: 0; background: linear-gradient(180deg, var(--night) 0%, color-mix(in srgb, var(--night) 50%, #06331c) 55%, #000 100%); mix-blend-mode: multiply; opacity: 0.32; }
+  .p-sky { position: absolute; inset: 0; mix-blend-mode: screen; opacity: 0.8;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--sky) 60%, transparent) 0%, color-mix(in srgb, var(--sky) 18%, transparent) 26%, transparent 40%); }
+  .p-vig { position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 62% at 50% 44%, transparent 38%, rgba(0,5,12,0.72) 100%),
+      linear-gradient(0deg, rgba(0,0,0,0.6), transparent 38%); }
+  .p-chunk { position: absolute; left: 0; top: 0; display: flex; flex-direction: column; align-items: center; will-change: transform, filter, opacity; }
+  .p-chunk.pair { flex-direction: row; align-items: center; gap: 0.05em; }
+  .p-rest { display: flex; flex-direction: column; align-items: flex-start; }
+  .p-w {
+    display: block; font-family: var(--display); font-stretch: normal; font-weight: 700;
+    line-height: 0.88; text-transform: uppercase; white-space: nowrap; padding: 0 0.03em;
+    background: linear-gradient(180deg, var(--textTop) 18%, var(--textBottom) 96%);
+    -webkit-background-clip: text; background-clip: text; color: transparent; will-change: transform, filter, opacity;
+  }
+  .p-ghost { position: absolute; left: calc(var(--fw) * 0.1); right: calc(var(--fw) * 0.06); top: 22%; }
+  .p-ghost-title { font: 600 calc(var(--fw) * 0.036) / 1.2 var(--ui); color: rgba(255,255,255,0.82); margin-left: 18%; margin-bottom: calc(var(--fw) * 0.16); }
+  .p-ghost-line { font: 800 calc(var(--fw) * 0.074) / 1.12 var(--ui); letter-spacing: -0.012em; color: #fff;
+    filter: drop-shadow(0 0 calc(var(--fw) * 0.02) rgba(255,255,255,0.35)); }
+  .p-fly { position: absolute; left: 0; top: 0; width: calc(var(--fw) * 0.16); overflow: visible; will-change: transform;
+    filter: drop-shadow(0 0 calc(var(--fw) * 0.02) color-mix(in srgb, var(--butterfly) 60%, transparent)); }
+  .p-fly .wing { transform-box: view-box; transform-origin: 50px 40px; }
+  .p-spark { position: absolute; left: 0; top: 0; width: calc(var(--fw) * 0.07); overflow: visible;
+    filter: drop-shadow(0 0 calc(var(--fw) * 0.012) rgba(255,240,210,0.9)); }
+
+  /* ============ ESCENA 3 — espacio, luna y columna amarilla ============ */
+  #sc-moon { background: var(--bg); }
+  .m-stars, .m-twinkle { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .m-persp { position: absolute; inset: 0; perspective: calc(var(--fw) * 1.3); perspective-origin: 50% 88%;
+    -webkit-mask-image: radial-gradient(circle at 50% 44%, transparent calc(var(--fw) * 0.24), #000 calc(var(--fw) * 0.33));
+    mask-image: radial-gradient(circle at 50% 44%, transparent calc(var(--fw) * 0.24), #000 calc(var(--fw) * 0.33)); }
+  .m-plane { position: absolute; inset: 0; transform: rotateX(20deg); transform-origin: 50% 86%;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%); mask-image: linear-gradient(180deg, transparent 0%, #000 30%); }
+  .m-col { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; align-items: center; will-change: transform; --ca: 0.03em; }
+  .m-row { display: block; white-space: nowrap; font-family: var(--display); font-stretch: extra-condensed; font-weight: 500;
+    line-height: 0.9; text-transform: uppercase; color: var(--ink); text-align: center;
+    text-shadow: calc(var(--ca) * -1) 0 color-mix(in srgb, var(--fringeA) 70%, transparent),
+                 var(--ca) 0 color-mix(in srgb, var(--fringeB) 55%, transparent),
+                 0 0 0.3em color-mix(in srgb, var(--ink) 55%, transparent); }
+  .m-row.gap { margin-bottom: 0.35em; }
+  .m-w { display: inline-block; will-change: transform, filter, opacity; }
+  .m-moon { position: absolute; left: 50%; top: 44%; width: calc(var(--fw) * 0.44); aspect-ratio: 1; will-change: transform;
+    filter: drop-shadow(0 0 calc(var(--fw) * 0.04) rgba(210,220,255,0.18)); }
+  .m-moon img { width: 100%; height: 100%; display: block; border-radius: 50%; filter: contrast(1.12) brightness(1.05); }
+  .m-moon::after { content: ""; position: absolute; inset: 0; border-radius: 50%;
+    background: radial-gradient(circle at 36% 30%, transparent 38%, rgba(0,0,0,0.35) 62%, rgba(0,0,0,0.82) 86%); }
+
+  /* ============ ESCENA 4 — túnel amarillo con motion blur ============ */
+  #sc-tunnel { background: radial-gradient(ellipse 70% 50% at 50% 50%, color-mix(in srgb, var(--dim) 22%, var(--bg)), var(--bg) 75%); perspective: calc(var(--fw) * 1.2); }
+  .t-ring { position: absolute; left: 50%; width: calc(var(--fw) * 1.9); height: calc(var(--fw) * 0.55); margin-left: calc(var(--fw) * -0.95);
+    border-radius: 50%; border: calc(var(--fw) * 0.013) solid transparent;
+    filter: drop-shadow(0 0 calc(var(--fw) * 0.02) color-mix(in srgb, var(--ink) 70%, transparent)) blur(0.6px); will-change: transform; }
+  .t-ring.top { top: 4%; border-bottom-color: var(--ink); }
+  .t-ring.bot { bottom: 4%; border-top-color: var(--ink); }
+  .t-drum, .t-echo { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; }
+  .t-echo { opacity: 0.22; filter: blur(2.5px); }
+  .t-row { position: absolute; left: 0; top: 0; white-space: nowrap; font-family: var(--humanist); font-weight: 500;
+    font-size: calc(var(--fw) * 0.118); line-height: 1; color: var(--ink); will-change: transform, filter, opacity;
+    text-shadow: 0 0 0.25em color-mix(in srgb, var(--ink) 45%, transparent); }
+  .t-row .w { transition: none; }
+
+  /* ============ ESCENA 5 — papel amarillo ============ */
+  #sc-paper { background: var(--bg); }
+  .pp-mag { position: absolute; left: 50%; top: 50%; width: calc(var(--fw) * 1.7); height: 125vh; will-change: transform;
+    filter: blur(3.5px); mix-blend-mode: multiply; opacity: 0.62; color: var(--shade); }
+  .pp-mag .big { font-family: var(--display); font-weight: 700; font-size: calc(var(--fw) * 0.42); line-height: 0.85; text-transform: uppercase; letter-spacing: -0.02em; }
+  .pp-mag .by { font: 600 calc(var(--fw) * 0.03) var(--ui); letter-spacing: 0.4em; text-transform: uppercase; margin: 2% 0 5% 40%; }
+  .pp-mag .cols { columns: 3; column-gap: 4%; font: 400 calc(var(--fw) * 0.028) / 1.35 var(--book); width: 70%; margin-left: 24%; }
+  .pp-mag .ph { position: absolute; background: linear-gradient(160deg, var(--shade), transparent); opacity: 0.8; }
+  .pp-bar { position: absolute; left: -10%; right: -10%; height: 7vh; background: var(--shade); filter: blur(16px); mix-blend-mode: multiply; opacity: 0.55; }
+  .pp-g { position: absolute; left: calc(var(--fw) * 0.12); top: 0; will-change: transform, filter, opacity; }
+  .pp-row { display: block; white-space: nowrap; font-family: var(--book); font-weight: 400; font-size: calc(var(--fw) * 0.118);
+    line-height: 1.02; letter-spacing: -0.01em; color: var(--ink); }
+  .pp-w { display: inline-block; will-change: transform, filter, opacity; }
+
+  /* ============ capas globales y transiciones ============ */
+  #foam { position: fixed; left: 0; top: 0; width: 100vw; height: 150vh; z-index: 6; display: none; pointer-events: none; will-change: transform, clip-path;
+    background-color: #dfe9f0; background-size: 100% 100%;
+    -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent 100%); mask-image: linear-gradient(180deg, #000 72%, transparent 100%); }
+  #peel { position: fixed; top: -10vh; height: 120vh; left: 0; width: 10px; z-index: 6; display: none; pointer-events: none; transform-origin: 0 50%;
+    background: linear-gradient(90deg, #5f5f58 0%, #bdbdb4 9%, #f4f4ee 34%, #ffffff 55%, #e2e2da 82%, #9d9d95 100%);
+    border-radius: 0 60% 60% 0 / 0 6% 6% 0;
+    box-shadow: 18px 0 40px rgba(0,0,0,0.55), inset 6px 0 14px rgba(0,0,0,0.25); }
+  #flash { position: fixed; inset: 0; z-index: 8; display: none; pointer-events: none; }
+  #grain { position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 7; pointer-events: none; opacity: 0.08; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    animation: grainShift 0.9s steps(5) infinite; }
+  @keyframes grainShift { 0%{transform:translate(0,0)} 20%{transform:translate(-3%,2%)} 40%{transform:translate(2%,-3%)} 60%{transform:translate(-2%,-1%)} 80%{transform:translate(3%,2%)} 100%{transform:translate(0,0)} }
+  #vignette { position: fixed; inset: 0; z-index: 7; pointer-events: none; background: radial-gradient(ellipse at 50% 48%, transparent 55%, rgba(0,0,0,0.45) 100%); }
+
+  /* intro / outro */
+  .cardScreen { position: fixed; inset: 0; z-index: 8; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: calc(var(--fw) * 0.02); transition: opacity 1.2s ease, filter 1.2s ease; pointer-events: none; }
+  .cardScreen .sub { font: 600 calc(var(--fw) * 0.03) var(--ui); letter-spacing: 0.42em; padding-left: 0.42em; text-transform: uppercase; color: rgba(255,236,214,0.7); }
+  .cardScreen .title { font-family: var(--display); font-stretch: extra-condensed; font-weight: 500; font-size: calc(var(--fw) * 0.34); line-height: 0.86;
+    text-transform: uppercase; padding: 0 0.04em; max-width: 94vw; white-space: nowrap;
+    background: linear-gradient(180deg, #FFF8E8 8%, #FFC178 52%, #F07737 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 0 calc(var(--fw) * 0.035) rgba(255,164,82,0.62)); -webkit-text-stroke: 1px rgba(255,241,220,0.22); }
+  .cardScreen .artist { font: 700 calc(var(--fw) * 0.045) var(--ui); color: #fff; }
+  .cardScreen .feats { font: 500 calc(var(--fw) * 0.028) var(--ui); letter-spacing: 0.16em; color: rgba(255,236,214,0.6); margin-top: calc(var(--fw) * 0.02); }
+  #intro { background: radial-gradient(ellipse 70% 50% at 50% 52%, rgba(60,22,6,0.55), rgba(4,2,1,0.94) 75%); }
+  #intro.gone { opacity: 0; filter: blur(12px); }
+  #outro { opacity: 0; background: transparent; transition: none; }
+  #outro.show { opacity: 1; }
+  body.outroActive #world .c-lines,
+  body.outroActive #world .p-words,
+  body.outroActive #world .p-ghost,
+  body.outroActive #world .m-persp,
+  body.outroActive #world .t-drum,
+  body.outroActive #world .t-echo,
+  body.outroActive #world .pp-g {
+    opacity: 0 !important;
+    transition: opacity .35s ease !important;
+  }
+  #hint { position: fixed; bottom: 6vh; left: 0; right: 0; text-align: center; z-index: 9; pointer-events: none;
+    font: 600 1.5vh var(--ui); letter-spacing: 0.5em; color: rgba(255,236,214,0.8); animation: hintPulse 2s ease infinite; }
+  @keyframes hintPulse { 0%,100% { opacity: 0.25; } 50% { opacity: 0.8; } }
+  #hud { position: fixed; top: 8px; left: 8px; z-index: 10; font: 12px/1.4 monospace; color: #0f0; background: rgba(0,0,0,0.6); padding: 4px 8px; display: none; white-space: pre; }
+

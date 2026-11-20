@@ -1,0 +1,7300 @@
+{
+  "version": 1,
+  "components": [
+    {
+      "name": "air.bomber",
+      "summary": "Bombardero de ala volante o alas en flecha, rumbo y sombra con altura.",
+      "layer": 50,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "wing",
+            "swept"
+          ],
+          "default": "wing"
+        },
+        "altitude": {
+          "type": "number",
+          "default": 2,
+          "min": 0,
+          "max": 20
+        },
+        "contrail": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": [
+        "normal",
+        "active",
+        "hit",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "air-bomber",
+        "type": "air.bomber",
+        "at": [
+          58.4,
+          24.9
+        ],
+        "variant": "wing",
+        "scale": 2.7,
+        "heading": "auto",
+        "altitude": 2,
+        "contrail": true,
+        "t": 0,
+        "dur": 8,
+        "label": "ALA VOLANTE",
+        "path": {
+          "via": [
+            [
+              58.4,
+              24.9
+            ],
+            [
+              58.14,
+              25.02
+            ],
+            [
+              57.95,
+              25.06
+            ]
+          ],
+          "t": 0.3,
+          "dur": 6.5,
+          "curve": "smooth"
+        }
+      },
+      "file": "components/air.js",
+      "used_by": [
+        "work/tactico/items-air.json"
+      ]
+    },
+    {
+      "name": "air.drop",
+      "summary": "Agregado: caída de bombas con sombra convergente y destello, ausente de las referencias.",
+      "layer": 50,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "to": {
+          "default": null
+        },
+        "count": {
+          "type": "number",
+          "default": 3,
+          "min": 1,
+          "max": 20
+        },
+        "interval": {
+          "type": "number",
+          "default": 0.3
+        },
+        "fallDur": {
+          "type": "number",
+          "default": 1.4
+        },
+        "height": {
+          "type": "number",
+          "default": 150
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "air-drop",
+        "type": "air.drop",
+        "at": [
+          58.2,
+          25
+        ],
+        "to": [
+          58.2,
+          25
+        ],
+        "count": 4,
+        "t": 0,
+        "dur": 4,
+        "note": "Caída agregada, no observada en las referencias."
+      },
+      "file": "components/air.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-air.json"
+      ]
+    },
+    {
+      "name": "air.helicopter",
+      "summary": "Helicóptero con rotor animado por tiempo absoluto.",
+      "layer": 50,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "utility"
+          ],
+          "default": "utility"
+        },
+        "altitude": {
+          "type": "number",
+          "default": 2,
+          "min": 0,
+          "max": 20
+        },
+        "contrail": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": [
+        "normal",
+        "active",
+        "hit",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "air-helicopter",
+        "type": "air.helicopter",
+        "at": [
+          58.4,
+          24.9
+        ],
+        "variant": "utility",
+        "scale": 4,
+        "heading": "auto",
+        "altitude": 2,
+        "contrail": true,
+        "t": 0,
+        "dur": 8,
+        "label": "HELICÓPTERO",
+        "path": {
+          "via": [
+            [
+              58.4,
+              24.9
+            ],
+            [
+              58.14,
+              25.02
+            ],
+            [
+              57.95,
+              25.06
+            ]
+          ],
+          "t": 0.3,
+          "dur": 6.5,
+          "curve": "smooth"
+        }
+      },
+      "file": "components/air.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-air.json"
+      ]
+    },
+    {
+      "name": "air.jet",
+      "summary": "Avión de ataque o caza.",
+      "layer": 50,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "attack",
+            "fighter"
+          ],
+          "default": "attack"
+        },
+        "altitude": {
+          "type": "number",
+          "default": 2,
+          "min": 0,
+          "max": 20
+        },
+        "contrail": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": [
+        "normal",
+        "active",
+        "hit",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "air-jet",
+        "type": "air.jet",
+        "at": [
+          58.4,
+          24.9
+        ],
+        "variant": "attack",
+        "scale": 4,
+        "heading": "auto",
+        "altitude": 2,
+        "contrail": true,
+        "t": 0,
+        "dur": 8,
+        "label": "CAZA",
+        "path": {
+          "via": [
+            [
+              58.4,
+              24.9
+            ],
+            [
+              58.14,
+              25.02
+            ],
+            [
+              57.95,
+              25.06
+            ]
+          ],
+          "t": 0.3,
+          "dur": 6.5,
+          "curve": "smooth"
+        }
+      },
+      "file": "components/air.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-air.json"
+      ]
+    },
+    {
+      "name": "air.launch",
+      "summary": "Agregado: despegues escalonados por la cubierta angulada de un portaaviones móvil.",
+      "layer": 50,
+      "params": {
+        "carrier": {
+          "type": "string",
+          "default": null
+        },
+        "to": {
+          "default": null
+        },
+        "from": {
+          "default": null
+        },
+        "unit": {
+          "type": "string",
+          "default": "air.jet:fighter"
+        },
+        "count": {
+          "type": "number",
+          "default": 1,
+          "min": 1,
+          "max": 20
+        },
+        "interval": {
+          "type": "number",
+          "default": 0.65
+        },
+        "deckDur": {
+          "type": "number",
+          "default": 0.75
+        },
+        "flightDur": {
+          "type": "number",
+          "default": 3.8
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "air-launch",
+        "type": "air.launch",
+        "carrier": "demo-carrier",
+        "at": "demo-carrier",
+        "to": [
+          57.6,
+          25.6
+        ],
+        "count": 2,
+        "t": 0,
+        "dur": 7,
+        "unit": "air.jet:attack",
+        "note": "Agregado: no aparece en las referencias. Requiere el item demo-carrier."
+      },
+      "file": "components/air.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-air.json"
+      ]
+    },
+    {
+      "name": "air.prop",
+      "summary": "Transporte de hélices animadas.",
+      "layer": 50,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "transport"
+          ],
+          "default": "transport"
+        },
+        "altitude": {
+          "type": "number",
+          "default": 2,
+          "min": 0,
+          "max": 20
+        },
+        "contrail": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": [
+        "normal",
+        "active",
+        "hit",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "air-prop",
+        "type": "air.prop",
+        "at": [
+          58.4,
+          24.9
+        ],
+        "variant": "transport",
+        "scale": 4,
+        "heading": "auto",
+        "altitude": 2,
+        "contrail": true,
+        "t": 0,
+        "dur": 8,
+        "label": "TRANSPORTE",
+        "path": {
+          "via": [
+            [
+              58.4,
+              24.9
+            ],
+            [
+              58.14,
+              25.02
+            ],
+            [
+              57.95,
+              25.06
+            ]
+          ],
+          "t": 0.3,
+          "dur": 6.5,
+          "curve": "smooth"
+        }
+      },
+      "file": "components/air.js",
+      "used_by": [
+        "work/tactico/items-air.json"
+      ]
+    },
+    {
+      "name": "air.recover",
+      "summary": "Agregado: aproximación y recuperación sobre la cubierta de un portaaviones móvil.",
+      "layer": 50,
+      "params": {
+        "carrier": {
+          "type": "string",
+          "default": null
+        },
+        "to": {
+          "default": null
+        },
+        "from": {
+          "default": null
+        },
+        "unit": {
+          "type": "string",
+          "default": "air.jet:fighter"
+        },
+        "count": {
+          "type": "number",
+          "default": 1,
+          "min": 1,
+          "max": 20
+        },
+        "interval": {
+          "type": "number",
+          "default": 0.65
+        },
+        "deckDur": {
+          "type": "number",
+          "default": 0.75
+        },
+        "flightDur": {
+          "type": "number",
+          "default": 3.8
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "air-recover",
+        "type": "air.recover",
+        "carrier": "demo-carrier",
+        "at": "demo-carrier",
+        "to": [
+          57.6,
+          25.6
+        ],
+        "from": [
+          57.6,
+          25.6
+        ],
+        "count": 2,
+        "t": 0,
+        "dur": 7,
+        "unit": "air.jet:attack",
+        "note": "Agregado: no aparece en las referencias. Requiere el item demo-carrier."
+      },
+      "file": "components/air.js",
+      "used_by": [
+        "work/tactico/items-air.json"
+      ]
+    },
+    {
+      "name": "army.advance",
+      "summary": "Ola de fichas con relieve, bandera, filas escalonadas, flecha progresiva y frente luminoso.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.35,
+          "max": 2.5,
+          "step": 0.05
+        },
+        "count": {
+          "type": "number",
+          "default": 24,
+          "min": 8,
+          "max": 40,
+          "step": 1
+        },
+        "columns": {
+          "type": "number",
+          "default": 6,
+          "min": 2,
+          "max": 10,
+          "step": 1
+        },
+        "spacing": {
+          "type": "number",
+          "default": 59,
+          "min": 44,
+          "max": 100,
+          "step": 1
+        },
+        "radius": {
+          "type": "number",
+          "default": 25,
+          "min": 16,
+          "max": 42,
+          "step": 1
+        },
+        "wave": {
+          "type": "number",
+          "default": 5,
+          "min": 0,
+          "max": 16,
+          "step": 0.5
+        },
+        "speed": {
+          "type": "number",
+          "default": 1.6,
+          "min": 0.1,
+          "max": 5,
+          "step": 0.1
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "arrow": {
+          "type": "boolean",
+          "default": true
+        },
+        "banner": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "default": "EJÉRCITO"
+        },
+        "date": {
+          "type": "string",
+          "default": ""
+        },
+        "seed": {
+          "default": 23
+        }
+      },
+      "states": [
+        "normal",
+        "engaged",
+        "routed",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "army-advance",
+        "type": "army.advance",
+        "at": [
+          48.45,
+          31.2
+        ],
+        "flag": "IQ",
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "count": 24,
+        "columns": 6,
+        "radius": 25,
+        "spacing": 59,
+        "wave": 5,
+        "label": "EJÉRCITO",
+        "date": "",
+        "path": {
+          "via": [
+            [
+              48.3,
+              30.98
+            ],
+            [
+              48.48,
+              31.18
+            ],
+            [
+              48.6,
+              31.38
+            ]
+          ],
+          "t": 0.5,
+          "dur": 7,
+          "curve": "smooth",
+          "ease": "inOut"
+        }
+      },
+      "file": "components/army.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-terrestre.json",
+        "work/tactico/scene-terrestre.json"
+      ]
+    },
+    {
+      "name": "army.banner",
+      "summary": "Estandarte ondeante con banda biselada, nombre de ejército y fecha.",
+      "layer": 70,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.35,
+          "max": 2.5,
+          "step": 0.05
+        },
+        "label": {
+          "type": "string",
+          "default": "EJÉRCITO"
+        },
+        "date": {
+          "type": "string",
+          "default": ""
+        },
+        "seed": {
+          "default": 23
+        }
+      },
+      "states": [
+        "normal",
+        "engaged",
+        "routed",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "army-banner",
+        "type": "army.banner",
+        "at": [
+          48.45,
+          31.2
+        ],
+        "flag": "IQ",
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "count": 24,
+        "columns": 6,
+        "radius": 25,
+        "spacing": 59,
+        "wave": 5,
+        "label": "EJÉRCITO",
+        "date": "SEPTIEMBRE · 1980"
+      },
+      "file": "components/army.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "army.clash",
+      "summary": "Dos ejércitos enfrentados con destellos deterministas y fichas que caen.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.35,
+          "max": 2.5,
+          "step": 0.05
+        },
+        "count": {
+          "type": "number",
+          "default": 24,
+          "min": 8,
+          "max": 40,
+          "step": 1
+        },
+        "columns": {
+          "type": "number",
+          "default": 6,
+          "min": 2,
+          "max": 10,
+          "step": 1
+        },
+        "spacing": {
+          "type": "number",
+          "default": 59,
+          "min": 44,
+          "max": 100,
+          "step": 1
+        },
+        "radius": {
+          "type": "number",
+          "default": 25,
+          "min": 16,
+          "max": 42,
+          "step": 1
+        },
+        "wave": {
+          "type": "number",
+          "default": 5,
+          "min": 0,
+          "max": 16,
+          "step": 0.5
+        },
+        "speed": {
+          "type": "number",
+          "default": 1.6,
+          "min": 0.1,
+          "max": 5,
+          "step": 0.1
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "arrow": {
+          "type": "boolean",
+          "default": true
+        },
+        "banner": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "default": "EJÉRCITO"
+        },
+        "date": {
+          "type": "string",
+          "default": ""
+        },
+        "seed": {
+          "default": 23
+        },
+        "opponentFlag": {
+          "type": "string",
+          "default": "IR"
+        },
+        "fall": {
+          "type": "number",
+          "default": 0.7,
+          "min": 0,
+          "max": 0.8,
+          "step": 0.05
+        }
+      },
+      "states": [
+        "normal",
+        "engaged",
+        "routed",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "army-clash",
+        "type": "army.clash",
+        "at": [
+          48.45,
+          31.2
+        ],
+        "flag": "IQ",
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "count": 24,
+        "columns": 6,
+        "radius": 25,
+        "spacing": 59,
+        "wave": 5,
+        "label": "CHOQUE DE FRENTES",
+        "date": "",
+        "opponentFlag": "IR"
+      },
+      "file": "components/army.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "army.encircle",
+      "summary": "Dos brazos de fichas que cierran el cerco gradualmente.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.35,
+          "max": 2.5,
+          "step": 0.05
+        },
+        "count": {
+          "type": "number",
+          "default": 24,
+          "min": 8,
+          "max": 40,
+          "step": 1
+        },
+        "columns": {
+          "type": "number",
+          "default": 6,
+          "min": 2,
+          "max": 10,
+          "step": 1
+        },
+        "spacing": {
+          "type": "number",
+          "default": 59,
+          "min": 44,
+          "max": 100,
+          "step": 1
+        },
+        "radius": {
+          "type": "number",
+          "default": 25,
+          "min": 16,
+          "max": 42,
+          "step": 1
+        },
+        "wave": {
+          "type": "number",
+          "default": 5,
+          "min": 0,
+          "max": 16,
+          "step": 0.5
+        },
+        "speed": {
+          "type": "number",
+          "default": 1.6,
+          "min": 0.1,
+          "max": 5,
+          "step": 0.1
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "arrow": {
+          "type": "boolean",
+          "default": true
+        },
+        "banner": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "default": "EJÉRCITO"
+        },
+        "date": {
+          "type": "string",
+          "default": ""
+        },
+        "seed": {
+          "default": 23
+        },
+        "closeDur": {
+          "type": "number",
+          "default": 5,
+          "min": 0.2,
+          "max": 30,
+          "step": 0.1
+        }
+      },
+      "states": [
+        "normal",
+        "engaged",
+        "routed",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "army-encircle",
+        "type": "army.encircle",
+        "at": [
+          48.45,
+          31.2
+        ],
+        "flag": "IQ",
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "count": 16,
+        "columns": 4,
+        "radius": 25,
+        "spacing": 59,
+        "wave": 5,
+        "label": "EJÉRCITO",
+        "date": "",
+        "closeDur": 5
+      },
+      "file": "components/army.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "army.hold",
+      "summary": "Línea defensiva escalonada que resiste con un pulso coordinado.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.35,
+          "max": 2.5,
+          "step": 0.05
+        },
+        "count": {
+          "type": "number",
+          "default": 24,
+          "min": 8,
+          "max": 40,
+          "step": 1
+        },
+        "columns": {
+          "type": "number",
+          "default": 6,
+          "min": 2,
+          "max": 10,
+          "step": 1
+        },
+        "spacing": {
+          "type": "number",
+          "default": 59,
+          "min": 44,
+          "max": 100,
+          "step": 1
+        },
+        "radius": {
+          "type": "number",
+          "default": 25,
+          "min": 16,
+          "max": 42,
+          "step": 1
+        },
+        "wave": {
+          "type": "number",
+          "default": 5,
+          "min": 0,
+          "max": 16,
+          "step": 0.5
+        },
+        "speed": {
+          "type": "number",
+          "default": 1.6,
+          "min": 0.1,
+          "max": 5,
+          "step": 0.1
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "arrow": {
+          "type": "boolean",
+          "default": true
+        },
+        "banner": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "default": "EJÉRCITO"
+        },
+        "date": {
+          "type": "string",
+          "default": ""
+        },
+        "seed": {
+          "default": 23
+        }
+      },
+      "states": [
+        "normal",
+        "engaged",
+        "routed",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "army-hold",
+        "type": "army.hold",
+        "at": [
+          48.45,
+          31.2
+        ],
+        "flag": "IQ",
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "count": 24,
+        "columns": 6,
+        "radius": 25,
+        "spacing": 59,
+        "wave": 5,
+        "label": "LÍNEA DEFENSIVA",
+        "date": ""
+      },
+      "file": "components/army.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "army.retreat",
+      "summary": "Retirada organizada de fichas con ondulación, polvo y frente rojo discontinuo.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.35,
+          "max": 2.5,
+          "step": 0.05
+        },
+        "count": {
+          "type": "number",
+          "default": 24,
+          "min": 8,
+          "max": 40,
+          "step": 1
+        },
+        "columns": {
+          "type": "number",
+          "default": 6,
+          "min": 2,
+          "max": 10,
+          "step": 1
+        },
+        "spacing": {
+          "type": "number",
+          "default": 59,
+          "min": 44,
+          "max": 100,
+          "step": 1
+        },
+        "radius": {
+          "type": "number",
+          "default": 25,
+          "min": 16,
+          "max": 42,
+          "step": 1
+        },
+        "wave": {
+          "type": "number",
+          "default": 5,
+          "min": 0,
+          "max": 16,
+          "step": 0.5
+        },
+        "speed": {
+          "type": "number",
+          "default": 1.6,
+          "min": 0.1,
+          "max": 5,
+          "step": 0.1
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "arrow": {
+          "type": "boolean",
+          "default": true
+        },
+        "banner": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "default": "EJÉRCITO"
+        },
+        "date": {
+          "type": "string",
+          "default": ""
+        },
+        "seed": {
+          "default": 23
+        }
+      },
+      "states": [
+        "normal",
+        "engaged",
+        "routed",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "army-retreat",
+        "type": "army.retreat",
+        "at": [
+          48.45,
+          31.2
+        ],
+        "flag": "IQ",
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "count": 24,
+        "columns": 6,
+        "radius": 25,
+        "spacing": 59,
+        "wave": 5,
+        "label": "EJÉRCITO",
+        "date": "",
+        "path": {
+          "via": [
+            [
+              48.6,
+              31.38
+            ],
+            [
+              48.48,
+              31.18
+            ],
+            [
+              48.3,
+              30.98
+            ]
+          ],
+          "t": 0.5,
+          "dur": 7,
+          "curve": "smooth",
+          "ease": "inOut"
+        }
+      },
+      "file": "components/army.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "army.supply",
+      "summary": "Ruta logística discontinua con pequeños camiones, polvo y entrada/salida suave.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.35,
+          "max": 2.5,
+          "step": 0.05
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "default": "EJÉRCITO"
+        },
+        "date": {
+          "type": "string",
+          "default": ""
+        },
+        "seed": {
+          "default": 23
+        },
+        "supplyCount": {
+          "type": "number",
+          "default": 5,
+          "min": 2,
+          "max": 12,
+          "step": 1
+        }
+      },
+      "states": [
+        "normal",
+        "engaged",
+        "routed",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "army-supply",
+        "type": "army.supply",
+        "at": [
+          48.45,
+          31.2
+        ],
+        "flag": "IQ",
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "count": 24,
+        "columns": 6,
+        "radius": 25,
+        "spacing": 59,
+        "wave": 5,
+        "label": "ABASTECIMIENTO",
+        "date": "",
+        "path": {
+          "via": [
+            [
+              48.3,
+              30.98
+            ],
+            [
+              48.48,
+              31.18
+            ],
+            [
+              48.6,
+              31.38
+            ]
+          ],
+          "t": 0.5,
+          "dur": 7,
+          "curve": "smooth",
+          "ease": "inOut"
+        }
+      },
+      "file": "components/army.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "arrow.bolt",
+      "summary": "Rayo angular determinista entre dos puntos con núcleo brillante y pulso.",
+      "layer": 15,
+      "params": {
+        "via": {
+          "type": "array",
+          "default": [
+            [
+              49,
+              28
+            ],
+            [
+              56.3,
+              26.5
+            ],
+            [
+              59,
+              24
+            ]
+          ]
+        },
+        "width": {
+          "type": "number",
+          "default": 4
+        },
+        "color": {
+          "type": "string",
+          "default": "text"
+        },
+        "reveal": {
+          "type": "number",
+          "default": 1
+        },
+        "teeth": {
+          "type": "number",
+          "default": 8
+        },
+        "amplitude": {
+          "type": "number",
+          "default": 24
+        },
+        "seed": {
+          "type": "number",
+          "default": 1
+        }
+      },
+      "states": [],
+      "demo": {
+        "via": [
+          [
+            48,
+            32
+          ],
+          [
+            58,
+            25
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "arrow.bolt",
+        "color": "accent"
+      },
+      "file": "components/routes.js",
+      "used_by": [
+        "work/tactico/items-routes.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "arrow.curve",
+      "summary": "Curva cuadrática con punta, revelado y estela luminosa en movimiento.",
+      "layer": 15,
+      "params": {
+        "via": {
+          "type": "array",
+          "default": [
+            [
+              49,
+              28
+            ],
+            [
+              56.3,
+              26.5
+            ],
+            [
+              59,
+              24
+            ]
+          ]
+        },
+        "width": {
+          "type": "number",
+          "default": 4
+        },
+        "color": {
+          "type": "string",
+          "default": "text"
+        },
+        "reveal": {
+          "type": "number",
+          "default": 1
+        },
+        "bend": {
+          "type": "number",
+          "default": 0.3
+        },
+        "trail": {
+          "type": "number",
+          "default": 0.24
+        }
+      },
+      "states": [],
+      "demo": {
+        "via": [
+          [
+            48,
+            33
+          ],
+          [
+            56,
+            27
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "arrow.curve",
+        "color": "text",
+        "width": 9
+      },
+      "file": "components/routes.js",
+      "used_by": [
+        "work/tactico/items-routes.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "arrow.flow",
+      "summary": "Flujo ondulado con flechas que recorren la curva según tiempo absoluto.",
+      "layer": 15,
+      "params": {
+        "via": {
+          "type": "array",
+          "default": [
+            [
+              49,
+              28
+            ],
+            [
+              56.3,
+              26.5
+            ],
+            [
+              59,
+              24
+            ]
+          ]
+        },
+        "width": {
+          "type": "number",
+          "default": 4
+        },
+        "color": {
+          "type": "string",
+          "default": "text"
+        },
+        "reveal": {
+          "type": "number",
+          "default": 1
+        },
+        "amplitude": {
+          "type": "number",
+          "default": 14
+        },
+        "wavelength": {
+          "type": "number",
+          "default": 150
+        },
+        "heads": {
+          "type": "number",
+          "default": 5
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.13
+        }
+      },
+      "states": [],
+      "demo": {
+        "via": [
+          [
+            50.5,
+            28.8
+          ],
+          [
+            53,
+            27
+          ],
+          [
+            56.4,
+            26.4
+          ],
+          [
+            58.5,
+            24.8
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "arrow.flow",
+        "color": "accent"
+      },
+      "file": "components/routes.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-routes.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "arrow.route",
+      "summary": "Flecha por waypoints con contorno y punta que avanza a longitud constante.",
+      "layer": 15,
+      "params": {
+        "via": {
+          "type": "array",
+          "default": [
+            [
+              49,
+              28
+            ],
+            [
+              56.3,
+              26.5
+            ],
+            [
+              59,
+              24
+            ]
+          ]
+        },
+        "width": {
+          "type": "number",
+          "default": 4
+        },
+        "color": {
+          "type": "string",
+          "default": "text"
+        },
+        "reveal": {
+          "type": "number",
+          "default": 1
+        }
+      },
+      "states": [],
+      "demo": {
+        "via": [
+          [
+            50.5,
+            28.8
+          ],
+          [
+            53,
+            27
+          ],
+          [
+            56.4,
+            26.4
+          ],
+          [
+            58.5,
+            24.8
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "arrow.route",
+        "color": "accent"
+      },
+      "file": "components/routes.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-routes.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "badge.count",
+      "summary": "Contador circular con dígitos rodantes y valores explícitos por estados fechados.",
+      "layer": 90,
+      "params": {
+        "value": {
+          "type": "number",
+          "default": 0
+        },
+        "radius": {
+          "type": "number",
+          "default": 66
+        },
+        "color": {
+          "type": "string",
+          "default": "success"
+        }
+      },
+      "states": [
+        "count"
+      ],
+      "demo": {
+        "type": "badge.count",
+        "screen": [
+          0.5,
+          0.35
+        ],
+        "value": 2,
+        "states": [
+          {
+            "at": 2,
+            "state": "count",
+            "value": 3,
+            "dur": 0.8
+          }
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "note": "Contador sintético para demostrar la animación."
+      },
+      "file": "components/labels.js",
+      "used_by": [
+        "work/tactico/items-labels.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "callout.photo",
+      "summary": "Foto/documento con pie y crédito visibles, haz hasta un punto del mapa.",
+      "layer": 80,
+      "params": {
+        "src": {
+          "type": "string",
+          "default": ""
+        },
+        "credit": {
+          "type": "string",
+          "default": ""
+        },
+        "date": {
+          "type": "string",
+          "default": ""
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 2
+        },
+        "offset": {
+          "type": "array",
+          "default": [
+            0,
+            -220
+          ]
+        },
+        "caption": {
+          "type": "string",
+          "default": ""
+        },
+        "beam": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [
+        "normal"
+      ],
+      "demo": {
+        "id": "demo-photo",
+        "type": "callout.photo",
+        "at": [
+          51,
+          27
+        ],
+        "src": "assets/media/A04.png",
+        "caption": "Iran Ajr · tras la captura",
+        "date": "22 sep 1987",
+        "credit": "PH3 Henry Cleveland · U.S. Navy · PD",
+        "offset": [
+          0,
+          -390
+        ],
+        "t": 0,
+        "dur": 8,
+        "out": 7
+      },
+      "file": "components/editorial.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-editorial.json",
+        "work/tactico/scene-portraits.json"
+      ]
+    },
+    {
+      "name": "debug.dot",
+      "summary": "Punto geográfico; sirve como unidad de prueba para trayectorias y estados.",
+      "layer": 40,
+      "params": {
+        "r": {
+          "type": "number",
+          "default": 18,
+          "min": 1,
+          "max": 200
+        }
+      },
+      "states": [
+        "normal",
+        "hit"
+      ],
+      "demo": {
+        "id": "core-dot",
+        "type": "debug.dot",
+        "at": [
+          56.25,
+          26.65
+        ],
+        "t": 0,
+        "dur": 9,
+        "path": {
+          "via": [
+            [
+              56.25,
+              26.65
+            ],
+            [
+              56.45,
+              26.5
+            ],
+            [
+              56.75,
+              26.35
+            ]
+          ],
+          "t": 1,
+          "dur": 6,
+          "curve": "smooth",
+          "ease": "inOut"
+        },
+        "states": [
+          {
+            "at": 5,
+            "state": "hit",
+            "dur": 0.8
+          }
+        ]
+      },
+      "file": "components/_base.js",
+      "used_by": [
+        "work/tactico/scene-core.json",
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "debug.label",
+      "summary": "Rótulo geográfico con contorno y tipografía declarada.",
+      "layer": 70,
+      "params": {
+        "text": {
+          "type": "string",
+          "required": true
+        },
+        "size": {
+          "type": "number",
+          "default": 28,
+          "min": 1,
+          "max": 200
+        },
+        "font": {
+          "type": "string",
+          "default": "sans-serif"
+        },
+        "dy": {
+          "type": "number",
+          "default": -42
+        }
+      },
+      "states": [
+        "normal",
+        "hit"
+      ],
+      "demo": {
+        "id": "core-label",
+        "type": "debug.label",
+        "text": "Núcleo táctico",
+        "at": "core-dot",
+        "t": 0,
+        "dur": 9
+      },
+      "file": "components/_base.js",
+      "used_by": [
+        "work/tactico/scene-core.json"
+      ]
+    },
+    {
+      "name": "debug.path",
+      "summary": "Trayectoria Mercator con cabeza y tramo recorrido; línea, arco o Catmull-Rom.",
+      "layer": 15,
+      "params": {
+        "width": {
+          "type": "number",
+          "default": 4,
+          "min": 0.1,
+          "max": 30
+        }
+      },
+      "states": [
+        "normal",
+        "hit"
+      ],
+      "demo": {
+        "id": "core-path",
+        "type": "debug.path",
+        "t": 0,
+        "dur": 9,
+        "path": {
+          "via": [
+            [
+              56.25,
+              26.65
+            ],
+            [
+              56.45,
+              26.5
+            ],
+            [
+              56.75,
+              26.35
+            ]
+          ],
+          "t": 1,
+          "dur": 6,
+          "curve": "smooth",
+          "ease": "inOut"
+        }
+      },
+      "file": "components/_base.js",
+      "used_by": [
+        "work/tactico/scene-core.json"
+      ]
+    },
+    {
+      "name": "editorial.press",
+      "summary": "Retrato y documento inclinado; solo docText del episodio y atribución explícita.",
+      "layer": 80,
+      "params": {
+        "src": {
+          "type": "string",
+          "default": ""
+        },
+        "credit": {
+          "type": "string",
+          "default": ""
+        },
+        "date": {
+          "type": "string",
+          "default": ""
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 2
+        },
+        "offset": {
+          "type": "array",
+          "default": [
+            0,
+            -220
+          ]
+        },
+        "name": {
+          "type": "string",
+          "default": ""
+        },
+        "role": {
+          "type": "string",
+          "default": ""
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.38
+          ]
+        },
+        "docText": {
+          "type": "string",
+          "default": ""
+        },
+        "docSrc": {
+          "type": "string",
+          "default": ""
+        },
+        "docCredit": {
+          "type": "string",
+          "default": ""
+        },
+        "tilt": {
+          "type": "number",
+          "default": -7
+        }
+      },
+      "states": [
+        "normal"
+      ],
+      "demo": {
+        "id": "demo-press",
+        "type": "editorial.press",
+        "at": [
+          51,
+          28
+        ],
+        "src": "assets/media/P03-soft.png",
+        "name": "Ronald Reagan",
+        "role": "Presidente de EE. UU.",
+        "date": "1987 · foto: 7 feb 1981",
+        "credit": "Michael Evans · Casa Blanca · PD",
+        "docSrc": "assets/media/A01.png",
+        "docText": "USS Stark · daños tras el ataque",
+        "docCredit": "U.S. Navy · DN-ST-89-01562 · PD",
+        "offset": [
+          0,
+          -100
+        ],
+        "t": 0,
+        "dur": 8,
+        "out": 7
+      },
+      "file": "components/editorial.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-editorial.json",
+        "work/tactico/scene-portraits.json"
+      ]
+    },
+    {
+      "name": "flag.marker",
+      "summary": "Bandera independiente en mástil, sombra y onda calculada desde el tiempo; admite ancla móvil.",
+      "layer": 70,
+      "params": {
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "flagWidth": {
+          "type": "number",
+          "default": 78
+        },
+        "poleHeight": {
+          "type": "number",
+          "default": 98
+        },
+        "wave": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [],
+      "demo": {
+        "type": "flag.marker",
+        "at": [
+          53,
+          27
+        ],
+        "flag": "US",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5
+      },
+      "file": "components/territory.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-territory.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "front.line",
+      "summary": "Frente discontinuo rotulado «aproximado»; interpola posiciones fechadas de avance o retirada.",
+      "layer": 15,
+      "params": {
+        "via": {
+          "type": "array",
+          "default": [
+            [
+              49,
+              28
+            ],
+            [
+              56.3,
+              26.5
+            ],
+            [
+              59,
+              24
+            ]
+          ]
+        },
+        "width": {
+          "type": "number",
+          "default": 4
+        },
+        "color": {
+          "type": "string",
+          "default": "text"
+        },
+        "reveal": {
+          "type": "number",
+          "default": 1
+        },
+        "approximate": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [
+        "advance",
+        "retreat",
+        "hold"
+      ],
+      "demo": {
+        "type": "front.line",
+        "via": [
+          [
+            47,
+            33
+          ],
+          [
+            48.5,
+            31.5
+          ],
+          [
+            49,
+            30
+          ]
+        ],
+        "states": [
+          {
+            "at": 1,
+            "state": "advance",
+            "via": [
+              [
+                48,
+                33
+              ],
+              [
+                49.5,
+                31.5
+              ],
+              [
+                50,
+                30
+              ]
+            ],
+            "dur": 1.5
+          },
+          {
+            "at": 3.5,
+            "state": "retreat",
+            "via": [
+              [
+                47.3,
+                33
+              ],
+              [
+                48.8,
+                31.5
+              ],
+              [
+                49.3,
+                30
+              ]
+            ],
+            "dur": 1
+          }
+        ],
+        "color": "danger",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "note": "Frente esquemático sin valor histórico."
+      },
+      "file": "components/routes.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-routes.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "fx.clash",
+      "summary": "Choque entre dos grupos: destello y ondas en el punto medio móvil.",
+      "layer": 60,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "groups": {
+          "type": "array",
+          "default": []
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        }
+      },
+      "states": [],
+      "demo": {
+        "type": "fx.clash",
+        "id": "clash",
+        "at": [
+          48.5,
+          30.6
+        ],
+        "t": 0,
+        "dur": 2,
+        "scale": 1.6
+      },
+      "file": "components/units.js",
+      "used_by": [
+        "work/tactico/items-units.json"
+      ]
+    },
+    {
+      "name": "fx.dust",
+      "summary": "Polvo determinista detrás de una ruta terrestre, con emisión proporcional al movimiento.",
+      "layer": 29,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 4,
+          "step": 0.05
+        },
+        "length": {
+          "type": "number",
+          "default": 154,
+          "min": 40,
+          "max": 360,
+          "step": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "tracks": {
+          "type": "boolean",
+          "default": true
+        },
+        "particles": {
+          "type": "number",
+          "default": 14,
+          "min": 0,
+          "max": 48,
+          "step": 1
+        },
+        "seed": {
+          "default": 1
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "ground-dust",
+        "type": "fx.dust",
+        "at": [
+          48.4,
+          31.1
+        ],
+        "t": 0,
+        "dur": 8,
+        "length": 210,
+        "particles": 36,
+        "seed": 4,
+        "path": {
+          "via": [
+            [
+              48.2,
+              31
+            ],
+            [
+              48.4,
+              31.1
+            ],
+            [
+              48.6,
+              31.3
+            ]
+          ],
+          "t": 0,
+          "dur": 7,
+          "curve": "smooth"
+        }
+      },
+      "file": "components/ground.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "fx.explosion",
+      "summary": "Explosión con bola de fuego, chispas, escombros y humo expansivo.",
+      "layer": 60,
+      "params": {
+        "dur": {
+          "type": "number",
+          "default": 2.8,
+          "min": 0.05
+        },
+        "size": {
+          "type": "number",
+          "default": 100,
+          "min": 4,
+          "max": 260,
+          "description": "Radio simbólico en px a U=1."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.1,
+          "max": 4
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "seed": {
+          "default": 1,
+          "description": "Semilla numérica o texto."
+        },
+        "particles": {
+          "type": "number",
+          "default": 84,
+          "min": 1,
+          "max": 300
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "ground",
+            "air",
+            "naval"
+          ],
+          "default": "ground"
+        },
+        "distance": {
+          "type": "enum",
+          "values": [
+            "near",
+            "far"
+          ],
+          "default": "near"
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "fx-explosion",
+        "type": "fx.explosion",
+        "at": [
+          54,
+          27
+        ],
+        "t": 0,
+        "dur": 2.8,
+        "size": 100,
+        "particles": 84,
+        "variant": "ground",
+        "seed": 73
+      },
+      "file": "components/fx.js",
+      "used_by": [
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "fx.fire",
+      "summary": "Llamas cíclicas sobre un punto o casco, con cierre suave de cada partícula.",
+      "layer": 60,
+      "params": {
+        "dur": {
+          "type": "number",
+          "default": 8,
+          "min": 0.05
+        },
+        "size": {
+          "type": "number",
+          "default": 70,
+          "min": 4,
+          "max": 260,
+          "description": "Radio simbólico en px a U=1."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.1,
+          "max": 4
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "seed": {
+          "default": 1,
+          "description": "Semilla numérica o texto."
+        },
+        "particles": {
+          "type": "number",
+          "default": 32,
+          "min": 1,
+          "max": 300
+        },
+        "period": {
+          "type": "number",
+          "default": 1.3,
+          "min": 0.2,
+          "max": 8
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "fx-fire",
+        "type": "fx.fire",
+        "at": [
+          54,
+          27
+        ],
+        "t": 0,
+        "dur": 8,
+        "size": 70,
+        "particles": 32,
+        "seed": 73
+      },
+      "file": "components/fx.js",
+      "used_by": [
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "fx.flash",
+      "summary": "Destello radial breve con núcleo luminoso.",
+      "layer": 60,
+      "params": {
+        "dur": {
+          "type": "number",
+          "default": 0.45,
+          "min": 0.05
+        },
+        "size": {
+          "type": "number",
+          "default": 80,
+          "min": 4,
+          "max": 260,
+          "description": "Radio simbólico en px a U=1."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.1,
+          "max": 4
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "seed": {
+          "default": 1,
+          "description": "Semilla numérica o texto."
+        },
+        "particles": {
+          "type": "number",
+          "default": 1,
+          "min": 1,
+          "max": 300
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "fx-flash",
+        "type": "fx.flash",
+        "at": [
+          54,
+          27
+        ],
+        "t": 0,
+        "dur": 0.45,
+        "size": 80,
+        "particles": 1,
+        "seed": 73
+      },
+      "file": "components/fx.js",
+      "used_by": [
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "fx.impact",
+      "summary": "Impacto con anillo; agua con columna, gotas y espuma.",
+      "layer": 60,
+      "params": {
+        "dur": {
+          "type": "number",
+          "default": 1.6,
+          "min": 0.05
+        },
+        "size": {
+          "type": "number",
+          "default": 75,
+          "min": 4,
+          "max": 260,
+          "description": "Radio simbólico en px a U=1."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.1,
+          "max": 4
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "seed": {
+          "default": 1,
+          "description": "Semilla numérica o texto."
+        },
+        "particles": {
+          "type": "number",
+          "default": 52,
+          "min": 1,
+          "max": 300
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "ground",
+            "water"
+          ],
+          "default": "ground"
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "fx-impact",
+        "type": "fx.impact",
+        "at": [
+          54,
+          27
+        ],
+        "t": 0,
+        "dur": 1.6,
+        "size": 75,
+        "particles": 52,
+        "variant": "ground",
+        "seed": 73
+      },
+      "file": "components/fx.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "fx.ring",
+      "summary": "Anillos concéntricos pulsantes de sonar, objetivo o detección.",
+      "layer": 60,
+      "params": {
+        "dur": {
+          "type": "number",
+          "default": 6,
+          "min": 0.05
+        },
+        "size": {
+          "type": "number",
+          "default": 100,
+          "min": 4,
+          "max": 260,
+          "description": "Radio simbólico en px a U=1."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.1,
+          "max": 4
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "seed": {
+          "default": 1,
+          "description": "Semilla numérica o texto."
+        },
+        "particles": {
+          "type": "number",
+          "default": 1,
+          "min": 1,
+          "max": 300
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "sonar",
+            "target",
+            "detection"
+          ],
+          "default": "sonar"
+        },
+        "period": {
+          "type": "number",
+          "default": 2,
+          "min": 0.2,
+          "max": 12
+        },
+        "rings": {
+          "type": "number",
+          "default": 3,
+          "min": 1,
+          "max": 6
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "fx-ring",
+        "type": "fx.ring",
+        "at": [
+          54,
+          27
+        ],
+        "t": 0,
+        "dur": 6,
+        "size": 100,
+        "particles": 1,
+        "variant": "sonar",
+        "seed": 73
+      },
+      "file": "components/fx.js",
+      "used_by": [
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "fx.shockwave",
+      "summary": "Onda circular con tres bordes de refracción simulada.",
+      "layer": 60,
+      "params": {
+        "dur": {
+          "type": "number",
+          "default": 2.4,
+          "min": 0.05
+        },
+        "size": {
+          "type": "number",
+          "default": 110,
+          "min": 4,
+          "max": 260,
+          "description": "Radio simbólico en px a U=1."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.1,
+          "max": 4
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "seed": {
+          "default": 1,
+          "description": "Semilla numérica o texto."
+        },
+        "particles": {
+          "type": "number",
+          "default": 1,
+          "min": 1,
+          "max": 300
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "ground",
+            "water"
+          ],
+          "default": "ground"
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "fx-shockwave",
+        "type": "fx.shockwave",
+        "at": [
+          54,
+          27
+        ],
+        "t": 0,
+        "dur": 2.4,
+        "size": 110,
+        "particles": 1,
+        "variant": "ground",
+        "seed": 73
+      },
+      "file": "components/fx.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "fx.smoke",
+      "summary": "Columna de humo sembrada, con deriva y emisión acotada.",
+      "layer": 60,
+      "params": {
+        "dur": {
+          "type": "number",
+          "default": 8,
+          "min": 0.05
+        },
+        "size": {
+          "type": "number",
+          "default": 85,
+          "min": 4,
+          "max": 260,
+          "description": "Radio simbólico en px a U=1."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.1,
+          "max": 4
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "seed": {
+          "default": 1,
+          "description": "Semilla numérica o texto."
+        },
+        "particles": {
+          "type": "number",
+          "default": 36,
+          "min": 1,
+          "max": 300
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "column",
+            "trail"
+          ],
+          "default": "column"
+        },
+        "drift": {
+          "type": "array",
+          "default": [
+            20,
+            -9
+          ],
+          "description": "px/s en pantalla, multiplicados por U."
+        },
+        "life": {
+          "type": "number",
+          "default": 3,
+          "min": 0.2,
+          "max": 20
+        },
+        "emitFor": {
+          "type": "number",
+          "default": 8,
+          "description": "Segundos de emisión; dejar life segundos para disipación."
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "fx-smoke",
+        "type": "fx.smoke",
+        "at": [
+          54,
+          27
+        ],
+        "t": 0,
+        "dur": 8,
+        "size": 85,
+        "particles": 36,
+        "variant": "column",
+        "seed": 73
+      },
+      "file": "components/fx.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "ground.ambulance",
+      "summary": "Ambulancia con cruz o media luna, balizas alternas y rumbo de ruta.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 4,
+          "step": 0.05
+        },
+        "length": {
+          "type": "number",
+          "default": 154,
+          "min": 40,
+          "max": 360,
+          "step": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "tracks": {
+          "type": "boolean",
+          "default": true
+        },
+        "particles": {
+          "type": "number",
+          "default": 14,
+          "min": 0,
+          "max": 48,
+          "step": 1
+        },
+        "seed": {
+          "default": 1
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "cross",
+            "crescent"
+          ],
+          "default": "cross"
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "ground-ambulance",
+        "type": "ground.ambulance",
+        "at": [
+          48.4,
+          31.1
+        ],
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "flag": "IQ",
+        "variant": "cross",
+        "path": {
+          "via": [
+            [
+              48.3,
+              31
+            ],
+            [
+              48.42,
+              31.13
+            ],
+            [
+              48.65,
+              31.22
+            ]
+          ],
+          "t": 0.6,
+          "dur": 6.5,
+          "curve": "smooth",
+          "ease": "inOut"
+        },
+        "label": "",
+        "seed": 17
+      },
+      "file": "components/ground.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "ground.apc",
+      "summary": "Blindado de ruedas con escotilla, sombra, polvo y huellas.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 4,
+          "step": 0.05
+        },
+        "length": {
+          "type": "number",
+          "default": 154,
+          "min": 40,
+          "max": 360,
+          "step": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "tracks": {
+          "type": "boolean",
+          "default": true
+        },
+        "particles": {
+          "type": "number",
+          "default": 14,
+          "min": 0,
+          "max": 48,
+          "step": 1
+        },
+        "seed": {
+          "default": 1
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "ground-apc",
+        "type": "ground.apc",
+        "at": [
+          48.4,
+          31.1
+        ],
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "flag": "IQ",
+        "variant": "normal",
+        "path": {
+          "via": [
+            [
+              48.3,
+              31
+            ],
+            [
+              48.42,
+              31.13
+            ],
+            [
+              48.65,
+              31.22
+            ]
+          ],
+          "t": 0.6,
+          "dur": 6.5,
+          "curve": "smooth",
+          "ease": "inOut"
+        },
+        "label": "",
+        "seed": 17
+      },
+      "file": "components/ground.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "ground.artillery",
+      "summary": "Obús remolcado o autopropulsado con fogonazo y retroceso programados.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 4,
+          "step": 0.05
+        },
+        "length": {
+          "type": "number",
+          "default": 154,
+          "min": 40,
+          "max": 360,
+          "step": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "tracks": {
+          "type": "boolean",
+          "default": true
+        },
+        "particles": {
+          "type": "number",
+          "default": 14,
+          "min": 0,
+          "max": 48,
+          "step": 1
+        },
+        "seed": {
+          "default": 1
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "towed",
+            "self"
+          ],
+          "default": "towed"
+        },
+        "fire": {
+          "type": "array",
+          "default": []
+        },
+        "turretHeading": {
+          "type": "number",
+          "default": 0,
+          "min": -180,
+          "max": 180,
+          "step": 1
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "destroyed",
+        "fire"
+      ],
+      "demo": {
+        "id": "ground-artillery",
+        "type": "ground.artillery",
+        "at": [
+          48.4,
+          31.1
+        ],
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "flag": "IQ",
+        "variant": "towed",
+        "path": {
+          "via": [
+            [
+              48.3,
+              31
+            ],
+            [
+              48.42,
+              31.13
+            ],
+            [
+              48.65,
+              31.22
+            ]
+          ],
+          "t": 0.6,
+          "dur": 6.5,
+          "curve": "smooth",
+          "ease": "inOut"
+        },
+        "fire": [
+          2.2,
+          4.4
+        ],
+        "label": "",
+        "seed": 17
+      },
+      "file": "components/ground.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "ground.convoy",
+      "summary": "Columna mixta que recorre una curva por distancia con separación y bandera líder.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 4,
+          "step": 0.05
+        },
+        "length": {
+          "type": "number",
+          "default": 110,
+          "min": 40,
+          "max": 360,
+          "step": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "tracks": {
+          "type": "boolean",
+          "default": true
+        },
+        "particles": {
+          "type": "number",
+          "default": 14,
+          "min": 0,
+          "max": 48,
+          "step": 1
+        },
+        "seed": {
+          "default": 1
+        },
+        "count": {
+          "type": "number",
+          "default": 6,
+          "min": 1,
+          "max": 40,
+          "step": 1
+        },
+        "spacing": {
+          "type": "number",
+          "default": 110,
+          "min": 30,
+          "max": 300,
+          "step": 2
+        },
+        "vehicles": {
+          "type": "array",
+          "default": [
+            "tank:main",
+            "apc",
+            "truck:cargo",
+            "truck:fuel",
+            "jeep",
+            "ambulance:cross"
+          ]
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "ground-convoy",
+        "type": "ground.convoy",
+        "at": [
+          48.4,
+          31.1
+        ],
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "flag": "IQ",
+        "path": {
+          "via": [
+            [
+              48.3,
+              31
+            ],
+            [
+              48.42,
+              31.13
+            ],
+            [
+              48.65,
+              31.22
+            ]
+          ],
+          "t": 0.6,
+          "dur": 6.5,
+          "curve": "smooth",
+          "ease": "inOut"
+        },
+        "count": 6,
+        "length": 92,
+        "spacing": 98,
+        "label": "",
+        "seed": 17
+      },
+      "file": "components/ground.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json",
+        "work/tactico/scene-terrestre.json"
+      ]
+    },
+    {
+      "name": "ground.jeep",
+      "summary": "Vehículo ligero abierto con rueda de repuesto y sombra.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 4,
+          "step": 0.05
+        },
+        "length": {
+          "type": "number",
+          "default": 154,
+          "min": 40,
+          "max": 360,
+          "step": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "tracks": {
+          "type": "boolean",
+          "default": true
+        },
+        "particles": {
+          "type": "number",
+          "default": 14,
+          "min": 0,
+          "max": 48,
+          "step": 1
+        },
+        "seed": {
+          "default": 1
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "ground-jeep",
+        "type": "ground.jeep",
+        "at": [
+          48.4,
+          31.1
+        ],
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "flag": "IQ",
+        "variant": "normal",
+        "path": {
+          "via": [
+            [
+              48.3,
+              31
+            ],
+            [
+              48.42,
+              31.13
+            ],
+            [
+              48.65,
+              31.22
+            ]
+          ],
+          "t": 0.6,
+          "dur": 6.5,
+          "curve": "smooth",
+          "ease": "inOut"
+        },
+        "label": "",
+        "seed": 17
+      },
+      "file": "components/ground.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "ground.launcher",
+      "summary": "Lanzador sobre camión; cada fire prepara un strike.missile hacia to.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 4,
+          "step": 0.05
+        },
+        "length": {
+          "type": "number",
+          "default": 154,
+          "min": 40,
+          "max": 360,
+          "step": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "tracks": {
+          "type": "boolean",
+          "default": true
+        },
+        "particles": {
+          "type": "number",
+          "default": 14,
+          "min": 0,
+          "max": 48,
+          "step": 1
+        },
+        "seed": {
+          "default": 1
+        },
+        "fire": {
+          "type": "array",
+          "default": []
+        },
+        "turretHeading": {
+          "type": "number",
+          "default": 0,
+          "min": -180,
+          "max": 180,
+          "step": 1
+        },
+        "to": {
+          "default": null
+        },
+        "flightDur": {
+          "type": "number",
+          "default": 1.8,
+          "min": 0.1,
+          "max": 30,
+          "step": 0.1
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "destroyed",
+        "fire"
+      ],
+      "demo": {
+        "id": "ground-launcher",
+        "type": "ground.launcher",
+        "at": [
+          48.4,
+          31.1
+        ],
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "flag": "IQ",
+        "variant": "normal",
+        "path": {
+          "via": [
+            [
+              48.3,
+              31
+            ],
+            [
+              48.42,
+              31.13
+            ],
+            [
+              48.65,
+              31.22
+            ]
+          ],
+          "t": 0.6,
+          "dur": 6.5,
+          "curve": "smooth",
+          "ease": "inOut"
+        },
+        "fire": [
+          2.2,
+          4.4
+        ],
+        "to": [
+          49.02,
+          31.55
+        ],
+        "label": "",
+        "seed": 17
+      },
+      "file": "components/ground.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "ground.tank",
+      "summary": "Tanque con casco, orugas, torreta orientable y retroceso; principal o ligero.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 4,
+          "step": 0.05
+        },
+        "length": {
+          "type": "number",
+          "default": 154,
+          "min": 40,
+          "max": 360,
+          "step": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "tracks": {
+          "type": "boolean",
+          "default": true
+        },
+        "particles": {
+          "type": "number",
+          "default": 14,
+          "min": 0,
+          "max": 48,
+          "step": 1
+        },
+        "seed": {
+          "default": 1
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "main",
+            "light"
+          ],
+          "default": "main"
+        },
+        "fire": {
+          "type": "array",
+          "default": []
+        },
+        "turretHeading": {
+          "type": "number",
+          "default": 0,
+          "min": -180,
+          "max": 180,
+          "step": 1
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "destroyed",
+        "fire"
+      ],
+      "demo": {
+        "id": "ground-tank",
+        "type": "ground.tank",
+        "at": [
+          48.4,
+          31.1
+        ],
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "flag": "IQ",
+        "variant": "main",
+        "path": {
+          "via": [
+            [
+              48.3,
+              31
+            ],
+            [
+              48.42,
+              31.13
+            ],
+            [
+              48.65,
+              31.22
+            ]
+          ],
+          "t": 0.6,
+          "dur": 6.5,
+          "curve": "smooth",
+          "ease": "inOut"
+        },
+        "fire": [
+          2.2,
+          4.4
+        ],
+        "label": "",
+        "seed": 17
+      },
+      "file": "components/ground.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "ground.truck",
+      "summary": "Camión militar de lona o cisterna, con rodadura animada.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 4,
+          "step": 0.05
+        },
+        "length": {
+          "type": "number",
+          "default": 154,
+          "min": 40,
+          "max": 360,
+          "step": 2
+        },
+        "flag": {
+          "type": "string",
+          "default": "IQ"
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "dust": {
+          "type": "boolean",
+          "default": true
+        },
+        "tracks": {
+          "type": "boolean",
+          "default": true
+        },
+        "particles": {
+          "type": "number",
+          "default": 14,
+          "min": 0,
+          "max": 48,
+          "step": 1
+        },
+        "seed": {
+          "default": 1
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "cargo",
+            "fuel"
+          ],
+          "default": "cargo"
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "ground-truck",
+        "type": "ground.truck",
+        "at": [
+          48.4,
+          31.1
+        ],
+        "t": 0,
+        "dur": 8,
+        "fade": 0.6,
+        "flag": "IQ",
+        "variant": "cargo",
+        "path": {
+          "via": [
+            [
+              48.3,
+              31
+            ],
+            [
+              48.42,
+              31.13
+            ],
+            [
+              48.65,
+              31.22
+            ]
+          ],
+          "t": 0.6,
+          "dur": 6.5,
+          "curve": "smooth",
+          "ease": "inOut"
+        },
+        "label": "",
+        "seed": 17
+      },
+      "file": "components/ground.js",
+      "used_by": [
+        "work/tactico/items-terrestre.json"
+      ]
+    },
+    {
+      "name": "icon.badge",
+      "summary": "Medallón vectorial propio: avión, barco, petróleo, edificio, escudo o estrella.",
+      "layer": 70,
+      "params": {
+        "icon": {
+          "type": "enum",
+          "values": [
+            "plane",
+            "ship",
+            "oil",
+            "building",
+            "shield",
+            "star"
+          ],
+          "default": "ship"
+        },
+        "radius": {
+          "type": "number",
+          "default": 60
+        },
+        "color": {
+          "type": "string",
+          "default": "accent"
+        }
+      },
+      "states": [],
+      "demo": {
+        "type": "icon.badge",
+        "screen": [
+          0.5,
+          0.4
+        ],
+        "icon": "ship",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5
+      },
+      "file": "components/labels.js",
+      "used_by": [
+        "work/tactico/items-labels.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "intro.title",
+      "summary": "Título Atlas: anillo geográfico que enfoca el mapa, año, rótulo neón y tres entradas propias.",
+      "layer": 90,
+      "params": {
+        "title": {
+          "type": "string",
+          "required": true,
+          "default": "EL GOLFO\nBAJO PRESIÓN"
+        },
+        "subtitle": {
+          "type": "string",
+          "default": ""
+        },
+        "kicker": {
+          "type": "string",
+          "default": "ATLAS EN MOVIMIENTO"
+        },
+        "year": {
+          "type": "string",
+          "default": ""
+        },
+        "focus": {
+          "type": "place",
+          "default": [
+            52,
+            26.8
+          ]
+        },
+        "style": {
+          "type": "enum",
+          "values": [
+            "focus",
+            "trace",
+            "meridian"
+          ],
+          "default": "focus"
+        },
+        "dur": {
+          "type": "number",
+          "default": 6,
+          "min": 2,
+          "max": 6
+        },
+        "fade": {
+          "type": "number",
+          "default": 0
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "intro-atlas",
+        "type": "intro.title",
+        "title": "EL GOLFO\nBAJO PRESIÓN",
+        "subtitle": "Una ruta. Un punto de tensión.",
+        "kicker": "ATLAS EN MOVIMIENTO",
+        "year": "1987",
+        "focus": [
+          52,
+          26.8
+        ],
+        "style": "focus",
+        "t": 0,
+        "dur": 6,
+        "fade": 0
+      },
+      "file": "components/intro.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-intro.json"
+      ]
+    },
+    {
+      "name": "inventory.units",
+      "summary": "Rejilla de siluetas de unidades con contador explícito; máximo 60 iconos y total independiente.",
+      "layer": 80,
+      "params": {
+        "icon": {
+          "type": "string",
+          "default": "naval.carrier"
+        },
+        "useSprites": {
+          "type": "boolean",
+          "default": false
+        },
+        "count": {
+          "type": "number",
+          "default": 11,
+          "min": 0,
+          "max": 60
+        },
+        "total": {
+          "type": "number",
+          "default": null,
+          "min": 0,
+          "max": 1000000
+        },
+        "columns": {
+          "type": "number",
+          "default": 4,
+          "min": 1,
+          "max": 10
+        },
+        "label": {
+          "type": "string",
+          "default": "Inventario"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 2
+        },
+        "offset": {
+          "type": "array",
+          "default": [
+            0,
+            -200
+          ]
+        }
+      },
+      "states": [
+        "normal"
+      ],
+      "demo": {
+        "id": "demo-inventory",
+        "type": "inventory.units",
+        "at": [
+          51,
+          28
+        ],
+        "icon": "naval.carrier",
+        "count": 11,
+        "total": 11,
+        "columns": 4,
+        "label": "Inventario · muestra de biblioteca",
+        "offset": [
+          0,
+          -100
+        ],
+        "t": 0,
+        "dur": 8,
+        "out": 7,
+        "note": "Ejemplo de capacidad; no es una cifra de la guerra del Golfo."
+      },
+      "file": "components/editorial.js",
+      "used_by": [
+        "work/tactico/scene-editorial.json",
+        "work/tactico/scene-portraits.json"
+      ]
+    },
+    {
+      "name": "label.callout",
+      "summary": "Ficha ajustada a zona segura con guía, estrella vectorial y escritura progresiva.",
+      "layer": 70,
+      "params": {
+        "text": {
+          "type": "string",
+          "default": ""
+        },
+        "size": {
+          "type": "number",
+          "default": 32
+        },
+        "width": {
+          "type": "number",
+          "default": 650
+        },
+        "height": {
+          "type": "number",
+          "default": 220
+        },
+        "color": {
+          "type": "string",
+          "default": "text"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true
+        },
+        "screen": {
+          "type": "array",
+          "default": null
+        },
+        "offset": {
+          "type": "array",
+          "default": [
+            110,
+            -100
+          ]
+        },
+        "reveal": {
+          "type": "number",
+          "default": 0.65
+        }
+      },
+      "states": [],
+      "demo": {
+        "type": "label.callout",
+        "at": [
+          53,
+          27
+        ],
+        "text": "Unidad de demostración",
+        "offset": [
+          100,
+          -120
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5
+      },
+      "file": "components/labels.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-labels.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "label.chip",
+      "summary": "Fecha o ficha pequeña con borde y texto ajustado.",
+      "layer": 70,
+      "params": {
+        "text": {
+          "type": "string",
+          "default": ""
+        },
+        "size": {
+          "type": "number",
+          "default": 30
+        },
+        "width": {
+          "type": "number",
+          "default": 650
+        },
+        "height": {
+          "type": "number",
+          "default": 220
+        },
+        "color": {
+          "type": "string",
+          "default": "text"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true
+        },
+        "screen": {
+          "type": "array",
+          "default": null
+        }
+      },
+      "states": [],
+      "demo": {
+        "type": "label.chip",
+        "at": [
+          56.4,
+          26.5
+        ],
+        "text": "ESTRECHO DE ORMUZ",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5
+      },
+      "file": "components/labels.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-labels.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "label.figure",
+      "summary": "Cifra grande con unidad y procedencia obligatoria; no genera valores.",
+      "layer": 70,
+      "params": {
+        "text": {
+          "type": "string",
+          "default": ""
+        },
+        "size": {
+          "type": "number",
+          "default": 96
+        },
+        "width": {
+          "type": "number",
+          "default": 650
+        },
+        "height": {
+          "type": "number",
+          "default": 220
+        },
+        "color": {
+          "type": "string",
+          "default": "text"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true
+        },
+        "screen": {
+          "type": "array",
+          "default": null
+        },
+        "value": {
+          "type": "number",
+          "default": null
+        },
+        "unit": {
+          "type": "string",
+          "default": ""
+        },
+        "source": {
+          "type": "string",
+          "default": ""
+        },
+        "rotation": {
+          "type": "number",
+          "default": -8
+        }
+      },
+      "states": [],
+      "demo": {
+        "type": "label.figure",
+        "screen": [
+          0.5,
+          0.48
+        ],
+        "value": 4,
+        "unit": "países",
+        "source": "Los cuatro países de scene-territorios.json; dato de la demostración",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5
+      },
+      "file": "components/labels.js",
+      "used_by": [
+        "work/tactico/items-labels.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "label.neon",
+      "summary": "Rótulo neón con contorno oscuro, rotación y ajuste de líneas.",
+      "layer": 70,
+      "params": {
+        "text": {
+          "type": "string",
+          "default": ""
+        },
+        "size": {
+          "type": "number",
+          "default": 64
+        },
+        "width": {
+          "type": "number",
+          "default": 650
+        },
+        "height": {
+          "type": "number",
+          "default": 220
+        },
+        "color": {
+          "type": "string",
+          "default": "accent"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true
+        },
+        "screen": {
+          "type": "array",
+          "default": null
+        },
+        "rotation": {
+          "type": "number",
+          "default": 0
+        }
+      },
+      "states": [],
+      "demo": {
+        "type": "label.neon",
+        "at": [
+          54,
+          32
+        ],
+        "text": "IRÁN",
+        "color": "cyan",
+        "size": 78,
+        "t": 0,
+        "dur": 6,
+        "out": 5.5
+      },
+      "file": "components/labels.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-labels.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "money.flow",
+      "summary": "Billetes simbólicos por una ruta geográfica; fase y rumbo puros de t, sin afirmar un valor comercial.",
+      "layer": 30,
+      "params": {
+        "via": {
+          "type": "array",
+          "default": [
+            [
+              50.33,
+              29.25
+            ],
+            [
+              52,
+              27.5
+            ],
+            [
+              56.4,
+              26.5
+            ],
+            [
+              58,
+              24
+            ]
+          ]
+        },
+        "count": {
+          "type": "number",
+          "default": 7,
+          "min": 1,
+          "max": 40
+        },
+        "period": {
+          "type": "number",
+          "default": 5,
+          "min": 0.2,
+          "max": 60
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 4
+        },
+        "routeVisible": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": [
+        "normal"
+      ],
+      "demo": {
+        "id": "demo-money-flow",
+        "type": "money.flow",
+        "at": [
+          50.33,
+          29.25
+        ],
+        "via": [
+          [
+            50.33,
+            29.25
+          ],
+          [
+            51.8,
+            27.4
+          ],
+          [
+            54.5,
+            26.1
+          ],
+          [
+            56.4,
+            26.5
+          ],
+          [
+            58,
+            24
+          ]
+        ],
+        "count": 7,
+        "period": 5,
+        "t": 0,
+        "dur": 8,
+        "out": 7,
+        "note": "Flujo simbólico · rutas esquemáticas"
+      },
+      "file": "components/economy.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-economy.json",
+        "work/tactico/scene-editorial.json"
+      ]
+    },
+    {
+      "name": "money.stack",
+      "summary": "Fajos simbólicos que se deslizan y apilan; sin moneda ni cifra económica implícita.",
+      "layer": 30,
+      "params": {
+        "count": {
+          "type": "number",
+          "default": 8,
+          "min": 1,
+          "max": 36
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 4
+        },
+        "buildDur": {
+          "type": "number",
+          "default": 1.8,
+          "min": 0,
+          "max": 10
+        }
+      },
+      "states": [
+        "normal"
+      ],
+      "demo": {
+        "id": "demo-money-stack",
+        "type": "money.stack",
+        "at": [
+          51,
+          28
+        ],
+        "count": 12,
+        "t": 0,
+        "dur": 8,
+        "out": 7
+      },
+      "file": "components/economy.js",
+      "used_by": [
+        "work/tactico/scene-economy.json",
+        "work/tactico/scene-editorial.json"
+      ]
+    },
+    {
+      "name": "naval.cargo",
+      "summary": "Mercante: petrolero, contenedores o granelero, con estados de casco y estela.",
+      "layer": 40,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "tanker",
+            "container",
+            "bulk"
+          ],
+          "default": "tanker"
+        },
+        "wake": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [
+        "normal",
+        "detected",
+        "targeted",
+        "hit",
+        "burning",
+        "wrecked",
+        "sunk",
+        "flightops"
+      ],
+      "demo": {
+        "type": "naval.cargo",
+        "id": "naval-cargo",
+        "variant": "tanker",
+        "at": [
+          58.4,
+          24.9
+        ],
+        "heading": "auto",
+        "label": "PETROLERO",
+        "t": 0,
+        "dur": 8,
+        "path": {
+          "via": [
+            [
+              58.4,
+              24.9
+            ],
+            [
+              58.18,
+              25.04
+            ],
+            [
+              57.95,
+              25.06
+            ]
+          ],
+          "t": 0.5,
+          "dur": 6,
+          "curve": "smooth"
+        },
+        "states": [
+          {
+            "at": 3,
+            "state": "detected"
+          },
+          {
+            "at": 5.5,
+            "state": "normal"
+          }
+        ]
+      },
+      "file": "components/naval.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-naval.json"
+      ]
+    },
+    {
+      "name": "naval.carrier",
+      "summary": "Portaaviones con cubierta angulada, aviones, escoltas coordinadas y operaciones aéreas.",
+      "layer": 40,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "supercarrier",
+            "stovl",
+            "hero",
+            "inventory"
+          ],
+          "default": "supercarrier"
+        },
+        "wake": {
+          "type": "boolean",
+          "default": true
+        },
+        "deck": {
+          "type": "object",
+          "default": {
+            "aircraft": 12
+          }
+        },
+        "escorts": {
+          "type": "object",
+          "default": null
+        },
+        "actions": {
+          "type": "array",
+          "default": []
+        },
+        "region": {
+          "type": "string",
+          "default": null
+        },
+        "count": {
+          "type": "number",
+          "default": 8
+        },
+        "inventoryScale": {
+          "type": "number",
+          "default": 0.42
+        }
+      },
+      "states": [
+        "normal",
+        "detected",
+        "targeted",
+        "hit",
+        "burning",
+        "wrecked",
+        "sunk",
+        "flightops"
+      ],
+      "demo": {
+        "type": "naval.carrier",
+        "id": "naval-carrier",
+        "variant": "supercarrier",
+        "at": [
+          58.4,
+          24.9
+        ],
+        "heading": "auto",
+        "label": "PORTAAVIONES",
+        "t": 0,
+        "dur": 8,
+        "path": {
+          "via": [
+            [
+              58.4,
+              24.9
+            ],
+            [
+              58.18,
+              25.04
+            ],
+            [
+              57.95,
+              25.06
+            ]
+          ],
+          "t": 0.5,
+          "dur": 6,
+          "curve": "smooth"
+        },
+        "deck": {
+          "aircraft": 12
+        },
+        "escorts": {
+          "formation": "diamond",
+          "units": [
+            "naval.warship:cg",
+            "naval.warship:ddg",
+            "naval.warship:ff"
+          ]
+        },
+        "states": [
+          {
+            "at": 3,
+            "state": "flightops"
+          },
+          {
+            "at": 5.5,
+            "state": "normal"
+          }
+        ]
+      },
+      "file": "components/naval.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-air.json",
+        "work/tactico/items-naval.json",
+        "work/tactico/scene-unidades-movimiento.json",
+        "work/tactico/scene-unidades.json"
+      ]
+    },
+    {
+      "name": "naval.group",
+      "summary": "Líder y escoltas en formación rígida que gira con la ruta, por ids o tipos.",
+      "layer": 40,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "wake": {
+          "type": "boolean",
+          "default": true
+        },
+        "leader": {
+          "default": "naval.carrier:supercarrier"
+        },
+        "formation": {
+          "type": "enum",
+          "values": [
+            "line",
+            "diamond",
+            "box",
+            "escort-ring"
+          ],
+          "default": "diamond"
+        },
+        "units": {
+          "type": "array",
+          "default": [
+            "naval.warship:ddg",
+            "naval.warship:ff",
+            "naval.warship:cg"
+          ]
+        },
+        "spacing": {
+          "type": "number",
+          "default": 0.82
+        }
+      },
+      "states": [
+        "normal",
+        "detected",
+        "targeted",
+        "hit",
+        "burning",
+        "wrecked",
+        "sunk",
+        "flightops"
+      ],
+      "demo": {
+        "type": "naval.group",
+        "id": "naval-group",
+        "at": [
+          58.4,
+          24.9
+        ],
+        "heading": "auto",
+        "label": "GRUPO NAVAL",
+        "t": 0,
+        "dur": 8,
+        "path": {
+          "via": [
+            [
+              58.4,
+              24.9
+            ],
+            [
+              58.18,
+              25.04
+            ],
+            [
+              57.95,
+              25.06
+            ]
+          ],
+          "t": 0.5,
+          "dur": 6,
+          "curve": "smooth"
+        },
+        "states": [
+          {
+            "at": 3,
+            "state": "detected"
+          },
+          {
+            "at": 5.5,
+            "state": "normal"
+          }
+        ]
+      },
+      "file": "components/naval.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-naval.json",
+        "work/tactico/scene-unidades-movimiento.json",
+        "work/tactico/scene-unidades.json"
+      ]
+    },
+    {
+      "name": "naval.submarine",
+      "summary": "Submarino opaco o azul translúcido, rótulo y línea guía.",
+      "layer": 40,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "normal",
+            "translucent"
+          ],
+          "default": "normal"
+        },
+        "wake": {
+          "type": "boolean",
+          "default": true
+        },
+        "translucent": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "states": [
+        "normal",
+        "detected",
+        "targeted",
+        "hit",
+        "burning",
+        "wrecked",
+        "sunk",
+        "flightops"
+      ],
+      "demo": {
+        "type": "naval.submarine",
+        "id": "naval-submarine",
+        "variant": "normal",
+        "at": [
+          58.4,
+          24.9
+        ],
+        "heading": "auto",
+        "label": "SUBMARINO",
+        "t": 0,
+        "dur": 8,
+        "path": {
+          "via": [
+            [
+              58.4,
+              24.9
+            ],
+            [
+              58.18,
+              25.04
+            ],
+            [
+              57.95,
+              25.06
+            ]
+          ],
+          "t": 0.5,
+          "dur": 6,
+          "curve": "smooth"
+        },
+        "states": [
+          {
+            "at": 3,
+            "state": "detected"
+          },
+          {
+            "at": 5.5,
+            "state": "normal"
+          }
+        ]
+      },
+      "file": "components/naval.js",
+      "used_by": [
+        "work/tactico/items-naval.json"
+      ]
+    },
+    {
+      "name": "naval.warship",
+      "summary": "Destructor, fragata o crucero gris con torres.",
+      "layer": 40,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "variant": {
+          "type": "enum",
+          "values": [
+            "destroyer",
+            "frigate",
+            "cruiser"
+          ],
+          "default": "destroyer"
+        },
+        "wake": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [
+        "normal",
+        "detected",
+        "targeted",
+        "hit",
+        "burning",
+        "wrecked",
+        "sunk",
+        "flightops"
+      ],
+      "demo": {
+        "type": "naval.warship",
+        "id": "naval-warship",
+        "variant": "destroyer",
+        "at": [
+          58.4,
+          24.9
+        ],
+        "heading": "auto",
+        "label": "DESTRUCTOR",
+        "t": 0,
+        "dur": 8,
+        "path": {
+          "via": [
+            [
+              58.4,
+              24.9
+            ],
+            [
+              58.18,
+              25.04
+            ],
+            [
+              57.95,
+              25.06
+            ]
+          ],
+          "t": 0.5,
+          "dur": 6,
+          "curve": "smooth"
+        },
+        "states": [
+          {
+            "at": 3,
+            "state": "detected"
+          },
+          {
+            "at": 5.5,
+            "state": "normal"
+          }
+        ]
+      },
+      "file": "components/naval.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-naval.json"
+      ]
+    },
+    {
+      "name": "outro.channel",
+      "summary": "Cierre Atlas ≤8 s: gracias, canal, me gusta, suscribirse y campana, apoyo y handle sin recuadro.",
+      "layer": 90,
+      "params": {
+        "channel": {
+          "type": "string",
+          "default": "NODEHISTORY"
+        },
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER"
+        },
+        "support": {
+          "type": "string",
+          "default": "Apoya el canal. Comparte esta historia."
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodehistory"
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.78,
+          "min": 0,
+          "max": 1
+        },
+        "dur": {
+          "type": "number",
+          "default": 8,
+          "min": 4,
+          "max": 8
+        },
+        "fade": {
+          "type": "number",
+          "default": 0
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "outro-atlas",
+        "type": "outro.channel",
+        "t": 6,
+        "dur": 8,
+        "fade": 0,
+        "channel": "NODEHISTORY",
+        "handle": "youtube.com/@nodehistory"
+      },
+      "file": "components/intro.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-intro.json"
+      ]
+    },
+    {
+      "name": "portrait.badge",
+      "summary": "Retrato circular u octogonal con cargo y fecha documentada.",
+      "layer": 80,
+      "params": {
+        "src": {
+          "type": "string",
+          "default": ""
+        },
+        "credit": {
+          "type": "string",
+          "default": ""
+        },
+        "date": {
+          "type": "string",
+          "default": ""
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 2
+        },
+        "offset": {
+          "type": "array",
+          "default": [
+            0,
+            -220
+          ]
+        },
+        "name": {
+          "type": "string",
+          "default": ""
+        },
+        "role": {
+          "type": "string",
+          "default": ""
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.38
+          ]
+        },
+        "shape": {
+          "type": "enum",
+          "values": [
+            "circle",
+            "octagon"
+          ],
+          "default": "octagon"
+        }
+      },
+      "states": [
+        "normal"
+      ],
+      "demo": {
+        "id": "demo-portrait-badge",
+        "type": "portrait.badge",
+        "at": [
+          51,
+          28
+        ],
+        "src": "assets/media/P01.png",
+        "name": "Ruhollah Jomeini",
+        "role": "Líder supremo de Irán",
+        "date": "Foto: 6 may 1981",
+        "credit": "Ali Kaveh · PD-Iran · Commons",
+        "shape": "octagon",
+        "offset": [
+          0,
+          -100
+        ],
+        "t": 0,
+        "dur": 8,
+        "out": 7
+      },
+      "file": "components/editorial.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-editorial.json",
+        "work/tactico/scene-portraits.json"
+      ]
+    },
+    {
+      "name": "portrait.cutout",
+      "summary": "Retrato con máscara suave sobre una forma, borde y sombra.",
+      "layer": 80,
+      "params": {
+        "src": {
+          "type": "string",
+          "default": ""
+        },
+        "credit": {
+          "type": "string",
+          "default": ""
+        },
+        "date": {
+          "type": "string",
+          "default": ""
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.2,
+          "max": 2
+        },
+        "offset": {
+          "type": "array",
+          "default": [
+            0,
+            -220
+          ]
+        },
+        "name": {
+          "type": "string",
+          "default": ""
+        },
+        "role": {
+          "type": "string",
+          "default": ""
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.38
+          ]
+        },
+        "mask": {
+          "type": "array",
+          "default": []
+        }
+      },
+      "states": [
+        "normal"
+      ],
+      "demo": {
+        "id": "demo-portrait-cutout",
+        "type": "portrait.cutout",
+        "at": [
+          51,
+          28
+        ],
+        "src": "assets/media/P01-soft.png",
+        "name": "Ruhollah Jomeini",
+        "role": "Líder supremo de Irán",
+        "date": "Foto: 6 may 1981",
+        "credit": "Ali Kaveh · PD-Iran · Commons",
+        "shape": "octagon",
+        "mask": [
+          [
+            0.28,
+            0
+          ],
+          [
+            0.73,
+            0
+          ],
+          [
+            0.85,
+            0.04
+          ],
+          [
+            0.93,
+            0.15
+          ],
+          [
+            0.94,
+            0.3
+          ],
+          [
+            0.9,
+            0.43
+          ],
+          [
+            0.81,
+            0.49
+          ],
+          [
+            0.78,
+            0.68
+          ],
+          [
+            0.97,
+            0.76
+          ],
+          [
+            1,
+            0.99
+          ],
+          [
+            0,
+            0.99
+          ],
+          [
+            0.03,
+            0.77
+          ],
+          [
+            0.22,
+            0.7
+          ],
+          [
+            0.19,
+            0.48
+          ],
+          [
+            0.12,
+            0.44
+          ],
+          [
+            0.08,
+            0.33
+          ],
+          [
+            0.09,
+            0.22
+          ],
+          [
+            0.14,
+            0.12
+          ],
+          [
+            0.21,
+            0.04
+          ]
+        ],
+        "offset": [
+          0,
+          -100
+        ],
+        "t": 0,
+        "dur": 8,
+        "out": 7
+      },
+      "file": "components/editorial.js",
+      "used_by": [
+        "work/tactico/scene-editorial.json",
+        "work/tactico/scene-portraits.json"
+      ]
+    },
+    {
+      "name": "range.ring",
+      "summary": "Anillo de alcance geodésico o simbólico en pantalla, pulso y guiones móviles.",
+      "layer": 15,
+      "params": {
+        "radiusMode": {
+          "type": "enum",
+          "values": [
+            "geo",
+            "screen"
+          ],
+          "default": "geo"
+        },
+        "radiusKm": {
+          "type": "number",
+          "default": 180
+        },
+        "radius": {
+          "type": "number",
+          "default": 160
+        },
+        "color": {
+          "type": "string",
+          "default": "danger"
+        },
+        "pulse": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [],
+      "demo": {
+        "type": "range.ring",
+        "at": [
+          53,
+          29
+        ],
+        "radiusKm": 180,
+        "color": "danger",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5
+      },
+      "file": "components/routes.js",
+      "used_by": [
+        "work/tactico/items-routes.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "route.lanes",
+      "summary": "Haz de carriles convergentes de pantalla con chip ajustado al punto de paso.",
+      "layer": 15,
+      "params": {
+        "via": {
+          "type": "array",
+          "default": [
+            [
+              49,
+              28
+            ],
+            [
+              56.3,
+              26.5
+            ],
+            [
+              59,
+              24
+            ]
+          ]
+        },
+        "width": {
+          "type": "number",
+          "default": 4
+        },
+        "color": {
+          "type": "string",
+          "default": "text"
+        },
+        "reveal": {
+          "type": "number",
+          "default": 1
+        },
+        "lanes": {
+          "type": "number",
+          "default": 5
+        },
+        "spacing": {
+          "type": "number",
+          "default": 14
+        },
+        "text": {
+          "type": "string",
+          "default": "ORMUZ"
+        }
+      },
+      "states": [],
+      "demo": {
+        "via": [
+          [
+            50.5,
+            28.8
+          ],
+          [
+            53,
+            27
+          ],
+          [
+            56.4,
+            26.4
+          ],
+          [
+            58.5,
+            24.8
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "route.lanes",
+        "text": "ESTRECHO DE ORMUZ",
+        "width": 1.5
+      },
+      "file": "components/routes.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-routes.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "route.sea",
+      "summary": "Ruta marítima por waypoints, puntos y guiones animados; rechaza cada cruce con tierra.",
+      "layer": 15,
+      "params": {
+        "via": {
+          "type": "array",
+          "default": [
+            [
+              49,
+              28
+            ],
+            [
+              56.3,
+              26.5
+            ],
+            [
+              59,
+              24
+            ]
+          ]
+        },
+        "width": {
+          "type": "number",
+          "default": 4
+        },
+        "color": {
+          "type": "string",
+          "default": "text"
+        },
+        "reveal": {
+          "type": "number",
+          "default": 1
+        },
+        "speed": {
+          "type": "number",
+          "default": 20
+        },
+        "points": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [],
+      "demo": {
+        "via": [
+          [
+            50,
+            28
+          ],
+          [
+            52,
+            27
+          ],
+          [
+            54.5,
+            26
+          ],
+          [
+            56.4,
+            26.5
+          ],
+          [
+            57.4,
+            25.3
+          ],
+          [
+            59,
+            24.5
+          ]
+        ],
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "route.sea",
+        "color": "text"
+      },
+      "file": "components/routes.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-routes.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "site.base",
+      "summary": "Base con pista y hangares; extrusión, sombra y daño persistente.",
+      "layer": 20,
+      "params": {
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.15,
+          "max": 4
+        },
+        "zoomScale": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 24
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "ruined"
+      ],
+      "demo": {
+        "id": "demo-site-base",
+        "type": "site.base",
+        "at": [
+          50.33,
+          29.25
+        ],
+        "label": "base",
+        "t": 0,
+        "dur": 8,
+        "out": 7,
+        "states": [
+          {
+            "at": 3,
+            "state": "hit"
+          },
+          {
+            "at": 3.4,
+            "state": "burning"
+          },
+          {
+            "at": 6,
+            "state": "ruined"
+          }
+        ]
+      },
+      "file": "components/sites.js",
+      "used_by": [
+        "work/tactico/scene-editorial.json",
+        "work/tactico/scene-sites.json"
+      ]
+    },
+    {
+      "name": "site.oilfield",
+      "summary": "Campo petrolero con balancines; extrusión, sombra y daño persistente.",
+      "layer": 20,
+      "params": {
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.15,
+          "max": 4
+        },
+        "zoomScale": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 24
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "ruined"
+      ],
+      "demo": {
+        "id": "demo-site-oilfield",
+        "type": "site.oilfield",
+        "at": [
+          50.33,
+          29.25
+        ],
+        "label": "oilfield",
+        "t": 0,
+        "dur": 8,
+        "out": 7,
+        "states": [
+          {
+            "at": 3,
+            "state": "hit"
+          },
+          {
+            "at": 3.4,
+            "state": "burning"
+          },
+          {
+            "at": 6,
+            "state": "ruined"
+          }
+        ]
+      },
+      "file": "components/sites.js",
+      "used_by": [
+        "work/tactico/scene-editorial.json",
+        "work/tactico/scene-sites.json"
+      ]
+    },
+    {
+      "name": "site.plant",
+      "summary": "Planta industrial; extrusión, sombra y daño persistente.",
+      "layer": 20,
+      "params": {
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.15,
+          "max": 4
+        },
+        "zoomScale": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 24
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "ruined"
+      ],
+      "demo": {
+        "id": "demo-site-plant",
+        "type": "site.plant",
+        "at": [
+          50.33,
+          29.25
+        ],
+        "label": "plant",
+        "t": 0,
+        "dur": 8,
+        "out": 7,
+        "states": [
+          {
+            "at": 3,
+            "state": "hit"
+          },
+          {
+            "at": 3.4,
+            "state": "burning"
+          },
+          {
+            "at": 6,
+            "state": "ruined"
+          }
+        ]
+      },
+      "file": "components/sites.js",
+      "used_by": [
+        "work/tactico/scene-editorial.json",
+        "work/tactico/scene-sites.json"
+      ]
+    },
+    {
+      "name": "site.platform",
+      "summary": "Plataforma petrolera elevada; extrusión, sombra y daño persistente.",
+      "layer": 20,
+      "params": {
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.15,
+          "max": 4
+        },
+        "zoomScale": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 24
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "ruined"
+      ],
+      "demo": {
+        "id": "demo-site-platform",
+        "type": "site.platform",
+        "at": [
+          50.33,
+          29.25
+        ],
+        "label": "platform",
+        "t": 0,
+        "dur": 8,
+        "out": 7,
+        "states": [
+          {
+            "at": 3,
+            "state": "hit"
+          },
+          {
+            "at": 3.4,
+            "state": "burning"
+          },
+          {
+            "at": 6,
+            "state": "ruined"
+          }
+        ]
+      },
+      "file": "components/sites.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-editorial.json",
+        "work/tactico/scene-sites.json"
+      ]
+    },
+    {
+      "name": "site.port",
+      "summary": "Terminal de tanques y muelle; extrusión, sombra y daño persistente.",
+      "layer": 20,
+      "params": {
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.15,
+          "max": 4
+        },
+        "zoomScale": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 24
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "ruined"
+      ],
+      "demo": {
+        "id": "demo-site-port",
+        "type": "site.port",
+        "at": [
+          50.33,
+          29.25
+        ],
+        "label": "Kharg · terminal",
+        "t": 0,
+        "dur": 8,
+        "out": 7,
+        "states": [
+          {
+            "at": 3,
+            "state": "hit"
+          },
+          {
+            "at": 3.4,
+            "state": "burning"
+          },
+          {
+            "at": 6,
+            "state": "ruined"
+          }
+        ]
+      },
+      "file": "components/sites.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-editorial.json",
+        "work/tactico/scene-sites.json"
+      ]
+    },
+    {
+      "name": "site.refinery",
+      "summary": "Refinería con torres y tuberías; extrusión, sombra y daño persistente.",
+      "layer": 20,
+      "params": {
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "min": 0.15,
+          "max": 4
+        },
+        "zoomScale": {
+          "type": "boolean",
+          "default": true
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 24
+        }
+      },
+      "states": [
+        "normal",
+        "hit",
+        "burning",
+        "ruined"
+      ],
+      "demo": {
+        "id": "demo-site-refinery",
+        "type": "site.refinery",
+        "at": [
+          50.33,
+          29.25
+        ],
+        "label": "Abadán · refinería",
+        "t": 0,
+        "dur": 8,
+        "out": 7,
+        "states": [
+          {
+            "at": 3,
+            "state": "hit"
+          },
+          {
+            "at": 3.4,
+            "state": "burning"
+          },
+          {
+            "at": 6,
+            "state": "ruined"
+          }
+        ]
+      },
+      "file": "components/sites.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-editorial.json",
+        "work/tactico/scene-sites.json"
+      ]
+    },
+    {
+      "name": "strike.missile",
+      "summary": "Misil de rumbo tangente con estela roja, cabeza luminosa y onHit programable.",
+      "layer": 60,
+      "params": {
+        "from": {
+          "default": null,
+          "description": "[lon,lat], lugar o id; alternativo a path.via."
+        },
+        "to": {
+          "default": null,
+          "description": "[lon,lat], lugar o id de destino."
+        },
+        "dur": {
+          "type": "number",
+          "default": 4,
+          "description": "Vida completa incluyendo onHit; ampliarla si cambia el vuelo o el impacto."
+        },
+        "flightDur": {
+          "type": "number",
+          "default": 2.4,
+          "min": 0.05
+        },
+        "width": {
+          "type": "number",
+          "default": 3.4,
+          "min": 0.5,
+          "max": 16
+        },
+        "bend": {
+          "type": "number",
+          "default": 0.25,
+          "min": -1,
+          "max": 1
+        },
+        "particles": {
+          "type": "number",
+          "default": 96,
+          "min": 8,
+          "max": 300,
+          "description": "Presupuesto agregado de estelas y todos los impactos."
+        },
+        "seed": {
+          "default": 1,
+          "description": "Semilla numérica o texto."
+        },
+        "trailLife": {
+          "type": "number",
+          "default": 0.65
+        },
+        "onHit": {
+          "default": {
+            "fx": "fx.impact"
+          }
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "strike-missile",
+        "type": "strike.missile",
+        "from": [
+          51.5,
+          27
+        ],
+        "to": [
+          55,
+          28.5
+        ],
+        "t": 0,
+        "dur": 4,
+        "flightDur": 2.4,
+        "seed": 51,
+        "onHit": {
+          "fx": "fx.impact"
+        }
+      },
+      "file": "components/strike.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "strike.salvo",
+      "summary": "Salva escalonada de hasta diez misiles con curvas en abanico e impactos programables.",
+      "layer": 60,
+      "params": {
+        "from": {
+          "default": null,
+          "description": "[lon,lat], lugar o id; alternativo a path.via."
+        },
+        "to": {
+          "default": null,
+          "description": "[lon,lat], lugar o id de destino."
+        },
+        "dur": {
+          "type": "number",
+          "default": 5,
+          "description": "Vida completa incluyendo onHit; ampliarla si cambia el vuelo o el impacto."
+        },
+        "flightDur": {
+          "type": "number",
+          "default": 2.4,
+          "min": 0.05
+        },
+        "width": {
+          "type": "number",
+          "default": 3,
+          "min": 0.5,
+          "max": 16
+        },
+        "bend": {
+          "type": "number",
+          "default": 0.3,
+          "min": -1,
+          "max": 1
+        },
+        "particles": {
+          "type": "number",
+          "default": 240,
+          "min": 8,
+          "max": 300,
+          "description": "Presupuesto agregado de estelas y todos los impactos."
+        },
+        "seed": {
+          "default": 1,
+          "description": "Semilla numérica o texto."
+        },
+        "trailLife": {
+          "type": "number",
+          "default": 0.65
+        },
+        "onHit": {
+          "default": {
+            "fx": "fx.impact"
+          }
+        },
+        "count": {
+          "type": "number",
+          "default": 6,
+          "min": 1,
+          "max": 10
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.2,
+          "min": 0
+        },
+        "spread": {
+          "type": "number",
+          "default": 0.24,
+          "min": 0,
+          "max": 2
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "strike-salvo",
+        "type": "strike.salvo",
+        "from": [
+          51.5,
+          27
+        ],
+        "to": [
+          55,
+          28.5
+        ],
+        "t": 0,
+        "dur": 5,
+        "flightDur": 2.4,
+        "seed": 51,
+        "count": 6,
+        "stagger": 0.2,
+        "spread": 0.24,
+        "onHit": {
+          "fx": "fx.impact"
+        }
+      },
+      "file": "components/strike.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "strike.shell",
+      "summary": "Proyectil rápido con trazadora corta e impacto programable.",
+      "layer": 60,
+      "params": {
+        "from": {
+          "default": null,
+          "description": "[lon,lat], lugar o id; alternativo a path.via."
+        },
+        "to": {
+          "default": null,
+          "description": "[lon,lat], lugar o id de destino."
+        },
+        "dur": {
+          "type": "number",
+          "default": 2.15,
+          "description": "Vida completa incluyendo onHit; ampliarla si cambia el vuelo o el impacto."
+        },
+        "flightDur": {
+          "type": "number",
+          "default": 0.55,
+          "min": 0.05
+        },
+        "width": {
+          "type": "number",
+          "default": 2.8,
+          "min": 0.5,
+          "max": 16
+        },
+        "bend": {
+          "type": "number",
+          "default": 0.08,
+          "min": -1,
+          "max": 1
+        },
+        "particles": {
+          "type": "number",
+          "default": 32,
+          "min": 8,
+          "max": 300,
+          "description": "Presupuesto agregado de estelas y todos los impactos."
+        },
+        "seed": {
+          "default": 1,
+          "description": "Semilla numérica o texto."
+        },
+        "trailLife": {
+          "type": "number",
+          "default": 0.12
+        },
+        "onHit": {
+          "default": {
+            "fx": "fx.impact"
+          }
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "strike-shell",
+        "type": "strike.shell",
+        "from": [
+          51.5,
+          27
+        ],
+        "to": [
+          55,
+          28.5
+        ],
+        "t": 0,
+        "dur": 2.15,
+        "flightDur": 0.55,
+        "seed": 51,
+        "onHit": {
+          "fx": "fx.impact"
+        }
+      },
+      "file": "components/strike.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "strike.torpedo",
+      "summary": "Torpedo bajo el agua, estela blanca, zigzag y burbujas; impacto acuático.",
+      "layer": 60,
+      "params": {
+        "from": {
+          "default": null,
+          "description": "[lon,lat], lugar o id; alternativo a path.via."
+        },
+        "to": {
+          "default": null,
+          "description": "[lon,lat], lugar o id de destino."
+        },
+        "dur": {
+          "type": "number",
+          "default": 5.6,
+          "description": "Vida completa incluyendo onHit; ampliarla si cambia el vuelo o el impacto."
+        },
+        "flightDur": {
+          "type": "number",
+          "default": 4,
+          "min": 0.05
+        },
+        "width": {
+          "type": "number",
+          "default": 3.5,
+          "min": 0.5,
+          "max": 16
+        },
+        "bend": {
+          "type": "number",
+          "default": 0,
+          "min": -1,
+          "max": 1
+        },
+        "particles": {
+          "type": "number",
+          "default": 96,
+          "min": 8,
+          "max": 300,
+          "description": "Presupuesto agregado de estelas y todos los impactos."
+        },
+        "seed": {
+          "default": 1,
+          "description": "Semilla numérica o texto."
+        },
+        "trailLife": {
+          "type": "number",
+          "default": 0.85
+        },
+        "onHit": {
+          "default": {
+            "fx": "fx.impact",
+            "variant": "water"
+          }
+        },
+        "zigzag": {
+          "type": "number",
+          "default": 7,
+          "min": 0,
+          "max": 30
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "strike-torpedo",
+        "type": "strike.torpedo",
+        "from": [
+          51.5,
+          27
+        ],
+        "to": [
+          55,
+          28.5
+        ],
+        "t": 0,
+        "dur": 5.6,
+        "flightDur": 4,
+        "seed": 51,
+        "onHit": {
+          "fx": "fx.impact",
+          "variant": "water"
+        }
+      },
+      "file": "components/strike.js",
+      "used_by": [
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "territory.extrude",
+      "summary": "Losa geográfica con canto y sombra desplazados en píxeles de pantalla.",
+      "layer": 10,
+      "params": {
+        "region": {
+          "type": "string",
+          "default": "IR"
+        },
+        "color": {
+          "type": "string",
+          "default": "success"
+        },
+        "opacity": {
+          "type": "number",
+          "default": 0.8
+        },
+        "border": {
+          "type": "boolean",
+          "default": true
+        },
+        "depth": {
+          "type": "number",
+          "default": 16
+        },
+        "offset": {
+          "type": "array",
+          "default": [
+            10,
+            16
+          ]
+        }
+      },
+      "states": [],
+      "demo": {
+        "region": "IQ",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "territory.extrude",
+        "color": "danger"
+      },
+      "file": "components/territory.js",
+      "used_by": [
+        "work/tactico/items-territory.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "territory.fill",
+      "summary": "Envuelve el relleno original de Atlas plano con multiply, screen y overlay.",
+      "layer": 10,
+      "params": {
+        "region": {
+          "type": "string",
+          "default": "IR"
+        },
+        "color": {
+          "type": "string",
+          "default": "success"
+        },
+        "opacity": {
+          "type": "number",
+          "default": 0.8
+        },
+        "border": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [],
+      "demo": {
+        "region": "IR",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "territory.fill",
+        "color": "success"
+      },
+      "file": "components/territory.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-territory.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "territory.flag",
+      "summary": "Bandera recortada al país, en poste, ambas o ninguna; catálogo original de 148 banderas.",
+      "layer": 10,
+      "params": {
+        "region": {
+          "type": "string",
+          "default": "IR"
+        },
+        "color": {
+          "type": "string",
+          "default": "success"
+        },
+        "opacity": {
+          "type": "number",
+          "default": 0.8
+        },
+        "border": {
+          "type": "boolean",
+          "default": true
+        },
+        "flag": {
+          "type": "string",
+          "default": "IR"
+        },
+        "flagMode": {
+          "type": "enum",
+          "values": [
+            "fill",
+            "marker",
+            "both",
+            "none"
+          ],
+          "default": "fill"
+        },
+        "flagAlign": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "country"
+          ],
+          "default": "screen"
+        },
+        "flagWidth": {
+          "type": "number",
+          "default": 78
+        }
+      },
+      "states": [],
+      "demo": {
+        "region": "IR",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "territory.flag",
+        "flag": "IR",
+        "flagMode": "both"
+      },
+      "file": "components/territory.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-territory.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "territory.glow",
+      "summary": "Borde neón de tres trazos sin desenfoque costoso por cuadro.",
+      "layer": 10,
+      "params": {
+        "region": {
+          "type": "string",
+          "default": "IR"
+        },
+        "color": {
+          "type": "string",
+          "default": "success"
+        },
+        "opacity": {
+          "type": "number",
+          "default": 0.8
+        },
+        "border": {
+          "type": "boolean",
+          "default": true
+        },
+        "width": {
+          "type": "number",
+          "default": 2
+        },
+        "pulse": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [],
+      "demo": {
+        "region": "IR",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "territory.glow",
+        "color": "cyan"
+      },
+      "file": "components/territory.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-territory.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "territory.hatch",
+      "summary": "Rayado diagonal de pantalla recortado por costa y huecos del país.",
+      "layer": 10,
+      "params": {
+        "region": {
+          "type": "string",
+          "default": "IR"
+        },
+        "color": {
+          "type": "string",
+          "default": "success"
+        },
+        "opacity": {
+          "type": "number",
+          "default": 0.8
+        },
+        "border": {
+          "type": "boolean",
+          "default": true
+        },
+        "spacing": {
+          "type": "number",
+          "default": 18
+        },
+        "width": {
+          "type": "number",
+          "default": 2
+        }
+      },
+      "states": [],
+      "demo": {
+        "region": "IR",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "territory.hatch",
+        "color": "accent"
+      },
+      "file": "components/territory.js",
+      "used_by": [
+        "work/tactico/items-territory.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "territory.state",
+      "summary": "Cambio territorial fechado, con color interpolado y barrido direccional o radial.",
+      "layer": 10,
+      "params": {
+        "region": {
+          "type": "string",
+          "default": "IR"
+        },
+        "color": {
+          "type": "string",
+          "default": "success"
+        },
+        "opacity": {
+          "type": "number",
+          "default": 0.8
+        },
+        "border": {
+          "type": "boolean",
+          "default": true
+        },
+        "state": {
+          "type": "enum",
+          "values": [
+            "normal",
+            "ocupado",
+            "disputado",
+            "liberado"
+          ],
+          "default": "normal"
+        },
+        "transition": {
+          "type": "enum",
+          "values": [
+            "color",
+            "wipe",
+            "radial"
+          ],
+          "default": "wipe"
+        },
+        "direction": {
+          "type": "enum",
+          "values": [
+            "east",
+            "west",
+            "north",
+            "south"
+          ],
+          "default": "east"
+        },
+        "stateColors": {
+          "type": "object",
+          "default": {}
+        }
+      },
+      "states": [
+        "normal",
+        "ocupado",
+        "disputado",
+        "liberado"
+      ],
+      "demo": {
+        "region": "IQ",
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "type": "territory.state",
+        "states": [
+          {
+            "at": 1,
+            "state": "disputado",
+            "dur": 1
+          },
+          {
+            "at": 3,
+            "state": "ocupado",
+            "dur": 1
+          },
+          {
+            "at": 4.5,
+            "state": "liberado",
+            "dur": 0.8
+          }
+        ],
+        "transition": "wipe",
+        "note": "Estados sintéticos: no describen hechos históricos."
+      },
+      "file": "components/territory.js",
+      "used_by": [
+        "work/tactico/items-territory.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "text.year",
+      "summary": "Año gigante con contorno, giro y ajuste dentro del encuadre.",
+      "layer": 90,
+      "params": {
+        "text": {
+          "type": "string",
+          "default": ""
+        },
+        "size": {
+          "type": "number",
+          "default": 180
+        },
+        "width": {
+          "type": "number",
+          "default": 650
+        },
+        "height": {
+          "type": "number",
+          "default": 220
+        },
+        "color": {
+          "type": "string",
+          "default": "text"
+        },
+        "fit": {
+          "type": "boolean",
+          "default": true
+        },
+        "screen": {
+          "type": "array",
+          "default": null
+        },
+        "rotation": {
+          "type": "number",
+          "default": 0
+        }
+      },
+      "states": [],
+      "demo": {
+        "type": "text.year",
+        "screen": [
+          0.5,
+          0.24
+        ],
+        "text": "1987",
+        "size": 180,
+        "t": 0,
+        "dur": 6,
+        "out": 5.5,
+        "note": "Año ilustrativo; no representa un cambio territorial."
+      },
+      "file": "components/labels.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-labels.json",
+        "work/tactico/scene-territorios.json"
+      ]
+    },
+    {
+      "name": "trail.contrail",
+      "summary": "Doble estela de condensación enganchada al path de follow; historial geográfico calculado desde t.",
+      "layer": 49,
+      "params": {
+        "follow": {
+          "type": "string",
+          "default": "",
+          "description": "Id de aeronave con path; requiere ctx.scene en prepare."
+        },
+        "dur": {
+          "type": "number",
+          "default": 8
+        },
+        "width": {
+          "type": "number",
+          "default": 4,
+          "min": 0.5,
+          "max": 16
+        },
+        "life": {
+          "type": "number",
+          "default": 2.6,
+          "min": 0.1,
+          "max": 20
+        },
+        "fadePower": {
+          "type": "number",
+          "default": 1.4,
+          "min": 0.1,
+          "max": 5
+        },
+        "separation": {
+          "type": "number",
+          "default": 10,
+          "min": 0,
+          "max": 50
+        },
+        "particles": {
+          "type": "number",
+          "default": 24,
+          "min": 4,
+          "max": 150,
+          "description": "Segmentos por motor; dos motores, máximo 300."
+        }
+      },
+      "states": [],
+      "demo": {
+        "id": "trail-contrail",
+        "type": "trail.contrail",
+        "follow": "trail-contrail",
+        "path": {
+          "via": [
+            [
+              51.5,
+              27
+            ],
+            [
+              53,
+              28.6
+            ],
+            [
+              55,
+              28.5
+            ]
+          ],
+          "t": 0,
+          "dur": 6,
+          "curve": "smooth"
+        },
+        "t": 0,
+        "dur": 8,
+        "width": 4,
+        "life": 2.6
+      },
+      "file": "components/strike.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/scene-fx.json"
+      ]
+    },
+    {
+      "name": "unit.advance",
+      "summary": "Avance con frente dorado y estela.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "count": {
+          "type": "number",
+          "default": 5
+        },
+        "formation": {
+          "type": "enum",
+          "values": [
+            "line",
+            "wedge",
+            "column"
+          ],
+          "default": "wedge"
+        },
+        "trail": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [
+        "idle",
+        "active",
+        "retreat",
+        "hit",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "unit-advance",
+        "type": "unit.advance",
+        "at": [
+          48.4,
+          30.6
+        ],
+        "flag": "IQ",
+        "label": "FRENTE",
+        "count": 5,
+        "t": 0,
+        "dur": 7,
+        "path": {
+          "via": [
+            [
+              48.2,
+              30.5
+            ],
+            [
+              48.6,
+              30.7
+            ],
+            [
+              48.9,
+              30.6
+            ]
+          ],
+          "t": 0.5,
+          "dur": 5,
+          "curve": "smooth"
+        },
+        "states": [
+          {
+            "at": 1,
+            "state": "active"
+          },
+          {
+            "at": 5.8,
+            "state": "idle"
+          }
+        ]
+      },
+      "file": "components/units.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-units.json"
+      ]
+    },
+    {
+      "name": "unit.group",
+      "summary": "Fichas en línea, cuña o columna.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "count": {
+          "type": "number",
+          "default": 5
+        },
+        "formation": {
+          "type": "enum",
+          "values": [
+            "line",
+            "wedge",
+            "column"
+          ],
+          "default": "wedge"
+        },
+        "trail": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [
+        "idle",
+        "active",
+        "retreat",
+        "hit",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "unit-group",
+        "type": "unit.group",
+        "at": [
+          48.4,
+          30.6
+        ],
+        "flag": "IQ",
+        "label": "FRENTE",
+        "count": 5,
+        "t": 0,
+        "dur": 7,
+        "states": [
+          {
+            "at": 1,
+            "state": "active"
+          },
+          {
+            "at": 5.8,
+            "state": "idle"
+          }
+        ]
+      },
+      "file": "components/units.js",
+      "used_by": [
+        "work/tactico/items-units.json"
+      ]
+    },
+    {
+      "name": "unit.move",
+      "summary": "Formación terrestre que recorre una ruta.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "count": {
+          "type": "number",
+          "default": 5
+        },
+        "formation": {
+          "type": "enum",
+          "values": [
+            "line",
+            "wedge",
+            "column"
+          ],
+          "default": "wedge"
+        },
+        "trail": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [
+        "idle",
+        "active",
+        "retreat",
+        "hit",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "unit-move",
+        "type": "unit.move",
+        "at": [
+          48.4,
+          30.6
+        ],
+        "flag": "IQ",
+        "label": "FRENTE",
+        "count": 5,
+        "t": 0,
+        "dur": 7,
+        "path": {
+          "via": [
+            [
+              48.2,
+              30.5
+            ],
+            [
+              48.6,
+              30.7
+            ],
+            [
+              48.9,
+              30.6
+            ]
+          ],
+          "t": 0.5,
+          "dur": 5,
+          "curve": "smooth"
+        },
+        "states": [
+          {
+            "at": 1,
+            "state": "active"
+          },
+          {
+            "at": 5.8,
+            "state": "idle"
+          }
+        ]
+      },
+      "file": "components/units.js",
+      "used_by": [
+        "work/tactico/items-units.json"
+      ]
+    },
+    {
+      "name": "unit.retreat",
+      "summary": "Retirada con frente rojo discontinuo.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "count": {
+          "type": "number",
+          "default": 5
+        },
+        "formation": {
+          "type": "enum",
+          "values": [
+            "line",
+            "wedge",
+            "column"
+          ],
+          "default": "wedge"
+        },
+        "trail": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [
+        "idle",
+        "active",
+        "retreat",
+        "hit",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "unit-retreat",
+        "type": "unit.retreat",
+        "at": [
+          48.4,
+          30.6
+        ],
+        "flag": "IQ",
+        "label": "RETIRADA",
+        "count": 5,
+        "t": 0,
+        "dur": 7,
+        "path": {
+          "via": [
+            [
+              48.2,
+              30.5
+            ],
+            [
+              48.6,
+              30.7
+            ],
+            [
+              48.9,
+              30.6
+            ]
+          ],
+          "t": 0.5,
+          "dur": 5,
+          "curve": "smooth"
+        },
+        "states": [
+          {
+            "at": 1,
+            "state": "active"
+          },
+          {
+            "at": 5.8,
+            "state": "retreat"
+          }
+        ]
+      },
+      "file": "components/units.js",
+      "used_by": [
+        "assets/scene.json",
+        "work/tactico/items-units.json"
+      ]
+    },
+    {
+      "name": "unit.token",
+      "summary": "Ficha octogonal con bandera, soldado y aro dorado.",
+      "layer": 30,
+      "params": {
+        "at": {
+          "default": null
+        },
+        "heading": {
+          "default": "auto"
+        },
+        "scale": {
+          "type": "number",
+          "default": 1
+        },
+        "scaleMode": {
+          "type": "enum",
+          "values": [
+            "screen",
+            "geo"
+          ],
+          "default": "screen"
+        },
+        "kmLength": {
+          "type": "number",
+          "default": null
+        },
+        "path": {
+          "type": "object",
+          "default": null
+        },
+        "label": {
+          "type": "string",
+          "default": ""
+        },
+        "flag": {
+          "type": "string",
+          "default": "US"
+        },
+        "count": {
+          "type": "number",
+          "default": 1
+        },
+        "formation": {
+          "type": "enum",
+          "values": [
+            "line",
+            "wedge",
+            "column"
+          ],
+          "default": "wedge"
+        },
+        "trail": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "states": [
+        "idle",
+        "active",
+        "retreat",
+        "hit",
+        "destroyed"
+      ],
+      "demo": {
+        "id": "unit-token",
+        "type": "unit.token",
+        "at": [
+          48.4,
+          30.6
+        ],
+        "flag": "IQ",
+        "label": "FRENTE",
+        "count": 1,
+        "t": 0,
+        "dur": 7,
+        "states": [
+          {
+            "at": 1,
+            "state": "active"
+          },
+          {
+            "at": 5.8,
+            "state": "idle"
+          }
+        ]
+      },
+      "file": "components/units.js",
+      "used_by": [
+        "work/tactico/items-units.json"
+      ]
+    }
+  ]
+}

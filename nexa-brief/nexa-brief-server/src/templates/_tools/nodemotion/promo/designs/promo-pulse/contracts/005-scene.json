@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-pulse",
+  "id": "scene.knockout",
+  "entry_id": "scene.knockout",
+  "name": "knockout",
+  "kind": "scene",
+  "label": "knockout",
+  "summary": "palabra calada con el video dentro",
+  "variants": [
+    {
+      "type": "knockout",
+      "media": [
+        "dancer"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    },
+    {
+      "type": "knockout",
+      "media": [
+        "soccer"
+      ],
+      "trans": "greenFlash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "knockout",
+      "media": [
+        "skate"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    },
+    {
+      "type": "knockout",
+      "media": [
+        "pushup"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    },
+    {
+      "type": "knockout",
+      "media": [
+        "dancer"
+      ],
+      "trans": "greenFlash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "knockout",
+      "media": [
+        "runners"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 7,
+      "type": "knockout",
+      "shows": "palabra calada con el video dentro",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "dancer",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 11,
+      "type": "knockout",
+      "shows": "palabra calada con el video dentro",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "soccer",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 20,
+      "type": "knockout",
+      "shows": "palabra calada con el video dentro",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "skate",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 31,
+      "type": "knockout",
+      "shows": "palabra calada con el video dentro",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "pushup",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 36,
+      "type": "knockout",
+      "shows": "palabra calada con el video dentro",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "dancer",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 43,
+      "type": "knockout",
+      "shows": "palabra calada con el video dentro",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "runners",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, renglones en lines (renglón 1 = palabra principal, renglón 2 = complemento). La primera escena es la intro y la última el outro.",
+    "brand_texts": {
+      "brand.name": "marca del cierre",
+      "brand.url": "dirección del cierre si el último segmento no trae renglón 2",
+      "brand.cta": "caja verde del Outro v2",
+      "brand.corner": "rótulo fijo arriba a la derecha (vacío = sin rótulo)",
+      "brand.footer": "pie fijo (vacío = sin pie)"
+    },
+    "design_limitations": "Escenas counter requieren un número entero al inicio del renglón 1; si no lo hay se dibujan como framed. knockout usa palabras cortas (≤ 10 letras) para que el video se lea dentro.",
+    "scene_cycle_note": "Las longitudes recomendadas no garantizan legibilidad: revisar ambos formatos.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/6"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/10"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/19"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/30"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/35"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/42"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/6"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/10"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/19"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/30"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/35"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/42"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

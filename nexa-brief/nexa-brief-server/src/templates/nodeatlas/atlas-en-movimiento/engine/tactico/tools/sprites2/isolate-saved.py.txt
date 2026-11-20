@@ -1,0 +1,27 @@
+"""Retira datos ajenos de COPIAS headless, sin modelar ni acceder a la sesión viva."""
+import bpy,json,sys
+from pathlib import Path
+root=Path(sys.argv[sys.argv.index('--')+1]);report=[]
+for path in sorted((root/'blend').glob('*.blend')):
+ bpy.ops.wm.open_mainfile(filepath=str(path),load_ui=False,use_scripts=False)
+ scene=bpy.context.scene;scene.name='AEM_'+path.stem
+ own={ob for ob in bpy.data.objects if ob.name.startswith('AEM_'+path.stem+'_')}|{ob for ob in bpy.data.objects if ob.name in ['AEM_Cenital','AEM_Sol']}
+ for ob in list(bpy.data.objects):
+  if ob not in own:bpy.data.objects.remove(ob,do_unlink=True)
+ # Estas copias sólo usan mallas y shaders procedurales, sin imágenes, acciones ni esqueletos.
+ for items in [bpy.data.actions,bpy.data.armatures,bpy.data.images,bpy.data.texts,bpy.data.node_groups]:
+  for item in list(items):items.remove(item,do_unlink=True)
+ for mat in list(bpy.data.materials):
+  if not mat.name.startswith('AEM_'+path.stem+'_'):bpy.data.materials.remove(mat,do_unlink=True)
+ for world in list(bpy.data.worlds):
+  if world!=scene.world:bpy.data.worlds.remove(world,do_unlink=True)
+ for meshes in [bpy.data.meshes,bpy.data.curves,bpy.data.cameras,bpy.data.lights,bpy.data.materials]:
+  for item in list(meshes):
+   if item.users==0 or (item.users==1 and item.use_fake_user):item.use_fake_user=False
+ bpy.data.orphans_purge(do_recursive=True)
+ scene.render.filepath='//'+path.stem+'.png';bpy.context.preferences.filepaths.save_version=0
+ before=path.stat().st_size;bpy.ops.wm.save_as_mainfile(filepath=str(path),compress=True)
+ report.append(dict(sprite=path.stem,objects=len(bpy.data.objects),meshes=len(bpy.data.meshes),images=len(bpy.data.images),actions=len(bpy.data.actions),bytes_before=before,bytes_after=path.stat().st_size,source='headless saved-copy cleanup; no geometry generated'))
+ print('ISOLATED',path.stem,path.stat().st_size,flush=True)
+(root/'blend-audit.json').write_text(json.dumps(report,indent=2)+'\n')
+for path in (root/'blend').glob('*.blend1'):path.unlink()

@@ -1,0 +1,26 @@
+import json,fcntl,time,hashlib
+from pathlib import Path
+from playwright.sync_api import sync_playwright
+root=Path.cwd();out=root/'work/texto/capturas';lock=open('/tmp/atlas-tactico-chromium.lock','w');fcntl.flock(lock,fcntl.LOCK_EX)
+r={'errors':[],'httpErrors':[]};base='http://192.168.20.2:8000/api/v1/explainer/files/sandbox/nodehistory/atlas-en-movimiento/'
+with sync_playwright() as p:
+ b=p.chromium.launch(headless=True,args=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--renderer-process-limit=1','--num-raster-threads=2'])
+ try:
+  page=b.new_page(viewport={'width':1440,'height':1100});page.on('pageerror',lambda e:r['errors'].append(str(e)));page.on('response',lambda q:r['httpErrors'].append(q.status) if q.status>=400 else None)
+  start=time.monotonic();page.goto(base+'diseno-textos.html');page.wait_for_function('window.__textos?.ready');r['loadSeconds']=time.monotonic()-start;page.evaluate('__textos.seek(13.4)')
+  page.evaluate('''async()=>{for(const c of __textos.cards){c.article.scrollIntoView();await new Promise(r=>setTimeout(r,60));__textos.sample(c.id,c.id==='estilo-27'?7.2:c.id==='transcripcion'?13.4:2.7);}}''')
+  for id in ['estilo-14','estilo-15','estilo-28','estilo-27']:
+   el=page.locator('#'+id);el.scroll_into_view_if_needed();page.wait_for_timeout(60);page.evaluate('(id)=>__textos.sample(id,id==="estilo-27"?7.2:2.7)',id);el.screenshot(path=str(out/f'solo-muestra-{id}.png'))
+  page.screenshot(path=str(out/'solo-pagina-completa-1440.png'),full_page=True)
+  # Repeatability and real entry/exit of the last corrected sample.
+  el=page.locator('#estilo-27');el.scroll_into_view_if_needed();page.wait_for_timeout(40)
+  for n,t in enumerate([1.9,3.4,7.2,8.1]):
+   page.evaluate('(t)=>__textos.sample("estilo-27",t)',t);el.locator('canvas').screenshot(path=str(out/f'solo-cierre-{n+1}.png'))
+  r['finalStats']=page.evaluate('__textos.stats()');r['noPageOverflow']=page.evaluate('document.documentElement.scrollWidth===innerWidth')
+  page.close()
+  page=b.new_page(viewport={'width':1440,'height':1100},device_scale_factor=2);page.on('pageerror',lambda e:r['errors'].append(str(e)))
+  page.goto(base+'diseno-textos.html');page.wait_for_function('window.__textos?.ready');page.evaluate('__textos.seek(2.7)');el=page.locator('#estilo-14');el.scroll_into_view_if_needed();page.wait_for_timeout(70);page.evaluate('__textos.sample("estilo-14",2.7)');el.screenshot(path=str(out/'solo-neon-dpr2.png'));r['neonDpr2']=el.locator('canvas').evaluate('(c)=>({dpr:devicePixelRatio,css:c.clientWidth,bitmap:c.width})')
+ finally:b.close()
+protected=json.loads((root/'work/texto/solo-estilos-protegidos.json').read_text());r['protectedUnchanged']={f:hashlib.sha256((root/f).read_bytes()).hexdigest()==h for f,h in protected.items()}
+r['protoObservation']={'path':'../../_proto/proto.js','initialSha256':protected['../../_proto/proto.js'],'currentSha256':hashlib.sha256((root/'../../_proto/proto.js').read_bytes()).hexdigest(),'mtime':(root/'../../_proto/proto.js').stat().st_mtime,'note':'Cambio externo observado. Esta tarea no escribió Proto. Sus funciones buildCaptions/drawCaption conservan los valores relevados al inicio.'}
+(root/'work/texto/solo-estilos-ajustes-qa.json').write_text(json.dumps(r,indent=2,ensure_ascii=False));print(json.dumps(r,indent=2,ensure_ascii=False))

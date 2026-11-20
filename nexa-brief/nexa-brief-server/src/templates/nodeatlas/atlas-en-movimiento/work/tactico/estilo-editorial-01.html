@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Atlas · Estilo editorial 01</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#fff;color:#1c1c1c;font:15px/1.5 system-ui,sans-serif}main{max-width:1400px;margin:auto;padding:32px 4% 50px}h1{font-size:clamp(27px,4vw,42px);line-height:1.15;margin:0 0 12px}p{max-width:800px;color:#555}.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:25px 0}button{font:inherit;border:1px solid #888;background:white;padding:9px 14px;cursor:pointer}button[aria-pressed=true]{background:#222;color:#fff}label{display:flex;align-items:center;gap:10px}input{width:48px;height:38px;padding:2px;border:1px solid #888;background:#fff}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}article{border:1px solid #ddd;min-width:0}article h2{font-size:15px;margin:14px 16px}.frame{background:#303030;display:flex;align-items:center;justify-content:center;padding:18px;min-height:350px}canvas{display:block;max-width:100%;max-height:470px;width:auto;height:auto}.status{font-size:13px;color:#555}.status.error{color:#9c1212}@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.grid{grid-template-columns:1fr}main{padding:20px}.frame{min-height:250px}}
+</style></head><body><main>
+<h1>Estilo 01 en los cinco componentes</h1><p>Las muestras usan los componentes de la plantilla. La opción 01 es el estilo inicial; prueba un fondo más oscuro para ver cómo cambia junto con los bordes.</p>
+<div class="bar"><button type="button" id="original" aria-pressed="true">01 · Grafito inicial</button><button type="button" id="dark" aria-pressed="false">03 · Grafito más oscuro</button><label>Color de tarjeta y bordes <input id="color" type="color" value="#20252b"></label></div>
+<p id="status" class="status" role="status">Cargando componentes…</p><div id="cards" class="grid"></div>
+</main><script type="module">
+import {Tactico} from '../../engine/tactico/core.js';
+import '../../engine/tactico/components/editorial.js?v=5';
+const types=['editorial.press','callout.photo','inventory.units','portrait.badge','portrait.cutout'];
+const cards=document.querySelector('#cards'),status=document.querySelector('#status'),color=document.querySelector('#color'),original=document.querySelector('#original'),dark=document.querySelector('#dark');
+const response=await fetch('../../assets/scene.json');if(!response.ok)throw Error('No se pudo cargar la escena');const scene=await response.json();
+const context={scene,palette:scene.defs?.palette||{},env:{}};let serial=0;
+for(const type of types){const article=document.createElement('article'),title=document.createElement('h2'),frame=document.createElement('div'),canvas=document.createElement('canvas');title.textContent=type;frame.className='frame';canvas.setAttribute('role','img');canvas.setAttribute('aria-label','Ejemplo de '+type);frame.append(canvas);article.append(title,frame);cards.append(article);}
+async function show(value){const id=++serial;status.textContent='Actualizando…';try{const results=await Promise.all(types.map(async type=>{const def=Tactico.get(type),item=structuredClone(def.demo);if(value!=='#20252b')item.appearance={cardColor:value};return def.prepare(item,context);}));if(id!==serial)return;results.forEach((data,i)=>{const canvas=cards.children[i].querySelector('canvas');canvas.width=data.bitmap.width;canvas.height=data.bitmap.height;canvas.getContext('2d').drawImage(data.bitmap,0,0);});status.textContent='Cinco componentes · fondo y borde '+value.toUpperCase();}catch(e){status.className='status error';status.textContent='No se pudo mostrar la vista: '+e.message;console.error(e);}}
+function choose(value){color.value=value;original.setAttribute('aria-pressed',value==='#20252b');dark.setAttribute('aria-pressed',value==='#0f1216');show(value);}
+original.onclick=()=>choose('#20252b');dark.onclick=()=>choose('#0f1216');color.oninput=()=>choose(color.value);await show(color.value);
+</script></body></html>

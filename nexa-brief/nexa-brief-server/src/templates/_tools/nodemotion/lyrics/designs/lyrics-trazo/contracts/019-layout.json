@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "layout.deck",
+  "entry_id": "layout.deck",
+  "name": "deck",
+  "kind": "layout",
+  "label": "deck",
+  "summary": "Existing layout configuration: deck.",
+  "params": {
+    "line": {
+      "default": 3
+    },
+    "stack": {
+      "default": 2
+    },
+    "vertical": {
+      "default": 0.8
+    },
+    "stair": {
+      "default": 0.7
+    }
+  },
+  "example": {
+    "line": 3,
+    "stack": 2,
+    "vertical": 0.8,
+    "stair": 0.7
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "pointer": "/configs/0/layouts/deck"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

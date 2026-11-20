@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/schemas/nodemotion-promo/build-breaking.json",
+  "type": "object",
+  "properties": {
+    "template": {
+      "const": "promo-breaking"
+    },
+    "texts": {
+      "type": "object",
+      "properties": {
+        "brand.name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30
+        },
+        "brand.tag": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "brand.cta": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 24
+        },
+        "brand.url": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "brand.live": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16
+        }
+      },
+      "required": [
+        "brand.name",
+        "brand.tag",
+        "brand.cta",
+        "brand.url",
+        "brand.live"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "template",
+    "texts"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-romantic",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-romantic",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/01-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "assets/Bruses Dueles Tan Bien Audio.mp3",
+    "assets/bruses_desktop.jpg",
+    "assets/lyrics-bruses-dueles-tan-bien.json",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "460757b4deea628cac59b7138a5fe218bcab6c832fb712a7c28eae909328cff1",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-romantic",
+    "config": "nodemotion/lyrics/lyrics-romantic/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-romantic/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-romantic/README.md"
+  },
+  "revision": "bc8b297cc81d32d84586ad1638f29b69f18cd00a50cadbdb95ad1f208d5ca8be"
+}

@@ -1,0 +1,189 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "lyricsFilter": {
+        "dropPatterns": [
+          "(?i)subt[ií]tulos",
+          "(?i)amara\\.org",
+          "(?i)thanks for watching"
+        ],
+        "maxWordSec": 3.5
+      },
+      "seed": 23,
+      "colors": {
+        "dark": "#190F06",
+        "pale": "#E4EDF7",
+        "blue": "#0080FD",
+        "white": "#F4F4F2",
+        "black": "#050505"
+      },
+      "fonts": {
+        "display": {
+          "family": "Archivo",
+          "src": "assets/fonts/Archivo.woff2",
+          "variable": true,
+          "stretch": 72,
+          "weight": 800,
+          "tracking": -0.01
+        },
+        "brand": {
+          "family": "Caveat Brush",
+          "src": "assets/fonts/CaveatBrush-Regular.woff2",
+          "stretch": 100,
+          "weight": 400
+        },
+        "signature": {
+          "family": "Mrs Saint Delafield",
+          "src": "assets/fonts/MrsSaintDelafield-Regular.woff2",
+          "stretch": 100,
+          "weight": 400
+        }
+      },
+      "media": [
+        {
+          "type": "image",
+          "src": "assets/media/foto-01.jpg"
+        },
+        {
+          "type": "image",
+          "src": "assets/media/foto-02.jpg"
+        },
+        {
+          "type": "image",
+          "src": "assets/media/foto-03.jpg"
+        },
+        {
+          "type": "image",
+          "src": "assets/media/foto-04.jpg"
+        },
+        {
+          "type": "image",
+          "src": "assets/media/foto-05.jpg"
+        },
+        {
+          "type": "image",
+          "src": "assets/media/foto-06.jpg"
+        },
+        {
+          "type": "image",
+          "src": "assets/media/foto-07.jpg"
+        },
+        {
+          "type": "image",
+          "src": "assets/media/foto-08.jpg"
+        }
+      ],
+      "halftone": {
+        "enabled": true,
+        "cell": 7,
+        "contrast": 1.15,
+        "size": 900
+      },
+      "texts": {
+        "label": "Dueles",
+        "tags": [
+          "DIC-97",
+          "NOV-86",
+          "ENE-MAR",
+          "LADO A"
+        ],
+        "credit": "Bruses"
+      },
+      "components": {
+        "intro": true,
+        "outro": "decadas.outrov1",
+        "photos": true,
+        "tags": true,
+        "signature": true,
+        "fragments": true
+      },
+      "intro": {
+        "title": "Dueles tan bien",
+        "artist": "Bruses",
+        "minSec": 1.8
+      },
+      "outro": {
+        "title": "Gracias",
+        "sub": "por ver",
+        "feats": "Suscríbete · NodeMotion",
+        "brand": "NodeMotion",
+        "line": "NodeMotion producciones",
+        "leadSec": 0.4,
+        "minSec": 3,
+        "maxSec": 6
+      },
+      "timing": {
+        "leadSec": 0.06,
+        "maxWords": 4,
+        "maxChars": 18,
+        "wordGapSec": 0.45,
+        "gapSec": 1.3,
+        "holdSec": 0.5,
+      "splitChars": 9
+      },
+      "scenes": {
+        "deck": {
+          "letras": 1.2,
+          "titulo": 2.4,
+          "barrido": 1.2,
+          "gigante": 1.4,
+          "contador": 1.6,
+          "credito": 1.6,
+          "foto": 0.6
+        },
+        "cooldown": 2,
+        "letrasMaxLetters": 8
+      },
+      "transitions": {
+        "flashSec": 0.1,
+        "wipeSec": 0.22,
+        "deck": {
+          "cut": 5,
+          "photoFlash": 1.4,
+          "blueWipe": 1,
+          "letterSlam": 0.8
+        }
+      },
+      "motion": {
+        "rollSec": 0.35,
+        "rollGlyphs": "0123456789",
+        "drift": 0.03,
+        "fragmentSpeed": 1
+      },
+      "interludes": {
+        "minSec": 0.8,
+        "maxSec": 3,
+        "deck": {
+          "letras": 1,
+          "foto": 1,
+          "titulo": 1
+        }
+      },
+      "overrides": [
+        {
+          "match": "dueles",
+          "scene": "letras"
+        },
+        {
+          "match": "cuidado",
+          "scene": "gigante",
+          "transition": "photoFlash"
+        },
+        {
+          "match": "triste",
+          "scene": "barrido"
+        }
+      ],
+      "debug": {
+        "enabled": false
+      },
+      "description": "Tipografía editorial condensada con azul eléctrico, fotos en semitono, letras gigantes y años que ruedan. Demo: Dueles tan bien (recorte 1:47)."
+    }
+  ]
+}

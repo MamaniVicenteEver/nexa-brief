@@ -1,0 +1,631 @@
+{
+  "design": "promo-mono",
+  "gallery": "showcase/index.html",
+  "query": {
+    "only": "name",
+    "aspect": "16:9|9:16"
+  },
+  "note": "Cada escena lee sus renglones del guion (timeline: un segmento = una escena, campo lines) y sus parámetros de config.scenes[i]. Valores fuera de rango se corrigen con aviso en consola.",
+  "components": [
+    {
+      "name": "mono.headline",
+      "label": "Titular centrado (+ renglón 2 pequeño)",
+      "summary": "Titular centrado (+ renglón 2 pequeño)",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "headline",
+      "params": {
+        "size": {
+          "type": "number",
+          "min": 0.5,
+          "max": 1.6,
+          "default": 1.0
+        },
+        "underline": {
+          "type": "boolean",
+          "default": false
+        },
+        "textIn": {
+          "type": "string",
+          "options": [
+            "type",
+            "rise",
+            "pop",
+            "fade",
+            "wipe",
+            "cut"
+          ],
+          "default": "type"
+        }
+      },
+      "demo": {},
+      "preview": {
+        "t": null
+      }
+    },
+    {
+      "name": "mono.playline",
+      "label": "Botón de reproducir y línea que crece (+ texto opcional)",
+      "summary": "Botón de reproducir y línea que crece (+ texto opcional)",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "playline",
+      "params": {
+        "lineLen": {
+          "type": "number",
+          "min": 0.05,
+          "max": 0.6,
+          "default": 0.18
+        },
+        "icon": {
+          "type": "string",
+          "options": [
+            "play",
+            "pause",
+            "pin"
+          ],
+          "default": "play"
+        },
+        "size": {
+          "type": "number",
+          "min": 0.5,
+          "max": 2.0,
+          "default": 1.0
+        }
+      },
+      "demo": {
+        "time": 4.6
+      },
+      "preview": {
+        "t": 4.6
+      }
+    },
+    {
+      "name": "mono.cardfan",
+      "label": "Abanico de tarjetas con fotos en semitono (+ palabra detrás)",
+      "summary": "Abanico de tarjetas con fotos en semitono (+ palabra detrás)",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "cardfan",
+      "params": {
+        "count": {
+          "type": "number",
+          "min": 3.0,
+          "max": 10.0,
+          "default": 7.0
+        },
+        "spread": {
+          "type": "number",
+          "min": 4.0,
+          "max": 20.0,
+          "default": 11.0
+        },
+        "cell": {
+          "type": "number",
+          "min": 3.0,
+          "max": 14.0,
+          "default": 5.0
+        }
+      },
+      "demo": {
+        "time": 6.4
+      },
+      "preview": {
+        "t": 6.4
+      }
+    },
+    {
+      "name": "mono.wordgrid",
+      "label": "Palabra repetida en filas, partida por ventanas de video",
+      "summary": "Palabra repetida en filas, partida por ventanas de video",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "wordgrid",
+      "params": {
+        "rows": {
+          "type": "number",
+          "min": 3.0,
+          "max": 7.0,
+          "default": 5.0
+        },
+        "grade": {
+          "type": "string",
+          "options": [
+            "mono",
+            "none"
+          ],
+          "default": "mono"
+        },
+        "split": {
+          "type": "string",
+          "options": [
+            "auto",
+            "hyphen",
+            "middle"
+          ],
+          "default": "auto"
+        }
+      },
+      "demo": {
+        "time": 9.0
+      },
+      "preview": {
+        "t": 9.0
+      }
+    },
+    {
+      "name": "mono.chips",
+      "label": "Lluvia de píldoras de texto alrededor de un titular (float) ",
+      "summary": "Lluvia de píldoras de texto alrededor de un titular (float) o apiladas (pile)",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "chips",
+      "params": {
+        "mode": {
+          "type": "string",
+          "options": [
+            "float",
+            "pile"
+          ],
+          "default": "float"
+        },
+        "count": {
+          "type": "number",
+          "min": 4.0,
+          "max": 90.0,
+          "default": 26.0
+        },
+        "emoticons": {
+          "type": "boolean",
+          "default": true
+        },
+        "headline": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "time": 13.4
+      },
+      "preview": {
+        "t": 13.4
+      }
+    },
+    {
+      "name": "mono.linetext",
+      "label": "Línea que entra desde el borde + texto; opcional garabato qu",
+      "summary": "Línea que entra desde el borde + texto; opcional garabato que la reemplaza",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "linetext",
+      "params": {
+        "squiggle": {
+          "type": "boolean",
+          "default": true
+        },
+        "lineLen": {
+          "type": "number",
+          "min": 0.1,
+          "max": 0.6,
+          "default": 0.32
+        }
+      },
+      "demo": {
+        "time": 18.4
+      },
+      "preview": {
+        "t": 18.4
+      }
+    },
+    {
+      "name": "mono.pin",
+      "label": "Píldora con pin de ubicación que crece mientras se escribe",
+      "summary": "Píldora con pin de ubicación que crece mientras se escribe",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "pin",
+      "params": {
+        "size": {
+          "type": "number",
+          "min": 0.5,
+          "max": 2.0,
+          "default": 1.0
+        },
+        "outline": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "time": 20.8
+      },
+      "preview": {
+        "t": 20.8
+      }
+    },
+    {
+      "name": "mono.footage",
+      "label": "Metraje a pantalla completa en semitono (o gris) + subtítulo",
+      "summary": "Metraje a pantalla completa en semitono (o gris) + subtítulo + icono",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "footage",
+      "params": {
+        "style": {
+          "type": "string",
+          "options": [
+            "dots",
+            "squares",
+            "gray"
+          ],
+          "default": "dots"
+        },
+        "cell": {
+          "type": "number",
+          "min": 3.0,
+          "max": 20.0,
+          "default": 7.0
+        },
+        "dotsIn": {
+          "type": "boolean",
+          "default": false
+        },
+        "icon": {
+          "type": "string",
+          "options": [
+            "none",
+            "bars",
+            "pause",
+            "play"
+          ],
+          "default": "none"
+        },
+        "subtitle": {
+          "type": "string",
+          "options": [
+            "dash",
+            "plain",
+            "none"
+          ],
+          "default": "dash"
+        },
+        "zoom": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "time": 23.6
+      },
+      "preview": {
+        "t": 23.6
+      }
+    },
+    {
+      "name": "mono.numbers",
+      "label": "Rejilla de cifras que parpadean y dejan sólo las cifras del ",
+      "summary": "Rejilla de cifras que parpadean y dejan sólo las cifras del guion",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "numbers",
+      "params": {
+        "flicker": {
+          "type": "number",
+          "min": 0.05,
+          "max": 0.4,
+          "default": 0.12
+        },
+        "collapse": {
+          "type": "number",
+          "min": 0.2,
+          "max": 0.9,
+          "default": 0.45
+        }
+      },
+      "demo": {
+        "time": 29.0
+      },
+      "preview": {
+        "t": 29.0
+      }
+    },
+    {
+      "name": "mono.pattern",
+      "label": "Patrón óptico de puntos en onda + botón central (pausa o pla",
+      "summary": "Patrón óptico de puntos en onda + botón central (pausa o play)",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "pattern",
+      "params": {
+        "icon": {
+          "type": "string",
+          "options": [
+            "pause",
+            "play",
+            "none"
+          ],
+          "default": "pause"
+        },
+        "cell": {
+          "type": "number",
+          "min": 20.0,
+          "max": 120.0,
+          "default": 56.0
+        },
+        "speed": {
+          "type": "number",
+          "min": 0.2,
+          "max": 4.0,
+          "default": 1.4
+        }
+      },
+      "demo": {
+        "time": 30.9
+      },
+      "preview": {
+        "t": 30.9
+      }
+    },
+    {
+      "name": "mono.spaced",
+      "label": "Texto en mayúsculas muy espaciado, palabra a palabra; eco ap",
+      "summary": "Texto en mayúsculas muy espaciado, palabra a palabra; eco apilado del último renglón",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "spaced",
+      "params": {
+        "tracking": {
+          "type": "number",
+          "min": 0.1,
+          "max": 1.2,
+          "default": 0.7
+        },
+        "echo": {
+          "type": "number",
+          "min": 0.0,
+          "max": 8.0,
+          "default": 0.0
+        }
+      },
+      "demo": {
+        "time": 36.5
+      },
+      "preview": {
+        "t": 36.5
+      }
+    },
+    {
+      "name": "mono.phonechat",
+      "label": "Móvil (punteado) con burbujas de chat que llegan; garabato o",
+      "summary": "Móvil (punteado) con burbujas de chat que llegan; garabato opcional",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "phonechat",
+      "params": {
+        "dotted": {
+          "type": "boolean",
+          "default": true
+        },
+        "squiggle": {
+          "type": "boolean",
+          "default": false
+        },
+        "size": {
+          "type": "number",
+          "min": 0.5,
+          "max": 1.2,
+          "default": 0.86
+        }
+      },
+      "demo": {
+        "time": 39.6
+      },
+      "preview": {
+        "t": 39.6
+      }
+    },
+    {
+      "name": "mono.coupon",
+      "label": "Cupones que entran girando desde los bordes + rótulo central",
+      "summary": "Cupones que entran girando desde los bordes + rótulo central",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "coupon",
+      "params": {
+        "count": {
+          "type": "number",
+          "min": 2.0,
+          "max": 8.0,
+          "default": 4.0
+        }
+      },
+      "demo": {
+        "time": 43.4
+      },
+      "preview": {
+        "t": 43.4
+      }
+    },
+    {
+      "name": "mono.codeinput",
+      "label": "Móvil con campo donde se escribe un código y dos botones (re",
+      "summary": "Móvil con campo donde se escribe un código y dos botones (renglón 1 = código, 2 y 3 = botones)",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "codeinput",
+      "params": {
+        "ticket": {
+          "type": "boolean",
+          "default": true
+        },
+        "size": {
+          "type": "number",
+          "min": 0.5,
+          "max": 1.2,
+          "default": 0.8
+        }
+      },
+      "demo": {
+        "time": 45.4
+      },
+      "preview": {
+        "t": 45.4
+      }
+    },
+    {
+      "name": "mono.contact",
+      "label": "Móvil grande punteado con encabezado y un número o contacto ",
+      "summary": "Móvil grande punteado con encabezado y un número o contacto enorme (renglón 1 = encabezado, 2+ = número)",
+      "tags": [
+        "escena"
+      ],
+      "scene_type": "contact",
+      "params": {
+        "size": {
+          "type": "number",
+          "min": 0.6,
+          "max": 1.3,
+          "default": 1.05
+        },
+        "brand": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "time": 49.0
+      },
+      "preview": {
+        "t": 49.0
+      }
+    },
+    {
+      "name": "mono.intro",
+      "label": "Intro: logotipo de la marca",
+      "summary": "Intro: logotipo de la marca",
+      "tags": [
+        "intro"
+      ],
+      "scene_type": "intro",
+      "params": {
+        "size": {
+          "type": "number",
+          "min": 0.5,
+          "max": 1.6,
+          "default": 1.0
+        },
+        "sub": {
+          "type": "boolean",
+          "default": true
+        }
+      },
+      "demo": {
+        "time": 1.6
+      },
+      "preview": {
+        "t": 1.6
+      }
+    },
+    {
+      "name": "mono.outroV1",
+      "label": "Outro v1: logotipo + llamado en píldora",
+      "summary": "Outro v1: logotipo + llamado en píldora",
+      "tags": [
+        "outro"
+      ],
+      "group": "outro",
+      "default": true,
+      "scene_type": "outro",
+      "params": {
+        "size": {
+          "type": "number",
+          "min": 0.5,
+          "max": 1.6,
+          "default": 1.0
+        }
+      },
+      "demo": {
+        "time": 54.0,
+        "outro": "v1"
+      },
+      "preview": {
+        "t": 54.0
+      }
+    },
+    {
+      "name": "mono.outroV2",
+      "label": "Outro v2: chips que se apartan + píldora con pin + marca",
+      "summary": "Outro v2: chips que se apartan + píldora con pin + marca",
+      "tags": [
+        "outro"
+      ],
+      "group": "outro",
+      "scene_type": "outro",
+      "params": {
+        "count": {
+          "type": "number",
+          "min": 6.0,
+          "max": 40.0,
+          "default": 22.0
+        }
+      },
+      "demo": {
+        "time": 54.0,
+        "outro": "v2"
+      },
+      "preview": {
+        "t": 54.0
+      }
+    },
+    {
+      "name": "mono.transitions",
+      "label": "Transiciones de entrada",
+      "summary": "dots (rejilla de puntos que se encoge), lineSweep (línea que barre), blink (cuadro negro), pillPop (sale de una píldora); además las del núcleo: fade, blur, iris, wipeL/R/Up/Down, bars, flash, zoomIn, zoomOut, slice, cut.",
+      "tags": [
+        "transicion"
+      ],
+      "params": {
+        "trans": {
+          "type": "string",
+          "options": [
+            "cut",
+            "dots",
+            "lineSweep",
+            "blink",
+            "pillPop",
+            "fade",
+            "blur",
+            "iris",
+            "wipeL",
+            "wipeR",
+            "wipeUp",
+            "wipeDown",
+            "bars",
+            "flash",
+            "zoomIn",
+            "zoomOut",
+            "slice"
+          ],
+          "default": "cut",
+          "doc": "config.scenes[i].trans o pesos en config.transition.weights"
+        }
+      },
+      "demo": {},
+      "preview": {}
+    }
+  ]
+}

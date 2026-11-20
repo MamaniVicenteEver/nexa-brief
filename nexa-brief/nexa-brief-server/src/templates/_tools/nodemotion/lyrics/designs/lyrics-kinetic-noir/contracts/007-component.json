@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "noir.stack",
+  "entry_id": "noir.stack",
+  "kind": "component",
+  "label": "Pila",
+  "summary": "Palabras en renglones cortos de grotesca extendida, sangrías alternas y tecleo con mezcla de caracteres.",
+  "component": {
+    "name": "noir.stack",
+    "label": "Pila",
+    "summary": "Palabras en renglones cortos de grotesca extendida, sangrías alternas y tecleo con mezcla de caracteres.",
+    "tags": [
+      "scene"
+    ],
+    "file": "components/scenes.js",
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "LO SIMPLE SIEMPRE QUEDA PARA EL FINAL",
+        "doc": "Texto de la frase (en el video sale de la letra)"
+      },
+      "smoke": {
+        "type": "boolean",
+        "default": false,
+        "doc": "Humo bajo en la demo"
+      }
+    },
+    "demo": {
+      "text": "LO SIMPLE SIEMPRE QUEDA PARA EL FINAL"
+    },
+    "preview": {
+      "t": 2.8
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "LO SIMPLE SIEMPRE QUEDA PARA EL FINAL",
+      "doc": "Texto de la frase (en el video sale de la letra)"
+    },
+    "smoke": {
+      "type": "boolean",
+      "default": false,
+      "doc": "Humo bajo en la demo"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/showcase/components.json",
+      "pointer": "/components/4"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

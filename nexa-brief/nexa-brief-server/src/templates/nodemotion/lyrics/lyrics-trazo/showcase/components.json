@@ -1,0 +1,348 @@
+{
+  "design": "lyrics-trazo",
+  "gallery": "showcase/index.html",
+  "query": {
+    "only": "name",
+    "aspect": "16:9|9:16",
+    "p": "JSON de params",
+    "t": "segundos (congela)",
+    "bg": "#hex",
+    "loop": "0|1"
+  },
+  "components": [
+    {
+      "name": "trazo.intro",
+      "label": "Intro escrita a mano",
+      "summary": "Círculo que crece con rayos, título escrito a mano y artista tecleado.",
+      "tags": [
+        "intro"
+      ],
+      "file": "components/intro.js",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "Let Out The Beast",
+          "doc": "Título (config.intro.title)"
+        },
+        "artist": {
+          "type": "string",
+          "default": "Ombré ft. KTHLN",
+          "doc": "Artista (config.intro.artist)"
+        },
+        "duration": {
+          "type": "number",
+          "default": 3.2,
+          "doc": "Segundos de la demo",
+          "min": 1,
+          "max": 10
+        }
+      },
+      "demo": {
+        "title": "Let Out The Beast",
+        "artist": "Ombré ft. KTHLN"
+      },
+      "preview": {
+        "t": 2.6
+      }
+    },
+    {
+      "name": "trazo.outrov1",
+      "label": "Outro v1 Burbuja",
+      "summary": "Fondo negro, título en burbuja con rebote, firma y línea final tecleada.",
+      "tags": [
+        "outro"
+      ],
+      "file": "components/outro-v1.js",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "Gracias",
+          "doc": "config.outro.title"
+        },
+        "sub": {
+          "type": "string",
+          "default": "por ver",
+          "doc": "config.outro.sub"
+        },
+        "feats": {
+          "type": "string",
+          "default": "Suscríbete · NodeMotion",
+          "doc": "config.outro.feats"
+        }
+      },
+      "demo": {},
+      "preview": {
+        "t": 3.3
+      }
+    },
+    {
+      "name": "trazo.outrov2",
+      "label": "Outro v2 Grieta",
+      "summary": "Papel blanco, grieta que se abre, letras de estilos mezclados e impactos.",
+      "tags": [
+        "outro"
+      ],
+      "file": "components/outro-v2.js",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "Gracias",
+          "doc": "config.outro.title"
+        },
+        "sub": {
+          "type": "string",
+          "default": "por ver",
+          "doc": "config.outro.sub"
+        },
+        "feats": {
+          "type": "string",
+          "default": "Suscríbete · NodeMotion",
+          "doc": "config.outro.feats"
+        }
+      },
+      "demo": {},
+      "preview": {
+        "t": 3.3
+      }
+    },
+    {
+      "name": "trazo.palabra",
+      "label": "Palabra rotulada",
+      "summary": "Una palabra a pantalla grande con estilo, disposición, movimiento y transición.",
+      "tags": [
+        "escena"
+      ],
+      "file": "components/escenas.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "jungle",
+          "doc": "Texto"
+        },
+        "style": {
+          "type": "string",
+          "default": "bubble",
+          "options": [
+            "marker-caps",
+            "bubble",
+            "brush",
+            "brush-outline",
+            "chalk",
+            "sketch",
+            "tall",
+            "scratch",
+            "signature",
+            "scribble",
+            "hatch-fill",
+            "sketch-caps",
+            "block-hatch",
+            "block-shadow",
+            "graffiti",
+            "thin-brush",
+            "doodle",
+            "caveat"
+          ]
+        },
+        "layout": {
+          "type": "string",
+          "default": "stack",
+          "options": [
+            "line",
+            "stack",
+            "vertical",
+            "stair"
+          ]
+        },
+        "motion": {
+          "type": "string",
+          "default": "punch",
+          "options": [
+            "none",
+            "punch",
+            "pop",
+            "drift",
+            "recede",
+            "shake"
+          ]
+        },
+        "transition": {
+          "type": "string",
+          "default": "cut",
+          "options": [
+            "cut",
+            "flash",
+            "zoom",
+            "shift",
+            "blink"
+          ]
+        },
+        "inverted": {
+          "type": "boolean",
+          "default": false
+        },
+        "hatch": {
+          "type": "boolean",
+          "default": false
+        },
+        "doodle": {
+          "type": "string",
+          "default": "",
+          "options": [
+            "",
+            "rays",
+            "star",
+            "underline",
+            "circle",
+            "arrow"
+          ]
+        }
+      },
+      "demo": {
+        "text": "jungle",
+        "style": "bubble",
+        "layout": "stack"
+      },
+      "preview": {
+        "t": 0.6
+      }
+    },
+    {
+      "name": "trazo.rafaga",
+      "label": "Ráfaga letra a letra",
+      "summary": "Palabra sostenida: la palabra y sus letras gigantes alternan estilo y fondo.",
+      "tags": [
+        "escena"
+      ],
+      "file": "components/escenas.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "rumble",
+          "doc": "Palabra"
+        },
+        "duration": {
+          "type": "number",
+          "default": 1.6,
+          "doc": "Segundos",
+          "min": 0.4,
+          "max": 6
+        }
+      },
+      "demo": {
+        "text": "rumble"
+      },
+      "preview": {
+        "t": 0.45
+      }
+    },
+    {
+      "name": "trazo.interludios",
+      "label": "Interludios",
+      "summary": "Silencios: sol que crece, impactos, grieta, ovillo o destello.",
+      "tags": [
+        "escena",
+        "transicion"
+      ],
+      "file": "components/garabatos.js",
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "sun",
+          "options": [
+            "sun",
+            "holes",
+            "crack",
+            "scribble",
+            "spark"
+          ]
+        },
+        "duration": {
+          "type": "number",
+          "default": 2,
+          "doc": "Segundos",
+          "min": 0.4,
+          "max": 8
+        }
+      },
+      "demo": {
+        "type": "crack"
+      },
+      "preview": {
+        "t": 1.6
+      }
+    },
+    {
+      "name": "trazo.garabatos",
+      "label": "Garabatos sobre palabra",
+      "summary": "Rayos, destello, subrayado, círculo o flecha dibujados alrededor de la palabra.",
+      "tags": [
+        "adorno"
+      ],
+      "file": "components/garabatos.js",
+      "params": {
+        "doodle": {
+          "type": "string",
+          "default": "rays",
+          "options": [
+            "rays",
+            "star",
+            "underline",
+            "circle",
+            "arrow"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "default": "hear",
+          "doc": "Texto"
+        }
+      },
+      "demo": {
+        "doodle": "circle"
+      },
+      "preview": {
+        "t": 0.6
+      }
+    },
+    {
+      "name": "trazo.inversion",
+      "label": "Inversión de fondo",
+      "summary": "Cuadros de papel blanco y tinta negra con destello de entrada.",
+      "tags": [
+        "transicion"
+      ],
+      "file": "components/transiciones.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "never",
+          "doc": "Texto"
+        }
+      },
+      "demo": {},
+      "preview": {
+        "t": 0.5
+      }
+    },
+    {
+      "name": "trazo.trama",
+      "label": "Fondo rayado",
+      "summary": "Trama de rayas a mano detrás de la palabra, con halo para que se lea.",
+      "tags": [
+        "fondo"
+      ],
+      "file": "components/escenas.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "witness",
+          "doc": "Texto"
+        }
+      },
+      "demo": {},
+      "preview": {
+        "t": 0.6
+      }
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+---
+import Wordmark from './Wordmark.astro';
+import { text, homePath, type Locale } from '@/shared/lib/locale';
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+---
+
+<footer class="site-footer">
+  <div class="container footer-main">
+    <a href={homePath(locale)} class="brand-link" aria-label="NODE Media Network">
+      <Wordmark />
+    </a>
+    <p>
+      {text(
+        locale,
+        'Una red. Voces propias. Ideas que conectan.',
+        'One network. Distinct voices. Ideas that connect.',
+      )}
+    </p>
+    <a href="/identidad/">{text(locale, 'Sistema de identidad', 'Identity system')}</a>
+  </div>
+  <div class="container footer-bottom">
+    <span>© {new Date().getFullYear()} NODE Media Network</span>
+    <span>{text(locale, 'Historias con intención.', 'Stories with intention.')}</span>
+  </div>
+</footer>

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Japón · prueba de sonido</title>
+<style>
+:root{font-family:system-ui,sans-serif;color:#eee9df;background:#101715;color-scheme:dark}*{box-sizing:border-box}body{margin:0}main{max-width:1020px;margin:auto;padding:40px 24px 64px}a{color:#adc8af}h1{font:600 clamp(28px,5vw,48px)/1.12 Georgia,serif;max-width:760px;margin:12px 0 16px}h2{font-size:21px;margin:0 0 12px}p{line-height:1.6;color:#c1cac2;max-width:780px}.eyebrow{font-size:12px;letter-spacing:.15em;color:#bfcb9a}section{border-top:1px solid #374039;padding:28px 0}.intro{padding-bottom:24px}.players{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.sample{background:#1b2520;border:1px solid #39453c;border-radius:12px;padding:18px}.sample h3{font-size:16px;margin:0 0 12px}audio{width:100%;margin:10px 0}button{border:1px solid #65765e;background:transparent;color:inherit;padding:10px 18px;border-radius:24px;cursor:pointer;font:inherit}button[aria-pressed=true]{background:#cad7a6;color:#142014;border-color:#cad7a6}nav{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 8px}.note{font-size:13px;color:#a4b1a6}.badge{display:inline-block;font-size:12px;border:1px solid #52644c;padding:4px 10px;border-radius:20px}.links{display:flex;gap:20px;flex-wrap:wrap}details{margin:18px 0}summary{cursor:pointer;padding:10px 0}.warn{color:#dfc58e}@media(max-width:700px){.players{grid-template-columns:1fr}main{padding:24px 18px}}
+</style></head><body><aside style="padding:18px 24px;background:#d8e5bf;color:#172315;font:600 16px system-ui"><a style="color:inherit" href="biblioteca-demo.html">Nueva prueba integrada: escuchar los 2 minutos con voz continua y efectos independientes →</a></aside><main>
+<div class="intro"><span class="eyebrow">SANDBOX / PRUEBA DE AUDIO</span><h1>La expansión del Imperio japonés</h1><p>Escucha los efectos por separado y después con la narración a volumen de fondo. La plantilla original sigue igual.</p><span class="badge">Audio · sin grabación de video</span></div>
+<section><h2>Primero, compara con la voz</h2><p>Son los mismos tres fragmentos, en el mismo orden: ejército y vehículos, China y aviones, tropas en Java. Cambia de opción para comparar desde el mismo punto.</p>
+<nav aria-label="Versión de audio"><button aria-pressed="true" data-file="comparacion-original.mp3">Solo narración</button><button aria-pressed="false" data-file="comparacion-sfxmint.mp3">Con SFXMint</button><button aria-pressed="false" data-file="comparacion-soundza.mp3">Con Soundza</button></nav>
+<audio id="compare" aria-label="Comparación con narración" controls preload="metadata" src="comparacion-original.mp3"></audio><p class="note">27 segundos · 0–9 s vehículos · 9–18 s aviones · 18–27 s pasos. Los sonidos están bajos y entran y salen suavemente.</p>
+<div class="links"><a href="mezcla-sfxmint.mp3">Escuchar narración completa con SFXMint · 2 min</a><a href="mezcla-soundza.mp3">Escuchar narración completa con Soundza · 2 min</a></div></section>
+<section><h2>SFXMint · sonidos de su biblioteca</h2><p>Tres archivos existentes descargados por API, con licencia CC0. No son generaciones nuevas.</p><div class="players">
+<div class="sample"><h3>Vehículos y orugas</h3><audio aria-label="SFXMint vehículos" controls preload="metadata" src="sfxmint-vehiculos.mp3"></audio></div>
+<div class="sample"><h3>Avión de hélice</h3><audio aria-label="SFXMint avión" controls preload="metadata" src="sfxmint-aviones.mp3"></audio></div>
+<div class="sample"><h3>Pasos de tropas</h3><audio aria-label="SFXMint pasos" controls preload="metadata" src="sfxmint-pasos.mp3"></audio></div></div></section>
+<section><h2>Soundza · generados para esta prueba</h2><p>Tres efectos nuevos solicitados sin música ni voz. Son recreaciones, no grabaciones históricas.</p><div class="players">
+<div class="sample"><h3>Vehículos y orugas</h3><audio aria-label="Soundza vehículos" controls preload="metadata" src="soundza-vehiculos.mp3"></audio></div>
+<div class="sample"><h3>Avión y batalla lejana</h3><audio aria-label="Soundza avión" controls preload="metadata" src="soundza-aviones.mp3"></audio></div>
+<div class="sample"><h3>Pasos de tropas</h3><audio aria-label="Soundza pasos" controls preload="metadata" src="soundza-pasos.mp3"></audio></div></div><p class="note warn">La revisión automática señaló posibles sonidos artificiales y un avión que podría parecer moderno. Escúchalos antes de elegir; esa revisión no sustituye tu oído.</p></section>
+<section><h2>Gemini / Lyria · experimento de motor</h2><p>Una muestra nueva de ocho segundos pedida como ambiente mecánico sin música. Lyria es un modelo musical: esta prueba no demuestra precisión histórica ni soporte general de efectos.</p><div class="players">
+<div class="sample"><h3>Motor · sonido solo</h3><audio aria-label="Gemini motor" controls preload="metadata" src="gemini-experimento.mp3"></audio></div>
+<div class="sample"><h3>Motor con narración</h3><audio aria-label="Gemini con narración" controls preload="metadata" src="comparacion-gemini.mp3"></audio></div></div></section>
+<section><h2>Qué estamos evaluando</h2><p>Que el sonido acompañe la imagen, que la voz se entienda y que el ambiente resulte creíble. Ninguna muestra está aprobada para el documental todavía.</p><p class="note">Efectos: <a href="https://soundza.com">soundza.com</a> · <a href="https://sfxmint.com">SFXMint</a> · experimento Google Gemini API / Lyria RealTime.</p><a href="../../index.html?controls=1">Abrir la plantilla original</a></section>
+</main><script>
+const mainAudio=document.getElementById('compare');
+document.querySelectorAll('[data-file]').forEach(button=>button.addEventListener('click',()=>{
+ const t=mainAudio.currentTime, playing=!mainAudio.paused;
+ mainAudio.pause();mainAudio.src=button.dataset.file;
+ document.querySelectorAll('[data-file]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+ mainAudio.addEventListener('loadedmetadata',()=>{mainAudio.currentTime=Math.min(t,mainAudio.duration||0);if(playing)mainAudio.play().catch(()=>{});},{once:true});mainAudio.load();
+}));
+document.querySelectorAll('audio').forEach(a=>a.addEventListener('play',()=>document.querySelectorAll('audio').forEach(other=>{if(other!==a)other.pause();})));
+</script></body></html>

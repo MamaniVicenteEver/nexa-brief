@@ -10,7 +10,11 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
+import signal
+import queue
 import re
+import threading
 from collections import deque
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -21,6 +25,8 @@ from src.core.progress import report_step_progress
 ProgressParser = Callable[[str], float | None]
 
 _TAIL_LINES = 40
+_TAIL_CHARS = 4096
+_LINE_BUFFER_BYTES = 64 * 1024
 _PERCENT = re.compile(r"(\d{1,3}(?:\.\d+)?)\s?%")
 
 
@@ -55,49 +61,119 @@ def parse_remotion_event(line: str) -> float | None:
     return (rendered + encoded) / (2 * total)
 
 
+class _Lector:
+    """Vacía una tubería en un hilo propio. Así el proceso nunca se bloquea al escribir
+    aunque el bucle de eventos esté ocupado, y no hace falta que la tubería se cierre
+    para saber que el proceso terminó."""
+
+    def __init__(self, fd: int) -> None:
+        self._fd = fd
+        self._lineas: queue.SimpleQueue[bytes | None] = queue.SimpleQueue()
+        self.cola: deque[str] = deque(maxlen=_TAIL_LINES)
+        self.terminada = False
+        threading.Thread(target=self._leer, name="lector-proceso", daemon=True).start()
+
+    def _leer(self) -> None:
+        buffer = b""
+        try:
+            while chunk := os.read(self._fd, 65536):
+                # Las barras de progreso se redibujan con '\r': se parte por ambos.
+                buffer = (buffer + chunk)[-_LINE_BUFFER_BYTES:]
+                *lineas, buffer = re.split(rb"[\r\n]", buffer)
+                for linea in lineas:
+                    self._lineas.put(linea)
+            if buffer.strip():
+                self._lineas.put(buffer)
+        except OSError:
+            pass
+        finally:
+            os.close(self._fd)
+            self._lineas.put(None)
+
+    def procesar(self, parse_progress: ProgressParser) -> None:
+        """Entrega al progreso lo que ya llegó. Corre en el bucle y nunca espera."""
+        while True:
+            try:
+                crudo = self._lineas.get_nowait()
+            except queue.Empty:
+                return
+            if crudo is None:
+                self.terminada = True
+                return
+            linea = crudo.decode(errors="replace").strip()[-_TAIL_CHARS:]
+            if not linea:
+                continue
+            self.cola.append(linea)
+            fraccion = parse_progress(linea)
+            if fraccion is not None:
+                report_step_progress(fraccion)
+
+
+async def _detener_grupo(proc: asyncio.subprocess.Process) -> None:
+    """Termina el proceso y los descendientes que sigan vivos (navegadores, workers)."""
+    try:
+        os.killpg(proc.pid, signal.SIGTERM)
+    except ProcessLookupError:
+        await proc.wait()
+        return
+    await asyncio.sleep(0.2)
+    try:
+        os.killpg(proc.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        pass
+    await proc.wait()
+
+
 async def run_with_progress(
     cmd: list[str],
     *,
     cwd: Path,
-    timeout: float,
+    timeout: float | None,
     parse_progress: ProgressParser,
+    env: dict[str, str] | None = None,
 ) -> ProcessOutput:
-    """Raises asyncio.TimeoutError (after killing the process) if it exceeds `timeout`."""
-    proc = await asyncio.create_subprocess_exec(
-        *cmd, cwd=str(cwd), stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
-    )
-    tails: dict[str, deque[str]] = {"stdout": deque(maxlen=_TAIL_LINES), "stderr": deque(maxlen=_TAIL_LINES)}
+    """Corre el proceso leyendo su salida en vivo.
 
-    async def pump(stream: asyncio.StreamReader, name: str) -> None:
-        # Progress bars redraw with '\r' instead of newlines — split on both.
-        buffer = b""
-        while chunk := await stream.read(4096):
-            buffer += chunk
-            *lines, buffer = re.split(rb"[\r\n]", buffer)
-            for raw in lines:
-                line = raw.decode(errors="replace").strip()
-                if not line:
-                    continue
-                tails[name].append(line)
-                fraction = parse_progress(line)
-                if fraction is not None:
-                    report_step_progress(fraction)
-        if buffer.strip():
-            tails[name].append(buffer.decode(errors="replace").strip())
-
-    assert proc.stdout is not None and proc.stderr is not None
+    Termina cuando termina el proceso principal. No espera a que se cierren las
+    tuberías: un descendiente que las conserve abiertas no puede retener el render.
+    Al final detiene su grupo. Lanza asyncio.TimeoutError (tras matar el grupo) si
+    pasa `timeout`.
+    """
+    lectura_salida, escritura_salida = os.pipe()
+    lectura_error, escritura_error = os.pipe()
     try:
-        await asyncio.wait_for(
-            asyncio.gather(pump(proc.stdout, "stdout"), pump(proc.stderr, "stderr"), proc.wait()),
-            timeout=timeout,
+        proc = await asyncio.create_subprocess_exec(
+            *cmd, cwd=str(cwd), stdout=escritura_salida, stderr=escritura_error,
+            start_new_session=True, env=env,
         )
-    except asyncio.TimeoutError:
-        proc.kill()
-        await proc.wait()
+    except BaseException:
+        os.close(lectura_salida)
+        os.close(lectura_error)
         raise
-
+    finally:
+        os.close(escritura_salida)
+        os.close(escritura_error)
+    salida, errores = _Lector(lectura_salida), _Lector(lectura_error)
+    loop = asyncio.get_running_loop()
+    limite = None if timeout is None else loop.time() + timeout
+    try:
+        while proc.returncode is None:
+            salida.procesar(parse_progress)
+            errores.procesar(parse_progress)
+            if limite is not None and loop.time() > limite:
+                raise asyncio.TimeoutError()
+            await asyncio.sleep(0.2)
+        # El proceso principal ya terminó: lo que quedó en las tuberías se entrega en ~2 s.
+        for _ in range(10):
+            salida.procesar(parse_progress)
+            errores.procesar(parse_progress)
+            if salida.terminada and errores.terminada:
+                break
+            await asyncio.sleep(0.2)
+    finally:
+        await _detener_grupo(proc)
     return ProcessOutput(
         returncode=proc.returncode if proc.returncode is not None else -1,
-        stdout_tail="\n".join(tails["stdout"]),
-        stderr_tail="\n".join(tails["stderr"]),
+        stdout_tail="\n".join(salida.cola),
+        stderr_tail="\n".join(errores.cola),
     )

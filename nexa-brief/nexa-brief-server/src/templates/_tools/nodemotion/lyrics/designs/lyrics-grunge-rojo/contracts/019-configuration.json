@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "config.timing",
+  "entry_id": "config.timing",
+  "name": "timing",
+  "kind": "configuration",
+  "label": "timing",
+  "summary": "Existing configuration configuration: timing.",
+  "params": {
+    "leadSec": {
+      "default": 0.05
+    },
+    "maxWords": {
+      "default": 4
+    },
+    "maxChars": {
+      "default": 22
+    },
+    "wordGapSec": {
+      "default": 0.5
+    },
+    "gapSec": {
+      "default": 1.2
+    },
+    "holdSec": {
+      "default": 0.5
+    }
+  },
+  "example": {
+    "leadSec": 0.05,
+    "maxWords": 4,
+    "maxChars": 22,
+    "wordGapSec": 0.5,
+    "gapSec": 1.2,
+    "holdSec": 0.5
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/assets/config.json",
+      "pointer": "/configs/0/timing"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

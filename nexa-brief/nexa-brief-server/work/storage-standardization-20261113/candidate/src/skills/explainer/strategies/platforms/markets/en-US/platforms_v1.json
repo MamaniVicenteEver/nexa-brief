@@ -1,0 +1,27 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "platforms_v1",
+  "piece": "platforms",
+  "locale": "en-US",
+  "status": "draft",
+  "intent": "Facebook needs a strong first line; TikTok and Reels need the topic in the opening on-screen text and caption.",
+  "templates": {
+    "facebook": "{named subject}: {concrete consequence}.",
+    "tiktok": "{subject viewers search for}. {one open question}?"
+  },
+  "examples": [
+    "ChatGPT privacy: what does deleting a chat actually remove?"
+  ],
+  "conventions": [
+    "Keep Facebook’s first line under 125 characters and TikTok’s caption under 150.",
+    "Preserve source scope, native punctuation and platform hashtag limits.",
+    "Use the 0–3 second opening as the visual hook."
+  ],
+  "sounds_false": [
+    "Link in bio when no link is configured.",
+    "#foryou #viral as a substitute for the actual topic."
+  ],
+  "overrides": {
+    "name": "Native first lines and search-led captions"
+  }
+}

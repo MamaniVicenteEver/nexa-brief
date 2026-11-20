@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-trendy",
+  "family": "promo",
+  "demo_folder": "nodemotion/commercial/promo-trendy",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/outro.js": "runtime/components/outro.js",
+    "components/outroV2.js": "runtime/components/outro-v2.js"
+  },
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "source_sha256": "374e9ad61ac8b5d464bb2c951020ad932984d9892a91f07f91fcd2fa43abdbec",
+  "migration_source_sha256": "374e9ad61ac8b5d464bb2c951020ad932984d9892a91f07f91fcd2fa43abdbec",
+  "migration_runtime_sha256": {
+    "components/outro.js": "02f7aed619072be018a11863e4068ce523cf533e3ab7ba156857f6dd13608378",
+    "components/outroV2.js": "492f18f9766fc0fe94ef8ba8663cb99dc7fb2b9b42231f0fba51b7a06e071463"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/promo-trendy",
+    "config": "nodemotion/commercial/promo-trendy/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-trendy/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-trendy/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "46a97f4f2f1d39426b1e19c6658983b6b0519fa8c879fc61163d40804411e4c3.webp",
+    "assets/media/basketball-1.jpg": "d71e945a69ccb615ed749c48df4374e7f3c54fc54a9041e5d02c4e9c30b4d58b.jpg",
+    "assets/media/basketball-2.jpg": "8038d74197644035ced79e14e39abf0dff7d9d61a97107754721ac3b38af167a.jpg",
+    "assets/media/basketball.mp4": "e975fdd83a8f4ced914f0d03577f2c391e186329ec095d59d27fa09ade070cf4.mp4",
+    "assets/media/battle-ropes-1.jpg": "ad948d802994076e9cb24843f2b6dce4e1632a3e275f31848f8adf02c40ccbf5.jpg",
+    "assets/media/battle-ropes-2.jpg": "a1dc7e10b119d7e2c56b022fe944054d34a3c54e522e605c5f81428a9d93635c.jpg",
+    "assets/media/battle-ropes.mp4": "c88cf7cc535db1bd909cc42fd986936cc193376ef785f09607d79d3fbc68e43f.mp4",
+    "assets/media/boxing-1.jpg": "61e15c7fd9de0b798c0f56450f82c33416b624562e43087786e43c17904db086.jpg",
+    "assets/media/boxing-2.jpg": "178f4e96e8a4b3c3379b4f1de8df06e671b1676ea71933a5702379f791fe2fe6.jpg",
+    "assets/media/boxing.mp4": "e423efb995012fc5c1db453d7dd18a04e4d4352b29220c19fd3d9a330659d81b.mp4",
+    "assets/media/graded/basketball-1.bwWarm.jpg": "6b0374ad2f07abfb7aeb6efa109874a3b3ff4502786ccbc9c3232f5e49919a16.jpg",
+    "assets/media/graded/basketball-1.duoLime.jpg": "961e8abbf28be7beb0adde12eb5fab021318329ac022f6fd7da70adb88284e27.jpg",
+    "assets/media/graded/basketball-2.bwWarm.jpg": "559e93cf653b04375a17703405db2ebacb44e1fc8ed2134edf3fdb71e07d1d27.jpg",
+    "assets/media/graded/basketball-2.duoLime.jpg": "5b46419efe8e9cb477c9a4727808049da523dd775939ddc9acbd69c7db1ae3b1.jpg",
+    "assets/media/graded/basketball.bwWarm.mp4": "e3491319c77b061ef166cb43e5bb724a2628c4feab6f939c47f56560d45002c0.mp4",
+    "assets/media/graded/basketball.duoLime.mp4": "fbd0b9ac8185532529aaf51c30186d1cb03090469478ed48e1e020de32a7445a.mp4",
+    "assets/media/graded/battle-ropes-1.bwWarm.jpg": "b01a82df2b4e95d716add90b2ae8f49276c398072f17650b0f9896dd490e6c4e.jpg",
+    "assets/media/graded/battle-ropes-1.duoLime.jpg": "fa343bfad72ef22ff204524afee356b87237ef9b66a7478cb725e44b4566a1ab.jpg",
+    "assets/media/graded/battle-ropes-2.bwWarm.jpg": "ba67293f7eb0d55db4c3d147ff71fcc7952efe26c7b22d0be44bfcebcdf9544b.jpg",
+    "assets/media/graded/battle-ropes-2.duoLime.jpg": "6f04980170364de147df8e6f52517463c736f4b63ef27d30efa7dfb5a9933565.jpg",
+    "assets/media/graded/battle-ropes.bwWarm.mp4": "c15f7cea41379838f9baa78fcc3fa42b38a4505bdba27d90c9ab3f81f213648a.mp4",
+    "assets/media/graded/battle-ropes.duoLime.mp4": "6cc11f505325067eb9dc03948168c5fcbe99929d6ce0dcba85bbd8193fbcdf64.mp4",
+    "assets/media/graded/boxing-1.bwWarm.jpg": "874177ceffcc6665760e63641a7638e7d658d129c7a696324076206739a73d6c.jpg",
+    "assets/media/graded/boxing-1.duoLime.jpg": "ae84bcc9f79ae60c315246dec89c49454c7c1607eb0f4b7d4ac2a9b4be328e05.jpg",
+    "assets/media/graded/boxing-2.bwWarm.jpg": "647de42ad03ea9382535ae171154b761991ce4f4b7ddd1f3252a7494d39aebdf.jpg",
+    "assets/media/graded/boxing-2.duoLime.jpg": "73c4a1326c54aef4f1611e15508a1a2c4a3aac1fd3de849f5706c4116c331b6b.jpg",
+    "assets/media/graded/boxing.bwWarm.mp4": "5c69a237ead3ec6f8b41597289dfb9451090b820fd752bbd58518631d86efa9e.mp4",
+    "assets/media/graded/boxing.duoLime.mp4": "06514797624b72cd00f815b1de3eb9264aeac1c923637deb3e187e81b0831df7.mp4",
+    "assets/media/graded/skate-1.bwWarm.jpg": "7899f031a89fd27e6fd0a785a2b6cb78b932d47c5bad93c2273082d766023da0.jpg",
+    "assets/media/graded/skate-1.duoLime.jpg": "e63ae152a2ac6da83cd7cb46a2788c363596bb1d6e18090aaf1a56d089ae8ebc.jpg",
+    "assets/media/graded/skate-2.bwWarm.jpg": "ceacd15f4ee9108704161976fe5e791d9e51853dd901a9440d53cf65bc2258f6.jpg",
+    "assets/media/graded/skate-2.duoLime.jpg": "af9d1d8ea0b9232a7b7222477fe03cc5ca6f00541c94ca151e02ad01212a43ec.jpg",
+    "assets/media/graded/skate.bwWarm.mp4": "0fdcbb05fe8c9d27b593e73f52762314bfcac61387fb51fbc5453c500151d85e.mp4",
+    "assets/media/graded/skate.duoLime.mp4": "70cdec0258a9585128883d5f24dac05ab2dc46c621ed484c58291bd25bd4cf5b.mp4",
+    "assets/media/graded/soccer-1.bwWarm.jpg": "52fba37f948e8c33a9e2f7561f6dec0869f1dd651e8c44b4f4ab706d3dda5dd0.jpg",
+    "assets/media/graded/soccer-1.duoLime.jpg": "76a84f1f16a9a572f2f2a925feda31538fa376042a849edcdf3414fd18320043.jpg",
+    "assets/media/graded/soccer-2.bwWarm.jpg": "d8d42b2215aa7b3bf583ba74c40bf95ed6e7cceede3cdc7b2ed43b1b9895aee1.jpg",
+    "assets/media/graded/soccer-2.duoLime.jpg": "69cff5399bb4d3ac873b7178a81ee0faada68e5ebece3e00f67a1bd004c821ef.jpg",
+    "assets/media/graded/soccer.bwWarm.mp4": "8169259584daeae2ba5d92d326e7d9f27270203b24d847f35df97ce5151aa933.mp4",
+    "assets/media/graded/soccer.duoLime.mp4": "b26a895b9ae2c08a2d201481b96c2c2d5d4d7154d4c94a646011078629c92c0f.mp4",
+    "assets/media/graded/sprinter-1.bwWarm.jpg": "f973a8353684191d96da92b1087e1cf6b80a96f8253eaac70cc6f14659024b1a.jpg",
+    "assets/media/graded/sprinter-1.duoLime.jpg": "2609c3d2964f8a61956250da6b56a8c258bfcd69fa4c1707a146fe07e0f50293.jpg",
+    "assets/media/graded/sprinter-2.bwWarm.jpg": "8af7b5db1ac30369f0a0bd6df5707384c27445990c0c3a79037520593699c068.jpg",
+    "assets/media/graded/sprinter-2.duoLime.jpg": "308e8bdad5c9081b1271699a7fdf7a30268d2797acf7c1a78e4c86634673fded.jpg",
+    "assets/media/graded/sprinter.bwWarm.mp4": "9e1112b49e78d28a3a64eacc719286357b3736e3f2db30fc2b82cdc2a2980ed7.mp4",
+    "assets/media/graded/sprinter.duoLime.mp4": "92103b19eaa861e180d9b1f05fd50f85c5ae18dfa6f634e5e15a74951e4f7ea9.mp4",
+    "assets/media/skate-1.jpg": "6e0b015ec780c815c9883a250ca866e05fd8270302d2bb63a96ff9926a30d4c8.jpg",
+    "assets/media/skate-2.jpg": "17d94b77c0a18655e8e7b31b211517e4a4efa487bc3ebf8eb5d1511087ce2611.jpg",
+    "assets/media/skate.mp4": "695ff98f1a05699932df95dcd9c10120c6ee72ff55a19ed5f7fb4b5db0d60f5c.mp4",
+    "assets/media/soccer-1.jpg": "c62897fef52e3484e9ec5aeab137ef4f046c6ec55834bc8bb360af57e43004bf.jpg",
+    "assets/media/soccer-2.jpg": "6d2a26279086c0ad23ab7334303b2316358b9e95014bb6301f241e406de6d60c.jpg",
+    "assets/media/soccer.mp4": "a6b6e586f6cdc31a4b57c63e751cc815176d4109b98f487221bec63005081a2d.mp4",
+    "assets/media/sprinter-1.jpg": "b9166bf33c5f7e3e509cc5b833042a8025e796efca7b9d95ab7faa9f799f3600.jpg",
+    "assets/media/sprinter-2.jpg": "9bd90fdd2e928325b15c9166f978f7a5426fd14f54f84005981b8a9ac5f1652d.jpg",
+    "assets/media/sprinter.mp4": "da8181384d6e9bd969b4e357340a1058f52475e0066af4ff0f1be8c0e0c08a19.mp4",
+    "assets/song.mp3": "b57e29f1a765ce1d487234058083db701ae1d46af9d239d1c26120fd23cf903c.mp3"
+  }
+}

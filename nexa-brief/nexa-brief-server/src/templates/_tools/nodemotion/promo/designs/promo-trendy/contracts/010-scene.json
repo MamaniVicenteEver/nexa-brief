@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-trendy",
+  "id": "scene.end",
+  "entry_id": "scene.end",
+  "name": "end",
+  "kind": "scene",
+  "label": "end",
+  "summary": "cierre de líneas apiladas",
+  "variants": [
+    {
+      "type": "end",
+      "in": "none",
+      "max_text_lines": null
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 10,
+      "type": "end",
+      "shows": "cierre de líneas apiladas",
+      "lines_used": 3,
+      "max_characters_per_line_recommended": 16,
+      "media": [],
+      "line_usage": "Usa todas las líneas; se recomiendan hasta 3.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+    "brand_texts": {},
+    "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-trendy.json",
+      "pointer": "/default_scenes/9"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-trendy.json",
+      "pointer": "/scene_cycle/9"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

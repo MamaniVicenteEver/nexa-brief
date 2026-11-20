@@ -72,9 +72,15 @@ def test_publications_counts_windows_per_platform():
 def test_public_channel_list_never_exposes_token_fields():
     ctx = make_ctx(accounts=[{"platform": "youtube", "alias": "canal_1", "name": "Mi Canal",
                               "target_id": "UC123", "status": "ok", "expires_in_seconds": 10.5,
-                              "has_refresh_token": True}])
+                              "has_refresh_token": True, "access_token": "fake-access",
+                              "refresh_token": "fake-refresh", "avatar": "https://example.com/private-avatar",
+                              "label": "INTERNAL"}])
     public = channels.public_list(ctx)[0].model_dump()
-    assert public["public_url"] == "https://www.youtube.com/channel/UC123"
+    assert public == {"name": "Mi Canal", "public_url": "https://www.youtube.com/channel/UC123"}
+    private = channels.details(ctx)[0].model_dump()
+    assert private["alias"] == "canal_1"
+    assert private["has_refresh_token"] is True
+    assert private["avatar"] == "https://example.com/private-avatar"
     assert not {"alias", "status", "expires_in_seconds", "has_refresh_token"} & set(public)
 
 
@@ -115,3 +121,30 @@ def test_every_registered_section_runs_on_empty_data(sections):
     ctx = make_ctx()
     for name, collect in sections.items():
         collect(ctx)  # no debe lanzar con el sistema vacío (landing recién instalada)
+
+
+def test_public_channel_without_name_does_not_fall_back_to_private_alias():
+    ctx = make_ctx(accounts=[{"platform": "youtube", "alias": "private-internal-alias", "target_id": "UC123"}])
+    assert channels.public_list(ctx)[0].name == "Canal"
+
+
+def test_tiktok_public_url_uses_known_handle_and_never_oauth_id():
+    assert channels.public_url("tiktok", "private-oauth-id", "@mi_canal") == "https://www.tiktok.com/@mi_canal"
+    assert channels.public_url("tiktok", "private-oauth-id") is None
+
+
+@pytest.mark.asyncio
+async def test_public_stats_http_response_has_only_name_and_url_per_channel(api_client, monkeypatch):
+    from src.core.stats.models import PublicStats
+    from src.presentation.api.routers import stats as stats_router
+
+    ctx = make_ctx(accounts=[{"platform": "youtube", "alias": "internal", "name": "Público",
+                              "target_id": "UC123", "has_refresh_token": True,
+                              "expires_in_seconds": 15, "status": "requires_reauth"}])
+    result = PublicStats(**{name: collect(ctx) for name, collect in PUBLIC_SECTIONS.items()})
+    monkeypatch.setattr(stats_router, "build_public_stats", lambda loader: result)
+    response = await api_client.get("/api/v1/stats/public")
+    assert response.status_code == 200
+    assert response.json()["channel_list"] == [
+        {"name": "Público", "public_url": "https://www.youtube.com/channel/UC123"}
+    ]

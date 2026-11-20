@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-expediente",
+  "id": "config.intro",
+  "entry_id": "config.intro",
+  "name": "intro",
+  "kind": "configuration",
+  "label": "intro",
+  "summary": "Existing configuration configuration: intro.",
+  "params": {
+    "backdrop": {
+      "default": {
+        "opacity": 0.8
+      }
+    },
+    "artist": {
+      "default": "Yasuha · Expediente Nº 084"
+    },
+    "title": {
+      "default": "Flyday\nChinatown"
+    },
+    "sub": {
+      "default": ""
+    },
+    "feats": {
+      "default": "Material clasificado · NODEMOTION"
+    }
+  },
+  "example": {
+    "backdrop": {
+      "opacity": 0.8
+    },
+    "artist": "Yasuha · Expediente Nº 084",
+    "title": "Flyday\nChinatown",
+    "sub": "",
+    "feats": "Material clasificado · NODEMOTION"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-expediente/assets/config.json",
+      "pointer": "/configs/0/intro"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

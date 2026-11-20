@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram-worlds",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "void": {
+      "default": "#08090C"
+    },
+    "night": {
+      "default": "#14151B"
+    },
+    "white": {
+      "default": "#F4F2FB"
+    },
+    "ink": {
+      "default": "#0E0C18"
+    },
+    "red": {
+      "default": "#EE0A2B"
+    },
+    "violet": {
+      "default": "#46108A"
+    },
+    "pale": {
+      "default": "#E6E6EC"
+    },
+    "h1": {
+      "default": "#9A8AF4"
+    },
+    "h2": {
+      "default": "#A4E8F2"
+    },
+    "h3": {
+      "default": "#B69EF4"
+    },
+    "h4": {
+      "default": "#6C76F0"
+    },
+    "h5": {
+      "default": "#DDE7FF"
+    }
+  },
+  "example": {
+    "void": "#08090C",
+    "night": "#14151B",
+    "white": "#F4F2FB",
+    "ink": "#0E0C18",
+    "red": "#EE0A2B",
+    "violet": "#46108A",
+    "pale": "#E6E6EC",
+    "h1": "#9A8AF4",
+    "h2": "#A4E8F2",
+    "h3": "#B69EF4",
+    "h4": "#6C76F0",
+    "h5": "#DDE7FF"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram-worlds/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

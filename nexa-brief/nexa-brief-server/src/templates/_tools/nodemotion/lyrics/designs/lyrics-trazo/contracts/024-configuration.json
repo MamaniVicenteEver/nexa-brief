@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "config.transitions",
+  "entry_id": "config.transitions",
+  "name": "transitions",
+  "kind": "configuration",
+  "label": "transitions",
+  "summary": "Existing configuration configuration: transitions.",
+  "params": {
+    "flashSec": {
+      "default": 0.08
+    },
+    "zoomSec": {
+      "default": 0.12
+    },
+    "deck": {
+      "default": {
+        "cut": 6,
+        "flash": 1.2,
+        "zoom": 1,
+        "shift": 0.6,
+        "blink": 0.6
+      }
+    }
+  },
+  "example": {
+    "flashSec": 0.08,
+    "zoomSec": 0.12,
+    "deck": {
+      "cut": 6,
+      "flash": 1.2,
+      "zoom": 1,
+      "shift": 0.6,
+      "blink": 0.6
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "pointer": "/configs/0/transitions"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

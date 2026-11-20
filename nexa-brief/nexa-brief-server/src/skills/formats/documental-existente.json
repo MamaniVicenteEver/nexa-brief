@@ -1,0 +1,84 @@
+{
+  "schema": "nexa.format/1",
+  "format_id": "documental-existente",
+  "label": "Documental existente (adaptación)",
+  "duration_seconds": {
+    "min": 1,
+    "default": 600,
+    "max": 3600,
+    "step": 60
+  },
+  "selection": {
+    "default_below_seconds": 240,
+    "below_format": "animado-corto",
+    "otherwise_format": "documental-largo"
+  },
+  "structure": {
+    "acts": [
+      3,
+      8
+    ],
+    "hook_max_seconds": 3,
+    "chapters": true,
+    "ending": "pregunta y cierre"
+  },
+  "media": {
+    "photos": true,
+    "clips": true,
+    "generated_images": true,
+    "only_components": false
+  },
+  "density": {
+    "segments_per_minute": [
+      3.0,
+      4.5
+    ],
+    "photos_per_minute": [
+      0.8,
+      1.6
+    ],
+    "lyrics_per_minute": [
+      0.6,
+      1.0
+    ],
+    "clips_per_minute": [
+      0.2,
+      0.6
+    ],
+    "scenes_per_minute": [
+      11,
+      17
+    ]
+  },
+  "words_margin": [
+    0.95,
+    1.08
+  ],
+  "chapter_seconds": [
+    75,
+    150
+  ],
+  "domain_components": [
+    {
+      "from_minutes": 5,
+      "min": 1
+    },
+    {
+      "from_minutes": 10,
+      "min": 2
+    },
+    {
+      "from_minutes": 15,
+      "min": 3
+    },
+    {
+      "from_minutes": 30,
+      "min": 4
+    }
+  ],
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "legacy_source": "localización de un original existente sin formato declarado"
+}

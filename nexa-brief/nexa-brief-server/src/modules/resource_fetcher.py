@@ -18,6 +18,7 @@ el sistema usa, buscado o provisto, queda disponible para reutilizar después.
 from __future__ import annotations
 
 import asyncio
+import math
 import random
 import shutil
 import time
@@ -43,9 +44,30 @@ logger = structlog.get_logger(__name__)
 
 
 async def run(job: Job, niche_cfg: NicheConfig, analysis_ai: AIPort) -> Job:
+    # Registered engines acquire resources in a disposable workspace. The
+    # library remains the durable source; the output project stores IDs only.
+    from src.templates._tools.nodemotion.shared.assemble import registered
+    if not registered(niche_cfg.template.template_id):
+        return await _run_legacy(job, niche_cfg, analysis_ai)
+    import tempfile
+    from src.core.nodemotion.service import asset_ref, _resolve_ref
+    with tempfile.TemporaryDirectory(prefix="nodemotion-acquire-") as temporary:
+        work = job.model_copy(update={"artifacts": job.artifacts.model_copy(update={"assets_dir": Path(temporary)})})
+        result = await _run_legacy(work, niche_cfg, analysis_ai)
+        art = result.artifacts
+        music_ref = asset_ref("music", art.music_asset_id, tail_seconds=_outro_tail_seconds(niche_cfg))
+        changes = {"assets_dir": job.artifacts.assets_dir, "music_path": _resolve_ref(music_ref)}
+        if art.image_asset_id:
+            changes["image_path"] = asset_library.resolve_image_path(art.image_asset_id)
+        if art.video_asset_id:
+            changes["video_path"] = asset_library.resolve_video_path(art.video_asset_id)
+        return result.model_copy(update={"artifacts": art.model_copy(update=changes)})
+
+
+async def _run_legacy(job: Job, niche_cfg: NicheConfig, analysis_ai: AIPort) -> Job:
     t_start = time.monotonic()
-    output_dir = job.artifacts.output_dir
-    logs_dir = output_dir / "logs"
+    output_dir = job.artifacts.content_dir
+    logs_dir = job.artifacts.log_dir or job.artifacts.output_dir / "logs"
     logs_dir.mkdir(parents=True, exist_ok=True)
     now = datetime.now(timezone.utc).isoformat()
 
@@ -151,9 +173,13 @@ async def run(job: Job, niche_cfg: NicheConfig, analysis_ai: AIPort) -> Job:
     # resultado sobreescribe analyzed_input.duration_seconds (lo que
     # video_recorder / packager / result_summarizer usan río abajo), no
     # job.input.duration_seconds (que es inmutable, solo el valor de entrada).
+    await _add_outro_tail(job, niche_cfg, music_result.path, output_dir)
+
     analyzed_input = job.artifacts.analyzed_input
     if job.input.duration_config is not None:
-        resolved_seconds = await _resolve_duration_seconds(job, music_result.path, logs_dir)
+        resolved_seconds = await _resolve_duration_seconds(
+            job, music_result.path, logs_dir, locked_to_music=niche_cfg.video.duration_locked_to_music,
+        )
         analyzed_input = analyzed_input.model_copy(update={"duration_seconds": resolved_seconds})
         # Reescribir el log de Stage 1 para que quede consistente con la duración
         # que realmente se va a grabar (evita un 01_input_completado.json que
@@ -190,6 +216,46 @@ async def run(job: Job, niche_cfg: NicheConfig, analysis_ai: AIPort) -> Job:
     return job.model_copy(update={"artifacts": artifacts}).advance(JobStage.RESOURCES_FETCHED)
 
 
+DEFAULT_OUTRO_TAIL_SECONDS = 4.0
+
+
+def _outro_tail_seconds(niche_cfg: NicheConfig) -> float:
+    if niche_cfg.video.outro_tail_seconds is not None:
+        return niche_cfg.video.outro_tail_seconds
+    template = niche_cfg.template
+    if template is None or not template.template_id:
+        return 0.0
+    from src.config.template_manifest import get_template_runtime_assets
+
+    try:
+        has_outro = any(p.name == "outro.js" for p in get_template_runtime_assets(template.template_id))
+    except Exception:
+        has_outro = False
+    return DEFAULT_OUTRO_TAIL_SECONDS if has_outro else 0.0
+
+
+async def _add_outro_tail(job: Job, niche_cfg: NicheConfig, music_path: Path, output_dir: Path) -> None:
+    """Silencio al final de la canción del job para que la salida de la plantilla tenga tiempo:
+    sin esto arranca con la última palabra y se ve menos de un segundo (o el cierre queda en negro).
+    Solo toca la copia del job (output_dir/song.mp3), nunca el archivo de la librería."""
+    tail = _outro_tail_seconds(niche_cfg)
+    if tail <= 0 or music_path.parent.resolve() != output_dir.resolve():
+        return
+    padded = music_path.with_name("song.tail.mp3")
+    proc = await asyncio.create_subprocess_exec(
+        "ffmpeg", "-y", "-v", "error", "-i", str(music_path), "-af", f"apad=pad_dur={tail}",
+        "-c:a", "libmp3lame", "-q:a", "2", str(padded),
+        stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+    )
+    _, stderr = await proc.communicate()
+    if proc.returncode != 0:
+        logger.warning("outro_tail_failed", job_id=job.job_id, error=stderr.decode()[-300:])
+        padded.unlink(missing_ok=True)
+        return
+    padded.replace(music_path)
+    logger.info("outro_tail_added", job_id=job.job_id, seconds=tail)
+
+
 async def _get_audio_duration_seconds(path: Path) -> float:
     """Lee la duración real de un archivo de audio con ffprobe (ya es dependencia del sistema)."""
     proc = await asyncio.create_subprocess_exec(
@@ -206,12 +272,19 @@ async def _get_audio_duration_seconds(path: Path) -> float:
     return float(stdout.decode().strip())
 
 
-async def _resolve_duration_seconds(job: Job, music_path: Path, logs_dir: Path) -> int:
+async def _resolve_duration_seconds(job: Job, music_path: Path, logs_dir: Path, *, locked_to_music: bool = False) -> int:
     dc = job.input.duration_config
     detected_song_seconds: float | None = None
     was_clamped = False
 
-    if dc.mode == DurationMode.MANUAL:
+    if locked_to_music:
+        detected_song_seconds = await _get_audio_duration_seconds(music_path)
+        if not math.isfinite(detected_song_seconds) or detected_song_seconds <= 0:
+            raise MusicFetchError("La canción no tiene una duración válida")
+        # Lyric videos follow the actual track, including its outro silence.
+        # Rounding up preserves the last audio samples instead of cutting them.
+        resolved = math.ceil(detected_song_seconds)
+    elif dc.mode == DurationMode.MANUAL:
         resolved = dc.manual_seconds or job.input.duration_seconds
     else:  # AUTO
         detected_song_seconds = await _get_audio_duration_seconds(music_path)
@@ -235,7 +308,8 @@ async def _resolve_duration_seconds(job: Job, music_path: Path, logs_dir: Path) 
         "manual_seconds": dc.manual_seconds if dc.mode == DurationMode.MANUAL else None,
         "resolved_duration_seconds": resolved,
         "was_clamped": was_clamped,
-        "allowed_range": [settings.video_min_duration_seconds, settings.video_max_duration_seconds],
+        "locked_to_music": locked_to_music,
+        "allowed_range": None if locked_to_music else [settings.video_min_duration_seconds, settings.video_max_duration_seconds],
     }
     (logs_dir / "05c_duracion_resuelta.json").write_bytes(
         orjson.dumps(duration_log, option=orjson.OPT_INDENT_2)

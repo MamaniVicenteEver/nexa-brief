@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "grunge.outrov2",
+  "entry_id": "grunge.outrov2",
+  "kind": "component",
+  "label": "Outro v2 Collage",
+  "summary": "Collage de frases cantadas y tiza sobre papel; franja roja con el título y feats.",
+  "component": {
+    "name": "grunge.outrov2",
+    "label": "Outro v2 Collage",
+    "summary": "Collage de frases cantadas y tiza sobre papel; franja roja con el título y feats.",
+    "group": "outro",
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "Gracias",
+        "doc": "config.outro.title"
+      },
+      "sub": {
+        "type": "string",
+        "default": "por ver",
+        "doc": "config.outro.sub"
+      },
+      "feats": {
+        "type": "string",
+        "default": "Suscríbete · NodeMotion",
+        "doc": "config.outro.feats"
+      }
+    },
+    "tags": [
+      "outro"
+    ],
+    "file": "components/outro-v2.js",
+    "demo": {},
+    "preview": {
+      "t": 3.4
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "Gracias",
+      "doc": "config.outro.title"
+    },
+    "sub": {
+      "type": "string",
+      "default": "por ver",
+      "doc": "config.outro.sub"
+    },
+    "feats": {
+      "type": "string",
+      "default": "Suscríbete · NodeMotion",
+      "doc": "config.outro.feats"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/showcase/components.json",
+      "pointer": "/components/2"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

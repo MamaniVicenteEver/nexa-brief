@@ -1,0 +1,103 @@
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* tema (fuentes/colores) — defaults idénticos al caso actual; config.json puede pisarlos */
+  :root {
+    --fontSerif: "Playfair Display", serif; --fontScript: "Great Vibes", cursive;
+    --serifInk: #F2E7DA; --scriptInk: #D89A9E; --muted: #cbb8ad;
+  }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #0d0709; cursor: pointer; }
+  body { opacity: 0; transition: opacity 1.2s ease; }
+  body.ready { opacity: 1; }
+
+  /* fondo imagen/video con filtro cálido-rosado (CONFIG.bg) */
+  #bgMedia {
+    opacity: var(--custom-bg-opacity, 1);
+    position: fixed; inset: -6%; width: 112%; height: 112%; object-fit: cover; z-index: 0;
+    animation: bgBreath 58s ease-in-out infinite alternate; will-change: transform;
+  }
+  #bgFallback {
+    position: fixed; inset: 0; z-index: -1;
+    background: linear-gradient(160deg, #1a0e12 0%, #0d0709 60%, #070405 100%);
+  }
+  @keyframes bgBreath {
+    0%   { transform: scale(1.01); }
+    100% { transform: scale(1.06) translate(0.8%, -0.9%); }
+  }
+  #warmTint {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 62%, rgba(210,120,120,0.10) 0%, rgba(24,8,10,0.55) 75%, rgba(10,4,5,0.8) 100%);
+    mix-blend-mode: multiply;
+  }
+
+  #bokeh { position: fixed; inset: 0; z-index: 2; }
+
+  #viewport { position: fixed; inset: 0; overflow: hidden; z-index: 3; }
+  #world { position: absolute; left: 0; top: 0; width: 100%; will-change: transform; }
+
+  .row {
+    position: absolute; left: 7vw; right: 7vw; text-align: center;
+    will-change: transform, opacity, filter; line-height: 1.15;
+    transition: opacity 1.6s ease, filter 1.8s ease, transform 1.2s ease;
+    transform: rotate(var(--rot, 0deg));
+  }
+  .row.serif { font-family: var(--fontSerif); font-style: italic; font-weight: 500; color: var(--serifInk); text-shadow: 0 2px 14px rgba(0,0,0,0.55); }
+  .row.script { font-family: var(--fontScript); color: var(--scriptInk); text-shadow: 0 0 18px rgba(216,120,130,0.28), 0 2px 10px rgba(0,0,0,0.5); text-transform: none !important; }
+  .row.alignL { text-align: left; padding-left: 4vw; }
+  .row.alignR { text-align: right; padding-right: 4vw; }
+  .row.old { opacity: 0.14; filter: blur(3px); }
+  /* escritura a mano: cada carácter aparece en cascada */
+  .row span { opacity: 0; display: inline; filter: blur(6px); transition: opacity 0.5s ease, filter 0.7s ease; }
+  .row span.on { opacity: 1; filter: blur(0); }
+  /* latido en líneas enfatizadas */
+  @keyframes heartbeat {
+    0% { transform: scale(1) rotate(var(--rot, 0deg)); }
+    14% { transform: scale(1.045) rotate(var(--rot, 0deg)); }
+    28% { transform: scale(1) rotate(var(--rot, 0deg)); }
+    42% { transform: scale(1.03) rotate(var(--rot, 0deg)); }
+    60% { transform: scale(1) rotate(var(--rot, 0deg)); }
+    100% { transform: scale(1) rotate(var(--rot, 0deg)); }
+  }
+  .row.beat { animation: heartbeat 1.6s ease 0.35s 1; }
+
+  #vignette {
+    position: fixed; inset: 0; z-index: 4; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 46%, transparent 38%, rgba(6,2,3,0.78) 100%);
+  }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 5; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.045; mix-blend-mode: overlay; animation: gsh 1.3s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+
+  .cardScreen {
+    position: fixed; inset: 0; z-index: 8; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 1.6vh; text-align: center;
+    transition: opacity 1.6s ease; padding: 0 6vw;
+  }
+  .cardScreen .artist { font-family: var(--fontSerif); font-style: italic; font-size: 3vh; color: var(--muted); letter-spacing: 0.22em; text-transform: uppercase; }
+  .cardScreen .title  { font-family: var(--fontScript); font-size: 16.25vh; color: var(--scriptInk); line-height: 1.05; text-shadow: 0 0 26px rgba(216,120,130,0.3); }
+  .cardScreen .sub    { font-family: var(--fontSerif); font-style: italic; font-size: 2.6vh; color: var(--serifInk); letter-spacing: 0.14em; }
+  .cardScreen .feats  { font-family: var(--fontSerif); font-size: 1.5vh; letter-spacing: 0.32em; opacity: 0.65; color: var(--muted); margin-top: 2.4vh; text-transform: uppercase; }
+  #intro.gone { opacity: 0; pointer-events: none; }
+  #outro { opacity: 0; pointer-events: none; }
+  #outro.show { opacity: 1; pointer-events: auto; }
+  body.outroActive #viewport { opacity: 0.10; transition: opacity 2.2s ease; }
+  body.outroActive #bgMedia { opacity: calc(0.50 * var(--custom-bg-opacity, 1)); transition: opacity 2.2s ease; }
+  #hint {
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: var(--fontSerif); font-size: 1.5vh; letter-spacing: 0.4em;
+    opacity: 0.5; animation: hintPulse 2.4s ease infinite; pointer-events: none; color: var(--muted);
+    text-transform: uppercase;
+  }
+  @keyframes hintPulse { 0%,100% { opacity: 0.15; } 50% { opacity: 0.55; } }
+
+
+  /* responsive móvil (solo orientación vertical — desktop queda intacto) */
+  @media (orientation: portrait) {
+    .cardScreen .artist { font-size: min(3vh, 5.4vw); letter-spacing: 0.16em; }
+    .cardScreen .title  { font-size: min(16.25vh, 26.25vw); }
+    .cardScreen .sub    { font-size: min(2.6vh, 4.6vw); }
+    .cardScreen .feats  { font-size: min(1.5vh, 3vw); letter-spacing: 0.22em; }
+  }
+

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "config.components",
+  "entry_id": "config.components",
+  "name": "components",
+  "kind": "configuration",
+  "label": "components",
+  "summary": "Existing configuration configuration: components.",
+  "params": {
+    "intro": {
+      "default": true
+    },
+    "outro": {
+      "default": "grunge.outrov1"
+    },
+    "paper": {
+      "default": true
+    },
+    "doodles": {
+      "default": true
+    },
+    "fog": {
+      "default": true
+    },
+    "grain": {
+      "default": true
+    },
+    "distress": {
+      "default": true
+    },
+    "recap": {
+      "default": true
+    }
+  },
+  "example": {
+    "intro": true,
+    "outro": "grunge.outrov1",
+    "paper": true,
+    "doodles": true,
+    "fog": true,
+    "grain": true,
+    "distress": true,
+    "recap": true
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/assets/config.json",
+      "pointer": "/configs/0/components"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

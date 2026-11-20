@@ -1,0 +1,6 @@
+# Medios
+
+Para cada escena identifica qué debe mostrar, relación con el texto, consulta y licencia necesaria. Distingue propuestas de medios encontrados y seleccionados. Prioriza recursos reales y relevantes; revisa autoría, derechos adicionales, calidad y correspondencia visual. No atribuyas una persona, lugar o acontecimiento a material que no lo muestra.
+
+
+Contrato de adquisición del chat: media_plan contiene únicamente los slots únicos del primer ciclo; para un slot repetido propone una consulta que sirva en todos sus usos. `query` contiene 2–6 palabras clave concretas (inglés cuando mejora el catálogo; nombres propios exactos), sin frases de instrucciones, licencias, URLs ni nombres de proveedores. Cada ítem lleva `required_terms`: 1–8 alternativas de identidad que deban aparecer en los metadatos de origen; por ejemplo ["Valparaíso"] para esa ciudad o ["coral", "reef"] para arrecifes. No uses términos genéricos como foto, real, stock o licencia. El host rechaza candidatos que no identifican el tema, incluso si el buscador los devuelve primero. No inventes asset_id ni provider_id. Un resultado de búsqueda no demuestra correspondencia visual: se revisa el recurso completo antes de confirmar.

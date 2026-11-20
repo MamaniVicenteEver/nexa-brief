@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-rasgado",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-rasgado",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/escenas.js": "runtime/components/scenes.js",
+    "components/intro.js": "runtime/components/intro.js",
+    "components/kit.js": "runtime/components/kit.js",
+    "components/outro-v1.js": "runtime/components/outro-v1.js",
+    "components/outro-v2.js": "runtime/components/outro-v2.js",
+    "components/transiciones.js": "runtime/components/transitions.js",
+    "galeria.html": "runtime/gallery.html",
+    "player.js": "runtime/player.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "source_sha256": "bddbb20b285b4cfc2f5689702c8a5890e686c7ff37ea10295a3797bcb9e75055",
+  "migration_source_sha256": "bddbb20b285b4cfc2f5689702c8a5890e686c7ff37ea10295a3797bcb9e75055",
+  "migration_runtime_sha256": {
+    "components/escenas.js": "1112634e92771f727b1ffb8380fe77f9e8c3fadf48b5b4398c80daa25366e211",
+    "components/intro.js": "3d65e56202c518efc6b6935c7b47921c853b22e29ccd447461dc8266b5a8471d",
+    "components/kit.js": "2bef7ea518ce00fe9a191f35a2ec82166b9796a4a7f3255051b331ce9a94500e",
+    "components/outro-v1.js": "978e05e944b0400638e9e9a40d60d3bf6d59428165e30f7a9b150abe19d94b2e",
+    "components/outro-v2.js": "2eb7718836caa49e5f4249a517b98b68588c6bc03d3b81cde7791c1bb14bf288",
+    "components/transiciones.js": "14f91f8002845f9ce10d411c4ee11ed44c2b6ab25e2b34e3af08cd1668296227",
+    "galeria.html": "7048db53c0bcae2fb849fe2af35d9edd7784b149a038aaf333b4eeb6eedf26cd",
+    "player.js": "3843a6d40d0fabc873e1e6afba9814d7698b10ed6ee25182a1a49cc1ce38b157"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-rasgado",
+    "config": "nodemotion/lyrics/lyrics-rasgado/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-rasgado/DESIGN.md"
+  },
+  "demo_resource_aliases": {
+    "assets/media/alley-1.jpg": "e275e74c107dc06d29c7a4c3e32a70a9c144531dead55ec330f446a5b4169ab0.jpg",
+    "assets/media/alley-2.jpg": "3937d085d07c67d5ece2985932a8aa059ab10cb220291dc6c45a15353d94604c.jpg",
+    "assets/media/alley.mp4": "a68934d4f10f6e515addecf5cda28c69f0d7ceb6b5bfa0a1f6b1ddcce56b8a6d.mp4",
+    "assets/media/fans-1.jpg": "dd494e08d3f5950d83cda1817879f4bd280f079238aa13b8b36c9a4333b92c6b.jpg",
+    "assets/media/fans-2.jpg": "e7ff803df34b4dbde257a8c8584fb766158dd9436386caa1af2b55377b78c7e2.jpg",
+    "assets/media/fans.mp4": "3d5ea18df78564dcab2248510a1c0fd5408d6ebeaa1c94d7870898b30cc281cd.mp4",
+    "assets/media/graded/alley-1.mono.jpg": "a5e900f84bc3087a554c3b2acf9271720ff7f87c7cb1e2ea60160d78af83301a.jpg",
+    "assets/media/graded/alley.mono.mp4": "652e6aa8c2dce325ca4ac95abf74f913a4f1fa654476d9438b76c65753b5e9ae.mp4",
+    "assets/media/graded/fans-1.mono.jpg": "0456834a962bfdf837ec4f1a1eb3a98b5285035ec906c199b1041fac1ba80968.jpg",
+    "assets/media/graded/fans.mono.mp4": "865f7cd38abc567295be139f10425b9fdcc0bd9e09fdfa87f7131e8212a4ad10.mp4",
+    "assets/media/graded/hands-1.mono.jpg": "fd58780a868965964af0420857e7ca77518962be35d147142ea60292903e019a.jpg",
+    "assets/media/graded/hands.mono.mp4": "ae6d3ace7993b1c80e1ff9c4414a9eed9f37e06e00765d3722940061a79fb2d1.mp4",
+    "assets/media/graded/hood-1.mono.jpg": "c3af668856b77e491fab63111241b54efa8b61188c4db5069c4ed73f4bf2db70.jpg",
+    "assets/media/graded/hood.mono.mp4": "2a691f14ae8176a7478314601b1af63065122dfa8d3848d02df6b4917c999c80.mp4",
+    "assets/media/graded/smoke-1.mono.jpg": "8c98ad5e779d9aa499f36a45a0635bf16e0260e588b35b2b83b2a65bfb2b7e4e.jpg",
+    "assets/media/graded/smoke.mono.mp4": "2f67c38b1c2672db03f780ce5b15bd31b2dc7d6c7fe3d7d7e892c42db4b22162.mp4",
+    "assets/media/graded/stage-1.mono.jpg": "e4f2cb5cce34cd0a932d2eaf66ece793761c408c2a7085c32953515eb09db81f.jpg",
+    "assets/media/graded/stage.mono.mp4": "2c3536cefe8bd3b833843a14e0e2402325a7fb84829ba0a5a61be10b66d8ec25.mp4",
+    "assets/media/hands-1.jpg": "ecee250d2be0976c1a6df39401b6a80955be0c4b72187977fccd205feee83d9e.jpg",
+    "assets/media/hands-2.jpg": "f287347af984334a037bbd35e2c19cedf66b3629daf7651ee6fc00a062bb938a.jpg",
+    "assets/media/hands.mp4": "56a0d80a12981b27ecc8787929fdfbcecceacf372082301ba43959c711e9eb89.mp4",
+    "assets/media/hood-1.jpg": "7ea0778797b4002da50827445ecfdc7e37939ca8ec3c983bf2205bdf0a2a96d8.jpg",
+    "assets/media/hood-2.jpg": "fc21901ce8a28f9a195559d4bf0b4659577b8033bcc112fd2dd0726152d1b58d.jpg",
+    "assets/media/hood.mp4": "08cdf3ae0f9b4753f8a3b6cabce604535ac97d2e6ff315c504ef17ed815b2bbd.mp4",
+    "assets/media/smoke-1.jpg": "4ebf666470f99ec9d80afca837ef763c57f4f6d7e7902c04f2e2e6f3b422b445.jpg",
+    "assets/media/smoke-2.jpg": "843c5073e3d08c3e47fafafd67a58921f0e17bfbf96ba3c0feb5b7875ce2dc2f.jpg",
+    "assets/media/smoke.mp4": "dde1f36d0c629576e0654c7ece77e50fd40f530396854896fc18e884972fa972.mp4",
+    "assets/media/stage-1.jpg": "bf87f5d6d3e66a962e6a3ac28606cfd1d4e194df6b2c60b4f84a7efa9f3aed13.jpg",
+    "assets/media/stage-2.jpg": "c0b3d465ac7ae94f7e7be4f215cd0c234485fc84003ece44b861c3c5b76930b0.jpg",
+    "assets/media/stage.mp4": "e1bd37442721bfd9ee38a339eab065dc08b5d197cd70ef9728980a84ff59762c.mp4",
+    "assets/song.mp3": "ba0438c18434c325e6e6c3df7af30e1ee6d699e76ab5491af83adf14d3728698.mp3"
+  }
+}

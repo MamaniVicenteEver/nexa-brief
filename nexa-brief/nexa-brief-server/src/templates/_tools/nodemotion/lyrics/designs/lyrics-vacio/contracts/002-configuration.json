@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-vacio",
+  "id": "config.fonts",
+  "entry_id": "config.fonts",
+  "name": "fonts",
+  "kind": "configuration",
+  "label": "fonts",
+  "summary": "Existing configuration configuration: fonts.",
+  "params": {
+    "googleUrl": {
+      "default": "https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@100;800&family=Inter:wght@300&display=swap"
+    }
+  },
+  "example": {
+    "googleUrl": "https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@100;800&family=Inter:wght@300&display=swap"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-vacio/assets/config.json",
+      "pointer": "/configs/0/fonts"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

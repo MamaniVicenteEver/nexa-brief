@@ -1,0 +1,128 @@
+{
+  "fondo": {
+    "preset": "foco",
+    "color": "#0B1220",
+    "acento": "#1F6BFF",
+    "grano": 0.15
+  },
+  "camara": {
+    "mov": "acercar",
+    "intensidad": 0.04
+  },
+  "elenco": [
+    {
+      "id": "jefe",
+      "asset": "ejecutivo",
+      "pose": "original",
+      "x": 0.55,
+      "y": 0.9,
+      "escala": 1,
+      "profundidad": 0.2,
+      "estilo": {
+        "brillo": "#66D1FF",
+        "sombra": true,
+        "halo": 0.3,
+        "zonas": {
+          "corbata": "#E3262F"
+        }
+      },
+      "entrada": {
+        "anim": "entrar-sube",
+        "dur": 0.6
+      },
+      "anim": "respirar"
+    },
+    {
+      "id": "mano-1",
+      "asset": "mano",
+      "x": 0.5,
+      "y": 0.05,
+      "escala": 1,
+      "profundidad": 0.1,
+      "anim": "flotar"
+    }
+  ],
+  "conexiones": [
+    {
+      "de": "mano-1:dedo-1",
+      "a": "jefe:mano-izq",
+      "tipo": "hilo",
+      "color": "#EFE9DF"
+    },
+    {
+      "de": "mano-1:dedo-2",
+      "a": "jefe:cabeza",
+      "tipo": "hilo",
+      "color": "#EFE9DF"
+    },
+    {
+      "de": "mano-1:dedo-3",
+      "a": "jefe:mano-der",
+      "tipo": "hilo",
+      "color": "#EFE9DF"
+    }
+  ],
+  "eventos": [
+    {
+      "en": 1.5,
+      "id": "jefe",
+      "accion": "mover",
+      "valor": {
+        "x": 0.65,
+        "y": 0.9,
+        "dur": 1
+      }
+    },
+    {
+      "en": 2.4,
+      "id": "jefe",
+      "accion": "pose",
+      "valor": "pose-2"
+    },
+    {
+      "en": 3,
+      "id": "jefe",
+      "accion": "color",
+      "valor": {
+        "zona": "corbata",
+        "color": "#E9B23B",
+        "dur": 0.7
+      }
+    },
+    {
+      "en": 4,
+      "id": "jefe",
+      "accion": "silueta",
+      "valor": true
+    },
+    {
+      "en": 4.8,
+      "id": "jefe",
+      "accion": "silueta",
+      "valor": false
+    }
+  ],
+  "textos": [
+    {
+      "texto": "HILOS DE PODER",
+      "pos": "arriba",
+      "estilo": "titulo"
+    }
+  ],
+  "formato": {
+    "9x16": {
+      "elenco": {
+        "jefe": {
+          "x": 0.5,
+          "y": 0.9,
+          "escala": 1
+        },
+        "mano-1": {
+          "x": 0.5,
+          "y": 0.05,
+          "escala": 0.8
+        }
+      }
+    }
+  }
+}

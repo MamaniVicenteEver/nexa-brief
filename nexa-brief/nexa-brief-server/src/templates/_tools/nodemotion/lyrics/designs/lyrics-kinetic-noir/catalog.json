@@ -1,0 +1,291 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "family": "lyrics",
+  "display_name": "Cinético Noir",
+  "description": "Tipografía cinética en blanco sobre azul casi negro: cada frase cantada en una composición propia (barra que cruza el texto, pila de renglones, cita con crédito manuscrito, eco slab, subtítulo con cursor rojo, marco que se traza, caja invertida y resaltado de la palabra cantada), con tecleo y mezcla de caracteres, cortes en bandas, trazos de luz y humo generados — para rap, pop y electrónica con frases cortas.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [
+      {
+        "key": "intro.title",
+        "label": "Título en la intro",
+        "max": 40,
+        "default": ""
+      },
+      {
+        "key": "intro.artist",
+        "label": "Artista en la intro",
+        "max": 40,
+        "default": ""
+      },
+      {
+        "key": "outro.title",
+        "label": "Título del cierre",
+        "max": 24,
+        "default": "Gracias"
+      },
+      {
+        "key": "outro.sub",
+        "label": "Subtítulo del cierre",
+        "max": 24,
+        "default": "por escuchar"
+      },
+      {
+        "key": "outro.feats",
+        "label": "Línea final del cierre",
+        "max": 40,
+        "default": "Suscríbete · NodeMotion"
+      }
+    ],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-kinetic-noir/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "player.js",
+    "components",
+    "assets/fonts"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-kinetic-noir",
+    "config": "nodemotion/lyrics/lyrics-kinetic-noir/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-kinetic-noir/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-kinetic-noir/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-kinetic-noir/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-kinetic-noir/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-kinetic-noir/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "noir.intro",
+      "kind": "component",
+      "label": "Intro marco",
+      "summary": "Título en grotesca extendida dentro del marco y artista sobre el borde.",
+      "constraints_status": "documented",
+      "id": "noir.intro",
+      "contract": "contracts/001-component.json"
+    },
+    {
+      "entry_id": "noir.outrov1",
+      "kind": "component",
+      "label": "Outro v1",
+      "summary": "Título slab con cursor rojo, subtítulo espaciado y fundido.",
+      "constraints_status": "documented",
+      "id": "noir.outrov1",
+      "contract": "contracts/002-component.json"
+    },
+    {
+      "entry_id": "noir.outrov2",
+      "kind": "component",
+      "label": "Outro v2",
+      "summary": "Caja blanca invertida, humo bajo y fundido.",
+      "constraints_status": "documented",
+      "id": "noir.outrov2",
+      "contract": "contracts/003-component.json"
+    },
+    {
+      "entry_id": "noir.glitch",
+      "kind": "component",
+      "label": "Cortes en bandas",
+      "summary": "Corte horizontal al entrar cada palabra y al cerrar cada escena.",
+      "constraints_status": "unknown",
+      "id": "noir.glitch",
+      "contract": "contracts/004-component.json"
+    },
+    {
+      "entry_id": "noir.smoke",
+      "kind": "component",
+      "label": "Humo",
+      "summary": "Humo gris en la parte baja en algunas frases.",
+      "constraints_status": "unknown",
+      "id": "noir.smoke",
+      "contract": "contracts/005-component.json"
+    },
+    {
+      "entry_id": "noir.bar",
+      "kind": "component",
+      "label": "Barra",
+      "summary": "Barra blanca que se abre y cruza la línea condensada; el texto se invierte sobre la barra.",
+      "constraints_status": "documented",
+      "id": "noir.bar",
+      "contract": "contracts/006-component.json"
+    },
+    {
+      "entry_id": "noir.stack",
+      "kind": "component",
+      "label": "Pila",
+      "summary": "Palabras en renglones cortos de grotesca extendida, sangrías alternas y tecleo con mezcla de caracteres.",
+      "constraints_status": "documented",
+      "id": "noir.stack",
+      "contract": "contracts/007-component.json"
+    },
+    {
+      "entry_id": "noir.quote",
+      "kind": "component",
+      "label": "Cita",
+      "summary": "Condensada centrada; las palabras entran en gris y se encienden; crédito manuscrito opcional arriba.",
+      "constraints_status": "documented",
+      "id": "noir.quote",
+      "contract": "contracts/008-component.json"
+    },
+    {
+      "entry_id": "noir.ghost",
+      "kind": "component",
+      "label": "Eco",
+      "summary": "Palabra slab enorme que entra inclinada con dos copias tenues desplazadas debajo (1-2 palabras).",
+      "constraints_status": "documented",
+      "id": "noir.ghost",
+      "contract": "contracts/009-component.json"
+    },
+    {
+      "entry_id": "noir.subtitle",
+      "kind": "component",
+      "label": "Subtítulo",
+      "summary": "Línea slab tecleada con cursor rojo y el resto pequeño y espaciado debajo.",
+      "constraints_status": "documented",
+      "id": "noir.subtitle",
+      "contract": "contracts/010-component.json"
+    },
+    {
+      "entry_id": "noir.frame",
+      "kind": "component",
+      "label": "Marco",
+      "summary": "Grotesca extendida, recuadro que se traza alrededor y subtítulo sobre el borde; sale borrando letras de derecha a izquierda.",
+      "constraints_status": "documented",
+      "id": "noir.frame",
+      "contract": "contracts/011-component.json"
+    },
+    {
+      "entry_id": "noir.box",
+      "kind": "component",
+      "label": "Caja",
+      "summary": "Primer renglón en caja blanca invertida que se abre; el resto debajo con mezcla de caracteres.",
+      "constraints_status": "documented",
+      "id": "noir.box",
+      "contract": "contracts/012-component.json"
+    },
+    {
+      "entry_id": "noir.highlight",
+      "kind": "component",
+      "label": "Resaltado",
+      "summary": "Condensada alineada a la izquierda; la palabra cantada va en bloque blanco.",
+      "constraints_status": "documented",
+      "id": "noir.highlight",
+      "contract": "contracts/013-component.json"
+    },
+    {
+      "entry_id": "noir.pause",
+      "kind": "component",
+      "label": "Pausa",
+      "summary": "Línea que barre el centro y recuadro vacío que parpadea en los silencios.",
+      "constraints_status": "unknown",
+      "id": "noir.pause",
+      "contract": "contracts/014-component.json"
+    },
+    {
+      "entry_id": "config.lyricsFilter",
+      "kind": "configuration",
+      "label": "lyricsFilter",
+      "summary": "Existing configuration configuration: lyricsFilter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.lyricsFilter",
+      "contract": "contracts/015-configuration.json"
+    },
+    {
+      "entry_id": "config.colors",
+      "kind": "configuration",
+      "label": "colors",
+      "summary": "Existing configuration configuration: colors.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.colors",
+      "contract": "contracts/016-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/017-configuration.json"
+    },
+    {
+      "entry_id": "config.components",
+      "kind": "configuration",
+      "label": "components",
+      "summary": "Existing configuration configuration: components.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.components",
+      "contract": "contracts/018-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/019-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/020-configuration.json"
+    },
+    {
+      "entry_id": "config.credit",
+      "kind": "configuration",
+      "label": "credit",
+      "summary": "Existing configuration configuration: credit.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.credit",
+      "contract": "contracts/021-configuration.json"
+    },
+    {
+      "entry_id": "config.phrase",
+      "kind": "configuration",
+      "label": "phrase",
+      "summary": "Existing configuration configuration: phrase.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.phrase",
+      "contract": "contracts/022-configuration.json"
+    },
+    {
+      "entry_id": "layout.deck",
+      "kind": "layout",
+      "label": "deck",
+      "summary": "Existing layout configuration: deck.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.deck",
+      "contract": "contracts/023-layout.json"
+    },
+    {
+      "entry_id": "config.effects",
+      "kind": "configuration",
+      "label": "effects",
+      "summary": "Existing configuration configuration: effects.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.effects",
+      "contract": "contracts/024-configuration.json"
+    },
+    {
+      "entry_id": "config.background",
+      "kind": "configuration",
+      "label": "background",
+      "summary": "Existing configuration configuration: background.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.background",
+      "contract": "contracts/025-configuration.json"
+    }
+  ]
+}

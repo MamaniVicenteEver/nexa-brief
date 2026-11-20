@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-caution",
+  "id": "config.outro",
+  "entry_id": "config.outro",
+  "name": "outro",
+  "kind": "configuration",
+  "label": "outro",
+  "summary": "Existing configuration configuration: outro.",
+  "params": {
+    "enabled": {
+      "default": true
+    },
+    "leadSec": {
+      "default": 3
+    },
+    "title": {
+      "default": "Gracias"
+    },
+    "sub": {
+      "default": "Por ver"
+    },
+    "feats": {
+      "default": "Suscribite | NodeMotion"
+    }
+  },
+  "example": {
+    "enabled": true,
+    "leadSec": 3,
+    "title": "Gracias",
+    "sub": "Por ver",
+    "feats": "Suscribite | NodeMotion"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-caution/assets/config.json",
+      "pointer": "/configs/0/outro"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

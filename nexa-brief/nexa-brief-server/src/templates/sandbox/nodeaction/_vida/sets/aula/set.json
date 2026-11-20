@@ -1,0 +1,138 @@
+{
+  "id": "aula",
+  "title": "Aula · luz de día",
+  "plate": {
+    "file": "plate.png",
+    "w": 1536,
+    "h": 1024
+  },
+  "floorY": 960,
+  "charHeight": 560,
+  "walk": [
+    140,
+    1396
+  ],
+  "anchors": {
+    "seat-tomas": {
+      "x": 690,
+      "y": 960,
+      "kind": "seat",
+      "facing": "right"
+    },
+    "seat-nico": {
+      "x": 930,
+      "y": 960,
+      "kind": "seat",
+      "facing": "left"
+    },
+    "desk-tomas": {
+      "x": 690,
+      "y": 960,
+      "kind": "table",
+      "facing": "front"
+    },
+    "desk-nico": {
+      "x": 930,
+      "y": 960,
+      "kind": "table",
+      "facing": "front"
+    },
+    "enter-left": {
+      "x": 140,
+      "y": 960,
+      "kind": "enter",
+      "facing": "right"
+    }
+  },
+  "props": [
+    {
+      "prop": "chair",
+      "x": 690,
+      "y": 960,
+      "w": 155,
+      "layer": "back",
+      "params": {
+        "h": 330,
+        "seatY": 816,
+        "color": "#d8ad8d"
+      },
+      "id": "chair-0"
+    },
+    {
+      "prop": "chair",
+      "x": 930,
+      "y": 960,
+      "w": 155,
+      "layer": "back",
+      "params": {
+        "h": 330,
+        "seatY": 816,
+        "color": "#d8ad8d"
+      },
+      "id": "chair-1"
+    },
+    {
+      "prop": "desk",
+      "x": 690,
+      "y": 960,
+      "w": 230,
+      "layer": "front",
+      "params": {
+        "h": 245,
+        "surfaceY": 715,
+        "color": "#d8ad8d"
+      },
+      "id": "desk-2"
+    },
+    {
+      "prop": "desk",
+      "x": 930,
+      "y": 960,
+      "w": 230,
+      "layer": "front",
+      "params": {
+        "h": 245,
+        "surfaceY": 715,
+        "color": "#d8ad8d"
+      },
+      "id": "desk-3"
+    },
+    {
+      "id": "clock",
+      "prop": "wall-clock",
+      "x": 1350,
+      "y": 260,
+      "w": 80,
+      "layer": "back",
+      "params": {
+        "h": 80
+      }
+    },
+    {
+      "id": "books",
+      "prop": "shelf",
+      "x": 145,
+      "y": 610,
+      "w": 205,
+      "layer": "back",
+      "params": {
+        "h": 83,
+        "color": "#cfad90"
+      }
+    }
+  ],
+  "light": {
+    "tint": "#ffffff",
+    "ambient": 1
+  },
+  "credits": {
+    "type": "ai-generated",
+    "adapter": "src.adapters.image_gen.cli",
+    "modelPreset": "luna-xhigh",
+    "prompt": "prompt.txt",
+    "reference": "sandbox/nodeaction/vida-en-escena/work/ref/v2-sheet.jpg (solo estilo del fondo)",
+    "status": "generated",
+    "note": "Original PNG copiado por el adaptador, sin recomprimir. Pendiente de revisión visual y calibración sobre la lámina. Calibración etapa 2 sobre PNG 1536×1024: suelo visible y≈710, apoyo 960, altura 560. Anclas y mobiliario ajustados; original intacto.",
+    "sha256": "b3fb2ec52387c50a52e75fcd3248ba52c021958d7fd222d6edaecac967448464"
+  }
+}

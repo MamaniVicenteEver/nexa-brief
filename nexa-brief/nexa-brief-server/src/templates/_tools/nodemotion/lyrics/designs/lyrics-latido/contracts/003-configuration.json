@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-latido",
+  "id": "config.ekg",
+  "entry_id": "config.ekg",
+  "name": "ekg",
+  "kind": "configuration",
+  "label": "ekg",
+  "summary": "Existing configuration configuration: ekg.",
+  "params": {
+    "stepVwMin": {
+      "default": 0.14
+    },
+    "stepVwMax": {
+      "default": 0.24
+    },
+    "wanderRad": {
+      "default": 0.55
+    },
+    "sharpTurnChance": {
+      "default": 0.13
+    },
+    "spikeVh": {
+      "default": [
+        0.1,
+        0.22
+      ]
+    },
+    "spikeSoloVh": {
+      "default": [
+        0.26,
+        0.36
+      ]
+    },
+    "gritoChance": {
+      "default": 0.5
+    },
+    "soloChance": {
+      "default": 0.12
+    },
+    "zoomWide": {
+      "default": [
+        0.86,
+        0.96
+      ]
+    },
+    "zoomClose": {
+      "default": [
+        1.08,
+        1.2
+      ]
+    },
+    "dutchMax": {
+      "default": 2.2
+    }
+  },
+  "example": {
+    "stepVwMin": 0.14,
+    "stepVwMax": 0.24,
+    "wanderRad": 0.55,
+    "sharpTurnChance": 0.13,
+    "spikeVh": [
+      0.1,
+      0.22
+    ],
+    "spikeSoloVh": [
+      0.26,
+      0.36
+    ],
+    "gritoChance": 0.5,
+    "soloChance": 0.12,
+    "zoomWide": [
+      0.86,
+      0.96
+    ],
+    "zoomClose": [
+      1.08,
+      1.2
+    ],
+    "dutchMax": 2.2
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-latido/assets/config.json",
+      "pointer": "/configs/0/ekg"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

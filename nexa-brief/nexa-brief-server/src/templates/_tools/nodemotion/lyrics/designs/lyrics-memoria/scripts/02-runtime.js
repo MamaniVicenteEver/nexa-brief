@@ -1,0 +1,1174 @@
+
+/* Memoria Velada — Lyric Video — recuerdos que se desvanecen: 8 mm y VHS en sepia lavado, polaroids, proyector, máquina de escribir que escribe y borra, letra manuscrita, light leaks y quemado de película. */
+const NAME = "lyrics-memoria";
+const ACTIVE_ID = null;   /* <-- forzar un id · null = usa "activeId" del JSON */
+const DEFAULT_CONFIG = {"activeId": "default", "configs": [{"id": "default", "description": "Lyric video de recuerdos que se desvanecen: películas caseras de 8 mm y VHS en sepia lavado, polaroids que caen, proyector que titila, fecha VHS, máquina de escribir que escribe y borra la letra, letra manuscrita que se esfuma, destellos de luz cálida y fotogramas que se queman. — metadata para marketing/SEO, la plantilla no la usa todavía.", "audio": {"src": "assets/song.mp3"}, "lyricsUrl": "assets/lyrics.json", "lyricsFilter": {"minLogprob": -0.6, "drop": ["gracias por ver", "subt[ií]tulos", "amara\\.org", "audio ?jungle", "suscr[ií]bete"]}, "fonts": {"googleUrl": "https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Special+Elite&family=VT323&display=swap"}, "palette": {"dark": "#1A1410", "cream": "#EADFC8", "sepia": "#A88B62", "rose": "#B9877A", "ink": "#3A2A1E", "vhs": "#E8A84A"}, "grades": {"faded": {"type": "css", "saturate": 0.5, "contrast": 0.88, "brightness": 0.95}, "sepia": {"type": "duo", "dark": "#1C130C", "light": "#EBD9B6", "contrast": 1.05}}, "render": {"kbVideo": true}, "media": [{"id": "family-kitchen", "type": "video", "src": "assets/media/family-kitchen.mp4", "poster": "assets/media/family-kitchen-1.jpg", "graded": {"faded": {"src": "assets/media/graded/family-kitchen.faded.mp4", "poster": "assets/media/graded/family-kitchen-1.faded.jpg"}, "sepia": {"src": "assets/media/graded/family-kitchen.sepia.mp4", "poster": "assets/media/graded/family-kitchen-1.sepia.jpg"}}}, {"id": "family-snow", "type": "video", "src": "assets/media/family-snow.mp4", "poster": "assets/media/family-snow-1.jpg", "graded": {"faded": {"src": "assets/media/graded/family-snow.faded.mp4", "poster": "assets/media/graded/family-snow-1.faded.jpg"}, "sepia": {"src": "assets/media/graded/family-snow.sepia.mp4", "poster": "assets/media/graded/family-snow-1.sepia.jpg"}}}, {"id": "family-nature", "type": "video", "src": "assets/media/family-nature.mp4", "poster": "assets/media/family-nature-1.jpg", "graded": {"faded": {"src": "assets/media/graded/family-nature.faded.mp4", "poster": "assets/media/graded/family-nature-1.faded.jpg"}, "sepia": {"src": "assets/media/graded/family-nature.sepia.mp4", "poster": "assets/media/graded/family-nature-1.sepia.jpg"}}}, {"id": "father-baby", "type": "video", "src": "assets/media/father-baby.mp4", "poster": "assets/media/father-baby-1.jpg", "graded": {"faded": {"src": "assets/media/graded/father-baby.faded.mp4", "poster": "assets/media/graded/father-baby-1.faded.jpg"}, "sepia": {"src": "assets/media/graded/father-baby.sepia.mp4", "poster": "assets/media/graded/father-baby-1.sepia.jpg"}}}, {"id": "child-8mm", "type": "video", "src": "assets/media/child-8mm.mp4", "poster": "assets/media/child-8mm-1.jpg", "graded": {"faded": {"src": "assets/media/graded/child-8mm.faded.mp4", "poster": "assets/media/graded/child-8mm-1.faded.jpg"}, "sepia": {"src": "assets/media/graded/child-8mm.sepia.mp4", "poster": "assets/media/graded/child-8mm-1.sepia.jpg"}}}, {"id": "hands", "type": "video", "src": "assets/media/hands.mp4", "poster": "assets/media/hands-1.jpg", "graded": {"faded": {"src": "assets/media/graded/hands.faded.mp4", "poster": "assets/media/graded/hands-1.faded.jpg"}, "sepia": {"src": "assets/media/graded/hands.sepia.mp4", "poster": "assets/media/graded/hands-1.sepia.jpg"}}}], "phrases": {"maxWords": 8, "maxSec": 5.5, "minWords": 3}, "timing": {"leadSec": 0.15, "holdSec": 1.1, "gapSec": 2.6, "echoSec": 1.6, "echoPhraseSec": 3.0, "cooldown": 3}, "transition": {"overlapSec": 0.8, "weights": {"burn": 2.5, "blur": 2, "fade": 2, "flash": 1, "slice": 0.8}, "flashColor": "#FFE6C2", "burnColor": "rgba(255,150,60,0.9)"}, "layouts": {"polaroid": {"weight": 1.8, "media": ["family-kitchen", "family-nature", "father-baby", "child-8mm", "hands"]}, "homevideo": {"weight": 2.0}, "album": {"weight": 1.2}, "projector": {"weight": 1.3, "media": ["family-snow", "child-8mm", "family-kitchen", "family-nature"]}, "fading": {"weight": 1.2}, "filmBurn": {"weight": 1.0}, "double": {"weight": 1.0}, "dateCard": {"weight": 0.8}}, "intro": {"title": "Fue un sueño", "artist": ""}, "outro": {"enabled": true, "sec": 4.0, "title": "Gracias", "sub": "Por ver", "feats": "Suscribite | NodeMotion"}, "texture": {"grain": 0.1}, "debug": {"enabled": false}, "seed": 41}]};
+const FONT_LOADS = ["400 100px 'Special Elite'", "500 100px Caveat", "400 100px VT323"];
+
+/* ======================= NÚCLEO COMÚN (promo-*) =========================
+   Compartido por las 6 plantillas de commercial/ (promo-trendy,
+   promo-dynamic, promo-urban, promo-sports, promo-editorial y
+   promo-kinetic). Contrato:
+   · config.json  = colección { activeId, configs: [ CASO ] } (como neon /
+     caution): audio, lyricsUrl, paleta, fuentes, MEDIA (videos / imágenes)
+     y la coreografía `scenes` (tipo de escena + media por escena).
+   · lyricsUrl   = guion en formato Whisper { segments: [ { start, end, text,
+     words: [ { word, start, end } ] } ] }. UN segmento = UNA escena (corte en
+     segment.start, palabras que aparecen en word.start). Campos extra
+     opcionales por segmento: "lines" (cómo partir el texto en renglones) y
+     "sub" (texto chico de acompañamiento). Una transcripción real de Whisper
+     también sirve tal cual.
+   · Todo se anima con Tracks propios (interpolan y escriben style solo si
+     cambia; sin Web Animations → nada se promueve a capa y el headless no se
+     hunde) posicionados con el reloj del audio: ?t=SEG congela un cuadro y
+     los videos se buscan a ese instante exacto.
+   Servir por HTTP (python3 -m http.server): por file:// el fetch se bloquea. */
+const doc = document, $ = id => doc.getElementById(id);
+const QS = new URLSearchParams(location.search);
+const FROZEN = QS.has("t") ? parseFloat(QS.get("t")) : null;
+
+async function loadDB() {
+  for (const u of ["config.json", `assets/${NAME}.config.json`, "assets/config.json"]) {
+    try { const r = await fetch(u); if (r.ok) return await r.json(); } catch (e) {}
+  }
+  console.warn(`[${NAME}] config.json no disponible — usando DEFAULT_CONFIG embebido`);
+  return DEFAULT_CONFIG;
+}
+/* merge profundo de objetos; los arrays (media, scenes…) se reemplazan enteros */
+function deepMerge(a, b) {
+  if (Array.isArray(b) || typeof b !== "object" || b === null) return b === undefined ? a : b;
+  const out = { ...(typeof a === "object" && a && !Array.isArray(a) ? a : {}) };
+  for (const k of Object.keys(b)) out[k] = deepMerge(out[k], b[k]);
+  return out;
+}
+const DB = await loadDB();
+const RAW = DB.configs.find(c => c.id === ACTIVE_ID) || DB.configs.find(c => c.id === DB.activeId) || DB.configs[0];
+const C = deepMerge(DEFAULT_CONFIG.configs[0], RAW);
+const DEBUG = C.debug?.enabled || QS.get("debug") === "1";
+if (C.fonts?.googleUrl) {
+  const link = doc.querySelector('link[href^="https://fonts.googleapis.com/css2"]');
+  if (link && link.href !== C.fonts.googleUrl) link.href = C.fonts.googleUrl;
+}
+for (const [k, v] of Object.entries(C.palette || {})) doc.documentElement.style.setProperty("--" + k, v);
+
+function mulberry32(a) { return function() {
+  a |= 0; a = a + 0x6D2B79F5 | 0;
+  let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+  return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const EASE_OUT = "cubic-bezier(.16,.84,.24,1)", EASE_IN = "cubic-bezier(.6,0,.9,.4)", EASE_IO = "cubic-bezier(.65,0,.3,1)";
+const EASE_BACK = "cubic-bezier(.3,1.5,.5,1)";
+
+/* ---------------- Tracks: interpolación propia, seek determinista ---------------- */
+const NUM = /-?\d*\.?\d+(?:e-?\d+)?/g;
+function lerpStr(a, b, p) {
+  if (p <= 0 || a === b) return a;
+  if (p >= 1) return b;
+  const na = a.match(NUM), nb = b.match(NUM);
+  if (!na || !nb || na.length !== nb.length) return p < 0.5 ? a : b;
+  let i = 0;
+  return b.replace(NUM, () => { const v = +na[i] + (+nb[i] - +na[i]) * p; i++; return String(Math.round(v * 1000) / 1000); });
+}
+const easeCache = new Map();
+function easeFn(spec) {
+  let f = easeCache.get(spec);
+  if (f) return f;
+  const m = /cubic-bezier\(([^)]+)\)/.exec(spec);
+  if (!m) f = spec.startsWith("steps") ? () => 0 : p => p;
+  else {
+    const [x1, y1, x2, y2] = m[1].split(",").map(Number);
+    const bz = (t, a, b) => 3 * a * t * (1 - t) * (1 - t) + 3 * b * t * t * (1 - t) + t * t * t;
+    const dbz = (t, a, b) => 3 * a * (1 - t) * (1 - t) + 6 * (b - a) * t * (1 - t) + 3 * (1 - b) * t * t;
+    f = x => {
+      let t = x;
+      for (let i = 0; i < 6; i++) { const d = dbz(t, x1, x2); if (Math.abs(d) < 1e-6) break; t -= (bz(t, x1, x2) - x) / d; t = clamp(t, 0, 1); }
+      return bz(t, y1, y2);
+    };
+  }
+  easeCache.set(spec, f);
+  return f;
+}
+class Track {
+  constructor(el, prop, init, discrete = false) { this.el = el; this.prop = prop; this.discrete = discrete; this.keys = [[0, init, "linear"]]; }
+  get last() { return this.keys[this.keys.length - 1][1]; }
+  set(t, v) { this.keys.push([t, v, "linear"]); return this; }
+  to(t0, d, v, ease = "linear") { this.keys.push([t0, this.last, ease]); this.keys.push([t0 + Math.max(0.001, d), v, "linear"]); return this; }
+  compile() {
+    this.ks = this.keys.slice().sort((a, b) => a[0] - b[0]).map(([t, v, e]) => [t, v, easeFn(this.discrete ? "steps" : e)]);
+    this.a = Infinity; this.b = -Infinity;
+    for (let i = 1; i < this.ks.length; i++)
+      if (this.ks[i][1] !== this.ks[i - 1][1]) { this.a = Math.min(this.a, this.ks[i - 1][0]); this.b = Math.max(this.b, this.ks[i][0]); }
+    this.side = null; this.cur = undefined;
+  }
+  value(t) {
+    const ks = this.ks;
+    if (t <= ks[0][0]) return ks[0][1];
+    for (let i = ks.length - 1; i >= 0; i--) {
+      if (t < ks[i][0]) continue;
+      const nx = ks[i + 1];
+      if (!nx) return ks[i][1];
+      const span = nx[0] - ks[i][0];
+      return span <= 0 ? nx[1] : lerpStr(ks[i][1], nx[1], ks[i][2]((t - ks[i][0]) / span));
+    }
+    return ks[0][1];
+  }
+  seek(t) {
+    const side = t < this.a ? -1 : t > this.b ? 1 : 0;
+    if (side !== 0 && side === this.side) return;
+    this.side = side;
+    const v = this.value(t);
+    if (v !== this.cur) {
+      if (this.prop[0] === "@") this.el[this.prop.slice(1)] = v;   /* "@textContent" → propiedad directa */
+      else this.el.style[this.prop] = v;
+      this.cur = v;
+    }
+  }
+}
+
+/* ---------------- DOM, texto, medición ---------------- */
+function div(parent, cls, css) {
+  const d = doc.createElement("div");
+  if (cls) d.className = cls;
+  if (css) Object.assign(d.style, css);
+  if (parent) parent.appendChild(d);
+  return d;
+}
+const meas = (() => { const m = doc.createElement("span"); m.style.cssText = "position:absolute;left:-99999px;top:0;visibility:hidden;white-space:pre;font-size:100px;line-height:1"; doc.body.appendChild(m); return m; })();
+const measCache = new Map();
+function measure(text, cls, ls = 0) {
+  const key = cls + "|" + ls + "|" + text;
+  let m = measCache.get(key);
+  if (!m) {
+    meas.className = "tx " + cls; meas.style.letterSpacing = ls + "em"; meas.textContent = text;
+    const r = meas.getBoundingClientRect();
+    m = { w: Math.max(1, r.width), h: Math.max(1, r.height) };
+    measCache.set(key, m);
+  }
+  return m;
+}
+const fit = (text, cls, ls, maxW, maxH) => { const m = measure(text, cls, ls); return 100 * Math.min(maxW / m.w, maxH / m.h); };
+const textW = (text, cls, ls, fs) => measure(text, cls, ls).w * fs / 100;
+/* texto decorativo enorme → <canvas> rasterizado UNA vez (mover un texto de
+   1000+ px re-rasteriza cada cuadro en headless: 27 → 7 fps). Respeta fuente,
+   peso, itálica, font-stretch, mayúsculas, espaciado, contorno y textura. */
+const STRETCH = { "50%": "ultra-condensed", "62.5%": "extra-condensed", "75%": "condensed", "87.5%": "semi-condensed", "112.5%": "semi-expanded", "125%": "expanded", "150%": "extra-expanded", "200%": "ultra-expanded" };
+function canvasText(text, o) {
+  meas.className = "tx " + (o.cls || ""); meas.style.letterSpacing = "0em";
+  const cs = getComputedStyle(meas), fs = o.fs;
+  const t = cs.textTransform === "uppercase" ? text.toUpperCase() : text;
+  const cv = doc.createElement("canvas"), cx = cv.getContext("2d");
+  const setFont = () => {
+    cx.font = `${cs.fontStyle} ${cs.fontWeight} ${fs}px ${cs.fontFamily}`;
+    cx.fontStretch = STRETCH[cs.fontStretch] || "normal";
+    cx.letterSpacing = `${(o.ls || 0) * fs}px`;
+  };
+  setFont();
+  const sw = o.stroke ? (o.swPx ?? Math.max(1, fs * (o.sw || 0.012))) : 0;
+  const padL = fs * 0.06 + sw, padR = fs * 0.22 + sw;
+  const w = Math.ceil(cx.measureText(t).width + padL + padR), h = Math.ceil(fs * 1.3);
+  cv.width = Math.min(16000, w); cv.height = h;
+  setFont();
+  cx.textBaseline = "middle";
+  const y = h / 2 + fs * 0.04;
+  if (o.stroke) { cx.lineWidth = sw; cx.strokeStyle = o.color; cx.lineJoin = "round"; cx.strokeText(t, padL, y); }
+  else { cx.fillStyle = o.color; cx.fillText(t, padL, y); }
+  if (o.texture) {            /* textura de piedra: motas oscuras solo sobre la letra */
+    cx.globalCompositeOperation = "source-atop";
+    const n = Math.floor(cv.width * cv.height / 220);
+    for (let i = 0; i < n; i++) { cx.fillStyle = `rgba(0,0,0,${0.08 + texRng() * 0.3})`; const s = 1 + texRng() * 3; cx.fillRect(texRng() * cv.width, texRng() * cv.height, s, s); }
+    cx.globalCompositeOperation = "source-over";
+  }
+  cv.className = "tx"; cv.style.width = cv.width + "px"; cv.style.height = h + "px"; cv.style.display = "block";
+  return cv;
+}
+/* texto posicionado: (x, y) = punto de ancla (ax, ay ∈ 0..1). .bx posiciona, .tx se anima */
+function tx(parent, text, o) {
+  const box = div(parent, "bx");
+  box.style.left = o.x + "px"; box.style.top = o.y + "px";
+  box.style.transform = `translate(${-(o.ax ?? 0.5) * 100}%, ${-(o.ay ?? 0.5) * 100}%)` + (o.rot ? ` rotate(${o.rot}deg)` : "");
+  if (o.canvas) { const el = canvasText(text, o); box.appendChild(el); return { box, el, chars: [], words: [] }; }
+  const el = div(box, "tx " + (o.cls || ""));
+  el.style.fontSize = o.fs + "px";
+  if (o.ls) el.style.letterSpacing = o.ls + "em";
+  if (o.stroke) { el.style.color = "transparent"; el.style.webkitTextStroke = `${Math.max(1, o.fs * (o.sw || 0.012))}px ${o.color}`; }
+  else el.style.color = o.color;
+  const chars = [], words = [];
+  if (o.split === "chars") {
+    let wi = 0;
+    for (const c of text) {
+      const s = doc.createElement("span"); s.className = "ch"; s.textContent = c; s.wi = wi;
+      if (c === " ") wi++;
+      el.appendChild(s); chars.push(s);
+    }
+  } else if (o.split === "words") {
+    text.split(" ").forEach((w, i) => {
+      if (i) el.appendChild(doc.createTextNode(" "));
+      const s = doc.createElement("span"); s.className = "wd"; s.textContent = w; el.appendChild(s); words.push(s);
+    });
+  } else el.textContent = text;
+  return { box, el, chars, words };
+}
+
+/* ---------------- filtros SVG: duotono, B/N, desenfoque direccional ---------------- */
+const SVGNS = "http://www.w3.org/2000/svg";
+const fx = (() => {
+  const s = doc.createElementNS(SVGNS, "svg");
+  s.setAttribute("width", "0"); s.setAttribute("height", "0"); s.style.position = "absolute";
+  const d = doc.createElementNS(SVGNS, "defs"); s.appendChild(d); doc.body.appendChild(s);
+  return d;
+})();
+const hex = h => { const n = parseInt(h.replace("#", ""), 16); return [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255]; };
+/* duotono: luminancia → tabla [oscuro → claro], con contraste previo */
+function duoFilter(id, dark, light, contrast = 1.25) {
+  const [dr, dg, db] = hex(dark), [lr, lg, lb] = hex(light);
+  const icpt = (1 - contrast) / 2;
+  fx.insertAdjacentHTML("beforeend", `<filter id="${id}" color-interpolation-filters="sRGB">
+    <feColorMatrix type="saturate" values="0"/>
+    <feComponentTransfer><feFuncR type="linear" slope="${contrast}" intercept="${icpt}"/><feFuncG type="linear" slope="${contrast}" intercept="${icpt}"/><feFuncB type="linear" slope="${contrast}" intercept="${icpt}"/></feComponentTransfer>
+    <feComponentTransfer><feFuncR type="table" tableValues="${dr} ${lr}"/><feFuncG type="table" tableValues="${dg} ${lg}"/><feFuncB type="table" tableValues="${db} ${lb}"/></feComponentTransfer>
+  </filter>`);
+  return `url(#${id})`;
+}
+for (const [n, s] of [[1, 6], [2, 16], [3, 34]]) {
+  fx.insertAdjacentHTML("beforeend", `<filter id="mbx${n}" x="-30%" y="-10%" width="160%" height="120%"><feGaussianBlur stdDeviation="${s} 0"/></filter>`);
+  fx.insertAdjacentHTML("beforeend", `<filter id="mby${n}" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="0 ${s}"/></filter>`);
+}
+/* gradings del config (C.grades): key → filtro CSS/SVG. Si un media trae la
+   variante ya gradada (media.graded[key], generada por tools/grade_media.py)
+   se usa esa y NO se aplica filtro en vivo: filtrar video en tiempo real es
+   carísimo en Chrome headless (45 fps → 13 fps con un solo filtro). */
+const GRADE = {};
+for (const [k, g] of Object.entries(C.grades || {}))
+  GRADE[k] = g.type === "duo" ? duoFilter(k, g.dark, g.light, g.contrast ?? 1.25)
+           : `saturate(${g.saturate ?? 1}) contrast(${g.contrast ?? 1}) brightness(${g.brightness ?? 1})`;
+/* video → foto fija (su póster), conservando las variantes gradadas del póster */
+function asStill(s) {
+  if (!s || s.type !== "video") return s;
+  const graded = {};
+  for (const [k, g] of Object.entries(s.graded || {})) if (g.poster) graded[k] = { src: g.poster };
+  return { ...s, type: "image", src: s.poster || s.src, graded };
+}
+function blurPass(tr, t0, d, axis = "x", fadeIn = false) {
+  const f = n => `url(#mb${axis}${n})`;
+  if (fadeIn) tr.set(t0, "none").set(t0 + d * 0.35, f(1)).set(t0 + d * 0.65, f(2)).set(t0 + d, f(3));
+  else tr.set(t0, f(3)).set(t0 + d * 0.4, f(2)).set(t0 + d * 0.75, f(1)).set(t0 + d, "none");
+}
+
+/* ---------------- texturas (grano) ---------------- */
+const texRng = mulberry32((C.seed || 7) * 31 + 5);
+function noiseTile(size, alpha) {
+  const cv = doc.createElement("canvas"); cv.width = cv.height = size;
+  const cx = cv.getContext("2d"), im = cx.createImageData(size, size), d = im.data;
+  for (let i = 0; i < d.length; i += 4) { const v = texRng() < 0.5 ? 0 : 255; d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = texRng() * alpha; }
+  cx.putImageData(im, 0, 0);
+  return `url(${cv.toDataURL()})`;
+}
+const GRAIN = noiseTile(192, 255);
+
+/* ---------------- guion (lyrics.json) → escenas ---------------- */
+async function loadScript() {
+  try {
+    const r = await fetch(C.lyricsUrl);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const j = await r.json();
+    /* filtro de alucinaciones de Whisper (tramos instrumentales): config.lyricsFilter
+       = { minLogprob, drop: [regex…] } — un segmento que no pasa se descarta */
+    const F = C.lyricsFilter || {}, drop = (F.drop || []).map(x => new RegExp(x, "i"));
+    const bad = s => (F.minLogprob != null && s.avg_logprob != null && s.avg_logprob < F.minLogprob) ||
+                     drop.some(re => re.test(s.text || ""));
+    const out = (j.segments || []).filter(s => !bad(s)).map(s => {
+      let words = (s.words || []).map(w => ({ text: String(w.word).trim(), t: w.start, end: w.end })).filter(w => w.text);
+      if (!words.length && s.text) words = s.text.trim().split(/\s+/).map(x => ({ text: x, t: s.start, end: s.end }));
+      return { start: s.start, end: s.end, text: (s.text || "").trim(), lines: s.lines, sub: s.sub, words };
+    }).filter(s => isFinite(s.start)).sort((a, b) => a.start - b.start);
+    /* Audio puede tardar en entregar loadedmetadata; usa la duración ya anotada en lyrics.json. */
+    out.audioDurationSec = Number(j.metadata?.audio_duration_sec) || 0;
+    return out;
+  } catch (e) {
+    console.warn(`[${NAME}] No se pudo cargar`, C.lyricsUrl, e);
+    return [];
+  }
+}
+/* renglones de la escena: seg.lines (strings) si existe; si no, un renglón */
+function linesOf(sc) {
+  const ws = sc.words;
+  const specs = Array.isArray(sc.seg.lines) && sc.seg.lines.length ? sc.seg.lines : [ws.map(w => w.text).join(" ")];
+  let k = 0;
+  return specs.map(str => {
+    const n = String(str).trim().split(/\s+/).filter(Boolean).length;
+    const lw = ws.slice(k, k + n); k += n;
+    return { text: String(str).trim(), words: lw, rt: lw.length ? lw[0].rt : (ws[ws.length - 1]?.rt ?? 0) };
+  });
+}
+function buildTimeline(segs, dur) {
+  const slots = C.scenes && C.scenes.length ? C.scenes : [{ type: Object.keys(B)[0] }];
+  return segs.map((s, i) => {
+    const t0 = i === 0 ? 0 : s.start;
+    const t1 = i + 1 < segs.length ? segs[i + 1].start : dur;
+    const slot = slots[i % slots.length];
+    const type = B[slot.type] ? slot.type : Object.keys(B)[0];
+    return { idx: i, t0, t1, dur: Math.max(0.05, t1 - t0), seg: s, slot, type,
+             words: s.words.map(w => ({ text: w.text, rt: Math.max(0, w.t - t0) })) };
+  });
+}
+
+/* ---------------- letra de canción → frases ---------------- */
+/* segmentos de Whisper → frases de ≤ maxWords / ≤ maxSec, cortando en la pausa
+   más larga; palabras limpias de puntuación, con su tiempo real */
+const cleanWord = s => String(s).trim().replace(/[.,;:!?¡¿"“”()\[\]]/g, "").replace(/[`´’]/g, "'");
+function lyricPhrases(segs, o = {}) {
+  const maxW = o.maxWords ?? 6, maxS = o.maxSec ?? 3.2, minW = o.minWords ?? 2;
+  const out = [], q = segs.map(s => {
+    const ws = [];
+    for (const w of s.words) {
+      const x = { text: cleanWord(w.text), t: w.t, end: w.end ?? w.t + 0.3 };
+      if (!x.text) continue;
+      /* Whisper a veces parte "y'all" → "y" + "'all": se vuelve a unir */
+      if (x.text.startsWith("'") && ws.length) { ws[ws.length - 1].text += x.text; ws[ws.length - 1].end = x.end; continue; }
+      ws.push(x);
+    }
+    return ws;
+  });
+  const dur = ws => ws[ws.length - 1].end - ws[0].t;
+  while (q.length) {
+    const ws = q.shift();
+    if (!ws.length) continue;
+    if (ws.length > maxW || (dur(ws) > maxS && ws.length >= 2 * minW)) {
+      let bi = Math.ceil(ws.length / 2), bg = -1;
+      for (let i = Math.max(minW, Math.ceil(ws.length * 0.2)); i <= Math.min(ws.length - minW, Math.floor(ws.length * 0.8)); i++) {
+        const g = ws[i].t - ws[i - 1].end + (/^(and|but|i|i'm|y|pero|que)$/i.test(ws[i].text) ? 0.12 : 0);
+        if (g > bg) { bg = g; bi = i; }
+      }
+      q.unshift(ws.slice(0, bi), ws.slice(bi));
+      continue;
+    }
+    out.push(ws);
+  }
+  return out;
+}
+const isStop = w => /^(a|an|the|and|or|but|so|of|to|in|on|at|for|with|i|i'm|me|my|you|your|it|is|am|are|be|we|us|el|la|los|las|un|una|y|o|de|del|en|con|por|que|me|te|mi|tu|su|yo|es)$/i.test(w.text);
+/* fuerza de una palabra (para elegir la protagonista de la frase) */
+const heroIdx = ws => { let b = 0, bs = -1; ws.forEach((w, i) => { const s = (isStop(w) ? 0 : 10) + w.text.length; if (s > bs) { bs = s; b = i; } }); return b; };
+
+/* línea de tiempo para plantillas de LETRA: una escena por frase, con la
+   escena elegida por un mazo ponderado (config.layouts = { tipo: { weight,
+   bgs } } + FITS[tipo](frase) de la plantilla), ecos de las palabras fuertes
+   en los tramos instrumentales largos y tarjetas de intro / cierre.
+   config.timing = { leadSec, holdSec, gapSec, echoSec, cooldown } */
+function lyricTimeline(segs, dur, FITS) {
+  const Tm = { leadSec: 0.12, holdSec: 0.9, gapSec: 2.4, echoSec: 1.1, cooldown: 3, ...(C.timing || {}) };
+  const r = mulberry32((C.seed || 7) * 977 + 3);
+  const ph = lyricPhrases(segs, C.phrases || {});
+  const list = [];
+  const mk = (kind, t0, t1, ws, extra = {}) => ({ kind, t0, t1, seg: { text: ws.map(w => w.text).join(" ") },
+    words: ws.map(w => ({ text: w.text, rt: Math.max(0, (w.t ?? t0) - Tm.leadSec - t0) })), ...extra });
+  const syn = (texts, t0) => texts.filter(Boolean).map((x, i) => ({ text: x, t: t0 + 0.25 + i * 0.45 + Tm.leadSec }));
+  const I = C.intro || {}, O = C.outro || {};
+  const first = ph.length ? Math.max(0, ph[0][0].t - Tm.leadSec) : dur;
+  const introTitle = window.NexaTemplateIntro?.title?.(I) || I.title || I.artist;
+  const introMin = window.NexaTemplateIntro?.minDuration?.() ?? 1.2;
+  if (first >= introMin && introTitle) list.push(mk("intro", 0, first, window.NexaTemplateIntro?.words ? window.NexaTemplateIntro.words(introTitle, 0, Tm.leadSec) : syn([introTitle], 0), { type: I.type || "intro" }));
+  const heroes = [], hist = [];
+  ph.forEach((ws, i) => {
+    const t0 = i === 0 && !list.length ? 0 : Math.max(0, ws[0].t - Tm.leadSec);
+    const nx = ph[i + 1], lastEnd = ws[ws.length - 1].end;
+    let t1 = nx ? Math.max(t0 + 0.35, nx[0].t - Tm.leadSec) : dur;
+    heroes.push(ws[heroIdx(ws)].text); hist.push(ws);
+    let gap = null;
+    if (t1 - lastEnd > Tm.gapSec) { gap = [lastEnd + Tm.holdSec, t1]; t1 = gap[0]; }
+    const ly = mk("lyric", t0, t1, ws);
+    list.push(ly);
+    const minOutroTail = Number.isFinite(Number(O.minTailSec)) ? Math.max(0, Number(O.minTailSec)) : 1.2;
+    const outroBuffer = Number.isFinite(Number(O.tailBufferSec)) ? Math.max(0, Number(O.tailBufferSec)) : 0.3;
+    if (!gap && !nx && O.enabled !== false && (O.title || O.sub) && dur - lastEnd > minOutroTail)
+      gap = [Math.max(t0 + 0.6, lastEnd + outroBuffer), dur];
+    if (!gap) return;
+    ly.t1 = gap[0];
+    /* tramo final: el cierre ocupa los últimos outro.sec segundos; antes, ecos */
+    if (!nx && O.enabled !== false && (O.title || O.sub)) {
+      const os = Math.max(gap[0], dur - (O.sec ?? 3.2));
+      list.push(mk("outro", os, dur, syn([O.title, O.sub, O.feats], os), { type: O.type || "outro" }));
+      if (os - gap[0] < 0.8) { ly.t1 = os; return; }
+      gap = [gap[0], os];
+    }
+    /* tramo instrumental largo → se repiten frases completas ya cantadas (en orden,
+       como un estribillo); corto → ecos de las palabras fuertes */
+    const len = gap[1] - gap[0], ps = Tm.echoPhraseSec ?? 1.8;
+    if (len >= 3 * ps && hist.length) {
+      const k = Math.max(1, Math.round(len / ps));
+      for (let j = 0; j < k; j++) {
+        const a = gap[0] + len * j / k, b = gap[0] + len * (j + 1) / k, src = hist[j % hist.length];
+        const step = Math.min(0.26, (b - a) * 0.55 / Math.max(1, src.length));
+        list.push(mk("echo", a, b, src.map((w, n) => ({ text: w.text, t: a + Tm.leadSec + 0.06 + n * step }))));
+      }
+    } else {
+      const k = Math.max(1, Math.round(len / Tm.echoSec));
+      for (let j = 0; j < k; j++) {
+        const a = gap[0] + len * j / k, b = gap[0] + len * (j + 1) / k;
+        const pool = [...new Set(heroes.slice(-8))];
+        const txt = pool[Math.floor(r() * pool.length)] || ws[0].text;
+        list.push(mk("echo", a, b, [{ text: txt, t: a + Tm.leadSec + 0.05 }]));
+      }
+    }
+  });
+  list.sort((a, b) => a.t0 - b.t0);
+  /* mazo: tipo de escena + fondo */
+  const L = C.layouts || {}, recent = [];
+  let prevBg = "";
+  list.forEach((sc, i) => {
+    sc.idx = i; sc.dur = Math.max(0.05, sc.t1 - sc.t0);
+    if (!sc.type) {
+      let c = Object.entries(L).filter(([k, v]) => v.weight > 0 && B[k] && (!FITS[k] || FITS[k](sc)) && !recent.includes(k));
+      if (!c.length) c = Object.entries(L).filter(([k, v]) => v.weight > 0 && B[k]);
+      let x = r() * c.reduce((a, [, v]) => a + v.weight, 0); sc.type = c[0][0];
+      for (const [k, v] of c) { x -= v.weight; if (x <= 0) { sc.type = k; break; } }
+      recent.push(sc.type); if (recent.length > Tm.cooldown) recent.shift();
+    }
+    const bgs = (L[sc.type]?.bgs || C.defaultBgs || ["media"]).filter(b => b !== prevBg || (L[sc.type]?.bgs || []).length === 1);
+    const bg = bgs[Math.floor(r() * bgs.length)] || "media";
+    /* layouts[tipo].media = [ids] → la escena prefiere esos clips; si no, cualquiera */
+    const pool = (L[sc.type]?.media || []).filter(id => (C.media || []).some(m => m.id === id));
+    const ids = pool.length ? pool : (C.media || []).map(m => m.id);
+    const pk = () => ids[Math.floor(r() * ids.length)];
+    const media = ids.length ? [pk(), pk()] : [];
+    if (media.length > 1 && media[1] === media[0] && ids.length > 1) media[1] = ids[(ids.indexOf(media[0]) + 1) % ids.length];
+    sc.slot = { type: sc.type, bg, media, trans: L[sc.type]?.trans };
+    prevBg = bg;
+  });
+  return list;
+}
+
+/* ---------------- transiciones de entrada (sobre la escena anterior) ----------------
+   enterFx(X, kind, d): anima la raíz de la escena nueva durante d segundos.
+   Con overlapSec > 0 la anterior se ve debajo → disolvencias reales.
+   kinds: fade · blur · iris · irisOut · wipeL · wipeR · wipeUp · wipeDown · bars
+   (persiana) · rain (franjas verticales irregulares) · burn (borde de quemado
+   con brillo) · ink (mancha orgánica) · flash · zoomIn · zoomOut · slice (glitch) */
+function enterFx(X, kind, d, o = {}) {
+  const { root: R, W, H, r } = X;
+  if (!kind || kind === "cut" || X.sc.idx === 0) return;
+  const E = EASE_IO;
+  const poly = pts => `polygon(${pts.map(([x, y]) => `${x.toFixed(1)}px ${y.toFixed(1)}px`).join(", ")})`;
+  switch (kind) {
+    case "fade": X.T(R, "opacity", "0").to(0, d, "1", E); break;
+    case "blur":
+      X.T(R, "opacity", "0").to(0, d, "1", E);
+      X.T(R, "filter", "blur(18px) brightness(1.4)").to(0, d, "blur(0px) brightness(1)", EASE_OUT); break;
+    case "iris": { const cx = (o.cx ?? 0.5) * 100, cy = (o.cy ?? 0.5) * 100;
+      X.T(R, "clipPath", `circle(0% at ${cx}% ${cy}%)`).to(0, d, `circle(120% at ${cx}% ${cy}%)`, E); break; }
+    case "wipeL": X.T(R, "clipPath", "inset(0% 100% 0% 0%)").to(0, d, "inset(0% 0% 0% 0%)", E); break;
+    case "wipeR": X.T(R, "clipPath", "inset(0% 0% 0% 100%)").to(0, d, "inset(0% 0% 0% 0%)", E); break;
+    case "wipeUp": X.T(R, "clipPath", "inset(100% 0% 0% 0%)").to(0, d, "inset(0% 0% 0% 0%)", E); break;
+    case "wipeDown": X.T(R, "clipPath", "inset(0% 0% 100% 0%)").to(0, d, "inset(0% 0% 0% 0%)", E); break;
+    case "bars": { /* persiana horizontal: n franjas que se abren escalonadas */
+      const n = o.n ?? 8, k = 12, mk = p => { const pts = [];
+        for (let i = 0; i < n; i++) { const y0 = i * H / n, hh = (H / n) * clamp(p * 1.6 - i / n * 0.6, 0, 1);
+          pts.push([0, y0], [W, y0], [W, y0 + hh], [0, y0 + hh], [0, y0]); }
+        return poly(pts); };
+      const tr = X.T(R, "clipPath", mk(0));
+      for (let j = 1; j <= k; j++) tr.set(d * j / k, mk(j / k)); break; }
+    case "rain": { /* franjas verticales de ancho irregular que "caen" */
+      const n = o.n ?? 44, ws = Array.from({ length: n }, () => 0.3 + r()), sum = ws.reduce((a, b) => a + b, 0), dl = ws.map(() => r() * 0.5);
+      X.T(R, "opacity", "0.2").to(0, d, "1", EASE_OUT);
+      const k = 12, mk = p => { const pts = []; let x = 0;
+        ws.forEach((w, i) => { const ww = w / sum * W, hh = H * clamp((p - dl[i]) / 0.55, 0, 1);
+          pts.push([x, 0], [x + ww + 1, 0], [x + ww + 1, hh], [x, hh], [x, 0]); x += ww; });
+        return poly(pts); };
+      const tr = X.T(R, "clipPath", mk(0));
+      for (let j = 1; j <= k; j++) tr.set(d * j / k, mk(j / k));
+      tr.set(d + 0.001, "none"); break; }
+    case "burn": { /* borde de quemado irregular que avanza + resplandor */
+      const k = 14, n = 26, jit = Array.from({ length: n + 1 }, () => r());
+      const mk = p => { const pts = [[0, 0]];
+        for (let i = 0; i <= n; i++) { const y = i / n * H; pts.push([clamp((p * 1.25 - 0.12) * W + (jit[i] - 0.5) * 0.12 * W, 0, W), y]); }
+        pts.push([0, H]); return poly(pts); };
+      const tr = X.T(R, "clipPath", mk(0));
+      for (let j = 1; j <= k; j++) tr.set(d * j / k, mk(j / k));
+      tr.set(d + 0.001, "none");
+      /* franja incandescente angosta que viaja pegada al borde quemado */
+      const gw = 0.09 * W, glow = div(X.root, "patch", { left: -gw / 2 + "px", top: 0, width: gw + "px", height: H + "px", zIndex: 40, mixBlendMode: "screen", filter: "blur(6px)",
+        background: `linear-gradient(90deg, transparent 0%, ${o.color || C.transition?.burnColor || "rgba(255,140,40,0.85)"} 42%, rgba(255,235,190,0.95) 50%, transparent 62%)` });
+      const gt = X.T(glow, "transform", "translateX(0px)");
+      for (let j = 0; j <= k; j++) gt.set(d * j / k, `translateX(${((j / k * 1.25 - 0.12) * W).toFixed(1)}px)`);
+      X.T(glow, "opacity", "1").to(d * 0.85, d * 0.15, "0"); break; }
+    case "ink": { /* mancha orgánica que crece desde un punto */
+      const cx = (o.cx ?? 0.3 + r() * 0.4) * W, cy = (o.cy ?? 0.35 + r() * 0.3) * H, n = 40, a0 = r() * 6, k = 12;
+      const amp = Array.from({ length: n }, (_, i) => 0.75 + 0.25 * Math.sin(i * 1.7 + a0) + (r() - 0.5) * 0.25);
+      const mk = p => { const R0 = p * 1.25 * Math.hypot(W, H); return poly(amp.map((a, i) => { const th = i / n * Math.PI * 2; return [cx + Math.cos(th) * R0 * a, cy + Math.sin(th) * R0 * a]; })); };
+      const tr = X.T(R, "clipPath", mk(0));
+      for (let j = 1; j <= k; j++) tr.set(d * j / k, mk(easeFn(EASE_IN)(j / k)));
+      tr.set(d + 0.001, "none"); break; }
+    case "flash": {
+      const f = div(X.root, "patch", { left: 0, top: 0, width: W + "px", height: H + "px", background: o.color || C.transition?.flashColor || "#fff", zIndex: 40 });
+      X.T(f, "opacity", "0.95").to(0, d, "0", EASE_OUT); break; }
+    case "zoomIn":
+      X.T(R, "opacity", "0").to(0, d * 0.6, "1", E);
+      X.T(R, "transform", "scale(1.35)").to(0, d, "scale(1)", EASE_OUT); break;
+    case "zoomOut":
+      X.T(R, "opacity", "0").to(0, d * 0.6, "1", E);
+      X.T(R, "transform", "scale(0.82)").to(0, d, "scale(1)", EASE_OUT); break;
+    case "slice": { /* glitch: franjas horizontales desplazadas que se alinean */
+      const n = 7, k = 8, off = Array.from({ length: n }, () => (r() - 0.5) * 0.4 * W);
+      const mk = p => { const pts = [];
+        for (let i = 0; i < n; i++) { const y0 = i * H / n, y1 = y0 + H / n, dx = off[i] * (1 - p); pts.push([dx, y0], [W + dx, y0], [W + dx, y1], [dx, y1], [dx, y0]); }
+        return poly(pts); };
+      const tr = X.T(R, "clipPath", mk(0));
+      for (let j = 1; j <= k; j++) tr.set(d * j / k, mk(j / k));
+      tr.set(d + 0.001, "none"); break; }
+  }
+}
+/* tipo de transición de la escena: slot.trans o sorteo ponderado de config.transition.weights */
+function pickTrans(X) {
+  if (X.sc.slot.trans) return X.sc.slot.trans;
+  const w = Object.entries(C.transition?.weights || { fade: 1 }).filter(([, v]) => v > 0);
+  let x = X.r() * w.reduce((a, [, v]) => a + v, 0);
+  for (const [k, v] of w) { x -= v; if (x <= 0) return k; }
+  return w[0][0];
+}
+
+/* ---------------- media (video / imagen) ---------------- */
+/* En la captura cuadro a cuadro los medios se bajan como blob porque el
+   servidor del grabador no admite Range. En la vista previa normal el navegador
+   transmite solo el clip activo y usa su poster mientras carga, sin bloquear el
+   resto de la página con variantes que aún no se muestran. config.preload=false
+   también permite desactivar la precarga durante captura. */
+const BLOBS = new Map();
+async function preloadMedia(timeoutMs = 8000) {
+  if (C.preload === false || window.__HF_RENDER_CAPTURE_MODE !== true) return;
+  const srcs = new Set([C.audio?.src].filter(Boolean));
+  for (const m of C.media || []) if (m.type === "video") {
+    srcs.add(m.src);
+    for (const g of Object.values(m.graded || {})) if (g.src) srcs.add(g.src);
+  }
+  const jobs = [...srcs].map(async s => {
+    try { const r = await fetch(encodeURI(s)); if (r.ok) BLOBS.set(s, URL.createObjectURL(await r.blob())); } catch (e) {}
+  });
+  await Promise.race([Promise.all(jobs), new Promise(r => __nbSetTimeout(r, timeoutMs))]);
+}
+const srcURL = s => BLOBS.get(s) || encodeURI(s);
+function mediaSpec(sc, k) {
+  const list = C.media || [];
+  if (!list.length) return null;
+  const ref = (sc.slot.media || [])[k];
+  if (typeof ref === "number") return list[ref % list.length];
+  if (typeof ref === "string") { const m = list.find(x => x.id === ref); if (m) return m; }
+  return list[(sc.idx * 2 + k) % list.length];
+}
+/* caja de media recortada; o.filter = key de C.grades (o filtro CSS), o.off = desfase del clip */
+function mbox(X, parent, k, css = {}, o = {}) {
+  let spec = typeof k === "object" ? k : mediaSpec(X.sc, k);
+  const box = div(parent, "mbox", css);
+  if (!spec) return { box, el: div(box, "media") };
+  let filter = o.filter;
+  if (filter && GRADE[filter] !== undefined) {
+    const g = spec.graded && spec.graded[filter];
+    if (g) { spec = { ...spec, src: g.src || spec.src, poster: g.poster || spec.poster }; filter = null; }
+    else filter = GRADE[filter];
+  }
+  let el;
+  if (spec.type === "video") {
+    el = doc.createElement("video");
+    el.muted = true; el.playsInline = true; el.preload = "auto"; el.loop = true;
+    if (spec.poster) el.poster = encodeURI(spec.poster);
+    el.src = srcURL(spec.src);
+    X.videos.push({ v: el, spec, off: o.off || 0 });
+  } else { el = doc.createElement("img"); el.src = spec.src; el.decoding = "sync"; }
+  el.className = "media";
+  if (filter) el.style.filter = filter;
+  if (spec.pos) el.style.objectPosition = spec.pos;
+  box.appendChild(el);
+  return { box, el, spec };
+}
+/* Ken Burns: en fotos siempre; en video solo con config.render.kbVideo (escalar
+   un <video> en cada cuadro cuesta mucho en headless: 45 → 26 fps) */
+function kenBurns(X, m, from, to) {
+  if (m.spec && m.spec.type === "video" && !C.render?.kbVideo) { m.el.style.transform = from; return; }
+  X.T(m.el, "transform", from).to(0, X.dur, to);
+}
+function syncVideos(X, t, scrub) {
+  for (const it of X.videos) {
+    const v = it.v, d = v.duration, rate = it.spec.rate || 1;
+    let e = (it.spec.start || 0) + (t + it.off) * rate;
+    if (isFinite(d) && d > 0.3) e = e % (d - 0.08);
+    if (scrub) {
+      if (!v.paused) v.pause();
+      if (Math.abs(v.currentTime - e) > 0.02) { try { v.currentTime = e; } catch (err) {} }
+    } else {
+      v.playbackRate = rate;
+      if (v.paused) v.play().catch(() => {});
+      if (Math.abs(v.currentTime - e) > 0.35) { try { v.currentTime = e; } catch (err) {} }
+    }
+  }
+}
+
+/* ---------------- escenas: construir, montar, buscar ---------------- */
+let vw = innerWidth, vh = innerHeight;
+function buildScene(sc) {
+  const W = vw, H = vh;
+  const root = div(null, "scene", { width: W + "px", height: H + "px" });
+  const tracks = [];
+  const X = {
+    sc, root, W, H, u: Math.min(W, H) / 720, dur: sc.dur, videos: [],
+    r: mulberry32(((C.seed || 7) * 7919 + sc.idx * 104729) >>> 0),
+    T: (el, prop, init, discrete) => { const t = new Track(el, prop, init, discrete); tracks.push(t); return t; }
+  };
+  X.lines = linesOf(sc);
+  X.pend = [];
+  try { B[sc.type](sc, X); }
+  catch (e) { console.warn(`[${NAME}] escena falló`, sc.type, e); }
+  if (sc.kind !== "intro" && sc.t0 === 0 && window.NexaTemplateIntro?.title) {
+    const title = window.NexaTemplateIntro.title(C.intro || {});
+    if (title) {
+      const L = div(root, "lay", { zIndex: 50, pointerEvents: "none" });
+      const baseFs = Math.min(0.17 * H, fit(title, ser, 0.04, 0.88 * W, 0.17 * H));
+      const titleFs = Math.min(baseFs * 1.45, fit(title, ser, 0.04, 0.94 * W, 0.25 * H));
+      const heading = word(X, L, title, { cls: ser, fs: titleFs, x: W / 2, y: 0.5 * H, color: P.bone, ls: 0.04 });
+      heading.el.style.whiteSpace = "nowrap";
+      heading.el.style.textShadow = "0 0 18px rgba(255,125,55,0.42)";
+      X.T(heading.el, "opacity", "0").to(0.02, 0.3, "1", EASE_OUT).to(1.05, 0.35, "0", EASE_IN);
+    }
+  }
+  /* piezas que necesitan medir el texto ya maquetado (garabatos, marcos):
+     se monta la escena oculta un instante, se mide y se desmonta */
+  if (X.pend.length) {
+    root.style.visibility = "hidden"; stage.appendChild(root);
+    for (const f of X.pend) { try { f(); } catch (e) { console.warn(`[${NAME}] medición falló`, e); } }
+    stage.removeChild(root); root.style.visibility = "";
+  }
+  if (C.texture?.grain > 0) div(root, "grain", { backgroundImage: GRAIN, opacity: C.texture.grain,
+    backgroundPosition: `${Math.floor(X.r() * 192)}px ${Math.floor(X.r() * 192)}px` });
+  for (const t of tracks) { t.compile(); t.seek(0); }
+  return {
+    root, sc,
+    seek(t, scrub) { for (const tr of tracks) tr.seek(t); syncVideos(X, t, scrub); },
+    dispose() { for (const it of X.videos) { it.v.pause(); it.v.removeAttribute("src"); it.v.load(); } root.remove(); }
+  };
+}
+
+const stage = $("stage"), audio = $("audio"), hud = $("hud");
+let rafT0 = null, rafNow = 0, started = false, forced = FROZEN;
+const clock = () => forced != null ? forced
+  : (!audio.paused && audio.currentTime > 0.05) ? audio.currentTime
+  : (rafT0 === null ? 0 : (rafNow - rafT0) / 1000);
+async function begin() {
+  if (started || FROZEN != null) return;
+  started = true;
+  $("hint").style.display = "none";
+  try { await audio.play(); } catch (e) { /* reloj de pared */ }
+}
+addEventListener("pointerdown", begin, { once: true });
+
+let scenes = [], curIdx = -1, cur = null, nextBuilt = null, prev = null, prevIdx = -1;
+/* solapamiento entre escenas (config.transition.overlapSec, def. 0 = corte seco):
+   la escena anterior sigue viva DEBAJO de la nueva durante ese tiempo, así la
+   transición de entrada (enterFx) se ve contra la imagen real de la anterior */
+const OVERLAP = () => Math.max(0, C.transition?.overlapSec ?? 0);
+function sceneAt(t) {
+  let lo = 0, hi = scenes.length - 1, ans = -1;
+  while (lo <= hi) { const m = (lo + hi) >> 1; if (scenes[m].t0 <= t) { ans = m; lo = m + 1; } else hi = m - 1; }
+  return ans;
+}
+function mount(i) {
+  const old = cur, oldIdx = curIdx;
+  cur = (nextBuilt && nextBuilt.i === i) ? nextBuilt.b : buildScene(scenes[i]);
+  nextBuilt = null;
+  stage.appendChild(cur.root);
+  curIdx = i;
+  if (prev && prevIdx !== i - 1) { prev.dispose(); prev = null; prevIdx = -1; }
+  if (old && old !== prev) {
+    if (OVERLAP() > 0 && oldIdx === i - 1 && !prev) { prev = old; prevIdx = oldIdx; }
+    else old.dispose();
+  }
+  if (i + 1 < scenes.length) {
+    const j = i + 1;
+    __nbSetTimeout(() => { if (curIdx === i && !nextBuilt) nextBuilt = { i: j, b: buildScene(scenes[j]) }; }, 0);
+  }
+}
+function render(t) {
+  const i = sceneAt(t);
+  if (i < 0) return;
+  if (i !== curIdx) mount(i);
+  const ov = OVERLAP(), dt = t - scenes[i].t0;
+  if (ov > 0 && i > 0 && dt < ov) {
+    if (!prev) { prev = buildScene(scenes[i - 1]); prevIdx = i - 1; stage.insertBefore(prev.root, cur.root); }
+    /* la anterior sigue corriendo su "cola" (t > dur): sus pistas pueden animar la salida */
+    prev.seek(t - scenes[i - 1].t0, forced != null);
+  } else if (prev) { prev.dispose(); prev = null; prevIdx = -1; }
+  cur.seek(ov > 0 ? t - scenes[i].t0 : Math.min(t, scenes[i].t1) - scenes[i].t0, forced != null);
+  if (DEBUG) { const s = scenes[i]; hud.textContent = `t ${t.toFixed(2)} · #${i} ${s.type} · "${s.seg.text}"`; }
+}
+function frame(now) {
+  rafNow = now;
+  if (rafT0 === null) rafT0 = now;
+  render(clock());
+  if (FROZEN == null) requestAnimationFrame(frame);
+}
+
+async function boot() {
+  if (DEBUG) hud.style.display = "block";
+  if (QS.get("headless") === "1") doc.body.classList.add("headless");
+  const fontsReady = Promise.race([Promise.all(FONT_LOADS.map(f => doc.fonts.load(f))).then(() => doc.fonts.ready), new Promise(r => __nbSetTimeout(r, 3000))]);
+  /* carga primero letra y fuentes: los clips pueden ser pesados y no deben
+     ocupar las conexiones que necesita la línea de tiempo. Después se precarga
+     media antes de arrancar el reloj, con el límite definido por preloadMedia. */
+  const [segs] = await Promise.all([loadScript(), fontsReady]);
+  await preloadMedia();
+  audio.src = srcURL(C.audio.src);
+  const aDur = await new Promise(res => {
+    if (isFinite(audio.duration) && audio.duration > 0) return res(audio.duration);
+    audio.addEventListener("loadedmetadata", () => res(audio.duration), { once: true });
+    __nbSetTimeout(() => res(NaN), 2500);
+  });
+  if (segs.length) {
+    const last = segs[segs.length - 1];
+    const dur = isFinite(aDur) && aDur > 0 ? aDur : (segs.audioDurationSec || last.end || last.start + 3);
+    measCache.clear();
+    /* una plantilla puede traer su propia línea de tiempo (las de letra de canción) */
+    scenes = (typeof makeTimeline === "function" ? makeTimeline : buildTimeline)(segs, dur);
+  }
+  addEventListener("resize", () => { vw = innerWidth; vh = innerHeight; measCache.clear(); nextBuilt = null; if (prev) { prev.dispose(); prev = null; prevIdx = -1; } if (cur) { cur.dispose(); cur = null; curIdx = -1; } });
+  window.__promo = {
+    scenes: () => scenes,
+    seek(t) { forced = t; render(t); return new Promise(res => { const vs = cur ? [...cur.root.querySelectorAll("video")] : [];
+      Promise.all(vs.map(v => new Promise(r => { if (v.readyState >= 2 && !v.seeking) r(); else { v.addEventListener("seeked", r, { once: true }); v.addEventListener("loadeddata", r, { once: true }); __nbSetTimeout(r, 1500); } })))
+        .then(() => requestAnimationFrame(() => requestAnimationFrame(res))); }); },
+    release() { forced = null; }
+  };
+  requestAnimationFrame(frame);
+  if (FROZEN == null) begin();
+}
+/* ===================== FIN NÚCLEO COMÚN ===================== */
+
+/* =================== UTILIDADES COMUNES · plantillas tristes ===================
+   Compartidas por lyrics-lluvia-gris, lyrics-memoria, lyrics-ceniza y
+   lyrics-vacio (se concatenan antes del archivo de escenas de cada una).
+   Todo es determinista (Tracks + mulberry32): se busca por tiempo igual que el
+   resto de plantillas del generador. Convenciones:
+   · sc.words = [{ text, rt }]  (rt = segundo relativo a la escena)
+   · la escena dura X.dur; con transition.overlapSec > 0 la escena sigue viva
+     hasta X.dur + overlap DEBAJO de la siguiente → "leave*" anima esa cola. */
+const P = C.palette;
+const U = s => String(s).toUpperCase();
+const J = ws => ws.map(w => w.text).join(" ");
+const OV = () => Math.max(0.01, C.transition?.overlapSec ?? 0.5);
+const show = (X, el, t) => { if (t > 0.001) X.T(el, "visibility", "hidden", true).set(t, "visible"); };
+function rows(ws, n) {
+  if (n <= 1 || ws.length <= 1) return [ws];
+  const total = J(ws).length, out = [[]]; let acc = 0;
+  for (const w of ws) {
+    if (out[out.length - 1].length && acc >= total * out.length / n && out.length < n) out.push([]);
+    out[out.length - 1].push(w); acc += w.text.length + 1;
+  }
+  return out.filter(r => r.length);
+}
+const tcase = (s, cls) => /\b(ser|it|hw|tw)\b/.test(cls) ? String(s) : U(s);
+
+/* ---------------- fondos ---------------- */
+/* metraje con movimiento lento (zoom + deriva) y grado; sin config.render.kbVideo
+   el video queda fijo y solo se mueve el contenedor (más barato en vivo) */
+function footage(X, L, k, grade, o = {}) {
+  const { W, H, r } = X;
+  const box = div(L, "lay");
+  const m = mbox(X, box, k, { left: 0, top: 0, width: W + "px", height: H + "px" }, { filter: grade, off: o.off ?? r() * 3 });
+  const z0 = o.from ?? 1.06, z1 = o.to ?? 1.16, dx = (r() - 0.5) * 3, dy = (r() - 0.5) * 2;
+  X.T(box, "transform", `scale(${z0}) translate(0%, 0%)`).to(0, X.dur + OV(), `scale(${z1}) translate(${dx.toFixed(2)}%, ${dy.toFixed(2)}%)`);
+  if (o.opacity != null) box.style.opacity = o.opacity;
+  return { box, m };
+}
+function vignette(L, a = 0.75, inner = 40) {
+  return div(L, "lay", { background: `radial-gradient(ellipse at 50% 50%, transparent ${inner}%, rgba(0,0,0,${a}) 100%)`, pointerEvents: "none" });
+}
+function tint(L, color, op = 0.3, blend = "multiply") {
+  return div(L, "lay", { background: color, opacity: op, mixBlendMode: blend, pointerEvents: "none" });
+}
+/* niebla: manchas suaves que derivan lento */
+function fog(X, L, n = 3, a = 0.18, color = "220,225,230") {
+  const { W, r } = X;
+  for (let i = 0; i < n; i++) {
+    const f = div(L, "lay", { background: `radial-gradient(ellipse ${40 + r() * 30}% ${30 + r() * 25}% at ${20 + r() * 60}% ${25 + r() * 50}%, rgba(${color},${(a * (0.6 + r() * 0.6)).toFixed(3)}) 0%, transparent 70%)` });
+    X.T(f, "transform", "translateX(0px)").to(0, X.dur + OV(), `translateX(${((r() - 0.5) * 0.18 * W).toFixed(1)}px)`);
+  }
+}
+function letterbox(X, L, h = 0.1) {
+  for (const top of [true, false]) div(L, "patch", { left: 0, [top ? "top" : "bottom"]: 0, width: X.W + "px", height: h * X.H + "px", background: "#000", zIndex: 30 });
+}
+
+/* ---------------- partículas (deterministas) ---------------- */
+/* lluvia: trazos finos que caen en bucle; dur de caída corto → se repiten */
+function rainFx(X, L, n = 60, o = {}) {
+  const { W, H, u, r } = X, T = X.dur + OV(), g = div(L, "lay", { pointerEvents: "none", transform: `rotate(${o.angle ?? 8}deg) scale(1.2)` });
+  for (let i = 0; i < n; i++) {
+    const len = (18 + r() * 50) * u, sp = (0.45 + r() * 0.5) * (o.speed ?? 1), x = r() * W;
+    const d = div(g, "patch", { left: x + "px", top: -len + "px", width: Math.max(1, (0.8 + r() * 0.9) * u) + "px", height: len + "px",
+      background: `linear-gradient(transparent, rgba(${o.color || "220,230,240"},${(0.25 + r() * 0.4).toFixed(2)}))` });
+    const per = (H + len) / (H * 1.6) * sp, ph = r() * per, tr = X.T(d, "transform", "translateY(0px)");
+    for (let t = -ph; t < T; t += per) { tr.set(Math.max(0, t), "translateY(0px)"); tr.to(Math.max(0, t), per * 0.999, `translateY(${H + 2 * len}px)`); }
+  }
+  return g;
+}
+/* partículas genéricas que flotan: dir -1 = suben (brasas), +1 = caen (ceniza, nieve) */
+function motes(X, L, n, o = {}) {
+  const { W, H, u, r } = X, T = X.dur + OV(), dir = o.dir ?? 1, g = div(L, "lay", { pointerEvents: "none" });
+  for (let i = 0; i < n; i++) {
+    const s = (o.size ?? 3) * (0.5 + r()) * u, x = r() * W, y = r() * H, sway = (r() - 0.5) * (o.sway ?? 60) * u;
+    const c = Array.isArray(o.color) ? o.color[Math.floor(r() * o.color.length)] : (o.color || "rgba(220,220,220,0.7)");
+    const d = div(g, "patch", { left: x + "px", top: y + "px", width: s + "px", height: s * (o.stretch ?? 1) + "px", borderRadius: o.square ? "0" : "50%", background: c,
+      boxShadow: o.glow ? `0 0 ${(s * 3).toFixed(1)}px ${c}` : "none" });
+    const dist = dir * (o.dist ?? 0.6) * H * (0.5 + r());
+    X.T(d, "transform", "translate(0px, 0px)").to(0, T, `translate(${sway.toFixed(1)}px, ${dist.toFixed(1)}px)`);
+    if (o.flicker) { const tr = X.T(d, "opacity", "1"); for (let t = r(); t < T; t += 0.3 + r() * 0.8) tr.to(t, 0.2, (0.2 + r() * 0.8).toFixed(2)); }
+  }
+  return g;
+}
+
+/* ---------------- texto ---------------- */
+function word(X, L, s, o) {
+  return tx(L, tcase(s, o.cls || ""), { cls: o.cls, fs: o.fs, x: o.x, y: o.y, ax: o.ax ?? 0.5, ay: o.ay ?? 0.5, color: o.color, ls: o.ls, split: o.split, stroke: o.stroke, sw: o.sw, rot: o.rot });
+}
+/* renglón con palabras en su tiempo (cada palabra entra con el estilo `mode`) */
+function line(X, L, ws, o, mode = "blur") {
+  const t = word(X, L, J(ws), { ...o, split: "words" });
+  t.words.forEach((s, i) => reveal(X, s, Math.max(0.02, ws[i]?.rt ?? 0), mode, o.revealSec));
+  return t;
+}
+/* renglón ANIDADO: span por palabra (para el revelado) que contiene span por letra
+   (para destruir: derretir, arder, desmoronar…) → nunca dos pistas pelean por la
+   misma propiedad del mismo elemento */
+function lineNested(X, L, ws, o, mode = "blur") {
+  const t = tx(L, "", { cls: o.cls, fs: o.fs, x: o.x, y: o.y, ax: o.ax ?? 0.5, ay: o.ay ?? 0.5, color: o.color, ls: o.ls });
+  const words = [], chars = [];
+  ws.forEach((w, i) => {
+    if (i) t.el.appendChild(doc.createTextNode(" "));
+    const sw = doc.createElement("span"); sw.className = "wd"; t.el.appendChild(sw); words.push(sw);
+    for (const c of tcase(w.text, o.cls || "")) { const ch = doc.createElement("span"); ch.className = "ch"; ch.textContent = c; ch.wi = i; sw.appendChild(ch); chars.push(ch); }
+    reveal(X, sw, Math.max(0.02, w.rt ?? 0), mode, o.revealSec);
+  });
+  return { ...t, words, chars };
+}
+/* estilos de entrada de una palabra / letra */
+function reveal(X, el, at, mode = "blur", d) {
+  if (mode === "blur") {
+    d = d ?? 0.7;
+    X.T(el, "opacity", "0").to(at, d, "1", EASE_OUT);
+    X.T(el, "filter", "blur(10px)").to(at, d, "blur(0px)", EASE_OUT);
+    X.T(el, "transform", "translateY(18%)").to(at, d, "translateY(0%)", EASE_OUT);
+  } else if (mode === "fade") {
+    X.T(el, "opacity", "0").to(at, d ?? 0.6, "1", EASE_OUT);
+  } else if (mode === "rise") {
+    X.T(el, "opacity", "0").to(at, d ?? 0.5, "1", EASE_OUT);
+    X.T(el, "transform", "translateY(60%)").to(at, d ?? 0.5, "translateY(0%)", EASE_OUT);
+  } else if (mode === "drop") {      /* cae como una gota y se asienta */
+    X.T(el, "opacity", "0").to(at, 0.12, "1");
+    X.T(el, "transform", "translateY(-140%) scaleY(1.6)").to(at, d ?? 0.38, "translateY(0%) scaleY(1)", "cubic-bezier(.5,0,.85,.6)");
+  } else if (mode === "type") {
+    show(X, el, at);
+  } else if (mode === "flicker") {   /* se enciende titilando (vela, proyector) */
+    X.T(el, "opacity", "0", true).set(at, "0.6").set(at + 0.05, "0.1").set(at + 0.1, "0.9").set(at + 0.16, "0.3").set(at + 0.22, "1");
+  } else if (mode === "ember") {     /* aparece al rojo y se enfría a su color */
+    X.T(el, "opacity", "0").to(at, 0.35, "1", EASE_OUT);
+    X.T(el, "textShadow", `0 0 18px rgba(255,120,40,0.95)`).to(at, 1.4, `0 0 0px rgba(255,120,40,0)`, EASE_OUT);
+  }
+}
+/* letras que se derriten hacia abajo (gotean) desde t0, escalonadas */
+function drip(X, chars, t0, span = 1.2) {
+  chars.forEach((c, i) => {
+    if (c.textContent === " ") return;
+    const at = t0 + X.r() * span, d = 0.9 + X.r() * 1.1;
+    c.style.transformOrigin = "50% 0%";
+    X.T(c, "transform", "translateY(0%) scaleY(1)").to(at, d, `translateY(${(60 + X.r() * 140).toFixed(0)}%) scaleY(${(1.8 + X.r() * 1.6).toFixed(2)})`, EASE_IN);
+    X.T(c, "opacity", "1").to(at + d * 0.4, d * 0.6, "0");
+    X.T(c, "filter", "blur(0px)").to(at, d, "blur(3px)");
+  });
+}
+/* letras que se desmoronan con gravedad y giro */
+function crumble(X, chars, t0, span = 0.9) {
+  chars.forEach(c => {
+    if (c.textContent === " ") return;
+    const at = t0 + X.r() * span, rot = (X.r() - 0.5) * 140, dx = (X.r() - 0.5) * 60;
+    X.T(c, "transform", "translate(0%, 0%) rotate(0deg)").to(at, 1.1, `translate(${dx.toFixed(0)}%, ${(260 + X.r() * 200).toFixed(0)}%) rotate(${rot.toFixed(0)}deg)`, "cubic-bezier(.55,0,.9,.45)");
+    X.T(c, "opacity", "1").to(at + 0.6, 0.5, "0");
+  });
+}
+/* letras que se vuelven humo: suben, se agrandan, se desenfocan */
+function smokeOut(X, chars, t0, span = 0.8) {
+  chars.forEach(c => {
+    if (c.textContent === " ") return;
+    const at = t0 + X.r() * span, d = 1.2 + X.r() * 0.8;
+    X.T(c, "transform", "translate(0%, 0%) scale(1)").to(at, d, `translate(${((X.r() - 0.5) * 80).toFixed(0)}%, ${(-90 - X.r() * 120).toFixed(0)}%) scale(${(1.3 + X.r() * 0.8).toFixed(2)})`, EASE_OUT);
+    X.T(c, "filter", "blur(0px)").to(at, d, `blur(${(8 + X.r() * 10).toFixed(0)}px)`, EASE_OUT);
+    X.T(c, "opacity", "1").to(at, d, "0", EASE_IN);
+  });
+}
+/* letras que arden: se ponen al rojo y estallan en ceniza (fragmentos que suben) */
+function burnChars(X, L, t, t0, span = 0.9, o = {}) {
+  const host = L.getBoundingClientRect ? L : null;
+  t.chars.forEach(c => {
+    if (c.textContent === " ") return;
+    const at = t0 + X.r() * span;
+    X.T(c, "color", o.color || P.bone, true).set(at, o.hot || "#FFB070").set(at + 0.18, o.ember || "#E2683A");
+    X.T(c, "textShadow", "0 0 0px rgba(255,110,30,0)").to(at, 0.25, "0 0 22px rgba(255,110,30,0.95)").to(at + 0.3, 0.5, "0 0 4px rgba(255,80,20,0.4)");
+    X.T(c, "opacity", "1").to(at + 0.35, 0.45, "0");
+    X.T(c, "filter", "blur(0px)").to(at + 0.3, 0.5, "blur(4px)");
+  });
+  /* fragmentos: puntos cálidos que nacen sobre la línea y suben */
+  later(X, t, b => {
+    const n = Math.min(70, Math.round(b.w / (6 * X.u)));
+    for (let i = 0; i < n; i++) {
+      const x = b.x + X.r() * b.w, y = b.y + X.r() * b.h, s = (1.5 + X.r() * 3) * X.u, at = t0 + X.r() * span + 0.25;
+      const d = div(X.root, "patch", { left: x + "px", top: y + "px", width: s + "px", height: s + "px", background: X.r() < 0.5 ? "#F2A15C" : "#9A948E", zIndex: 20, borderRadius: X.r() < 0.5 ? "50%" : "0", visibility: "hidden" });
+      show(X, d, at);
+      X.T(d, "transform", "translate(0px, 0px) rotate(0deg)").to(at, 1.6 + X.r(), `translate(${((X.r() - 0.5) * 120 * X.u).toFixed(0)}px, ${(-(80 + X.r() * 220) * X.u).toFixed(0)}px) rotate(${(X.r() * 360).toFixed(0)}deg)`, EASE_OUT);
+      X.T(d, "opacity", "1").to(at + 0.4, 1.2, "0");
+    }
+  });
+}
+/* tecleado y borrado (con cursor): los recuerdos que se borran */
+function typeErase(X, t, at, eraseAt, o = {}) {
+  const ch = t.chars, n = ch.length, step = o.step ?? Math.min(0.06, 1.2 / Math.max(1, n));
+  ch.forEach((c, i) => {
+    const vt = X.T(c, "visibility", "hidden", true).set(at + i * step, "visible");
+    if (eraseAt != null) vt.set(eraseAt + (n - 1 - i) * (step * 0.6), "hidden");
+  });
+  if (o.cursor !== false) {
+    const cur = doc.createElement("span"); cur.className = "ch"; cur.textContent = o.cursorChar || "▌"; cur.style.color = o.cursorColor || "inherit";
+    t.el.appendChild(cur);
+    const bl = X.T(cur, "opacity", "1", true);
+    for (let k = 0; k < (X.dur + OV()) / 0.5; k++) bl.set(k * 0.5, k % 2 ? "0" : "1");
+  }
+}
+/* medir caja de un texto ya maquetado (core.js monta la escena oculta un instante) */
+const box = (X, t) => { const r = t.el.getBoundingClientRect(), R = X.root.getBoundingClientRect(); return { x: r.left - R.left, y: r.top - R.top, w: r.width, h: r.height }; };
+function later(X, t, fn) { X.pend.push(() => fn(box(X, t))); }
+
+/* salida en la cola de la escena (debajo de la siguiente durante el solapamiento).
+   Se aplica a la CAJA (t.box): solo toca filter / opacity, nunca su transform. */
+function leave(X, el, kind = "blur") {
+  const a = Math.max(0.05, X.dur - 0.2), d = OV() + 0.2;
+  if (kind === "blur") { X.T(el, "filter", "blur(0px)").to(a, d, "blur(14px)", EASE_IN); X.T(el, "opacity", "1").to(a, d, "0", EASE_IN); }
+  else if (kind === "fade") X.T(el, "opacity", "1").to(a, d, "0", EASE_IN);
+}
+/* pulso de latido: el bloque late suave (sad heartbeat) */
+function heartbeat(X, el, every = 1.6, amp = 0.025) {
+  const tr = X.T(el, "transform", "scale(1)");
+  for (let t = 0.3; t < X.dur; t += every) { tr.to(t, 0.12, `scale(${1 + amp})`, EASE_OUT); tr.to(t + 0.12, 0.18, "scale(1)", EASE_IN); tr.to(t + 0.32, 0.12, `scale(${1 + amp * 0.6})`, EASE_OUT); tr.to(t + 0.44, 0.3, "scale(1)", EASE_IN); }
+}
+
+/* ======================== ESCENAS · lyrics-memoria ========================
+   Recuerdos que se desvanecen: películas caseras (8 mm / VHS) en sepia
+   lavado, polaroids que caen, proyector que titila, fecha VHS en la esquina,
+   máquina de escribir que escribe y BORRA la letra, letra manuscrita que se
+   desvanece, destellos de luz cálida (light leaks), rayas de película y
+   quemado del fotograma. Paleta: crema, sepia, rosa polvoriento, marrón
+   oscuro, naranja VHS apagado. Transiciones: quemado, desenfoque, flash
+   cálido, glitch VHS. */
+const tw = "tw", hw = "hw", vhs = "vh";
+const MONTHS = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
+
+/* ---------------- capas de "recuerdo" ---------------- */
+function oldFilm(X, L, o = {}) {
+  const { W, H, u, r } = X, T = X.dur + OV();
+  tint(L, P.sepia, 0.22, "soft-light");
+  vignette(L, 0.8, 34);
+  /* rayas y motas de película que saltan cuadro a cuadro */
+  for (let i = 0; i < (o.scratches ?? 3); i++) {
+    const s = div(L, "patch", { left: r() * W + "px", top: 0, width: Math.max(1, u * (0.6 + r())) + "px", height: H + "px", background: "rgba(240,230,210,0.35)" });
+    const tr = X.T(s, "transform", "translateX(0px)", true), op = X.T(s, "opacity", "0", true);
+    for (let t = 0; t < T; t += 0.08 + r() * 0.2) { tr.set(t, `translateX(${((r() - 0.5) * 0.3 * W).toFixed(0)}px)`); op.set(t, r() < 0.45 ? (0.3 + r() * 0.6).toFixed(2) : "0"); }
+  }
+  /* destello de luz cálida que cruza */
+  if (o.leak !== false) {
+    const lk = div(L, "lay", { background: `radial-gradient(ellipse 45% 70% at 50% 50%, rgba(255,150,70,0.55) 0%, rgba(255,90,60,0.25) 35%, transparent 70%)`, mixBlendMode: "screen", pointerEvents: "none" });
+    const at = r() * Math.max(0.2, X.dur - 1.6), side = r() < 0.5 ? -1 : 1;
+    X.T(lk, "transform", `translateX(${side * 0.75 * W}px)`).to(at, 1.8, `translateX(${-side * 0.75 * W}px)`, EASE_IO);
+    X.T(lk, "opacity", "0").to(at, 0.6, "1").to(at + 1.2, 0.6, "0");
+  }
+  /* parpadeo de exposición */
+  if (o.flicker !== false) { const fl = div(L, "lay", { background: "#fff3dc", mixBlendMode: "overlay", pointerEvents: "none" }), tr = X.T(fl, "opacity", "0", true); for (let t = 0; t < T; t += 0.1) tr.set(t, (r() * 0.12).toFixed(3)); }
+}
+/* gate weave: el fotograma tiembla como en el proyector */
+function weave(X, el, amp = 1) {
+  const tr = X.T(el, "transform", "translate(0px, 0px)", true), T = X.dur + OV();
+  for (let t = 0; t < T; t += 1 / 12) tr.set(t, `translate(${((X.r() - 0.5) * 2 * amp * X.u).toFixed(1)}px, ${((X.r() - 0.5) * 3 * amp * X.u).toFixed(1)}px)`);
+}
+function vhsHud(X, L) {
+  const { W, H, u, r, sc } = X;
+  const y = 2006 + Math.floor(r() * 6), d = 1 + Math.floor(r() * 28), m = MONTHS[Math.floor(r() * 12)], hh = 1 + Math.floor(r() * 11), mm = Math.floor(r() * 60);
+  const c = P.vhs, f = 26 * u;
+  const play = word(X, L, "▶ PLAY", { cls: vhs, fs: f, x: 0.05 * W, y: 0.09 * H, ax: 0, color: c });
+  const bl = X.T(play.el, "opacity", "1", true); for (let k = 0; k * 0.7 < X.dur + OV(); k++) bl.set(k * 0.7, k % 2 ? "0.35" : "1");
+  word(X, L, `${hh < 10 ? "AM" : "PM"} ${String(hh).padStart(2, " ")}:${String(mm).padStart(2, "0")}`, { cls: vhs, fs: f, x: 0.05 * W, y: 0.86 * H, ax: 0, color: c });
+  word(X, L, `${m}. ${String(d).padStart(2, "0")} ${y}`, { cls: vhs, fs: f, x: 0.05 * W, y: 0.92 * H, ax: 0, color: c });
+  const sp = word(X, L, "SP", { cls: vhs, fs: f, x: 0.95 * W, y: 0.09 * H, ax: 1, color: c });
+  /* barra de tracking que baja */
+  const tb = div(L, "patch", { left: 0, top: 0, width: W + "px", height: 0.05 * H + "px", background: "linear-gradient(transparent, rgba(255,255,255,0.12), transparent)", pointerEvents: "none" });
+  X.T(tb, "transform", `translateY(${-0.1 * H}px)`).to(0, X.dur + OV(), `translateY(${1.1 * H}px)`);
+}
+function polaroid(X, L, k, cx, cy, w, rot, o = {}) {
+  const h = w * 1.18, pad = w * 0.06;
+  const card = div(L, "patch", { left: cx - w / 2 + "px", top: cy - h / 2 + "px", width: w + "px", height: h + "px", background: P.cream, boxShadow: `0 ${12 * X.u}px ${40 * X.u}px rgba(0,0,0,0.55)`, transform: `rotate(${rot}deg)` });
+  const ph = mbox(X, card, typeof k === "object" ? k : (o.still ? asStill(mediaSpec(X.sc, k)) : k), { left: pad + "px", top: pad + "px", width: w - 2 * pad + "px", height: w - 2 * pad + "px" }, { filter: "faded", off: X.r() * 3 });
+  div(ph.box, "lay", { background: "radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(60,40,20,0.45) 100%)" });
+  return { card, ph, w, h, pad };
+}
+
+const B = {};
+
+/* 1. polaroid: cae girando sobre la mesa; la frase manuscrita en el borde blanco */
+B.polaroid = (sc, X) => {
+  const { W, H } = X, L = div(X.root, "lay", { background: P.dark });
+  footage(X, L, 1, "sepia", { opacity: 0.25 });
+  const w = 0.32 * W, rot = (X.r() - 0.5) * 10, p = polaroid(X, L, 0, 0.5 * W, 0.47 * H, w, rot);
+  X.T(p.card, "transform", `translate(${(X.r() - 0.5) * 0.3 * W}px, ${-0.9 * H}px) rotate(${rot - 25}deg)`).to(0, 0.9, `translate(0px, 0px) rotate(${rot}deg)`, "cubic-bezier(.2,.9,.25,1)")
+    .to(0.9, X.dur + OV() - 0.9, `translate(0px, ${-0.02 * H}px) rotate(${rot + 1.5}deg) scale(1.04)`);
+  const s = J(sc.words), fs = Math.min(fit(s, hw, 0, p.w - 2 * p.pad, (p.h - p.w) * 0.55), (p.h - p.w) * 0.5);
+  const t = line(X, p.card, sc.words, { cls: hw, fs, x: p.w / 2, y: p.w + (p.h - p.w) / 2 - p.pad * 0.2, color: P.ink }, "fade");
+  oldFilm(X, L, { scratches: 2 });
+  enterFx(X, pickTrans(X), OV());
+};
+
+/* 2. video casero: metraje VHS a pantalla completa, máquina de escribir que escribe y borra */
+B.homevideo = (sc, X) => {
+  const { W, H } = X, L = div(X.root, "lay", { background: P.dark });
+  const f = footage(X, L, 0, "faded"); weave(X, f.m.box, 0.6);
+  oldFilm(X, L, { leak: X.r() < 0.6 });
+  vhsHud(X, L);
+  const s = J(sc.words), fs = Math.min(fit(s, tw, 0, 0.8 * W, 0.08 * H), 0.075 * H);
+  const t = word(X, L, s, { cls: tw, fs, x: 0.1 * W, y: 0.72 * H, ax: 0, color: P.cream, split: "chars" });
+  Object.assign(t.el.style, { textShadow: "0 2px 10px rgba(0,0,0,0.7)" });
+  const at = Math.max(0.05, sc.words[0].rt), last = Math.max(at + 0.4, sc.words[sc.words.length - 1].rt + 0.4);
+  typeErase(X, t, at, X.dur > last + 1.0 ? Math.max(last + 0.5, X.dur - 0.9) : null, { step: Math.min(0.065, (last - at) / Math.max(1, t.chars.length)), cursorColor: P.vhs });
+  enterFx(X, pickTrans(X), OV());
+};
+
+/* 3. álbum: varias polaroids sobre la mesa, la cámara se desliza; frase a máquina al centro */
+B.album = (sc, X) => {
+  const { W, H } = X, L = div(X.root, "lay", { background: P.dark });
+  const table = div(L, "lay");
+  X.T(table, "transform", "translate(0px, 0px) scale(1.12)").to(0, X.dur + OV(), `translate(${-0.06 * W}px, ${-0.03 * H}px) scale(1.02)`);
+  const spots = [[0.2, 0.3, -9], [0.52, 0.22, 6], [0.82, 0.34, -4], [0.3, 0.74, 7], [0.72, 0.76, -8]];
+  spots.forEach(([x, y, rot], i) => {
+    const p = polaroid(X, table, asStill((C.media || [])[(sc.idx + i) % C.media.length]), x * W, y * H, 0.2 * W, rot + (X.r() - 0.5) * 4);
+    show(X, p.card, i * 0.12);
+    X.T(p.card, "opacity", "0").to(i * 0.12, 0.5, i === 1 ? "1" : "0.75");
+  });
+  div(L, "lay", { background: "radial-gradient(ellipse at 50% 50%, rgba(20,14,10,0.35) 0%, rgba(20,14,10,0.85) 70%)" });
+  const ls = rows(sc.words, sc.words.length > 4 ? 2 : 1);
+  const fs = Math.min(...ls.map(l => fit(J(l), tw, 0, 0.78 * W, 0.11 * H)));
+  ls.forEach((l, i) => { const t = line(X, L, l, { cls: tw, fs, x: W / 2, y: H / 2 + (i - (ls.length - 1) / 2) * fs * 1.15, color: P.cream }, "blur"); leave(X, t.box, "blur"); });
+  oldFilm(X, L, { scratches: 2, leak: true });
+  enterFx(X, pickTrans(X), OV());
+};
+
+/* 4. proyector: cuarto oscuro, rectángulo de luz con el metraje titilando, perforaciones */
+B.projector = (sc, X) => {
+  const { W, H, u } = X, L = div(X.root, "lay", { background: "#060403" });
+  const fw = 0.62 * W, fh = fw * 0.66, fx = (W - fw) / 2, fy = 0.12 * H;
+  const glow = div(L, "patch", { left: fx - 0.08 * W + "px", top: fy - 0.08 * H + "px", width: fw + 0.16 * W + "px", height: fh + 0.16 * H + "px", background: "radial-gradient(ellipse at 50% 50%, rgba(255,220,170,0.18), transparent 70%)" });
+  const fr = div(L, "patch", { left: fx + "px", top: fy + "px", width: fw + "px", height: fh + "px", overflow: "hidden", borderRadius: `${6 * u}px` });
+  mbox(X, fr, 0, { left: 0, top: 0, width: fw + "px", height: fh + "px" }, { filter: "sepia" });
+  weave(X, fr, 1.2);
+  const fl = X.T(fr, "opacity", "1", true); for (let t = 0; t < X.dur + OV(); t += 1 / 12) fl.set(t, (0.82 + X.r() * 0.18).toFixed(2));
+  for (const side of [0, 1]) for (let i = 0; i < 9; i++)
+    div(L, "patch", { left: (side ? fx + fw + 0.012 * W : fx - 0.03 * W) + "px", top: fy + i * fh / 9 + fh / 36 + "px", width: 0.018 * W + "px", height: fh / 18 + "px", background: "#1d1712", borderRadius: `${2 * u}px` });
+  oldFilm(X, L, { leak: false, scratches: 2 });
+  const s = J(sc.words), fs = Math.min(fit(s, tw, 0, 0.78 * W, 0.07 * H), 0.065 * H);
+  const t = line(X, L, sc.words, { cls: tw, fs, x: W / 2, y: fy + fh + 0.12 * H, color: P.cream }, "flicker");
+  leave(X, t.box, "blur");
+  enterFx(X, pickTrans(X), OV());
+};
+
+/* 5. papel crema: la frase manuscrita aparece y se va borrando letra a letra (el recuerdo se va) */
+B.fading = (sc, X) => {
+  const { W, H } = X, L = div(X.root, "lay", { background: P.cream });
+  div(L, "lay", { background: "radial-gradient(ellipse at 50% 40%, rgba(255,250,235,0.6), rgba(140,110,80,0.35) 100%)" });
+  const ls = rows(sc.words, sc.words.length > 4 ? 2 : 1);
+  const fs = Math.min(...ls.map(l => fit(J(l), hw, 0, 0.78 * W, 0.2 * H)));
+  ls.forEach((l, i) => {
+    const t = lineNested(X, L, l, { cls: hw, fs, x: W / 2, y: H / 2 + (i - (ls.length - 1) / 2) * fs * 1.05, color: P.ink, revealSec: 0.8 }, "fade");
+    const t0 = Math.max(l[l.length - 1].rt + 0.9, X.dur * 0.55);
+    t.chars.forEach(c => { const at = t0 + X.r() * Math.max(0.6, X.dur - t0); X.T(c, "opacity", "1").to(at, 0.8, "0"); X.T(c, "filter", "blur(0px)").to(at, 0.8, "blur(5px)"); });
+  });
+  /* manchas de tinta / humedad */
+  for (let i = 0; i < 3; i++) div(L, "patch", { left: X.r() * W + "px", top: X.r() * H + "px", width: (0.1 + X.r() * 0.2) * W + "px", height: (0.1 + X.r() * 0.2) * W + "px", borderRadius: "50%", background: "radial-gradient(circle, rgba(120,90,60,0.18), transparent 70%)" });
+  tint(L, P.sepia, 0.12, "multiply"); vignette(L, 0.5, 45);
+  enterFx(X, pickTrans(X), OV());
+};
+
+/* 6. quemado: el fotograma se derrite desde el centro (agujero que crece con borde
+   incandescente) y deja ver la frase sobre negro */
+B.filmBurn = (sc, X) => {
+  const { W, H } = X, L = div(X.root, "lay", { background: "#050302" });
+  const ls = rows(sc.words, sc.words.length > 4 ? 2 : 1);
+  const fs = Math.min(...ls.map(l => fit(J(l), tw, 0, 0.78 * W, 0.12 * H)));
+  ls.forEach((l, i) => line(X, L, l, { cls: tw, fs, x: W / 2, y: H / 2 + (i - (ls.length - 1) / 2) * fs * 1.15, color: P.cream }, "blur"));
+  const top = div(L, "lay"); const f = footage(X, top, 0, "faded"); weave(X, f.m.box, 0.7);
+  oldFilm(X, top, { leak: false });
+  const tb = Math.max(0.3, Math.min(sc.words[0].rt - 0.5, X.dur * 0.35)), d = 0.9;
+  const cx = 40 + X.r() * 20, cy = 40 + X.r() * 20;
+  X.T(top, "webkitMaskImage", `radial-gradient(circle at ${cx}% ${cy}%, transparent 0%, #000 0.5%)`).to(tb, d, `radial-gradient(circle at ${cx}% ${cy}%, transparent 85%, #000 90%)`, EASE_IN);
+  const ring = div(L, "lay", { background: `radial-gradient(circle at ${cx}% ${cy}%, transparent 0%, rgba(255,170,80,0.0) 0%, rgba(255,170,80,0) 1%)`, mixBlendMode: "screen", pointerEvents: "none" });
+  X.T(ring, "background", `radial-gradient(circle at ${cx}% ${cy}%, transparent 0%, rgba(255,190,110,0.95) 0.5%, rgba(255,90,30,0) 3%)`)
+    .to(tb, d, `radial-gradient(circle at ${cx}% ${cy}%, transparent 84%, rgba(255,190,110,0.95) 85%, rgba(255,90,30,0) 90%)`, EASE_IN);
+  X.T(ring, "opacity", "0", true).set(tb, "1").set(tb + d, "0");
+  enterFx(X, pickTrans(X), OV());
+};
+
+/* 7. doble exposición: dos recuerdos superpuestos (screen), frase grande a máquina */
+B.double = (sc, X) => {
+  const { W, H } = X, L = div(X.root, "lay", { background: P.dark });
+  footage(X, L, 0, "sepia");
+  const b = footage(X, L, 1, "faded", { from: 1.2, to: 1.05, off: 2 }); b.box.style.mixBlendMode = "screen"; b.box.style.opacity = "0.55";
+  oldFilm(X, L);
+  const ls = rows(sc.words, sc.words.length > 3 ? 2 : 1);
+  const fs = Math.min(...ls.map(l => fit(U(J(l)), tw, 0.08, 0.84 * W, 0.16 * H)));
+  ls.forEach((l, i) => {
+    const t = line(X, L, l.map(w => ({ ...w, text: U(w.text) })), { cls: tw, fs, x: W / 2, y: H / 2 + (i - (ls.length - 1) / 2) * fs * 1.08, color: P.cream, ls: 0.08 }, "blur");
+    t.el.style.mixBlendMode = "overlay"; leave(X, t.box, "blur");
+  });
+  enterFx(X, pickTrans(X), OV());
+};
+
+/* 8. tarjeta de fecha: negro, fecha VHS grande que se escribe y la frase debajo */
+B.dateCard = (sc, X) => {
+  const { W, H, u } = X, L = div(X.root, "lay", { background: "#070605" });
+  const y = 2006 + Math.floor(X.r() * 6), m = MONTHS[Math.floor(X.r() * 12)], d = String(1 + Math.floor(X.r() * 28)).padStart(2, "0");
+  const dt = word(X, L, `${m}. ${d} ${y}`, { cls: vhs, fs: 0.16 * H, x: W / 2, y: 0.4 * H, color: P.vhs, split: "chars" });
+  dt.chars.forEach((c, i) => show(X, c, 0.1 + i * 0.07));
+  const s = J(sc.words), fs = Math.min(fit(s, tw, 0, 0.8 * W, 0.07 * H), 0.06 * H);
+  const t = line(X, L, sc.words, { cls: tw, fs, x: W / 2, y: 0.6 * H, color: P.cream }, "type");
+  for (let i = 0; i < 40; i++) div(L, "patch", { left: 0, top: i * H / 40 + "px", width: W + "px", height: Math.max(1, u) + "px", background: "rgba(255,255,255,0.03)" });
+  leave(X, t.box, "fade");
+  enterFx(X, pickTrans(X), OV());
+};
+
+/* intro / cierre */
+B.intro = (sc, X) => {
+  const { W, H } = X, L = div(X.root, "lay", { background: "#050302" });
+  const f = footage(X, L, 0, "sepia", { opacity: 0.64 }); weave(X, f.m.box, 0.8); oldFilm(X, L);
+  const [a, b] = sc.words;
+  if (a) {
+    const baseFs = Math.min(0.16 * H, fit(a.text, hw, 0, 0.9 * W, 0.16 * H));
+    const fs = Math.min(baseFs * 1.15, fit(a.text, hw, 0, 0.94 * W, 0.22 * H));
+    const t = word(X, L, a.text, { cls: hw, fs, x: W / 2, y: 0.46 * H, color: P.cream });
+    t.el.style.whiteSpace = "nowrap";
+    reveal(X, t.el, a.rt + 0.12, "blur", 0.75); leave(X, t.box, "blur");
+  }
+  if (b) { const t = word(X, L, U(b.text), { cls: tw, fs: 0.035 * H, x: W / 2, y: 0.6 * H, color: P.sepia, ls: 0.3 }); reveal(X, t.el, b.rt + 1.2, "fade", 1.5); }
+  enterFx(X, "fade", 1.2);
+};
+B.outro = (sc, X) => window.NexaMemoriaOutro.render(sc, X, { P, hw, tw, div, footage, word, fit, reveal, config: C.outro || {} });
+
+const FITS = {
+  polaroid: sc => J(sc.words).length <= 36,
+  homevideo: sc => J(sc.words).length <= 44,
+  album: sc => J(sc.words).length <= 46,
+  projector: sc => J(sc.words).length <= 44,
+  fading: sc => J(sc.words).length <= 40,
+  filmBurn: sc => J(sc.words).length <= 40 && sc.dur > 1.6,
+  double: sc => J(sc.words).length <= 28,
+  dateCard: sc => J(sc.words).length <= 44
+};
+function makeTimeline(segs, dur) { return lyricTimeline(segs, dur, FITS); }
+
+boot();

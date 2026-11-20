@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "scope": "cara-a-cara mobile",
+  "publication": {
+    "required_before_voice": [
+      "youtube_title",
+      "youtube_description",
+      "instagram_title",
+      "instagram_description",
+      "facebook_title",
+      "facebook_description",
+      "tiktok_caption"
+    ],
+    "editorial_max_characters": {
+      "title": 100,
+      "youtube_description": 400,
+      "instagram_description": 280,
+      "facebook_description": 280,
+      "tiktok_caption": 100
+    },
+    "tiktok": "Solo título corto; sin descripción adicional.",
+    "sources": "Guardar fuentes y créditos por separado del texto social."
+  },
+  "spoken": {
+    "all": "Sin saludo, nombre ni autopresentación. Lenguaje cotidiano y frases cortas; datos y términos técnicos solo cuando ayudan. Cierre opcional de una frase.",
+    "alma": "Boletín: Lo último del mundo, seguido de fecha completa hablada. Cinco a siete noticias distintas verificadas. Atribuir y distinguir fecha de publicación y fecha del hecho; no rellenar con noticias antiguas ni anunciar acuerdos inexistentes. Ritmo algo más ágil, pausas breves. Si faltan fuentes no inventar ni entregar un boletín completo.",
+    "leo": "Empezar por una pregunta simple y curiosa, por ejemplo ¿Sabes qué diferencia hay entre un SSD y un M.2? Responder pronto: un M.2 puede ser un SSD. Ejemplos visuales cotidianos; explicar HDD y SSD antes de siglas NVMe/PCIe. No plantear SSD y M.2 como tecnologías excluyentes.",
+    "nara": "Conservar divulgación del espacio con preguntas, escalas y comparaciones fáciles de imaginar. Mezclar datos técnicos justificados con una pregunta al público. Separar hitos futuros de hechos ocurridos."
+  },
+  "visual": {
+    "priority": "Fotos y clips concretos vinculados a lo que se dice, ocupando los cuadros completos; menos esquemas y láminas de texto.",
+    "subjects_fit": "cover",
+    "crop": "Elegir encuadres compatibles; no cortar el sujeto ni incrustar bandas blancas.",
+    "text": "Titulares breves de tres a siete palabras y subtítulos; esquemas solo si explican un mecanismo o comparación que el medio no muestra.",
+    "rhythm": "Alternar fotos, clips, acercamientos y poses de componentes existentes. Archivo e ilustraciones rotulados cuando corresponda.",
+    "fallback": "Si no existe clip pertinente, foto pertinente con movimiento; no inventar ni usar metraje ajeno al hecho como actual."
+  },
+  "review": "Un guion pendiente de aprobación no autoriza voz, transcripción, render ni publicación."
+}

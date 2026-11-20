@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8">
+<meta name="nodemotion-design" content="promo-mono">
+<title>NodeMotion · promo-mono</title></head><body>
+<script>(async function(){
+  const response = await fetch("/api/v1/templates/promo-mono/source");
+  if (!response.ok) throw new Error("Shared NodeMotion source is unavailable");
+  const html = await response.text();
+  document.open(); document.write(html); document.close();
+})();</script>
+</body></html>

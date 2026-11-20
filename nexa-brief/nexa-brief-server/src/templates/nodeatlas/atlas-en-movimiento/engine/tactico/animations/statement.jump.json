@@ -1,0 +1,48 @@
+{
+  "name": "statement.jump",
+  "family": "statement",
+  "estilo": {
+    "usa": [
+      "estilos.titular.principal",
+      "estilos.titular.salto",
+      "ranuras.salto"
+    ]
+  },
+  "description": "Salto temporal («Siete años antes») en versales espaciadas, en la ranura «salto». Úsala como recurso visual en una escena.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 90,
+  "states": [],
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "Siete años antes",
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "screen": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-statement-jump",
+    "t": 0,
+    "type": "statement.jump",
+    "text": "Siete años antes",
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "assets/scene.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/statement.jump.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

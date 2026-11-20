@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "config.transitions",
+  "entry_id": "config.transitions",
+  "name": "transitions",
+  "kind": "configuration",
+  "label": "transitions",
+  "summary": "Existing configuration configuration: transitions.",
+  "params": {
+    "flashSec": {
+      "default": 0.1
+    },
+    "wipeSec": {
+      "default": 0.22
+    },
+    "deck": {
+      "default": {
+        "cut": 5,
+        "photoFlash": 1.4,
+        "blueWipe": 1,
+        "letterSlam": 0.8
+      }
+    }
+  },
+  "example": {
+    "flashSec": 0.1,
+    "wipeSec": 0.22,
+    "deck": {
+      "cut": 5,
+      "photoFlash": 1.4,
+      "blueWipe": 1,
+      "letterSlam": 0.8
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+      "pointer": "/configs/0/transitions"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

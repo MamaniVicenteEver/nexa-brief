@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "grunge-montage.tiza",
+  "entry_id": "grunge-montage.tiza",
+  "kind": "component",
+  "label": "Garabatos de tiza y pincel",
+  "summary": "Flechas, triángulo, espiral, elipses, marcos y cruces que se dibujan solos con trazo seco.",
+  "component": {
+    "name": "grunge-montage.tiza",
+    "label": "Garabatos de tiza y pincel",
+    "summary": "Flechas, triángulo, espiral, elipses, marcos y cruces que se dibujan solos con trazo seco.",
+    "default": true,
+    "params": {
+      "scene": {
+        "type": "string",
+        "default": "s03",
+        "doc": "Nombre de la escena de config.timeline que se muestra"
+      },
+      "duration": {
+        "type": "number",
+        "default": 2.0,
+        "doc": "Segundos de la demo",
+        "min": 0.5,
+        "max": 6
+      }
+    },
+    "tags": [
+      "escena"
+    ],
+    "file": "player.js",
+    "demo": {
+      "scene": "s03"
+    },
+    "preview": {
+      "t": 0.9
+    }
+  },
+  "params": {
+    "scene": {
+      "type": "string",
+      "default": "s03",
+      "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+      "type": "number",
+      "default": 2.0,
+      "doc": "Segundos de la demo",
+      "min": 0.5,
+      "max": 6
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json",
+      "pointer": "/components/7"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

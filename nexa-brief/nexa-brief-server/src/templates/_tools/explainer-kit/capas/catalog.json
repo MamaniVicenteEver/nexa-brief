@@ -1,0 +1,2565 @@
+{
+  "contract": "nexa.capas.catalog/1",
+  "version": "1.0.0",
+  "updated": "2026-11-14",
+  "animations": [
+    "entrar-sube",
+    "entrar-cae",
+    "entrar-desliza",
+    "salir-cae",
+    "salir-funde",
+    "respirar",
+    "flotar",
+    "temblar",
+    "girar",
+    "caer",
+    "latir"
+  ],
+  "assets": [
+    {
+      "id": "acantilados",
+      "version": 1,
+      "type": "decorado",
+      "name": "Acantilados",
+      "description": "Dos plataformas separadas por un vacío para componer una escena de salto o caída.",
+      "tags": [
+        "riesgo",
+        "abismo",
+        "caida"
+      ],
+      "status": "aprobado",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/acantilados.jpg",
+        "notes": "Revisión de todas las poses sobre claro, oscuro y damero, con las anclas marcadas. Tintes complementarios sobre claro y #0B1220 en review/acantilados-tintes.jpg. Leyenda numerada de anclas en review/acantilados-anclas.jpg. Las máscaras quedan dentro del alfa y las anclas sobre cobertura ≥128. Sin defecto adicional de zonas o anclas detectado en la revisión. Se mantienen las limitaciones de uso descritas en limitations."
+      },
+      "source": {
+        "resource_id": "titanes-ref-55cb7dc771d3",
+        "original": "0d02f1918f4409f3ec5e4bd9410dcf13.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-55cb7dc771d3",
+        "file": "masters/acantilados.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        628
+      ],
+      "height_ref": 232,
+      "poses": {
+        "original": {
+          "file": "assets/acantilados/original.webp",
+          "sha256": "00bb012ff9100ee4d33a24627517110d9eeaf5c8863cb0d2755b9001060d95f2",
+          "anchors": {
+            "centro": [
+              453,
+              489
+            ],
+            "agarre": [
+              457,
+              449
+            ]
+          },
+          "masks": {
+            "brillo": "assets/acantilados/original.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-55cb7dc771d3 / 0d02f1918f4409f3ec5e4bd9410dcf13.jpg (sha256 55cb7dc771d39e3a019e2c446f1d32b1d1ace1749e01e4b058ba233bda79fb45). Aristas de las dos columnas perfiladas un píxel hacia la cara oscura. Descontaminación localizada en caras oscuras; degradado iluminado conservado. Revisión completa y al 200% sobre blanco y #0B1220 sin defecto de extracción detectado."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#66D1FF",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "flotar",
+        "temblar",
+        "caer"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Las dos plataformas se conservan en un único decorado con separación transparente.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar."
+      ]
+    },
+    {
+      "id": "escritorio-espalda",
+      "version": 1,
+      "type": "decorado",
+      "name": "Escritorio de espaldas",
+      "description": "Ejecutivo ante un monitor y una pila de papeles, con escritorio y silla integrados.",
+      "tags": [
+        "trabajo",
+        "burocracia",
+        "oficina"
+      ],
+      "status": "aprobado",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/escritorio-espalda.jpg",
+        "notes": "Revisión de todas las poses sobre claro, oscuro y damero, con las anclas marcadas. Tintes complementarios sobre claro y #0B1220 en review/escritorio-espalda-tintes.jpg. Leyenda numerada de anclas en review/escritorio-espalda-anclas.jpg. Las máscaras quedan dentro del alfa y las anclas sobre cobertura ≥128. Sin defecto adicional de zonas o anclas detectado en la revisión. Se mantienen las limitaciones de uso descritas en limitations."
+      },
+      "source": {
+        "resource_id": "titanes-ref-eb95fa4134e6",
+        "original": "01e0784e001ce8761c21718426d4042a.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-eb95fa4134e6",
+        "file": "masters/escritorio-espalda.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 905,
+      "poses": {
+        "original": {
+          "file": "assets/escritorio-espalda/original.webp",
+          "sha256": "bce3e43505b7fdb8556aea76a432d7429ffd8d812e69937b4b8631e5990bf0a5",
+          "anchors": {
+            "centro": [
+              500,
+              510
+            ],
+            "agarre": [
+              497,
+              477
+            ],
+            "cabeza": [
+              444,
+              144
+            ],
+            "mano-der": [
+              688,
+              448
+            ],
+            "pies": [
+              470,
+              885
+            ]
+          },
+          "masks": {
+            "brillo": "assets/escritorio-espalda/original.brillo.png",
+            "pantalla": "assets/escritorio-espalda/original.pantalla.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-eb95fa4134e6 / 01e0784e001ce8761c21718426d4042a.jpg (sha256 eb95fa4134e684e3db9bbf4ce33463587dc472efec877ce96d388da27e2f086b). Fondo y sombra retirados. Contornos y huecos revisados al 200% sobre blanco y #0B1220. La luz de borde y textura de origen se conservan. Se conserva como composición de escritorio; mesa, monitor, papeles, silla y figura no se separan en capas independientes."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre",
+        "cabeza",
+        "mano-der",
+        "pies"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#66D1FF",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        },
+        "pantalla": {
+          "default": "#E8E8E8",
+          "doc": "Superficie luminosa visible del monitor, separada del marco y de la figura."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "flotar",
+        "temblar",
+        "caer"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Figura, mesa, silla, monitor y papeles forman una escena integrada. Los papeles y la pantalla quedan excluidos de la zona brillo. pantalla controla la superficie luminosa del monitor.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar."
+      ]
+    },
+    {
+      "id": "ejecutivo",
+      "version": 2,
+      "type": "personaje",
+      "name": "Ejecutivo",
+      "description": "Ejecutivo de silueta con nueve poses de autoridad, duda, trabajo, control y riesgo.",
+      "tags": [
+        "poder",
+        "ejecutivo",
+        "trabajo",
+        "duda",
+        "riesgo"
+      ],
+      "status": "aprobado",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/ejecutivo.jpg",
+        "notes": "Revisión sobre claro, oscuro y damero, con anclas y pruebas de tinte. Sin defectos de recorte detectados en las poses conservadas."
+      },
+      "source": {
+        "resource_id": "titanes-ref-9c13aaf5e635",
+        "original": "descarga (3).png",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-9c13aaf5e635",
+        "file": "masters/ejecutivo.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1536
+      },
+      "pivot": [
+        512,
+        1460
+      ],
+      "height_ref": 784.8,
+      "poses": {
+        "brazos-arriba": {
+          "file": "assets/ejecutivo/brazos-arriba.webp",
+          "sha256": "a39a1c9b3b56d8787ff1c8b3f99197933839a7bcc9996330ea1917796d548c94",
+          "anchors": {
+            "cabeza": [
+              515,
+              795
+            ],
+            "mano-der": [
+              325,
+              747
+            ],
+            "mano-izq": [
+              698,
+              737
+            ],
+            "pies": [
+              622,
+              1437
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo/brazos-arriba.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-7487108956ae / descarga (4).png (sha256 7487108956aebd55b4063e5461cfe3db3c11ad11275f488fdcc982ec58309536). Fondo crema, borde blanco externo y sombra retirados; camisa clara recuperada. Contornos grises dibujados en el original conservados. Dedos, cabeza y zapatos revisados."
+        },
+        "con-mascara": {
+          "file": "assets/ejecutivo/con-mascara.webp",
+          "sha256": "f72b1369c98f7cc68c2da0aebc4d8e6eeaad5c23b908ed0b9b54438c5f32ec1e",
+          "anchors": {
+            "cabeza": [
+              529,
+              739
+            ],
+            "mano-der": [
+              406,
+              816
+            ],
+            "mano-izq": [
+              592,
+              1044
+            ],
+            "pies": [
+              583,
+              1436
+            ],
+            "mascara": [
+              423,
+              741
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo/con-mascara.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-c14184a5eb3e / 45de859b8b470f79ebbdfbfce2c7d992.jpg (sha256 c14184a5eb3ee72cf81cb18108f344ac18e0ae4dc070040a8d949e6216029a80). Fondo y sombra retirados. Contornos y huecos revisados al 200% sobre blanco y #0B1220. La luz de borde y textura de origen se conservan."
+        },
+        "de-espaldas": {
+          "file": "assets/ejecutivo/de-espaldas.webp",
+          "sha256": "518c11a322f8737c9577a1d1ebfa991a3fe68df156222e6fada3aa8e5cd31e1b",
+          "anchors": {
+            "cabeza": [
+              505,
+              757
+            ],
+            "mano-der": [
+              599,
+              1012
+            ],
+            "mano-izq": [
+              422,
+              1018
+            ],
+            "pies": [
+              577,
+              1431
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo/de-espaldas.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-2124d6b4d43a / 5ca7a6c9922b9035355647467b1f8b32.jpg (sha256 2124d6b4d43a9483860024c807d567993a98c1317b2317a79d11a3973b8c812c). Fondo y sombra retirados. Contornos y huecos revisados al 200% sobre blanco y #0B1220. La luz de borde y textura de origen se conservan."
+        },
+        "de-pie": {
+          "file": "assets/ejecutivo/de-pie.webp",
+          "sha256": "e544eafc1c4089f1abc63aff527dcd13d44211c543005b9f44024e9097755529",
+          "anchors": {
+            "cabeza": [
+              519,
+              737
+            ],
+            "mano-der": [
+              480,
+              1053
+            ],
+            "mano-izq": [
+              610,
+              1030
+            ],
+            "pies": [
+              496,
+              1433
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo/de-pie.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-9c13aaf5e635 / descarga (3).png (sha256 9c13aaf5e63513c14ad97f995a7a55d5dcfcfae5dea7595d695341510b16a7ab). Camisa y corbata recuperadas; sombra retirada. Luz gris original conservada. Revisión ampliada de cabeza, cuello y ambos zapatos sin restos de fondo."
+        },
+        "encoge": {
+          "file": "assets/ejecutivo/encoge.webp",
+          "sha256": "e396fa3544587f1a2e61c17b98801c65d63f74c7043ef1c2529d7acdf02cc279",
+          "anchors": {
+            "cabeza": [
+              509,
+              687
+            ],
+            "mano-der": [
+              328,
+              822
+            ],
+            "mano-izq": [
+              703,
+              818
+            ],
+            "pies": [
+              611,
+              1440
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo/encoge.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-2c194a82274c / 758eef59c0d24b808601ca583b72769e.jpg (sha256 2c194a82274ca954e017af9acbf651da4db56daa56f7f2d0f16b5cbc2fc0f3e8). Fondo y sombra retirados. Contornos y huecos revisados al 200% sobre blanco y #0B1220. La luz de borde y textura de origen se conservan."
+        },
+        "escribiendo": {
+          "file": "assets/ejecutivo/escribiendo.webp",
+          "sha256": "f563aaa296faa521fc1ad49f40a2e0bff775a60a92211c1370ea506b4a097226",
+          "anchors": {
+            "cabeza": [
+              680,
+              969
+            ],
+            "mano-der": [
+              564,
+              1117
+            ],
+            "mano-izq": [
+              554,
+              1058
+            ],
+            "pies": [
+              487,
+              1449
+            ],
+            "papel": [
+              474,
+              1062
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo/escribiendo.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-7750f8ed2144 / From Klickpin.com- Classy romantic date night ideas that instantly upgrade your space style or celebration without much effort for anyone who want (1).mp4 (sha256 7750f8ed2144661b0e3f37fb1aa7c58188eb2454dfd35eb37aba11c0cc049729). Escena de escritorio autorizada como pose: mesa, silla y papel integrados. Sin croma rojo ni sombras; ampliaciones revisadas."
+        },
+        "senala": {
+          "file": "assets/ejecutivo/senala.webp",
+          "sha256": "d1cba9c5a4dbcbe5ce9aceb49be526838a2195630affe5aaacb82bac9081af95",
+          "anchors": {
+            "cabeza": [
+              430,
+              719
+            ],
+            "mano-der": [
+              355,
+              1020
+            ],
+            "mano-izq": [
+              738,
+              736
+            ],
+            "pies": [
+              546,
+              1438
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo/senala.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-d75c5d89b331 / 7edc5026a926af65b64772141a2b89d0.jpg (sha256 d75c5d89b331cdc4c012dd8b9f0c3be2025a3d889efe99ba30b222aee90d2226). Fondo y sombra retirados. Contornos y huecos revisados al 200% sobre blanco y #0B1220. La luz de borde y textura de origen se conservan."
+        },
+        "sentado-jet": {
+          "file": "assets/ejecutivo/sentado-jet.webp",
+          "sha256": "31e731a8128b65fa01c07dcc07e108251cbd376a101f98c1a67939649a47d6e5",
+          "anchors": {
+            "cabeza": [
+              479,
+              744
+            ],
+            "mano-der": [
+              422,
+              789
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo/sentado-jet.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-7e623cb52d36 / edeefa1bb0d189c32c545664bedced99.jpg (sha256 7e623cb52d3648f8c7ccb773ca746bb5152ef75d88305e5597b8a158aeed35de). Busto visible del ejecutivo aislado de la cabina, con corte inferior heredado del encuadre. Perfil manual limpio; no se reconstruyen piernas ni superficie ocluida. Usar como busto, no como figura completa de pie."
+        },
+        "trepando": {
+          "file": "assets/ejecutivo/trepando.webp",
+          "sha256": "8b0e93f611c4afbe8949c15508ac3e7659fcbd33f13e2b4f0bcaeccc551b1ce0",
+          "anchors": {
+            "cabeza": [
+              721,
+              910
+            ],
+            "mano-der": [
+              629,
+              772
+            ],
+            "mano-izq": [
+              615,
+              944
+            ],
+            "pies": [
+              362,
+              1421
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo/trepando.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-9bfc35e56a51 / 87984debd8e532ae70fc9ba2ab10685b.jpg (sha256 9bfc35e56a51b01968adfdd40db39098d362c259092c1131e87f2c725ba48960). Escalador separado de mano y cuerda. Sin el tramo de cuerda bajo el cuerpo. Aprobado para altura de uso ≤ 150 px; el original no permite detalle de dedos en primeros planos."
+        }
+      },
+      "default_pose": "de-pie",
+      "anchors": [
+        "cabeza",
+        "mano-der"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#66D1FF",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Camisa y corbata se omiten de color_zones y de las exportaciones porque de-espaldas carece de ellas y el esquema exige las mismas zonas en todas las poses.",
+        "sentado-jet conserva únicamente el busto visible. Solo cabeza y mano-der son visibles. Se omiten pies y mano-izq en esa pose, y de la garantía común. El pivote es el suelo virtual a y=1460.",
+        "de-pie y con-mascara tienen manos ocultas en bolsillos. Las anclas correspondientes marcan su posición de contacto con el bolsillo visible.",
+        "escribiendo incluye mesa, silla y papel. El papel queda excluido del brillo. trepando tiene detalle útil para una altura de uso de hasta 150 px.",
+        "Las proporciones se igualan por cabeza sin cuello y se contrastan con hombros. La perspectiva y la estilización de cada fuente producen variaciones anatómicas.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar.",
+        "La luz original incluye gris, blanco, cian y crema."
+      ]
+    },
+    {
+      "id": "ejecutivo-revision",
+      "version": 2,
+      "type": "personaje",
+      "name": "Ejecutivo — revisión",
+      "description": "Ejecutivo de silueta con cinco poses de autoridad, duda, trabajo, control y riesgo pendientes de corrección.",
+      "tags": [
+        "poder",
+        "ejecutivo",
+        "trabajo",
+        "duda",
+        "riesgo"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/ejecutivo-revision.jpg",
+        "notes": "Revisión sobre claro, oscuro y damero, con anclas y pruebas de tinte. Defectos pendientes: corre-maletin · Base de la ronda 3 de 1b, con polígonos locales de cara y puño y perfilado exclusivo del borde facial. No hay relleno global de huecos. Cara y puño recuperados sin rellenar fondo entre hilos. La revisión completa muestra una franja rosa discontinua en el borde de las piernas (izquierda: x 124–181, y 406–454; derecha: x 210–259, y 397–510). Requiere perfilar/desmezclar esas aristas preservando la línea rosa dibujada; no se aprueba la figura completa. encoge-video · Fleco azul irregular alrededor de cabeza, muñecas y dedos; la banda inferior y la sombra ya no están. Falta ajustar el contorno a la figura real y desmezclar el azul comprimido en una banda de 2–3 px del original. meditando · Persisten píxeles magenta/oliva en puntas de dedos y borde inferior de los pies. Neutralizar exclusivamente esa franja comprimida sin quitar la luz cian/crema deliberada. pesas · Cara completa y bandas claras conservadas. Contornos de los discos mejorados, pero no limpios al 200%. Dientes cian discontinuos en el borde exterior derecho de los discos: x 139–161, y 206–267 en el juego izquierdo, y x 500–518, y 187–250 en el derecho. Hay una transición irregular con la barra en x 151–171, y 227–241. La ronda 3 oscureció por tramos la banda clara; se conserva la ronda 2. saltando · Recuperación local de camisa, talón y maletín sin rellenar huecos globales. Queda contaminación en el contorno del maletín. Persiste un borde cian moteado y escalonado en el perímetro del maletín (x 405–433, y 205–243), especialmente en el lateral izquierdo y la base. El agujero de camisa de dos píxeles (x 476–477, y 245) está cerrado y la luz del talón recuperada. Fuente de sólo 125 × 116 px; no se aprueba el halo como una limitación de resolución."
+      },
+      "source": {
+        "resource_id": "titanes-ref-eed19c773ed9",
+        "original": "a963597407cc18fdfcf2aeac3a843e90.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-9c13aaf5e635",
+        "file": "masters/ejecutivo-revision.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1536
+      },
+      "pivot": [
+        512,
+        1460
+      ],
+      "height_ref": 784.8,
+      "poses": {
+        "corre-maletin": {
+          "file": "assets/ejecutivo-revision/corre-maletin.webp",
+          "sha256": "55717eb5465a62afa114db0718a698b80d26025f14be392a1c6bcb26a9243b5b",
+          "anchors": {
+            "cabeza": [
+              579,
+              780
+            ],
+            "mano-der": [
+              332,
+              1000
+            ],
+            "mano-izq": [
+              783,
+              1017
+            ],
+            "pies": [
+              677,
+              1440
+            ],
+            "maletin": [
+              279,
+              1050
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo-revision/corre-maletin.brillo.png"
+          },
+          "notes": "Estado del recorte con-defectos. Fuente titanes-ref-eed19c773ed9 / a963597407cc18fdfcf2aeac3a843e90.jpg (sha256 eed19c773ed91130e65257716deeb004bff0a5f03c3516629d1846b56cae00a8). Base de la ronda 3 de 1b, con polígonos locales de cara y puño y perfilado exclusivo del borde facial. No hay relleno global de huecos. Cara y puño recuperados sin rellenar fondo entre hilos. La revisión completa muestra una franja rosa discontinua en el borde de las piernas (izquierda: x 124–181, y 406–454; derecha: x 210–259, y 397–510). Requiere perfilar/desmezclar esas aristas preservando la línea rosa dibujada; no se aprueba la figura completa."
+        },
+        "encoge-video": {
+          "file": "assets/ejecutivo-revision/encoge-video.webp",
+          "sha256": "580448f3117c10d24ae63e11371487ccf21d2ade55a5bb584c1715a80032104e",
+          "anchors": {
+            "cabeza": [
+              511,
+              649
+            ],
+            "mano-der": [
+              318,
+              784
+            ],
+            "mano-izq": [
+              712,
+              780
+            ],
+            "pies": [
+              616,
+              1438
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo-revision/encoge-video.brillo.png"
+          },
+          "notes": "Estado del recorte con-defectos. Fuente titanes-ref-adeb709008a2 / 59304f605682d4e95fec2c66698dc704.jpg (sha256 adeb709008a265492217786be66d867072916be908810efa89401147802e2b76). Fleco azul irregular alrededor de cabeza, muñecas y dedos; la banda inferior y la sombra ya no están. Falta ajustar el contorno a la figura real y desmezclar el azul comprimido en una banda de 2–3 px del original."
+        },
+        "meditando": {
+          "file": "assets/ejecutivo-revision/meditando.webp",
+          "sha256": "8c7288c243136035c8559e5d408f9bf9e28282b4f93ea35de381dc843ab8b34b",
+          "anchors": {
+            "cabeza": [
+              503,
+              1132
+            ],
+            "mano-der": [
+              333,
+              1280
+            ],
+            "mano-izq": [
+              692,
+              1276
+            ],
+            "pies": [
+              550,
+              1438
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo-revision/meditando.brillo.png"
+          },
+          "notes": "Estado del recorte con-defectos. Fuente titanes-ref-68783b2fa621 / From Klickpin.com- Classy romantic date night ideas that instantly upgrade your space style or celebration without much effort for anyone who want (2).mp4 (sha256 68783b2fa6215c67d2a4bfb28eba790b871ba955af9dc9b5cc6200bf49b61044). Persisten píxeles magenta/oliva en puntas de dedos y borde inferior de los pies. Neutralizar exclusivamente esa franja comprimida sin quitar la luz cian/crema deliberada."
+        },
+        "pesas": {
+          "file": "assets/ejecutivo-revision/pesas.webp",
+          "sha256": "a0e0e125258120b2a2592065d4140ba653362a6daaf423a390eb2c51613a4d83",
+          "anchors": {
+            "cabeza": [
+              618,
+              791
+            ],
+            "mano-der": [
+              477,
+              688
+            ],
+            "mano-izq": [
+              741,
+              1135
+            ],
+            "pies": [
+              691,
+              1431
+            ],
+            "maletin": [
+              740,
+              1229
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo-revision/pesas.brillo.png"
+          },
+          "notes": "Estado del recorte con-defectos. Fuente titanes-ref-7c9a66483763 / 63061ea5f7726398794d6c388665ba07.jpg (sha256 7c9a66483763f7e2fcfa5fd1adc9311c5c4c8145da0b7d120db6af3b6f99a81a). Cara completa y bandas claras conservadas. Contornos de los discos mejorados, pero no limpios al 200%. Dientes cian discontinuos en el borde exterior derecho de los discos: x 139–161, y 206–267 en el juego izquierdo, y x 500–518, y 187–250 en el derecho. Hay una transición irregular con la barra en x 151–171, y 227–241. La ronda 3 oscureció por tramos la banda clara; se conserva la ronda 2."
+        },
+        "saltando": {
+          "file": "assets/ejecutivo-revision/saltando.webp",
+          "sha256": "f04292238fb2b9fd2b1fe2275c081cb039070e7be3fdc5310a2d5e0533d8acff",
+          "anchors": {
+            "cabeza": [
+              697,
+              959
+            ],
+            "mano-der": [
+              353,
+              1005
+            ],
+            "mano-izq": [
+              780,
+              981
+            ],
+            "pies": [
+              283,
+              1411
+            ],
+            "maletin": [
+              284,
+              1005
+            ]
+          },
+          "masks": {
+            "brillo": "assets/ejecutivo-revision/saltando.brillo.png"
+          },
+          "notes": "Estado del recorte con-defectos. Fuente titanes-ref-55cb7dc771d3 / 0d02f1918f4409f3ec5e4bd9410dcf13.jpg (sha256 55cb7dc771d39e3a019e2c446f1d32b1d1ace1749e01e4b058ba233bda79fb45). Recuperación local de camisa, talón y maletín sin rellenar huecos globales. Queda contaminación en el contorno del maletín. Persiste un borde cian moteado y escalonado en el perímetro del maletín (x 405–433, y 205–243), especialmente en el lateral izquierdo y la base. El agujero de camisa de dos píxeles (x 476–477, y 245) está cerrado y la luz del talón recuperada. Fuente de sólo 125 × 116 px; no se aprueba el halo como una limitación de resolución."
+        }
+      },
+      "default_pose": "corre-maletin",
+      "anchors": [
+        "cabeza",
+        "mano-der",
+        "mano-izq",
+        "pies"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#66D1FF",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Las proporciones se igualan por cabeza sin cuello y se contrastan con hombros. La perspectiva y la estilización de cada fuente producen variaciones anatómicas.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar.",
+        "El maletín tiene anclas específicas en las poses que lo muestran.",
+        "La luz original incluye rosa en corre-maletin.",
+        "corre-maletin · Base de la ronda 3 de 1b, con polígonos locales de cara y puño y perfilado exclusivo del borde facial. No hay relleno global de huecos. Cara y puño recuperados sin rellenar fondo entre hilos. La revisión completa muestra una franja rosa discontinua en el borde de las piernas (izquierda: x 124–181, y 406–454; derecha: x 210–259, y 397–510). Requiere perfilar/desmezclar esas aristas preservando la línea rosa dibujada; no se aprueba la figura completa.",
+        "encoge-video · Fleco azul irregular alrededor de cabeza, muñecas y dedos; la banda inferior y la sombra ya no están. Falta ajustar el contorno a la figura real y desmezclar el azul comprimido en una banda de 2–3 px del original.",
+        "meditando · Persisten píxeles magenta/oliva en puntas de dedos y borde inferior de los pies. Neutralizar exclusivamente esa franja comprimida sin quitar la luz cian/crema deliberada.",
+        "pesas · Cara completa y bandas claras conservadas. Contornos de los discos mejorados, pero no limpios al 200%. Dientes cian discontinuos en el borde exterior derecho de los discos: x 139–161, y 206–267 en el juego izquierdo, y x 500–518, y 187–250 en el derecho. Hay una transición irregular con la barra en x 151–171, y 227–241. La ronda 3 oscureció por tramos la banda clara; se conserva la ronda 2.",
+        "saltando · Recuperación local de camisa, talón y maletín sin rellenar huecos globales. Queda contaminación en el contorno del maletín. Persiste un borde cian moteado y escalonado en el perímetro del maletín (x 405–433, y 205–243), especialmente en el lateral izquierdo y la base. El agujero de camisa de dos píxeles (x 476–477, y 245) está cerrado y la luz del talón recuperada. Fuente de sólo 125 × 116 px; no se aprueba el halo como una limitación de resolución."
+      ]
+    },
+    {
+      "id": "apreton",
+      "version": 2,
+      "type": "grupo",
+      "name": "Apretón de manos",
+      "description": "Parejas que negocian o esconden sus intenciones al cerrar un acuerdo.",
+      "tags": [
+        "alianza",
+        "negociacion",
+        "acuerdo",
+        "mascara"
+      ],
+      "status": "aprobado",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/apreton.jpg",
+        "notes": "Revisión sobre claro, oscuro y damero, con anclas y pruebas de tinte. Sin defectos de recorte detectados en las poses conservadas."
+      },
+      "source": {
+        "resource_id": "titanes-ref-805c082d5f4e",
+        "original": "929081d869b3c97b9a3b73477be4b279.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-805c082d5f4e",
+        "file": "masters/apreton.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 767,
+      "poses": {
+        "blanco": {
+          "file": "assets/apreton/blanco.webp",
+          "sha256": "7eff10b4fcba4167c01f7306b02602e897d668e26d99348271950f330d7fb420",
+          "anchors": {
+            "cabeza": [
+              345,
+              262
+            ],
+            "mano-der": [
+              500,
+              484
+            ],
+            "mano-izq": [
+              352,
+              625
+            ],
+            "pies": [
+              341,
+              952
+            ],
+            "cabeza-2": [
+              661,
+              263
+            ],
+            "pies-2": [
+              636,
+              953
+            ],
+            "maletin": [
+              331,
+              703
+            ]
+          },
+          "masks": {
+            "brillo": "assets/apreton/blanco.brillo.png",
+            "corbata": "assets/apreton/blanco.corbata.png",
+            "camisa": "assets/apreton/blanco.camisa.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-805c082d5f4e / 929081d869b3c97b9a3b73477be4b279.jpg (sha256 805c082d5f4e35b02b4dfe20ad2285e633c7421e82f5a55980bd85fb7b712a61). Fondo y sombra retirados. Contornos y huecos revisados al 200% sobre blanco y #0B1220. La luz de borde y textura de origen se conservan."
+        },
+        "blanco-cian": {
+          "file": "assets/apreton/blanco-cian.webp",
+          "sha256": "cd8ff95352a1dbd697ce904114b4d0596f49f0e63a1299c526d40fb3ff1f1c0d",
+          "anchors": {
+            "cabeza": [
+              348,
+              276
+            ],
+            "mano-der": [
+              501,
+              492
+            ],
+            "mano-izq": [
+              357,
+              630
+            ],
+            "pies": [
+              345,
+              953
+            ],
+            "cabeza-2": [
+              659,
+              276
+            ],
+            "pies-2": [
+              634,
+              954
+            ],
+            "maletin": [
+              334,
+              709
+            ]
+          },
+          "masks": {
+            "brillo": "assets/apreton/blanco-cian.brillo.png",
+            "corbata": "assets/apreton/blanco-cian.corbata.png",
+            "camisa": "assets/apreton/blanco-cian.camisa.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-01862e23d41a / 6f94e2d526e4354ed06ad94f94ec470f.jpg (sha256 01862e23d41a8a248b526cc9532509265c8d905eaa9e5cd9c9675e16be168b22). Fondo y sombra retirados. Contornos y huecos revisados al 200% sobre blanco y #0B1220. La luz de borde y textura de origen se conservan."
+        },
+        "mascaras": {
+          "file": "assets/apreton/mascaras.webp",
+          "sha256": "bb2c590053a630385e3be35076792c9c397d46a0b081496dfe3c2c026dc65cbe",
+          "anchors": {
+            "cabeza": [
+              351,
+              264
+            ],
+            "mano-der": [
+              503,
+              486
+            ],
+            "mano-izq": [
+              419,
+              332
+            ],
+            "pies": [
+              346,
+              953
+            ],
+            "cabeza-2": [
+              668,
+              263
+            ],
+            "pies-2": [
+              641,
+              953
+            ],
+            "mascara": [
+              418,
+              268
+            ],
+            "mascara-2": [
+              604,
+              267
+            ]
+          },
+          "masks": {
+            "brillo": "assets/apreton/mascaras.brillo.png",
+            "corbata": "assets/apreton/mascaras.corbata.png",
+            "camisa": "assets/apreton/mascaras.camisa.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-68cd9822be02 / b205f96a45ce1f11a846d223611d24e1.jpg (sha256 68cd9822be02560d2bf7f6156d68f663590d25f3afad99dd0e343f94db353d03). Fondo y sombra retirados. Contornos y huecos revisados al 200% sobre blanco y #0B1220. La luz de borde y textura de origen se conservan."
+        }
+      },
+      "default_pose": "blanco",
+      "anchors": [
+        "cabeza",
+        "mano-der",
+        "mano-izq",
+        "pies",
+        "cabeza-2",
+        "pies-2"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#66D1FF",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        },
+        "corbata": {
+          "default": "#06080C",
+          "doc": "Corbata del ejecutivo izquierdo."
+        },
+        "camisa": {
+          "default": "#EFE9DF",
+          "doc": "Camisa y cuello del ejecutivo izquierdo."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "flotar",
+        "temblar",
+        "caer"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Camisa y corbata controlan al personaje situado a la izquierda en las poses. La ropa del personaje derecho queda fuera de esas zonas.",
+        "Maletín ausente en mascaras. Se omite como zona común. Los objetos permanecen integrados en las poses que los muestran.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar."
+      ]
+    },
+    {
+      "id": "apreton-revision",
+      "version": 2,
+      "type": "grupo",
+      "name": "Apretón de manos — revisión",
+      "description": "Parejas que negocian o esconden sus intenciones al cerrar un acuerdo. Poses con defectos pendientes de corrección.",
+      "tags": [
+        "alianza",
+        "negociacion",
+        "acuerdo",
+        "mascara"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/apreton-revision.jpg",
+        "notes": "Revisión sobre claro, oscuro y damero, con anclas y pruebas de tinte. Defectos pendientes: cian · Queda un mordisco en la cara clara del ejecutivo izquierdo y borde cian discontinuo en manos y zapatos. Recuperar la cara (x 204–219, y 222–282) con máscara guiada y descontaminar el perímetro del apretón."
+      },
+      "source": {
+        "resource_id": "titanes-ref-65fef6f3b915",
+        "original": "5fe3ef4e9bc7792ae771366dd38974f7.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-805c082d5f4e",
+        "file": "masters/apreton-revision.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 767,
+      "poses": {
+        "cian": {
+          "file": "assets/apreton-revision/cian.webp",
+          "sha256": "5c8e438c5ba688bc6e8aec470276d03b38ee3b8fec28109a4adf74c1b85263b9",
+          "anchors": {
+            "cabeza": [
+              348,
+              281
+            ],
+            "mano-der": [
+              498,
+              494
+            ],
+            "mano-izq": [
+              357,
+              631
+            ],
+            "pies": [
+              344,
+              953
+            ],
+            "cabeza-2": [
+              654,
+              286
+            ],
+            "pies-2": [
+              642,
+              950
+            ],
+            "maletin": [
+              334,
+              709
+            ]
+          },
+          "masks": {
+            "brillo": "assets/apreton-revision/cian.brillo.png",
+            "corbata": "assets/apreton-revision/cian.corbata.png",
+            "camisa": "assets/apreton-revision/cian.camisa.png"
+          },
+          "notes": "Estado del recorte con-defectos. Fuente titanes-ref-65fef6f3b915 / 5fe3ef4e9bc7792ae771366dd38974f7.jpg (sha256 65fef6f3b9151ced609ed7172ee6ed4baf9f8574f8b8549e67301d93eb55d529). Queda un mordisco en la cara clara del ejecutivo izquierdo y borde cian discontinuo en manos y zapatos. Recuperar la cara (x 204–219, y 222–282) con máscara guiada y descontaminar el perímetro del apretón."
+        }
+      },
+      "default_pose": "cian",
+      "anchors": [
+        "cabeza",
+        "mano-der",
+        "mano-izq",
+        "pies",
+        "cabeza-2",
+        "pies-2",
+        "maletin"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#66D1FF",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        },
+        "corbata": {
+          "default": "#06080C",
+          "doc": "Corbata del ejecutivo izquierdo."
+        },
+        "camisa": {
+          "default": "#EFE9DF",
+          "doc": "Camisa y cuello del ejecutivo izquierdo."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "flotar",
+        "temblar",
+        "caer"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Camisa y corbata controlan al personaje situado a la izquierda en la pose. La ropa del personaje derecho queda fuera de esas zonas.",
+        "cian conserva el atuendo y la anatomía distintos del personaje derecho. La calibración corresponde al ejecutivo de la izquierda.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar.",
+        "cian · Queda un mordisco en la cara clara del ejecutivo izquierdo y borde cian discontinuo en manos y zapatos. Recuperar la cara (x 204–219, y 222–282) con máscara guiada y descontaminar el perímetro del apretón."
+      ]
+    },
+    {
+      "id": "mano-presiona",
+      "version": 1,
+      "type": "grupo",
+      "name": "Mano que presiona",
+      "description": "Mano gigante en contacto con un ejecutivo agachado para representar presión y subordinación.",
+      "tags": [
+        "presion",
+        "control",
+        "subordinacion"
+      ],
+      "status": "aprobado",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/mano-presiona.jpg",
+        "notes": "Revisión de todas las poses sobre claro, oscuro y damero, con las anclas marcadas. Tintes complementarios sobre claro y #0B1220 en review/mano-presiona-tintes.jpg. Leyenda numerada de anclas en review/mano-presiona-anclas.jpg. Las máscaras quedan dentro del alfa y las anclas sobre cobertura ≥128. Sin defecto adicional de zonas o anclas detectado en la revisión. Se mantienen las limitaciones de uso descritas en limitations."
+      },
+      "source": {
+        "resource_id": "titanes-ref-8e1d27a7a4b1",
+        "original": "989b66515a5b167db9780bdf1db67c33.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-8e1d27a7a4b1",
+        "file": "masters/mano-presiona.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 920,
+      "poses": {
+        "original": {
+          "file": "assets/mano-presiona/original.webp",
+          "sha256": "a4be79af7c85e871274f1c3db89ce94c269cc1c12f581bdf7a2c2aa1cf54a56b",
+          "anchors": {
+            "cabeza": [
+              253,
+              569
+            ],
+            "mano-der": [
+              326,
+              635
+            ],
+            "mano-izq": [
+              310,
+              805
+            ],
+            "pies": [
+              520,
+              954
+            ],
+            "dedo-1": [
+              337,
+              562
+            ],
+            "agarre": [
+              339,
+              561
+            ]
+          },
+          "masks": {
+            "brillo": "assets/mano-presiona/original.brillo.png",
+            "camisa": "assets/mano-presiona/original.camisa.png",
+            "corbata": "assets/mano-presiona/original.corbata.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-8e1d27a7a4b1 / 989b66515a5b167db9780bdf1db67c33.jpg (sha256 8e1d27a7a4b1558e476b82621ff197a75947db167879b94d8cf7f1ee7d5c7487). Franja cian exterior limpiada localmente en puño, dorso y suelas mediante color interior. Se conservan las luces dibujadas y el grupo por la oclusión del hombro. Revisión completa y al 200% sobre blanco y #0B1220 sin defecto de extracción detectado en las zonas corregidas."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "cabeza",
+        "mano-der",
+        "mano-izq",
+        "pies",
+        "dedo-1",
+        "agarre"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#66D1FF",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        },
+        "camisa": {
+          "default": "#EFE9DF",
+          "doc": "Camisa visible del ejecutivo."
+        },
+        "corbata": {
+          "default": "#06080C",
+          "doc": "Corbata visible del ejecutivo."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "flotar",
+        "temblar",
+        "caer"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "El contacto entre dedo y hombro se conserva como grupo por oclusión real.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar."
+      ]
+    },
+    {
+      "id": "mano",
+      "version": 2,
+      "type": "mano",
+      "name": "Mano",
+      "description": "Mano gigante con dos gestos de manipulación y control, con puntas para conectar hilos.",
+      "tags": [
+        "control",
+        "mano",
+        "manipulacion"
+      ],
+      "status": "aprobado",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/mano.jpg",
+        "notes": "Revisión sobre claro, oscuro y damero, con anclas y pruebas de tinte. Sin defectos de recorte detectados en las poses conservadas."
+      },
+      "source": {
+        "resource_id": "titanes-ref-eed19c773ed9",
+        "original": "a963597407cc18fdfcf2aeac3a843e90.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-eed19c773ed9",
+        "file": "masters/mano.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        512
+      ],
+      "height_ref": 650,
+      "poses": {
+        "marionetista": {
+          "file": "assets/mano/marionetista.webp",
+          "sha256": "a8ded6adf730e2e6238b4f9b474d697187d2a33dd738251e151fe65651183f46",
+          "anchors": {
+            "dedo-1": [
+              316,
+              590
+            ],
+            "dedo-2": [
+              575,
+              762
+            ],
+            "dedo-3": [
+              743,
+              807
+            ],
+            "dedo-4": [
+              828,
+              782
+            ],
+            "dedo-5": [
+              922,
+              693
+            ],
+            "agarre": [
+              580,
+              560
+            ]
+          },
+          "masks": {
+            "brillo": "assets/mano/marionetista.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-eed19c773ed9 / a963597407cc18fdfcf2aeac3a843e90.jpg (sha256 eed19c773ed91130e65257716deeb004bff0a5f03c3516629d1846b56cae00a8). Mano independiente sin hilos colgantes ni nudos. Polígono de contorno manual y retoque clásico Telea en dos nudos y su unión, limitado a superficie visible; no generación por IA. Resolución de origen aproximada: 259 × 193 px."
+        },
+        "pinza": {
+          "file": "assets/mano/pinza.webp",
+          "sha256": "54c124bb3f95a7b3c974db787f4026da402acc91fce267c97275fe352892c141",
+          "anchors": {
+            "dedo-1": [
+              204,
+              641
+            ],
+            "dedo-2": [
+              277,
+              674
+            ],
+            "dedo-3": [
+              323,
+              694
+            ],
+            "agarre": [
+              276,
+              672
+            ]
+          },
+          "masks": {
+            "brillo": "assets/mano/pinza.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-e0def8be8429 / 81da35c101e2899f6aabda50e90ac0d3.jpg (sha256 e0def8be8429075193eb2e77520cfaedfac8e32cc918ffe579d78a4fbdeb43d8). Contacto del índice delimitado con exclusión subpíxel; borde claro de la pieza retirado y huecos entre dedos suavizados. Sólo superficie visible: se conserva el corte de oclusión, sin reconstruir la zona tapada por la pieza. Revisión completa y al 200% sin defecto de extracción detectado."
+        }
+      },
+      "default_pose": "marionetista",
+      "anchors": [
+        "dedo-1",
+        "dedo-2",
+        "agarre",
+        "dedo-3"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#66D1FF",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": false,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "La escala usa 260 px entre muñeca y nudillos. El pivote central facilita componer gestos con orientaciones distintas.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar.",
+        "La pose presiona pertenece al grupo mano-presiona.",
+        "pinza conserva el corte de oclusión de la pieza. marionetista conserva la luz rosa y una resolución aproximada de 259 × 193 px."
+      ]
+    },
+    {
+      "id": "mano-revision",
+      "version": 2,
+      "type": "mano",
+      "name": "Mano — revisión",
+      "description": "Mano gigante con un gesto de manipulación y control pendiente de corrección.",
+      "tags": [
+        "control",
+        "mano",
+        "manipulacion"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/mano-revision.jpg",
+        "notes": "Revisión sobre claro, oscuro y damero, con anclas y pruebas de tinte. Defectos pendientes: tijera · Hueco espurio del metal cerrado; nudillo y dedo inferior perfilados. Persisten irregularidades locales visibles al 200%. Metal completado en x 151–177, y 201–212. Quedan un pequeño saliente en la transición nudillo/metal (x 237–240, y 177–186) y un borde cian irregular en la unión del dedo inferior con el aro (x 226–238, y 251–260). Se conserva la ronda 3, con mejor contorno del nudillo y base del dedo."
+      },
+      "source": {
+        "resource_id": "titanes-ref-9bfc35e56a51",
+        "original": "87984debd8e532ae70fc9ba2ab10685b.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-eed19c773ed9",
+        "file": "masters/mano-revision.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        512
+      ],
+      "height_ref": 650,
+      "poses": {
+        "tijera": {
+          "file": "assets/mano-revision/tijera.webp",
+          "sha256": "c5433932d650abd6ee0f1ac5585801b7c276cc90707983f1eba26da097e5e96c",
+          "anchors": {
+            "dedo-1": [
+              515,
+              545
+            ],
+            "dedo-2": [
+              475,
+              648
+            ],
+            "agarre": [
+              513,
+              529
+            ],
+            "corte": [
+              354,
+              541
+            ]
+          },
+          "masks": {
+            "brillo": "assets/mano-revision/tijera.brillo.png"
+          },
+          "notes": "Estado del recorte con-defectos. Fuente titanes-ref-9bfc35e56a51 / 87984debd8e532ae70fc9ba2ab10685b.jpg (sha256 9bfc35e56a51b01968adfdd40db39098d362c259092c1131e87f2c725ba48960). Hueco espurio del metal cerrado; nudillo y dedo inferior perfilados. Persisten irregularidades locales visibles al 200%. Metal completado en x 151–177, y 201–212. Quedan un pequeño saliente en la transición nudillo/metal (x 237–240, y 177–186) y un borde cian irregular en la unión del dedo inferior con el aro (x 226–238, y 251–260). Se conserva la ronda 3, con mejor contorno del nudillo y base del dedo."
+        }
+      },
+      "default_pose": "tijera",
+      "anchors": [
+        "dedo-1",
+        "dedo-2",
+        "agarre",
+        "corte"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#66D1FF",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": false,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "La escala usa 260 px entre muñeca y nudillos. El pivote central facilita componer gestos con orientaciones distintas.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar.",
+        "La pose integra las tijeras.",
+        "tijera · Hueco espurio del metal cerrado; nudillo y dedo inferior perfilados. Persisten irregularidades locales visibles al 200%. Metal completado en x 151–177, y 201–212. Quedan un pequeño saliente en la transición nudillo/metal (x 237–240, y 177–186) y un borde cian irregular en la unión del dedo inferior con el aro (x 226–238, y 251–260). Se conserva la ronda 3, con mejor contorno del nudillo y base del dedo."
+      ]
+    },
+    {
+      "id": "copa",
+      "version": 1,
+      "type": "objeto",
+      "name": "Copa de vino",
+      "description": "Copa de vino extraída de la cabina, útil como detalle de privilegio.",
+      "tags": [
+        "lujo",
+        "privilegio",
+        "copa"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/copa.jpg",
+        "notes": "Revisión de todas las poses sobre claro, oscuro y damero, con las anclas marcadas. Tintes complementarios sobre claro y #0B1220 en review/copa-tintes.jpg. Leyenda numerada de anclas en review/copa-anclas.jpg. Las máscaras quedan dentro del alfa y las anclas sobre cobertura ≥128. Defectos heredados por pose. original · El cristal tiene transparencia, pero quedan manchas cian/grises de la cabina en el cáliz, tallo y base. Falta un modelo local del fondo por superficies (pared/mesa) y una matte del vidrio que preserve sus reflejos; fuente de unos 54 × 112 px."
+      },
+      "source": {
+        "resource_id": "titanes-ref-7e623cb52d36",
+        "original": "edeefa1bb0d189c32c545664bedced99.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-7e623cb52d36",
+        "file": "masters/copa.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 920,
+      "poses": {
+        "original": {
+          "file": "assets/copa/original.webp",
+          "sha256": "67c8d6d1e15bf2423fe404e765d653450b082108ab2d6d81dac7db01bffe6a42",
+          "anchors": {
+            "centro": [
+              513,
+              427
+            ],
+            "agarre": [
+              513,
+              540
+            ]
+          },
+          "masks": {
+            "vino": "assets/copa/original.vino.png"
+          },
+          "notes": "Estado del recorte con-defectos. Fuente titanes-ref-7e623cb52d36 / edeefa1bb0d189c32c545664bedced99.jpg (sha256 7e623cb52d3648f8c7ccb773ca746bb5152ef75d88305e5597b8a158aeed35de). El cristal tiene transparencia, pero quedan manchas cian/grises de la cabina en el cáliz, tallo y base. Falta un modelo local del fondo por superficies (pared/mesa) y una matte del vidrio que preserve sus reflejos; fuente de unos 54 × 112 px. El ancla agarre está en la parte inferior del cáliz, cuya cobertura cumple el umbral de opacidad."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre"
+      ],
+      "color_zones": {
+        "vino": {
+          "default": "#7A1020",
+          "doc": "Superficie roja del vino dentro del cáliz."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "original · El cristal tiene transparencia, pero quedan manchas cian/grises de la cabina en el cáliz, tallo y base. Falta un modelo local del fondo por superficies (pared/mesa) y una matte del vidrio que preserve sus reflejos; fuente de unos 54 × 112 px.",
+        "Se omite brillo porque los reflejos del vidrio se mezclan con residuos de la cabina. Solo se declara la superficie roja del vino.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar."
+      ]
+    },
+    {
+      "id": "cuerda",
+      "version": 1,
+      "type": "objeto",
+      "name": "Cuerda",
+      "description": "Tres tramos visibles de una cuerda interrumpida por oclusiones de la escena original.",
+      "tags": [
+        "control",
+        "cuerda",
+        "riesgo"
+      ],
+      "status": "aprobado",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/cuerda.jpg",
+        "notes": "Revisión de todas las poses sobre claro, oscuro y damero, con las anclas marcadas. Tintes complementarios sobre claro y #0B1220 en review/cuerda-tintes.jpg. Leyenda numerada de anclas en review/cuerda-anclas.jpg. Las máscaras quedan dentro del alfa y las anclas sobre cobertura ≥128. Sin defecto adicional de zonas o anclas detectado en la revisión. Se mantienen las limitaciones de uso descritas en limitations."
+      },
+      "source": {
+        "resource_id": "titanes-ref-9bfc35e56a51",
+        "original": "87984debd8e532ae70fc9ba2ab10685b.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-9bfc35e56a51",
+        "file": "masters/cuerda.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 920,
+      "poses": {
+        "original": {
+          "file": "assets/cuerda/original.webp",
+          "sha256": "a6bb884162867fa7e033e71da30bffcfb8149ddc19849127910059c66fd26d1c",
+          "anchors": {
+            "centro": [
+              523,
+              482
+            ],
+            "agarre": [
+              523,
+              104
+            ],
+            "extremo-1": [
+              523,
+              65
+            ],
+            "extremo-2": [
+              536,
+              954
+            ]
+          },
+          "masks": {
+            "cuerpo": "assets/cuerda/original.cuerpo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-9bfc35e56a51 / 87984debd8e532ae70fc9ba2ab10685b.jpg (sha256 9bfc35e56a51b01968adfdd40db39098d362c259092c1131e87f2c725ba48960). Tres tramos visibles conservados. Remanente de hoja retirado por encima de y=199; curva continua con anchura perpendicular de 2,3 píxeles de fuente y centro ajustado a la línea visible. Se mantienen las interrupciones originales de tijera y escalador. Revisión completa y al 200% sin defecto de extracción detectado."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre",
+        "extremo-1",
+        "extremo-2"
+      ],
+      "color_zones": {
+        "cuerpo": {
+          "default": "#66D1FF",
+          "doc": "Cobertura suave de los tres tramos visibles de cuerda."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Contiene tres tramos visibles, con interrupciones originales por oclusión. cuerpo tiñe la cuerda completa.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar."
+      ]
+    },
+    {
+      "id": "llave-cuerda",
+      "version": 1,
+      "type": "objeto",
+      "name": "Llave de cuerda",
+      "description": "Llave mecánica separada del muñeco para representar dependencia o automatismo.",
+      "tags": [
+        "automatismo",
+        "llave",
+        "control"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/llave-cuerda.jpg",
+        "notes": "Revisión de todas las poses sobre claro, oscuro y damero, con las anclas marcadas. Tintes complementarios sobre claro y #0B1220 en review/llave-cuerda-tintes.jpg. Leyenda numerada de anclas en review/llave-cuerda-anclas.jpg. Las máscaras quedan dentro del alfa y las anclas sobre cobertura ≥128. Defectos heredados por pose. original · El orificio inferior quedó sobredimensionado y abre parte del aro; fuente de sólo unos 31 × 35 px. Reducir el polígono de vaciado a la cavidad real y mantener el anillo exterior. No aprobar para ampliaciones grandes."
+      },
+      "source": {
+        "resource_id": "titanes-ref-55cb7dc771d3",
+        "original": "0d02f1918f4409f3ec5e4bd9410dcf13.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-55cb7dc771d3",
+        "file": "masters/llave-cuerda.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 895,
+      "poses": {
+        "original": {
+          "file": "assets/llave-cuerda/original.webp",
+          "sha256": "2f1100216e6c56b4424e756843633091ce71dcd8a893bdb653248077b592e3b9",
+          "anchors": {
+            "centro": [
+              545,
+              524
+            ],
+            "agarre": [
+              832,
+              166
+            ]
+          },
+          "masks": {
+            "brillo": "assets/llave-cuerda/original.brillo.png"
+          },
+          "notes": "Estado del recorte con-defectos. Fuente titanes-ref-55cb7dc771d3 / 0d02f1918f4409f3ec5e4bd9410dcf13.jpg (sha256 55cb7dc771d39e3a019e2c446f1d32b1d1ace1749e01e4b058ba233bda79fb45). El orificio inferior quedó sobredimensionado y abre parte del aro; fuente de sólo unos 31 × 35 px. Reducir el polígono de vaciado a la cavidad real y mantener el anillo exterior. No aprobar para ampliaciones grandes."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#66D1FF",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "original · El orificio inferior quedó sobredimensionado y abre parte del aro; fuente de sólo unos 31 × 35 px. Reducir el polígono de vaciado a la cavidad real y mantener el anillo exterior. No aprobar para ampliaciones grandes.",
+        "Fuente de unos 31 × 35 px. Detalle limitado para ampliaciones.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar."
+      ]
+    },
+    {
+      "id": "muneco-cuerda",
+      "version": 1,
+      "type": "objeto",
+      "name": "Muñeco de cuerda",
+      "description": "Figura que cae con su llave incorporada, para representar automatismo y pérdida de control.",
+      "tags": [
+        "caida",
+        "automatismo",
+        "control"
+      ],
+      "status": "aprobado",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/muneco-cuerda.jpg",
+        "notes": "Revisión de todas las poses sobre claro, oscuro y damero, con las anclas marcadas. Tintes complementarios sobre claro y #0B1220 en review/muneco-cuerda-tintes.jpg. Leyenda numerada de anclas en review/muneco-cuerda-anclas.jpg. Las máscaras quedan dentro del alfa y las anclas sobre cobertura ≥128. Sin defecto adicional de zonas o anclas detectado en la revisión. Se mantienen las limitaciones de uso descritas en limitations."
+      },
+      "source": {
+        "resource_id": "titanes-ref-55cb7dc771d3",
+        "original": "0d02f1918f4409f3ec5e4bd9410dcf13.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-55cb7dc771d3",
+        "file": "masters/muneco-cuerda.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 908,
+      "poses": {
+        "original": {
+          "file": "assets/muneco-cuerda/original.webp",
+          "sha256": "f5d66fd0b3c42f06be3fa336595140189c77c7793406d5118ccc15390dd81e3d",
+          "anchors": {
+            "centro": [
+              494,
+              509
+            ],
+            "agarre": [
+              457,
+              155
+            ],
+            "cabeza": [
+              760,
+              132
+            ],
+            "mano-der": [
+              299,
+              611
+            ],
+            "pies": [
+              431,
+              934
+            ]
+          },
+          "masks": {
+            "brillo": "assets/muneco-cuerda/original.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-55cb7dc771d3 / 0d02f1918f4409f3ec5e4bd9410dcf13.jpg (sha256 55cb7dc771d39e3a019e2c446f1d32b1d1ace1749e01e4b058ba233bda79fb45). Muñeco que cae aislado con su llave incorporada, hueco visible transparente y sin fondo. El degradado teal pertenece al muñeco. Aprobado para altura de uso ≤ 130 px por resolución de origen; no para primeros planos."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre",
+        "cabeza",
+        "mano-der",
+        "pies"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#66D1FF",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Llave incorporada. Altura de uso de hasta 130 px por resolución de la fuente.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar."
+      ]
+    },
+    {
+      "id": "pieza-clara",
+      "version": 1,
+      "type": "objeto",
+      "name": "Fragmento de pieza clara",
+      "description": "Superficie visible de una pieza de ajedrez parcialmente ocluida por la mano de origen.",
+      "tags": [
+        "ajedrez",
+        "estrategia",
+        "fragmento"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/pieza-clara.jpg",
+        "notes": "Revisión de todas las poses sobre claro, oscuro y damero, con las anclas marcadas. Tintes complementarios sobre claro y #0B1220 en review/pieza-clara-tintes.jpg. Leyenda numerada de anclas en review/pieza-clara-anclas.jpg. Las máscaras quedan dentro del alfa y las anclas sobre cobertura ≥128. Defectos heredados por pose. original · Fragmento visible aislado sin el rey negro; falta parte de la cabeza ocultada por los dedos y el contorno superior conserva una muesca. No sirve como pieza completa independiente sin una fuente no ocluida; se conserva el fragmento, sin inventar la parte oculta."
+      },
+      "source": {
+        "resource_id": "titanes-ref-e0def8be8429",
+        "original": "81da35c101e2899f6aabda50e90ac0d3.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-e0def8be8429",
+        "file": "masters/pieza-clara.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 916,
+      "poses": {
+        "original": {
+          "file": "assets/pieza-clara/original.webp",
+          "sha256": "3ae2ef42a173e377c9be171477d6ca3865dc19c2448a6832d60cdfea1c9d9828",
+          "anchors": {
+            "centro": [
+              569,
+              516
+            ],
+            "agarre": [
+              687,
+              247
+            ]
+          },
+          "masks": {},
+          "notes": "Estado del recorte con-defectos. Fuente titanes-ref-e0def8be8429 / 81da35c101e2899f6aabda50e90ac0d3.jpg (sha256 e0def8be8429075193eb2e77520cfaedfac8e32cc918ffe579d78a4fbdeb43d8). Fragmento visible aislado sin el rey negro; falta parte de la cabeza ocultada por los dedos y el contorno superior conserva una muesca. No sirve como pieza completa independiente sin una fuente no ocluida; se conserva el fragmento, sin inventar la parte oculta."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre"
+      ],
+      "color_zones": {},
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "original · Fragmento visible aislado sin el rey negro; falta parte de la cabeza ocultada por los dedos y el contorno superior conserva una muesca. No sirve como pieza completa independiente sin una fuente no ocluida; se conserva el fragmento, sin inventar la parte oculta.",
+        "Fragmento de superficie visible. La cabeza está parcialmente ocluida por los dedos de la fuente. Se omite brillo porque la fuente mezcla el cian del cuerpo con reflejos comprimidos y la prueba de tinte produce manchas.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar."
+      ]
+    },
+    {
+      "id": "rey-negro",
+      "version": 1,
+      "type": "objeto",
+      "name": "Rey negro",
+      "description": "Rey de ajedrez inclinado, aislado para representar poder o amenaza de caída.",
+      "tags": [
+        "ajedrez",
+        "poder",
+        "estrategia"
+      ],
+      "status": "aprobado",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-14",
+        "sheet": "review/rey-negro.jpg",
+        "notes": "Revisión de todas las poses sobre claro, oscuro y damero, con las anclas marcadas. Tintes complementarios sobre claro y #0B1220 en review/rey-negro-tintes.jpg. Leyenda numerada de anclas en review/rey-negro-anclas.jpg. Las máscaras quedan dentro del alfa y las anclas sobre cobertura ≥128. Sin defecto adicional de zonas o anclas detectado en la revisión. Se mantienen las limitaciones de uso descritas en limitations."
+      },
+      "source": {
+        "resource_id": "titanes-ref-e0def8be8429",
+        "original": "81da35c101e2899f6aabda50e90ac0d3.jpg",
+        "origin": "Colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Recurso principal de la pose por defecto. Cada pose identifica su recurso y hash en notes. El maestro conserva las referencias de todas las poses."
+      },
+      "master": {
+        "resource_id": "titanes-ref-e0def8be8429",
+        "file": "masters/rey-negro.xcf"
+      },
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 918,
+      "poses": {
+        "original": {
+          "file": "assets/rey-negro/original.webp",
+          "sha256": "92dd286107a78162e9544f5af220b901b6520731183e2e2090aea7d455b8afad",
+          "anchors": {
+            "centro": [
+              466,
+              536
+            ],
+            "agarre": [
+              380,
+              354
+            ]
+          },
+          "masks": {
+            "brillo": "assets/rey-negro/original.brillo.png"
+          },
+          "notes": "Estado del recorte aprobado. Fuente titanes-ref-e0def8be8429 / 81da35c101e2899f6aabda50e90ac0d3.jpg (sha256 e0def8be8429075193eb2e77520cfaedfac8e32cc918ffe579d78a4fbdeb43d8). Pieza negra aislada sin sombra ni fragmentos de pieza clara. Se conserva la luz cian/crema del dibujo original. Textura JPEG original; usar a altura aproximada de 300 px o menor."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#66D1FF",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Textura JPEG del original. Altura de uso aproximada de hasta 300 px.",
+        "Licencia desconocida. Autor y procedencia externa sin documentar."
+      ]
+    },
+    {
+      "id": "copa-propuesta",
+      "version": 1,
+      "type": "objeto",
+      "name": "Copa de vino · propuesta",
+      "description": "Reconstrucción generada para revisión visual de Copa de vino extraída de la cabina, útil como detalle de privilegio.",
+      "tags": [
+        "lujo",
+        "privilegio",
+        "copa"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-15",
+        "sheet": "review/propuestas-estilo-2026-11-15/estilo-comparacion.png",
+        "notes": "Propuesta generada con IA a partir de la referencia y del estilo del apretón; pendiente de revisión y aprobación humana. Las zonas de color y anclas requieren revisión visual en escena."
+      },
+      "source": {
+        "resource_id": "titanes-ref-7e623cb52d36",
+        "original": "edeefa1bb0d189c32c545664bedced99.jpg",
+        "origin": "Reconstrucción generada con IA a partir de la colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Derivada de copa; conserva la referencia original y su licencia desconocida. La imagen generada no sustituye el maestro de origen."
+      },
+      "master": null,
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 920,
+      "poses": {
+        "original": {
+          "file": "assets/copa-propuesta/original.webp",
+          "sha256": "43be738b654dc2d69e90caee3d6a621d5f4e2457de3db3b6268b84aa6983418e",
+          "anchors": {
+            "centro": [
+              512,
+              400
+            ],
+            "agarre": [
+              512,
+              550
+            ]
+          },
+          "masks": {
+            "vino": "assets/copa-propuesta/original.vino.png"
+          },
+          "notes": "Reconstrucción generada con IA; pose y geometría aproximadas, conservar el original hasta la elección humana."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre"
+      ],
+      "color_zones": {
+        "vino": {
+          "default": "#202020",
+          "doc": "Superficie roja del vino dentro del cáliz."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Propuesta pendiente de revisión y aprobación humana; las anclas y tintes deben confirmarse en escena.",
+        "Derivada de referencia de licencia desconocida; no lista para publicación."
+      ]
+    },
+    {
+      "id": "llave-cuerda-propuesta",
+      "version": 1,
+      "type": "objeto",
+      "name": "Llave de cuerda · propuesta",
+      "description": "Reconstrucción generada para revisión visual de Llave mecánica separada del muñeco para representar dependencia o automatismo.",
+      "tags": [
+        "automatismo",
+        "llave",
+        "control"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-15",
+        "sheet": "review/propuestas-estilo-2026-11-15/estilo-comparacion.png",
+        "notes": "Propuesta generada con IA a partir de la referencia y del estilo del apretón; pendiente de revisión y aprobación humana. Las zonas de color y anclas requieren revisión visual en escena."
+      },
+      "source": {
+        "resource_id": "titanes-ref-55cb7dc771d3",
+        "original": "0d02f1918f4409f3ec5e4bd9410dcf13.jpg",
+        "origin": "Reconstrucción generada con IA a partir de la colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Derivada de llave-cuerda; conserva la referencia original y su licencia desconocida. La imagen generada no sustituye el maestro de origen."
+      },
+      "master": null,
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 895,
+      "poses": {
+        "original": {
+          "file": "assets/llave-cuerda-propuesta/original.webp",
+          "sha256": "e4df0e34c4a01fb1eb164b4af453b64b8d94a10867c7e682b63d8a5d0d94e801",
+          "anchors": {
+            "centro": [
+              510,
+              500
+            ],
+            "agarre": [
+              805,
+              230
+            ]
+          },
+          "masks": {
+            "brillo": "assets/llave-cuerda-propuesta/original.brillo.png"
+          },
+          "notes": "Reconstrucción generada con IA; pose y geometría aproximadas, conservar el original hasta la elección humana."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#D0D0D0",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Propuesta pendiente de revisión y aprobación humana; las anclas y tintes deben confirmarse en escena.",
+        "Derivada de referencia de licencia desconocida; no lista para publicación."
+      ]
+    },
+    {
+      "id": "muneco-cuerda-propuesta",
+      "version": 1,
+      "type": "objeto",
+      "name": "Muñeco de cuerda · propuesta",
+      "description": "Reconstrucción generada para revisión visual de Figura que cae con su llave incorporada, para representar automatismo y pérdida de control.",
+      "tags": [
+        "caida",
+        "automatismo",
+        "control"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-15",
+        "sheet": "review/propuestas-estilo-2026-11-15/estilo-comparacion.png",
+        "notes": "Propuesta generada con IA a partir de la referencia y del estilo del apretón; pendiente de revisión y aprobación humana. Las zonas de color y anclas requieren revisión visual en escena."
+      },
+      "source": {
+        "resource_id": "titanes-ref-55cb7dc771d3",
+        "original": "0d02f1918f4409f3ec5e4bd9410dcf13.jpg",
+        "origin": "Reconstrucción generada con IA a partir de la colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Derivada de muneco-cuerda; conserva la referencia original y su licencia desconocida. La imagen generada no sustituye el maestro de origen."
+      },
+      "master": null,
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 908,
+      "poses": {
+        "original": {
+          "file": "assets/muneco-cuerda-propuesta/original.webp",
+          "sha256": "742e726807b5cc1102f772e7bef7b48c4f9bf95d856b9f391cf5c2e9a92652ca",
+          "anchors": {
+            "centro": [
+              520,
+              400
+            ],
+            "agarre": [
+              490,
+              190
+            ],
+            "cabeza": [
+              650,
+              130
+            ],
+            "mano-der": [
+              410,
+              500
+            ],
+            "pies": [
+              350,
+              920
+            ]
+          },
+          "masks": {
+            "brillo": "assets/muneco-cuerda-propuesta/original.brillo.png"
+          },
+          "notes": "Reconstrucción generada con IA; pose y geometría aproximadas, conservar el original hasta la elección humana."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre",
+        "cabeza",
+        "mano-der",
+        "pies"
+      ],
+      "color_zones": {
+        "brillo": {
+          "default": "#D0D0D0",
+          "doc": "Luz dibujada de borde e interiores iluminados, recortada por el alfa y separada de la camisa cuando existe."
+        }
+      },
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Propuesta pendiente de revisión y aprobación humana; las anclas y tintes deben confirmarse en escena.",
+        "Derivada de referencia de licencia desconocida; no lista para publicación."
+      ]
+    },
+    {
+      "id": "pieza-clara-propuesta",
+      "version": 1,
+      "type": "objeto",
+      "name": "Fragmento de pieza clara · propuesta",
+      "description": "Reconstrucción generada para revisión visual de Superficie visible de una pieza de ajedrez parcialmente ocluida por la mano de origen.",
+      "tags": [
+        "ajedrez",
+        "estrategia",
+        "fragmento"
+      ],
+      "status": "con-defectos",
+      "review": {
+        "by": "Codex",
+        "date": "2026-11-15",
+        "sheet": "review/propuestas-estilo-2026-11-15/estilo-comparacion.png",
+        "notes": "Propuesta generada con IA a partir de la referencia y del estilo del apretón; pendiente de revisión y aprobación humana. Las zonas de color y anclas requieren revisión visual en escena."
+      },
+      "source": {
+        "resource_id": "titanes-ref-e0def8be8429",
+        "original": "81da35c101e2899f6aabda50e90ac0d3.jpg",
+        "origin": "Reconstrucción generada con IA a partir de la colección local nodebusness",
+        "license": "desconocida",
+        "author": null,
+        "url": null,
+        "notes": "Derivada de pieza-clara; conserva la referencia original y su licencia desconocida. La imagen generada no sustituye el maestro de origen."
+      },
+      "master": null,
+      "canvas": {
+        "w": 1024,
+        "h": 1024
+      },
+      "pivot": [
+        512,
+        972
+      ],
+      "height_ref": 916,
+      "poses": {
+        "original": {
+          "file": "assets/pieza-clara-propuesta/original.webp",
+          "sha256": "2a4daffd671983fdfce80b1999cef73dbcc95075cfcb46b778806ace680de71d",
+          "anchors": {
+            "centro": [
+              500,
+              500
+            ],
+            "agarre": [
+              680,
+              270
+            ]
+          },
+          "masks": {},
+          "notes": "Reconstrucción generada con IA; pose y geometría aproximadas, conservar el original hasta la elección humana."
+        }
+      },
+      "default_pose": "original",
+      "anchors": [
+        "centro",
+        "agarre"
+      ],
+      "color_zones": {},
+      "animations": [
+        "entrar-sube",
+        "entrar-cae",
+        "entrar-desliza",
+        "salir-cae",
+        "salir-funde",
+        "respirar",
+        "flotar",
+        "temblar",
+        "girar",
+        "caer",
+        "latir"
+      ],
+      "defaults": {
+        "scale": 0.5,
+        "rim": "#66D1FF",
+        "shadow": true,
+        "glow": 0.15
+      },
+      "limits": {
+        "scale": [
+          0.05,
+          1
+        ]
+      },
+      "limitations": [
+        "Propuesta pendiente de revisión y aprobación humana; las anclas y tintes deben confirmarse en escena.",
+        "Derivada de referencia de licencia desconocida; no lista para publicación."
+      ]
+    }
+  ]
+}

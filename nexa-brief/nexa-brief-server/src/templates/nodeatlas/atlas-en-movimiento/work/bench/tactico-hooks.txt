@@ -1,0 +1,10 @@
+  // GANCHO tactico: items de la biblioteca (../tactico/core.js) se dibujan por muestra, asi se desenfocan con el mapa.
+  if(c.tactico)c.tactico.draw(g,view,t,{sample:true});
+  return JSON.stringify([W,H,c.camera.at(t),alphas,c.look,c.tiles.stats().loaded,c.tactico?c.tactico.key(t):null]);
+      readJSON(new URL(`${scene.planoLook||'tactico'}.json`,LOOKS)),
+    // GANCHO tactico: expande camera macros (follow, zoomThrough, reframe) a keys explicitas antes de crear la camara.
+    if(scene.items){const tm=await import("../tactico/core.js");tm.expandScene(scene,{T});c.tacticoModule=tm;}
+    // GANCHO tactico: crea los items (sprites, flags, sonido) despues de territorios y antes del barrido.
+    if(c.tacticoModule){c.tactico=await c.tacticoModule.create(c,scene);window.__tactico=c.tactico;c.missing.push(...(c.tactico.missing?c.tactico.missing():[]));}
+
+Comparación literal con work/bench/reference/plano.js: idénticos.

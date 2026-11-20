@@ -12,6 +12,10 @@ de la plantilla, justo antes de que html_generator lo escriba en el output.
   ciclo (mezclar el material del usuario con el de demo se vería roto).
   Los archivos se COPIAN de la librería al output del job (el HTML los carga
   con rutas relativas y el grabador no debe depender de data/).
+- Medios con `target: "config"` (fondo opcional, ej. Neón): el primer asset se
+  copia a assets/inputs y su ruta va a `path` del config (ej. "bg.src"); el
+  `type` hermano, si existe, pasa a "image"/"video". Sin asset, queda el fondo
+  que trae la plantilla.
 - Medios con `target: "source"` (fondos de letras, imagen/video principal) no
   se tocan acá: siguen entrando por image/video source del job.
 
@@ -22,6 +26,8 @@ from __future__ import annotations
 
 import asyncio
 import copy
+import json
+import math
 import shutil
 from pathlib import Path
 from typing import Any
@@ -39,16 +45,42 @@ logger = structlog.get_logger(__name__)
 INPUTS_DIR = "assets/inputs"
 
 
-def _set_dotted(config: dict[str, Any], dotted_key: str, value: Any) -> None:
-    node = config
+def _dotted_parent(config: dict[str, Any], dotted_key: str, *, create: bool = False) -> tuple[object, str]:
     *parents, leaf = dotted_key.split(".")
+    node: object = config
     for part in parents:
-        child = node.get(part)
-        if not isinstance(child, dict):
-            child = {}
-            node[part] = child
-        node = child
-    node[leaf] = value
+        if isinstance(node, dict):
+            child = node.get(part)
+            if child is None and create:
+                child = {}
+                node[part] = child
+            node = child
+        elif isinstance(node, list) and part.isdigit() and int(part) < len(node):
+            node = node[int(part)]
+        else:
+            return None, leaf
+    return node, leaf
+
+
+def _delete_dotted(config: dict[str, Any], dotted_key: str) -> bool:
+    parent, leaf = _dotted_parent(config, dotted_key)
+    if isinstance(parent, dict) and leaf in parent:
+        del parent[leaf]
+        return True
+    if isinstance(parent, list) and leaf.isdigit() and int(leaf) < len(parent):
+        parent[int(leaf)] = None  # preservar los índices de las demás escenas
+        return True
+    return False
+
+
+def _set_dotted(config: dict[str, Any], dotted_key: str, value: Any) -> None:
+    parent, leaf = _dotted_parent(config, dotted_key, create=True)
+    if isinstance(parent, dict):
+        parent[leaf] = value
+    elif isinstance(parent, list) and leaf.isdigit() and int(leaf) < len(parent):
+        parent[int(leaf)] = value
+    else:
+        raise ValueError(f"Invalid configuration path: {dotted_key}")
 
 
 def _resolve_asset(kind: str, asset_id: str) -> tuple[str, Path]:
@@ -103,44 +135,184 @@ async def _apply_media_slot(
     slot: dict,
     asset_ids: list[str],
     output_dir: Path,
+    references: dict | None = None,
 ) -> int:
     entries = config.get("media")
-    if not isinstance(entries, list):
-        logger.warning("template_inputs_no_media_list", slot=slot["slot"])
+    if not isinstance(entries, (list, dict)):
+        logger.warning("template_inputs_no_media_collection", slot=slot["slot"])
         return 0
     asset_ids = asset_ids[: slot["max"]]
     wanted = {"image", "video"} if slot["kind"] == "image|video" else {slot["kind"]}
-    targets = [entry for entry in entries if isinstance(entry, dict) and entry.get("type") in wanted]
+
+    if isinstance(entries, list):
+        targets = [
+            (index, entry) for index, entry in enumerate(entries)
+            if isinstance(entry, dict) and entry.get("type") in wanted
+        ]
+        if not asset_ids:
+            if slot.get("min", 1) != 0:
+                return 0
+            config["media"] = [
+                entry for entry in entries
+                if not (isinstance(entry, dict) and entry.get("type") in wanted)
+            ]
+            return len(targets)
+    else:
+        def entry_kind(value: object) -> str | None:
+            if isinstance(value, dict) and value.get("type") in {"image", "video"}:
+                return value["type"]
+            raw_path = value.get("src") if isinstance(value, dict) else value
+            if not isinstance(raw_path, str):
+                return None
+            suffix = Path(raw_path).suffix.lower()
+            if suffix in {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif", ".svg"}:
+                return "image"
+            if suffix in {".mp4", ".webm", ".mov"}:
+                return "video"
+            return None
+
+        targets = [(key, value) for key, value in entries.items() if entry_kind(value) in wanted]
+        if not asset_ids:
+            if slot.get("min", 1) != 0:
+                return 0
+            for key, _ in targets:
+                entries.pop(key, None)
+            return len(targets)
+
     if not targets or not asset_ids:
         return 0
 
     dest_dir = output_dir / INPUTS_DIR
     dest_dir.mkdir(parents=True, exist_ok=True)
-    # Cada asset se copia una sola vez aunque se reparta en varias entradas.
     copied: dict[str, dict[str, str]] = {}
     for index, asset_id in enumerate(asset_ids):
+        if asset_id in copied:
+            continue
         real_kind, source = _resolve_asset(slot["kind"], asset_id)
         relative = f"{INPUTS_DIR}/{slot['slot']}-{index + 1}{source.suffix.lower()}"
-        shutil.copy2(source, output_dir / relative)
+        if references is None:
+            shutil.copy2(source, output_dir / relative)
+        else:
+            from src.core.nodemotion.service import asset_ref
+            references[relative] = asset_ref(real_kind, asset_id)
         spec = {"type": real_kind, "src": relative}
         if real_kind == "video":
             poster_rel = f"{INPUTS_DIR}/{slot['slot']}-{index + 1}-poster.jpg"
-            if await _extract_poster(output_dir / relative, output_dir / poster_rel):
-                spec["poster"] = poster_rel
+            if references is None:
+                if await _extract_poster(output_dir / relative, output_dir / poster_rel):
+                    spec["poster"] = poster_rel
+            else:
+                from src.core.nodemotion.service import _resolve_ref
+                poster = dict(references[relative], poster=True)
+                try:
+                    await asyncio.to_thread(_resolve_ref, poster)
+                except Exception:
+                    pass
+                else:
+                    references[poster_rel] = poster
+                    spec["poster"] = poster_rel
         copied[asset_id] = spec
 
-    for position, entry in enumerate(targets):
+    for position, (key, entry) in enumerate(targets):
         spec = copied[asset_ids[position % len(asset_ids)]]
-        entry["type"] = spec["type"]
-        entry["src"] = spec["src"]
-        if "poster" in spec:
-            entry["poster"] = spec["poster"]
+        if isinstance(entries, list):
+            entry["type"] = spec["type"]
+            entry["src"] = spec["src"]
+            if "poster" in spec:
+                entry["poster"] = spec["poster"]
+            else:
+                entry.pop("poster", None)
+            entry.pop("graded", None)
+        elif isinstance(entry, dict):
+            entry["type"] = spec["type"]
+            entry["src"] = spec["src"]
         else:
-            entry.pop("poster", None)
-        # Las variantes pre-gradadas eran del material de demo: sin ellas la
-        # plantilla aplica el mismo grade en vivo (idéntico, solo más lento).
-        entry.pop("graded", None)
+            entries[key] = spec["src"]
     return len(targets)
+
+
+def _apply_config_slot(config: dict[str, Any], slot: dict, asset_ids: list[str], output_dir: Path, references: dict | None = None) -> bool:
+    if not slot.get("path"):
+        return False
+    parent, leaf = _dotted_parent(config, slot["path"])
+    current = parent.get(leaf) if isinstance(parent, dict) else (
+        parent[int(leaf)] if isinstance(parent, list) and leaf.isdigit() and int(leaf) < len(parent) else None
+    )
+    if isinstance(current, list) and slot.get("max", 1) > 1:
+        if not asset_ids and slot.get("min", 1) > 0:
+            return False
+        selected = []
+        for index, asset_id in enumerate(asset_ids[:slot["max"]]):
+            real_kind, source = _resolve_asset(slot["kind"], asset_id)
+            relative = f"{INPUTS_DIR}/{slot['slot']}-{index}{source.suffix.lower()}"
+            (output_dir / INPUTS_DIR).mkdir(parents=True, exist_ok=True)
+            if references is None:
+                shutil.copy2(source, output_dir / relative)
+            else:
+                from src.core.nodemotion.service import asset_ref
+                references[relative] = asset_ref(real_kind, asset_id)
+            selected.append(relative)
+        _set_dotted(config, slot["path"], selected)
+        return True
+    if not asset_ids:
+        return _delete_dotted(config, slot["path"]) if slot.get("min", 1) == 0 else False
+    real_kind, source = _resolve_asset(slot["kind"], asset_ids[0])
+    relative = f"{INPUTS_DIR}/{slot['slot']}{source.suffix.lower()}"
+    (output_dir / INPUTS_DIR).mkdir(parents=True, exist_ok=True)
+    if references is None:
+        shutil.copy2(source, output_dir / relative)
+    else:
+        from src.core.nodemotion.service import asset_ref
+        references[relative] = asset_ref(real_kind, asset_ids[0])
+    _set_dotted(config, slot["path"], relative)
+    parent, _ = _dotted_parent(config, slot["path"])
+    if isinstance(parent, dict) and "type" in parent:
+        parent["type"] = real_kind
+    return True
+
+
+async def _sequence_video_duration(source: Path) -> float:
+    """Duración real para que cada video termine antes de pasar al siguiente."""
+    proc = await asyncio.create_subprocess_exec(
+        "ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "json", str(source),
+        stdin=asyncio.subprocess.DEVNULL, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE,
+    )
+    try:
+        stdout, _ = await asyncio.wait_for(proc.communicate(), timeout=10)
+    except (asyncio.TimeoutError, asyncio.CancelledError):
+        proc.kill()
+        await proc.wait()
+        raise
+    try:
+        duration = float(json.loads(stdout).get("format", {}).get("duration", 0))
+    except (ValueError, TypeError, json.JSONDecodeError):
+        duration = 0
+    if proc.returncode != 0 or not math.isfinite(duration) or duration <= 0:
+        raise ValueError("No se pudo leer la duración de un video seleccionado")
+    return duration
+
+
+async def _apply_impact_sequence(config: dict[str, Any], slot: dict, asset_ids: list[str],
+                                 kinds: list[str], output_dir: Path, references: dict | None = None) -> int:
+    """Copia la lista en orden sin depender de rutas del perfil durante la grabación."""
+    if len(asset_ids) <= 1 or not isinstance(config.get("bg"), dict):
+        return 0
+    playlist = []
+    dest_dir = output_dir / INPUTS_DIR
+    dest_dir.mkdir(parents=True, exist_ok=True)
+    for index, asset_id in enumerate(asset_ids[:slot["max"]]):
+        expected = kinds[index] if index < len(kinds) and kinds[index] in {"image", "video"} else slot["kind"]
+        real_kind, source = _resolve_asset(expected, asset_id)
+        relative = f"{INPUTS_DIR}/background-{index + 1}{source.suffix.lower()}"
+        duration = await _sequence_video_duration(source) if real_kind == "video" else 5.0
+        if references is None:
+            await asyncio.to_thread(shutil.copy2, source, output_dir / relative)
+        else:
+            from src.core.nodemotion.service import asset_ref
+            references[relative] = asset_ref(real_kind, asset_id)
+        playlist.append({"type": real_kind, "src": relative, "duration": duration})
+    config["bg"]["playlist"] = playlist
+    return len(playlist)
 
 
 async def apply_template_inputs(
@@ -148,6 +320,7 @@ async def apply_template_inputs(
     inputs: TemplateInputs | None,
     template_id: str,
     output_dir: Path,
+    references: dict | None = None,
 ) -> dict[str, Any]:
     """Devuelve una copia del config con textos y medios del usuario aplicados.
 
@@ -159,6 +332,18 @@ async def apply_template_inputs(
     result = copy.deepcopy(config)
     applied_texts = _apply_texts(result, inputs.texts, requirements["texts"])
 
+    # Only the four lyric backgrounds have the matching browser/recorder
+    # implementation. An explicitly selected source defaults to fully visible;
+    # legacy/demo configurations without a selected source remain unchanged.
+    if template_id in {"lyrics-impact", "lyrics-romantic", "lyrics-suave", "lyrics-triste"}:
+        selected_slot = next((
+            slot["slot"] for slot in requirements["media"]
+            if slot.get("target") == "source" and inputs.media.get(slot["slot"])
+        ), None)
+        if selected_slot and isinstance(result.get("bg"), dict):
+            result["bg"]["opacity"] = inputs.media_opacity.get(selected_slot, 0.8)
+
+
     slots = {slot["slot"]: slot for slot in requirements["media"]}
     replaced: dict[str, int] = {}
     for slot_name, asset_ids in inputs.media.items():
@@ -166,9 +351,15 @@ async def apply_template_inputs(
         if slot is None:
             logger.warning("template_inputs_unknown_slot", template_id=template_id, slot=slot_name)
             continue
+        if template_id == "lyrics-impact" and slot_name == "background" and slot["target"] == "source":
+            replaced[slot_name] = await _apply_impact_sequence(result, slot, list(asset_ids), inputs.media_kinds.get(slot_name, []), output_dir, references)
+            continue
+        if slot["target"] == "config":
+            replaced[slot_name] = int(_apply_config_slot(result, slot, list(asset_ids), output_dir, references))
+            continue
         if slot["target"] != "media":
             continue  # entra por image/video source del job
-        replaced[slot_name] = await _apply_media_slot(result, slot, list(asset_ids), output_dir)
+        replaced[slot_name] = await _apply_media_slot(result, slot, list(asset_ids), output_dir, references)
 
     logger.info(
         "template_inputs_applied",

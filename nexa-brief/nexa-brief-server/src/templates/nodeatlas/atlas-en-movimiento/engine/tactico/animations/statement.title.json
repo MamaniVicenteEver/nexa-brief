@@ -1,0 +1,55 @@
+{
+  "name": "statement.title",
+  "family": "statement",
+  "estilo": {
+    "usa": [
+      "estilos.titular.barra",
+      "estilos.titular.principal",
+      "estilos.titular.secundario",
+      "ranuras.titular"
+    ]
+  },
+  "description": "Titular con barra de acento; el « · » separa el dato principal del secundario. Ranura «titular». Úsala como recurso visual en una escena.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 90,
+  "states": [],
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "Abadán resiste el asedio",
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "slot": {
+      "type": "string",
+      "default": "titular",
+      "range": null,
+      "description": "Valor de slot para la composición de statement.title."
+    },
+    "screen": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-statement-title",
+    "t": 0,
+    "type": "statement.title",
+    "text": "Frank C. Seitz, Jr. · capitán del Bridgeton",
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "assets/scene.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/statement.title.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-sports",
+  "family": "promo",
+  "display_name": "Promo Sports",
+  "description": "Promo deportivo cinematográfico: metraje oscuro verde azulado, itálica pesada espaciada, marcos y acentos amarillos, palabras gigantes en contorno, paneles que destellan y letras que se barajan.",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "acción deportiva en movimiento, atletas entrenando"
+      },
+      {
+        "slot": "photos",
+        "kind": "image",
+        "min": 1,
+        "max": 12,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Fotos",
+        "hint": "atletas en primer plano, retrato deportivo"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/commercial/promo-sports/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/promo-sports",
+    "config": "nodemotion/commercial/promo-sports/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-sports/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-sports/README.md"
+  },
+  "lookup": "/api/v1/templates/promo-sports/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "scene.giant",
+      "kind": "scene",
+      "label": "giant",
+      "summary": "palabra gigante sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.giant",
+      "contract": "contracts/001-scene.json"
+    },
+    {
+      "entry_id": "scene.rows",
+      "kind": "scene",
+      "label": "rows",
+      "summary": "palabra repetida sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.rows",
+      "contract": "contracts/002-scene.json"
+    },
+    {
+      "entry_id": "scene.panels3",
+      "kind": "scene",
+      "label": "panels3",
+      "summary": "tres paneles; tres líneas o primeras tres palabras",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.panels3",
+      "contract": "contracts/003-scene.json"
+    },
+    {
+      "entry_id": "scene.converge",
+      "kind": "scene",
+      "label": "converge",
+      "summary": "palabra convergente sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.converge",
+      "contract": "contracts/004-scene.json"
+    },
+    {
+      "entry_id": "scene.frame",
+      "kind": "scene",
+      "label": "frame",
+      "summary": "palabra en marco sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.frame",
+      "contract": "contracts/005-scene.json"
+    },
+    {
+      "entry_id": "scene.stack3",
+      "kind": "scene",
+      "label": "stack3",
+      "summary": "primera línea repetida tres veces",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.stack3",
+      "contract": "contracts/006-scene.json"
+    },
+    {
+      "entry_id": "scene.outlineBg",
+      "kind": "scene",
+      "label": "outlineBg",
+      "summary": "palabra con contorno sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.outlineBg",
+      "contract": "contracts/007-scene.json"
+    },
+    {
+      "entry_id": "scene.bars",
+      "kind": "scene",
+      "label": "bars",
+      "summary": "palabra y barras sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.bars",
+      "contract": "contracts/008-scene.json"
+    },
+    {
+      "entry_id": "scene.frameWord",
+      "kind": "scene",
+      "label": "frameWord",
+      "summary": "palabra en marco sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.frameWord",
+      "contract": "contracts/009-scene.json"
+    },
+    {
+      "entry_id": "scene.scramble",
+      "kind": "scene",
+      "label": "scramble",
+      "summary": "palabra animada sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.scramble",
+      "contract": "contracts/010-scene.json"
+    },
+    {
+      "entry_id": "scene.ticker",
+      "kind": "scene",
+      "label": "ticker",
+      "summary": "primera línea en cinta sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.ticker",
+      "contract": "contracts/011-scene.json"
+    },
+    {
+      "entry_id": "scene.tags",
+      "kind": "scene",
+      "label": "tags",
+      "summary": "palabra repetida y tres medios",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.tags",
+      "contract": "contracts/012-scene.json"
+    },
+    {
+      "entry_id": "scene.face",
+      "kind": "scene",
+      "label": "face",
+      "summary": "palabra sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.face",
+      "contract": "contracts/013-scene.json"
+    },
+    {
+      "entry_id": "scene.end",
+      "kind": "scene",
+      "label": "end",
+      "summary": "cierre con primera y segunda línea opcional",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.end",
+      "contract": "contracts/014-scene.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/015-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/016-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/017-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/018-configuration.json"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Inventario vivo de textos · Atlas</title><link rel="icon" href="data:,"><style>
+:root{font:15px/1.5 system-ui,sans-serif;color:#e8ebed;background:#10171d;color-scheme:dark}*{box-sizing:border-box}body{margin:0}header{padding:30px max(24px,calc((100vw - 1400px)/2));border-bottom:1px solid #35414b;background:#161f27}h1{font-size:clamp(25px,3vw,38px);margin:0 0 8px}p{margin:8px 0}a{color:#b6dcf0}main{max-width:1450px;margin:auto;padding:24px}.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:20px 0 10px}button,select,input{font:inherit;color:inherit;background:#202d37;border:1px solid #5c6c78;border-radius:5px;padding:7px 11px}button{cursor:pointer}input[type=range]{padding:0;min-width:160px;flex:1}label{display:flex;gap:8px;align-items:center}#status{color:#aabecb;font-size:13px;min-height:22px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;align-items:start}article{border:1px solid #38444d;border-radius:8px;background:#172129;overflow:hidden;content-visibility:auto;contain-intrinsic-size:auto 680px}article h2{font-size:18px;margin:0;padding:15px 18px 4px}article .tag{font-size:12px;color:#cbd4db;padding:0 18px 12px}canvas.preview{width:100%;height:270px;display:block;object-fit:contain;background:#081e2c}article[data-tall] canvas.preview{height:480px}dl{display:grid;grid-template-columns:93px 1fr;margin:16px 18px;gap:7px 12px;font-size:13px}dt{color:#a8becb}dd{margin:0;overflow-wrap:anywhere}.reference{padding:10px 18px 16px;font-size:12px;color:#a8becb}.mark{display:inline-block;background:#414141;color:#fff;padding:2px 7px;border-radius:3px;margin-left:8px;font-size:11px;vertical-align:middle}.loading{padding:24px}.card-restart{font-size:12px;margin:0 18px 15px}.sample-time{font-variant-numeric:tabular-nums}#error{white-space:pre-wrap;background:#492f2e;padding:16px}footer{padding:24px;font-size:13px;color:#a8becb}@media(max-width:760px){.grid{grid-template-columns:1fr}header{padding:24px}main{padding:14px}dl{grid-template-columns:82px 1fr}canvas.preview{height:240px}}
+</style></head><body>
+<header><h1>Todo el texto, tal como está hoy</h1><p>La guerra de los petroleros · Inventario para decidir el próximo rediseño.</p><p>Las muestras usan los componentes reales. Se conserva la letra, el color, el borde y la animación actuales. «DESAGRADA» señala lo marcado por el usuario.</p>
+<div class="controls"><label>Fondo <select id="background"><option value="map">Mapa satelital</option><option value="dark">Liso oscuro</option><option value="light">Liso claro</option></select></label><button id="restart">Reiniciar todo</button><button id="play">Pausar</button><label>Velocidad <select id="speed"><option value="0.5">0,5×</option><option value="1" selected>1×</option><option value="1.5">1,5×</option><option value="2">2×</option></select></label><label>Ver <select id="filter"><option value="all">Todo</option><option value="episode">Solo el episodio</option><option value="dislikes">Marcados DESAGRADA</option><option value="extra">Complementos de biblioteca</option></select></label></div>
+<div class="controls"><label for="time">Tramo real de transcripción · 0–14 s</label><input id="time" type="range" min="0" max="13.999" step=".01" value="0"><output id="stamp">0,00 s</output></div><p id="status" role="status">Preparando biblioteca…</p><a href="work/texto/INVENTARIO.md">Inventario completo y ubicaciones</a> · <a href="index.caption-propio.html?paused=1">Ver escena con transcripción propia</a> · <a href="assets/scene.caption-propio.json">JSON</a></header>
+<main><p id="error" role="alert" hidden></p><div id="grid" class="grid"></div></main><footer>Las vistas son recortes de un lienzo 1080×1920; el panel no cambia el diseño del video. Los tamaños se expresan en U = min(ancho, alto) / 1080. El mapa de fondo es una única imagen satelital local, sin teselas ni audio. La transcripción conserva los grupos de Proto; el modo de color por palabra es opcional en caption.transcript.</footer>
+<script type="module">
+import {create,Tactico} from './engine/tactico/core.js';
+const $=s=>document.querySelector(s),start=performance.now();
+const labels={font:'Fuente',size:'Tamaño',fill:'Relleno',outline:'Contorno',background:'Fondo',border:'Borde',shadow:'Sombra',animation:'Animación'};
+let data,engine,playing=true,time=0,last=0,lastPaint=0,loadMs=0,background='map';const visible=new Set(),offsets=new Map();
+const frame=new OffscreenCanvas(1080,1920),g=frame.getContext('2d',{willReadFrequently:true});
+const view={W:1080,H:1920,zoom:6.5,bearing:0,project:()=>({x:540,y:864,visible:true,k:1})};
+const map=new Image();map.src='work/texto/fondo-satelital.jpg';
+const readyMap=map.decode();
+const observer=new IntersectionObserver(entries=>{for(const e of entries)e.isIntersecting?visible.add(e.target.id):visible.delete(e.target.id);paint();},{rootMargin:'200px'});
+function tag(name,content){const el=document.createElement(name);el.textContent=content;return el;}
+function card(c){const article=tag('article','');article.id=c.id;if(c.crop[3]>1000)article.dataset.tall='';
+ const heading=tag('h2',c.title);if(c.dislikes)heading.append(tag('span','DESAGRADA')),heading.lastChild.className='mark';article.append(heading);
+ const meta=tag('div',`${c.type} · ${c.extra?'Complemento; no aparece en el episodio':'Presente en el episodio'}`);meta.className='tag';article.append(meta);
+ const canvas=document.createElement('canvas');canvas.className='preview';canvas.width=1080;canvas.height=c.crop[3];canvas.setAttribute('aria-label',c.title);article.append(canvas);
+ const dl=document.createElement('dl');for(const [k,val] of Object.entries(c.spec))dl.append(tag('dt',labels[k]||k),tag('dd',val));article.append(dl);
+ const ref=tag('div',`${c.ref}${c.example?' · ejemplo '+c.example.t+' s':''}`);ref.className='reference';article.append(ref);
+ if(c.example){const a=tag('a','Ver cuadro original');a.href=`work/escena/cuadros/${c.example.file}`;ref.append(document.createTextNode(' · '),a);}
+ const reset=tag('button','Reiniciar muestra');reset.className='card-restart';reset.onclick=()=>{offsets.set(c.id,time);paint();};article.append(reset);$('#grid').append(article);observer.observe(article);
+}
+function paint(){if(!engine)return;for(const c of data.cards){if(!visible.has(c.id)||$('#'+c.id).hidden)continue;
+ const duration=c.item.dur+(c.item.fade||0)+.2,local=((time-(offsets.get(c.id)||0))%duration+duration)%duration;
+ g.resetTransform();g.globalAlpha=1;g.clearRect(0,0,1080,1920);
+ if(background==='map'&&map.complete)g.drawImage(map,0,0,1080,1920);else{g.fillStyle=background==='light'?'#e9e3df':'#081e2c';g.fillRect(0,0,1080,1920);}
+ engine.draw(g,view,c.slot+local);
+ const cv=$('#'+c.id+' canvas'),ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);ctx.drawImage(frame,...c.crop,0,0,cv.width,cv.height);
+ }$('#time').value=time%14;$('#stamp').textContent=(time%14).toFixed(2).replace('.',',')+' s';}
+function tick(now){if(playing&&last)time+=(now-last)/1000*Number($('#speed').value);last=now;if(now-lastPaint>66){lastPaint=now;paint();}requestAnimationFrame(tick);}
+$('#background').onchange=e=>{background=e.target.value;paint();};$('#restart').onclick=()=>{time=0;offsets.clear();paint();};$('#play').onclick=()=>{playing=!playing;$('#play').textContent=playing?'Pausar':'Reproducir';};$('#time').oninput=e=>{playing=false;$('#play').textContent='Reproducir';time=Number(e.target.value);offsets.clear();paint();};
+$('#filter').onchange=e=>{for(const c of data.cards){const show=e.target.value==='all'||e.target.value==='episode'&&!c.extra||e.target.value==='extra'&&c.extra||e.target.value==='dislikes'&&c.dislikes;$('#'+c.id).hidden=!show;}paint();};
+async function setup(){
+ data=await (await fetch('work/texto/catalogo-textos.json')).json();data.cards.forEach(card);
+ // A single timeline owns all samples. Each occupies a separate interval;
+ // only viewport-visible samples are painted. Resources prepare once.
+ engine=await create({st:{W:1080,H:1920,U:1},base:location.href}, {duration:data.duration,end:data.duration,defs:{palette:data.palette,fonts:data.fonts},items:data.cards.map(c=>c.item)});
+ await readyMap;await document.fonts.ready;
+ loadMs=performance.now()-start;
+ $('#status').textContent=`${data.cards.length} muestras · ${Tactico.list().length} componentes en Biblioteca · una instancia · listo en ${((performance.now()-start)/1000).toFixed(2)} s`;
+ window.__textos={ready:true,data,engine,seek:t=>{playing=false;time=t;offsets.clear();$('#play').textContent='Reproducir';paint();},background:value=>{background=value;$('#background').value=value;paint();},paint,stats:()=>({instances:1,visible:visible.size,total:data.cards.length,loadMs})};
+ paint();requestAnimationFrame(tick);
+}
+setup().catch(e=>{$('#error').hidden=false;$('#error').textContent=e.stack||e.message;$('#status').textContent='No se pudo preparar el inventario.';console.error(e);});
+</script></body></html>

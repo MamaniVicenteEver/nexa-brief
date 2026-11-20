@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "decadas.firma",
+  "entry_id": "decadas.firma",
+  "kind": "component",
+  "label": "Firma trazada",
+  "summary": "Firma blanca que se dibuja sobre las letras gigantes.",
+  "component": {
+    "name": "decadas.firma",
+    "label": "Firma trazada",
+    "summary": "Firma blanca que se dibuja sobre las letras gigantes.",
+    "default": true,
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "Dueles",
+        "doc": "Texto"
+      }
+    },
+    "tags": [
+      "adorno"
+    ],
+    "file": "components/escenas.js",
+    "demo": {
+      "text": "Dueles"
+    },
+    "preview": {
+      "t": 0.5
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "Dueles",
+      "doc": "Texto"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/showcase/components.json",
+      "pointer": "/components/7"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

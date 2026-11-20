@@ -1,0 +1,121 @@
+{
+ "version": 1,
+ "title": "Grunge Montaje",
+ "summary": "Montaje de letra grunge que replica el lenguaje del video de referencia: metraje B/N que cambia de toma dentro de la frase, letra erosionada que tiembla a cuadros con ecos desplazados, tiza y pincel que hierven y se borran, papel rasgado, cortes scan, polvo y grano. Letra real de la canción; intro y dos cierres que se desarman hasta quedar vacíos.",
+ "engine": "nodemotion/lyrics-grunge-montage/_engine",
+ "based_on": "lyrics-grunge",
+ "is_new_design": true,
+ "status": "lista para revisar",
+ "created_at": "2026-11-16",
+ "libraries": [
+  {
+   "name": "Google Fonts: Anton, Archivo, Oswald",
+   "version": "remota, sin versión fijada",
+   "purpose": "tipografía del diseño grunge"
+  }
+ ],
+ "inputs": [
+  "assets/song.mp3: canción de lyrics-grunge (almacén compartido), 67,89 s; el video de referencia la trae con 0,22 s de silencio (timeOffsetSec).",
+  "assets/lyrics.json: transcripción Whisper de lyrics-grunge (letra real).",
+  "assets/media/graded/: 6 clips Pexels de lyrics-grunge ya gradados B/N."
+ ],
+ "notes": [
+  "ID propuesto: lyrics-grunge-montage; nombre visible propuesto: Grunge Montaje. Falta la confirmación del usuario; no se escribió en templates.json.",
+  "Base: lyrics-grunge, con motor propio (--new-design): player.js = escenas de la base + modo config.timeline (piezas por datos: text, stack, grid, chalk, rect, paper, glitch). El motor base no se tocó.",
+  "Ensamblado: python work/tools/timeline.py (genera timeline.json) y work/tools/build.py (index.html autocontenido con núcleo común y reloj HyperFrames).",
+  "2026-11-16 (corrección): animaciones revisadas a 5 fps contra la referencia: corte scan por desplazamiento de franjas del cuadro (antes barras sólidas), metraje claro con niebla, pincel blanco grueso, fondos de niebla clara (bg.light), pila vertical que corre, textos a la escala del video.",
+  "Intro = toma real de apertura (timeline type intro) con config.intro.title/artist; outro v1/v2 = config.outroDesigns (tomas del cierre del video) con config.outro.title/sub/feats; elección por config.outro.version o ?outro=v1|v2. Galería: ?only=<componente>&p=<JSON>.",
+  "Sin render HyperFrames. Verificado con __promo.seek en 16:9 y 9:16 (ver INFORME.md).",
+  "2026-11-16 (segunda corrección): motor con lenguaje de movimiento a cuadros medido a 25 fps en la referencia (temblor cada 2 cuadros de letra, tiza y bordes; ecos desplazados; erosión de fotocopia por cuadros; cortes de toma en los 111 cortes medidos, a veces por agujero de papel; scan al final de escena; polvo, grano y parpadeo; metraje dentro de las palabras rojas gigantes). Cierres que se desarman (tiza borrada trazo a trazo, letra que sale) con tiempos contados desde el final. config.fx regula cada capa; todo determinista con el reloj del motor."
+ ],
+ "reference": "referencias/nodemotion/lyrics-grunge-montage",
+ "components": [
+  {
+   "name": "grunge-montage.intro",
+   "label": "Intro",
+   "summary": "Apertura real del video con título y artista de config.intro.",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "grunge-montage.outrov1",
+   "label": "Outro v1",
+   "summary": "Marca gigante roja sobre metraje que se desarma hasta quedar solo el metraje.",
+   "group": "outro",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "grunge-montage.outrov2",
+   "label": "Outro v2",
+   "summary": "Tarjeta de papel con corona; corona y subrayado se borran y queda el papel vacío.",
+   "group": "outro",
+   "params": {}
+  },
+  {
+   "name": "grunge-montage.movimiento",
+   "label": "Movimiento a cuadros",
+   "summary": "Temblor por cuadros, ecos, erosión, cortes de toma, scan, polvo y grano en todas las escenas (config.fx).",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "grunge-montage.texto",
+   "label": "Palabras con golpe",
+   "summary": "Texto gastado que se aplasta con fantasma.",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "grunge-montage.pila",
+   "label": "Pilas que corren",
+   "summary": "Palabras gigantes que se empujan en vertical.",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "grunge-montage.rejilla",
+   "label": "Rejillas",
+   "summary": "Frase repetida en celdas.",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "grunge-montage.tiza",
+   "label": "Tiza y pincel",
+   "summary": "Garabatos que se dibujan solos.",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "grunge-montage.papel",
+   "label": "Papel y niebla",
+   "summary": "Bandas de papel rasgado y niebla clara.",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "grunge-montage.scan",
+   "label": "Cortes scan",
+   "summary": "Franjas del cuadro desplazadas.",
+   "default": true,
+   "params": {}
+  },
+  {
+   "name": "grunge-montage.resumen",
+   "label": "Resumen final",
+   "summary": "Collage de frases antes del cierre.",
+   "default": true,
+   "params": {}
+  }
+ ],
+ "catalog": {
+  "components": "showcase/components.json",
+  "gallery": "showcase/index.html"
+ },
+ "thumbnail": {
+  "style": "thumbnail-style.json",
+  "frameSec": 12,
+  "note": "La miniatura usa el fotograma de 12 s del video grabado (línea roja con marco de pincel)."
+ }
+}

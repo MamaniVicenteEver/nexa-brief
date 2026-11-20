@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/schemas/nodemotion-promo/build-sports.json",
+  "type": "object",
+  "properties": {
+    "template": {"const": "promo-sports"},
+    "texts": {"type": "object", "maxProperties": 0}
+  },
+  "required": ["template", "texts"]
+}

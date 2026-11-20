@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-caution",
+  "id": "layout.stack",
+  "entry_id": "layout.stack",
+  "name": "stack",
+  "kind": "layout",
+  "label": "stack",
+  "summary": "Existing layout configuration: stack.",
+  "params": {
+    "weight": {
+      "default": 1.0
+    },
+    "bgs": {
+      "default": [
+        "white"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.0,
+    "bgs": [
+      "white"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-caution/assets/config.json",
+      "pointer": "/configs/0/layouts/stack"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

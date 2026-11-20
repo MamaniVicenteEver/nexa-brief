@@ -35,7 +35,7 @@ def test_list_templates():
     }
     assert expected <= ids
     assert {template["category_id"] for template in templates} == {
-        "lyrics", "commercial", "image", "video", "in_progress",
+        "lyrics", "commercial", "image", "video", "testing",
     }
     assert all(template["can_generate"] for template in templates)
 
@@ -45,7 +45,7 @@ def test_list_template_categories():
     assert r.status_code == 200
     categories = r.json()
     assert [category["id"] for category in categories] == [
-        "lyrics", "commercial", "image", "video", "in_progress",
+        "lyrics", "commercial", "image", "video", "in_progress", "testing",
     ]
 
 

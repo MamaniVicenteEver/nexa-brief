@@ -39,6 +39,15 @@ class StockItem(BaseModel):
     author_url: str = ""
     source_url: str = ""                # página del medio en el proveedor (para el crédito)
     license: str = ""                   # nombre de la licencia del proveedor
+    license_url: str = ""
+    credit: str = ""
+    description: str = ""
+    attribution: str = ""
+    original_url: str = ""
+    thumb_url: str = ""
+    original_width: int = 0
+    original_height: int = 0
+    article_url: str = ""
     # Lo completa el servicio (no el adapter ni la caché): asset_id si este
     # medio ya está importado en la librería, para que la UI no lo duplique.
     library_asset_id: str | None = None

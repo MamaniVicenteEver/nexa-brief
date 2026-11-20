@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram-worlds",
+  "id": "hw.outrov2",
+  "entry_id": "hw.outrov2",
+  "kind": "component",
+  "label": "Outro v2 · tarjeta y seda",
+  "summary": "Basada en el final de la referencia (161 a 175 s): título en contorno fino extendido sobre el negro azulado y una pared de seda holográfica que entra desde la derecha y queda a pantalla completa con la línea final en tinta, hasta el corte a negro.",
+  "component": {
+    "name": "hw.outrov2",
+    "label": "Outro v2 · tarjeta y seda",
+    "summary": "Basada en el final de la referencia (161 a 175 s): título en contorno fino extendido sobre el negro azulado y una pared de seda holográfica que entra desde la derecha y queda a pantalla completa con la línea final en tinta, hasta el corte a negro.",
+    "group": "outro",
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "GRACIAS",
+        "doc": "config.outro.title"
+      },
+      "sub": {
+        "type": "string",
+        "default": "POR VER",
+        "doc": "config.outro.sub"
+      },
+      "feats": {
+        "type": "string",
+        "default": "SUSCRÍBETE · NODEMOTION",
+        "doc": "config.outro.feats"
+      },
+      "split": {
+        "type": "number",
+        "default": 0.32,
+        "min": 0.15,
+        "max": 0.6,
+        "doc": "Momento en que entra la seda (fracción)"
+      },
+      "blackSec": {
+        "type": "number",
+        "default": 0.12,
+        "min": 0,
+        "max": 1,
+        "doc": "Corte a negro final"
+      },
+      "duration": {
+        "type": "number",
+        "default": 7,
+        "min": 2,
+        "max": 20,
+        "doc": "Segundos de la demo"
+      }
+    },
+    "tags": [
+      "outro"
+    ],
+    "file": "components/outro-v2.js",
+    "demo": {},
+    "preview": {
+      "t": 4.5
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "GRACIAS",
+      "doc": "config.outro.title"
+    },
+    "sub": {
+      "type": "string",
+      "default": "POR VER",
+      "doc": "config.outro.sub"
+    },
+    "feats": {
+      "type": "string",
+      "default": "SUSCRÍBETE · NODEMOTION",
+      "doc": "config.outro.feats"
+    },
+    "split": {
+      "type": "number",
+      "default": 0.32,
+      "min": 0.15,
+      "max": 0.6,
+      "doc": "Momento en que entra la seda (fracción)"
+    },
+    "blackSec": {
+      "type": "number",
+      "default": 0.12,
+      "min": 0,
+      "max": 1,
+      "doc": "Corte a negro final"
+    },
+    "duration": {
+      "type": "number",
+      "default": 7,
+      "min": 2,
+      "max": 20,
+      "doc": "Segundos de la demo"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram-worlds/showcase/components.json",
+      "pointer": "/components/2"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

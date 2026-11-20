@@ -1,0 +1,32 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "thumb_two_modes_v1",
+  "piece": "thumbnail",
+  "locale": "pt-BR",
+  "status": "draft",
+  "intent": "Dividir o trabalho entre título e miniatura: mostrar o assunto e abrir uma tensão concreta sem repetir a mesma frase.",
+  "templates": {
+    "A": "{assunto reconhecível}\n{consequência curta}",
+    "B": "{tensão em duas a cinco palavras}",
+    "C": "{manchete breve} + {número verificado com contexto}"
+  },
+  "examples": [
+    "QUEM GUARDOU?",
+    "NÃO É SÓ UM CHAT",
+    "SEU HISTÓRICO"
+  ],
+  "conventions": [
+    "A identifica o assunto pelo texto; B usa uma imagem pertinente e licenciada.",
+    "Na narrativa do demo, C tem no máximo seis palavras e o destaque cita exatamente o título.",
+    "Vermelho e amarelo só no alerta com dado real; mantenha o acento lima.",
+    "Cena de curto animado não leva foto nem clipe; escolha a opção só de texto."
+  ],
+  "sounds_false": [
+    "EXCLUSIVO sem exclusividade comprovada.",
+    "A VERDADE CHOCANTE sem dizer do que se trata.",
+    "Uma foto de banco apresentada como a pessoa real do caso."
+  ],
+  "overrides": {
+    "name": "Miniaturas de texto e de imagem que se completam"
+  }
+}

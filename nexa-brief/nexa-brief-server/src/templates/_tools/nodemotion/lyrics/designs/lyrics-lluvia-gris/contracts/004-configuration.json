@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-lluvia-gris",
+  "id": "config.grades",
+  "entry_id": "config.grades",
+  "name": "grades",
+  "kind": "configuration",
+  "label": "grades",
+  "summary": "Existing configuration configuration: grades.",
+  "params": {
+    "rain": {
+      "default": {
+        "type": "css",
+        "saturate": 0.22,
+        "contrast": 1.06,
+        "brightness": 0.68
+      }
+    },
+    "cold": {
+      "default": {
+        "type": "duo",
+        "dark": "#0A1015",
+        "light": "#B9C7D0",
+        "contrast": 1.15
+      }
+    }
+  },
+  "example": {
+    "rain": {
+      "type": "css",
+      "saturate": 0.22,
+      "contrast": 1.06,
+      "brightness": 0.68
+    },
+    "cold": {
+      "type": "duo",
+      "dark": "#0A1015",
+      "light": "#B9C7D0",
+      "contrast": 1.15
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
+      "pointer": "/configs/0/grades"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-impact",
+  "id": "config.cluster",
+  "entry_id": "config.cluster",
+  "name": "cluster",
+  "kind": "configuration",
+  "label": "cluster",
+  "summary": "Existing configuration configuration: cluster.",
+  "params": {
+    "gapSec": {
+      "default": 0.55
+    },
+    "maxWords": {
+      "default": 5
+    },
+    "maxChars": {
+      "default": 26
+    },
+    "bigMaxVh": {
+      "default": 0.26
+    },
+    "smallRatio": {
+      "default": 0.3
+    },
+    "skewBase": {
+      "default": -8
+    },
+    "skewJitter": {
+      "default": 3
+    },
+    "rotJitter": {
+      "default": 1.2
+    },
+    "shakePx": {
+      "default": 6
+    }
+  },
+  "example": {
+    "gapSec": 0.55,
+    "maxWords": 5,
+    "maxChars": 26,
+    "bigMaxVh": 0.26,
+    "smallRatio": 0.3,
+    "skewBase": -8,
+    "skewJitter": 3,
+    "rotJitter": 1.2,
+    "shakePx": 6
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-impact/assets/config.json",
+      "pointer": "/configs/0/cluster"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

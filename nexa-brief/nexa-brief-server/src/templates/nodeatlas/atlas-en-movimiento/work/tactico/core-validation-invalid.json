@@ -1,0 +1,44 @@
+{
+  "errors": [
+    {
+      "code": "anchor",
+      "path": "items[2].t",
+      "message": "Tiempo sin resolver: @inexistente"
+    },
+    {
+      "code": "sea-land",
+      "path": "items[0].path.via",
+      "message": "Segmento 0 cruza tierra: Irán",
+      "item": "repetido",
+      "segment": 0,
+      "from": [
+        50,
+        32
+      ],
+      "to": [
+        53,
+        33
+      ],
+      "place": "Irán",
+      "suggestion": "Añadir waypoints por agua alrededor de esta costa y volver a validar."
+    },
+    {
+      "code": "duplicate-id",
+      "path": "items[1].id",
+      "message": "id duplicado: repetido",
+      "item": "repetido"
+    },
+    {
+      "code": "number",
+      "path": "items[2].t",
+      "message": "t debe ser finito y no negativo",
+      "item": "ancla"
+    },
+    {
+      "code": "camera",
+      "path": "camera",
+      "message": "items[2].t: Tiempo sin resolver: NaN"
+    }
+  ],
+  "warnings": []
+}

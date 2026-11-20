@@ -20,7 +20,9 @@ falla o tarda más de MEDIA_GATE_TIMEOUT_MS, arranca igual.
 
 from __future__ import annotations
 
+import re
 from collections.abc import Mapping
+from pathlib import Path
 
 HIDE_RECORDER_STYLE = "<style>#rec-btn,#rec-panel{display:none!important}</style>"
 
@@ -271,6 +273,36 @@ def inject_preview_scripts(content: str, query_params: Mapping[str, str]) -> str
           });
       };
 
+      // La vista temporal no modifica los archivos que se usan al grabar.
+      // CSS permite aplicar el ajuste aunque setupBg reemplace la imagen por un
+      // video posteriormente, sin observar ni intervenir el árbol animado.
+      const backgroundStyle = document.createElement("style");
+      backgroundStyle.textContent = `
+        html[data-nexa-live-background] #bgMedia {
+          opacity: var(--nexa-live-background-opacity) !important;
+          filter: none !important;
+        }
+        html[data-nexa-live-background] body.outroActive #bgMedia {
+          opacity: calc(var(--nexa-live-background-opacity) * var(--nexa-live-outro-factor)) !important;
+        }
+        html[data-nexa-live-background] :is(#darkTint, #warmTint, #coldTint) { opacity: 0.25 !important; }
+        html[data-nexa-live-background] #vignette { opacity: 0.35 !important; }
+      `;
+      document.head.appendChild(backgroundStyle);
+      const backgroundOutroFactors = {"lyrics-impact": 1, "lyrics-romantic": 0.5, "lyrics-suave": 0.12, "lyrics-triste": 0.1};
+      window.addEventListener("message", (event) => {
+        if (event.source !== window.parent || event.data?.type !== "nexa-template-background-visibility") return;
+        if (event.data.enabled === false) {
+          document.documentElement.removeAttribute("data-nexa-live-background");
+          return;
+        }
+        const { value, templateId } = event.data;
+        if (!Object.hasOwn(backgroundOutroFactors, templateId) || typeof value !== "number" || !Number.isFinite(value)) return;
+        document.documentElement.style.setProperty("--nexa-live-background-opacity", String(Math.max(0, Math.min(1, value))));
+        document.documentElement.style.setProperty("--nexa-live-outro-factor", String(backgroundOutroFactors[templateId]));
+        document.documentElement.setAttribute("data-nexa-live-background", "");
+      });
+
       window.addEventListener("message", (event) => {
         if (event.data?.type === "nexa-template-reset") {
           resetPreview();
@@ -423,3 +455,22 @@ def inject_preview_scripts(content: str, query_params: Mapping[str, str]) -> str
     # que trae cada plantilla se oculta SIEMPRE, en toda vista previa.
     scripts += HIDE_RECORDER_STYLE
     return content.replace("</head>", f"{scripts}</head>", 1)
+
+
+_LOCAL_ASSET = re.compile(r'''(<(?:script|link)\b[^>]*?\b(?:src|href)=["'])(\./)?((?:components|assets)/[^"'?#]+\.(?:js|css))(["'])''')
+
+
+def version_local_assets(content: str, root: Path) -> str:
+    """`components/outro.js` → `components/outro.js?v=<mtime>` en el HTML de una plantilla o prototipo.
+
+    Cloudflare le dice al navegador que guarde los .js 4 horas (Browser Cache TTL) y pisa el
+    Cache-Control del servidor: sin esto, un componente editado (p. ej. el cierre) se seguía viendo
+    viejo. Con la fecha del archivo en la URL, cada cambio es una dirección nueva."""
+    def stamp(match: re.Match) -> str:
+        prefix, dot, rel, quote = match.groups()
+        file = (root / rel).resolve()
+        if not file.is_file() or not file.is_relative_to(root.resolve()):
+            return match.group(0)
+        return f"{prefix}{dot or ''}{rel}?v={int(file.stat().st_mtime)}{quote}"
+
+    return _LOCAL_ASSET.sub(stamp, content)

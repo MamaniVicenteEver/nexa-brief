@@ -11,11 +11,18 @@ from __future__ import annotations
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
+from src.core.library.resource_metadata import ResourceMetadata
 
 TranscriptionStatus = Literal["none", "pending", "running", "done", "failed"]
 
 
-class ImageLibraryEntryResponse(BaseModel):
+class ImageLibraryEntryResponse(ResourceMetadata):
+    media_type: Literal["image"] = "image"
+    # Datos que faltan para publicar (vacía = listo).
+    metadata_missing: list[str] = []
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     source: str
@@ -38,7 +45,13 @@ class ImageLibraryEntryResponse(BaseModel):
     file_url: str = ""
 
 
-class MusicLibraryEntryResponse(BaseModel):
+class MusicLibraryEntryResponse(ResourceMetadata):
+    media_type: Literal["music"] = "music"
+    # Datos que faltan para publicar (vacía = listo).
+    metadata_missing: list[str] = []
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     source: str
@@ -65,7 +78,13 @@ class MusicLibraryEntryResponse(BaseModel):
     lyrics_url: str | None = None
 
 
-class VideoLibraryEntryResponse(BaseModel):
+class VideoLibraryEntryResponse(ResourceMetadata):
+    media_type: Literal["video"] = "video"
+    # Datos que faltan para publicar (vacía = listo).
+    metadata_missing: list[str] = []
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     source: str
@@ -87,11 +106,64 @@ class VideoLibraryEntryResponse(BaseModel):
     file_url: str = ""
 
 
+class SoundLibraryEntryResponse(ResourceMetadata):
+    media_type: Literal["sound"] = "sound"
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
+    schema_version: int = 1
+    asset_id: str
+    title: str
+    description: str = ""
+    category: str = "sound_effects"
+    source: str = "auto"
+    original_filename: str = ""
+    duration_seconds: float = 0
+    recommended_uses: list[str] = Field(default_factory=list)
+    tags: str = ""
+    tag_list: list[str] = Field(default_factory=list)
+    provider: str = ""
+    provider_sound_id: str = ""
+    original_url: str | None = None
+    license_note: str = "unknown"
+    license_url: str = ""
+    content_hash: str = ""
+    approval_status: Literal["pending", "approved", "rejected"] = "pending"
+    added_at: str = ""
+    usage_count: int = 0
+    last_used_at: str | None = None
+    file_url: str = ""
+
+
+class LibraryAssetPageResponse(BaseModel):
+    items: list[ImageLibraryEntryResponse | MusicLibraryEntryResponse | VideoLibraryEntryResponse | SoundLibraryEntryResponse]
+    total: int
+    page: int
+    page_size: int
+
+
+class MusicGroupResponse(BaseModel):
+    title: str
+    artist: str
+    items: list[MusicLibraryEntryResponse]
+
+
+class MusicGroupPageResponse(BaseModel):
+    items: list[MusicGroupResponse]
+    total: int
+    page: int
+    page_size: int
+
+
 class LibraryAssetPatch(BaseModel):
     """Cuerpo de PATCH /library/{kind}/{asset_id}. Todos opcionales: solo se
     aplica lo que viene. Los campos que no corresponden al kind se ignoran
     (ej. `artist` en una imagen). `tags` acepta lista o string con comas."""
 
+    display_name: str | None = Field(default=None, min_length=1, max_length=240, pattern=r".*\S.*")
+    title: str | None = Field(default=None, min_length=1, max_length=240)
+    recommended_uses: list[str] | None = None
+    approval_status: Literal["pending", "approved", "rejected"] | None = None
     category: str | None = None
     label: str | None = None
     track_name: str | None = None
@@ -105,7 +177,7 @@ class LibraryAssetPatch(BaseModel):
 
 
 class LibraryDeleteResponse(BaseModel):
-    kind: Literal["images", "music", "videos"]
+    kind: Literal["images", "music", "videos", "sounds"]
     asset_id: str
     deleted: bool = True
 
@@ -117,7 +189,7 @@ class TemplateConfigEntryResponse(BaseModel):
     image_asset_id: str | None = None
     music_asset_id: str | None = None
     created_at: str = ""
-    texts: dict[str, str] = {}
+    texts: dict[str, Any] = Field(default_factory=dict)
 
 
 class TemplateConfigDetailResponse(BaseModel):

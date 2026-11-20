@@ -1,0 +1,255 @@
+{
+  "format": "atlas-v1",
+  "duration": 24,
+  "lang": "es",
+  "planoLook": "tactico",
+  "defs": {
+    "fonts": {
+      "label": "Arial, sans-serif",
+      "display": "Arial, sans-serif"
+    },
+    "palette": {
+      "background": "#081e2c",
+      "ink": "#e9e3ba",
+      "white": "#e9e3ba",
+      "gold": "#f6edb4",
+      "red": "#d1495b",
+      "green": "#399e58",
+      "cyan": "#66c6e3",
+      "steel": "#82949c",
+      "smoke": "#33424b",
+      "orange": "#e69b45"
+    }
+  },
+  "words": [
+    {
+      "word": "Enterprise",
+      "start": 0,
+      "end": 0.5
+    },
+    {
+      "word": "navegaba",
+      "start": 1,
+      "end": 1.4
+    },
+    {
+      "word": "despegan",
+      "start": 4,
+      "end": 4.5
+    }
+  ],
+  "tiles": {
+    "provider": "gibs-bluemarble",
+    "manifest": "../bench/cache-inventory.json"
+  },
+  "motionBlur": {
+    "samples": 1
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        58.4,
+        24.9
+      ],
+      "zoom": 7.3
+    },
+    {
+      "t": 1,
+      "follow": "enterprise",
+      "zoom": 7.3,
+      "dur": 9
+    },
+    {
+      "t": 11,
+      "center": [
+        60.05,
+        20.3
+      ],
+      "zoom": 7.1,
+      "dur": 0.5
+    },
+    {
+      "t": 12,
+      "follow": "turning-carrier",
+      "zoom": 7.1,
+      "dur": 10
+    }
+  ],
+  "items": [
+    {
+      "type": "naval.carrier",
+      "id": "enterprise",
+      "variant": "supercarrier",
+      "flag": "US",
+      "label": "USS Enterprise",
+      "at": [
+        58.4,
+        24.9
+      ],
+      "heading": "auto",
+      "t": "@Enterprise",
+      "scale": 1,
+      "path": {
+        "via": [
+          [
+            58.4,
+            24.9
+          ],
+          [
+            57.2,
+            25.6
+          ]
+        ],
+        "t": "@navegaba",
+        "dur": 9,
+        "ease": "inOut"
+      },
+      "escorts": {
+        "formation": "diamond",
+        "units": [
+          "naval.warship:cg",
+          "naval.warship:ddg",
+          "naval.warship:ff"
+        ]
+      },
+      "deck": {
+        "aircraft": 12
+      },
+      "states": [
+        {
+          "at": "@despegan",
+          "state": "flightops"
+        }
+      ],
+      "actions": [
+        {
+          "type": "air.launch",
+          "at": "@despegan",
+          "count": 2,
+          "unit": "air.jet:a6",
+          "to": [
+            51.3,
+            26.2
+          ]
+        }
+      ],
+      "follow": true,
+      "sfx": "naval-engine-low"
+    },
+    {
+      "id": "turning-carrier",
+      "type": "naval.carrier",
+      "variant": "supercarrier",
+      "label": "GRUPO AERONAVAL",
+      "flag": "US",
+      "scale": 1,
+      "at": [
+        60,
+        20
+      ],
+      "heading": "auto",
+      "t": 11,
+      "dur": 13,
+      "path": {
+        "via": [
+          [
+            60,
+            20
+          ],
+          [
+            60.1,
+            20.4
+          ],
+          [
+            60.5,
+            20.6
+          ],
+          [
+            60.9,
+            20.55
+          ]
+        ],
+        "t": 12,
+        "dur": 10,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "escorts": {
+        "formation": "diamond",
+        "units": [
+          "naval.warship:cg",
+          "naval.warship:ddg",
+          "naval.warship:ff"
+        ]
+      },
+      "deck": {
+        "aircraft": 12
+      },
+      "states": [
+        {
+          "at": 14,
+          "state": "flightops"
+        }
+      ],
+      "actions": [
+        {
+          "type": "air.launch",
+          "at": 15,
+          "count": 2,
+          "unit": "air.jet:a6",
+          "to": [
+            62,
+            21.5
+          ],
+          "flightDur": 5
+        }
+      ],
+      "sfx": false
+    },
+    {
+      "id": "convoy-turn",
+      "type": "naval.group",
+      "leader": {
+        "type": "naval.cargo",
+        "variant": "tanker",
+        "label": "CONVOY"
+      },
+      "formation": "line",
+      "units": [
+        "naval.cargo:container",
+        "naval.warship:ff"
+      ],
+      "scale": 0.8,
+      "t": 11,
+      "dur": 13,
+      "path": {
+        "via": [
+          [
+            60.6,
+            21.3
+          ],
+          [
+            60.4,
+            21.7
+          ],
+          [
+            60.7,
+            22
+          ],
+          [
+            61.1,
+            22.1
+          ]
+        ],
+        "t": 12,
+        "dur": 10,
+        "curve": "smooth",
+        "ease": "inOut"
+      },
+      "heading": "auto",
+      "sfx": false
+    }
+  ],
+  "note": "Escena técnica sintética. Enterprise copia exacta de PLAN §5. Launch/recover/drop son agregados, no observados en las referencias."
+}

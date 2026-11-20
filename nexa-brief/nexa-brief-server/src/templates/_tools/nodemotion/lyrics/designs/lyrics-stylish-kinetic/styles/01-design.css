@@ -1,0 +1,34 @@
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* tema — defaults idénticos al caso actual; config.json puede pisarlos */
+  :root { --fCaps: "Lilita One", sans-serif; --fLow: "Sniglet", sans-serif; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #E31D40; cursor: pointer; }
+
+  #stage { position: fixed; inset: 0; overflow: hidden; }
+  .scene { position: absolute; left: 0; top: 0; overflow: hidden; }
+  .comp { position: absolute; width: 0; height: 0; }
+  .grp { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 0 0; }
+  .blk { position: absolute; }
+  .panel { position: absolute; inset: 0; }
+
+  /* línea de texto: .ch lleva el bamboleo fijo de cada letra, .cu es lo que se anima */
+  .ln { position: absolute; left: 0; top: 0; white-space: nowrap; line-height: 0.92; }
+  .ln .ch { display: inline-block; white-space: pre; }
+  .ln .cu { display: inline-block; white-space: pre; transform-origin: 50% 85%; }
+  .caps { font-family: var(--fCaps); font-weight: 400; }
+  .low  { font-family: var(--fLow); font-weight: 800; }
+  .brush { position: absolute; overflow: visible; pointer-events: none; }
+  .brush path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+  #measure { position: absolute; left: -99999px; top: 0; visibility: hidden; }
+  #hud {
+    position: fixed; left: 8px; top: 8px; z-index: 50; display: none; padding: 6px 8px;
+    font: 11px/1.4 ui-monospace, monospace; color: #0f0; background: rgba(0,0,0,0.7); pointer-events: none;
+  }
+  #hint { display: none !important;
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: var(--fCaps); font-size: 2vh; letter-spacing: 0.3em; color: #fff;
+    opacity: 0.55; animation: hintPulse 2s ease infinite; pointer-events: none;
+  }
+  @keyframes hintPulse { 0%,100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+  body.headless #hint { display: none !important; }

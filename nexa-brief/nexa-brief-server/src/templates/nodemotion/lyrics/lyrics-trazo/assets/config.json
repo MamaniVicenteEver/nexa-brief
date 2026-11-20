@@ -1,0 +1,382 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "lyricsFilter": {
+        "dropPatterns": [
+          "(?i)subt[ií]tulos",
+          "(?i)amara\\.org",
+          "(?i)thanks for watching"
+        ],
+        "maxWordSec": 3.5
+      },
+      "seed": 11,
+      "colors": {
+        "ink": "#FFFFFF",
+        "paper": "#050505",
+        "inkInverted": "#0B0B0B",
+        "paperInverted": "#F6F6F3"
+      },
+      "fonts": {
+        "marker": {
+          "family": "Permanent Marker",
+          "src": "assets/fonts/PermanentMarker-Regular.woff2",
+          "lineHeight": 1,
+          "scale": 1
+        },
+        "bubble": {
+          "family": "Rubik Bubbles",
+          "src": "assets/fonts/RubikBubbles-Regular.woff2",
+          "lineHeight": 0.92,
+          "scale": 1
+        },
+        "brush": {
+          "family": "Knewave",
+          "src": "assets/fonts/Knewave-Regular.woff2",
+          "lineHeight": 1,
+          "scale": 1
+        },
+        "chalk": {
+          "family": "Cabin Sketch",
+          "src": "assets/fonts/CabinSketch-Bold.woff2",
+          "lineHeight": 0.95,
+          "scale": 1
+        },
+        "sketch": {
+          "family": "Fredericka the Great",
+          "src": "assets/fonts/FrederickatheGreat-Regular.woff2",
+          "lineHeight": 1,
+          "scale": 1
+        },
+        "tall": {
+          "family": "Amatic SC",
+          "src": "assets/fonts/AmaticSC-Bold.woff2",
+          "lineHeight": 0.86,
+          "scale": 1
+        },
+        "scratch": {
+          "family": "Rock Salt",
+          "src": "assets/fonts/RockSalt-Regular.woff2",
+          "lineHeight": 1.25,
+          "scale": 0.92
+        },
+        "signature": {
+          "family": "Mrs Saint Delafield",
+          "src": "assets/fonts/MrsSaintDelafield-Regular.woff2",
+          "lineHeight": 1.1,
+          "scale": 1.1
+        },
+        "scribble": {
+          "family": "Rubik Scribble",
+          "src": "assets/fonts/RubikScribble-Regular.woff2",
+          "lineHeight": 0.92,
+          "scale": 1
+        },
+        "hatchfont": {
+          "family": "Rubik Marker Hatch",
+          "src": "assets/fonts/RubikMarkerHatch-Regular.woff2",
+          "lineHeight": 0.92,
+          "scale": 1
+        },
+        "sketchcaps": {
+          "family": "Londrina Sketch",
+          "src": "assets/fonts/LondrinaSketch-Regular.woff2",
+          "lineHeight": 0.92,
+          "scale": 1
+        },
+        "block": {
+          "family": "Londrina Solid",
+          "src": "assets/fonts/LondrinaSolid-Black.woff2",
+          "lineHeight": 0.92,
+          "scale": 1
+        },
+        "graffiti": {
+          "family": "Sedgwick Ave Display",
+          "src": "assets/fonts/SedgwickAveDisplay-Regular.woff2",
+          "lineHeight": 0.95,
+          "scale": 1
+        },
+        "thinbrush": {
+          "family": "Mansalva",
+          "src": "assets/fonts/Mansalva-Regular.woff2",
+          "lineHeight": 1,
+          "scale": 1
+        },
+        "doodle": {
+          "family": "Rubik Doodle Shadow",
+          "src": "assets/fonts/RubikDoodleShadow-Regular.woff2",
+          "lineHeight": 0.92,
+          "scale": 1
+        },
+        "caveat": {
+          "family": "Caveat Brush",
+          "src": "assets/fonts/CaveatBrush-Regular.woff2",
+          "lineHeight": 0.95,
+          "scale": 1
+        }
+      },
+      "styles": {
+        "marker-caps": {
+          "font": "marker",
+          "treatment": "solid",
+          "case": "upper",
+          "weight": 3
+        },
+        "bubble": {
+          "font": "bubble",
+          "treatment": "solid",
+          "case": "lower",
+          "weight": 2
+        },
+        "brush": {
+          "font": "brush",
+          "treatment": "solid",
+          "case": "title",
+          "weight": 2
+        },
+        "brush-outline": {
+          "font": "brush",
+          "treatment": "outline",
+          "case": "upper",
+          "weight": 1
+        },
+        "chalk": {
+          "font": "chalk",
+          "treatment": "solid",
+          "case": "upper",
+          "weight": 2
+        },
+        "sketch": {
+          "font": "sketch",
+          "treatment": "solid",
+          "case": "upper",
+          "weight": 1.5
+        },
+        "tall": {
+          "font": "tall",
+          "treatment": "solid",
+          "case": "upper",
+          "weight": 2.5,
+          "tracking": 0.02
+        },
+        "scratch": {
+          "font": "scratch",
+          "treatment": "solid",
+          "case": "lower",
+          "weight": 1.5
+        },
+        "signature": {
+          "font": "signature",
+          "treatment": "solid",
+          "case": "title",
+          "weight": 1,
+          "dim": 0.82
+        },
+        "scribble": {
+          "font": "scribble",
+          "treatment": "solid",
+          "case": "upper",
+          "weight": 1
+        },
+        "hatch-fill": {
+          "font": "hatchfont",
+          "treatment": "solid",
+          "case": "upper",
+          "weight": 1
+        },
+        "sketch-caps": {
+          "font": "sketchcaps",
+          "treatment": "solid",
+          "case": "upper",
+          "weight": 1.5
+        },
+        "block-hatch": {
+          "font": "block",
+          "treatment": "hatch",
+          "case": "upper",
+          "weight": 1.5
+        },
+        "block-shadow": {
+          "font": "block",
+          "treatment": "shadow",
+          "case": "upper",
+          "weight": 1
+        },
+        "graffiti": {
+          "font": "graffiti",
+          "treatment": "solid",
+          "case": "lower",
+          "weight": 1.5
+        },
+        "thin-brush": {
+          "font": "thinbrush",
+          "treatment": "solid",
+          "case": "lower",
+          "weight": 1.5
+        },
+        "doodle": {
+          "font": "doodle",
+          "treatment": "solid",
+          "case": "upper",
+          "weight": 1
+        },
+        "caveat": {
+          "font": "caveat",
+          "treatment": "solid",
+          "case": "lower",
+          "weight": 1.5
+        }
+      },
+      "components": {
+        "intro": true,
+        "outro": "trazo.outrov1",
+        "interludes": true,
+        "burst": true,
+        "invert": true,
+        "hatch": true,
+        "doodles": true
+      },
+      "intro": {
+        "title": "Let Out The Beast",
+        "artist": "Ombré ft. KTHLN",
+        "titleFont": "caveat",
+        "artistFont": "tall",
+        "minSec": 1.6
+      },
+      "outro": {
+        "title": "Gracias",
+        "sub": "por ver",
+        "feats": "Suscríbete · NodeMotion",
+        "titleFont": "bubble",
+        "subFont": "signature",
+        "featsFont": "tall",
+        "leadSec": 0.35,
+        "minSec": 2.6,
+        "maxSec": 6
+      },
+      "timing": {
+        "leadSec": 0.05,
+        "minWordSec": 0.16,
+        "maxMergeChars": 12,
+        "gapSec": 0.85,
+        "holdSec": 0.4
+      },
+      "size": {
+        "fill": 0.8,
+        "fillH": 0.6
+      },
+      "layouts": {
+        "deck": {
+          "line": 3,
+          "stack": 2,
+          "vertical": 0.8,
+          "stair": 0.7
+        },
+        "stackMinLetters": 5,
+        "verticalMaxLetters": 5,
+      "portraitStackBoost": 2.2
+      },
+      "motion": {
+        "boilFps": 8,
+        "boil": 0.35,
+        "wobble": 2.2,
+        "grain": 0.5,
+        "punch": 0.1,
+        "drift": 0.05,
+        "shake": 0.5,
+        "deck": {
+          "punch": 3,
+          "drift": 2,
+          "pop": 1.5,
+          "recede": 1,
+          "shake": 0.6,
+          "none": 1
+        }
+      },
+      "transitions": {
+        "flashSec": 0.08,
+        "zoomSec": 0.12,
+        "deck": {
+          "cut": 6,
+          "flash": 1.2,
+          "zoom": 1,
+          "shift": 0.6,
+          "blink": 0.6
+        }
+      },
+      "invert": {
+        "chance": 0.12,
+        "minGap": 4
+      },
+      "hatch": {
+        "chance": 0.06
+      },
+      "doodles": {
+        "chance": 0.2,
+        "deck": {
+          "rays": 2,
+          "star": 2,
+          "underline": 1,
+          "circle": 1,
+          "arrow": 0.5
+        }
+      },
+      "interludes": {
+        "minSec": 0.45,
+        "maxSec": 3,
+        "deck": {
+          "sun": 3,
+          "holes": 2,
+          "crack": 2,
+          "scribble": 2,
+          "spark": 1
+        }
+      },
+      "burst": {
+        "minSec": 0.85,
+        "minLetters": 3,
+        "stepSec": 0.1,
+        "invertChance": 0.5,
+        "hatchChance": 0.2,
+        "words": []
+      },
+      "overrides": [
+        {
+          "match": "beast",
+          "burst": true
+        },
+        {
+          "match": "jungle",
+          "style": "bubble",
+          "layout": "stack",
+          "doodle": "star",
+          "inverted": true
+        },
+        {
+          "match": "caution",
+          "burst": true
+        },
+        {
+          "match": "cage",
+          "layout": "vertical",
+          "style": "block-hatch",
+          "hatch": true
+        },
+        {
+          "match": "awesome",
+          "style": "signature",
+          "doodle": "rays"
+        }
+      ],
+      "debug": {
+        "enabled": false
+      },
+      "description": "Rotulación a mano palabra por palabra en blanco y negro, con garabatos, impactos y grietas. Demo: Let Out The Beast."
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram-worlds",
+  "id": "config.anim",
+  "entry_id": "config.anim",
+  "name": "anim",
+  "kind": "configuration",
+  "label": "anim",
+  "summary": "Existing configuration configuration: anim.",
+  "params": {
+    "textIn": {
+      "default": "slide"
+    },
+    "speed": {
+      "default": 1
+    },
+    "intensity": {
+      "default": 1
+    }
+  },
+  "example": {
+    "textIn": "slide",
+    "speed": 1,
+    "intensity": 1
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram-worlds/assets/config.json",
+      "pointer": "/configs/0/anim"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

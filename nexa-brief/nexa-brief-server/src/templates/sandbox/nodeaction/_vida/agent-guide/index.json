@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "title": "Vida en Escena: mapa para agentes",
+  "base_path": "sandbox/nodeaction/_vida/",
+  "instructions": [
+    "Rutas read relativas a _vida/. Selecciona solo la tarea necesaria; no cargues el motor ni el catálogo completo por defecto.",
+    "Consulta el esquema o archivo fuente señalado únicamente si necesitas más detalle. Sigue las instrucciones AGENTS.md aplicables.",
+    "Una guía describe capacidades existentes; no indica que algo ya esté implementado si requiere ampliar el motor."
+  ],
+  "tasks": [
+    {
+      "id": "crear-personaje",
+      "title": "Crear personaje",
+      "description": "Ficha reutilizable con opciones existentes, vinculación y vista previa.",
+      "read": [
+        "agent-guide/character.json"
+      ],
+      "outcome": "Ficha validada y, si se pide, visible en Showcase."
+    },
+    {
+      "id": "actualizar-personaje",
+      "title": "Actualizar personaje",
+      "description": "Cambiar solo las propiedades solicitadas y revisar usos afectados.",
+      "read": [
+        "agent-guide/character.json"
+      ],
+      "outcome": "Ficha actualizada y validada."
+    },
+    {
+      "id": "voz",
+      "title": "Crear o asignar voz",
+      "description": "Perfiles de voz, enlaces reales y límites del generador.",
+      "read": [
+        "agent-guide/voice.json"
+      ],
+      "outcome": "Perfil coherente con el hablante; audio real solo cuando se solicite."
+    },
+    {
+      "id": "actualizar-voz",
+      "title": "Actualizar voz",
+      "description": "Cambiar un perfil y comprobar clips afectados.",
+      "read": [
+        "agent-guide/voice.json"
+      ],
+      "outcome": "Perfil validado e identificación de audio afectado."
+    },
+    {
+      "id": "usar-animacion",
+      "title": "Usar animación existente",
+      "description": "Asignar gestos y acciones disponibles a una escena.",
+      "read": [
+        "agent-guide/extension/animations.json"
+      ],
+      "outcome": "Acción existente aplicada al episodio y validada."
+    },
+    {
+      "id": "animacion",
+      "title": "Agregar animación",
+      "description": "Ampliar acciones del motor cuando los datos no bastan.",
+      "read": [
+        "agent-guide/extension/animations.json"
+      ],
+      "outcome": "Acción reutilizable y comprobada."
+    },
+    {
+      "id": "componente",
+      "title": "Agregar componente",
+      "description": "Extender rasgos, objetos u otros componentes no disponibles.",
+      "read": [
+        "agent-guide/extension/components.json"
+      ],
+      "outcome": "Componente reutilizable y comprobado."
+    }
+  ],
+  "shared_rules": [
+    "No inventar campos, estilos, voces ni capacidades; verificar el esquema y el catálogo selectivamente.",
+    "Los datos de personajes y voces son compartidos entre episodios: conservar compatibilidad y revisar impacto al actualizarlos.",
+    "No publicar, generar audio ni renderizar salvo que el pedido vigente lo autorice."
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram-worlds",
+  "id": "hw.intro",
+  "entry_id": "hw.intro",
+  "kind": "component",
+  "label": "Intro · apertura del video",
+  "summary": "Réplica de la apertura (0 a 1,7 s), también portada: emblema blanco, ventana de seda con silueta de perfil enorme y el título en condensada blanca con ecos en contorno, artista en rótulos y tres emblemas holográficos apilados.",
+  "component": {
+    "name": "hw.intro",
+    "label": "Intro · apertura del video",
+    "summary": "Réplica de la apertura (0 a 1,7 s), también portada: emblema blanco, ventana de seda con silueta de perfil enorme y el título en condensada blanca con ecos en contorno, artista en rótulos y tres emblemas holográficos apilados.",
+    "default": true,
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "THE BADDEST",
+        "doc": "Título (config.intro.title); la palabra más larga va grande y el resto en una placa blanca"
+      },
+      "artist": {
+        "type": "string",
+        "default": "K/DA",
+        "doc": "Artista (config.intro.artist), en rótulos diminutos"
+      },
+      "emblem": {
+        "type": "enum",
+        "values": [
+          "emb-crest",
+          "emb-blades",
+          "emb-star"
+        ],
+        "default": "emb-crest",
+        "doc": "Emblema propio"
+      },
+      "silhouette": {
+        "type": "enum",
+        "values": [
+          "sil-profile",
+          "sil-spiky",
+          "sil-bun",
+          "sil-ponytail"
+        ],
+        "default": "sil-profile",
+        "doc": "Silueta propia"
+      },
+      "duration": {
+        "type": "number",
+        "default": 1.7,
+        "min": 1,
+        "max": 6,
+        "doc": "Segundos de la demo; las fases se reparten según la duración"
+      }
+    },
+    "tags": [
+      "intro"
+    ],
+    "file": "components/intro.js",
+    "demo": {
+      "title": "THE BADDEST",
+      "artist": "K/DA"
+    },
+    "preview": {
+      "t": 0.9
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "THE BADDEST",
+      "doc": "Título (config.intro.title); la palabra más larga va grande y el resto en una placa blanca"
+    },
+    "artist": {
+      "type": "string",
+      "default": "K/DA",
+      "doc": "Artista (config.intro.artist), en rótulos diminutos"
+    },
+    "emblem": {
+      "type": "enum",
+      "values": [
+        "emb-crest",
+        "emb-blades",
+        "emb-star"
+      ],
+      "default": "emb-crest",
+      "doc": "Emblema propio"
+    },
+    "silhouette": {
+      "type": "enum",
+      "values": [
+        "sil-profile",
+        "sil-spiky",
+        "sil-bun",
+        "sil-ponytail"
+      ],
+      "default": "sil-profile",
+      "doc": "Silueta propia"
+    },
+    "duration": {
+      "type": "number",
+      "default": 1.7,
+      "min": 1,
+      "max": 6,
+      "doc": "Segundos de la demo; las fases se reparten según la duración"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram-worlds/showcase/components.json",
+      "pointer": "/components/0"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

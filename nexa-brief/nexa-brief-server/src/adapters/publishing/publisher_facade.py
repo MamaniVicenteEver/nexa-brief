@@ -3,7 +3,7 @@
 This class is the ONLY public interface that the pipeline (Stage 9),
 the manual API router, and the scheduler interact with.  It:
 
-  - Initialises TokenStorage, TokenManager, and all 3 platform adapters.
+  - Initialises TokenStorage, TokenManager, and all platform adapters.
   - Routes publish/CRUD calls to the correct adapter based on the account selector.
   - Emits high-level structured log events (in addition to adapter-level events).
   - Provides list_accounts() for the management API.
@@ -26,22 +26,28 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import structlog
 
-from src.config.exceptions import PublisherError
+from src.config.exceptions import PlatformAPIError, PublisherError, UnsupportedOperationError, VideoNotFoundError
 from src.config.settings import settings
+from src.core import channel_sync
+from src.core.ports.channel_catalog_port import ChannelCatalogPort
 from src.core.ports.publisher_port import PublisherPort, PublishVideoResult, VideoMetadata
 from src.adapters.publishing.token_storage import TokenStorage
+from src.adapters.publishing.credential_factory import build_credential_store
 from src.adapters.publishing.token_manager import TokenManager
 from src.adapters.publishing.tiktok_adapter import TikTokAdapter
-from src.adapters.publishing.youtube_adapter import YouTubeAdapter
+from src.adapters.publishing.tiktok_business_adapter import TikTokBusinessAdapter
+from src.adapters.publishing.tiktok_service.adapter import TikTokServiceAdapter
+from src.adapters.publishing.youtube_adapter import YouTubeAdapter, YouTubeChannelProfile
 from src.adapters.publishing.facebook_adapter import FacebookAdapter
+from src.adapters.publishing.instagram_adapter import InstagramAdapter
 
 logger = structlog.get_logger(__name__)
 
-_SUPPORTED_PLATFORMS = ("tiktok", "youtube", "facebook")
+_SUPPORTED_PLATFORMS = ("tiktok", "youtube", "facebook", "instagram")
 
 
 class PublisherFacade:
@@ -60,7 +66,7 @@ class PublisherFacade:
     """
 
     def __init__(self) -> None:
-        storage = TokenStorage(
+        storage = build_credential_store(implementation=TokenStorage,
             path=settings.accounts_json_path,
             encryption_key=settings.publisher_encryption_key,
         )
@@ -70,6 +76,7 @@ class PublisherFacade:
             "tiktok": TikTokAdapter(self._token_manager),
             "youtube": YouTubeAdapter(self._token_manager),
             "facebook": FacebookAdapter(self._token_manager),
+            "instagram": InstagramAdapter(self._token_manager),
         }
 
         logger.info(
@@ -92,12 +99,37 @@ class PublisherFacade:
             raise PublisherError(
                 f"Unknown platform '{platform}'. Supported: {_SUPPORTED_PLATFORMS}"
             )
-        adapter = self._adapters[platform]
+        if platform == "tiktok" and self._token_manager._storage.get_mode(platform, alias) in {"browser", "service"}:
+            raise UnsupportedOperationError("La conexión de TikTok por navegador fue retirada. Conecta la cuenta mediante la API oficial.")
+        elif platform == "tiktok" and self._token_manager._storage.get_api_provider(platform, alias) == "tiktok_business":
+            adapter = TikTokBusinessAdapter(self._token_manager)
+        else:
+            adapter = self._adapters[platform]
         return platform, alias, adapter
 
     # ── CREATE ────────────────────────────────────────────────────────────────
 
     async def publish_video(
+        self,
+        video_path: Path,
+        title: str,
+        description: str,
+        tags: list[str],
+        account_selector: str | None = None,
+        *,
+        privacy: str = "public",
+        **kwargs: Any,
+    ) -> PublishVideoResult:
+        """Publish within the shared upload limit, serializing the same account."""
+        from src.core.publish_concurrency import publication_slot
+
+        selector = account_selector or settings.active_account
+        async with publication_slot(selector):
+            return await self._publish_video(
+                video_path, title, description, tags, selector, privacy=privacy, **kwargs,
+            )
+
+    async def _publish_video(
         self,
         video_path: Path,
         title: str,
@@ -124,6 +156,21 @@ class PublisherFacade:
         """
         selector = account_selector or settings.active_account
         platform, alias, adapter = self._resolve(selector)
+
+        if platform in ("instagram", "facebook", "tiktok"):
+            from src.core.social_caption import social_video_parts
+            description, tags = social_video_parts(title, description, tags)
+            if platform in ("instagram", "tiktok"):
+                # Those adapters prepend their title; the caption already starts with it.
+                title = ""
+
+        if platform in ("instagram", "facebook"):
+            from src.adapters.publishing.video_cover import ensure_video_cover
+
+            supplied = kwargs.get("thumbnail_path")
+            kwargs["thumbnail_path"] = await ensure_video_cover(
+                video_path, Path(supplied) if supplied else None,
+            )
 
         logger.info(
             "publisher_publish_start",
@@ -158,6 +205,20 @@ class PublisherFacade:
             raise
 
         elapsed = round(time.monotonic() - t_start, 2)
+        thumbnail = (result.raw_response or {}).get("thumbnail") or {}
+        if platform in ("facebook", "instagram") and thumbnail.get("status") == "failed":
+            from src.core import notification_tracker
+            from src.core.notification import Notification
+
+            try:
+                await notification_tracker.create(Notification(
+                    type="video_failed", severity="warning", title="Miniatura de video pendiente",
+                    message=(f"El video se publicó en {platform}, pero Meta no aceptó la miniatura. "
+                             f"Revisa la portada en Meta Business Suite: {result.url}"),
+                    account_alias=alias,
+                ))
+            except Exception:
+                logger.warning("publisher_thumbnail_notification_failed", platform=platform)
         logger.info(
             "publisher_publish_success",
             platform=platform,
@@ -228,7 +289,7 @@ class PublisherFacade:
     def list_accounts(self) -> list[dict[str, Any]]:
         """Return all configured accounts and their token status (no tokens exposed)."""
         storage = self._token_manager._storage
-        accounts = storage.list_accounts()
+        accounts = [a for a in storage.list_accounts() if not (a["platform"] == "tiktok" and a.get("mode") in {"browser", "service"})]
         logger.info("publisher_list_accounts", total=len(accounts))
         return accounts
 
@@ -238,12 +299,146 @@ class PublisherFacade:
         """Update an account's user-editable label/notes. Returns False if it doesn't exist."""
         return self._token_manager._storage.update_metadata(platform, alias, label=label, notes=notes)
 
+    async def refresh_youtube_profile(self, alias: str) -> dict[str, Any] | None:
+        """Refresh public YouTube channel metadata while keeping the internal alias stable."""
+        account = next(
+            (item for item in self.list_accounts() if item["platform"] == "youtube" and item["alias"] == alias),
+            None,
+        )
+        if account is None:
+            return None
+
+        adapter = cast(YouTubeAdapter, self._adapters["youtube"])
+        profile: YouTubeChannelProfile | None = await adapter.get_channel_profile(
+            alias,
+            expected_channel_id=(
+                account["target_id"]
+                if account.get("target_id") and account["target_id"] != alias
+                else None
+            ),
+        )
+        if profile is None:
+            return None
+
+        synced_at = time.time()
+        saved = self._token_manager._storage.update_channel_profile(
+            "youtube",
+            alias,
+            name=profile.title,
+            target_id=profile.channel_id,
+            handle=profile.handle,
+            description=profile.description,
+            custom_url=profile.custom_url,
+            avatar=profile.avatar,
+            profile_synced_at=synced_at,
+        )
+        if not saved:
+            return None
+
+        logger.info(
+            "youtube_channel_profile_refreshed",
+            account=alias,
+            channel_id=profile.channel_id,
+        )
+        return {
+            "channel_id": profile.channel_id,
+            "name": profile.title,
+            "handle": profile.handle,
+            "description": profile.description,
+            "custom_url": profile.custom_url,
+            "avatar": profile.avatar,
+            "profile_synced_at": synced_at,
+        }
+
+    async def refresh_instagram_profile(self, alias: str) -> dict[str, Any] | None:
+        """Refresh display fields without changing account identity or usage notes."""
+        from src.core.data import collection
+
+        account = next(
+            (item for item in self.list_accounts() if item["platform"] == "instagram" and item["alias"] == alias),
+            None,
+        )
+        if account is None:
+            return None
+        target_id = str(account.get("target_id") or "")
+        adapter = cast(InstagramAdapter, self._adapters["instagram"])
+        remote = await adapter.get_channel_profile(alias, expected_user_id=target_id)
+        # Keep the application boundary safe even if another provider is used.
+        if not target_id or str(remote.get("id") or "") != target_id:
+            raise PlatformAPIError(
+                "Instagram returned a different account ID. The saved profile was not changed.",
+                platform="instagram", status_code=409,
+            )
+        handle = remote.get("username") or account.get("handle")
+        profile = {
+            "name": remote.get("name") or handle or account["name"],
+            "target_id": target_id,
+            "handle": handle,
+            "description": remote.get("biography") or "",
+            "custom_url": f"https://www.instagram.com/{handle}" if handle else account.get("custom_url"),
+            "avatar": remote.get("profile_picture_url") or account.get("avatar"),
+            "profile_synced_at": time.time(),
+        }
+        if not self._token_manager._storage.update_channel_profile("instagram", alias, **profile):
+            raise PlatformAPIError(
+                "The Instagram connection changed during profile refresh. Retry the operation.",
+                platform="instagram", status_code=409,
+            )
+        await collection("channels").update_where(
+            {"platform": "instagram", "alias": alias, "target_id": target_id},
+            profile,
+        )
+        return profile
+
     def remove_account(self, platform: str, alias: str) -> bool:
         """Delete a connected account's stored tokens. Returns True if it existed."""
         storage = self._token_manager._storage
         removed = storage.remove_account(platform, alias)
         logger.info("publisher_remove_account", platform=platform, account=alias, removed=removed)
         return removed
+
+    # ── Channel sync (Canales) ────────────────────────────────────────────────
+
+    def catalog_for(self, platform: str) -> ChannelCatalogPort | None:
+        """El adaptador de la red si sabe leer su catálogo (ChannelCatalogPort), si no None."""
+        if platform == "tiktok":
+            return TikTokBusinessAdapter(self._token_manager)
+        adapter = self._adapters.get(platform)
+        return adapter if isinstance(adapter, ChannelCatalogPort) else None
+
+    async def sync_channel(self, platform: str, alias: str) -> channel_sync.SyncSummary:
+        """Trae de la plataforma los videos y totales de la cuenta (ver core/channel_sync.py)."""
+        if platform == "tiktok" and self._token_manager._storage.get_api_provider(platform, alias) != "tiktok_business":
+            raise UnsupportedOperationError("Esta cuenta no usa TikTok Business.")
+        catalog = self.catalog_for(platform)
+        if catalog is None:
+            raise UnsupportedOperationError(f"La sincronización de canales todavía no está disponible para {platform}.")
+        if not any(a["platform"] == platform and a["alias"] == alias for a in self.list_accounts()):
+            raise VideoNotFoundError(f"No hay una cuenta conectada '{platform}:{alias}'.")
+        if platform == "instagram":
+            await self.refresh_instagram_profile(alias)
+        summary = await channel_sync.sync_channel(platform, alias, catalog)
+        if platform == "facebook" and callable(getattr(catalog, "list_channel_posts", None)):
+            from src.core.channel_publications import sync_publications
+            target_id = self._token_manager.target_id(platform, alias)
+            await sync_publications(alias, target_id, catalog.list_channel_posts)
+        return summary
+
+    async def sync_all_channels(self) -> dict[str, str]:
+        """Sincroniza todas las cuentas que lo permiten; una que falla no frena a las demás."""
+        results: dict[str, str] = {}
+        for account in self.list_accounts():
+            platform, alias = account["platform"], account["alias"]
+            if self.catalog_for(platform) is None and account.get("mode") not in {"browser", "service"} or account.get("status") == "requires_reauth":
+                continue
+            key = f"{platform}:{alias}"
+            try:
+                summary = await self.sync_channel(platform, alias)
+                results[key] = f"ok: {summary.imported} nuevos, {summary.updated} actualizados"
+            except Exception as exc:  # noqa: BLE001 - una cuenta caída no frena a las demás
+                results[key] = f"error: {exc}"
+                logger.warning("channel_sync_failed", platform=platform, account=alias, error=str(exc))
+        return results
 
     # ── Token refresh (used by scheduler) ────────────────────────────────────
 
@@ -257,6 +452,8 @@ class PublisherFacade:
         for account_info in self.list_accounts():
             platform = account_info["platform"]
             alias = account_info["alias"]
+            if account_info.get("mode") in {"browser", "service"}:
+                continue
             key = f"{platform}:{alias}"
             try:
                 await self._token_manager.refresh_account_if_needed(platform, alias)
@@ -269,4 +466,20 @@ class PublisherFacade:
                     account=alias,
                     error=str(exc),
                 )
+        return results
+
+    async def check_browser_sessions(self) -> dict[str, str]:
+        """Check browser sessions as part of the configured channel-sync cycle."""
+        from src.adapters.publishing.tiktok_service.client import TikTokServiceClient
+
+        results: dict[str, str] = {}
+        for account in self.list_accounts():
+            if account["platform"] != "tiktok" or account.get("mode") not in {"browser", "service"}:
+                continue
+            alias = account["alias"]
+            try:
+                await TikTokServiceClient().request("POST", f"/v1/accounts/{alias}/check")
+                results[f"tiktok:{alias}"] = "ok"
+            except PublisherError:
+                results[f"tiktok:{alias}"] = "requires_reauth"
         return results

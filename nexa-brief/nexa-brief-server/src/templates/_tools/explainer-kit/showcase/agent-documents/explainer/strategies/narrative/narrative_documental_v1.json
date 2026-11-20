@@ -1,0 +1,19 @@
+{
+  "id": "narrative_documental_v1",
+  "label": "Documental",
+  "name": "DOCUMENTAL · un momento icónico contado como historia",
+  "description": "Un momento icónico contado como historia: gancho, contexto, subidas y bajadas, clímax y cierre con moraleja.",
+  "status": "active",
+  "acts": [
+    {"id": "gancho", "name": "Gancho", "weight": "apertura", "intensity": "alta", "function": "Fecha/lugar + algo imposible o una pregunta; presenta al protagonista.", "rules": ["Frases cortas y un número."]},
+    {"id": "contexto", "name": "Contexto", "weight": "corto", "intensity": "media", "function": "Qué estaba en juego y cómo funcionaba.", "rules": ["Una idea por oración; comparar con algo cotidiano."]},
+    {"id": "subida_1", "name": "Subida 1", "weight": "medio", "intensity": "alta", "function": "El problema se hace enorme.", "rules": ["Cifras concretas."]},
+    {"id": "bajada_1", "name": "Bajada 1", "weight": "corto", "intensity": "media", "function": "Obstáculo, duda, el tiempo se acaba.", "rules": ["Frases más lentas."]},
+    {"id": "subida_2", "name": "Subida 2", "weight": "medio", "intensity": "alta", "function": "La idea, el giro, el protagonista actúa."},
+    {"id": "climax", "name": "Clímax", "weight": "corto", "intensity": "maxima", "function": "El momento que el gancho prometió.", "rules": ["Nunca en el primer tercio."]},
+    {"id": "caida", "name": "Caída", "weight": "corto", "intensity": "baja", "function": "El precio y la consecuencia humana."},
+    {"id": "resolucion", "name": "Resolución", "weight": "corto", "intensity": "media", "function": "Qué quedó; puente al presente."},
+    {"id": "cierre", "name": "Cierre", "weight": "cierre", "intensity": "media", "function": "Vuelve al título o la tesis con una última frase memorable."},
+    {"id": "outro", "name": "Outro", "weight": "cierre", "intensity": "baja", "spoken": false, "function": "El cierre con voz del canal (explainer-kit/outro/); no va en el guion."}
+  ]
+}

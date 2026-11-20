@@ -1,0 +1,44 @@
+import json,time,fcntl,base64,io
+from pathlib import Path
+from PIL import Image,ImageDraw
+from playwright.sync_api import sync_playwright
+root=Path.cwd();out=root/'work/texto';lock=open('/tmp/atlas-tactico-chromium.lock','w');fcntl.flock(lock,fcntl.LOCK_EX)
+base='http://127.0.0.1:8000/api/v1/explainer/files/sandbox/nodehistory/atlas-en-movimiento/'
+new=['caption.transcript','label.front','label.route','label.unit','label.site','text.attribution'];r={'errors':[],'gallery':[]}
+with sync_playwright() as p:
+ b=p.chromium.launch(headless=True,args=['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--ignore-gpu-blocklist','--renderer-process-limit=1','--num-raster-threads=2'])
+ try:
+  page=b.new_page(viewport={'width':1080,'height':1920},device_scale_factor=1);page.on('pageerror',lambda e:r['errors'].append(str(e)))
+  for name in new:
+   start=time.monotonic();page.goto(base+'work/tactico/demo.html?only='+name+'&headless=1',wait_until='domcontentloaded');page.wait_for_function('window.__promo && window.__tacticoContext',timeout=60000);page.evaluate('async()=>{await __atlas.ready;await document.fonts.ready;}');page.evaluate('__promo.seek(3)')
+   r['gallery'].append({'name':name,'loaded':True,'picker':page.locator('#catalog option[value="'+name+'"]').count()==1,'items':page.evaluate('__tacticoContext.scene.items.map(i=>i.type)'),'missing':page.evaluate('__tactico.missing()'),'seconds':time.monotonic()-start});print('gallery',name,flush=True)
+  page.goto('http://127.0.0.1:3000/showcase',wait_until='domcontentloaded');r['showcaseUI']={'url':page.url,'authenticated':not page.url.endswith('/login')}
+  page.goto(base+'diseno-textos.html',wait_until='domcontentloaded');page.wait_for_function('window.__textos?.ready',timeout=60000);page.select_option('#background','dark');page.evaluate('__textos.seek(3)')
+  r['performance']=page.evaluate('''async()=>{
+   const {Tactico}=await import('./engine/tactico/core.js'),canvas=new OffscreenCanvas(1080,1920),g=canvas.getContext('2d',{willReadFrequently:true}),view={W:1080,H:1920,zoom:6.5,project:()=>({x:540,y:864,k:1})},env={W:1080,H:1920,U:1,font:()=> 'AtlasDisplay, sans-serif',palette:__textos.data.palette};
+   const result=[];
+   for(const name of ['caption.transcript','label.front','label.route','label.unit','label.site','text.attribution']){
+    const d=Tactico.get(name),item={...Object.fromEntries(Object.entries(d.params).map(([k,v])=>[k,v.default])),...d.demo},internal=await d.prepare?.(item,{scene:{duration:14},palette:env.palette});
+    const s={item,internal,t:3,lt:3,alpha:1};const samples=[];
+    for(let n=0;n<25;n++){const a=performance.now();for(let k=0;k<20;k++){g.save();d.draw(g,s,view,env);g.restore();}samples.push(performance.now()-a);}
+    samples.sort((a,b)=>a-b);result.push({name,instances:20,medianMs:samples[12],p95Ms:samples[23]});
+   }return result;
+  }''')
+  # Contact sheets of every real canvas. Scroll one page; no iframe or new engine.
+  cards=page.evaluate('__textos.data.cards.map(c=>({id:c.id,title:c.title}))');thumbs=[]
+  for c in cards:
+   page.locator('#'+c['id']).scroll_into_view_if_needed();page.wait_for_timeout(70);page.evaluate('__textos.seek(3)');uri=page.locator('#'+c['id']+' canvas').evaluate('(c)=>c.toDataURL()');im=Image.open(io.BytesIO(base64.b64decode(uri.split(',')[1]))).convert('RGB');im.thumbnail((520,330));thumbs.append((c['title'],im))
+  for n in range(2):
+   subset=thumbs[n*18:(n+1)*18];sheet=Image.new('RGB',(1080,((len(subset)+1)//2)*380),'#10171d');d=ImageDraw.Draw(sheet)
+   for k,(title,im) in enumerate(subset):x=(k%2)*540;y=(k//2)*380;d.text((x+10,y+9),title,fill='white');sheet.paste(im,(x+(540-im.width)//2,y+38))
+   sheet.save(out/f'capturas/11-todas-las-muestras-{n+1}.jpg',quality=88)
+  # Entry / hold / exit using actual engine; new components only.
+  cards=page.evaluate('__textos.data.cards');r['phaseSamples']=[]
+  for name in new:
+   c=next(c for c in cards if c['type']==name);page.locator('#'+c['id']).scroll_into_view_if_needed();page.wait_for_timeout(70);sheet=Image.new('RGB',(1080,3*190),'#10171d');d=ImageDraw.Draw(sheet)
+   for n,t in enumerate([.06,3,13.9]):
+    if name=='caption.transcript':t=[1.23,3,13.9][n]
+    page.evaluate('__textos.seek('+str(t)+')');uri=page.locator('#'+c['id']+' canvas').evaluate('(c)=>c.toDataURL()');im=Image.open(io.BytesIO(base64.b64decode(uri.split(',')[1]))).convert('RGB');im.thumbnail((1080,160));sheet.paste(im,((1080-im.width)//2,n*190+25));d.text((10,n*190+4),name+' / '+str(t)+' s',fill='white')
+   sheet.save(out/f'capturas/fases-{name}.jpg',quality=88);r['phaseSamples'].append(name)
+  r['ok']=not r['errors'] and all(e['loaded'] and e['picker'] and not e['missing'] for e in r['gallery'])
+ finally:(out/'qa-showcase.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r,indent=2),flush=True);b.close()

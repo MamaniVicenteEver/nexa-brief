@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "grunge-montage.papel",
+  "entry_id": "grunge-montage.papel",
+  "kind": "component",
+  "label": "Banda de papel en niebla",
+  "summary": "Fondo de niebla clara con banda de papel negro rasgado y texto dentro.",
+  "component": {
+    "name": "grunge-montage.papel",
+    "label": "Banda de papel en niebla",
+    "summary": "Fondo de niebla clara con banda de papel negro rasgado y texto dentro.",
+    "default": true,
+    "params": {
+      "scene": {
+        "type": "string",
+        "default": "s25",
+        "doc": "Nombre de la escena de config.timeline que se muestra"
+      },
+      "duration": {
+        "type": "number",
+        "default": 2.0,
+        "doc": "Segundos de la demo",
+        "min": 0.5,
+        "max": 6
+      }
+    },
+    "tags": [
+      "escena"
+    ],
+    "file": "player.js",
+    "demo": {
+      "scene": "s25"
+    },
+    "preview": {
+      "t": 0.6
+    }
+  },
+  "params": {
+    "scene": {
+      "type": "string",
+      "default": "s25",
+      "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+      "type": "number",
+      "default": 2.0,
+      "doc": "Segundos de la demo",
+      "min": 0.5,
+      "max": 6
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json",
+      "pointer": "/components/8"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

@@ -1,0 +1,33 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "title_alarmista_v1",
+  "piece": "title",
+  "locale": "pt-BR",
+  "status": "draft",
+  "intent": "Criar três títulos com alarmes verdadeiros e emoções diferentes, fáceis de entender sem conhecer o assunto.",
+  "templates": {
+    "paradox": "O {objeto pequeno} que {consequência grande}",
+    "countdown": "{N} segundos para {ação}",
+    "near_miss": "{algo conhecido} quase {resultado verificado}",
+    "personal_stake": "Seu {objeto do dia a dia} não é tão {suposição} assim"
+  },
+  "examples": [
+    "Seus chats com IA podem chegar ao tribunal",
+    "Você apagou. Quem ficou com uma cópia?",
+    "A promessa de privacidade que merece atenção"
+  ],
+  "conventions": [
+    "Até 60 caracteres por título; o essencial aparece nos primeiros 40.",
+    "Use três emoções, sem só trocar palavras do mesmo título.",
+    "Maiúsculas apenas na palavra-chave; não traduza caixa alta automaticamente.",
+    "Se o desastre não aconteceu, diga quase, pode ou faça uma pergunta fiel aos fatos."
+  ],
+  "sounds_false": [
+    "Descubra a incrível revolução que vai mudar TUDO.",
+    "Tu és o próximo: registro distante do público brasileiro.",
+    "Uma sigla técnica antes de explicar por que ela importa."
+  ],
+  "overrides": {
+    "name": "Três títulos claros, com tensão e prova"
+  }
+}

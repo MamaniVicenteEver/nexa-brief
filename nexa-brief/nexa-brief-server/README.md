@@ -39,6 +39,13 @@ nexa-brief-server/
 
 ---
 
+[Crear e integrar plantillas NodeMotion](docs/nodemotion-template-authoring.md).
+
+## NodeMotion
+
+- [Arquitectura y organización](docs/nodemotion-architecture.md)
+- [Validación y estado de migración](docs/nodemotion-validation.md)
+
 ## API Reference (Endpoints Activos)
 
 Los endpoints están versionados bajo el prefijo `/api/v1` y documentados automáticamente mediante Swagger UI en `/docs`.

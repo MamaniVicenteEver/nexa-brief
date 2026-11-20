@@ -13,6 +13,8 @@ export interface MediaRef {
 export interface StudioValue {
   musicAssetId: string | null;
   media: Record<string, MediaRef[]>;
+  /** Opacidad del fondo por slot (0 = invisible; 1 = visible). */
+  mediaOpacity?: Record<string, number>;
   texts: Record<string, string>;
   brief: string;
 }
@@ -25,32 +27,112 @@ export const EMPTY_STUDIO_VALUE: StudioValue = {
 };
 
 export type RecorderEngine = "remotion" | "hyperframes" | "playwright";
+export type RecordFormat = "16x9" | "9x16";
+export const DEFAULT_RECORD_OUTPUTS = ["tiktok", "instagram", "facebook", "youtube", "youtube_shorts"] as const;
+export type RecordOutput = (typeof DEFAULT_RECORD_OUTPUTS)[number];
+export const RECORD_OUTPUT_FORMAT: Record<RecordOutput, RecordFormat> = {
+  tiktok: "9x16",
+  instagram: "9x16",
+  facebook: "16x9",
+  youtube: "16x9",
+  youtube_shorts: "9x16",
+};
 
 export interface RenderOptions {
   recorderEngine?: RecorderEngine;
+  backgroundOpacity?: number;
   publishAccounts: string[];
+  /** Destinos cuyos archivos se preparan. No implica publicar en ninguna cuenta. */
+  outputs?: RecordOutput[];
+  /** Contrato legacy: formatos explícitos a grabar si outputs no viene. */
+  formats?: RecordFormat[];
+  /** Contrato legacy: un formato por cuenta ("platform:alias"). */
+  accountFormats?: Record<string, RecordFormat>;
 }
 
-export type DraftStatus = "previewing" | "preview_ready" | "rendering" | "rendered" | "failed";
+export type DraftStatus =
+  | "previewing"
+  | "preview_ready"
+  | "preparing"
+  | "prepared"
+  | "rendering"
+  | "rendered"
+  | "failed";
+
+export type DetailsPlatform = "youtube" | "facebook" | "instagram" | "tiktok";
+export type DraftCopyPlatform = DetailsPlatform | "youtube_shorts";
+export const DETAILS_PLATFORMS: DetailsPlatform[] = ["youtube", "facebook", "instagram", "tiktok"];
+export const DRAFT_DETAILS_PLATFORMS: DraftCopyPlatform[] = [...DEFAULT_RECORD_OUTPUTS];
+
+export interface PlatformDetails {
+  title: string;
+  description: string;
+  tags: string[];
+  strategy: string;
+  /** YouTube: el comentario que se publica y se fija. */
+  pinned_comment?: string;
+}
+
+/** Textos de publicación de un prototipo (Preparar → Detalles). */
+export interface DraftDetails {
+  songName: string;
+  artist: string;
+  language: string | null;
+  copies: Partial<Record<DraftCopyPlatform, PlatformDetails>>;
+  generatedAt: string | null;
+  edited: boolean;
+  /** Investigación previa: lo que la IA ordenó de la información de la canción. */
+  research: string;
+}
 
 export interface TemplateInputsPayload {
   media: Record<string, string[]>;
+  media_kinds?: Record<string, MediaAssetKind[]>;
+  media_opacity?: Record<string, number>;
   texts: Record<string, string>;
   brief?: string | null;
 }
 
 export interface DraftRequest {
   template_id: string;
+  name?: string;
   music_asset_id?: string;
   image_asset_id?: string;
   video_asset_id?: string;
   template_inputs?: TemplateInputsPayload;
-  auto_render?: { recorder_engine?: RecorderEngine; publish_accounts: string[] };
+  auto_render?: { recorder_engine?: RecorderEngine; publish_accounts: string[]; outputs?: RecordOutput[] };
 }
+
+export type DraftThumbnailOptionId = "A" | "B";
+
+export interface DraftThumbnailOption {
+  /** Texto de esta opción, independiente de los metadatos y copies de publicación. */
+  text: string;
+  /** Configuración visual que el renderer usa para generar la miniatura. */
+  design?: Record<string, unknown> | null;
+}
+
+export interface DraftThumbnails {
+  fingerprint: string;
+  /** Legacy manifests omit format and remain 16:9. */
+  format?: RecordFormat;
+  selected: DraftThumbnailOptionId;
+  urls: Partial<Record<DraftThumbnailOptionId, string>>;
+  /** Opcional para poder leer drafts creados antes de guardar el manifest A/B. */
+  options?: Partial<Record<DraftThumbnailOptionId, DraftThumbnailOption>>;
+}
+
+/** Miniaturas A/B y elección independientes por salida; ausencia significa fallback legacy. */
 
 export interface Draft {
   draftId: string;
   templateId: string;
+  /** Nombre del prototipo en el Sandbox. */
+  name: string;
+  /** «Video original»: la plantilla tal cual, con su canción y su fondo. */
+  original: boolean;
+  /** «Información de la canción» que se le pasó a la IA al preparar (opcional). */
+  songNotes: string;
   status: DraftStatus;
   stage: JobStage;
   errors: string[];
@@ -64,6 +146,13 @@ export interface Draft {
   previewUrl: string | null;
   jobId: string | null;
   recoverable: boolean;
+  details: DraftDetails | null;
+  thumbnails?: DraftThumbnails | null;
+  /** Cuando falta un destino se conserva thumbnails como manifest A/B compartido. */
+  thumbnailError?: string | null;
+  /** Datos que faltan por generar (IA no disponible o recursos sin ficha): bloquean publicar. */
+  pending?: string[];
+  createdAt: string;
   updatedAt: string;
 }
 

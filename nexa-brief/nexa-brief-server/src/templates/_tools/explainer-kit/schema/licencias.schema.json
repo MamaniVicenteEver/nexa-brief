@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/schema/licencias.schema.json",
+  "title": "Inventario de licencias de un video",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract", "video", "summary", "items"],
+  "properties": {
+    "contract": {"const": "nexa.licencias/1"},
+    "video": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "titulo", "diseno"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "titulo": {"type": ["string", "null"]}, "diseno": {"type": "string", "minLength": 1}}
+    },
+    "summary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["licencia_resultante", "apto_para_publicar", "motivos"],
+      "properties": {"licencia_resultante": {"type": ["string", "null"]}, "apto_para_publicar": {"type": "boolean"}, "motivos": {"type": "array", "items": {"type": "string"}}}
+    },
+    "items": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["id", "tipo", "titulo", "autor", "licencia", "licencia_url", "fuente_url", "atribucion", "cambios", "condiciones", "estado_licencia", "usado_en", "ficha"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1}, "tipo": {"type": "string", "minLength": 1},
+          "titulo": {"type": ["string", "null"]}, "autor": {"type": ["string", "null"]},
+          "licencia": {"type": ["string", "null"]}, "licencia_url": {"type": ["string", "null"]},
+          "fuente_url": {"type": ["string", "null"]}, "atribucion": {"type": ["string", "null"]},
+          "cambios": {"type": "array", "items": {"type": "string"}},
+          "condiciones": {"type": "array", "items": {"type": "string"}},
+          "estado_licencia": {"enum": ["verificada", "desconocida", "bloqueada", "propia"]},
+          "usado_en": {"type": "array", "items": {"type": "string"}}, "ficha": {"type": ["string", "null"]},
+          "proveedor": {"type": ["string", "null"]}, "modelo": {"type": ["string", "null"]}, "voz": {"type": ["string", "null"]}
+        }
+      }
+    }
+  }
+}

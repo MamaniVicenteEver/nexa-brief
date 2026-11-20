@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "id": "documentary",
+  "nombre": "Documentary",
+  "revision": 1,
+  "fuentes": {
+    "main": "Montserrat"
+  },
+  "font_url": "/api/v1/explainer/files/_tools/explainer-kit/vendor/fonts/Montserrat-700.ttf",
+  "font_weight": 700,
+  "theme": {
+    "heavy": "700 $px Montserrat",
+    "accent": "#ffd21a"
+  },
+  "map": {
+    "dim": 0.3,
+    "vignette": 0.4
+  },
+  "captions": {
+    "enabled": true,
+    "size": 30.6,
+    "y": 0.8902083333,
+    "yLandscape": 0.9242592593,
+    "maxWords": 4,
+    "font": "Montserrat, sans-serif",
+    "weight": 700,
+    "color": "#ffd21a",
+    "stroke": true,
+    "strokeColor": "#000"
+  },
+  "text": {
+    "font": "Montserrat",
+    "weight": 700,
+    "color": "#fff",
+    "background": "rgba(8,8,10,.92)",
+    "strokeColor": "rgba(0,0,0,.55)",
+    "shadow": 0.25
+  },
+  "layers": {
+    "label": {
+      "size": 30,
+      "style": "tag"
+    },
+    "pin": {
+      "size": 24,
+      "side": "right"
+    },
+    "icon": {
+      "size": 48,
+      "labelSize": 20
+    },
+    "flag": {
+      "size": 36,
+      "style": "badge"
+    },
+    "photo": {
+      "size": 82,
+      "labelSize": 20
+    },
+    "year": {
+      "size": 58,
+      "y": 0.7,
+      "color": "#e3122a"
+    },
+    "big": {
+      "size": 126,
+      "subSize": 30,
+      "y": 0.44
+    },
+    "line": {
+      "w": 3.2,
+      "glow": 14
+    },
+    "arrow": {
+      "w": 3.2,
+      "head": 26,
+      "glow": 14
+    },
+    "fill": {
+      "borderWidth": 3.2,
+      "glow": 18,
+      "hatchWidth": 7,
+      "hatchGap": 22
+    },
+    "dot": {
+      "r": 9
+    },
+    "crowd": {
+      "radius": 60,
+      "dotR": 4.2
+    }
+  },
+  "formatos": {
+    "movil": {
+      "layers": {
+        "label": {
+          "maxWidth": 0.86
+        },
+        "pin": {
+          "maxWidth": 0.72
+        }
+      }
+    },
+    "escritorio": {
+      "layers": {
+        "year": {
+          "y": 0.72
+        },
+        "label": {
+          "maxWidth": 0.65
+        },
+        "pin": {
+          "maxWidth": 0.55
+        }
+      }
+    }
+  },
+  "safeMargin": 24
+}

@@ -1,0 +1,64 @@
+{
+  "createFlow": {
+    "submit": "Generate",
+    "submitPending": "Generating…",
+    "oneStepHint": "One step: the preview is built, recorded automatically and titles and descriptions are generated. Follow it in the in-progress videos tray.",
+    "started": "{count, plural, one {Done: the video has started. Follow it in the tray.} other {Done: # videos have started. Follow them in the tray.}}",
+    "classicFallback": "With a duration other than “Automatic × 1” the classic flow is used.",
+    "classicLosesContent": "With a duration other than “Automatic × 1” the classic flow is used: only the song and the background are applied, not the template's own media or texts. Keep the duration at “Automatic × 1” to use them.",
+    "content": {
+      "title": "Content",
+      "loading": "Loading what the template needs…",
+      "requirementsFailed": "We couldn't load what the template needs: the usual fields are shown instead."
+    },
+    "needs": {
+      "title": "What this template needs",
+      "titleCommercial": "What this commercial needs",
+      "songRequired": "Song (required)",
+      "songOptional": "Song (optional)",
+      "lyricsAuto": "lyrics are transcribed automatically",
+      "kind": {
+        "image": "{range} {count, plural, one {image} other {images}}",
+        "video": "{range} {count, plural, one {video} other {videos}}",
+        "any": "{range} {count, plural, one {image or video} other {images or videos}}"
+      },
+      "orientation": {
+        "landscape": "landscape",
+        "portrait": "portrait",
+        "square": "square"
+      },
+      "chosen": "{count, plural, =0 {none chosen} one {# chosen} other {# chosen}}",
+      "texts": "{count, plural, one {# editable text} other {# editable texts}} (untouched ones keep the template's)",
+      "allFilled": "Everything is chosen. You can generate.",
+      "aiWillFill": "When you generate, the AI finds and imports what's missing in: {slots}.",
+      "aiHint": "No background? Write a description in “Let the AI choose” and leave it empty: it will find one when you generate. Without a description an automatic one is picked.",
+      "aiHintCommercial": "No videos or photos? Write a description in “Let the AI choose” and leave the slots empty: when you generate, the AI finds and imports them. Without media or a description, the template's sample media is used."
+    },
+    "progress": {
+      "aiPlanning": "The AI is looking for media… {done}/{total}",
+      "aiImporting": "Importing the media into your library…",
+      "creating": "Creating {done}/{total}…"
+    },
+    "errors": {
+      "generic": "We couldn't generate the video. Please try again.",
+      "ai": "The AI couldn't choose the media. Pick them yourself or try another description.",
+      "partial": "{created} of {total} started. The rest couldn't be created: {reason}"
+    },
+    "summary": {
+      "rowMedia": "Media",
+      "mediaChosen": "{count, plural, one {# chosen} other {# chosen}}",
+      "mediaByAi": "Chosen by the AI",
+      "noMedia": "Not used",
+      "songChosen": "Chosen"
+    },
+    "tray": {
+      "preparing": "Preparing",
+      "preparingCount": "{count, plural, one {# preparing} other {# preparing}}",
+      "starting": "Starting…",
+      "previewHint": "then it records automatically",
+      "failed": "Failed",
+      "failedHint": "The video couldn't be prepared.",
+      "barLabel": "Preparing {name}"
+    }
+  }
+}

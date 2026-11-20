@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-latido",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-latido",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [],
+  "source_sha256": "a1646923cfdacd9f43579b2561fcab6ce5c959ad398924d96e69bc615a2ed84e",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-latido",
+    "config": "nodemotion/lyrics/lyrics-latido/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-latido/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-latido/README.md"
+  },
+  "revision": "9a2ba434030ca019852c2ca94238b14e68343213401cfbc97347fb091a18d4eb"
+}

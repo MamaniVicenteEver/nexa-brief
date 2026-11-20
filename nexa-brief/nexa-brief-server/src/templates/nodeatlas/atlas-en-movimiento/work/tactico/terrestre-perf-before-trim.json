@@ -1,0 +1,475 @@
+{
+  "stage": "perf",
+  "viewport": [
+    1080,
+    1920
+  ],
+  "flags": [
+    "--use-gl=angle",
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader",
+    "--ignore-gpu-blocklist",
+    "--renderer-process-limit=1",
+    "--num-raster-threads=1"
+  ],
+  "errors": [],
+  "failedRequests": [],
+  "browser": "148.0.7778.96",
+  "benchmarks": [
+    {
+      "type": "army.advance",
+      "instances": 1,
+      "tokensPerInstance": 40,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 13.249999999875824,
+        "p95": 17
+      },
+      "controlMs": {
+        "mean": 7.494999999925494,
+        "p95": 8.100000001490116
+      },
+      "submissionMs": {
+        "mean": 0.7566666666418314,
+        "p95": 1.5
+      },
+      "netMs": 5.754999999950329,
+      "drawAndBarrier1pxMs": {
+        "mean": 5.668333333233992,
+        "p95": 6.200000002980232
+      },
+      "cache": {
+        "entries": 3,
+        "pixels": 173056,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "ground",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 0.65,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 18.37666666607062,
+        "p95": 21.099999994039536
+      },
+      "controlMs": {
+        "mean": 7.635000000645717,
+        "p95": 9
+      },
+      "submissionMs": {
+        "mean": 2.7549999989569187,
+        "p95": 5.5
+      },
+      "netMs": 10.741666665424901,
+      "cache": {
+        "entries": 13,
+        "pixels": 893952,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "army",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 0.48,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 25.433333333705864,
+        "p95": 27.80000000447035
+      },
+      "controlMs": {
+        "mean": 8.29833333293597,
+        "p95": 7.600000001490116
+      },
+      "submissionMs": {
+        "mean": 2.4500000002483526,
+        "p95": 4
+      },
+      "netMs": 17.135000000769892,
+      "cache": {
+        "entries": 14,
+        "pixels": 910336,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "ground.tank",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 27.08166666664183,
+        "p95": 29.600000001490116
+      },
+      "controlMs": {
+        "mean": 7.273333333432674,
+        "p95": 7.699999995529652
+      },
+      "submissionMs": {
+        "mean": 2.5383333332836626,
+        "p95": 3.6999999955296516
+      },
+      "netMs": 19.808333333209156,
+      "cache": {
+        "entries": 14,
+        "pixels": 910336,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "ground.apc",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 20.941666666045784,
+        "p95": 21.700000002980232
+      },
+      "controlMs": {
+        "mean": 7.088333333656192,
+        "p95": 7.299999997019768
+      },
+      "submissionMs": {
+        "mean": 2.1683333332339925,
+        "p95": 2.399999998509884
+      },
+      "netMs": 13.853333332389592,
+      "cache": {
+        "entries": 14,
+        "pixels": 910336,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "ground.truck",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 21.65666666701436,
+        "p95": 25.400000005960464
+      },
+      "controlMs": {
+        "mean": 7.138333332786957,
+        "p95": 7.300000004470348
+      },
+      "submissionMs": {
+        "mean": 2.289999999726812,
+        "p95": 2.7000000029802322
+      },
+      "netMs": 14.518333334227403,
+      "cache": {
+        "entries": 14,
+        "pixels": 910336,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "ground.jeep",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 20.81999999980132,
+        "p95": 21.299999997019768
+      },
+      "controlMs": {
+        "mean": 7.096666666741172,
+        "p95": 7.299999997019768
+      },
+      "submissionMs": {
+        "mean": 2.2083333329608044,
+        "p95": 2.7000000029802322
+      },
+      "netMs": 13.723333333060147,
+      "cache": {
+        "entries": 14,
+        "pixels": 910336,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "ground.artillery",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 25.904999999701978,
+        "p95": 26.399999998509884
+      },
+      "controlMs": {
+        "mean": 7.026666666815678,
+        "p95": 7.200000002980232
+      },
+      "submissionMs": {
+        "mean": 2.1583333330849808,
+        "p95": 2.399999998509884
+      },
+      "netMs": 18.8783333328863,
+      "cache": {
+        "entries": 14,
+        "pixels": 910336,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "ground.launcher",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 21.606666666517654,
+        "p95": 23.600000001490116
+      },
+      "controlMs": {
+        "mean": 7.139999999975164,
+        "p95": 7.300000004470348
+      },
+      "submissionMs": {
+        "mean": 2.2516666665673255,
+        "p95": 2.7999999970197678
+      },
+      "netMs": 14.46666666654249,
+      "cache": {
+        "entries": 14,
+        "pixels": 910336,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "ground.ambulance",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 21.364999999850987,
+        "p95": 22.099999994039536
+      },
+      "controlMs": {
+        "mean": 6.985000000024836,
+        "p95": 7.100000001490116
+      },
+      "submissionMs": {
+        "mean": 2.2766666668156783,
+        "p95": 3
+      },
+      "netMs": 14.37999999982615,
+      "cache": {
+        "entries": 14,
+        "pixels": 910336,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "ground.convoy",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 62.38833333291113,
+        "p95": 96.10000000149012
+      },
+      "controlMs": {
+        "mean": 8.186666666840514,
+        "p95": 16
+      },
+      "submissionMs": {
+        "mean": 16.624999999875822,
+        "p95": 40.600000001490116
+      },
+      "netMs": 54.201666666070615,
+      "cache": {
+        "entries": 17,
+        "pixels": 1159168,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "army.advance",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 85.75333333350719,
+        "p95": 105.20000000298023
+      },
+      "controlMs": {
+        "mean": 7.576666666691502,
+        "p95": 9.399999998509884
+      },
+      "submissionMs": {
+        "mean": 3.5500000002483527,
+        "p95": 8.100000001490116
+      },
+      "netMs": 78.17666666681568,
+      "cache": {
+        "entries": 17,
+        "pixels": 1159168,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "army.retreat",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 82.98833333340784,
+        "p95": 87.30000000447035
+      },
+      "controlMs": {
+        "mean": 7.743333333109816,
+        "p95": 7.399999998509884
+      },
+      "submissionMs": {
+        "mean": 2.699999999627471,
+        "p95": 2.899999998509884
+      },
+      "netMs": 75.24500000029802,
+      "cache": {
+        "entries": 17,
+        "pixels": 1159168,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "army.hold",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 67.31166666696468,
+        "p95": 69.20000000298023
+      },
+      "controlMs": {
+        "mean": 7.814999999726812,
+        "p95": 7.5
+      },
+      "submissionMs": {
+        "mean": 2.671666666616996,
+        "p95": 4
+      },
+      "netMs": 59.496666667237875,
+      "cache": {
+        "entries": 17,
+        "pixels": 1159168,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "army.encircle",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 56.28000000044703,
+        "p95": 62.899999998509884
+      },
+      "controlMs": {
+        "mean": 7.324999999751648,
+        "p95": 7.699999995529652
+      },
+      "submissionMs": {
+        "mean": 2.0283333340038854,
+        "p95": 3.1999999955296516
+      },
+      "netMs": 48.955000000695385,
+      "cache": {
+        "entries": 17,
+        "pixels": 1159168,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "army.clash",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 65.32666666706403,
+        "p95": 85.5
+      },
+      "controlMs": {
+        "mean": 8.393333332737287,
+        "p95": 7.5999999940395355
+      },
+      "submissionMs": {
+        "mean": 3.6199999999254944,
+        "p95": 6.600000001490116
+      },
+      "netMs": 56.93333333432675,
+      "cache": {
+        "entries": 17,
+        "pixels": 1159168,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "army.banner",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 41.53000000019868,
+        "p95": 45.29999999701977
+      },
+      "controlMs": {
+        "mean": 7.953333333383004,
+        "p95": 7.5
+      },
+      "submissionMs": {
+        "mean": 0.5816666668901841,
+        "p95": 0.7000000029802322
+      },
+      "netMs": 33.57666666681568,
+      "cache": {
+        "entries": 17,
+        "pixels": 1159168,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "army.supply",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 1,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 28.7049999995778,
+        "p95": 53.29999999701977
+      },
+      "controlMs": {
+        "mean": 7.838333333532016,
+        "p95": 9.899999998509884
+      },
+      "submissionMs": {
+        "mean": 9.78333333308498,
+        "p95": 30.399999998509884
+      },
+      "netMs": 20.866666666045784,
+      "cache": {
+        "entries": 17,
+        "pixels": 1159168,
+        "limit": 8000000
+      }
+    }
+  ],
+  "complete": true
+}

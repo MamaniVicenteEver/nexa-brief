@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-hologram-worlds",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-hologram-worlds",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/kit.js": "runtime/components/kit.js",
+    "components/outro-v1.js": "runtime/components/outro-v1.js",
+    "components/outro-v2.js": "runtime/components/outro-v2.js",
+    "components/scenes.js": "runtime/components/scenes.js",
+    "components/transitions.js": "runtime/components/transitions.js",
+    "components/worlds.js": "runtime/components/worlds.js",
+    "player.js": "runtime/player.js",
+    "showcase/index.html": "runtime/showcase/index.html"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "source_sha256": "9f7674bf1f3debe3f89c4e04e82a4af69a6a72eef79e68c39ff3a8870012d79c",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-hologram-worlds",
+    "config": "nodemotion/lyrics/lyrics-hologram-worlds/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-hologram-worlds/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-hologram-worlds/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-hologram-worlds/DESIGN.md"
+  },
+  "demo_resource_aliases": {
+    "assets/media/glam-1.jpg": "b859a0164e8eeceb0d2c9d8d2bb037b624198abea6bf567095dead37a43cc9ad.jpg",
+    "assets/media/glam-2.jpg": "8926208c9284deee54e718bb4d9be3ec620bb7950ace6296a86df281bc2e43a0.jpg",
+    "assets/media/glam.mp4": "1549fc9ca7b51ae06b2424181537ee947466c068a4773f25414e9bb26393fa07.mp4",
+    "assets/media/glasses-1.jpg": "e101bc7e16825474f24a358d75bc9568e7257c6888862467c169bc443daf2edb.jpg",
+    "assets/media/glasses-2.jpg": "d3809ee5be955b2b7519c89e9bbf88908e315deb0ef67078868d7f4cb09f4688.jpg",
+    "assets/media/glasses.mp4": "b770b5749392c59e86bc6e3575bb9167dc36a0611c6abb718d48f14736c232c5.mp4",
+    "assets/media/graded/glam-1.holo.jpg": "6ce9393093c08321c0466cd712ebf31fab0b9352cb743c9cc88c8e62a6867315.jpg",
+    "assets/media/graded/glam.holo.mp4": "0c457667183605d9ab08add20ab71219ca3a92b0828b484562b644dfda47dd8d.mp4",
+    "assets/media/graded/glasses-1.holo.jpg": "dfb4e235aaa0e5bca28741a99e3c98ff8c5a678f4afa4fbf04a67aa47a067b44.jpg",
+    "assets/media/graded/glasses.holo.mp4": "c7dda8a7cdd7f589bd6eca2faba6e44e94d0d9ebce05130b422015086a2d9d53.mp4",
+    "assets/media/graded/hair-1.holo.jpg": "2f881ffbde8935faa582f7e561fe83e02c9edfd4b167abca205e8f6a5add2fc0.jpg",
+    "assets/media/graded/hair.holo.mp4": "acc4f9307c670ae076e0fad5d1f57f23bb7e754e48dad6ee534e146927b08c61.mp4",
+    "assets/media/hair-1.jpg": "93abdbade11dec7213e8dbde1d44520d1181cb07a1fe882b635471fe434e6c90.jpg",
+    "assets/media/hair-2.jpg": "32dc2b61be12deef294f886e20aaf3c085fa187edfdd82659ae532a6f48bed11.jpg",
+    "assets/media/hair.mp4": "c427260b842fc4673edb89a6a5581cd246284afa1acf4a908db0bc86d18d17e7.mp4"
+  },
+  "revision": "ba342641d9b2a0ade7a029426d621bec9a97bd4e7285abdf771caa354604f588"
+}

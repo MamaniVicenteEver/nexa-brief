@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "config.background",
+  "entry_id": "config.background",
+  "name": "background",
+  "kind": "configuration",
+  "label": "background",
+  "summary": "Existing configuration configuration: background.",
+  "params": {
+    "streaks": {
+      "default": 16
+    },
+    "speed": {
+      "default": 1
+    },
+    "intensity": {
+      "default": 1
+    },
+    "vignette": {
+      "default": 0.55
+    },
+    "smokeChance": {
+      "default": 0.18
+    },
+    "smokeMinGap": {
+      "default": 4
+    }
+  },
+  "example": {
+    "streaks": 16,
+    "speed": 1,
+    "intensity": 1,
+    "vignette": 0.55,
+    "smokeChance": 0.18,
+    "smokeMinGap": 4
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/assets/config.json",
+      "pointer": "/configs/0/background"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

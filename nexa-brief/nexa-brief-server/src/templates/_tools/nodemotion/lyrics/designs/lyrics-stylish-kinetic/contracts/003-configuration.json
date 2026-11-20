@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-stylish-kinetic",
+  "id": "config.brush",
+  "entry_id": "config.brush",
+  "name": "brush",
+  "kind": "configuration",
+  "label": "brush",
+  "summary": "Existing configuration configuration: brush.",
+  "params": {
+    "color": {
+      "default": "#FFFFFF"
+    },
+    "chance": {
+      "default": 0.8
+    }
+  },
+  "example": {
+    "color": "#FFFFFF",
+    "chance": 0.8
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
+      "pointer": "/configs/0/brush"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

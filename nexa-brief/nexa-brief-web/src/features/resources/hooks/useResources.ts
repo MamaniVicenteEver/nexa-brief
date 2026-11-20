@@ -5,7 +5,9 @@ import { useState } from "react";
 import {
   type AssetPatch,
   deleteLibraryAsset,
+  enrichLibraryMusic,
   getLibraryCategories,
+  getLibraryPage,
   getLyrics,
   retranscribe,
   type UploadAssetInput,
@@ -19,9 +21,10 @@ import {
 } from "@/features/library/hooks/useLibraryAssets";
 import { useRealtimeEvent } from "@/features/realtime";
 import { type ResourceKind, toApiKind } from "../kinds";
+import { useResourceScope } from "../ResourceScope";
 
 interface LibraryAssetChangedEvent {
-  kind: "images" | "music" | "videos";
+  kind: "images" | "music" | "videos" | "sounds";
   asset_id: string;
   action: "created" | "updated" | "deleted" | "transcription";
   transcription_status: string | null;
@@ -44,18 +47,45 @@ export function useLibraryRealtimeSync() {
 }
 
 /** Listado con búsqueda (debounced) y filtro de categoría opcional. */
-export function useLibraryList(kind: ResourceKind, q = "", category = "", enabled = true) {
+export function useLibraryList(kind: ResourceKind, q = "", category?: string, enabled = true) {
+  const scope = useResourceScope();
   const apiKind = toApiKind(kind);
   useLibraryRealtimeSync();
   const debouncedQ = useDebouncedValue(q);
-  return useLibraryAssets(apiKind, enabled, { q: debouncedQ, category });
+  return useLibraryAssets(apiKind, enabled && (!scope.templateId || Boolean(scope.categoryId)), {
+    q: debouncedQ,
+    category: category ?? scope.categoryId ?? "",
+  });
 }
 
-export function useLibraryCategories(kind: ResourceKind) {
+export function useLibraryCategories(kind: ResourceKind, enabled = true) {
   const apiKind = toApiKind(kind);
   return useQuery({
     queryKey: ["library-categories", apiKind],
     queryFn: ({ signal }) => getLibraryCategories(apiKind, signal),
+    enabled,
+  });
+}
+
+/** Páginas independientes y cancelables; reutiliza la invalidación de la librería. */
+export function useLibraryPage(
+  kind: ResourceKind,
+  q = "",
+  category?: string,
+  page = 1,
+  enabled = true,
+) {
+  const apiKind = toApiKind(kind);
+  const scope = useResourceScope();
+  // Una categoría elegida explícitamente (incluida «todas») prevalece sobre
+  // la categoría del editor; solo hereda el contexto cuando se omite.
+  const effectiveCategory = category ?? scope.categoryId ?? "";
+  useLibraryRealtimeSync();
+  return useQuery({
+    queryKey: [...libraryAssetsKey(apiKind), "page", { q, category: effectiveCategory, page }],
+    queryFn: ({ signal }) =>
+      getLibraryPage(apiKind, { q, category: effectiveCategory, page, pageSize: 12 }, signal),
+    enabled: enabled && (!scope.templateId || Boolean(scope.categoryId)),
   });
 }
 
@@ -110,6 +140,19 @@ export function useRetranscribe() {
   return useMutation({
     mutationFn: ({ assetId, language }: { assetId: string; language?: string }) =>
       retranscribe(assetId, language),
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: libraryAssetsKey("music") });
+    },
+  });
+}
+
+/** «Completar datos» rellena artista, género, descripción y etiquetas vacíos con fuentes abiertas.
+ * «Regenerar» (overwrite) además reemplaza descripción y etiquetas aunque ya existan. */
+export function useEnrichMusic() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ assetId, overwrite = false }: { assetId: string; overwrite?: boolean }) =>
+      enrichLibraryMusic(assetId, overwrite),
     onSettled: () => {
       void queryClient.invalidateQueries({ queryKey: libraryAssetsKey("music") });
     },

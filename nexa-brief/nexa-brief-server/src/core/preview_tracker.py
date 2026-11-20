@@ -49,6 +49,7 @@ async def update(job: Job) -> None:
     record.update({
         "stage": job.stage.value,
         "output_dir": str(job.artifacts.output_dir) if job.artifacts.output_dir else record.get("output_dir"),
+        "assets_dir": str(job.artifacts.assets_dir) if job.artifacts.assets_dir else record.get("assets_dir"),
         "errors": job.errors,
         "updated_at": _now_iso(),
     })

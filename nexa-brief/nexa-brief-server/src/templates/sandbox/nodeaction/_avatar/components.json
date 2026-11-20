@@ -1,0 +1,349 @@
+{
+  "comps": [
+    {
+      "name": "avatar.character.chica",
+      "summary": "Avatar WebGL2 desde la imagen chica y rig.json.",
+      "tags": [
+        "personaje",
+        "avatar"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/nodeaction/_avatar/characters/chica/rig.json",
+      "demo": "sandbox/nodeaction/avatar-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/avatar-demo"
+      ]
+    },
+    {
+      "name": "avatar.scene",
+      "summary": "Configuración avatar/fondo; stage admite color o image.",
+      "tags": [
+        "escena",
+        "avatar"
+      ],
+      "layer": "main",
+      "params": {
+        "seed": {
+          "type": "number",
+          "default": 3,
+          "doc": "Semilla parpadeo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "avatar": {
+          "type": "object",
+          "default": null,
+          "doc": "character,url,x,portraitX,shot,flip.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "background": {
+          "type": "object",
+          "default": null,
+          "doc": "type,color,src,dim,shadow.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "idle": {
+          "type": "number",
+          "default": 1,
+          "doc": "Respiración/balanceo; 0 quieta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "labels": {
+          "type": "bool",
+          "default": false,
+          "doc": "Muestra gesto para revisión.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "talk": {
+          "type": "object",
+          "default": null,
+          "doc": "enabled true, amp 0.9 por defecto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_avatar/stage.js",
+      "demo": "sandbox/nodeaction/avatar-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/avatar-demo"
+      ]
+    },
+    {
+      "name": "avatar.camera.key",
+      "summary": "Plano full/medium/close; portrait puede pisar x/h/head.",
+      "tags": [
+        "cámara",
+        "transición"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Segundo/ancla.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "shot": {
+          "type": "enum",
+          "default": "full",
+          "doc": "Encuadre.",
+          "required": false,
+          "options": [
+            "full",
+            "medium",
+            "close"
+          ],
+          "min": null,
+          "max": null
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro horizontal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "smooth": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Duración mezcla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cut": {
+          "type": "bool",
+          "default": false,
+          "doc": "Corte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "portrait": {
+          "type": "object",
+          "default": null,
+          "doc": "Overrides vertical.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "h": {
+          "type": "number",
+          "default": null,
+          "doc": "Altura.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "head": {
+          "type": "number",
+          "default": null,
+          "doc": "Posición de cabeza.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_avatar/stage.js",
+      "demo": "sandbox/nodeaction/avatar-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/avatar-demo"
+      ]
+    },
+    {
+      "name": "avatar.gesture",
+      "summary": "Timeline do acepta wave, point, idea, present, explain, think, thumbsup, shrug, welcome, stop, count, hip, nod, shake, tilt, look, smile, happy, surprise, sad, angry, wink y alias españoles saludar, senalar, presentar, explicar, pensar, pulgar, encoger, bienvenida, alto, contar, cintura, si, no, inclinar, mirar, sonreir, feliz, sorpresa, triste, enojo, guino. dur/in/out dependen del gesto; consultar gestures.js. tilt recibe deg; look to (-1..1).",
+      "tags": [
+        "gesto"
+      ],
+      "layer": "main",
+      "params": {
+        "t": {
+          "type": "number|string",
+          "default": null,
+          "doc": "Segundo/ancla.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "do": {
+          "type": "enum",
+          "default": null,
+          "doc": "Gesto o alias.",
+          "required": true,
+          "options": [
+            "wave",
+            "point",
+            "idea",
+            "present",
+            "explain",
+            "think",
+            "thumbsup",
+            "shrug",
+            "welcome",
+            "stop",
+            "count",
+            "hip",
+            "nod",
+            "shake",
+            "tilt",
+            "look",
+            "smile",
+            "happy",
+            "surprise",
+            "sad",
+            "angry",
+            "wink",
+            "saludar",
+            "senalar",
+            "presentar",
+            "explicar",
+            "pensar",
+            "pulgar",
+            "encoger",
+            "bienvenida",
+            "alto",
+            "contar",
+            "cintura",
+            "si",
+            "no",
+            "inclinar",
+            "mirar",
+            "sonreir",
+            "feliz",
+            "sorpresa",
+            "triste",
+            "enojo",
+            "guino"
+          ],
+          "min": null,
+          "max": null
+        },
+        "side": {
+          "type": "enum",
+          "default": "R",
+          "doc": "L/R pantalla; wink default L.",
+          "required": false,
+          "options": [
+            "L",
+            "R"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": null,
+          "doc": "Pisa duración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "in": {
+          "type": "number",
+          "default": null,
+          "doc": "Pisa entrada.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "out": {
+          "type": "number",
+          "default": null,
+          "doc": "Pisa salida.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "deg": {
+          "type": "number",
+          "default": 9,
+          "doc": "Ángulo tilt.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "to": {
+          "type": "number",
+          "default": null,
+          "doc": "Look -1..1.",
+          "required": false,
+          "options": null,
+          "min": -1,
+          "max": 1
+        }
+      },
+      "file": "sandbox/nodeaction/_avatar/gestures.js",
+      "demo": "sandbox/nodeaction/avatar-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/avatar-demo"
+      ]
+    },
+    {
+      "name": "avatar.lipsync",
+      "summary": "Movimiento de boca derivado de vocales en lyrics.json.",
+      "tags": [
+        "voz",
+        "avatar"
+      ],
+      "layer": "main",
+      "params": {
+        "enabled": {
+          "type": "bool",
+          "default": true,
+          "doc": "Lip sync.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "amp": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Amplitud.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/nodeaction/_avatar/gestures.js",
+      "demo": "sandbox/nodeaction/avatar-demo/index.html",
+      "used_by": [
+        "sandbox/nodeaction/avatar-demo"
+      ]
+    }
+  ]
+}

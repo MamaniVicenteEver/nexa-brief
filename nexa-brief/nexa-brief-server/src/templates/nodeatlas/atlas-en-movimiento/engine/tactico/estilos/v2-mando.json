@@ -1,0 +1,2531 @@
+{
+  "esquema": 1,
+  "id": "v2-mando",
+  "nombre": "V2 · Mando",
+  "idea": "Sala de operaciones: letra condensada y datos en monoespaciada, retícula geográfica, un rojo sobrio como único acento y los textos directamente sobre el mapa, sin columnas ni barras laterales.",
+  "colores": {
+    "tinta": "#EEF1F3",
+    "tinta2": "#A6B0B8",
+    "tinta3": "#727D86",
+    "acento": "#C8372D",
+    "panel": "#0B0F12",
+    "sombra": "#080B0D",
+    "fondo": "#0B0E10"
+  },
+  "fuentes": {
+    "titulo": "Barlow Condensed",
+    "texto": "Barlow Condensed",
+    "datos": "IBM Plex Mono"
+  },
+  "sombras": {
+    "color": "#000000",
+    "halo": [
+      [
+        0,
+        0,
+        2,
+        0.9
+      ],
+      [
+        0,
+        0,
+        8,
+        0.6
+      ]
+    ],
+    "texto": [
+      [
+        0,
+        1,
+        2,
+        0.7
+      ],
+      [
+        0,
+        0,
+        18,
+        0.45
+      ]
+    ],
+    "ninguna": []
+  },
+  "mapa": {
+    "grado": {
+      "saturacion": 0.26,
+      "brillo": 0.7,
+      "contraste": 1.06,
+      "balance": [
+        0.95,
+        0.99,
+        1.04
+      ],
+      "gamma": 1.06
+    },
+    "gananciaHorizontal": 0.86,
+    "reticula": {
+      "visible": true,
+      "color": "tinta",
+      "opacidad": 0.085,
+      "grosor": 1
+    },
+    "look": {
+      "saturation": 0.42,
+      "brightness": 0.58,
+      "contrast": 1.1
+    }
+  },
+  "velos": {
+    "visible": true,
+    "opacidad": 1,
+    "portada": {
+      "color": "#080B0D",
+      "opacidad": 0.46
+    }
+  },
+  "paneles": {
+    "visible": true,
+    "opacidad": 0.12,
+    "color": "panel",
+    "desenfoque": 0,
+    "borde": {
+      "visible": true,
+      "grosor": 2,
+      "color": "tinta3",
+      "lado": "arriba"
+    },
+    "radio": 0,
+    "por": {
+      "titular": {},
+      "ficha": {},
+      "callout": {},
+      "documento": {},
+      "leyenda": {
+        "visible": false
+      }
+    }
+  },
+  "territorios": {
+    "irak": {
+      "relleno": "acento@.16",
+      "borde": {
+        "grosor": 3,
+        "color": "acento",
+        "dash": null
+      }
+    },
+    "iran": {
+      "relleno": "tinta@.06",
+      "borde": {
+        "grosor": 1.6,
+        "color": "tinta@.55",
+        "dash": [
+          7,
+          6
+        ]
+      }
+    },
+    "control": {
+      "atacante": "acento@.36",
+      "otro": "#2FA64F@.34"
+    }
+  },
+  "trazos": {
+    "flecha": {
+      "camisa": {
+        "grosor": 13,
+        "color": "sombra@.6"
+      },
+      "linea": {
+        "grosor": 6,
+        "color": "acento",
+        "dash": [
+          18,
+          10
+        ],
+        "cap": "butt"
+      },
+      "punta": "rellena",
+      "largoPunta": 30,
+      "anchoPunta": 20,
+      "grosor": 5,
+      "color": "acento",
+      "dash": []
+    },
+    "ruta": {
+      "grosor": 2.5,
+      "color": "tinta2",
+      "opacidad": 1,
+      "dash": [
+        10,
+        8
+      ],
+      "cap": "butt",
+      "punta": "triangulo",
+      "largoPunta": 18,
+      "anchoPunta": 12,
+      "camisa": {
+        "visible": false,
+        "grosor": 2,
+        "color": "sombra"
+      },
+      "linea": {
+        "grosor": 3,
+        "color": "tinta2",
+        "dash": [
+          12,
+          8
+        ]
+      }
+    },
+    "frente": {
+      "camisa": {
+        "grosor": 9,
+        "color": "sombra@.6"
+      },
+      "linea": {
+        "grosor": 4.5,
+        "color": "acento",
+        "dash": [
+          16,
+          9
+        ],
+        "cap": "butt"
+      },
+      "dientes": {
+        "visible": true,
+        "color": "acento",
+        "paso": 46,
+        "largo": 14,
+        "alto": 12
+      },
+      "grosor": 4,
+      "color": "acento",
+      "dash": [
+        12,
+        8
+      ],
+      "punta": "triangulo",
+      "largoPunta": 18,
+      "anchoPunta": 12
+    },
+    "guia": {
+      "grosor": 2,
+      "color": "tinta2",
+      "dash": [],
+      "punta": "triangulo",
+      "largoPunta": 18,
+      "anchoPunta": 12,
+      "camisa": {
+        "visible": false,
+        "grosor": 2,
+        "color": "sombra"
+      },
+      "linea": {
+        "grosor": 1.5,
+        "color": "tinta2",
+        "dash": []
+      }
+    },
+    "reticula": {
+      "forma": "esquinas",
+      "color": "acento",
+      "grosor": 3
+    },
+    "impacto": {
+      "anillo": "acento",
+      "grosor": 3,
+      "salpicadura": "tinta"
+    },
+    "humo": {
+      "color": "tinta2@.5"
+    }
+  },
+  "marcadores": {
+    "unidadTierra": {
+      "forma": "cuadrado",
+      "tam": 14,
+      "grosor": 2,
+      "atacante": {
+        "relleno": "acento",
+        "borde": "acento"
+      },
+      "otro": {
+        "relleno": null,
+        "borde": "tinta2"
+      }
+    },
+    "lugar": {
+      "forma": "cuadrado",
+      "tam": 14,
+      "grosor": 0,
+      "relleno": "tinta",
+      "borde": "tinta"
+    }
+  },
+  "animacion": {
+    "fundido": 0.3,
+    "entrada": {
+      "tipo": "barrido",
+      "encabezado": 0.45,
+      "titular": 0.5,
+      "anio": 0.6,
+      "ficha": 0.55,
+      "desplazamiento": 12
+    },
+    "escalonFichas": 0.2,
+    "subtitulo": {
+      "tipo": "ninguna",
+      "duracion": 0.18
+    }
+  },
+  "estilos": {
+    "encabezado": {
+      "disposicion": "pila",
+      "fecha": {
+        "fuente": "datos",
+        "tam": 28,
+        "peso": 500,
+        "interlinea": 1.1,
+        "espaciado": 0.02,
+        "color": "acento",
+        "sombra": "texto"
+      },
+      "lugar": {
+        "fuente": "titulo",
+        "tam": 38,
+        "peso": 600,
+        "interlinea": 1.05,
+        "espaciado": 0.06,
+        "mayusculas": true,
+        "color": "tinta",
+        "margenArriba": 6,
+        "sombra": "texto"
+      },
+      "separador": {
+        "tipo": "ninguno"
+      }
+    },
+    "titular": {
+      "anchoMax": 780,
+      "relleno": [
+        16,
+        28,
+        19,
+        24
+      ],
+      "barra": {
+        "visible": true,
+        "grosor": 6,
+        "color": "acento"
+      },
+      "principal": {
+        "fuente": "titulo",
+        "tam": 47,
+        "peso": 600,
+        "interlinea": 1.08,
+        "color": "tinta",
+        "sombra": "texto"
+      },
+      "secundario": {
+        "fuente": "datos",
+        "tam": 20,
+        "peso": 500,
+        "interlinea": 1.2,
+        "espaciado": 0.03,
+        "mayusculas": true,
+        "color": "tinta2",
+        "margenArriba": 8,
+        "sombra": "texto"
+      },
+      "salto": {}
+    },
+    "anio": {
+      "texto": {
+        "fuente": "titulo",
+        "tam": 170,
+        "peso": 700,
+        "interlinea": 0.9,
+        "color": "tinta",
+        "sombra": "texto"
+      },
+      "barra": {
+        "visible": true,
+        "grosor": 6,
+        "color": "acento",
+        "margenArriba": 12
+      }
+    },
+    "subtitulo": {
+      "texto": {
+        "fuente": "texto",
+        "tam": 63,
+        "peso": 600,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "texto"
+      },
+      "resalte": {
+        "tipo": "color",
+        "apagado": 0.5
+      }
+    },
+    "portada": {
+      "kicker": {
+        "fuente": "datos",
+        "tam": 23,
+        "peso": 500,
+        "interlinea": 1,
+        "espaciado": 0.06,
+        "color": "acento",
+        "sombra": "texto"
+      },
+      "titulo": {
+        "fuente": "titulo",
+        "tam": 116,
+        "peso": 700,
+        "interlinea": 0.9,
+        "espaciado": 0.005,
+        "mayusculas": true,
+        "color": "tinta",
+        "margenArriba": 22,
+        "sombra": "texto"
+      },
+      "meta": {
+        "disposicion": "fila",
+        "separacion": 16,
+        "margenArriba": 26
+      },
+      "anio": {
+        "fuente": "datos",
+        "tam": 26,
+        "peso": 500,
+        "interlinea": 1,
+        "color": "tinta",
+        "borde": {
+          "grosor": 1.5,
+          "color": "tinta2"
+        },
+        "relleno": [
+          6,
+          10,
+          5,
+          10
+        ],
+        "sombra": "ninguna"
+      },
+      "regla": {
+        "visible": false,
+        "ancho": 44,
+        "grosor": 2,
+        "color": "tinta2"
+      },
+      "sub": {
+        "fuente": "texto",
+        "tam": 32,
+        "peso": 600,
+        "interlinea": 1,
+        "espaciado": 0.03,
+        "color": "tinta2",
+        "sombra": "texto"
+      }
+    },
+    "unidad": {
+      "nombre": {
+        "fuente": "texto",
+        "tam": 24,
+        "peso": 600,
+        "interlinea": 1,
+        "espaciado": 0.07,
+        "mayusculas": true,
+        "color": "tinta",
+        "sombra": "halo"
+      },
+      "principal": {
+        "tam": 27
+      },
+      "marcador": {
+        "tipo": "cuadrado",
+        "tam": 12,
+        "grosor": 2,
+        "color": "tinta2",
+        "principal": "acento",
+        "soloPrincipal": false
+      },
+      "guia": {
+        "visible": true,
+        "largo": 30,
+        "grosor": 1.5,
+        "color": "tinta2"
+      },
+      "bandera": {
+        "ancho": 30,
+        "alto": 16
+      },
+      "tipo": {
+        "visible": false,
+        "fuente": "datos",
+        "tam": 16,
+        "peso": 500,
+        "interlinea": 1,
+        "mayusculas": true,
+        "color": "tinta2",
+        "sombra": "halo"
+      }
+    },
+    "pais": {
+      "fuente": "titulo",
+      "tam": 88,
+      "peso": 700,
+      "interlinea": 1,
+      "espaciado": 0.2,
+      "mayusculas": true,
+      "color": "tinta",
+      "sombra": "halo"
+    },
+    "frente": {
+      "a": {
+        "fuente": "titulo",
+        "tam": 25,
+        "peso": 700,
+        "interlinea": 1,
+        "espaciado": 0.12,
+        "color": "tinta",
+        "sombra": "halo"
+      },
+      "b": {
+        "fuente": "datos",
+        "tam": 17,
+        "peso": 500,
+        "interlinea": 1,
+        "color": "tinta2",
+        "margenArriba": 5,
+        "sombra": "halo"
+      }
+    },
+    "ficha": {
+      "disposicion": "fila",
+      "separacion": 16,
+      "relleno": [
+        12,
+        12,
+        12,
+        12
+      ],
+      "anchoTexto": 214,
+      "foto": {
+        "ancho": 160,
+        "alto": 200,
+        "posicion": "50% 18%",
+        "filtro": "grayscale(1) contrast(1.08) brightness(1.02)",
+        "mascara": false
+      },
+      "nombre": {
+        "fuente": "titulo",
+        "tam": 32,
+        "peso": 700,
+        "interlinea": 1,
+        "espaciado": 0.03,
+        "mayusculas": true,
+        "color": "tinta",
+        "sombra": "halo"
+      },
+      "cargo": {
+        "fuente": "texto",
+        "tam": 21,
+        "peso": 500,
+        "interlinea": 1.15,
+        "color": "tinta2",
+        "margenArriba": 8,
+        "sombra": "halo"
+      },
+      "pie": {
+        "fuente": "datos",
+        "tam": 19,
+        "peso": 500,
+        "interlinea": 1.3,
+        "color": "tinta",
+        "margenArriba": 10,
+        "sombra": "halo"
+      },
+      "credito": {
+        "fuente": "datos",
+        "tam": 15,
+        "peso": 500,
+        "interlinea": 1.3,
+        "color": "tinta2",
+        "margenArriba": 4,
+        "sombra": "halo"
+      }
+    },
+    "leyenda": {
+      "fuente": "datos",
+      "tam": 19,
+      "peso": 500,
+      "interlinea": 1.2,
+      "mayusculas": true,
+      "color": "tinta2",
+      "sombra": "halo",
+      "muestra": {
+        "ancho": 56,
+        "grosor": 4,
+        "dash": "dashed"
+      }
+    },
+    "callout": {
+      "relleno": [
+        14,
+        20,
+        16,
+        20
+      ],
+      "a": {
+        "fuente": "titulo",
+        "tam": 38,
+        "peso": 600,
+        "interlinea": 1,
+        "espaciado": 0.04,
+        "mayusculas": true,
+        "color": "tinta",
+        "sombra": "halo"
+      },
+      "b": {
+        "fuente": "datos",
+        "tam": 18,
+        "peso": 500,
+        "interlinea": 1,
+        "color": "tinta2",
+        "margenArriba": 6,
+        "sombra": "halo"
+      },
+      "marcador": {
+        "forma": "cuadrado",
+        "tam": 16,
+        "grosor": 3,
+        "color": "tinta"
+      }
+    },
+    "instalacion": {
+      "a": {
+        "fuente": "texto",
+        "tam": 27,
+        "peso": 600,
+        "interlinea": 1,
+        "espaciado": 0.07,
+        "mayusculas": true,
+        "color": "tinta",
+        "sombra": "halo"
+      },
+      "b": {
+        "fuente": "datos",
+        "tam": 17,
+        "peso": 500,
+        "interlinea": 1,
+        "mayusculas": true,
+        "color": "tinta2",
+        "sombra": "halo"
+      },
+      "marcador": {
+        "forma": "cuadrado",
+        "tam": 14,
+        "relleno": "tinta"
+      }
+    },
+    "cifra": {
+      "a": {
+        "fuente": "titulo",
+        "tam": 210,
+        "peso": 700,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "halo"
+      },
+      "b": {
+        "fuente": "datos",
+        "tam": 30,
+        "peso": 500,
+        "interlinea": 1,
+        "color": "acento",
+        "sombra": "halo"
+      }
+    },
+    "ruta": {
+      "fuente": "texto",
+      "tam": 26,
+      "peso": 600,
+      "interlinea": 1,
+      "espaciado": 0.34,
+      "color": "tinta2",
+      "sombra": "halo"
+    },
+    "documento": {
+      "ancho": 760,
+      "relleno": 16,
+      "foto": {
+        "ancho": 728,
+        "alto": 430,
+        "filtro": "grayscale(1) contrast(1.1)"
+      },
+      "fuenteLinea": {
+        "fuente": "datos",
+        "tam": 15,
+        "peso": 500,
+        "mayusculas": true,
+        "color": "tinta2"
+      },
+      "titulo": {
+        "fuente": "titulo",
+        "tam": 40,
+        "peso": 600,
+        "interlinea": 1.05,
+        "color": "tinta",
+        "sombra": "ninguna",
+        "barra": {
+          "visible": true,
+          "grosor": 6,
+          "color": "acento"
+        }
+      },
+      "subtitulo": {
+        "fuente": "texto",
+        "tam": 30,
+        "peso": 500,
+        "interlinea": 1.1,
+        "color": "tinta2",
+        "sombra": "ninguna"
+      }
+    },
+    "cierre": {
+      "alinear": "izq",
+      "k": {
+        "fuente": "datos",
+        "tam": 23,
+        "peso": 500,
+        "color": "acento"
+      },
+      "canal": {
+        "fuente": "titulo",
+        "tam": 150,
+        "peso": 700,
+        "interlinea": 0.9,
+        "color": "tinta"
+      },
+      "t": {
+        "fuente": "texto",
+        "tam": 36,
+        "peso": 600,
+        "interlinea": 1.15,
+        "color": "tinta2"
+      },
+      "h": {
+        "fuente": "datos",
+        "tam": 25,
+        "peso": 500,
+        "color": "tinta"
+      }
+    },
+    "iconos": {
+      "trazo": 3.4,
+      "color": "tinta",
+      "caja": {
+        "visible": true,
+        "grosor": 2,
+        "color": "tinta2",
+        "lado": 96
+      }
+    },
+    "atribucion": {
+      "fuente": "datos",
+      "tam": 13,
+      "peso": 500,
+      "interlinea": 1.2,
+      "color": "tinta3",
+      "espaciado": 0.02,
+      "sombra": "halo"
+    },
+    "rotuloUnidad": {
+      "nombre": {
+        "fuente": "texto",
+        "tam": 24,
+        "peso": 600,
+        "interlinea": 1,
+        "espaciado": 0.07,
+        "mayusculas": true,
+        "color": "tinta",
+        "sombra": "halo"
+      },
+      "principal": {
+        "tam": 27
+      },
+      "marcador": {
+        "tipo": "cuadrado",
+        "tam": 12,
+        "grosor": 2,
+        "color": "tinta2",
+        "principal": "acento",
+        "soloPrincipal": false
+      },
+      "guia": {
+        "visible": true,
+        "largo": 30,
+        "grosor": 1.5,
+        "color": "tinta2"
+      },
+      "bandera": {
+        "ancho": 30,
+        "alto": 16
+      },
+      "tipo": {
+        "visible": false,
+        "fuente": "datos",
+        "tam": 16,
+        "peso": 500,
+        "interlinea": 1,
+        "mayusculas": true,
+        "color": "tinta2",
+        "sombra": "halo"
+      },
+      "separacion": 8,
+      "antiSolape": "bandera visible; rótulo al lado o desplazado"
+    },
+    "fecha": {
+      "fuente": "datos",
+      "tam": 28,
+      "peso": 500,
+      "interlinea": 1.1,
+      "espaciado": 0.02,
+      "color": "acento",
+      "sombra": "texto"
+    },
+    "transcripcion": {
+      "posicion": "izq",
+      "ancho": 70,
+      "palabras": 3,
+      "alto": 80,
+      "texto": {
+        "fuente": "texto",
+        "tam": 63,
+        "peso": 600,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "texto"
+      }
+    },
+    "tierra": {}
+  },
+  "formatos": {
+    "movil": {
+      "ancla": {
+        "golfo": [
+          540,
+          800
+        ],
+        "region": [
+          540,
+          960
+        ],
+        "frente": [
+          540,
+          860
+        ]
+      },
+      "escalaFormacion": 1,
+      "zonaSegura": {
+        "arriba": 220,
+        "abajo": 440,
+        "derecha": 150
+      },
+      "ranuras": {
+        "encabezado": {
+          "izq": 72,
+          "arriba": 216,
+          "alinear": "izq"
+        },
+        "titular": {
+          "izq": 72,
+          "arriba": 330,
+          "alinear": "izq"
+        },
+        "salto": {
+          "izq": 72,
+          "arriba": 330,
+          "alinear": "izq"
+        },
+        "anio": {
+          "izq": 72,
+          "arriba": 330,
+          "alinear": "izq"
+        },
+        "subtitulo": {
+          "izq": 72,
+          "der": 150,
+          "arriba": 1380,
+          "alto": 80,
+          "alinear": "izq"
+        },
+        "portada": {
+          "izq": 72,
+          "der": 72,
+          "arriba": 352,
+          "alinear": "izq"
+        },
+        "fichaIzq": {
+          "izq": 72,
+          "arriba": 1060
+        },
+        "fichaDer": {
+          "der": 150,
+          "arriba": 1060
+        },
+        "leyenda": {
+          "izq": 72,
+          "arriba": 1395,
+          "alinear": "izq"
+        },
+        "atribucion": {
+          "der": 24,
+          "abajo": 12
+        },
+        "nota": {
+          "izq": 72,
+          "arriba": 480,
+          "alinear": "izq"
+        }
+      },
+      "rotulos": {
+        "callout": {
+          "desplazamiento": [
+            -150,
+            -230
+          ]
+        },
+        "instalacion": {
+          "desplazamiento": [
+            26,
+            26
+          ]
+        },
+        "frente": {
+          "desplazamiento": [
+            -18,
+            -10
+          ]
+        },
+        "paisLimite": {
+          "izq": 72,
+          "der": 930,
+          "derAlta": 1008
+        }
+      },
+      "bandas": {
+        "visible": false
+      },
+      "velos": {
+        "capas": [
+          {
+            "tipo": "lineal",
+            "desde": "arriba",
+            "color": "sombra",
+            "paradas": [
+              [
+                0,
+                0.55
+              ],
+              [
+                560,
+                0
+              ]
+            ]
+          },
+          {
+            "tipo": "lineal",
+            "desde": "abajo",
+            "color": "sombra",
+            "paradas": [
+              [
+                0,
+                0.66
+              ],
+              [
+                520,
+                0.22
+              ],
+              [
+                760,
+                0
+              ]
+            ]
+          },
+          {
+            "tipo": "radial",
+            "color": "#000000",
+            "elipse": [
+              90,
+              65
+            ],
+            "centro": [
+              50,
+              48
+            ],
+            "paradas": [
+              [
+                60,
+                0
+              ],
+              [
+                100,
+                0.32
+              ]
+            ]
+          }
+        ]
+      },
+      "estilos": {}
+    },
+    "escritorio": {
+      "ancla": {
+        "golfo": [
+          1290,
+          540
+        ],
+        "region": [
+          960,
+          560
+        ],
+        "frente": [
+          1060,
+          500
+        ]
+      },
+      "escalaFormacion": 0.8,
+      "zonaSegura": {
+        "izq": 96,
+        "der": 96,
+        "arriba": 54,
+        "abajo": 54
+      },
+      "ranuras": {
+        "encabezado": {
+          "izq": 96,
+          "arriba": 58,
+          "alinear": "izq"
+        },
+        "titular": {
+          "izq": 96,
+          "arriba": 176,
+          "alinear": "izq"
+        },
+        "salto": {
+          "izq": 96,
+          "arriba": 176,
+          "alinear": "izq"
+        },
+        "anio": {
+          "izq": 96,
+          "arriba": 168,
+          "alinear": "izq"
+        },
+        "subtitulo": {
+          "izq": 96,
+          "der": 760,
+          "arriba": 902,
+          "alto": 80,
+          "alinear": "izq"
+        },
+        "portada": {
+          "izq": 96,
+          "der": 1000,
+          "arriba": 250,
+          "alinear": "izq"
+        },
+        "fichaIzq": {
+          "izq": 96,
+          "arriba": 150
+        },
+        "fichaDer": {
+          "der": 96,
+          "arriba": 470
+        },
+        "leyenda": {
+          "der": 96,
+          "arriba": 926,
+          "alinear": "der"
+        },
+        "atribucion": {
+          "der": 24,
+          "abajo": 10
+        },
+        "nota": {
+          "izq": 96,
+          "arriba": 340,
+          "alinear": "izq"
+        }
+      },
+      "rotulos": {
+        "callout": {
+          "desplazamiento": [
+            -190,
+            -170
+          ]
+        },
+        "instalacion": {
+          "desplazamiento": [
+            30,
+            30
+          ]
+        },
+        "frente": {
+          "desplazamiento": [
+            -18,
+            -10
+          ]
+        },
+        "paisLimite": {
+          "izq": 96,
+          "der": 1824,
+          "derAlta": 1824
+        }
+      },
+      "estilos": {
+        "encabezado": {
+          "fecha": {
+            "tam": 28
+          },
+          "lugar": {
+            "tam": 40
+          }
+        },
+        "titular": {
+          "anchoMax": 860,
+          "relleno": [
+            14,
+            26,
+            16,
+            22
+          ],
+          "principal": {
+            "tam": 62
+          },
+          "secundario": {
+            "tam": 22
+          }
+        },
+        "anio": {
+          "texto": {
+            "tam": 190
+          }
+        },
+        "subtitulo": {
+          "texto": {
+            "tam": 58
+          }
+        },
+        "portada": {
+          "kicker": {
+            "tam": 24
+          },
+          "titulo": {
+            "tam": 112
+          },
+          "sub": {
+            "tam": 34
+          }
+        },
+        "unidad": {
+          "nombre": {
+            "tam": 26
+          },
+          "principal": {
+            "tam": 30
+          },
+          "tipo": {
+            "visible": true,
+            "tam": 16
+          }
+        },
+        "pais": {
+          "tam": 96
+        },
+        "frente": {
+          "a": {
+            "tam": 28
+          },
+          "b": {
+            "tam": 19
+          }
+        },
+        "ficha": {
+          "foto": {
+            "ancho": 176,
+            "alto": 220
+          },
+          "anchoTexto": 270,
+          "nombre": {
+            "tam": 36
+          },
+          "cargo": {
+            "tam": 24
+          },
+          "pie": {
+            "tam": 20
+          },
+          "credito": {
+            "tam": 16
+          }
+        },
+        "leyenda": {
+          "tam": 21
+        },
+        "callout": {
+          "a": {
+            "tam": 40
+          },
+          "b": {
+            "tam": 20
+          }
+        },
+        "instalacion": {
+          "a": {
+            "tam": 29
+          },
+          "b": {
+            "tam": 19
+          }
+        },
+        "atribucion": {
+          "tam": 13
+        },
+        "rotuloUnidad": {
+          "nombre": {
+            "tam": 26
+          },
+          "principal": {
+            "tam": 30
+          },
+          "tipo": {
+            "visible": true,
+            "tam": 16
+          }
+        },
+        "fecha": {
+          "tam": 28
+        },
+        "transcripcion": {
+          "texto": {
+            "tam": 58
+          }
+        }
+      },
+      "bandas": {
+        "visible": false
+      },
+      "velos": {
+        "capas": [
+          {
+            "tipo": "lineal",
+            "desde": "arriba",
+            "color": "sombra",
+            "paradas": [
+              [
+                0,
+                0.5
+              ],
+              [
+                330,
+                0
+              ]
+            ]
+          },
+          {
+            "tipo": "lineal",
+            "desde": "abajo",
+            "color": "sombra",
+            "paradas": [
+              [
+                0,
+                0.62
+              ],
+              [
+                200,
+                0.3
+              ],
+              [
+                380,
+                0
+              ]
+            ]
+          },
+          {
+            "tipo": "radial",
+            "color": "#000000",
+            "elipse": [
+              85,
+              80
+            ],
+            "centro": [
+              50,
+              50
+            ],
+            "paradas": [
+              [
+                60,
+                0
+              ],
+              [
+                100,
+                0.3
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "hoja": {
+    "sub": "Referencia: carta de estado mayor e informe desclasificado. Todo arranca en una columna de texto a la izquierda; los datos (fechas, créditos, coordenadas) van en monoespaciada y la retícula geográfica da escala. El rojo es el único acento. En 16:9 no hay columnas ni barras laterales: el mapa ocupa toda la imagen y cada texto va encima, junto a su objeto.",
+    "reglas": [
+      "Una sola columna de texto a la izquierda: todo arranca en x = 72 px en 9:16 y en x = 96 px en 16:9 (margen de título del 5 %), subtítulo incluido.",
+      "Fechas, créditos y coordenadas siempre en monoespaciada; nombres y titulares en condensada.",
+      "El rojo solo para la fecha del hecho, la barra del titular, el marcador de la unidad protagonista, el país o la fuerza que actúa y el frente.",
+      "Los cuadros (titular, fichas, callouts, documentos) son transparentes por defecto: paneles.visible y paneles.opacidad los muestran o los suben sin tocar el HTML.",
+      "16:9: sin barras ni columnas laterales; nombres de unidades y lugares junto a su objeto en el mapa (con su tipo en tinta secundaria)."
+    ]
+  },
+  "fijos": [
+    "flag.*",
+    "fx.*",
+    "strike.*",
+    "air.*",
+    "naval.*",
+    "ground.*",
+    "trail.*"
+  ],
+  "escalas": {
+    "ejercito": {
+      "movil": {
+        "escala": 0.62,
+        "columnas": 6
+      },
+      "escritorio": {
+        "escala": 0.8,
+        "columnas": 12
+      }
+    },
+    "unidad": {
+      "movil": 0.8,
+      "escritorio": 1
+    },
+    "bandera": {
+      "movil": {
+        "ancho": 30,
+        "alto": 16
+      },
+      "escritorio": {
+        "ancho": 30,
+        "alto": 16
+      }
+    },
+    "aire": {
+      "movil": 1.357,
+      "escritorio": 1.438
+    },
+    "naval": {
+      "movil": 1.08,
+      "escritorio": 1.04
+    },
+    "helicoptero": {
+      "movil": 1.2,
+      "escritorio": 1.15
+    }
+  },
+  "componentes": {
+    "air.bomber": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "air.drop": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "air.helicopter": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "air.jet": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "air.launch": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "air.prop": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "air.recover": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "army.advance": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "army.banner": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "army.clash": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "army.encircle": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "army.hold": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "army.retreat": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "army.supply": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "arrow.bolt": {
+      "usa": [
+        "trazos.flecha"
+      ],
+      "overrides": {}
+    },
+    "arrow.curve": {
+      "usa": [
+        "trazos.flecha"
+      ],
+      "overrides": {}
+    },
+    "arrow.flow": {
+      "usa": [
+        "trazos.flecha"
+      ],
+      "overrides": {}
+    },
+    "arrow.route": {
+      "usa": [
+        "trazos.flecha"
+      ],
+      "overrides": {}
+    },
+    "badge.count": {
+      "usa": [
+        "colores",
+        "fuentes.titulo"
+      ],
+      "overrides": {}
+    },
+    "callout.photo": {
+      "usa": [
+        "estilos.documento",
+        "estilos.ficha.separacion",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "sombras",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo"
+      ],
+      "overrides": {}
+    },
+    "caption.transcript": {
+      "usa": [
+        "estilos.transcripcion.posicion",
+        "estilos.transcripcion.ancho",
+        "estilos.transcripcion.palabras",
+        "estilos.transcripcion.alto",
+        "estilos.transcripcion.texto",
+        "estilos.subtitulo.resalte.apagado",
+        "formatos.*.ranuras.subtitulo"
+      ],
+      "overrides": {}
+    },
+    "debug.dot": {
+      "usa": [],
+      "overrides": {}
+    },
+    "debug.label": {
+      "usa": [],
+      "overrides": {}
+    },
+    "debug.path": {
+      "usa": [],
+      "overrides": {}
+    },
+    "editorial.press": {
+      "usa": [
+        "estilos.documento",
+        "estilos.ficha.separacion",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "sombras",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo"
+      ],
+      "overrides": {}
+    },
+    "flag.marker": {
+      "usa": [],
+      "overrides": {}
+    },
+    "front.line": {
+      "usa": [
+        "trazos.frente",
+        "estilos.frente.a"
+      ],
+      "overrides": {}
+    },
+    "fx.clash": {
+      "usa": [],
+      "overrides": {}
+    },
+    "fx.dust": {
+      "usa": [],
+      "overrides": {}
+    },
+    "fx.explosion": {
+      "usa": [],
+      "overrides": {}
+    },
+    "fx.fire": {
+      "usa": [],
+      "overrides": {}
+    },
+    "fx.flash": {
+      "usa": [],
+      "overrides": {}
+    },
+    "fx.impact": {
+      "usa": [
+        "trazos.impacto"
+      ],
+      "overrides": {}
+    },
+    "fx.ring": {
+      "usa": [],
+      "overrides": {}
+    },
+    "fx.shockwave": {
+      "usa": [],
+      "overrides": {}
+    },
+    "fx.smoke": {
+      "usa": [],
+      "overrides": {}
+    },
+    "ground.ambulance": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "ground.apc": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "ground.artillery": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "ground.convoy": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "ground.jeep": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "ground.launcher": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "ground.tank": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "ground.truck": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "icon.badge": {
+      "usa": [
+        "colores",
+        "iconos"
+      ],
+      "overrides": {}
+    },
+    "intro.title": {
+      "usa": [
+        "estilos.portada",
+        "ranuras.portada"
+      ],
+      "overrides": {}
+    },
+    "inventory.units": {
+      "usa": [
+        "estilos.ficha.foto",
+        "estilos.ficha.nombre",
+        "estilos.ficha.pie",
+        "estilos.ficha.separacion",
+        "colores.tinta2",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular"
+      ],
+      "overrides": {}
+    },
+    "label.callout": {
+      "usa": [
+        "estilos.callout",
+        "marcadores.lugar",
+        "sombras.halo",
+        "trazos.guia"
+      ],
+      "overrides": {}
+    },
+    "label.chip": {
+      "usa": [
+        "estilos.instalacion.a",
+        "sombras.halo"
+      ],
+      "overrides": {}
+    },
+    "label.figure": {
+      "usa": [
+        "colores",
+        "fuentes.titulo",
+        "sombras.halo"
+      ],
+      "overrides": {}
+    },
+    "label.front": {
+      "usa": [
+        "estilos.instalacion.a",
+        "sombras.halo"
+      ],
+      "overrides": {}
+    },
+    "label.neon": {
+      "usa": [
+        "estilos.pais",
+        "sombras.halo"
+      ],
+      "overrides": {}
+    },
+    "label.route": {
+      "usa": [
+        "estilos.instalacion.a",
+        "sombras.halo"
+      ],
+      "overrides": {}
+    },
+    "label.site": {
+      "usa": [
+        "estilos.instalacion.a"
+      ],
+      "overrides": {}
+    },
+    "label.unit": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "money.flow": {
+      "usa": [
+        "trazos.ruta"
+      ],
+      "overrides": {}
+    },
+    "money.stack": {
+      "usa": [],
+      "overrides": {}
+    },
+    "naval.cargo": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "naval.carrier": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "naval.group": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "naval.submarine": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "naval.warship": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "outro.channel": {
+      "usa": [
+        "estilos.cierre"
+      ],
+      "overrides": {}
+    },
+    "portrait.badge": {
+      "usa": [
+        "estilos.ficha.foto",
+        "estilos.ficha.separacion",
+        "estilos.ficha.anchoTexto",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo",
+        "estilos.ficha.pie",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular"
+      ],
+      "overrides": {}
+    },
+    "portrait.cutout": {
+      "usa": [
+        "estilos.ficha.foto",
+        "estilos.ficha.separacion",
+        "estilos.ficha.anchoTexto",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo",
+        "estilos.ficha.pie",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular"
+      ],
+      "overrides": {}
+    },
+    "range.ring": {
+      "usa": [
+        "trazos.frente"
+      ],
+      "overrides": {}
+    },
+    "route.lanes": {
+      "usa": [
+        "trazos.ruta",
+        "estilos.ruta"
+      ],
+      "overrides": {}
+    },
+    "route.sea": {
+      "usa": [
+        "trazos.ruta"
+      ],
+      "overrides": {}
+    },
+    "site.base": {
+      "usa": [
+        "estilos.instalacion.a",
+        "marcadores.lugar",
+        "trazos.guia"
+      ],
+      "overrides": {}
+    },
+    "site.oilfield": {
+      "usa": [
+        "estilos.instalacion.a",
+        "marcadores.lugar",
+        "trazos.guia"
+      ],
+      "overrides": {}
+    },
+    "site.plant": {
+      "usa": [
+        "estilos.instalacion.a",
+        "marcadores.lugar",
+        "trazos.guia"
+      ],
+      "overrides": {}
+    },
+    "site.platform": {
+      "usa": [
+        "estilos.instalacion.a",
+        "marcadores.lugar",
+        "trazos.guia"
+      ],
+      "overrides": {}
+    },
+    "site.port": {
+      "usa": [
+        "estilos.instalacion.a",
+        "marcadores.lugar",
+        "trazos.guia"
+      ],
+      "overrides": {}
+    },
+    "site.refinery": {
+      "usa": [
+        "estilos.instalacion.a",
+        "marcadores.lugar",
+        "trazos.guia"
+      ],
+      "overrides": {}
+    },
+    "strike.missile": {
+      "usa": [],
+      "overrides": {}
+    },
+    "strike.salvo": {
+      "usa": [],
+      "overrides": {}
+    },
+    "strike.shell": {
+      "usa": [],
+      "overrides": {}
+    },
+    "strike.torpedo": {
+      "usa": [],
+      "overrides": {}
+    },
+    "territory.extrude": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {}
+    },
+    "territory.fill": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {}
+    },
+    "territory.flag": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {}
+    },
+    "territory.glow": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {}
+    },
+    "territory.hatch": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {}
+    },
+    "territory.state": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {}
+    },
+    "text.year": {
+      "usa": [
+        "colores",
+        "fuentes.titulo",
+        "sombras.halo"
+      ],
+      "overrides": {}
+    },
+    "trail.contrail": {
+      "usa": [],
+      "overrides": {}
+    },
+    "unit.advance": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "unit.group": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "unit.move": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "unit.retreat": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "unit.token": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {}
+    },
+    "caption.words": {
+      "usa": [
+        "estilos.transcripcion.posicion",
+        "estilos.transcripcion.ancho",
+        "estilos.transcripcion.palabras",
+        "estilos.transcripcion.alto",
+        "estilos.transcripcion.texto",
+        "estilos.subtitulo.resalte.apagado",
+        "formatos.*.ranuras.subtitulo"
+      ],
+      "overrides": {}
+    },
+    "portrait.card": {
+      "usa": [
+        "estilos.ficha.foto",
+        "estilos.ficha.separacion",
+        "estilos.ficha.anchoTexto",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo",
+        "estilos.ficha.pie",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular"
+      ],
+      "overrides": {}
+    },
+    "portrait.column": {
+      "usa": [
+        "estilos.ficha.foto",
+        "estilos.ficha.separacion",
+        "estilos.ficha.anchoTexto",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo",
+        "estilos.ficha.pie",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular"
+      ],
+      "overrides": {}
+    },
+    "portrait.pair": {
+      "usa": [
+        "estilos.ficha.foto",
+        "estilos.ficha.separacion",
+        "estilos.ficha.anchoTexto",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo",
+        "estilos.ficha.pie",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular"
+      ],
+      "overrides": {}
+    },
+    "document.clip": {
+      "usa": [
+        "estilos.documento",
+        "estilos.ficha.separacion",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "sombras",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo"
+      ],
+      "overrides": {}
+    },
+    "document.stamp": {
+      "usa": [
+        "estilos.documento",
+        "estilos.ficha.separacion",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "sombras",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo"
+      ],
+      "overrides": {}
+    },
+    "image.frame": {
+      "usa": [
+        "estilos.documento",
+        "estilos.ficha.separacion",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "sombras",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo"
+      ],
+      "overrides": {}
+    },
+    "image.strip": {
+      "usa": [
+        "estilos.documento",
+        "estilos.ficha.separacion",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "sombras",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo"
+      ],
+      "overrides": {}
+    },
+    "header.date": {
+      "usa": [
+        "estilos.encabezado.fecha",
+        "estilos.encabezado.lugar",
+        "estilos.encabezado.marca",
+        "ranuras.encabezado"
+      ],
+      "overrides": {}
+    },
+    "statement.title": {
+      "usa": [
+        "estilos.titular.barra",
+        "estilos.titular.principal",
+        "estilos.titular.secundario",
+        "ranuras.titular"
+      ],
+      "overrides": {}
+    },
+    "statement.jump": {
+      "usa": [
+        "estilos.titular.principal",
+        "estilos.titular.salto",
+        "ranuras.salto"
+      ],
+      "overrides": {}
+    },
+    "year.big": {
+      "usa": [
+        "estilos.anio.barra",
+        "estilos.anio.texto",
+        "ranuras.anio"
+      ],
+      "overrides": {}
+    },
+    "legend.front": {
+      "usa": [
+        "estilos.leyenda",
+        "ranuras.leyenda",
+        "trazos.frente.linea"
+      ],
+      "overrides": {}
+    },
+    "label.country": {
+      "usa": [
+        "estilos.pais"
+      ],
+      "overrides": {}
+    },
+    "label.landunit": {
+      "usa": [
+        "estilos.tierra",
+        "marcadores.unidadTierra"
+      ],
+      "overrides": {}
+    },
+    "image.hex": {
+      "usa": [
+        "ucr2.imagen"
+      ],
+      "overrides": {}
+    },
+    "image.panel": {
+      "usa": [
+        "ucr2.imagen"
+      ],
+      "overrides": {}
+    },
+    "image.pole": {
+      "usa": [
+        "ucr2.imagen"
+      ],
+      "overrides": {}
+    },
+    "territory.wash": {
+      "usa": [
+        "ucr2.territorio"
+      ],
+      "overrides": {}
+    },
+    "space.satellite": {
+      "usa": [
+        "ucr2.aire"
+      ],
+      "overrides": {}
+    },
+    "air.swarm": {
+      "usa": [
+        "ucr2.aire"
+      ],
+      "overrides": {}
+    },
+    "territory.control": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {}
+    },
+    "territory.zone": {
+      "usa": [
+        "ucr2.territorio"
+      ],
+      "overrides": {}
+    }
+  },
+  "camara": {
+    "zoom": {
+      "movil": -0.35,
+      "escritorio": 0
+    }
+  },
+  "ucr2": {
+    "imagen": {
+      "hex": 260,
+      "hexAlto": 0.94,
+      "panelAncho": 410,
+      "panelAlto": 240,
+      "margen": 38,
+      "separacion": 12,
+      "textoAlto": 150,
+      "rotuloAlto": 100,
+      "zonaSuperior": 0.16,
+      "zonaInferior": 0.12,
+      "guia": "tinta2@.75",
+      "guiaGrosor": 1.5,
+      "punto": "acento",
+      "puntoRadio": 4,
+      "fondo": "panel",
+      "borde": "tinta",
+      "bordeGrosor": 2,
+      "textoFondo": "panel@.88",
+      "textoMargen": 12,
+      "interlinea": 1.12,
+      "titulo": {
+        "fuente": "titulo",
+        "tam": 26,
+        "peso": 800,
+        "color": "tinta"
+      },
+      "descripcion": {
+        "fuente": "texto",
+        "tam": 19,
+        "peso": 600,
+        "color": "tinta2"
+      },
+      "credito": {
+        "fuente": "texto",
+        "tam": 14,
+        "peso": 500,
+        "color": "tinta3"
+      },
+      "hexEscala": 1
+    },
+    "territorio": {
+      "entrada": 0.75,
+      "borde": "tinta2@.65",
+      "grosor": 2,
+      "zona": "#E23B2E@.5",
+      "zonaBorde": "#E23B2E@.9",
+      "zonaTexto": "#FFFFFF",
+      "zonaUcrania": "#F5C518@.5",
+      "zonaUcraniaBorde": "#F5C518@.95",
+      "zonaCheck": "#1A1A1A"
+    },
+    "aire": {
+      "cuerpo": "panel",
+      "borde": "panel",
+      "panel": "acento",
+      "altura": 13,
+      "sombraOpacidad": 0.23,
+      "satelite": 1.5,
+      "enlace": "tinta2@.8",
+      "escaneo": "acento@.65",
+      "hazGrosor": 2,
+      "guion": 8,
+      "pulsoVelocidad": 0.7,
+      "pulsoRadioMin": 7,
+      "pulsoRadio": 60,
+      "drone": 30,
+      "estela": "tinta2@.6",
+      "estelaGrosor": 1.5,
+      "estelaLargo": 16,
+      "interceptAt": 0.82,
+      "impactDur": 0.04,
+      "interceptColor": "acento",
+      "impactColor": "tinta",
+      "rotuloOffset": 32,
+      "rotulo": {
+        "fuente": "titulo",
+        "tam": 22,
+        "peso": 700,
+        "color": "tinta"
+      },
+      "spriteGrosor": 2,
+      "flagAncho": 32,
+      "flagAlto": 20,
+      "flagOffset": 30,
+      "flagBorde": 1,
+      "rotuloHalo": "panel",
+      "rotuloHaloGrosor": 5,
+      "rotuloMaxAncho": 300,
+      "rotuloSatelite": {
+        "fuente": "titulo",
+        "tam": 15.4,
+        "peso": 700,
+        "color": "tinta"
+      }
+    }
+  }
+}

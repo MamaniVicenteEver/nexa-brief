@@ -1,4 +1,19 @@
+Para crear cualquier contenido empieza por el [índice](../../../skills/README.md),
+[CALIDAD.md](../../../skills/CALIDAD.md) (estándar obligatorio) y
+[ORQUESTACION.md](../../../skills/ORQUESTACION.md) (roles, delegación, terminado e informe).
+
 # AGENTS.md — NodeMotion: prototipos de plantillas de música
+
+> **Excepción NodeMotion (vigente desde 2026-11-16):** esta guía no se usa para plantillas nuevas de letras o promos. Rige el «Estándar vigente para plantillas NodeMotion nuevas» del AGENTS.md raíz: motor en `src/templates/nodemotion/<cat>/<id>/` (solo código y JSON), prototipo y datos en `$NEXA_PROFILE_DIR/productions/nodemotion/<cat>/<id>/` y medios compartidos en recursos. Lo que aquí dice sobre `sandbox/nodemotion/`, la promoción desde el Sandbox y las pruebas de prototipo queda por actualizar; mientras tanto, esa norma manda. Las recetas técnicas (motores, HyperFrames, rendimiento) siguen siendo válidas como consulta.
+
+## Entrada breve para un chat directo
+
+Para replicar una referencia entregada por el usuario, usa las guías breves:
+[`REPLICA-LETRAS.md`](REPLICA-LETRAS.md) o [`REPLICA-PROMO.md`](REPLICA-PROMO.md),
+y su [contrato común](REPLICA-COMUN.md). El propio chat hace el trabajo; no
+delegues en agentes internos si el usuario pide trabajo directo. Las recetas
+históricas de abajo sirven como consulta técnica, no como instrucción de copiar
+un diseño, usar rutas antiguas ni trasladar a producción manualmente.
 
 > Para cualquier agente de IA o persona que vaya a **prototipar una plantilla nueva de música**
 > (video de letras, promo comercial, fondo de imagen o de video) en `sandbox/nodemotion/<id>/`
@@ -97,7 +112,7 @@ pone el reloj según la carpeta **registrada**; sobre una ruta sin registrar no 
 | # | Paso | Cómo |
 |---|---|---|
 | 1 | Id definitivo | `lyrics-<nombre>` o `promo-<nombre>`. Estable para siempre (no se renombra). |
-| 2 | Mover | `sandbox/nodemotion/<id>/` → `src/templates/nodemotion/{lyrics,commercial,image,video}/<id>/`. Si es generada: el spec va a `_tools/<familia>/build/<id>.spec.json` con `"out": "nodemotion/lyrics/<id>"` y se arma con `python3 src/templates/_tools/commercial/build/build.py <id>`. |
+| 2 | Mover | `sandbox/nodemotion/<id>/` → `src/templates/nodemotion/{lyrics,commercial,image,video}/<id>/`. Si es generada: el spec va a `_tools/<familia>/build/<id>.spec.json` con `"out": "nodemotion/lyrics/<id>"` y se arma con `python3 src/templates/_tools/nodemotion/promo/compiler/build/build.py <id>`. |
 | 3 | Contrato de job | Config: `fetch("config.json")` → `fetch("assets/config.json")` → `DEFAULT_CONFIG` embebido. Un solo `<audio>`, el primero del documento. Sin botón de grabar. |
 | 4 | CDN → local | Librerías a `assets/` y declaradas en `runtime_assets`. Fuentes: en plantillas nuevas preferí `@font-face` local declarado en `runtime_assets`. |
 | 5 | `templates.json` | Clonar la entrada de la plantilla base; `folder`, `index_html`, `config_json`, `config_prompt` con prefijo `nodemotion/<tipo>/<id>`; `category_id: "in_progress"`; `sort_order` siguiente libre (hoy el máximo es 42); `runtime_assets` (p. ej. `["assets/media"]`, se copia con la misma ruta relativa al job); `inputs` (ver `"//inputs"` en el mismo archivo). |
@@ -186,7 +201,7 @@ No definas `window.__hf`, `window.__player`, `window.__timelines`, `data-composi
 
 ### 4.1 Letras
 
-**Sincronía (lo que hace `_tools/commercial/build/core.js`, copiá de ahí):**
+**Sincronía (lo que hace `src/templates/_tools/nodemotion/promo/compiler/build/core.js`, copiá de ahí):**
 - **Filtro de alucinaciones de Whisper** en el config (Whisper inventa texto en tramos instrumentales:
   en Grunge salió "Oriel-chan" / "Audio Jungle"):
   ```json
@@ -225,7 +240,7 @@ si no salta de golpe. **No pongas dos Tracks sobre el mismo elemento y propiedad
 - Arco/slide/type/tilt sobre colores planos, Lilita One con "i" punteada + Sniglet, loops de
   pincel SVG, motion blur direccional SVG → `lyrics-stylish-kinetic`.
 - Ecos apilados, palabras gigantes con etiqueta, tickers, filas en outline, un solo acento → `lyrics-mixtas`.
-- Revelados (blur, typeErase) y destrucción por letra (`drip`, `crumble`, `smokeOut`, `burnChars`) → `_tools/lyrics-sad/build/sad-common.js`.
+- Revelados (blur, typeErase) y destrucción por letra (`drip`, `crumble`, `smokeOut`, `burnChars`) → `src/templates/_tools/nodemotion/lyrics/compiler/sad/build/sad-common.js`.
 - Acumulación con sentido (cada palabra queda en el muro, cámara con zoom/ángulo holandés/látigo) → `lyrics-expediente`.
 - Clímax físico: grietas que se acumulan y el vidrio estalla revelando otro "mundo" → `lyrics-cristal` (en desarrollo, pesado).
 - Separación RGB en el impacto, vaho escrito con el dedo, vidrio esmerilado → `lyrics-cristal`.
@@ -238,10 +253,10 @@ Tipo fijo por escena: `layouts.<tipo>.trans`.
 
 ### 4.2 Promos (y letras por escenas) — generador `core.js`
 
-- **Archivos:** `_tools/commercial/build/core.js` (núcleo común) + `<nombre>.js` (escenas,
-  funciones `B[tipo](sc, X)`) + `<id>.spec.json`. Familias: `_tools/lyrics-mixtas/build/`,
-  `_tools/lyrics-grunge/build/`, `_tools/lyrics-sad/build/` (`"js": ["sad-common.js", "ceniza.js"]` se concatenan).
-- **Spec** (ver `_tools/lyrics-sad/build/lyrics-ceniza.spec.json`): `title`, `out`
+- **Archivos:** `src/templates/_tools/nodemotion/promo/compiler/build/core.js` (núcleo común) + `<nombre>.js` (escenas,
+  funciones `B[tipo](sc, X)`) + `<id>.spec.json`. Familias: `src/templates/_tools/nodemotion/lyrics/compiler/mixed/build/`,
+  `src/templates/_tools/nodemotion/lyrics/compiler/grunge/build/`, `src/templates/_tools/nodemotion/lyrics/compiler/sad/build/` (`"js": ["sad-common.js", "ceniza.js"]` se concatenan).
+- **Spec** (ver `src/templates/_tools/nodemotion/lyrics/compiler/sad/build/lyrics-ceniza.spec.json`): `title`, `out`
   (`nodemotion/lyrics/<id>` o `nodemotion/commercial/<id>`), `js`, `about`, `fontLoads`, `css`,
   `config` (el caso: `audio`, `lyricsUrl`, `lyricsFilter`, `fonts.googleUrl`, `palette` → variables CSS,
   `grades`, `render.kbVideo`, `media[]`, `phrases`, `timing`, `transition`, `layouts`, `intro`,
@@ -260,13 +275,13 @@ Tipo fijo por escena: `layouts.<tipo>.trans`.
   del clip) y acreditá en `CREDITS.md`. ~6 clips por plantilla alcanzan.
 - **Grading pre-horneado:** nunca filtres un `<video>` en vivo (un solo `filter` CSS: 45 → 13 fps).
   Definí `config.grades` (`{type:"duo", dark, light, contrast}` o `{type:"css", saturate, contrast, brightness}`)
-  y corré `python3 src/templates/_tools/commercial/grade_media.py <ruta>/assets/config.json`
+  y corré `python3 src/templates/_tools/nodemotion/promo/compiler/grade_media.py <ruta>/assets/config.json`
   (lo hace `build.py` solo): genera variantes y anota `media[].graded[<grade>]`. Si falta la variante,
   la plantilla aplica el filtro en vivo (anda, pero lento).
 - **Ken Burns:** en fotos siempre; en video solo con `config.render.kbVideo` (escalar un `<video>`
   por cuadro: 45 → 26 fps). Alternativa barata: mover el contenedor (`footage()` en `sad-common.js`).
 - **Render cuadro a cuadro fuera de la app** (para revisar una pesada):
-  `python3 src/templates/_tools/commercial/render_promo.py nodemotion/commercial/<id>/index.html out.mp4 --workers 4`
+  `python3 src/templates/_tools/nodemotion/promo/compiler/render_promo.py nodemotion/commercial/<id>/index.html out.mp4 --workers 4`
   (ruta relativa a `src/templates/`; usa `window.__promo.seek`).
 
 ### 4.3 Fondos (imagen / video)
@@ -322,6 +337,8 @@ Tipo fijo por escena: `layouts.<tipo>.trans`.
 | Claves de config que el HTML principal no lee | Confunde a la IA y a quien edita (Collage) | Config = exactamente lo que el motor usa |
 | Editar a mano un `index.html` generado | Se pierde al regenerar | Editar el generador |
 | Guardar evidencia de render en `/tmp` | Se borró al reiniciar | `output/hf-demo-<id>/` |
+| Máscaras CSS (`mask-image`) con PNG en escala de grises sin alfa | CSS enmascara por **alfa**: el PNG se ve como un rectángulo opaco (pinceles y marcos «rotos» que no recortan) | PNG blanco con canal alfa (`_build/textures.py` de `promo-fuerza-motivacion`) |
+| Delegar una réplica «a ojo» a Codex sin verificar | Codex copió el logo de la referencia y dejó texto diminuto (2026-10-15) | Hoja comparativa ref ↔ plantilla en los mismos instantes y revisarla antes de entregar |
 
 ---
 
@@ -396,6 +413,13 @@ Resumen de `docs/investigaciones/estrategia-cro-titulos-descripciones-2026-09.md
 - [ ] Videos mudos, ≤ 2–3 visibles a la vez, sin filtros CSS en vivo sobre `<video>`.
 - [ ] Se ve distinta de las plantillas existentes (sección 5.1).
 - [ ] Media con créditos anotados (autor + URL de Pexels).
+- [ ] La intro declara su miniatura: primera línea de `components/intro.js` =
+      `// @nexa thumbnail-at: <segundos>` — el segundo en que el cartel con el nombre de la canción se ve
+      completo (medido reproduciendo la plantilla). De ahí sale la miniatura de YouTube
+      (`src/modules/thumbnail_maker.py`, que además elige el cuadro más estable de ±0,3 s). Sin la marca
+      se captura el segundo 1, que puede caer en plena animación.
+- [ ] El cierre (`components/outro.js`) queda quieto hasta el último cuadro: nunca se desmonta ni
+      apaga letras al llegar al final del audio (el video tiene que terminar en el cartel completo).
 
 **Al promover (sección 2.3):**
 - [ ] Carpeta `nodemotion/<tipo>/<id>/` + `templates.json` (`in_progress`) + `niches.json` + `node_motion.children`.
@@ -416,10 +440,17 @@ Resumen de `docs/investigaciones/estrategia-cro-titulos-descripciones-2026-09.md
   decide con `out.relative_to(TPL).parts[0] in HF_CATEGORIES`; con `out = "nodemotion/..."` eso da
   `nodemotion` → **no lo pone**. Por eso el paso 10 es obligatorio después de `build.py`.
   (`optimize.py` sí resuelve bien el tipo con `template_kind()`.)
-- Docstrings con rutas viejas: `render_promo.py`, `grade_media.py`, `_tools/lyrics-sad/README.md`
+- Docstrings con rutas viejas: `render_promo.py`, `grade_media.py`, `src/templates/_tools/nodemotion/lyrics/compiler/sad/README.md`
   (`lyrics/<id>`, `commercial/<id>` → anteponé `nodemotion/`).
 - `lyrics-mixtas`: en `templates.json` no es `static_config` (tiene `config_prompt`) pero su nicho dice
   `static_config: true`. Al clonar, alineá los dos.
 - `tests/unit/test_drafts.py::test_create_draft_rejects_unsupported_engine_400` busca una plantilla de
   letras **fuera** de la whitelist; con todas habilitadas falla con `StopIteration`. No es bug de tu
   plantilla: avisá al usuario, no saques ids de la whitelist.
+
+
+## Promos: instrucciones compartidas, sin copias por video
+
+Para Editorial, Sports, Dynamic, Kinetic, Trendy y Urban, usa [el flujo único de promos](../../_tools/nodemotion/promo/production/OPERATE.md). Los prompts versionados viven en `src/templates/_tools/nodemotion/promo/production/prompts/` del servidor y se resuelven con `promo.py prompt --id ID --stage ETAPA`; nunca crees `work/instrucciones/prompts/`, copias de esos Markdown, otro productor ni scripts de campaña para repetir el flujo. Cada proyecto conserva solo la referencia de versión y hashes, sus datos y evidencias. Las reglas específicas del diseño proceden de `src/templates/_tools/nodemotion/promo/production/templates/<template-id>.json` y `DESIGN.md`; no se copian al proyecto. `CLAUDE.md` incorpora este archivo mediante `@AGENTS.md`. Las recetas de crear o bifurcar una plantilla nueva no aplican a videos basados en una promo existente.
+
+For NodeMotion design creation, start with [template authoring](../../../../docs/nodemotion-template-authoring.md). Its shared-source and resource rules govern final integration. Isolated creators stay in their assigned workspace and report integration tasks; do not bypass the promotion service.

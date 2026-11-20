@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/schemas/nodemotion-promo/build-dynamic.json",
+  "type": "object",
+  "properties": {
+    "template": {
+      "const": "promo-dynamic"
+    },
+    "texts": {
+      "type": "object",
+      "properties": {
+        "brand.tag": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "brand.url": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "brand.vertical": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 24
+        }
+      },
+      "required": [
+        "brand.tag",
+        "brand.url",
+        "brand.vertical"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "template",
+    "texts"
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "config.timing",
+  "entry_id": "config.timing",
+  "name": "timing",
+  "kind": "configuration",
+  "label": "timing",
+  "summary": "Existing configuration configuration: timing.",
+  "params": {
+    "leadSec": {
+      "default": 0.08
+    },
+    "holdSec": {
+      "default": 0.8
+    },
+    "gapSec": {
+      "default": 2.0
+    },
+    "echoSec": {
+      "default": 0.9
+    },
+    "cooldown": {
+      "default": 4
+    }
+  },
+  "example": {
+    "leadSec": 0.08,
+    "holdSec": 0.8,
+    "gapSec": 2.0,
+    "echoSec": 0.9,
+    "cooldown": 4
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+      "pointer": "/configs/0/timing"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "config.interludes",
+  "entry_id": "config.interludes",
+  "name": "interludes",
+  "kind": "configuration",
+  "label": "interludes",
+  "summary": "Existing configuration configuration: interludes.",
+  "params": {
+    "minSec": {
+      "default": 0.8
+    },
+    "maxSec": {
+      "default": 3
+    },
+    "deck": {
+      "default": {
+        "letras": 1,
+        "foto": 1,
+        "titulo": 1
+      }
+    }
+  },
+  "example": {
+    "minSec": 0.8,
+    "maxSec": 3,
+    "deck": {
+      "letras": 1,
+      "foto": 1,
+      "titulo": 1
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+      "pointer": "/configs/0/interludes"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-manifiesto",
+  "id": "config.laminas",
+  "entry_id": "config.laminas",
+  "name": "laminas",
+  "kind": "configuration",
+  "label": "laminas",
+  "summary": "Existing configuration configuration: laminas.",
+  "params": {
+    "deck": {
+      "default": [
+        "pleno",
+        "pleno",
+        "columna",
+        "pleno",
+        "micro",
+        "borde",
+        "columna",
+        "contra",
+        "pleno",
+        "borde",
+        "micro",
+        "columna"
+      ]
+    },
+    "contraCooldownSec": {
+      "default": 6
+    },
+    "pushScale": {
+      "default": 1.028
+    },
+    "pushSec": {
+      "default": 7
+    }
+  },
+  "example": {
+    "deck": [
+      "pleno",
+      "pleno",
+      "columna",
+      "pleno",
+      "micro",
+      "borde",
+      "columna",
+      "contra",
+      "pleno",
+      "borde",
+      "micro",
+      "columna"
+    ],
+    "contraCooldownSec": 6,
+    "pushScale": 1.028,
+    "pushSec": 7
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-manifiesto/assets/config.json",
+      "pointer": "/configs/0/laminas"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

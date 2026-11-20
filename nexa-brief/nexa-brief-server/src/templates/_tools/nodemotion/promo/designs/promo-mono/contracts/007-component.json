@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.wordgrid",
+  "entry_id": "mono.wordgrid",
+  "kind": "component",
+  "label": "Palabra repetida en filas, partida por ventanas de video",
+  "summary": "Palabra repetida en filas, partida por ventanas de video",
+  "component": {
+    "name": "mono.wordgrid",
+    "label": "Palabra repetida en filas, partida por ventanas de video",
+    "summary": "Palabra repetida en filas, partida por ventanas de video",
+    "tags": [
+      "escena"
+    ],
+    "scene_type": "wordgrid",
+    "params": {
+      "rows": {
+        "type": "number",
+        "min": 3.0,
+        "max": 7.0,
+        "default": 5.0
+      },
+      "grade": {
+        "type": "string",
+        "options": [
+          "mono",
+          "none"
+        ],
+        "default": "mono"
+      },
+      "split": {
+        "type": "string",
+        "options": [
+          "auto",
+          "hyphen",
+          "middle"
+        ],
+        "default": "auto"
+      }
+    },
+    "demo": {
+      "time": 9.0
+    },
+    "preview": {
+      "t": 9.0
+    }
+  },
+  "params": {
+    "rows": {
+      "type": "number",
+      "min": 3.0,
+      "max": 7.0,
+      "default": 5.0
+    },
+    "grade": {
+      "type": "string",
+      "options": [
+        "mono",
+        "none"
+      ],
+      "default": "mono"
+    },
+    "split": {
+      "type": "string",
+      "options": [
+        "auto",
+        "hyphen",
+        "middle"
+      ],
+      "default": "auto"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/3"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

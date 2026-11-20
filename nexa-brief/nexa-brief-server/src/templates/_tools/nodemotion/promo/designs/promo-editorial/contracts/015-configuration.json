@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-editorial",
+  "id": "config.brand",
+  "entry_id": "config.brand",
+  "name": "brand",
+  "kind": "configuration",
+  "label": "brand",
+  "summary": "Existing configuration configuration: brand.",
+  "params": {
+    "left": {
+      "default": "Leones"
+    },
+    "right": {
+      "default": "Halcones"
+    },
+    "round": {
+      "default": "Gran Final"
+    },
+    "name": {
+      "default": "Liga Nexa"
+    },
+    "logo": {
+      "default": ""
+    }
+  },
+  "example": {
+    "left": "Leones",
+    "right": "Halcones",
+    "round": "Gran Final",
+    "name": "Liga Nexa",
+    "logo": ""
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-editorial/assets/config.json",
+      "pointer": "/configs/0/brand"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

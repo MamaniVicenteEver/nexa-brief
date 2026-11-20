@@ -1,0 +1,24 @@
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #000; cursor: pointer; }
+  #stage { position: fixed; inset: 0; overflow: hidden; }
+  .scene { position: absolute; left: 0; top: 0; overflow: hidden; }
+  .lay { position: absolute; inset: 0; transform-origin: 50% 50%; }
+  .grp { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+  .mbox { position: absolute; overflow: hidden; }
+  .media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+  .patch { position: absolute; pointer-events: none; }
+  .grain { position: absolute; inset: 0; pointer-events: none; }
+  .bx { position: absolute; left: 0; top: 0; white-space: nowrap; }
+  .tx { display: inline-block; white-space: nowrap; line-height: 0.92; }
+  .ch, .wd { display: inline-block; white-space: pre; }
+  #hud { position: fixed; left: 8px; top: 8px; z-index: 50; display: none; padding: 6px 8px;
+         font: 11px/1.4 ui-monospace, monospace; color: #0f0; background: rgba(0,0,0,0.7); pointer-events: none; }
+  #hint { display: none !important; position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8; font: 700 1.6vh system-ui, sans-serif;
+          letter-spacing: 0.4em; color: #fff; opacity: 0.55; pointer-events: none; }
+  :root { --fC: "Anton"; --fW: "Anton"; }
+  .fc { font-family: var(--fC), "Noto Sans KR", sans-serif; font-weight: 400; text-transform: uppercase; }
+  .fw { font-family: var(--fW), "Noto Sans KR", sans-serif; font-weight: 400; font-style: italic; text-transform: uppercase; }
+  .fk { font-family: "Noto Sans KR", sans-serif; font-weight: 900; }
+
+  body.headless #hint { display: none !important; }

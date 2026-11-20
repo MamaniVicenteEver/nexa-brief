@@ -1,0 +1,1995 @@
+{
+  "schema_version": 1,
+  "design_id": "acuarela",
+  "revision": "2875788f7042cd3b0a487b15ed5fadef0b7905a63e63418eaea5ab4a24e60722",
+  "entries": [
+    {
+      "id": "common.punch",
+      "name": "common.punch",
+      "label": "common.punch",
+      "kind": "component",
+      "summary": "Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento.",
+      "tags": [
+        "impacto",
+        "texto",
+        "énfasis"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto; '\\n' parte renglones; '^x^' = acento.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del ancho del cuadro que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 1
+        },
+        "style": {
+          "type": "enum",
+          "default": "solid",
+          "doc": "solid = relleno, outline = contorno, glitch = entra cortado.",
+          "required": false,
+          "options": [
+            "solid",
+            "outline",
+            "glitch"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.035,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hideCaptions": {
+          "type": "bool",
+          "default": true,
+          "doc": "Oculta los subtítulos mientras está en pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "MILLONES\nDE ^VIDAS^",
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=common.punch",
+      "data": {
+        "native_name": "common.punch"
+      }
+    },
+    {
+      "id": "common.tag",
+      "name": "common.tag",
+      "label": "common.tag",
+      "kind": "component",
+      "summary": "Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose.",
+      "tags": [
+        "contexto",
+        "lugar",
+        "fecha"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto del rótulo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "top",
+          "doc": "Posición.",
+          "required": false,
+          "options": [
+            "top",
+            "bottom",
+            "center"
+          ],
+          "min": null,
+          "max": null
+        },
+        "boxed": {
+          "type": "bool",
+          "default": true,
+          "doc": "Con caja de color (true) o solo texto. Duración: usar 'dur' del beat.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "BLETCHLEY PARK · 1940",
+        "pos": "top"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=common.tag",
+      "data": {
+        "native_name": "common.tag"
+      }
+    },
+    {
+      "id": "common.flash",
+      "name": "common.flash",
+      "label": "common.flash",
+      "kind": "component",
+      "summary": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+      "tags": [
+        "transición",
+        "golpe"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "palette.ink",
+          "doc": "Color del destello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Opacidad máxima.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "color": "palette.ink",
+        "dur": 0.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=common.flash",
+      "data": {
+        "native_name": "common.flash"
+      }
+    },
+    {
+      "id": "common.endcard",
+      "name": "common.endcard",
+      "label": "common.endcard",
+      "kind": "component",
+      "summary": "Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse).",
+      "tags": [
+        "cierre",
+        "marca"
+      ],
+      "params": {
+        "line": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase de cierre ('\\n' para renglones, '^x^' acento).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "brand": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca / canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "",
+          "doc": "Llamado a la acción (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "line": "SEGUIMOS\nPREGUNTANDO",
+        "brand": "NEXA BRIEF",
+        "cta": "SUSCRÍBETE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=common.endcard",
+      "data": {
+        "native_name": "common.endcard"
+      }
+    },
+    {
+      "id": "common.lyric",
+      "name": "common.lyric",
+      "label": "common.lyric",
+      "kind": "component",
+      "summary": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+      "tags": [
+        "impacto",
+        "letra",
+        "frase",
+        "clímax"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras (sin tildes ni mayúsculas importa) que van en color de acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Fracción del ancho que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "maxChars": {
+          "type": "number",
+          "default": 0,
+          "doc": "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dimPast": {
+          "type": "bool",
+          "default": true,
+          "doc": "Atenuar las palabras ya dichas (efecto karaoke).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "accent": [
+          "vidas"
+        ],
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=common.lyric",
+      "data": {
+        "native_name": "common.lyric"
+      }
+    },
+    {
+      "id": "common.logo",
+      "name": "common.logo",
+      "label": "common.logo",
+      "kind": "component",
+      "summary": "Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.",
+      "tags": [
+        "logo",
+        "obsoleto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=common.logo",
+      "data": {
+        "native_name": "common.logo"
+      }
+    },
+    {
+      "id": "common.clip",
+      "name": "common.clip",
+      "label": "common.clip",
+      "kind": "component",
+      "summary": "Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.",
+      "tags": [
+        "video",
+        "clip",
+        "metraje",
+        "foto",
+        "lugar",
+        "máquina"
+      ],
+      "params": {
+        "src": {
+          "type": "video",
+          "default": null,
+          "doc": "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo del clip desde el que arranca.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si es más corto que el beat; evita congelar el último cuadro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full).",
+          "required": false,
+          "options": [
+            "auto",
+            "full",
+            "frame"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "ar": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 0.06,
+          "doc": "Cuánto se acerca a lo largo del beat (empuje lento).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tone": {
+          "type": "enum",
+          "default": "design",
+          "doc": "design = filtro del diseño (defaults.clip.filter); color = el clip tal cual.",
+          "required": false,
+          "options": [
+            "design",
+            "color"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": -1,
+          "doc": "Oscurecido (para leer los subtítulos); -1 = el del diseño.",
+          "required": false,
+          "options": null,
+          "min": -1,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo (qué se ve); vacío = sin rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textColor": {
+          "type": "enum",
+          "default": "ink",
+          "doc": "Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords.",
+          "required": false,
+          "options": [
+            "ink",
+            "accent",
+            "mix"
+          ],
+          "min": null,
+          "max": null
+        },
+        "accentWords": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras o frases del rótulo que van en color de acento cuando textColor=mix.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textSide": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Ubicación del texto grande en layout full.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "bottom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del texto grande, controlada por el reloj del beat.",
+          "required": false,
+          "options": [
+            "slide",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/servidores.mp4",
+        "layout": "full",
+        "caption": "Una ^conversación^ digital",
+        "textColor": "mix",
+        "textSide": "left",
+        "sub": "Una historia real"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=common.clip",
+      "data": {
+        "native_name": "common.clip"
+      }
+    },
+    {
+      "id": "common.tabloid",
+      "name": "common.tabloid",
+      "label": "common.tabloid",
+      "kind": "component",
+      "summary": "Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.",
+      "tags": [
+        "miniatura",
+        "intro",
+        "alerta",
+        "tabloide",
+        "gancho"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular corto; máximo 6 palabras recomendado.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto opcional; también sirve de respaldo del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "srcAfter": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto del split.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip .mp4 local de assets/media; ocupa el lugar de src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poster": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si termina antes que el beat; evita congelar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "muted": {
+          "type": "bool",
+          "default": true,
+          "doc": "El clip siempre se reproduce mudo; false se ignora por el contrato del motor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase destacada con el acento del diseño (rojo en alert).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bullet": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra y leyenda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bulletScale": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la cifra y su recuadro.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 1.5
+        },
+        "beforeLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del antes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "afterLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del después.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "imageSide": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado de foto horizontal.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "impact",
+          "doc": "Foto única o split.",
+          "required": false,
+          "options": [
+            "impact",
+            "split"
+          ],
+          "min": null,
+          "max": null
+        },
+        "palette": {
+          "type": "enum",
+          "default": "brand",
+          "doc": "Identidad del diseño o estilo clásico de alerta.",
+          "required": false,
+          "options": [
+            "brand",
+            "alert"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strap": {
+          "type": "string",
+          "default": "",
+          "doc": "Cintillo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seal": {
+          "type": "string",
+          "default": "",
+          "doc": "Sello opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tapeText": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de cinta opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "marker": {
+          "type": "bool",
+          "default": false,
+          "doc": "Marca alrededor del foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": null,
+          "doc": "[x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": [
+            0.72,
+            0.52
+          ],
+          "doc": "Obsoleto: usar focus con radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de cada renglón del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Separación en segundos entre renglones.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "accentIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del acento después de su renglón.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bulletIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de la cifra después del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "inDuration": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Duración en segundos de cada entrada.",
+          "required": false,
+          "options": null,
+          "min": 0.05,
+          "max": 2
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "TÚ ERES EL SIGUIENTE",
+        "accent": "SIGUIENTE",
+        "strap": "AMAZON · IA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=common.tabloid",
+      "data": {
+        "native_name": "common.tabloid"
+      }
+    },
+    {
+      "id": "common.question",
+      "name": "common.question",
+      "label": "common.question",
+      "kind": "component",
+      "summary": "Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.",
+      "tags": [
+        "pregunta",
+        "comentarios",
+        "cierre",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta exacta del guion (máximo 8 palabras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro vertical de la tarjeta (fracción del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 0.8
+        }
+      },
+      "example": {
+        "text": "¿La IA te quita trabajo?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=common.question",
+      "data": {
+        "native_name": "common.question"
+      }
+    },
+    {
+      "id": "acuarela.title",
+      "name": "acuarela.title",
+      "label": "acuarela.title",
+      "kind": "component",
+      "summary": "Apertura 'THE HISTORY': título condensado en rojo ladrillo con rayas finas a ambos lados y subtítulo, sobre una gran mancha de acuarela que es una foto lavada (florece desde varios focos) y bloques manuscritos.",
+      "tags": [
+        "apertura",
+        "título",
+        "portada"
+      ],
+      "params": {
+        "title": {
+          "type": "string",
+          "default": null,
+          "doc": "Título (se escribe en mayúsculas).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo chico bajo el título.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto que forma la mancha de fondo (se lava a gris).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] 0..1 para el recorte 'cover'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "titlePortrait": {
+          "type": "string",
+          "default": "",
+          "doc": "Título alternativo para 9:16 ('\\n' parte renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "title": "La noche que cayó el muro",
+        "sub": "Berlín · 9 de noviembre de 1989",
+        "bg": "assets/media/muro-gente.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=acuarela.title",
+      "data": {
+        "native_name": "acuarela.title"
+      }
+    },
+    {
+      "id": "acuarela.photo",
+      "name": "acuarela.photo",
+      "label": "acuarela.photo",
+      "kind": "component",
+      "summary": "Una foto de archivo con marco (estampilla o copia vieja) que entra deslizándose y se asienta, mancha-foto que florece detrás, fecha grande con raya fina y párrafo corto que aparecen por tinta. layout: top (fecha centrada arriba), right (fecha abajo a la derecha), left (fecha abajo a la izquierda).",
+      "tags": [
+        "foto",
+        "fecha",
+        "lugar",
+        "evento"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "La foto principal.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "date": {
+          "type": "string",
+          "default": "",
+          "doc": "Fecha o rótulo grande (Oswald, rojo ladrillo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Párrafo corto (1–3 renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "top",
+          "doc": "Diagramación de la referencia.",
+          "required": false,
+          "options": [
+            "top",
+            "right",
+            "left"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de la mancha de fondo (vacío = la misma foto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "frame": {
+          "type": "enum",
+          "default": "stamp",
+          "doc": "Marco: estampilla perforada o copia vieja.",
+          "required": false,
+          "options": [
+            "stamp",
+            "deckle"
+          ],
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Entrada de la foto (auto = la del layout).",
+          "required": false,
+          "options": [
+            "auto",
+            "down",
+            "up",
+            "left",
+            "right",
+            "zoom",
+            "tilt",
+            "shrink",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] 0..1 para el recorte 'cover'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bgFocus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] 0..1 para el recorte 'cover'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "date": "Agosto de 1961",
+        "text": "En una sola noche, soldados y obreros levantan alambre y bloques en medio de Berlín.",
+        "layout": "top",
+        "bg": "assets/media/leipzig.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=acuarela.photo",
+      "data": {
+        "native_name": "acuarela.photo"
+      }
+    },
+    {
+      "id": "acuarela.pair",
+      "name": "acuarela.pair",
+      "label": "acuarela.pair",
+      "kind": "component",
+      "summary": "Dos fotos superpuestas (la segunda tapa el borde de la primera y llega un instante después) + fecha y párrafo; mancha-foto y manuscrito detrás. layout: above (texto arriba, fotos abajo), right (fotos a la izquierda, fecha arriba a la derecha; entra girada con zoom), below (fotos arriba, fecha abajo), center (fotos lado a lado, fecha centrada; entra con zoom hacia atrás), dual (dos fechas, una por foto).",
+      "tags": [
+        "fotos",
+        "comparación",
+        "fecha",
+        "collage"
+      ],
+      "params": {
+        "a": {
+          "type": "image",
+          "default": null,
+          "doc": "Primera foto (abajo en la pila).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "b": {
+          "type": "image",
+          "default": null,
+          "doc": "Segunda foto (arriba en la pila).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "date": {
+          "type": "string",
+          "default": "",
+          "doc": "Fecha principal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Párrafo principal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "date2": {
+          "type": "string",
+          "default": "",
+          "doc": "Solo layout dual: segunda fecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text2": {
+          "type": "string",
+          "default": "",
+          "doc": "Solo layout dual: segundo párrafo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "above",
+          "doc": "Diagramación de la referencia.",
+          "required": false,
+          "options": [
+            "above",
+            "right",
+            "below",
+            "center",
+            "dual"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de la mancha de fondo (vacío = la primera).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "frameA": {
+          "type": "enum",
+          "default": "stamp",
+          "doc": "Marco de la primera foto.",
+          "required": false,
+          "options": [
+            "stamp",
+            "deckle"
+          ],
+          "min": null,
+          "max": null
+        },
+        "frameB": {
+          "type": "enum",
+          "default": "deckle",
+          "doc": "Marco de la segunda foto.",
+          "required": false,
+          "options": [
+            "stamp",
+            "deckle"
+          ],
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Entrada del par (auto = la del layout).",
+          "required": false,
+          "options": [
+            "auto",
+            "down",
+            "up",
+            "left",
+            "right",
+            "zoom",
+            "tilt",
+            "shrink",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "focusA": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] 0..1 para el recorte 'cover'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focusB": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] 0..1 para el recorte 'cover'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bgFocus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] 0..1 para el recorte 'cover'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "a": "assets/media/bornholmer.jpg",
+        "b": "assets/media/muro-gente.jpg",
+        "date": "9 de noviembre",
+        "text": "Miles de personas llegan a los pasos fronterizos.",
+        "layout": "right"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=acuarela.pair",
+      "data": {
+        "native_name": "acuarela.pair"
+      }
+    },
+    {
+      "id": "acuarela.quote",
+      "name": "acuarela.quote",
+      "label": "acuarela.quote",
+      "kind": "component",
+      "summary": "Retrato vertical (copia vieja) que entra desde la izquierda achicándose, cita en sans condensada a su derecha que aparece por manchas, firma en rojo ladrillo y una 'isla' de mancha-foto detrás.",
+      "tags": [
+        "cita",
+        "retrato",
+        "frase",
+        "personaje"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Retrato (se recorta vertical).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "quote": {
+          "type": "string",
+          "default": null,
+          "doc": "La cita (2–5 renglones).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": "Firma (rojo ladrillo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de la mancha de fondo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.3
+          ],
+          "doc": "Punto de interés del retrato [x,y].",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bgFocus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] 0..1 para el recorte 'cover'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "frame": {
+          "type": "enum",
+          "default": "deckle",
+          "doc": "Marco del retrato.",
+          "required": false,
+          "options": [
+            "stamp",
+            "deckle"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/schabowski.jpg",
+        "quote": "Eso entra en vigor, según mi información, de inmediato, sin demora.",
+        "name": "Günter Schabowski",
+        "bg": "assets/media/bornholmer.jpg"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=acuarela.quote",
+      "data": {
+        "native_name": "acuarela.quote"
+      }
+    },
+    {
+      "id": "acuarela.introv1",
+      "name": "acuarela.introv1",
+      "label": "acuarela.introv1",
+      "kind": "component",
+      "summary": "GANCHO de apertura (lo primero que se ve). Fondo adaptable al tema (bg: blots | wash | timeline | manuscript | image con src | component con use/useParams); por defecto manchas de tinta y acuarela que florecen sobre el papel y manuscrito que se escribe. Titular GIGANTE en Oswald ladrillo: cada palabra cae y se revela 'comida' por una máscara de tinta que sangra, con sacudida y gotitas; '^palabra^' queda calada en una mancha de tinta negra. En dropAt cae una gota: salpica, una aguada sepia florece detrás y un pincel subraya. Subtítulo manuscrito.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "título",
+        "tinta",
+        "impacto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular gancho, corto (2–6 palabras). '\\n' = renglón; '^x^' = palabra calada en una mancha de tinta negra.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba (lugar · fecha), con rayas finas.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea manuscrita debajo del titular (se escribe a pluma).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wordAt": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Segundo del primer golpe de palabra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.28,
+          "doc": "Segundos entre palabra y palabra.",
+          "required": false,
+          "options": null,
+          "min": 0.08,
+          "max": null
+        },
+        "dropAt": {
+          "type": "number",
+          "default": 2.3,
+          "doc": "Segundo en que cae la gota de tinta: salpica, florece la aguada sepia y el pincel subraya (-1 = sin gota). Acepta '@palabra'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: blots, wash, timeline, manuscript; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "blots",
+            "wash",
+            "timeline",
+            "manuscript",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Velo de papel sobre el fondo foto/componente (paleta clara: se lava hacia el papel; 0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "blot": {
+          "type": "bool",
+          "default": true,
+          "doc": "bg=image: la foto aparece dentro de una mancha de tinta que florece (false = a sangre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "LA NOCHE QUE\nCAYÓ EL ^MURO^",
+        "kicker": "Berlín · 9 nov 1989",
+        "sub": "la noche que nadie vio venir",
+        "dropAt": 2.3
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=acuarela.introv1",
+      "data": {
+        "native_name": "acuarela.introv1"
+      }
+    },
+    {
+      "id": "acuarela.introv2",
+      "name": "acuarela.introv2",
+      "label": "acuarela.introv2",
+      "kind": "component",
+      "summary": "GANCHO pregunta + revelación. Fondo adaptable al tema (bg: manuscript | blots | wash | timeline | image con src | component con use/useParams); por defecto una página manuscrita con renglones y margen ladrillo donde cae una gota que se expande. Rótulo tipo fecha que se revela comido por tinta con su raya. La pregunta GIGANTE se escribe letra a letra con tinta fresca (una gota de pluma avanza delante) y la respuesta llega como una PINCELADA de acuarela ladrillo que barre con el texto calado en papel, con sacudida y salpicadura.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "pregunta",
+        "pincelada",
+        "tinta"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta gancho ('\\n' = renglón).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo tipo fecha arriba (Oswald ladrillo con raya).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stamp": {
+          "type": "string",
+          "default": "",
+          "doc": "Respuesta: pincelada de acuarela que barre con el texto calado (vacío = sin pincelada).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stampAt": {
+          "type": "number",
+          "default": 2.4,
+          "doc": "Segundo de la pincelada (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "typeAt": {
+          "type": "number",
+          "default": 0.35,
+          "doc": "Segundo en que empieza a escribirse la pregunta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cps": {
+          "type": "number",
+          "default": 18,
+          "doc": "Letras por segundo de la escritura.",
+          "required": false,
+          "options": null,
+          "min": 4,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: blots, wash, timeline, manuscript; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "blots",
+            "wash",
+            "timeline",
+            "manuscript",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Velo de papel sobre el fondo foto/componente (paleta clara: se lava hacia el papel; 0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "blot": {
+          "type": "bool",
+          "default": true,
+          "doc": "bg=image: la foto aparece dentro de una mancha de tinta que florece (false = a sangre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "¿QUIÉN ABRIÓ\nEL MURO?",
+        "kicker": "Berlín · 1989",
+        "stamp": "NADIE DIO LA ORDEN",
+        "stampAt": 2.4
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=acuarela.introv2",
+      "data": {
+        "native_name": "acuarela.introv2"
+      }
+    },
+    {
+      "id": "acuarela.outro",
+      "name": "acuarela.outro",
+      "label": "acuarela.outro",
+      "kind": "component",
+      "summary": "Cierre del canal SIN recuadro (bg: wash | blots | timeline | manuscript | image con src | component con use/useParams): por defecto papel con una aguada sepia que barre y pinceladas que chorrean. GRACIAS POR VER con rayas → nombre del canal GIGANTE en Oswald ladrillo que la tinta 'come' sobre una aguada que florece, subrayado a pincel y firma manuscrita → pulgar a tinta que se llena de acuarela ladrillo al marcar LIKE + círculo a pincel → flecha a pincel → pincelada SUSCRÍBETE con el texto calado + campana a tinta que suena → mensaje de apoyo por manchas → youtube.com/@canal. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt).",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse",
+        "tinta"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Rótulo inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODETECH",
+          "doc": "Nombre del canal (grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón de suscripción.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Apoya el canal y comparte la historia.",
+          "doc": "Mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodetech",
+          "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": true,
+          "doc": "Flecha del LIKE a SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del LIKE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la campana.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo del mensaje de apoyo y la dirección.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: wash, blots, timeline, manuscript; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "wash",
+            "blots",
+            "timeline",
+            "manuscript",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.65,
+          "doc": "Velo de papel sobre el fondo foto/componente (el cierre tiene mucho texto; paleta clara: se lava hacia el papel).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "blot": {
+          "type": "bool",
+          "default": true,
+          "doc": "bg=image: la foto aparece dentro de una mancha de tinta que florece (false = a sangre).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "NODETECH",
+        "cta": "SUSCRÍBETE",
+        "support": "Tu apoyo nos ayuda a seguir creando y traer más historias.",
+        "handle": "youtube.com/@nodetech"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=acuarela&c=acuarela.outro",
+      "data": {
+        "native_name": "acuarela.outro"
+      }
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "desc_nine_blocks_v1",
+  "piece": "description",
+  "locale": "en-US",
+  "status": "draft",
+  "intent": "Build nine purposeful blocks: hook, context, chapters, reflection, thanks, question, sources, credits, hashtags.",
+  "templates": {
+    "hook": "{specific consequence}. {one unanswered question}.",
+    "context": "What {named source} says, and what it does not establish.",
+    "reflection": "The distinction matters when you {specific action}.",
+    "question": "Would you {choice A} or {choice B}?"
+  },
+  "examples": [
+    "Deleting a chat and deleting every retained copy are different promises. Here is how to check which one you have."
+  ],
+  "conventions": [
+    "US month names avoid ambiguous numeric dates. Preserve the actual date and units.",
+    "Keep sources separate from image and music credits; include author, license, URL and modifications.",
+    "The host assembles timestamps, credits and source links; never invent them."
+  ],
+  "sounds_false": [
+    "In this fascinating journey, we delve into the future.",
+    "A generic call to like and subscribe in every block."
+  ],
+  "overrides": {
+    "headings": {
+      "chapters": "CHAPTERS",
+      "sources": "SOURCES",
+      "credits": "IMAGE AND MUSIC CREDITS"
+    }
+  },
+  "variants": {
+    "short": {
+      "instructions": [
+        "Omit chapters; keep the hook, context, sources, credits and one question."
+      ]
+    }
+  }
+}

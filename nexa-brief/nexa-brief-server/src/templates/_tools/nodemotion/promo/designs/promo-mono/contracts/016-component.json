@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.coupon",
+  "entry_id": "mono.coupon",
+  "kind": "component",
+  "label": "Cupones que entran girando desde los bordes + rótulo central",
+  "summary": "Cupones que entran girando desde los bordes + rótulo central",
+  "component": {
+    "name": "mono.coupon",
+    "label": "Cupones que entran girando desde los bordes + rótulo central",
+    "summary": "Cupones que entran girando desde los bordes + rótulo central",
+    "tags": [
+      "escena"
+    ],
+    "scene_type": "coupon",
+    "params": {
+      "count": {
+        "type": "number",
+        "min": 2.0,
+        "max": 8.0,
+        "default": 4.0
+      }
+    },
+    "demo": {
+      "time": 43.4
+    },
+    "preview": {
+      "t": 43.4
+    }
+  },
+  "params": {
+    "count": {
+      "type": "number",
+      "min": 2.0,
+      "max": 8.0,
+      "default": 4.0
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/12"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

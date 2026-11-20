@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-night-journey",
+  "id": "config.layout",
+  "entry_id": "config.layout",
+  "name": "layout",
+  "kind": "configuration",
+  "label": "layout",
+  "summary": "Existing configuration configuration: layout.",
+  "params": {
+    "splitLineWords": {
+      "default": 9
+    },
+    "splitLineSec": {
+      "default": 7
+    },
+    "pathChunkWeights": {
+      "default": {
+        "1": 0.12,
+        "2": 0.38,
+        "3": 0.5
+      }
+    },
+    "pathLayoutWeights": {
+      "default": {
+        "stack": 0.6,
+        "pair": 0.4
+      }
+    },
+    "tunnelRowWords": {
+      "default": 4
+    },
+    "paperRowChars": {
+      "default": 10
+    },
+    "transitionSec": {
+      "default": 1.2
+    },
+    "cardHeight": {
+      "default": 0.8
+    }
+  },
+  "example": {
+    "splitLineWords": 9,
+    "splitLineSec": 7,
+    "pathChunkWeights": {
+      "1": 0.12,
+      "2": 0.38,
+      "3": 0.5
+    },
+    "pathLayoutWeights": {
+      "stack": 0.6,
+      "pair": 0.4
+    },
+    "tunnelRowWords": 4,
+    "paperRowChars": 10,
+    "transitionSec": 1.2,
+    "cardHeight": 0.8
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-night-journey/assets/config.json",
+      "pointer": "/configs/0/layout"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

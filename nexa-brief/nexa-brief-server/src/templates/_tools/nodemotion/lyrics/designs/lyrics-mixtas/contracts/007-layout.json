@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-mixtas",
+  "id": "layout.echoCenter",
+  "entry_id": "layout.echoCenter",
+  "name": "echoCenter",
+  "kind": "layout",
+  "label": "echoCenter",
+  "summary": "Existing layout configuration: echoCenter.",
+  "params": {
+    "weight": {
+      "default": 2.0
+    },
+    "bgs": {
+      "default": [
+        "media",
+        "black"
+      ]
+    }
+  },
+  "example": {
+    "weight": 2.0,
+    "bgs": [
+      "media",
+      "black"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+      "pointer": "/configs/0/layouts/echoCenter"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

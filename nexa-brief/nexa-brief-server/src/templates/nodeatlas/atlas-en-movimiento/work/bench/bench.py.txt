@@ -1,0 +1,237 @@
+"""Atlas plano vs Atlas 3D. Fuente Python guardada como .txt para no recargar uvicorn.
+
+Desde el prototipo:
+  mkdir -p /tmp/atlas-plano-bench
+  cp work/bench/bench.py.txt /tmp/atlas-plano-bench/bench.py
+  PYTHONDONTWRITEBYTECODE=1 ../../../../../.venv/bin/python /tmp/atlas-plano-bench/bench.py --project "$PWD"
+
+Sin MP4. Servidor temporal propio, cachés compartidas solo lectura, ejecución serial.
+"""
+import sys
+sys.dont_write_bytecode = True
+import argparse
+import base64
+from collections import Counter
+import functools
+import importlib.util
+import io
+import json
+import math
+import os
+import hashlib
+from pathlib import Path
+import platform
+import socketserver
+import statistics
+import threading
+import time
+from urllib.parse import urlparse
+
+from PIL import Image, ImageDraw
+from playwright.sync_api import sync_playwright
+
+FLAGS = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist']
+SHEET_TIMES = [0, 2, 4, 6, 8, 10, 13.5, 15, 18, 19, 20.3, 25]
+HASH_TIMES = [0, 8, 15, 19, 25]
+
+MEASURE = """async t => {
+  const start=performance.now();
+  await __promo.seek(t);
+  const afterSeek=performance.now(), canvas=document.querySelector('#stage canvas');
+  const pixels=canvas.getContext('2d').getImageData(0,0,canvas.width,canvas.height);
+  const end=performance.now();
+  const hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',pixels.data)),x=>x.toString(16).padStart(2,'0')).join('');
+  const c=window.__benchContext;
+  return {t,seekMs:afterSeek-start,readbackMs:end-afterSeek,frameMs:end-start,hash,
+    blurMode:c.lastMode??'exact',phases:c.phases??{},renderMs:c.renderMs??null,blurSamples:c.lastSamples??1,
+    pose:c.camera.at(Math.min(t,24.999))};
+}"""
+
+def resources():
+    mem={}
+    for line in Path('/proc/meminfo').read_text().splitlines():
+        name,value=line.split(':',1)
+        if name in ('MemTotal','MemAvailable','SwapTotal','SwapFree'):mem[name+'KiB']=int(value.split()[0])
+    return {'loadAverage':Path('/proc/loadavg').read_text().split()[:3],**mem}
+
+def summary(values):
+    values=sorted(values)
+    return {'frames':len(values),'mean':statistics.mean(values),
+            'p95':values[math.ceil(.95*len(values))-1],'max':values[-1]}
+
+def contact(frames, path, columns, width):
+    height=round(width*1920/1080)
+    image=Image.new('RGB',(columns*width,math.ceil(len(frames)/columns)*(height+24)), '#101923')
+    draw=ImageDraw.Draw(image)
+    for i,(t,frame) in enumerate(frames):
+        x=(i%columns)*width;y=(i//columns)*(height+24)
+        image.paste(frame.resize((width,height),Image.Resampling.LANCZOS),(x,y+24))
+        draw.text((x+6,y+5),f'{t:06.2f} s',fill='white')
+    image.save(path,quality=92)
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--project',type=Path,default=Path.cwd())
+    parser.add_argument('--bases',default='plano')
+    parser.add_argument('--engine-root',type=Path,help='Sirve estos módulos sobre ../_atlas/plano/ sin modificar el motor')
+    parser.add_argument('--scene-overrides',default='{}',help='Objeto JSON de cambios superficiales a scene-bench')
+    parser.add_argument('--captures',action='store_true',help='Conserva PNG completos de la hoja y el vuelo para comparar píxeles')
+    parser.add_argument('--metrics-name',default='metrics.json')
+    parser.add_argument('--phase-flush',action='store_true',help='Diagnóstico: materializa cada fase con lectura de 1 píxel; no usar como tiempo de exportación')
+    parser.add_argument('--canvas-read',choices=['default','false'],default='default',help='Experimento aislado: elimina willReadFrequently en los módulos del plano')
+    parser.add_argument('--inventory',type=Path,help='Inventario congelado para comparar sobre la misma cobertura')
+    parser.add_argument('--cpu-limit',type=int,default=2,help='Afinidad heredada por Chromium; máximo dos núcleos por defecto')
+    parser.add_argument('--fps',type=int,default=30)
+    parser.add_argument('--quick',action='store_true',help='Solo los 12 instantes de la hoja; no reemplaza la medición completa')
+    parser.add_argument('--out',type=Path)
+    args=parser.parse_args()
+    if args.fps<10 or args.fps%10:parser.error('--fps debe ser múltiplo positivo de 10 para la tira de 10 fps')
+    if args.cpu_limit<1:parser.error('--cpu-limit debe ser positivo')
+    os.sched_setaffinity(0,sorted(os.sched_getaffinity(0))[:args.cpu_limit])
+    project=args.project.resolve();templates=project.parents[2];atlas=project.parent/'_atlas'
+    output=(args.out or project/'work/bench/results').resolve();output.mkdir(parents=True,exist_ok=True)
+    # Inventario de solo lectura: evita miles de 404 sin esconder faltantes al motor.
+    keys=sorted(str(p.relative_to(atlas/'cache/gibs-bluemarble').with_suffix('')) for p in (atlas/'cache/gibs-bluemarble').rglob('*.jpg'))
+    if args.inventory:keys=json.loads(args.inventory.read_text())['keys']
+    (project/'work/bench/cache-inventory.json').write_text(json.dumps({'provider':'gibs-bluemarble','keys':keys},separators=(',',':'))+'\n')
+    spec=importlib.util.spec_from_file_location('atlas_smoke',atlas/'test/smoke.py')
+    smoke=importlib.util.module_from_spec(spec);spec.loader.exec_module(smoke)
+    responses=[]
+    class Handler(smoke.Handler):
+        def log_message(self,fmt,*values):
+            if len(values)>1 and str(values[1]).isdigit() and int(values[1])>=400:
+                responses.append({'request':str(values[0]),'status':int(values[1])})
+    class Server(socketserver.ThreadingTCPServer):
+        daemon_threads=True
+        allow_reuse_address=True
+    server=Server(('127.0.0.1',0),functools.partial(Handler,directory=str(templates)))
+    threading.Thread(target=server.serve_forever,daemon=True).start()
+    root=f'http://127.0.0.1:{server.server_address[1]}'
+    url=root+'/sandbox/nodehistory/atlas-en-movimiento/work/bench/index.new.html'
+    report={'resourcesBefore':resources(),'platform':platform.platform(),'python':sys.version,'viewport':[1080,1920],'deviceScaleFactor':1,
+            'fps':args.fps,'duration':25,'quick':args.quick,'flags':FLAGS,'cacheTiles':len(keys),
+            'metric':'await __promo.seek + full RGBA readback; SHA256/PNG/I/O excluded; seeks include two rAF from Proto',
+            'phaseFlush':args.phase_flush,'canvasReadFrequently':args.canvas_read,'engineRoot':str(args.engine_root) if args.engine_root else '../_atlas/plano','sceneOverrides':json.loads(args.scene_overrides),'bases':{}}
+    source_root=(args.engine_root or project/'../_atlas/plano').resolve()
+    report.update(cpuAffinity=sorted(os.sched_getaffinity(0)),nice=os.getpriority(os.PRIO_PROCESS,0),
+        sourceSHA256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(source_root.glob('*.js'))},
+        inventorySHA256=hashlib.sha256(json.dumps(keys,separators=(',',':')).encode()).hexdigest(),
+        sceneSHA256=hashlib.sha256((project/'work/bench/scene-bench.json').read_bytes()).hexdigest())
+    try:
+        with sync_playwright() as playwright:
+            browser=playwright.chromium.launch(headless=True,args=FLAGS)
+            try:
+                report['chromium']=browser.version
+                for base in args.bases.split(','):
+                    if base not in ('plano','atlas3d'):raise ValueError(base)
+                    print(f'{base}: preparando',flush=True)
+                    context=browser.new_context(viewport={'width':1080,'height':1920},device_scale_factor=1)
+                    external=[]
+                    def local_only(route):
+                        parsed=urlparse(route.request.url)
+                        if (args.engine_root or args.canvas_read!='default' or args.phase_flush) and '/_atlas/plano/' in parsed.path and parsed.path.endswith('.js'):
+                            source=((args.engine_root or project/'../_atlas/plano').resolve()/Path(parsed.path).name).read_text()
+                            if args.phase_flush:
+                                source=source.replace('c.tiles.draw(g,view);c.phases.tiles+=','c.tiles.draw(g,view);g.getImageData(0,0,1,1);c.phases.tiles+=')
+                                source=source.replace('c.territories.draw(g,view,c.highlights,t,c.look);c.phases.territories+=','c.territories.draw(g,view,c.highlights,t,c.look);g.getImageData(0,0,1,1);c.phases.territories+=')
+                                source=source.replace('finishLook(g,c);c.phases.look+=','finishLook(g,c);g.getImageData(0,0,1,1);c.phases.look+=')
+                                source=source.replace('finishLook(g,c);c.phases.look=','finishLook(g,c);g.getImageData(0,0,1,1);c.phases.look=')
+                            if args.canvas_read=='false':source=source.replace('willReadFrequently:true','willReadFrequently:false')
+                            route.fulfill(body=source,content_type='text/javascript')
+                        elif parsed.path.endswith('/scene-bench.json'):
+                            scene=json.loads((project/'work/bench/scene-bench.json').read_text());scene.update(json.loads(args.scene_overrides))
+                            route.fulfill(body=json.dumps(scene),content_type='application/json')
+                        elif parsed.hostname in ('127.0.0.1',None):route.continue_()
+                        else:external.append(route.request.url);route.abort()
+                    context.route('**/*',local_only)
+                    page=context.new_page();page.set_default_timeout(180000)
+                    page.add_init_script('performance.setResourceTimingBufferSize(20000)')
+                    errors=[];warnings=[];response_start=len(responses)
+                    page.on('pageerror',lambda error:errors.append(str(error)))
+                    page.on('console',lambda message:errors.append(message.text) if message.type=='error' else warnings.append(message.text) if message.type=='warning' else print(base,message.text,flush=True) if message.text.startswith('sweep:') else None)
+                    began=time.perf_counter()
+                    page.goto(url+f'?base={base}&t=0',wait_until='domcontentloaded')
+                    page.wait_for_function('window.__promo && window.__benchContext')
+                    page.evaluate('window.__atlas.ready')
+                    print(base,'motor listo',flush=True)
+                    page.evaluate('''step => {let last=-1;return __atlas.sweep(step,p=>{const pct=Math.floor(p*10);if(pct!==last){console.log('sweep: '+(pct*10)+'%');last=pct;}})}''',5 if args.quick else .25)
+                    page.evaluate('window.__promo.seek(0)')
+                    # Materializar comandos diferidos y estabilizar lectura, fuera del tramo medido.
+                    for _ in range(2):page.evaluate(MEASURE,0)
+                    warm_seconds=time.perf_counter()-began
+                    print(base, 'precarga', round(warm_seconds,2), 's', page.evaluate('__atlas.stats()'),flush=True)
+                    baseline_requests=page.evaluate('performance.getEntriesByType("resource").length')
+                    renderer=page.evaluate('''() => {
+                      const map=window.__benchContext.map;
+                      if(!map)return {type:'Canvas2D',hardware:'Chromium with ANGLE SwiftShader flags'};
+                      const gl=map.getCanvas().getContext('webgl2'),ext=gl.getExtension('WEBGL_debug_renderer_info');
+                      return {type:'WebGL2',renderer:ext?gl.getParameter(ext.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER),terrain:map.getTerrain()};
+                    }''')
+                    times=SHEET_TIMES if args.quick else [i/args.fps for i in range(25*args.fps+1)]
+                    records=[];sheet=[];strip=[];hashes={};projections=[]
+                    sheet_frames={round(t*args.fps) for t in SHEET_TIMES}
+                    strip_frames={round((2+i/10)*args.fps) for i in range(81)}
+                    for index,t in enumerate(times):
+                        result=page.evaluate(MEASURE,t);records.append(result)
+                        frame=round(t*args.fps)
+                        if any(abs(t-h)<1e-7 for h in HASH_TIMES):hashes[f'{t:g}']=result['hash']
+                        want_sheet=frame in sheet_frames;want_strip=not args.quick and frame in strip_frames
+                        if want_sheet or want_strip:
+                            data=page.evaluate('document.querySelector("#stage canvas").toDataURL("image/png").split(",")[1]')
+                            image=Image.open(io.BytesIO(base64.b64decode(data))).convert('RGB')
+                            if args.captures:
+                                (output/'full').mkdir(exist_ok=True)
+                                image.save(output/'full'/f'{base}-{frame:04d}.png')
+                            if want_sheet:sheet.append((t,image.resize((270,480),Image.Resampling.LANCZOS)))
+                            if want_strip:strip.append((t,image.resize((216,384),Image.Resampling.LANCZOS)))
+                            if abs(t-8)<1e-7 or abs(t-19)<1e-7:image.save(output/f'{base}-t{t:g}.png')
+                        if args.quick or index%max(1,args.fps)==0:
+                            print(f'{base}: {t:.2f}/25 s, frame={result["frameMs"]:.1f} ms',flush=True)
+                    for t in HASH_TIMES:
+                        if f'{t:g}' not in hashes:hashes[f'{t:g}']=page.evaluate(MEASURE,t)['hash']
+                    repeats=[]
+                    for t in [25,0,19,8,15]:
+                        value=page.evaluate(MEASURE,t)
+                        repeats.append({'t':t,'hash':value['hash'],'expected':hashes[f'{t:g}'],'equal':value['hash']==hashes[f'{t:g}']})
+                        projections.append(page.evaluate('''t => {
+                          const c=__benchContext,pose=c.camera.at(Math.min(t,24.999));
+                          const points=[[pose.lon,pose.lat],[pose.lon+.1,pose.lat],[pose.lon,pose.lat+.1]];
+                          return {t,pose,points:points.map(([lon,lat])=>c.map?c.map.project([lon,lat]):__atlas.view(Math.min(t,24.999)).project(lon,lat))};
+                        }''',t))
+                    moving=[(a,b) for a,b in zip(records,records[1:]) if a['pose']!=b['pose']]
+                    duplicates=[b['t'] for a,b in moving if a['hash']==b['hash']]
+                    result={'timingMs':summary([r['frameMs'] for r in records]),'seekMs':summary([r['seekMs'] for r in records]),
+                            'readbackMs':summary([r['readbackMs'] for r in records]),'preloadSeconds':warm_seconds,
+                            'renderer':renderer,'determinism':repeats,'movingPairs':len(moving),'movingDuplicates':duplicates,
+                            'missingTiles':page.evaluate('__atlas.missingTiles()'),'stats':page.evaluate('__atlas.stats()'),
+                            'resourceEntriesDuringFrames':page.evaluate('performance.getEntriesByType("resource").length')-baseline_requests,
+                            'consoleErrors':list(dict.fromkeys(errors)),'warnings':list(dict.fromkeys(warnings)),
+                            'externalRequestsBlocked':external,'httpErrors':responses[response_start:], 'projections':projections}
+                    result['phasesMs']={name:summary([r['phases'].get(name,0) for r in records]) for name in records[0]['phases']}
+                    result['blurModes']=dict(Counter(r['blurMode'] for r in records))
+                    result['tileRequestsByLevel']=page.evaluate('''() => {
+                      const counts={};for(const e of performance.getEntriesByType('resource')){
+                        const m=e.name.match(/cache\\/gibs-bluemarble\\/(\\d+)\\//);if(m)counts[m[1]]=(counts[m[1]]||0)+1;
+                      }return counts;
+                    }''')
+                    for name,condition in [('static',lambda r:r['blurSamples']==1),('blur',lambda r:r['blurSamples']>1)]:
+                        group=[r['frameMs'] for r in records if condition(r)]
+                        if group:result[name+'Ms']=summary(group)
+                    (output/f'{base}-frames.json').write_text(json.dumps(records,indent=2)+'\n')
+                    contact(sheet,output/f'{base}-sheet.jpg',4,270)
+                    if strip:contact(strip,output/f'{base}-flight-10fps.jpg',10,216)
+                    result['artifacts']={name:os.path.relpath(output/f'{base}-{name}',project) for name in ['frames.json','sheet.jpg','flight-10fps.jpg'] if (output/f'{base}-{name}').exists()}
+                    report['bases'][base]=result
+                    report['resourcesAfter']=resources()
+                    (output/args.metrics_name).write_text(json.dumps(report,indent=2)+'\n')
+                    print(base,json.dumps({k:result[k] for k in ['timingMs','preloadSeconds','movingDuplicates']}),flush=True)
+                    print(base,'determinismo',all(x['equal'] for x in repeats),'faltantes',len(result['missingTiles']),flush=True)
+                    context.close()
+            finally:
+                browser.close()
+    finally:
+        server.shutdown();server.server_close()
+    print(output/args.metrics_name,flush=True)
+
+if __name__=='__main__':
+    main()

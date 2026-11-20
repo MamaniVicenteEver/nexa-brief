@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-ceniza",
+  "id": "config.transition",
+  "entry_id": "config.transition",
+  "name": "transition",
+  "kind": "configuration",
+  "label": "transition",
+  "summary": "Existing configuration configuration: transition.",
+  "params": {
+    "overlapSec": {
+      "default": 0.7
+    },
+    "weights": {
+      "default": {
+        "burn": 3,
+        "blur": 1.5,
+        "fade": 1.2,
+        "ink": 1.2,
+        "flash": 0.8
+      }
+    },
+    "flashColor": {
+      "default": "#FF9A55"
+    },
+    "burnColor": {
+      "default": "rgba(255,120,40,0.9)"
+    }
+  },
+  "example": {
+    "overlapSec": 0.7,
+    "weights": {
+      "burn": 3,
+      "blur": 1.5,
+      "fade": 1.2,
+      "ink": 1.2,
+      "flash": 0.8
+    },
+    "flashColor": "#FF9A55",
+    "burnColor": "rgba(255,120,40,0.9)"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-ceniza/assets/config.json",
+      "pointer": "/configs/0/transition"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

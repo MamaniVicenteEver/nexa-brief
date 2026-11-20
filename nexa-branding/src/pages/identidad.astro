@@ -1,0 +1,105 @@
+---
+import SiteLayout from '@/layouts/SiteLayout.astro';
+import Button from '@/shared/ui/Button.astro';
+import PreviewDialog from '@/features/profiles/components/PreviewDialog.astro';
+import { ArrowRight } from '@lucide/astro';
+const colors = [
+  ['Primario · Bosque', '#172a22'],
+  ['Secundario · Marfil', '#f3f0e8'],
+  ['Terciario · Bronce', '#80613d'],
+  ['Apoyo · Salvia', '#6b7b64'],
+  ['Superficie · Papel', '#faf8f3'],
+];
+---
+
+<SiteLayout
+  title="Sistema de identidad — NODE Media Network"
+  description="Los fundamentos visuales y de interacción de NODE Media Network."
+>
+  <section class="container identity-page section-space">
+    <span class="eyebrow">NODE / SISTEMA DE IDENTIDAD</span>
+    <h1>
+      Una identidad.
+      <br />
+      <em>Un criterio compartido.</em>
+    </h1>
+    <p>
+      Un sistema visual para mantener una voz coherente en cada canal, cada formato y cada punto de
+      contacto. La claridad y el propósito están por encima del adorno.
+    </p>
+    <div class="identity-block">
+      <h2>Color con intención.</h2>
+      <div class="swatches">
+        {colors.map(([name, hex]) => (
+          <div class="swatch">
+            <span style={`background:${hex}`}></span>
+            <strong>{name}</strong>
+            <small>{hex}</small>
+          </div>
+        ))}
+      </div>
+    </div>
+    <div class="identity-block">
+      <h2>Dos voces tipográficas.</h2>
+      <div class="identity-typography">
+        <div>
+          <span class="display-sample">
+            Newsreader
+            <br />
+            <em>La voz editorial.</em>
+          </span>
+          <p>Titulares, ideas principales y acentos narrativos. Peso variable 400–500.</p>
+        </div>
+        <div>
+          <span class="body-sample">
+            Manrope
+            <br />
+            La voz funcional.
+          </span>
+          <p>
+            Lectura, navegación y controles. Pesos 400–800, jerarquía clara y espacio para respirar.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="identity-block">
+      <h2>Acciones reconocibles.</h2>
+      <div class="button-specimens">
+        <Button href="/#canales">
+          Acción principal
+          <ArrowRight size={17} />
+        </Button>
+        <Button variant="secondary" data-open-channel="nodemotion">
+          Abrir diálogo
+        </Button>
+        <Button variant="quiet" href="/">
+          Acción discreta
+        </Button>
+        <Button disabled>Deshabilitado</Button>
+      </div>
+      <ul>
+        <li>Botones: radio de 4 px y altura mínima de 44 px.</li>
+        <li>Tarjetas: radio de 7 px, borde de 1 px, sombra contenida.</li>
+        <li>Diálogos: radio de 10 px, cierre por Escape y navegación con teclado.</li>
+        <li>El círculo se reserva para los emblemas y avatares.</li>
+      </ul>
+    </div>
+    <div class="identity-block">
+      <h2>Contenido antes que decoración.</h2>
+      <article class="spec-card">
+        <span class="eyebrow">TARJETA / EJEMPLO DE SISTEMA</span>
+        <h3>Una razón para contar.</h3>
+        <p>
+          Cada marca define su propósito, su especialidad y su forma de acompañar a la audiencia.
+        </p>
+      </article>
+      <ul>
+        <li>Iconos de interfaz: Lucide. Marcas sociales: símbolos vectoriales reconocibles.</li>
+        <li>Sin emojis, métricas inventadas ni promesas de audiencia.</li>
+        <li>Estados de foco visibles y alternativa de movimiento reducido.</li>
+        <li>Versiones clara y oscura con roles semánticos de color.</li>
+      </ul>
+    </div>
+  </section>
+  <PreviewDialog locale="es" />
+</SiteLayout>

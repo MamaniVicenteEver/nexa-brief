@@ -1,0 +1,19 @@
+{
+  "video_id": "resumen-geopolitico-demo",
+  "title": "Resumen geopolítico · Atlas noticiero",
+  "design": "sandbox-a476d9552a6cf43f01c78eb8",
+  "category": "node_atlas",
+  "shared_categories": [
+    "node_politics"
+  ],
+  "status": "listo",
+  "demo": true,
+  "engine": "nodehistory/_atlas",
+  "duration_seconds": 163,
+  "demo_summary": "Demo de diseño de un noticiero sobre globo y mapas animados. El guion, las cifras y los hechos heredados de una referencia no han sido verificados; requieren investigación antes de su uso como noticias.",
+  "review_requirements": [
+    "CONTENIDO NO VERIFICADO: el texto, las cifras (escaños, 289 drones, 437 M€, Ueno Bank…) y los hechos vienen de la referencia, no de fuentes propias. Es una demo de diseño; no publicar sin investigar cada dato. Polígonos del Sáhara y estados de EE. UU. son ilustrativos.",
+    "Sin retrato de Pedro Alliana (no hay foto con licencia): usa la silueta de reserva de portrait.",
+    "Pendiente visual conocido: los polígonos del Sáhara Occidental (zona ocupada/libre) no calzan bien con la costa en la vista inclinada (se ve igual con el polígono Natural Earth 'EH'): revisar proyección/terreno en ese tramo antes de dar por cerrado."
+  ]
+}

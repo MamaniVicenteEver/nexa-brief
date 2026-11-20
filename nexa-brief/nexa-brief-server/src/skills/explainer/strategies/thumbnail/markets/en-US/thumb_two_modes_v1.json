@@ -1,0 +1,32 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "thumb_two_modes_v1",
+  "piece": "thumbnail",
+  "locale": "en-US",
+  "status": "draft",
+  "intent": "Let the title and thumbnail do different jobs: identify the subject, then create a concrete tension.",
+  "templates": {
+    "A": "{recognizable subject}\n{short consequence}",
+    "B": "{two-to-five-word tension}",
+    "C": "{short headline} + {verified figure and scope}"
+  },
+  "examples": [
+    "WHO KEPT IT?",
+    "NOT JUST A CHAT",
+    "YOUR CHAT HISTORY"
+  ],
+  "conventions": [
+    "A uses text to identify the topic; B lets a relevant licensed image identify it.",
+    "For the demo narrative, C uses no more than six words and one exact accent substring.",
+    "Use red/yellow only for the verified alert bullet; keep the lime visual identity.",
+    "No photos or clips in an animated-short scene; use the text-only option."
+  ],
+  "sounds_false": [
+    "EXCLUSIVE when nothing is exclusive.",
+    "SHOCKING TRUTH with no named subject.",
+    "A stock face presented as a person from the story."
+  ],
+  "overrides": {
+    "name": "Text-led and image-led thumbnail pairs"
+  }
+}

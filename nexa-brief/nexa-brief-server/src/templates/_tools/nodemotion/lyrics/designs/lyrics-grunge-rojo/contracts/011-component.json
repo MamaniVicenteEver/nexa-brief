@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "grunge.transiciones",
+  "entry_id": "grunge.transiciones",
+  "kind": "component",
+  "label": "Transiciones",
+  "summary": "Papel rasgado, glitch, destello blanco o rojo, desenfoque o corte.",
+  "component": {
+    "name": "grunge.transiciones",
+    "label": "Transiciones",
+    "summary": "Papel rasgado, glitch, destello blanco o rojo, desenfoque o corte.",
+    "tags": [
+      "transicion"
+    ],
+    "file": "components/transiciones.js",
+    "params": {
+      "type": {
+        "type": "string",
+        "default": "tear",
+        "options": [
+          "cut",
+          "tear",
+          "glitch",
+          "flash",
+          "redflash",
+          "blur"
+        ]
+      }
+    },
+    "demo": {
+      "type": "glitch"
+    },
+    "preview": {
+      "t": 0.08
+    }
+  },
+  "params": {
+    "type": {
+      "type": "string",
+      "default": "tear",
+      "options": [
+        "cut",
+        "tear",
+        "glitch",
+        "flash",
+        "redflash",
+        "blur"
+      ]
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/showcase/components.json",
+      "pointer": "/components/4"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

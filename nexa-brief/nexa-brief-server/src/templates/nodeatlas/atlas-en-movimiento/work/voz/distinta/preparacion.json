@@ -1,0 +1,49 @@
+{
+  "voices": [
+    "Orus",
+    "Achird"
+  ],
+  "model": "gemini-3.8-flash-tts",
+  "reference_crop": {
+    "source": "assets/song.mp3",
+    "start_seconds": 1.07,
+    "end_seconds": 14.69,
+    "first_word_start": 1.17,
+    "last_word_end": 14.49,
+    "next_word_start": 14.91,
+    "timestamp_source": "assets/lyrics.json"
+  },
+  "sample_words": 27,
+  "full_script_lexical_words": 549,
+  "full_kit_words_including_tags": 616,
+  "same_style_as_original": true,
+  "global_voice_direction_used_in_3_8": false,
+  "note": "La ruta estándar 3.8 usa base binary + tone + intensity + delivery_note; conserva voice_direction en JSON, pero no la incluye en interactions. No se modifica ese comportamiento. lead/tail=0 para muestras sin silencios de título/cierre. Solo --voice varía entre candidatos.",
+  "official_sources": [
+    {
+      "url": "https://aistudio.google.com/docs/speech-generation#prebuilt-voices",
+      "checked": "2026-11-03",
+      "descriptors": {
+        "Charon": "Informative",
+        "Orus": "Firm",
+        "Rasalgethi": "Informative",
+        "Iapetus": "Clear",
+        "Alnilam": "Firm",
+        "Achird": "Friendly",
+        "Algieba": "Smooth"
+      }
+    },
+    {
+      "url": "https://docs.cloud.google.com/text-to-speech/docs/gemini-tts#voice_options",
+      "checked": "2026-11-03",
+      "male": [
+        "Orus",
+        "Rasalgethi",
+        "Iapetus",
+        "Alnilam",
+        "Achird",
+        "Algieba"
+      ]
+    }
+  ]
+}

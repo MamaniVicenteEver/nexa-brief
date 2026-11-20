@@ -1,0 +1,49 @@
+"""Estimación offline; solo lee _atlas/cache. No descarga ni modifica teselas."""
+import json
+import math
+from pathlib import Path
+import statistics
+
+project = Path.cwd()
+cache = project.parent / '_atlas/cache'
+original = json.loads((project / 'work/bench/missing-tiles.json').read_text())
+additional = ['gibs-bluemarble/8/172/102', 'gibs-bluemarble/8/172/114']
+rows = []
+for key in original + additional:
+    path = cache / (key + '.jpg')
+    rows.append({'key': key, 'present': path.is_file(),
+                 'bytes': path.stat().st_size if path.is_file() else None})
+sample = [p.stat().st_size for p in (cache / 'gibs-bluemarble/8').glob('*/*.jpg')]
+remaining = sum(not r['present'] for r in rows)
+mean = statistics.mean(sample)
+report = {
+    'originalMissing': len(original),
+    'presentNow': sum(r['present'] for r in rows[:len(original)]),
+    'missingNow': sum(not r['present'] for r in rows[:len(original)]),
+    'existingBytes': sum(r['bytes'] or 0 for r in rows[:len(original)]),
+    'affineAdditional': additional,
+    'affineMissingNow': remaining,
+    'estimate': {
+        'method': 'Media y máximo de JPEG locales del mismo proveedor y nivel z8; estimación, no Content-Length ni cota remota garantizada.',
+        'sampleCount': len(sample), 'meanTileBytes': mean, 'maxTileBytes': max(sample),
+        'original128MeanBytes': math.ceil(len(original) * mean),
+        'remainingMeanBytes': math.ceil(sum(not r['present'] for r in rows[:len(original)]) * mean),
+        'affineRemainingMeanBytes': math.ceil(remaining * mean),
+        'affineRemainingAtLocalMaxBytes': remaining * max(sample),
+        'decodedRGBABytesPerTile': 256 * 256 * 4,
+    },
+    'tiles': rows,
+    'fetchSource': '../../../_tools/atlas/atlas.py',
+    'fetchHasDryOption': False,
+    'commands': 'work/bench/fetch-missing.sh.txt',
+    'executedFetch': False,
+}
+commands = (project / report['commands']).read_text().splitlines()
+command_keys = ['gibs-bluemarble/' + '/'.join(line.split()[-3:]) for line in commands if ' fetch gibs-bluemarble ' in line]
+assert len(command_keys) == len(set(command_keys)) == len(rows)
+assert set(command_keys) == set(original + additional)
+source = (project / report['fetchSource']).read_text()
+fetch_parser = next(line for line in source.splitlines() if "subs.add_parser('fetch')" in line)
+assert '--dry' not in fetch_parser
+(project / 'work/bench/missing-tiles-estimate.json').write_text(json.dumps(report, indent=2) + '\n')
+print(json.dumps({k: v for k, v in report.items() if k != 'tiles'}, indent=2))

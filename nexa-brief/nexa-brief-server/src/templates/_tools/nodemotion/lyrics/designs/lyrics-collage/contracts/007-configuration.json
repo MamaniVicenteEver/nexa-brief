@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-collage",
+  "id": "config.layout",
+  "entry_id": "config.layout",
+  "name": "layout",
+  "kind": "configuration",
+  "label": "layout",
+  "summary": "Existing configuration configuration: layout.",
+  "params": {
+    "sceneWordsMin": {
+      "default": 2
+    },
+    "sceneWordsMax": {
+      "default": 4
+    },
+    "typeWeights": {
+      "default": {
+        "poster": 0.32,
+        "stencil": 0.2,
+        "marker": 0.16,
+        "hollow": 0.32
+      }
+    },
+    "colorWeights": {
+      "default": {
+        "ink": 0.45,
+        "red": 0.25,
+        "paper": 0.3
+      }
+    },
+    "sideWeights": {
+      "default": {
+        "left": 0.5,
+        "right": 0.5
+      }
+    },
+    "figureChance": {
+      "default": 0.5
+    },
+    "figurePositionWeights": {
+      "default": {
+        "left": 0.38,
+        "right": 0.38,
+        "center": 0.24
+      }
+    },
+    "figureScenesMin": {
+      "default": 2
+    },
+    "figureScenesMax": {
+      "default": 3
+    },
+    "captionChance": {
+      "default": 0.45
+    },
+    "rotMax": {
+      "default": 7
+    },
+    "clusterSpreadVw": {
+      "default": 16
+    },
+    "clusterSpreadVh": {
+      "default": 9
+    }
+  },
+  "example": {
+    "sceneWordsMin": 2,
+    "sceneWordsMax": 4,
+    "typeWeights": {
+      "poster": 0.32,
+      "stencil": 0.2,
+      "marker": 0.16,
+      "hollow": 0.32
+    },
+    "colorWeights": {
+      "ink": 0.45,
+      "red": 0.25,
+      "paper": 0.3
+    },
+    "sideWeights": {
+      "left": 0.5,
+      "right": 0.5
+    },
+    "figureChance": 0.5,
+    "figurePositionWeights": {
+      "left": 0.38,
+      "right": 0.38,
+      "center": 0.24
+    },
+    "figureScenesMin": 2,
+    "figureScenesMax": 3,
+    "captionChance": 0.45,
+    "rotMax": 7,
+    "clusterSpreadVw": 16,
+    "clusterSpreadVh": 9
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-collage/assets/config.json",
+      "pointer": "/configs/0/layout"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

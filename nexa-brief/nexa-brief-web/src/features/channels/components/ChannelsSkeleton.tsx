@@ -17,7 +17,7 @@ export function ChannelsSkeleton() {
       {[0, 1].map((i) => (
         <div key={i} className={cn(surfaceCard, "flex flex-col gap-5 p-6")}>
           <div className={cn(pulse, "h-10 w-48")} />
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-3.5">
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,240px),1fr))] gap-3.5">
             {[0, 1, 2].map((j) => (
               <div key={j} className={cn(pulse, "h-[236px] rounded-[18px]")} />
             ))}

@@ -1,0 +1,82 @@
+{
+  "id": "heladeria",
+  "title": "Heladería · mañana soleada",
+  "plate": {
+    "file": "plate.png",
+    "w": 1536,
+    "h": 1024
+  },
+  "floorY": 960,
+  "charHeight": 400,
+  "walk": [
+    140,
+    1396
+  ],
+  "anchors": {
+    "enter-right": {
+      "x": 1135,
+      "y": 960,
+      "kind": "enter",
+      "facing": "left"
+    },
+    "tomas-espera": {
+      "x": 850,
+      "y": 960,
+      "kind": "stand",
+      "facing": "left"
+    },
+    "valeria-llega": {
+      "x": 1135,
+      "y": 960,
+      "kind": "enter",
+      "facing": "left"
+    },
+    "pareja": {
+      "x": 900,
+      "y": 960,
+      "kind": "spot",
+      "facing": "left"
+    },
+    "heladero": {
+      "x": 600,
+      "y": 720,
+      "kind": "stand",
+      "facing": "front",
+      "behind": "mostrador"
+    },
+    "enter-left": {
+      "x": 140,
+      "y": 960,
+      "kind": "enter",
+      "facing": "right"
+    }
+  },
+  "props": [
+    {
+      "id": "mostrador",
+      "prop": "counter",
+      "x": 600,
+      "y": 760,
+      "w": 300,
+      "layer": "front",
+      "params": {
+        "h": 160,
+        "surfaceY": 600,
+        "color": "#f0bd8d"
+      }
+    }
+  ],
+  "light": {
+    "tint": "#fff2d9",
+    "ambient": 0.98
+  },
+  "credits": {
+    "type": "ai-generated",
+    "adapter": "src.adapters.image_gen.cli",
+    "modelPreset": "luna-xhigh",
+    "prompt": "prompt.txt",
+    "reference": "Lámina de heladería suministrada, 1536×1024; calibración visual del set.",
+    "status": "reviewed",
+    "note": "Lámina existente sin modificar. Mostrador counter frontal coral, superficie a la cintura del heladero; ancla heladero con behind: mostrador."
+  }
+}

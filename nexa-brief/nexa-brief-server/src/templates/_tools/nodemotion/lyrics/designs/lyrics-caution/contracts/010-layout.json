@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-caution",
+  "id": "layout.build",
+  "entry_id": "layout.build",
+  "name": "build",
+  "kind": "layout",
+  "label": "build",
+  "summary": "Existing layout configuration: build.",
+  "params": {
+    "weight": {
+      "default": 1.4
+    },
+    "bgs": {
+      "default": [
+        "white",
+        "black"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.4,
+    "bgs": [
+      "white",
+      "black"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-caution/assets/config.json",
+      "pointer": "/configs/0/layouts/build"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-vacio",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-vacio",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "59b57cf72ada708963a3fe5cf88c0c8892425a501c755006125fa8933d940235",
+  "migration_source_sha256": "59b57cf72ada708963a3fe5cf88c0c8892425a501c755006125fa8933d940235",
+  "migration_runtime_sha256": {
+    "components/intro.js": "3ac32c65d975200a99b5b07282cdde5686ff427644b08b8020a6c3939cc70355",
+    "components/outro.js": "8053c36b4a10297ab5f87ef1efca9e59f64e52658b5e4cbd1dcf1a932bdbf34c"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-vacio",
+    "config": "nodemotion/lyrics/lyrics-vacio/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-vacio/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-vacio/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "efd17eeeffffa48a78ebfeafe6a3455a018d327836d27219c8129449235e8b5e.webp",
+    "assets/media/empty-room-1.jpg": "389a9ca4a69a7fd5cb5be5b333f6bbec1f03b87358ced3b75a6770034950549f.jpg",
+    "assets/media/empty-room-2.jpg": "60e8d6398cb97e610c00aae7466149aac1bd0b43c6431136c0685e1d79bff49c.jpg",
+    "assets/media/empty-room.mp4": "cd87242b0e8d1da631c4a08a8475a38cab1edf3a4407abdecf04d9288812c9f0.mp4",
+    "assets/media/fog-road-1.jpg": "6ba99fece3ceec75a4937c6466745af86507a01f40166e7ee9a9bd0485872337.jpg",
+    "assets/media/fog-road-2.jpg": "77118275dffa51d598b19b1f923e24948efd8287e1ba2ab66d78246b01ed4d30.jpg",
+    "assets/media/fog-road.mp4": "1367221e7a607bb1c117dfc988acc1b0b4903d927b11ff023d6558a7654939b2.mp4",
+    "assets/media/fog-walk-1.jpg": "f3a3404e3c0b4e6cb7cbde7ee63deb394b451d3d451aee8b28129558bbcfe586.jpg",
+    "assets/media/fog-walk-2.jpg": "50597c2f96353ceb255a2cad63b437ec6fbf902c84995a1f1146bd3e8933803b.jpg",
+    "assets/media/fog-walk.mp4": "dc32a32a75535da49f5e7bfc17840f27e5eeef99dd05301ac71b77b430c88376.mp4",
+    "assets/media/graded/empty-room-1.bw.jpg": "e5e66c87a86930b192190e9aed324c27aea778d6c187c9cd418619b6c93514ad.jpg",
+    "assets/media/graded/empty-room-1.mist.jpg": "6016164604be66b8b0cfd81ae05db5e3f11056bc8e2eb133e25644bfd98730ab.jpg",
+    "assets/media/graded/empty-room.bw.mp4": "6b3603825e8579a004dba077ed9b34b865fd849eec92b13711257e2f62aa55bb.mp4",
+    "assets/media/graded/empty-room.mist.mp4": "ea2546991d7aade3c34f84d067eb956845aabd81304104641498c4d9f7687aec.mp4",
+    "assets/media/graded/fog-road-1.bw.jpg": "687c1bce1330ec7e982a1afd26f1cecc908219645e05241c62306f68f01e0635.jpg",
+    "assets/media/graded/fog-road-1.mist.jpg": "179739545501d8d24b2a06588e58d644003e06eb2d9b9580322043678b184110.jpg",
+    "assets/media/graded/fog-road.bw.mp4": "3b6290b415f80c2e987044163a0a3c48f9c5968805dd1b5d4091250f55cc69f7.mp4",
+    "assets/media/graded/fog-road.mist.mp4": "a716720e6222afe7b9e5697683fe38fc49b5615d9886a2b4ebe6115edc80d35b.mp4",
+    "assets/media/graded/fog-walk-1.bw.jpg": "91337cdbdfa1c6194503bce5a0c1aa1abeb87bf13b92f83d1e97e92de9b902fa.jpg",
+    "assets/media/graded/fog-walk-1.mist.jpg": "82c8848f485eeae718c66ba2da6c88c4bfeb404c74d32bd73cdc12037178c167.jpg",
+    "assets/media/graded/fog-walk.bw.mp4": "8704a237d1982879d594307cabeca468cfbf3a200bb61b542b2a84a2fd977b72.mp4",
+    "assets/media/graded/fog-walk.mist.mp4": "0f99cd06f701263d777b27e370576407e39f82365f7c103ee6d91b5bf5967d0e.mp4",
+    "assets/media/graded/ocean-figure-1.bw.jpg": "be8288809d1ac488ff7abe67d9cda2d64ce7ed951209f863480a13ade20fd67a.jpg",
+    "assets/media/graded/ocean-figure-1.mist.jpg": "9b5d112738626412e505163faa936e1830f01a1ee4623b3e8d92f1ad56279288.jpg",
+    "assets/media/graded/ocean-figure.bw.mp4": "4c5c577001926e07901d8d9763aa1a64e6cf3ffe8120778c897036a924cf2ab5.mp4",
+    "assets/media/graded/ocean-figure.mist.mp4": "c8bf1403c5767d8f97b535bd4f1f4cf2bee70ba5f077e3feb21b18bf82054073.mp4",
+    "assets/media/graded/snow-night-1.bw.jpg": "e357cc216eb907bb9395bf87b884a475d3a3c772b4393ea4bfe9a4644f067398.jpg",
+    "assets/media/graded/snow-night-1.mist.jpg": "6da42d95e4b0f15c6d70d0839b4328c61db1de5e74d4b311d46008cd4256ab7f.jpg",
+    "assets/media/graded/snow-night.bw.mp4": "a8acea5f63eec139df56c6260992ff2c70ff918a9f5c5a0981ad771b14f1a0a0.mp4",
+    "assets/media/graded/snow-night.mist.mp4": "b5faf0e5f141b19bc37e6f6ce435980cda4e9b33402b20146447cdae450b9732.mp4",
+    "assets/media/graded/window-silhouette-1.bw.jpg": "0bee816bf8c4ccb98b78048cf748a241385e35464fd1874950d2821366e9a30d.jpg",
+    "assets/media/graded/window-silhouette-1.mist.jpg": "8373afdda1930bd6e19c214e6373117706a3b1b448932363ace616290e65c908.jpg",
+    "assets/media/graded/window-silhouette.bw.mp4": "a030bafc803070d1202cc3748c4947acef4fd1a2e739ba421f336983380f6853.mp4",
+    "assets/media/graded/window-silhouette.mist.mp4": "4c85096e6357b5d7ffdd355b389b659434bf391e9a5a8591faeca5fa2124b8d2.mp4",
+    "assets/media/ocean-figure-1.jpg": "1cc12f10919fd738cfa90016d128ce8b145c79ea51bb5cf52e1cbfb0f61b3d45.jpg",
+    "assets/media/ocean-figure-2.jpg": "ca80e274e2b213ed02b214f1fc40bbad6a4e826c4b75dab30984aac49b74b164.jpg",
+    "assets/media/ocean-figure.mp4": "c102f2c364f2271f950ffbc34367a621c6591c418aa691cd48e99fd60556c139.mp4",
+    "assets/media/snow-night-1.jpg": "7b4281f39bf964da4aabe0822724fdc60c3d9e81df1aea26399ec05e6da52256.jpg",
+    "assets/media/snow-night-2.jpg": "8268c49046668f1d07cff09b1df1099ffe016474f655906f9186a19ff9c3a94f.jpg",
+    "assets/media/snow-night.mp4": "03a427b73669c0a0a064d351f64cda32e8080adc950b5cee2a5b05b0dcce1da0.mp4",
+    "assets/media/window-silhouette-1.jpg": "98ce36938e62de2597fef800aec440f70e0d13df18b9ea2335f4a50b2aa870ed.jpg",
+    "assets/media/window-silhouette-2.jpg": "8771bcd05143ebdfcc85479e572f487230e0e8c19971f1b18d1946b573491a1e.jpg",
+    "assets/media/window-silhouette.mp4": "64dff5a28e6a4eee16da401503104d6de334471e30e27c3eab7c3a0bae5a9c94.mp4",
+    "assets/song.mp3": "e8a2242d2e426ec68d0269d9c9e234de099203633689ae4bb70ee792a177db41.mp3"
+  }
+}

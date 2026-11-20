@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-trendy",
+  "family": "promo",
+  "display_name": "Promo Trendy",
+  "description": "Promo de cortes con golpes de zoom: metraje de atletas en blanco y negro cálido con duotono verde lima, itálica pesada, pantallas partidas, mosaico de tomas, tarjeta azul noche con círculo y cierre 'Gracias por ver'. Imágenes, videos y textos por JSON; música = audio del promo.",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "acción deportiva en movimiento, atletas entrenando"
+      },
+      {
+        "slot": "photos",
+        "kind": "image",
+        "min": 1,
+        "max": 12,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Fotos",
+        "hint": "atletas en primer plano, retrato deportivo"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/commercial/promo-trendy/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/promo-trendy",
+    "config": "nodemotion/commercial/promo-trendy/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-trendy/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-trendy/README.md"
+  },
+  "lookup": "/api/v1/templates/promo-trendy/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "scene.title",
+      "kind": "scene",
+      "label": "title",
+      "summary": "dos líneas sobre medio a pantalla completa",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.title",
+      "contract": "contracts/001-scene.json"
+    },
+    {
+      "entry_id": "scene.stack",
+      "kind": "scene",
+      "label": "stack",
+      "summary": "palabra repetida sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.stack",
+      "contract": "contracts/002-scene.json"
+    },
+    {
+      "entry_id": "scene.split",
+      "kind": "scene",
+      "label": "split",
+      "summary": "palabra y pantalla dividida en dos medios",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.split",
+      "contract": "contracts/003-scene.json"
+    },
+    {
+      "entry_id": "scene.grid",
+      "kind": "scene",
+      "label": "grid",
+      "summary": "palabra sobre mosaico de seis medios repetidos",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.grid",
+      "contract": "contracts/004-scene.json"
+    },
+    {
+      "entry_id": "scene.circle",
+      "kind": "scene",
+      "label": "circle",
+      "summary": "palabra repetida en círculo",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.circle",
+      "contract": "contracts/005-scene.json"
+    },
+    {
+      "entry_id": "scene.maskword",
+      "kind": "scene",
+      "label": "maskword",
+      "summary": "palabra máscara con dos medios",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.maskword",
+      "contract": "contracts/006-scene.json"
+    },
+    {
+      "entry_id": "scene.spaced",
+      "kind": "scene",
+      "label": "spaced",
+      "summary": "palabra espaciada sobre medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.spaced",
+      "contract": "contracts/007-scene.json"
+    },
+    {
+      "entry_id": "scene.tunnel",
+      "kind": "scene",
+      "label": "tunnel",
+      "summary": "palabra y túnel de medio",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.tunnel",
+      "contract": "contracts/008-scene.json"
+    },
+    {
+      "entry_id": "scene.action",
+      "kind": "scene",
+      "label": "action",
+      "summary": "palabra sobre dos medios",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.action",
+      "contract": "contracts/009-scene.json"
+    },
+    {
+      "entry_id": "scene.end",
+      "kind": "scene",
+      "label": "end",
+      "summary": "cierre de líneas apiladas",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.end",
+      "contract": "contracts/010-scene.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/011-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/012-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/013-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/014-configuration.json"
+    }
+  ]
+}

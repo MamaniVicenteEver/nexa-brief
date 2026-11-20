@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-breaking",
+  "id": "config.outro",
+  "entry_id": "config.outro",
+  "name": "outro",
+  "kind": "configuration",
+  "label": "outro",
+  "summary": "Existing configuration configuration: outro.",
+  "params": {
+    "enabled": {
+      "default": true
+    },
+    "version": {
+      "default": "v1"
+    },
+    "minSec": {
+      "default": 3.5
+    },
+    "title": {
+      "default": ""
+    },
+    "cta": {
+      "default": ""
+    }
+  },
+  "example": {
+    "enabled": true,
+    "version": "v1",
+    "minSec": 3.5,
+    "title": "",
+    "cta": ""
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-breaking/assets/config.json",
+      "pointer": "/configs/0/outro"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

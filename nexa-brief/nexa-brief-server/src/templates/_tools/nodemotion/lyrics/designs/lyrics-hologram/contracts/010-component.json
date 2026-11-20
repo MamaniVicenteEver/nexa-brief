@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "silhouette",
+  "entry_id": "silhouette",
+  "kind": "component",
+  "label": "Silueta holográfica + palabra",
+  "summary": "Silueta holográfica (medio look silhouette) sobre filas gigantes en contorno y la palabra en la extendida itálica.",
+  "component": {
+    "name": "silhouette",
+    "label": "Silueta holográfica + palabra",
+    "summary": "Silueta holográfica (medio look silhouette) sobre filas gigantes en contorno y la palabra en la extendida itálica.",
+    "group": "scene",
+    "tags": [
+      "lyrics-hologram",
+      "scene"
+    ],
+    "params": {
+      "textIn": {
+        "type": "enum",
+        "options": [
+          "slide",
+          "stamp",
+          "glitch",
+          "spread",
+          "fade",
+          "cut"
+        ],
+        "default": "stamp"
+      },
+      "rows": {
+        "type": "number",
+        "min": 0,
+        "max": 5,
+        "default": 3
+      }
+    },
+    "demo": {
+      "t": 9.55,
+      "query": null,
+      "layout": {
+        "weight": 1,
+        "bgs": [
+          "void",
+          "violet",
+          "red"
+        ],
+        "media": [
+          "sil-duo",
+          "sil-solo",
+          "sil-trio"
+        ]
+      }
+    },
+    "preview": {
+      "gallery": "gallery.html?only=silhouette"
+    }
+  },
+  "params": {
+    "textIn": {
+      "type": "enum",
+      "options": [
+        "slide",
+        "stamp",
+        "glitch",
+        "spread",
+        "fade",
+        "cut"
+      ],
+      "default": "stamp"
+    },
+    "rows": {
+      "type": "number",
+      "min": 0,
+      "max": 5,
+      "default": 3
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/9"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

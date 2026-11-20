@@ -3,7 +3,7 @@ from __future__ import annotations
 from src.core.stats.context import StatsContext
 from src.core.stats.models import PlatformPublications, PublicationStats
 
-_PLATFORMS = ("youtube", "facebook", "tiktok")
+_PLATFORMS = ("youtube", "facebook", "tiktok", "instagram")
 _DAY = 86_400
 
 

@@ -1,0 +1,118 @@
+# Executed only through Blender MCP, together with the model source.
+def military_materials():
+    land=not SPRITE.startswith(('ship-','air-'))
+    olive=LIVERY=='olive' or SPRITE in ['air-transport-jet','air-helicopter-heavy']
+    base=(.075,.105,.025,1) if olive else (.38,.265,.105,1) if LIVERY=='desert' else (.075,.105,.045,1) if land else (.105,.135,.155,1) if SPRITE.startswith('ship-') else (.065,.080,.090,1)
+    for key,mat in AEM_M.items():
+        ns=mat.node_tree.nodes; lk=mat.node_tree.links
+        ns.clear(); out=ns.new('ShaderNodeOutputMaterial'); sh=ns.new('ShaderNodeBsdfPrincipled');lk.new(sh.outputs['BSDF'],out.inputs['Surface'])
+        sh.inputs['Metallic'].default_value=.75 if key=='steel' else .25 if key=='seam' else 0
+        sh.inputs['Roughness'].default_value=.42 if key=='steel' else .18 if key=='glass' else .96 if key in ['canvas','rubber','mud'] else .82
+        special={'dark':(.012,.016,.011,1),'steel':(.09,.10,.075,1),'rubber':(.018,.020,.012,1),'glass':(.008,.018,.024,1),'seam':(.025,.030,.017,1),'red':(.55,.003,.004,1),'medical':(.82,.81,.75,1),'mud':(.048,.030,.012,1)}
+        color=special.get(key,base)
+        if key=='deck':color=tuple(c*.50 for c in base[:3])+(1,)
+        if key=='panel':color=tuple(c*.80 for c in base[:3])+(1,)
+        # White is only a local highlight now; medical panels have their own slot.
+        if key=='white':color=tuple(c*.85 for c in base[:3])+(1,)
+        sh.inputs['Base Color'].default_value=color; mat.diffuse_color=color
+        if key in ['red','medical','glass','dark']:continue
+        tc=ns.new('ShaderNodeTexCoord');tc.object=AEM['R']
+        no=ns.new('ShaderNodeTexNoise');no.inputs['Scale'].default_value=1.15 if land else .13;no.inputs['Detail'].default_value=2.4;no.inputs['Roughness'].default_value=.65
+        lk.new(tc.outputs['Object'],no.inputs['Vector'])
+        ramp=ns.new('ShaderNodeValToRGB')
+        ramp.color_ramp.elements[0].position=.2;ramp.color_ramp.elements[0].color=tuple(c*.72 for c in color[:3])+(1,)
+        ramp.color_ramp.elements[1].position=.8;ramp.color_ramp.elements[1].color=tuple(c*1.18 for c in color[:3])+(1,)
+        if LIVERY=='camo' and key in ['paint','light','panel','canvas','white']:
+            ramp.color_ramp.interpolation='CONSTANT'
+            ramp.color_ramp.elements[0].position=.34;ramp.color_ramp.elements[0].color=(.018,.026,.012,1)
+            ramp.color_ramp.elements[1].position=.57;ramp.color_ramp.elements[1].color=(.23,.15,.055,1)
+            e=ramp.color_ramp.elements.new(.44);e.color=(.075,.105,.032,1)
+        lk.new(no.outputs['Fac'],ramp.inputs['Fac'])
+        fine=ns.new('ShaderNodeTexNoise');fine.inputs['Scale'].default_value=28 if land else 4;fine.inputs['Detail'].default_value=2
+        lk.new(tc.outputs['Object'],fine.inputs['Vector'])
+        dust=ns.new('ShaderNodeValToRGB');dust.color_ramp.elements[0].position=.58;dust.color_ramp.elements[0].color=(0,0,0,1);dust.color_ramp.elements[1].position=.83;dust.color_ramp.elements[1].color=(.40,.40,.40,1)
+        lk.new(fine.outputs['Fac'],dust.inputs['Fac'])
+        mix=ns.new('ShaderNodeMixRGB');mix.inputs[2].default_value=(.19,.12,.044,1) if land else (.065,.055,.036,1)
+        lk.new(dust.outputs['Color'],mix.inputs[0]);lk.new(ramp.outputs['Color'],mix.inputs[1])
+        # Sparse, physically located scratches on bevels; no repeating UV tiles.
+        geo=ns.new('ShaderNodeNewGeometry');edge=ns.new('ShaderNodeValToRGB');edge.color_ramp.elements[0].position=.51;edge.color_ramp.elements[0].color=(0,0,0,1);edge.color_ramp.elements[1].position=.61;edge.color_ramp.elements[1].color=(.45,.45,.45,1)
+        lk.new(geo.outputs['Pointiness'],edge.inputs['Fac'])
+        wear=ns.new('ShaderNodeMixRGB');wear.inputs[2].default_value=(.16,.13,.075,1);lk.new(edge.outputs['Color'],wear.inputs[0]);lk.new(mix.outputs['Color'],wear.inputs[1]);lk.new(wear.outputs['Color'],sh.inputs['Base Color'])
+        bump=ns.new('ShaderNodeBump');bump.inputs['Strength'].default_value=.16;bump.inputs['Distance'].default_value=.009 if land else .035;lk.new(fine.outputs['Fac'],bump.inputs['Height']);lk.new(bump.outputs['Normal'],sh.inputs['Normal'])
+
+def military_details():
+    if SPRITE.startswith('tank-') or SPRITE=='artillery-self-propelled':
+        z=3.04 if SPRITE=='tank-main-rounded' else 3.12 if SPRITE=='artillery-self-propelled' else 2.83
+        for sg in [-1,1]:
+            for i in range(3):rod('Lanzahumos',(sg*1.2,.65+i*.22,2.5),(sg*1.52,.80+i*.22,2.75),.10,'panel',12)
+            box('Caja estiba',(sg*1.02,-1.42,2.0),(.45,.7,.48),'paint',.04)
+            for y in [-1.9,-2.45]:
+                box('Bidón campaña',(sg*.97,y,1.95),(.38,.44,.55),'panel',.04)
+                box('Asa bidón',(sg*.97,y,2.26),(.20,.06,.08),'steel',.01)
+            for y in [-1.5,0,1.5]:rod('Rodillo apoyo',(sg*1.35-.16,y,1),(sg*1.35+.16,y,1),.19,'mud',16)
+    if SPRITE=='apc':
+        rod('Cañón automático',(0,0,2.86),(0,2.9,2.86),.095,'steel',16)
+        for x in [-.88,.88]:rod('Antena APC',(x,-1.8,2.3),(x,-1.8,4.2),.025,'steel',8)
+    if SPRITE in ['jeep','truck-military','truck-fuel','ambulance-cross','ambulance-crescent','missile-launcher','engineer']:
+        rod('Antena campaña',(-.83,-1.8,1.8),(-.83,-1.8,3.8),.022,'steel',8)
+        if SPRITE in ['truck-military','truck-fuel','missile-launcher']:
+            rod('Rueda repuesto',(1.3,.4,1.6),(1.6,.4,1.6),.53,'rubber',24)
+            for x in [-.75,.75]:box('Bidón logístico',(x,.3,2.72),(.39,.46,.58),'panel',.035)
+        if SPRITE=='jeep':
+            rod('Pedestal ametralladora',(.33,-.82,1.4),(.33,-.82,2.65),.06,'steel',12)
+            box('Cajón ametralladora',(.33,-.70,2.7),(.16,.63,.18),'dark',.025)
+            rod('Cañón ametralladora',(.33,-.4,2.72),(.33,.9,2.72),.045,'steel',12)
+            box('Caja munición',(.62,-.78,2.58),(.35,.4,.36),'panel',.03)
+            box('Bidón jeep',(-.62,-1.55,1.74),(.37,.45,.55),'paint',.035)
+        if SPRITE.startswith('ambulance-'):
+            box('Cuadro sanitario',(0,-.58,2.765),(1.85,1.85,.025),'medical',0)
+        if SPRITE=='truck-fuel':
+            ring('Manguera enrollada',.35,-2,3.13,.45,.08,'rubber')
+    if SPRITE=='engineer':
+        polygon('Blindaje ingenieros',[(-1.05,-1.95),(-1.12,-.3),(-.85,.3),(.85,.3),(1.12,-.3),(1.05,-1.95)],1.1,1.65,'paint',.06)
+        hatch(.45,-1.05,3.10,.29)
+    if SPRITE=='ship-amphibious':
+        box('Rampa dique popa',(0,-48,3.9),(12,5,.8),'panel',.18)
+        for x in [-6,6]:rod('Pistón rampa',(x,-45,5),(x,-49,4.4),.22,'steel',12)
+    # Exhaust soot, accumulated mud and scratches modeled as thin raised solids.
+    if not SPRITE.startswith(('ship-','air-')):
+        for ob in AEM['C'].objects:
+            if ob.type=='MESH' and any(k in ob.name for k in ['Eslabón','Neumático','Diente oruga']):
+                if 'Eslabón' in ob.name:ob.data.materials[0]=AEM_M['mud']
+        if SPRITE not in ['artillery-towed','jeep','engineer','ambulance-cross','ambulance-crescent']:
+            box('Hollín escape',(.72,-2.3,1.84),(.45,.65,.035),'dark',.01)
+            for i in range(6):box('Rozadura',(-.9+i*.31,-2.65,1.85),(.10,.38,.023),'steel',.005,angle=.35)
+
+def landing_craft():
+    polygon('Casco desembarco',[(-7,-24),(-7,24),(7,24),(7,-24)],0,3,'paint',.18)
+    box('Pozo carga',(0,2,3.1),(11.6,38,.22),'deck',.1)
+    for x in [-6.4,6.4]:box('Amurada blindada',(x,1,4.0),(1.2,43,1.7),'paint',.12)
+    box('Rampa proa',(0,24,3.6),(13,1.2,4),'panel',.12)
+    for x in [-4,-2,0,2,4]:box('Nervio rampa',(x,24,5.65),(.25,.9,.14),'steel',.03)
+    bridge(3,-18,5,8,3,4);mast(3,-18,8,4)
+    for x in [-5,5]:
+        rod('Montura defensa',(x,-13,4),(x,-13,5),.55,'panel',16)
+        rod('Ametralladora naval',(x,-13,5.3),(x,-9,5.3),.10,'steel',12)
+    for x in [-3,3]:box('Carril bodega',(x,2,3.3),(.12,34,.10),'steel',.01)
+
+def support_platform():
+    for x in [-27,27]:
+        for y in [-27,27]:rod('Pilar base naval',(x,y,-8),(x,y,5),4,'dark',24)
+    box('Cubierta base naval',(0,0,5),(68,72,3),'paint',.4)
+    box('Zona vuelo',(-17,-15,6.7),(30,35,.3),'deck',.2);ring('Toma helicóptero',-17,-15,7,11,.18,'light')
+    bridge(18,-17,21,29,6.6,8);mast(18,-17,15,17)
+    for y in [15,27]:
+        for x in [-20,-6,8]:box('Contenedor logístico',(x,y,9),(10,8,5),'panel',.18)
+    for x,y in [(-27,30),(27,30)]:
+        rod('Base defensa',(x,y,7),(x,y,8.5),2.5,'panel',24)
+        box('Torre naval',(x,y,10),(4,4,3),'paint',.2);rod('Cañón defensa',(x,y+1,10),(x,y+9,10),.25,'steel',16)
+    for x in [-10,0,10]:sphere('Radomo comunicaciones',(x,0,9),(2.2,2.2,2.2),'light')
+
+def oiler_details():
+    for y in [-16,6,23]:
+        for x in [-6,6]:
+            rod('Pórtico RAS',(x,y,4),(x,y,14),.3,'steel',12)
+            rod('Brazo RAS',(x,y,14),(x*1.8,y,11),.28,'panel',12)
+            rod('Manguera RAS',(x,y,13),(x*1.5,y,5),.22,'rubber',12)
+        rod('Travesaño RAS',(-6,y,14),(6,y,14),.3,'panel',12)
+    box('Cubierta helicóptero',(0,-23,5),(15,13,.4),'deck',.2);ring('Toma popa',0,-23,5.3,5,.12,'light')

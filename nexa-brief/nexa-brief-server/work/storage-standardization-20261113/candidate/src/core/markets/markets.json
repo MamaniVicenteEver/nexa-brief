@@ -1,0 +1,9 @@
+{
+  "schema": "nexa.markets/1",
+  "default_locale": "es-419",
+  "markets": {
+    "es-419": {"locale": "es-419", "aliases": ["es"], "label": "ES", "name": "Español", "native_name": "Español latinoamericano", "whisper": "es", "tts": "es-419", "transcription_prompt": "Documental narrado en español. Nombres: {names}."},
+    "en-US": {"locale": "en-US", "aliases": ["en"], "label": "EN", "name": "English", "native_name": "English (United States)", "whisper": "en", "tts": "en-US", "transcription_prompt": "An English-language technology documentary. Names and terms: {names}."},
+    "pt-BR": {"locale": "pt-BR", "aliases": ["pt"], "label": "PT", "name": "Português", "native_name": "Português do Brasil", "whisper": "pt", "tts": "pt-BR", "transcription_prompt": "Documentário de tecnologia em português brasileiro. Nomes e termos: {names}."}
+  }
+}

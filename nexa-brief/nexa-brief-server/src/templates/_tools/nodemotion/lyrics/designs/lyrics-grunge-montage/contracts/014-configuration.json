@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "red": {
+      "default": "#E8292E"
+    },
+    "white": {
+      "default": "#F1F1EF"
+    },
+    "black": {
+      "default": "#070707"
+    },
+    "paper": {
+      "default": "#EDEDEA"
+    },
+    "ink": {
+      "default": "#101010"
+    },
+    "chalk": {
+      "default": "#F5F5F2"
+    }
+  },
+  "example": {
+    "red": "#E8292E",
+    "white": "#F1F1EF",
+    "black": "#070707",
+    "paper": "#EDEDEA",
+    "ink": "#101010",
+    "chalk": "#F5F5F2"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

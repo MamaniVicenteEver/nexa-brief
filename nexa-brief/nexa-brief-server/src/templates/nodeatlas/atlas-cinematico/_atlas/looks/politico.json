@@ -1,0 +1,106 @@
+{
+  "sky": {
+    "sky-color": "#c5dcec",
+    "horizon-color": "#e5f0f7",
+    "fog-color": "#dcebf3",
+    "fog-ground-blend": 0.5,
+    "horizon-fog-blend": 0.5,
+    "sky-horizon-blend": 0.5
+  },
+  "terrain": {
+    "exaggeration": 1.8
+  },
+  "projection": "mercator",
+  "background": "#b7d0df",
+  "sat": {
+    "visible": false,
+    "opacity": 1,
+    "saturation": -0.12,
+    "contrast": 0.08,
+    "brightness": 0.05,
+    "hue": 0,
+    "detail": null,
+    "viirs": false
+  },
+  "shade": {
+    "visible": true,
+    "opacity": 0.12
+  },
+  "base": {
+    "visible": true,
+    "opacity": 1,
+    "flavor": "light",
+    "political": true
+  },
+  "borders": {
+    "visible": true,
+    "opacity": 0.8,
+    "levels": [
+      {
+        "color": "#f6f3de",
+        "width": 1.1,
+        "minzoom": 0,
+        "maxzoom": 24
+      },
+      {
+        "color": "#eae8d7",
+        "width": 0.75,
+        "minzoom": 4.8,
+        "maxzoom": 24,
+        "opacity": 0.5
+      },
+      {
+        "color": "#e5e5d8",
+        "width": 0.5,
+        "minzoom": 7,
+        "maxzoom": 24
+      }
+    ]
+  },
+  "labels": {
+    "visible": true,
+    "opacity": 0.85,
+    "levels": [
+      {
+        "color": "#ffffff",
+        "size": 16,
+        "minzoom": 2,
+        "maxzoom": 5.5
+      },
+      {
+        "color": "#ffffff",
+        "size": 13,
+        "minzoom": 5,
+        "maxzoom": 9
+      },
+      {
+        "color": "#ffffff",
+        "size": 11,
+        "minzoom": 7,
+        "maxzoom": 24
+      },
+      {
+        "color": "#ffffff",
+        "size": 12,
+        "minzoom": 5,
+        "maxzoom": 24
+      }
+    ]
+  },
+  "highlight": {
+    "styles": {
+      "olive": {
+        "fill": "#9aa33a",
+        "opacity": 0.55,
+        "line": "#f3f3cf",
+        "width": 1.2
+      },
+      "pink": {
+        "fill": "#c4306f",
+        "opacity": 0.55,
+        "line": "#ffe4ef",
+        "width": 1.2
+      }
+    }
+  }
+}

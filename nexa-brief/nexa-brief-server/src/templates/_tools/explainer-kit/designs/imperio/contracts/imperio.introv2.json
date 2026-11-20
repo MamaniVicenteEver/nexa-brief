@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "imperio.introv2",
+  "description": "Apertura B de texto e imagen: fotografía grande, titular blanco en campo oscuro y palabra clave sobre carmesí. En móvil la foto ocupa arriba y el titular abajo; en escritorio se distribuyen a ambos lados. Sin bandera ni rayos; foco y lado configurables.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "description": "Titular gancho; '\\n' separa renglones y '^x^' destaca la palabra clave en carmesí.",
+      "default": null
+    },
+    "highlight": {
+      "type": "string",
+      "description": "Palabra o frase del titular que se destaca; si falta se conserva el marcado ^x^ o la última palabra sustantiva.",
+      "default": ""
+    },
+    "kicker": {
+      "type": "string",
+      "description": "Rótulo chico arriba.",
+      "default": ""
+    },
+    "stamp": {
+      "type": "string",
+      "description": "Revelación secundaria opcional, dentro del campo de texto.",
+      "default": ""
+    },
+    "stampAt": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo de la revelación (acepta '@palabra').",
+      "default": 2.6
+    },
+    "typeAt": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "pattern": "^@.+"
+        }
+      ],
+      "description": "Segundo de entrada del titular.",
+      "default": 0.35
+    },
+    "cps": {
+      "type": "number",
+      "minimum": 4,
+      "description": "Velocidad de entrada del titular, conservada del contrato anterior.",
+      "default": 18
+    },
+    "country": {
+      "type": "string",
+      "description": "País del episodio; no altera los colores de esta apertura editorial.",
+      "default": ""
+    },
+    "bg": {
+      "enum": [
+        "auto",
+        "atlas",
+        "archivo",
+        "papel",
+        "image",
+        "component",
+        "none"
+      ],
+      "description": "Fondo: auto = el del diseño; presets: atlas, archivo, papel; image = foto en src; component = otro componente (use/useParams); none = liso.",
+      "default": "auto"
+    },
+    "src": {
+      "type": "string",
+      "description": "Fotografía documental real del tema. Obligatoria en la apertura B; evitar documentos llenos de texto o fotos de sujetos ajenos.",
+      "default": ""
+    },
+    "focus": {
+      "type": "array",
+      "description": "Punto de interés de la foto [x,y] (0..1).",
+      "default": [
+        0.5,
+        0.5
+      ]
+    },
+    "use": {
+      "type": "string",
+      "description": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+      "default": ""
+    },
+    "useParams": {
+      "type": "object",
+      "description": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+      "default": {}
+    },
+    "dim": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Oscurecido suave de la fotografía sin perder al sujeto.",
+      "default": 0.2
+    },
+    "imageSide": {
+      "enum": [
+        "auto",
+        "left",
+        "right"
+      ],
+      "description": "Lado de la fotografía en escritorio; en móvil aparece siempre arriba.",
+      "default": "right"
+    }
+  },
+  "required": [
+    "text",
+    "src"
+  ],
+  "$defs": {},
+  "examples": [
+    {
+      "text": "LA NOCHE QUE\n^PARTIÓ BERLÍN^",
+      "kicker": "Berlín · 1961",
+      "src": "mauerbau.jpg",
+      "country": "Germany",
+      "imageSide": "right"
+    }
+  ],
+  "x-layer": "main",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

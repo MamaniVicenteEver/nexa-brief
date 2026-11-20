@@ -1,0 +1,130 @@
+{
+  "id": "titanes",
+  "family": "titanes",
+  "name": "TITANES",
+  "tagline": "Historias de dinero y poder.",
+  "topics": [
+    "dinero",
+    "poder",
+    "empresas",
+    "economía",
+    "decisiones",
+    "ascenso",
+    "caída",
+    "documental"
+  ],
+  "channel": {
+    "name": "TITANES",
+    "handle": "",
+    "language": "es-419",
+    "note": "Sin dirección pública confirmada. No se inventa un handle."
+  },
+  "fontsCss": "",
+  "scripts": [
+    "designs/common/text.js",
+    "designs/common/hook.js",
+    "designs/common/capas.js",
+    "designs/titanes/components/_titanes.js",
+    "designs/titanes/components/intros.js",
+    "designs/titanes/components/outro.js",
+    "designs/titanes/components/capitulo.js",
+    "designs/titanes/components/_datos.js",
+    "designs/titanes/components/cifra.js",
+    "designs/titanes/components/bolsa.js",
+    "designs/titanes/components/escala.js",
+    "designs/titanes/components/plantilla.js",
+    "designs/titanes/components/duelo.js",
+    "designs/titanes/components/cronologia.js",
+    "designs/titanes/components/titular.js",
+    "designs/titanes/components/foto.js"
+  ],
+  "defaults": {
+    "family": "titanes",
+    "palette": {
+      "bg": "#0B1220",
+      "ink": "#EFE9DF",
+      "muted": "#8A93A3",
+      "accent": "#E9B23B",
+      "rim": "#F2C96B",
+      "accentInk": "#06080C",
+      "black": "#000000",
+      "tinta": "#06080C",
+      "graphite": "#1A212C",
+      "blood": "#E3262F",
+      "gold": "#E9B23B"
+    },
+    "fonts": {
+      "main": "Anton",
+      "load": [
+        "400 40px Anton",
+        "400 40px Inter",
+        "900 40px Inter"
+      ]
+    },
+    "captions": {
+      "enabled": true,
+      "maxWords": 5,
+      "gap": 0.6,
+      "hold": 0.35
+    },
+    "transition": {
+      "overlap": 0
+    },
+    "minDur": {
+      "common.clip": 8
+    },
+    "overlay": {
+      "endWithScene": true,
+      "minDur": 2.5,
+      "maxDur": 8
+    },
+    "clip": {
+      "layout": "frame",
+      "size": 0.92
+    },
+    "outro": {
+      "enabled": true,
+      "use": "titanes.outro",
+      "dur": 6,
+      "thanks": "GRACIAS POR VER",
+      "channel": "TITANES",
+      "cta": "SUSCRÍBETE",
+      "support": "Comparte estas historias.",
+      "handle": ""
+    }
+  },
+  "voice": {
+    "voice": "Alnilam",
+    "alternatives": [
+      "Charon",
+      "Orus",
+      "Gacrux"
+    ],
+    "lead": 1.2,
+    "tail": 6,
+    "base": "Narrador de historias de dinero y poder. Voz masculina madura, grave y firme, español latinoamericano neutro sin ceceo. Seguro y directo, con suspenso contenido: frena antes de una cifra o de una caída y la deja caer con peso. Ironía leve cuando el poder se equivoca. Sin tono publicitario ni de noticiero. No imitar a ninguna persona real.",
+    "target_wpm": [
+      125,
+      135
+    ],
+    "note": "Orus provisional. Casting y escucha humana fuera del alcance de esta base visual."
+  },
+  "showcase": {
+    "components": [
+      "titanes.introv1",
+      "titanes.introv2",
+      "titanes.outro",
+      "titanes.capitulo",
+      "titanes.escenario",
+      "titanes.cifra",
+      "titanes.bolsa",
+      "titanes.escala",
+      "titanes.plantilla",
+      "titanes.duelo",
+      "titanes.cronologia",
+      "titanes.titular",
+      "titanes.foto"
+    ]
+  },
+  "outro_channel": "titanes"
+}

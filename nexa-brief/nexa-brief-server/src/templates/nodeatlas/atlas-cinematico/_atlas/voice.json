@@ -1,0 +1,15 @@
+{
+  "id": "atlas-cinematico",
+  "narrative_profile": "narrative.json",
+  "voice": {
+    "voice": "Orus",
+    "choices": [
+      {"id": "Orus", "label": "Orus", "default": true, "audition": "atlas-voz-calidad-20261109/orus"},
+      {"id": "Sulafat", "label": "Sulafat", "default": false, "audition": "atlas-voz-calidad-20261109/sulafat"}
+    ],
+    "models": ["gemini-3.8-flash-tts"],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "Español latinoamericano neutro. Personalidad de guía de viaje informado: amable, curioso, cercano y seguro. Habla como una persona que explica un mapa a otra persona. Sonrisa leve, sin tono publicitario, solemnidad ni voz de tráiler. Timbre cómodo, respiración natural y énfasis selectivo. Mantén la misma identidad entre segmentos. Ritmo de 130 palabras por minuto y pausas entre ideas. Pronuncia las cifras completas y las siglas PIB como pe, i, be. No leer instrucciones ni imitar personas reales."
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-expediente",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-expediente",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "93dc57e2b100356d7bc18b4cfcf1fa167e41be2e216cd3fc325558e97975024e",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-expediente",
+    "config": "nodemotion/lyrics/lyrics-expediente/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-expediente/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-expediente/README.md"
+  },
+  "revision": "d43b1fd0e5b7c20ae234e01e288dc3a263364177c93594bf052e0b8ce98abbf9"
+}

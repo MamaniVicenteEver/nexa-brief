@@ -1,0 +1,20 @@
+{
+  "duration": 14,
+  "planoLook": "tactico",
+  "tiles": {"provider":"gibs-bluemarble","manifest":"cache-inventory.json"},
+  "motionBlur": {"samples":4,"fps":30,"shutter":0.5,"thresholdPx":2},
+  "places": {"Salida":[56.25,26.65],"Paso":[56.45,26.5],"Llegada":[56.75,26.35]},
+  "defs": {"palette":{"ink":"#eee8d0","accent":"#74bb89","background":"#081e2c"},"fonts":{"label":"sans-serif"}},
+  "camera": [
+    {"t":0,"center":[56.25,26.65],"zoom":6.5,"bearing":0},
+    {"t":1,"follow":"core-dot","dur":6,"zoom":6.5},
+    {"t":7.5,"zoomThrough":{"to":"Llegada","zoom":7.3,"spin":25},"dur":1.8},
+    {"t":10,"reframe":["Salida","Llegada"],"dur":1.5,"bearing":0}
+  ],
+  "layers": [],
+  "items": [
+    {"id":"core-path","type":"debug.path","t":0,"out":11,"path":{"via":["Salida","Paso","Llegada"],"t":1,"dur":6,"curve":"smooth","ease":"inOut"}},
+    {"id":"core-dot","type":"debug.dot","t":0,"out":11,"r":22,"heading":"auto","path":{"via":["Salida","Paso","Llegada"],"t":1,"dur":6,"curve":"smooth","ease":"inOut"},"states":[{"at":5,"state":"hit","dur":0.8}]},
+    {"id":"core-label","type":"debug.label","text":"Seguimiento · núcleo táctico","at":"core-dot","t":0,"out":11,"size":28,"dy":-50}
+  ]
+}

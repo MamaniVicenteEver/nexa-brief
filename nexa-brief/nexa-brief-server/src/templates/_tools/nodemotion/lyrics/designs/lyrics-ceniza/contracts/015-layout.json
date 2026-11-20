@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-ceniza",
+  "id": "layout.crack",
+  "entry_id": "layout.crack",
+  "name": "crack",
+  "kind": "layout",
+  "label": "crack",
+  "summary": "Existing layout configuration: crack.",
+  "params": {
+    "weight": {
+      "default": 1.2
+    },
+    "media": {
+      "default": [
+        "smoke",
+        "crying"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.2,
+    "media": [
+      "smoke",
+      "crying"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-ceniza/assets/config.json",
+      "pointer": "/configs/0/layouts/crack"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

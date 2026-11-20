@@ -1,4 +1,8 @@
 const React = require('react');
+const NeonIntro = require("../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-neon/components/intro.js");
+const NeonOutro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-neon/components/outro.js');
+const {loadFont: loadAnton} = require('@remotion/google-fonts/Anton');
+loadAnton();
 const {useCurrentFrame, AbsoluteFill, Audio, interpolate, Easing} = require('remotion');
 const {loadFont: loadMonoton} = require('@remotion/google-fonts/Monoton');
 const {loadFont: loadArchivoBlack} = require('@remotion/google-fonts/ArchivoBlack');
@@ -72,81 +76,7 @@ function WordEl({pw, next, outroFrame, frame, C, N, fps}) {
   return React.createElement('div', {style: baseStyle}, pw.text);
 }
 
-function NeonCard({cfg, C, N, opacity}) {
-  return React.createElement(
-    'div',
-    {
-      style: {
-        position: 'absolute',
-        inset: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '2.4vh',
-        textAlign: 'center',
-        textTransform: 'uppercase',
-        opacity,
-      },
-    },
-    React.createElement(
-      'div',
-      {
-        style: {
-          fontFamily: C.fonts.tube,
-          fontSize: '5.2vh',
-          color: N.core,
-          textShadow: tubeGlow(N, HEIGHT * 0.052 * 0.2),
-        },
-      },
-      cfg.artist ?? cfg.songTitle ?? ''
-    ),
-    React.createElement(
-      'div',
-      {
-        style: {
-          fontFamily: C.fonts.block,
-          fontSize: '17vh',
-          letterSpacing: '0.04em',
-          lineHeight: 1,
-          color: 'transparent',
-          WebkitTextStroke: `${Math.max(1.5, HEIGHT * 0.17 * 0.045)}px ${N.core}`,
-          filter: neonDropShadow(N, HEIGHT * 0.17),
-        },
-      },
-      cfg.title
-    ),
-    React.createElement(
-      'div',
-      {
-        style: {
-          fontFamily: C.fonts.tube,
-          fontSize: '5.4vh',
-          letterSpacing: '0.55em',
-          paddingLeft: '0.55em',
-          color: N.core,
-          textShadow: tubeGlow(N, HEIGHT * 0.054 * 0.2),
-        },
-      },
-      cfg.sub
-    ),
-    React.createElement(
-      'div',
-      {
-        style: {
-          fontFamily: C.fonts.block,
-          fontSize: '1.7vh',
-          letterSpacing: '0.35em',
-          opacity: 0.85,
-          marginTop: '3vh',
-          color: N.core,
-          textShadow: tubeGlow(N, 8),
-        },
-      },
-      cfg.feats
-    )
-  );
-}
+
 
 function NeonLetras({configData, lyricsData, audioSrc, bgSrc}) {
   const frame = useCurrentFrame();
@@ -165,15 +95,17 @@ function NeonLetras({configData, lyricsData, audioSrc, bgSrc}) {
   const visible = [];
   for (let i = windowStart; i <= lastIdx; i++) visible.push(i);
 
-  const introVisible = WORDS.length === 0 || frame < WORDS[0].frame;
-  const introOpacity = WORDS.length
-    ? interpolate(frame, [WORDS[0].frame, WORDS[0].frame + 1.3 * fps], [1, 0], {
-        extrapolateLeft: 'clamp',
-        extrapolateRight: 'clamp',
-      })
-    : 1;
+  const introTimeSeconds = frame / fps;
+  const introDurationSeconds = WORDS.length
+    ? WORDS[0].frame / fps
+    : NeonIntro.DEFAULT_DURATION_SECONDS;
+  const introState = NeonIntro.stateAt(introTimeSeconds, frame >= OUTRO_FRAME, introDurationSeconds);
 
-  const outroOpacity = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + 1.3 * fps], [0, 1], {
+  const outroOpacity = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + 1.1 * fps], [0, 1], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const backgroundDim = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + 1.8 * fps], [1, 0.56], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -208,9 +140,9 @@ function NeonLetras({configData, lyricsData, audioSrc, bgSrc}) {
         width: '100%',
         height: '100%',
         objectFit: 'cover',
-        filter: C.bg.filter,
+        filter: NeonIntro.backgroundFilter(C.bg.filter, introState.backgroundLift),
         transform: `scale(${bgScale}) translate(${bgTX}%, ${bgTY}%)`,
-        opacity: worldDim,
+        opacity: backgroundDim,
       },
     }),
     React.createElement('div', {
@@ -220,12 +152,12 @@ function NeonLetras({configData, lyricsData, audioSrc, bgSrc}) {
         background:
           'radial-gradient(ellipse at 50% 60%, rgba(255,60,10,0.10) 0%, rgba(30,4,0,0.55) 78%, rgba(8,2,0,0.8) 100%)',
         mixBlendMode: 'multiply',
-        opacity: worldDim,
+        opacity: backgroundDim * (1 - 0.75 * introState.backgroundLift),
       },
     }),
     React.createElement(
       'div',
-      {style: {position: 'absolute', inset: 0, perspective: 1000, overflow: 'hidden', opacity: worldDim}},
+      {style: {position: 'absolute', inset: 0, perspective: 1000, overflow: 'hidden', opacity: worldDim * (introState.active ? 0 : 1)}},
       React.createElement(
         'div',
         {style: {position: 'absolute', inset: 0, transformStyle: 'preserve-3d', transform: `rotateY(${sway}deg)`}},
@@ -295,8 +227,15 @@ function NeonLetras({configData, lyricsData, audioSrc, bgSrc}) {
           "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E\")",
       },
     }),
-    introVisible && React.createElement(NeonCard, {cfg: C.intro, C, N, opacity: introOpacity}),
-    frame >= OUTRO_FRAME && React.createElement(NeonCard, {cfg: C.outro, C, N, opacity: outroOpacity})
+    NeonIntro.createRemotionElement({
+      React,
+      config: C.intro,
+      neon: N,
+      timeSeconds: introTimeSeconds,
+      durationSeconds: introDurationSeconds,
+      outroActive: frame >= OUTRO_FRAME,
+    }),
+    frame >= OUTRO_FRAME && NeonOutro.createRemotionElement({React, config: C.outro, opacity: outroOpacity, elapsedSeconds: Math.max(0, (frame - OUTRO_FRAME) / fps), width: WIDTH, height: HEIGHT})
   );
 }
 

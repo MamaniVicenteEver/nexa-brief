@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Image stage</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+    body { font-family: sans-serif; }
+    #stage { position: relative; overflow: hidden; width: 1080px; height: 1350px; }
+  </style>
+  <link rel="stylesheet" href="../engine/image-engine.css">
+  <link rel="stylesheet" href="../engine/image-skins.css">
+</head>
+<body>
+  <div id="stage" aria-label="Vista previa estática"></div>
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const designId = params.get("d") || "rough";
+      const kitRoot = new URL("../", location.href).href;
+      const loadJson = async path => {
+        const response = await fetch(new URL(path, kitRoot));
+        if (!response.ok) throw new Error("No se pudo cargar " + path);
+        return response.json();
+      };
+      const loadScript = path => new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = new URL(path, kitRoot).href;
+        script.async = false;
+        script.onload = resolve;
+        script.onerror = () => reject(new Error("No se pudo cargar " + path));
+        document.body.appendChild(script);
+      });
+
+      window.ImageStageReady = (async () => {
+        const [design, catalog] = await Promise.all([
+          loadJson("designs/" + designId + "/design.json"),
+          loadJson("catalog.json")
+        ]);
+        await loadScript("engine/kit.js");
+        for (const script of design.scripts || []) await loadScript(script);
+        await loadScript("engine/image-engine.js");
+        await loadScript("engine/image-stage-runtime.js");
+        await loadScript("designs/" + designId + "/image-components.js");
+        window.Kit.design = design;
+        window.ImageStage = window.createImageStage({design, catalog});
+        return true;
+      })();
+    })();
+  </script>
+</body>
+</html>

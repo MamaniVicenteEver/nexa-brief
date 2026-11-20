@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script data-nb-hf-clock="075fd9c8e584"><!-- nodemotion-fragment:scripts/01-hyperframes-clock.js --></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cinético Noir · NodeMotion</title>
+<!-- lyrics-kinetic-noir: tipografía cinética en blanco sobre azul casi negro, una composición por frase.
+     Cascarón mínimo: componentes en components/*.js y orquestador en player.js.
+     Configuración en config.json (job) o assets/config.json (demo). Servir por HTTP. Ver DESIGN.md. -->
+<link rel="stylesheet" href="./components/noir.css">
+<script src="./components/core.js"></script>
+<script src="./components/background.js"></script>
+<script src="./components/scenes.js"></script>
+<script src="./components/intro.js"></script>
+<script src="./components/outro-v1.js"></script>
+<script src="./components/outro-v2.js"></script>
+</head>
+<body>
+<audio id="audio" preload="auto"></audio>
+<div id="stage"><canvas id="bg"></canvas><div id="type"></div><div id="fade"></div><div id="hud"></div></div>
+<script src="./player.js"></script>
+</body>
+</html>

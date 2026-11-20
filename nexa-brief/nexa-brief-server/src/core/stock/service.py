@@ -248,12 +248,18 @@ async def import_stock_item(
     source_url: str = "",
     license: str = "",  # noqa: A002 - mismo nombre que el campo de StockItem
     category: str | None = None,
+    template_id: str = "",
     job_id: str = "",
 ) -> StockImportResult:
     """Descarga un resultado de búsqueda y lo registra en la librería.
 
     Idempotente por (provider, kind, provider_id). Levanta StockImportError si
     el pedido es inválido y AssetDownloadError si la descarga falla."""
+    from src.core.library.resource_metadata import resource_metadata
+    try:
+        resource_metadata(category or "", template_id)
+    except ValueError as exc:
+        raise StockImportError(str(exc)) from exc
     registry = get_stock_providers()
     adapter = registry.get(provider)
     if adapter is None:
@@ -270,6 +276,7 @@ async def import_stock_item(
     async with lock:
         existing = _find_imported(kind, ref)
         if existing is not None:
+            existing = await asset_library.attach_resource_origin(kind, existing.asset_id, category or "", template_id)
             return StockImportResult(kind=kind, entry=existing, already_imported=True)
 
         filename = asset_library.filename_from_url(download_url)
@@ -298,6 +305,7 @@ async def import_stock_item(
                 "provider": provider,
                 "original_url": download_url,
                 "job_id": job_id,
+                "template_id": template_id,
                 "filename": filename,
             }
             if kind == "image":

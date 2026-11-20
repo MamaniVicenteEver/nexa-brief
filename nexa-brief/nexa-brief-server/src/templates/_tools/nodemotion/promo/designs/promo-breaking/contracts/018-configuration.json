@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-breaking",
+  "id": "config.transition",
+  "entry_id": "config.transition",
+  "name": "transition",
+  "kind": "configuration",
+  "label": "transition",
+  "summary": "Existing configuration configuration: transition.",
+  "params": {
+    "overlapSec": {
+      "default": 0.5
+    },
+    "duration": {
+      "default": 0.45
+    },
+    "weights": {
+      "default": {
+        "stripes": 2,
+        "redBlock": 2,
+        "panels": 1,
+        "squash": 1,
+        "zoomCut": 1,
+        "cut": 2
+      }
+    }
+  },
+  "example": {
+    "overlapSec": 0.5,
+    "duration": 0.45,
+    "weights": {
+      "stripes": 2,
+      "redBlock": 2,
+      "panels": 1,
+      "squash": 1,
+      "zoomCut": 1,
+      "cut": 2
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-breaking/assets/config.json",
+      "pointer": "/configs/0/transition"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

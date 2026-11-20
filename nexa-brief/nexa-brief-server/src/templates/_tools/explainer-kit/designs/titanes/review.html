@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TITANES · revisión</title><style>html,body{margin:0;width:100%;height:100%;background:#000;overflow:hidden}#stage{position:fixed;inset:0}</style></head><body><div id="stage"></div><script src="../../engine/loader.js" data-design="titanes" data-noboot></script><script>
+(async()=>{
+  const D=await KitReady,Q=new URLSearchParams(location.search),name="titanes."+(Q.get("c")||"introv1");
+  const def=Kit.registry.get(name),params={...def.example,...JSON.parse(Q.get("p")||"{}")},dur=+(Q.get("dur")||6);
+  const color=Q.get("color")==="ibm"?"ibm":"oro";
+  const config=await(await fetch("examples/"+color+"/assets/config.json")).json();
+  window.__titanesCtx=await Kit.boot({design:D,config,storyboard:{beats:[{t:0,dur,use:name,params}]},lyrics:{segments:[]},total:dur});
+  window.__titanesReady=true;
+})();
+</script></body></html>

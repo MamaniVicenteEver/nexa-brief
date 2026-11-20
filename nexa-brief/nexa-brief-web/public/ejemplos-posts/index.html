@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formatos de post</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;700;800&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f1ec; --ink:#16161a; --muted:#64626b; --line:#dcd8cf; --card:#fff; --accent:#1f5eff; --pick:#0e9f6e;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--bg:#121214;--ink:#ecebe8;--muted:#9a98a2;--line:#2b2a30;--card:#1b1b1f;--accent:#7aa2ff;--pick:#34d399}
+}
+:root[data-theme="dark"]{--bg:#121214;--ink:#ecebe8;--muted:#9a98a2;--line:#2b2a30;--card:#1b1b1f;--accent:#7aa2ff;--pick:#34d399}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;padding:0 16px 120px}
+.wrap{max-width:1180px;margin:0 auto}
+header{padding:56px 0 28px;border-bottom:1px solid var(--line)}
+h1{font:800 clamp(30px,5vw,52px)/1.05 Inter,sans-serif;letter-spacing:-.03em}
+.lead{max-width:760px;color:var(--muted);margin-top:14px;font-size:18px}
+h2{font:800 26px/1.2 Inter,sans-serif;letter-spacing:-.02em;margin:56px 0 8px}
+.sub{color:var(--muted);max-width:760px}
+
+/* diagnóstico */
+.now{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:22px}
+.now img{width:100%;border-radius:10px;display:block;border:1px solid var(--line)}
+.issues{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.issue{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:14.5px}
+.issue b{display:block;margin-bottom:2px}
+
+/* opciones */
+.opt{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:36px;padding:40px 0;border-bottom:1px solid var(--line);align-items:start}
+.opt.wide{grid-template-columns:1fr}
+.opt.wide .info{max-width:820px}
+.num{font:600 13px 'IBM Plex Mono',monospace;color:var(--accent);letter-spacing:.08em}
+.info h3{font:800 28px/1.15 Inter,sans-serif;letter-spacing:-.02em;margin:6px 0 10px}
+.info p{margin-bottom:10px}
+.refs{font-size:14px;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.tag{font-size:12.5px;border:1px solid var(--line);border-radius:99px;padding:3px 10px;background:var(--card)}
+.tag.good{border-color:color-mix(in srgb,var(--pick) 50%,transparent);color:var(--pick)}
+.pickbtn{margin-top:8px;font:600 14px Inter,sans-serif;padding:10px 16px;border-radius:8px;border:1.5px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.pickbtn[aria-pressed="true"]{background:var(--pick);border-color:var(--pick);color:#fff}
+.strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:22px}
+
+/* marco de post 4:5 — todo escala con el ancho (cqw) */
+.post{container-type:inline-size;aspect-ratio:4/5;width:100%;position:relative;overflow:hidden;border-radius:6px;box-shadow:0 10px 30px rgba(0,0,0,.18);background:#000;color:#fff}
+.post .bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.handle{position:absolute;font:600 2.6cqw 'IBM Plex Mono',monospace;letter-spacing:.04em;opacity:.85}
+.credit{position:absolute;font:400 2cqw Inter,sans-serif;opacity:.6}
+
+/* 1 foto icónica */
+.p1 .bgimg{filter:grayscale(1) contrast(1.05);object-position:50% 20%}
+.p1 .shade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.92) 88%)}
+.p1 .cap{position:absolute;left:6cqw;right:6cqw;bottom:11cqw;font:500 5.2cqw/1.3 Inter,sans-serif}
+.p1 .cap em{font-style:normal;opacity:.65}
+.p1 .handle{left:6cqw;bottom:5cqw}
+
+/* 2 documento con lupa */
+.p2{background:#efe9dc;color:#1c1a17}
+.p2 .bgimg{height:58%;top:auto;bottom:0;object-position:50% 60%;filter:sepia(.25)}
+.p2 .lupa{position:absolute;width:38cqw;height:38cqw;border-radius:50%;right:6cqw;bottom:18cqw;border:1.2cqw solid #c8102e;background:url(img/bug.jpg) 30% 77%/360% auto no-repeat;box-shadow:0 2cqw 6cqw rgba(0,0,0,.35)}
+.p2 .tit{position:absolute;left:6cqw;right:6cqw;top:7cqw;font:900 8.4cqw/1.02 'Playfair Display',serif;letter-spacing:-.01em}
+.p2 .tit span{color:#c8102e}
+.p2 .meta{position:absolute;left:6cqw;top:35cqw;font:600 2.7cqw 'IBM Plex Mono',monospace;letter-spacing:.06em;text-transform:uppercase}
+.p2 .handle{left:6cqw;bottom:4cqw;color:#fff;text-shadow:0 0 2cqw #000}
+
+/* 3 antes vs ahora */
+.p3{background:#0b0b0d}
+.p3 .top{position:absolute;inset:0 0 50% 0}
+.p3 .top img{width:100%;height:100%;object-fit:cover;filter:grayscale(1)}
+.p3 .yr{position:absolute;left:5cqw;top:4.5cqw;font:400 13cqw/1 'Bebas Neue',sans-serif;text-shadow:0 0 4cqw rgba(0,0,0,.6)}
+.p3 .lbl{position:absolute;left:5cqw;bottom:4cqw;background:#fff;color:#000;font:700 3.2cqw/1.3 Inter,sans-serif;padding:1.6cqw 2.6cqw}
+.p3 .bot{position:absolute;inset:50% 0 0 0;display:flex;align-items:center;gap:6cqw;padding:0 6cqw}
+.p3 .phone{flex:0 0 auto;width:9cqw;height:18cqw;border:.8cqw solid #fff;border-radius:2cqw;position:relative}
+.p3 .phone:after{content:"";position:absolute;left:35%;right:35%;top:1.2cqw;height:.7cqw;border-radius:9px;background:#fff}
+.p3 .bot .yr{position:static;font-size:13cqw;color:#ffd23f}
+.p3 .bot p{font:500 3.4cqw/1.35 Inter,sans-serif;color:#cfcfd4;margin-top:1cqw}
+.p3 .bot b{color:#fff}
+.p3 .vs{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:12cqw;height:12cqw;border-radius:50%;background:#ffd23f;color:#000;display:grid;place-items:center;font:400 6cqw 'Bebas Neue',sans-serif;z-index:2}
+.p3 .handle{right:5cqw;bottom:4cqw}
+
+/* 4 anatomía */
+.p4{background:#0d1b2a}
+.p4 .bgimg{height:50%;top:20%;object-fit:cover}
+.p4 .tit{position:absolute;left:6cqw;right:6cqw;top:6cqw;font:700 6.6cqw/1.08 'Space Grotesk',sans-serif;letter-spacing:-.02em}
+.p4 .dot{position:absolute;width:6cqw;height:6cqw;border-radius:50%;background:#ff5a1f;color:#fff;font:700 3.2cqw 'Space Grotesk';display:grid;place-items:center;box-shadow:0 0 0 1.2cqw rgba(255,90,31,.3)}
+.p4 .legend{position:absolute;left:6cqw;right:6cqw;bottom:5cqw;display:grid;gap:1.8cqw;font:500 2.9cqw/1.3 Inter,sans-serif}
+.p4 .legend div{display:flex;gap:2.4cqw;align-items:baseline}
+.p4 .legend i{font-style:normal;flex:0 0 4.4cqw;height:4.4cqw;border-radius:50%;background:#ff5a1f;display:grid;place-items:center;font:700 2.4cqw 'Space Grotesk'}
+.p4 .handle{right:6cqw;top:21cqw;font-size:2.2cqw;opacity:.6}
+
+/* 5 frase + retrato */
+.p5{background:#111}
+.p5 .bgimg{left:38%;width:62%;object-position:40% 30%}
+.p5 .fade{position:absolute;inset:0;background:linear-gradient(90deg,#111 38%,rgba(17,17,17,.75) 55%,transparent 80%)}
+.p5 .q{position:absolute;left:6cqw;width:62cqw;top:12cqw;font:italic 700 6.2cqw/1.18 'Playfair Display',serif}
+.p5 .q:before{content:"“";display:block;font:900 22cqw/0.6 'Playfair Display';color:#e8c547;margin-bottom:2cqw}
+.p5 .who{position:absolute;left:6cqw;bottom:13cqw;font:700 3.4cqw Inter,sans-serif}
+.p5 .who span{display:block;font-weight:400;opacity:.7;font-size:2.8cqw;margin-top:.8cqw}
+.p5 .handle{left:6cqw;bottom:5cqw}
+.p5 .credit{right:4cqw;bottom:2.5cqw}
+
+/* 6 un día como hoy */
+.p6 .bgimg{object-position:50% 70%}
+.p6 .date{position:absolute;left:0;right:0;top:7cqw;text-align:center}
+.p6 .date small{display:block;font:600 2.8cqw 'IBM Plex Mono',monospace;letter-spacing:.3em;opacity:.75}
+.p6 .date b{display:block;font:900 13cqw/1 'Playfair Display',serif;margin-top:1.5cqw}
+.p6:after{content:"";position:absolute;inset:55% 0 0 0;background:linear-gradient(180deg,transparent,rgba(0,0,0,.85) 60%)}
+.p6 .cap,.p6 .handle{z-index:1}
+.p6 .cap{position:absolute;left:8cqw;right:8cqw;bottom:12cqw;text-align:center;font:500 3.7cqw/1.4 Inter,sans-serif}
+.p6 .handle{left:0;right:0;text-align:center;bottom:5cqw}
+
+/* 7 carrusel línea de tiempo */
+.p7{background:#f6f1e7;color:#1d1b18}
+.p7 .yr{position:absolute;left:6cqw;top:6cqw;font:400 22cqw/0.9 'Bebas Neue',sans-serif;color:#d94f2b}
+.p7 .ph{position:absolute;left:6cqw;right:6cqw;top:30cqw;height:56cqw;overflow:hidden}
+.p7 .ph img{width:100%;height:100%;object-fit:cover;filter:grayscale(.2) sepia(.15)}
+.p7 .tx{position:absolute;left:6cqw;right:6cqw;top:90cqw;font:700 5cqw/1.2 Inter,sans-serif;letter-spacing:-.01em}
+.p7 .rail{position:absolute;left:6cqw;right:6cqw;bottom:6cqw;height:.6cqw;background:#d8cfbe}
+.p7 .rail i{position:absolute;top:-1.6cqw;width:3.8cqw;height:3.8cqw;border-radius:50%;background:#d8cfbe}
+.p7 .rail i.on{background:#d94f2b}
+.p7.cover{background:#1d1b18;color:#f6f1e7}
+.p7.cover .big{position:absolute;left:6cqw;right:6cqw;top:12cqw;font:900 10cqw/1.02 'Playfair Display',serif}
+.p7.cover .big span{color:#ff7a50}
+.p7.cover .sw{position:absolute;left:6cqw;bottom:7cqw;font:700 4cqw Inter,sans-serif;color:#ff7a50}
+
+/* 8 portada editorial */
+.p8 .bgimg{object-position:50% 50%}
+.p8 .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1) 30%,rgba(0,0,0,.85) 72%)}
+.p8 .kick{position:absolute;left:6cqw;top:6cqw;background:#ff2d55;font:800 2.6cqw Inter,sans-serif;letter-spacing:.1em;padding:1.2cqw 2.4cqw}
+.p8 .tit{position:absolute;left:6cqw;right:6cqw;bottom:24cqw;font:400 14.5cqw/.9 'Bebas Neue',sans-serif;letter-spacing:.01em}
+.p8 .dek{position:absolute;left:6cqw;right:8cqw;bottom:9cqw;font:500 3.5cqw/1.35 Inter,sans-serif;opacity:.88}
+.p8 .handle{right:6cqw;top:6.6cqw}
+
+/* 9 comparación absurda */
+.p9{background:#e9f1fb;color:#0c1a2b}
+.p9 .bgimg{height:44%;filter:grayscale(1)}
+.p9 .tit{position:absolute;left:6cqw;right:6cqw;top:60cqw;font:800 6.2cqw/1.1 Inter,sans-serif;letter-spacing:-.025em}
+.p9 .bars{position:absolute;left:6cqw;right:6cqw;bottom:13cqw;display:grid;gap:3cqw}
+.p9 .bar{height:7cqw;display:flex;align-items:center;padding-left:2.4cqw;font:700 3cqw Inter,sans-serif;color:#fff;white-space:nowrap}
+.p9 .bar.a{background:#e4572e;width:61%}
+.p9 .bar.b{background:#0c1a2b;width:100%}
+.p9 .meta{position:absolute;left:6cqw;bottom:5cqw;font:500 2.4cqw 'IBM Plex Mono',monospace;opacity:.7}
+
+/* 10 gráfico de datos */
+.p10{background:#fbfaf7;color:#111}
+.p10 .tit{position:absolute;left:6cqw;right:6cqw;top:7cqw;font:900 8cqw/1.02 'Archivo Black',sans-serif;letter-spacing:-.01em}
+.p10 .sub{position:absolute;left:6cqw;top:27cqw;font:500 3cqw Inter,sans-serif;color:#555}
+.p10 .rows{position:absolute;left:6cqw;right:6cqw;top:38cqw;display:grid;gap:5.5cqw}
+.p10 .row small{display:block;font:600 2.8cqw Inter,sans-serif;color:#444;margin-bottom:1.2cqw}
+.p10 .row div{display:flex;align-items:center;gap:2cqw;font:800 3.6cqw Inter,sans-serif}
+.p10 .row i{display:block;height:6cqw;background:#2a6df4;border-radius:0 1cqw 1cqw 0}
+.p10 .row:first-child i{background:#111}
+.p10 .src{position:absolute;left:6cqw;right:6cqw;bottom:5cqw;font:400 2.2cqw Inter,sans-serif;color:#777;display:flex;justify-content:space-between}
+
+/* 11 tuit */
+.p11{background:linear-gradient(160deg,#1d2b53,#3b1f4a);display:grid;place-items:center}
+.p11 .tw{width:86cqw;background:#fff;color:#0f1419;border-radius:3.5cqw;padding:5cqw}
+.p11 .hd{display:flex;gap:3cqw;align-items:center;margin-bottom:3.5cqw}
+.p11 .av{width:11cqw;height:11cqw;border-radius:50%;background:#000;color:#fff;display:grid;place-items:center;font:800 4cqw Inter}
+.p11 .hd b{font:800 3.8cqw Inter,sans-serif;display:block}
+.p11 .hd span{font:400 3.2cqw Inter,sans-serif;color:#536471}
+.p11 p{font:400 4.1cqw/1.42 Inter,sans-serif;margin-bottom:3cqw}
+.p11 .pic{height:40cqw;border-radius:2.5cqw;overflow:hidden}
+.p11 .pic img{width:100%;height:100%;object-fit:cover;object-position:50% 18%}
+
+/* 12 imagen asombrosa + escala */
+.p12 .bgimg{object-position:50% 50%}
+.p12 .scale{position:absolute;left:12cqw;top:22cqw;bottom:33cqw;width:2.4cqw;border:.5cqw solid #fff;border-right:0}
+.p12 .scale span{position:absolute;left:4cqw;top:50%;transform:translateY(-50%);font:700 3.6cqw Inter,sans-serif;white-space:nowrap;text-shadow:0 0 2cqw #000}
+.p12 .cap{position:absolute;left:6cqw;right:6cqw;bottom:10cqw;font:500 3.6cqw/1.4 Inter,sans-serif;text-shadow:0 0 2cqw #000}
+.p12 .cap b{display:block;font:700 2.6cqw 'IBM Plex Mono',monospace;letter-spacing:.12em;opacity:.8;margin-bottom:1.2cqw}
+.p12 .handle{left:6cqw;bottom:4.5cqw}
+
+/* 13 adivina */
+.p13{background:#ffd23f;color:#111}
+.p13 .q{position:absolute;left:6cqw;right:6cqw;top:7cqw;font:900 11cqw/0.95 'Archivo Black',sans-serif;letter-spacing:-.02em}
+.p13 .ph{position:absolute;left:6cqw;right:6cqw;top:33cqw;height:62cqw;overflow:hidden;border:1cqw solid #111;background:#111}
+.p13 .ph img{width:100%;height:100%;object-fit:cover;filter:blur(1.4cqw) grayscale(.3);transform:scale(1.1)}
+.p13 .pista{position:absolute;left:6cqw;right:6cqw;bottom:13cqw;font:700 4cqw/1.3 Inter,sans-serif}
+.p13 .cta{position:absolute;left:6cqw;bottom:5cqw;font:700 3cqw 'IBM Plex Mono',monospace}
+.p13 .handle{right:6cqw;bottom:5cqw}
+
+/* tabla */
+table{width:100%;border-collapse:collapse;margin-top:18px;font-size:14.5px;background:var(--card);border-radius:10px;overflow:hidden}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.tablewrap{overflow-x:auto}
+.reco{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--pick);border-radius:10px;padding:18px 20px;margin-top:18px}
+.reco ol{padding-left:20px}
+.reco li{margin:6px 0}
+
+/* barra de selección */
+.bar-sel{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--bg);padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:15px}
+.bar-sel button{font:600 14px Inter;padding:8px 14px;border-radius:7px;border:0;background:var(--pick);color:#fff;cursor:pointer}
+
+@media (max-width:820px){
+  .opt{grid-template-columns:1fr;gap:20px}
+  .now{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="num">NODETECH · NODEHISTORY · POSTS DE IMAGEN</div>
+  <h1>13 formatos de post para elegir</h1>
+  <p class="lead">Arriba está lo que se publica hoy y por qué no funciona. Debajo hay 13 formatos que usan mucho las cuentas de tecnología e historia que más se comparten, cada uno armado como maqueta con una foto real de dominio público o con licencia libre. Marca los que te gusten y copia tu selección al final.</p>
+  <a class="pickbtn" href="ejemplos.html" style="display:inline-block;text-decoration:none">Ver ejemplos completos →</a>
+</header>
+
+<h2>Lo que se publica hoy</h2>
+<p class="sub">Las piezas reales de NodeTech en FB e IG (carpeta <code>data/publicaciones/node_tech/2026/10</code>).</p>
+<div class="now">
+  <img src="img/actual-1.jpg" alt="Post actual: 36 segundos">
+  <img src="img/actual-2.jpg" alt="Post actual: Taller de Dartmouth">
+  <img src="img/actual-3.jpg" alt="Post actual: JetBrains">
+</div>
+<div class="issues">
+  <div class="issue"><b>Sin imagen</b>Las tres son solo texto. En el feed compiten con fotos y video, y una pantalla negra con letras se pasa de largo.</div>
+  <div class="issue"><b>Todas iguales</b>El mismo negro, el mismo verde lima y la misma columna de texto. Ninguna pieza se distingue de las demás.</div>
+  <div class="issue"><b>Se escapan textos internos</b>«FUENTE DOCUMENTADA», «PLAN §3 · 1» y un «2026» enorme sin sentido. El titular además aparece dos veces.</div>
+  <div class="issue"><b>Mucho texto y poco gancho</b>No hay un elemento que haga detenerse: ni una cara, ni un objeto, ni un contraste visual.</div>
+</div>
+
+<h2>Opciones</h2>
+<p class="sub">Todos los datos de las maquetas son reales. Las fotos son de Wikimedia Commons y el motor ya sabe traerlas con su licencia (<code>media_sources.py</code>).</p>
+
+<!-- 1 -->
+<section class="opt" data-id="1">
+  <div class="post p1">
+    <img class="bgimg" src="img/hamilton.jpg" alt="">
+    <div class="shade"></div>
+    <p class="cap">Margaret Hamilton junto al código de navegación que su equipo del MIT escribió para el Apolo 11. <em>1969.</em></p>
+    <span class="handle">@nodehistory</span>
+  </div>
+  <div class="info">
+    <div class="num">01 · HISTORIA</div>
+    <h3>Foto icónica + una sola línea</h3>
+    <p>Una foto histórica potente a pantalla completa y una frase que la explica. Nada más: la foto hace todo el trabajo. Es el formato que hizo enormes a las cuentas de «fotos históricas», y esta foto en particular se ha vuelto viral muchas veces.</p>
+    <p class="refs">Lo usan: History Cool Kids, History in Pictures, History Photographed, Rare Historical Photos.</p>
+    <div class="tags"><span class="tag good">Alcance y compartidos</span><span class="tag good">Lo más fácil de automatizar</span><span class="tag">Imagen única</span><span class="tag">Necesita: 1 foto + 1 frase</span></div>
+    <a class="tag good" href="ejemplos.html#f01" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="opt" data-id="2">
+  <div class="post p2">
+    <div class="tit">El primer <span>«bug»</span> de la historia fue una polilla de verdad.</div>
+    <div class="meta">Harvard Mark II · 9 sep 1947</div>
+    <img class="bgimg" src="img/bug.jpg" alt="">
+    <div class="lupa"></div>
+    <span class="handle">@nodetech_es</span>
+  </div>
+  <div class="info">
+    <div class="num">02 · TECNOLOGÍA E HISTORIA</div>
+    <h3>Documento real con lupa</h3>
+    <p>Se muestra un objeto o documento original (una bitácora, una patente, un manual, un recibo) y se amplía con una lupa el detalle que cuenta la historia. Funciona porque el lector ve la prueba con sus propios ojos.</p>
+    <p class="refs">Lo usan: Smithsonian, National Archives, Computer History Museum, cuentas de «objetos de museo».</p>
+    <div class="tags"><span class="tag good">Compartidos y comentarios</span><span class="tag">Imagen única</span><span class="tag">Necesita: foto + coordenada del detalle</span></div>
+    <a class="tag good" href="ejemplos.html#f02" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="opt" data-id="3">
+  <div class="post p3">
+    <div class="top">
+      <img src="img/eniac.jpg" alt="">
+      <div class="yr">1945</div>
+      <div class="lbl">ENIAC · 27 toneladas · 5.000 sumas por segundo</div>
+    </div>
+    <div class="vs">VS</div>
+    <div class="bot">
+      <div class="phone"></div>
+      <div><div class="yr">HOY</div><p><b>Tu teléfono</b> pesa unos 200 g y hace miles de millones de operaciones por segundo.</p></div>
+    </div>
+    <span class="handle">@nodetech_es</span>
+  </div>
+  <div class="info">
+    <div class="num">03 · TECNOLOGÍA</div>
+    <h3>Antes vs. ahora</h3>
+    <p>Dos mitades: una foto de época arriba y lo actual abajo, con una sola cifra que compara. El salto de escala impresiona sin necesidad de explicar mucho, y la gente lo comparte para comentar «cómo cambió todo».</p>
+    <p class="refs">Lo usan: Visual Capitalist, Interesting Engineering, Tech Insider, cuentas de nostalgia tecnológica.</p>
+    <div class="tags"><span class="tag good">Compartidos</span><span class="tag">Imagen única o carrusel de 2</span><span class="tag">Necesita: foto antigua + 2 cifras</span></div>
+    <a class="tag good" href="ejemplos.html#f03" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="opt" data-id="4">
+  <div class="post p4">
+    <div class="tit">La computadora que llevó al ser humano a la Luna</div>
+    <img class="bgimg" src="img/agc.jpg" alt="">
+    <span class="dot" style="left:28%;top:36%">1</span>
+    <span class="dot" style="left:80%;top:34%">2</span>
+    <span class="dot" style="left:10%;top:52%">3</span>
+    <div class="legend">
+      <div><i>1</i><span>Apollo Guidance Computer: unos 32 kg y cerca de 1 MHz.</span></div>
+      <div><i>2</i><span>DSKY: los astronautas tecleaban órdenes como «verbo + sustantivo».</span></div>
+      <div><i>3</i><span>Memoria: unos 4 KB borrables y 72 KB fijos, tejidos a mano con hilo de cobre.</span></div>
+    </div>
+    <span class="handle">@nodetech_es</span>
+  </div>
+  <div class="info">
+    <div class="num">04 · TECNOLOGÍA</div>
+    <h3>Anatomía con etiquetas</h3>
+    <p>La foto de un aparato con puntos numerados y una leyenda corta. Es el formato de los desarmes y de los diagramas «cómo funciona». Se guarda mucho porque enseña algo concreto en diez segundos.</p>
+    <p class="refs">Lo usan: iFixit, ByteByteGo (en diagramas), Popular Mechanics, Interesting Engineering.</p>
+    <div class="tags"><span class="tag good">Guardados</span><span class="tag">Imagen única</span><span class="tag">Necesita: foto + 3 posiciones + 3 datos</span></div>
+    <a class="tag good" href="ejemplos.html#f04" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<!-- 5 -->
+<section class="opt" data-id="5">
+  <div class="post p5">
+    <img class="bgimg" src="img/jobs.jpg" alt="">
+    <div class="fade"></div>
+    <p class="q">Un iPod, un teléfono y un comunicador de internet. No son tres aparatos: es uno solo, y lo llamamos iPhone.</p>
+    <p class="who">Steve Jobs<span>Macworld, 9 de enero de 2007</span></p>
+    <span class="handle">@nodetech_es</span>
+    <span class="credit">Foto: 2010 · Wikimedia Commons</span>
+  </div>
+  <div class="info">
+    <div class="num">05 · TECNOLOGÍA E HISTORIA</div>
+    <h3>Frase célebre con retrato</h3>
+    <p>Una cita textual de alguien famoso, con fecha y lugar, junto a su foto. Es fácil de leer, se comparte en historias y sirve tanto para tecnología como para historia. La condición es que la cita sea literal y con fuente: las citas inventadas son el error más común en estas cuentas.</p>
+    <p class="refs">Lo usan: Brainy Quote, Founders (podcast), The Futur, cuentas de emprendimiento y liderazgo.</p>
+    <div class="tags"><span class="tag good">Compartidos en historias</span><span class="tag">Imagen única</span><span class="tag">Necesita: cita literal con fuente + retrato</span></div>
+    <a class="tag good" href="ejemplos.html#f05" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="opt" data-id="6">
+  <div class="post p6">
+    <img class="bgimg" src="img/earthrise.jpg" alt="">
+    <div class="date"><small>UN DÍA COMO HOY</small><b>24 dic 1968</b></div>
+    <p class="cap">Desde el Apolo 8, William Anders toma esta foto. Es la primera vez que unos seres humanos ven a la Tierra asomarse sobre la Luna.</p>
+    <span class="handle">@nodehistory</span>
+  </div>
+  <div class="info">
+    <div class="num">06 · HISTORIA</div>
+    <h3>Un día como hoy</h3>
+    <p>Una efeméride con la fecha bien grande. Da una excusa para publicar todos los días y el calendario se puede armar con meses de anticipación. Bien elegida la foto, es de los formatos más compartidos de historia.</p>
+    <p class="refs">Lo usan: NASA, History Channel, National Geographic, cuentas «On this day».</p>
+    <div class="tags"><span class="tag good">Constancia diaria</span><span class="tag good">Fácil de programar</span><span class="tag">Imagen única</span><span class="tag">Necesita: calendario de fechas + foto</span></div>
+    <a class="tag good" href="ejemplos.html#f06" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="opt wide" data-id="7">
+  <div class="strip">
+    <div class="post p7 cover"><div class="big">De una mujer en 1843 a <span>la web</span>: 4 momentos que lo cambiaron todo</div><div class="sw">Desliza →</div></div>
+    <div class="post p7"><div class="yr">1843</div><div class="ph"><img src="img/lovelace.jpg" alt="" style="object-position:50% 15%"></div><p class="tx">Ada Lovelace publica lo que hoy se considera el primer algoritmo pensado para una máquina.</p><div class="rail"><i class="on" style="left:0"></i><i style="left:32%"></i><i style="left:64%"></i><i style="right:0"></i></div></div>
+    <div class="post p7"><div class="yr">1936</div><div class="ph"><img src="img/turing.jpg" alt="" style="object-position:50% 20%"></div><p class="tx">Alan Turing describe una máquina universal capaz de calcular cualquier cosa calculable.</p><div class="rail"><i class="on" style="left:0"></i><i class="on" style="left:32%"></i><i style="left:64%"></i><i style="right:0"></i></div></div>
+    <div class="post p7"><div class="yr">1991</div><div class="ph"><img src="img/webserver.jpg" alt=""></div><p class="tx">Tim Berners-Lee publica la primera página web desde esta computadora del CERN.</p><div class="rail"><i class="on" style="left:0"></i><i class="on" style="left:32%"></i><i class="on" style="left:64%"></i><i class="on" style="right:0"></i></div></div>
+  </div>
+  <div class="info">
+    <div class="num">07 · CARRUSEL · TECNOLOGÍA E HISTORIA</div>
+    <h3>Línea de tiempo en carrusel</h3>
+    <p>Una portada con promesa y luego una lámina por momento: año grande, foto y una frase. La barra de abajo avanza en cada lámina y empuja a deslizar hasta el final. Los carruseles son lo que más se guarda en Instagram, y este se puede repetir con cualquier tema («evolución de los teléfonos», «del telégrafo a WhatsApp»).</p>
+    <p class="refs">Lo usan: ByteByteGo, Visual Capitalist, Kurzgesagt (en sus carruseles), Morning Brew, cuentas educativas.</p>
+    <div class="tags"><span class="tag good">Guardados y seguidores</span><span class="tag">Carrusel de 5 a 8</span><span class="tag">Necesita: 4–7 hitos con foto</span></div>
+    <a class="tag good" href="ejemplos.html#f07" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="opt" data-id="8">
+  <div class="post p8">
+    <img class="bgimg" src="img/webserver.jpg" alt="">
+    <div class="shade"></div>
+    <span class="kick">TECNOLOGÍA</span>
+    <div class="tit">Esta computadora era toda la web</div>
+    <p class="dek">El NeXT de Tim Berners-Lee en el CERN fue el primer servidor web. La etiqueta pegada dice: «Esta máquina es un servidor. ¡NO LA APAGUES!».</p>
+    <span class="handle">@nodetech_es</span>
+  </div>
+  <div class="info">
+    <div class="num">08 · TECNOLOGÍA · NOTICIAS</div>
+    <h3>Portada editorial</h3>
+    <p>Una foto a sangre con un titular grande y condensado y una bajada de dos líneas, como la tapa de una revista. Sirve para noticias del día y para historias. Se ve profesional enseguida y se adapta a cualquier tema.</p>
+    <p class="refs">Lo usan: The Verge, Wired, Brut, Bloomberg Technology, Rest of World.</p>
+    <div class="tags"><span class="tag good">Alcance</span><span class="tag good">Sirve para noticias diarias</span><span class="tag">Imagen única</span><span class="tag">Necesita: foto + titular de 5 palabras</span></div>
+    <a class="tag good" href="ejemplos.html#f08" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="opt" data-id="9">
+  <div class="post p9">
+    <img class="bgimg" src="img/wright.jpg" alt="">
+    <div class="tit">El primer vuelo de la historia fue más corto que las alas de un Boeing 747.</div>
+    <div class="bars">
+      <div class="bar a">Hermanos Wright, 1903 · 36,5 m</div>
+      <div class="bar b">Envergadura del Boeing 747 original · 59,6 m</div>
+    </div>
+    <span class="meta">17 dic 1903 · 12 segundos en el aire</span>
+    <span class="handle" style="right:6cqw;bottom:5cqw;color:#0c1a2b">@nodehistory</span>
+  </div>
+  <div class="info">
+    <div class="num">09 · HISTORIA Y TECNOLOGÍA</div>
+    <h3>Comparación que no cabe en la cabeza</h3>
+    <p>Un dato real puesto al lado de algo cotidiano para que la escala se entienda de golpe. Es de lo que más se comenta («no puede ser»), y dos barras alcanzan para explicarlo.</p>
+    <p class="refs">Lo usan: Interesting Engineering, Neil deGrasse Tyson, Tom Scott, cuentas de «datos curiosos».</p>
+    <div class="tags"><span class="tag good">Comentarios y compartidos</span><span class="tag">Imagen única</span><span class="tag">Necesita: 2 cifras comparables verificadas</span></div>
+    <a class="tag good" href="ejemplos.html#f09" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="opt" data-id="10">
+  <div class="post p10">
+    <div class="tit">Lo que pesaba una computadora</div>
+    <div class="sub">Peso en kilos · escala logarítmica</div>
+    <div class="rows">
+      <div class="row"><small>ENIAC · 1945</small><div><i style="width:90%"></i></div><div style="margin-top:1cqw">27.000 kg</div></div>
+      <div class="row"><small>Computadora del Apolo · 1969</small><div><i style="width:40%"></i>32 kg</div></div>
+      <div class="row"><small>MacBook Air · 2008</small><div><i style="width:18%"></i>1,36 kg</div></div>
+      <div class="row"><small>iPhone · 2007</small><div><i style="width:4%"></i>0,135 kg</div></div>
+    </div>
+    <div class="src"><span>Fuentes: U.S. Army, NASA, Apple</span><span>@nodetech_es</span></div>
+  </div>
+  <div class="info">
+    <div class="num">10 · TECNOLOGÍA · DATOS</div>
+    <h3>Gráfico de datos</h3>
+    <p>Un gráfico limpio, sobre fondo claro y con una sola idea en el título. Da autoridad, se guarda y se cita. Le pega a la línea de «datos con fuente» que ya tiene el motor, pero dibujado como gráfico en lugar de un número suelto.</p>
+    <p class="refs">Lo usan: Visual Capitalist, Our World in Data, Statista, The Economist.</p>
+    <div class="tags"><span class="tag good">Guardados y autoridad</span><span class="tag">Imagen única</span><span class="tag">Necesita: 3–6 cifras de la misma fuente o tipo</span></div>
+    <a class="tag good" href="ejemplos.html#f10" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="opt" data-id="11">
+  <div class="post p11">
+    <div class="tw">
+      <div class="hd"><div class="av">NH</div><div><b>NodeHistory</b><span>@nodehistory</span></div></div>
+      <p>En 1843, Ada Lovelace ya respondió la pregunta que hoy nos hacemos sobre la IA:</p>
+      <p>«La Máquina Analítica no pretende originar nada. Puede hacer todo aquello que sepamos ordenarle que haga».</p>
+      <div class="pic"><img src="img/lovelace.jpg" alt=""></div>
+    </div>
+  </div>
+  <div class="info">
+    <div class="num">11 · TECNOLOGÍA E HISTORIA</div>
+    <h3>Formato tuit</h3>
+    <p>El texto se presenta como una publicación de X con foto. Es uno de los formatos que más circulan en Instagram porque se lee como una opinión, no como un anuncio. Encaja muy bien para unir un hecho histórico con un tema actual, como la IA.</p>
+    <p class="refs">Lo usan: Daily Dose of Internet, Mind Blowing Facts, cuentas de tecnología que recopilan hilos.</p>
+    <div class="tags"><span class="tag good">Alcance y comentarios</span><span class="tag">Imagen única</span><span class="tag">Necesita: 2 frases + foto</span></div>
+    <a class="tag good" href="ejemplos.html#f11" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="opt" data-id="12">
+  <div class="post p12">
+    <img class="bgimg" src="img/pilares.jpg" alt="">
+    <div class="scale"><span>≈ 4 años luz</span></div>
+    <p class="cap"><b>PILARES DE LA CREACIÓN · HUBBLE</b>La luz tarda unos cuatro años en recorrer la columna de la izquierda, de punta a punta.</p>
+    <span class="handle">@nodetech_es</span>
+  </div>
+  <div class="info">
+    <div class="num">12 · CIENCIA Y TECNOLOGÍA</div>
+    <h3>Imagen asombrosa con escala</h3>
+    <p>Una imagen espectacular casi sin texto y una regla que muestra el tamaño. El diseño se aparta para que mande la imagen. Las fotos de NASA y ESA son de dominio público o de licencia abierta, así que hay material de sobra.</p>
+    <p class="refs">Lo usan: NASA, NASA Webb, ESA, Astronomy Picture of the Day.</p>
+    <div class="tags"><span class="tag good">Alcance</span><span class="tag">Imagen única</span><span class="tag">Necesita: foto + 1 medida</span></div>
+    <a class="tag good" href="ejemplos.html#f12" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="opt" data-id="13">
+  <div class="post p13">
+    <div class="q">¿Sabes qué es esto?</div>
+    <div class="ph"><img src="img/apple1.jpg" alt=""></div>
+    <p class="pista">Pista: en 1976 se vendía a 666,66 dólares.</p>
+    <span class="cta">Respuesta en la lámina 2 →</span>
+    <span class="handle">@nodetech_es</span>
+  </div>
+  <div class="info">
+    <div class="num">13 · CARRUSEL · TECNOLOGÍA E HISTORIA</div>
+    <h3>Adivina qué es</h3>
+    <p>La foto borrosa o recortada con una pista, y la respuesta en la segunda lámina (aquí, la Apple I). Es un juego: la gente comenta su respuesta antes de deslizar, y los comentarios son lo que más empuja el alcance.</p>
+    <p class="refs">Lo usan: Mental Floss, cuentas de trivia, Duolingo y marcas con mucha comunidad.</p>
+    <div class="tags"><span class="tag good">Comentarios</span><span class="tag">Carrusel de 2</span><span class="tag">Necesita: foto + pista + respuesta</span></div>
+    <a class="tag good" href="ejemplos.html#f13" style="display:inline-block;text-decoration:none">Ver ejemplo completo →</a>
+    <button class="pickbtn" aria-pressed="false">Me gusta este</button>
+  </div>
+</section>
+
+<h2>Comparación rápida</h2>
+<div class="tablewrap">
+<table>
+  <thead><tr><th>#</th><th>Formato</th><th>Para qué sirve</th><th>Cuenta</th><th>Dificultad para el motor</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td>Foto icónica + una línea</td><td>Alcance</td><td>NodeHistory</td><td>Baja: ya existe <code>prueba_a_la_vista</code> con foto</td></tr>
+    <tr><td>2</td><td>Documento con lupa</td><td>Compartidos</td><td>Ambas</td><td>Media: hay que ubicar el detalle en la foto</td></tr>
+    <tr><td>3</td><td>Antes vs. ahora</td><td>Compartidos</td><td>NodeTech</td><td>Baja</td></tr>
+    <tr><td>4</td><td>Anatomía con etiquetas</td><td>Guardados</td><td>NodeTech</td><td>Media: posiciones de los puntos</td></tr>
+    <tr><td>5</td><td>Frase célebre</td><td>Historias</td><td>Ambas</td><td>Baja, pero hay que cotejar la cita</td></tr>
+    <tr><td>6</td><td>Un día como hoy</td><td>Constancia</td><td>NodeHistory</td><td>Baja: calendario + foto</td></tr>
+    <tr><td>7</td><td>Línea de tiempo en carrusel</td><td>Guardados y seguidores</td><td>Ambas</td><td>Media: ya existe <code>hilo_guardable</code>, falta la foto por lámina</td></tr>
+    <tr><td>8</td><td>Portada editorial</td><td>Alcance diario</td><td>NodeTech</td><td>Baja</td></tr>
+    <tr><td>9</td><td>Comparación que no cabe en la cabeza</td><td>Comentarios</td><td>Ambas</td><td>Baja</td></tr>
+    <tr><td>10</td><td>Gráfico de datos</td><td>Autoridad</td><td>NodeTech</td><td>Media: bloque de gráfico nuevo</td></tr>
+    <tr><td>11</td><td>Formato tuit</td><td>Alcance</td><td>Ambas</td><td>Baja</td></tr>
+    <tr><td>12</td><td>Imagen asombrosa con escala</td><td>Alcance</td><td>NodeTech</td><td>Baja</td></tr>
+    <tr><td>13</td><td>Adivina qué es</td><td>Comentarios</td><td>Ambas</td><td>Baja (carrusel de 2)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<div class="reco">
+  <b>Si tuviera que elegir por ti, empezaría con 4 y los rotaría durante la semana:</b>
+  <ol>
+    <li><b>01 Foto icónica + una línea</b> para NodeHistory: es lo más barato y lo que más se comparte en historia.</li>
+    <li><b>08 Portada editorial</b> para NodeTech: sirve para noticias de cada día.</li>
+    <li><b>07 Línea de tiempo en carrusel</b> una o dos veces por semana, para guardados y seguidores.</li>
+    <li><b>13 Adivina qué es</b> una vez por semana, para generar comentarios.</li>
+  </ol>
+  <p style="margin-top:8px">Que no se repitan colores ni tipografía todos los días: cada formato tiene su propio estilo y la marca queda en el @ y en el tono del texto.</p>
+</div>
+</div>
+
+<div class="bar-sel"><span id="sel">Todavía no marcaste ninguno.</span><button id="copy" type="button">Copiar selección</button></div>
+
+<script>
+const KEY='nexa-formatos-elegidos';
+let picked=new Set();
+try{picked=new Set(JSON.parse(localStorage.getItem(KEY)||'[]'))}catch(e){}
+const label=id=>{const s=document.querySelector(`.opt[data-id="${id}"] h3`);return `${String(id).padStart(2,'0')} ${s?s.textContent:''}`};
+function render(){
+  document.querySelectorAll('.opt').forEach(o=>{o.querySelector('.pickbtn').setAttribute('aria-pressed',picked.has(o.dataset.id))});
+  const ids=[...picked].sort((a,b)=>a-b);
+  document.getElementById('sel').textContent=ids.length?'Elegidos: '+ids.map(label).join(' · '):'Todavía no marcaste ninguno.';
+  try{localStorage.setItem(KEY,JSON.stringify(ids))}catch(e){}
+}
+document.querySelectorAll('.pickbtn').forEach(b=>b.addEventListener('click',()=>{const id=b.closest('.opt').dataset.id;picked.has(id)?picked.delete(id):picked.add(id);render()}));
+document.getElementById('copy').addEventListener('click',()=>{const t=document.getElementById('sel').textContent;navigator.clipboard&&navigator.clipboard.writeText(t).catch(()=>{});document.getElementById('copy').textContent='Copiado';setTimeout(()=>document.getElementById('copy').textContent='Copiar selección',1500)});
+render();
+</script>
+</body>
+</html>

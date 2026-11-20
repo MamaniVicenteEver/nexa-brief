@@ -16,11 +16,12 @@ from __future__ import annotations
 import asyncio
 
 import structlog
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from src.adapters.publishing.factory import get_publisher_facade
 from src.core.schedule import engine, queue_repository, slot_repository
-from src.core.schedule.models import QueueEntry, QueueSource, ScheduleSlot
+from src.core.schedule.models import QueueEntry, QueueSource, QueueStatus, ScheduleSlot
+from src.presentation.api.security import require_internal
 from src.presentation.api.schemas.schedule_schema import (
     AssignVideoRequest,
     PublishNowRequest,
@@ -32,7 +33,7 @@ from src.presentation.api.schemas.schedule_schema import (
     ScheduleSlotUpdateRequest,
 )
 
-router = APIRouter(prefix="/schedule", tags=["schedule"])
+router = APIRouter(prefix="/schedule", tags=["schedule"], dependencies=[Depends(require_internal)])
 logger = structlog.get_logger(__name__)
 
 
@@ -79,6 +80,9 @@ async def create_slot(body: ScheduleSlotCreateRequest) -> ScheduleSlotResponse:
         times=body.times,
         enabled=body.enabled,
         niche_filter=body.niche_filter,
+        content_kind=body.content_kind,
+        category_id=body.category_id,
+        timezone=body.timezone,
     )
     return _slot_response(slot)
 
@@ -228,16 +232,18 @@ async def publish_now(body: PublishNowRequest) -> QueueEntryResponse:
     `queue_entry_changed` (y GET /schedule/queue).
     """
     facade = _get_facade()
-    entry = await queue_repository.create(
-        job_id=body.job_id,
-        platform=body.platform,
-        account_alias=body.account_alias,
-        scheduled_at=None,
-        source=QueueSource.IMMEDIATE,
-    )
-    task = asyncio.create_task(engine.publish_entry(facade, entry))
-    _publish_tasks.add(task)
-    task.add_done_callback(_on_publish_done)
+    try:
+        entry, _ = await queue_repository.create_immediate_once(
+            body.job_id, body.platform, body.account_alias, body.format, body.idempotency_key,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    # A crash may occur after persistence but before the task starts. The
+    # engine atomically claims queued work, so concurrent retries are safe.
+    if entry.status == QueueStatus.QUEUED:
+        task = asyncio.create_task(engine.publish_entry(facade, entry))
+        _publish_tasks.add(task)
+        task.add_done_callback(_on_publish_done)
     return _queue_response(entry)
 
 
@@ -371,3 +377,33 @@ async def planner_produce_item(item_id: str, body: PlannerProduceRequest) -> dic
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     await planner.link_production(item_id, rec["production_id"])
     return {"item_id": item_id, "production_id": rec["production_id"], "video_id": rec["video_id"]}
+
+
+# Explicit user-selected stages; independent from recurring category automation.
+from src.core.schedule.workflows import (  # noqa: E402
+    WorkflowRequest, WorkflowPatch, create_workflow, list_workflows, update_workflow,
+)
+
+
+@router.get("/workflows")
+async def get_workflows() -> list[dict]:
+    return list_workflows()
+
+
+@router.post("/workflows", status_code=201)
+async def post_workflow(body: WorkflowRequest) -> dict:
+    from src.presentation.api.routers.explainer import get_producer
+    try:
+        return await create_workflow(body, get_producer())
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@router.patch("/workflows/{workflow_id}")
+async def patch_workflow(workflow_id: str, body: WorkflowPatch) -> dict:
+    try:
+        return await update_workflow(workflow_id, body)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Programación no encontrada") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc

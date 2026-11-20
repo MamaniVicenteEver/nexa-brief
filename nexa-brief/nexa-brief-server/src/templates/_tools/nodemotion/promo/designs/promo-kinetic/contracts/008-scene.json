@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-kinetic",
+  "id": "scene.sliced",
+  "entry_id": "scene.sliced",
+  "name": "sliced",
+  "kind": "scene",
+  "label": "sliced",
+  "summary": "animación tipográfica sliced de la primera línea",
+  "variants": [
+    {
+      "type": "sliced",
+      "color": "green",
+      "max_text_lines": 1
+    },
+    {
+      "type": "sliced",
+      "color": "white",
+      "max_text_lines": 1
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 9,
+      "type": "sliced",
+      "shows": "animación tipográfica sliced de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 23,
+      "type": "sliced",
+      "shows": "animación tipográfica sliced de la primera línea",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+    "brand_texts": {
+      "brand.tag": "identidad breve en el indicador de pantalla"
+    },
+    "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-kinetic.json",
+      "pointer": "/default_scenes/8"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-kinetic.json",
+      "pointer": "/default_scenes/22"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-kinetic.json",
+      "pointer": "/scene_cycle/8"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-kinetic.json",
+      "pointer": "/scene_cycle/22"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

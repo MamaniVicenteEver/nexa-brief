@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Sparkles } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import {
@@ -22,6 +22,7 @@ export function AiMediaPanel({
   onBriefChange,
   filled,
   onAccept,
+  allowAddingBackground = false,
 }: {
   templateId: string;
   brief: string;
@@ -29,13 +30,14 @@ export function AiMediaPanel({
   /** Lo ya elegido por lugar: se respeta (lock). */
   filled: Record<string, MediaRef[]>;
   onAccept: (media: Record<string, MediaRef[]>) => void;
+  allowAddingBackground?: boolean;
 }) {
   const t = useTranslations("studio.ai");
   const [planId, setPlanId] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
   const [accepting, setAccepting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { data: plan } = useMediaPlan(planId);
+  const { data: plan } = useMediaPlan(planId, true);
   const [selection, setSelection] = useState<Record<string, string[]>>({});
 
   // Al quedar listo, arranca con la selección que propuso la IA.
@@ -51,7 +53,7 @@ export function AiMediaPanel({
     try {
       const locks = Object.fromEntries(
         Object.entries(filled)
-          .filter(([, refs]) => refs.length > 0)
+          .filter(([slot, refs]) => refs.length > 0 && !(allowAddingBackground && slot === "background"))
           .map(([slot, refs]) => [slot, refs.map((r) => r.assetId)]),
       );
       const created = await createMediaPlan({
@@ -119,80 +121,66 @@ export function AiMediaPanel({
   const planning = starting || plan?.status === "planning" || (planId !== null && !plan);
 
   return (
-    <div className="flex flex-col gap-2.5 rounded-xl border border-nb-line bg-nb-bg p-3">
-      <div className="flex items-center gap-1.5">
-        <Sparkles className="size-4 text-nb-green-dark" />
-        <h3 className="text-[13px] font-bold text-nb-ink">{t("title")}</h3>
-      </div>
-      <textarea
-        value={brief}
-        onChange={(e) => onBriefChange(e.target.value)}
-        maxLength={2000}
-        rows={3}
-        placeholder={t("briefPlaceholder")}
-        aria-label={t("briefLabel")}
-        className="resize-none rounded-lg border border-nb-line bg-nb-surface px-3 py-2 text-[12.5px] text-nb-ink outline-none placeholder:text-nb-mute focus:border-nb-green-dark focus:ring-3 focus:ring-nb-green/30"
-      />
-      <button
-        type="button"
-        onClick={start}
-        disabled={planning || accepting}
-        className="nb-btn-pill flex items-center justify-center gap-1.5 px-4 py-2 text-[12.5px] font-semibold disabled:opacity-60"
-      >
-        {planning && <Loader2 className="size-3.5 animate-spin" />}
-        {planning
-          ? t("planning", { done: plan?.progress.done ?? 0, total: plan?.progress.total ?? 0 })
-          : t("start")}
-      </button>
-      {error && <p className="text-[12px] text-nb-accent-coral">{error}</p>}
-      {plan?.status === "failed" && (
-        <p className="text-[12px] text-nb-accent-coral">{plan.error ?? t("failed")}</p>
-      )}
+    <div className="flex flex-col gap-2">
+      <label className="flex flex-col gap-1 text-[12px] font-semibold text-nb-ink">
+        {t("title")}
+        <span className="relative block">
+          <input value={brief} onChange={(e) => onBriefChange(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); if (!planning && !accepting) void start(); } }} maxLength={2000} placeholder={t("briefPlaceholder")} className="w-full rounded-xl border border-nb-line bg-nb-surface py-2 pr-10 pl-3 text-[12px] font-normal text-nb-ink outline-none placeholder:text-nb-mute focus:border-nb-green-dark" />
+          <button type="button" onClick={start} disabled={planning || accepting} aria-label={t("start")} title={t("start")} className="absolute top-1/2 right-2 -translate-y-1/2 rounded-full p-1 text-nb-ink-soft disabled:opacity-60">{planning ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}</button>
+        </span>
+      </label>
+      {planning && <p className="text-[11px] text-nb-mute">{t("planning", { done: plan?.progress.done ?? 0, total: plan?.progress.total ?? 0 })}</p>}
+        {error && <p className="text-[12px] text-nb-accent-coral">{error}</p>}
+        {plan?.status === "failed" && (
+          <p className="text-[12px] text-nb-accent-coral">{plan.error ?? t("failed")}</p>
+        )}
 
-      {plan?.status === "ready" && (
-        <div className="flex flex-col gap-3">
-          {plan.slots
-            .filter((s) => !s.locked)
-            .map((s) => (
-              <div key={s.slot} className="flex flex-col gap-1.5">
-                <p className="text-[12px] font-semibold text-nb-ink-soft">
-                  {s.label || s.slot}
-                  {s.query && <span className="ml-1 font-normal text-nb-mute">· “{s.query}”</span>}
-                </p>
-                {s.candidates.length === 0 ? (
-                  <p className="text-[11.5px] text-nb-mute">{t("noCandidates")}</p>
-                ) : (
-                  <ul className="grid max-h-[260px] grid-cols-2 gap-2 overflow-y-auto pr-0.5">
-                    {s.candidates.map((item) => {
-                      const ref = candidateRef(item);
-                      const isSelected = (selection[s.slot] ?? []).includes(ref);
-                      return (
-                        <li key={ref}>
-                          <StockCard
-                            item={item}
-                            selected={isSelected}
-                            disabled={accepting}
-                            actionLabel={isSelected ? t("selected") : t("choose")}
-                            onAction={() => toggle(s.slot, ref, s.max)}
-                          />
-                        </li>
-                      );
-                    })}
-                  </ul>
-                )}
-              </div>
-            ))}
-          <button
-            type="button"
-            onClick={() => accept(plan)}
-            disabled={accepting}
-            className="flex items-center justify-center gap-1.5 rounded-full bg-nb-ink px-4 py-2 text-[12.5px] font-semibold text-nb-surface disabled:opacity-60"
-          >
-            {accepting && <Loader2 className="size-3.5 animate-spin" />}
-            {accepting ? t("accepting") : t("accept")}
-          </button>
-        </div>
-      )}
+        {plan?.status === "ready" && (
+          <div className="flex flex-col gap-3">
+            {plan.slots
+              .filter((s) => !s.locked)
+              .map((s) => (
+                <div key={s.slot} className="flex flex-col gap-1.5">
+                  <p className="text-[12px] font-semibold text-nb-ink-soft">
+                    {s.label || s.slot}
+                    {s.query && (
+                      <span className="ml-1 font-normal text-nb-mute">· “{s.query}”</span>
+                    )}
+                  </p>
+                  {s.candidates.length === 0 ? (
+                    <p className="text-[11.5px] text-nb-mute">{t("noCandidates")}</p>
+                  ) : (
+                    <ul className="grid max-h-[260px] grid-cols-2 gap-2 overflow-y-auto pr-0.5">
+                      {s.candidates.map((item) => {
+                        const ref = candidateRef(item);
+                        const isSelected = (selection[s.slot] ?? []).includes(ref);
+                        return (
+                          <li key={ref}>
+                            <StockCard
+                              item={item}
+                              selected={isSelected}
+                              disabled={accepting}
+                              actionLabel={isSelected ? t("selected") : t("choose")}
+                              onAction={() => toggle(s.slot, ref, s.max)}
+                            />
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            <button
+              type="button"
+              onClick={() => accept(plan)}
+              disabled={accepting}
+              className="flex items-center justify-center gap-1.5 rounded-full bg-nb-ink px-4 py-2 text-[12.5px] font-semibold text-nb-surface disabled:opacity-60"
+            >
+              {accepting && <Loader2 className="size-3.5 animate-spin" />}
+              {accepting ? t("accepting") : t("accept")}
+            </button>
+          </div>
+        )}
     </div>
   );
 }

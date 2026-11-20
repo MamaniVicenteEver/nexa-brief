@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-dynamic",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "neon": {
+      "default": "#C9FF1F"
+    },
+    "ink": {
+      "default": "#1E1E1E"
+    }
+  },
+  "example": {
+    "neon": "#C9FF1F",
+    "ink": "#1E1E1E"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-dynamic/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

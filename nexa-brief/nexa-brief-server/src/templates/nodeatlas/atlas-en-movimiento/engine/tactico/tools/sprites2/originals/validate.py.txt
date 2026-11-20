@@ -1,0 +1,88 @@
+"""Valida los archivos reales y su contrato, sin Blender ni servicios externos."""
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+
+import numpy as np
+from PIL import Image
+
+from catalog import SPECS, STATES
+
+
+def require(condition, message):
+    if not condition: raise AssertionError(message)
+
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument("directory",type=Path,nargs="?",default=Path(__file__).resolve().parents[2]/"sprites")
+    args=p.parse_args(); root=args.directory
+    data=json.loads((root/"sprites.json").read_text())
+    entries=data["sprites"]
+    expected=set(SPECS)|{"submarine-submerged"}
+    require(set(data["base_sprites"])==expected,"Faltan variantes base")
+    images={}
+    for key,m in entries.items():
+        require(m["file"]==f"{key}.png",f"Ruta inesperada: {key}")
+        require(m["anchor"]==[.5,.5] and m["bow"]==[0,-1],f"Pivote/rumbo: {key}")
+        im=Image.open(root/m["file"])
+        require(im.mode=="RGBA",f"Sin RGBA: {key}")
+        require(list(im.size)==m["size"] and max(im.size)==1024,f"Resolución: {key}")
+        require(all(x%2==0 for x in im.size),f"Dimensiones impares: {key}")
+        ar=np.array(im); images[key]=ar
+        alpha=ar[:,:,3]; opaque=alpha>0
+        require(0<int(np.count_nonzero(opaque))<alpha.size,f"Alfa inválido: {key}")
+        require(not np.any(ar[~opaque,:3]),f"RGB residual bajo alfa cero: {key}")
+        require(not any(np.any(x) for x in [alpha[:5],alpha[-5:],alpha[:,:5],alpha[:,-5:]]),f"Recorte al borde: {key}")
+        sh=Image.open(root/m["mask"])
+        require(sh.mode=="RGBA" and sh.size==im.size,f"Máscara incompatible: {key}")
+        require(np.max(np.array(sh)[:,:,:3])==0,f"La máscara no es negra: {key}")
+        require(m["length_pixels"]>0 and m["length_m"]>0 and m["length_relative"]>0,f"Escala inválida: {key}")
+        require(abs(m["length_m"]/332-m["length_relative"])<1e-7,f"Metros y escala relativa discrepan: {key}")
+        for state,ref in m["states"].items():
+            require(ref in entries and entries[ref]["state"]==state,f"Estado roto: {key} / {state}")
+        if m["state"]=="normal" and m["variant"]!="submerged":
+            require(np.array_equal(ar[:,:,0],ar[:,:,1]) and np.array_equal(ar[:,:,1],ar[:,:,2]),f"Dominante de color: {key}")
+    for base in data["base_sprites"]:
+        meta=entries[base]; states=meta["states"]
+        require(set(states)==({"normal"} if base.endswith("-rotor") else set(STATES)),f"Estados incompletos: {base}")
+        original=images[base]
+        hashes=set()
+        for ref in states.values():
+            ar=images[ref]
+            require(ar.shape==original.shape,f"Cambio de encuadre: {ref}")
+            require(np.array_equal(ar[:,:,3],original[:,:,3]),f"El estado modifica la silueta: {ref}")
+            hashes.add(hashlib.sha256(ar.tobytes()).hexdigest())
+        require(len(hashes)==len(states),f"Estados idénticos: {base}")
+        mask=np.array(Image.open(root/meta["mask"]))[:,:,3]
+        expected_alpha=images["submarine"][:,:,3] if base=="submarine-submerged" else original[:,:,3]
+        require(np.array_equal(mask,expected_alpha),f"Máscara desalineada: {base}")
+    require(entries["carrier-super"]["deck_aircraft"]==12,"Número de aviones")
+    require(entries["carrier-super-empty"]["deck_aircraft"]==0,"Cubierta vacía")
+    a,b=images["carrier-super"],images["carrier-super-empty"]
+    require(a.shape==b.shape,"Cubierta vacía cambia encuadre")
+    # Las alas aparcadas pueden volar sobre el borde; el casco y el pivote siguen fijos.
+    require(np.count_nonzero(a[:,:,:3]!=b[:,:,:3])>1000,"La cubierta vacía aún contiene los aviones")
+    under=images["submarine-submerged"]
+    require(0<under[:,:,3].max()<180,"Submarino sin transparencia")
+    require(np.mean(under[under[:,:,3]>100,2])>np.mean(under[under[:,:,3]>100,0]),"Submarino sin matiz azul")
+    attachment=entries["air-helicopter-body"]["attachments"]["main_rotor"]
+    require(attachment["sprite"] in entries and all(0<x<1 for x in attachment["anchor"]),"Anclaje de rotor")
+    timing=json.loads((root/"render-times.json").read_text())
+    require(len(timing["renders"])==17,"Cantidad de renders")
+    require(all(x["threads"]==2 and x["samples"]==64 for x in timing["renders"]),"Presupuesto/calidad Blender")
+    sheet=Image.open(root/"hoja.png"); sheet.verify()
+    actual_png={p.name for p in root.glob("*.png")}
+    referenced={m[k] for m in entries.values() for k in ["file","mask"]}|{"hoja.png"}
+    require(actual_png==referenced,"PNG huérfanos o ausentes")
+    total=sum(p.stat().st_size for p in root.rglob("*") if p.is_file())
+    require(total<=40_000_000,f"Supera 40 MB: {total}")
+    result=dict(status="PASS",base_variants=len(expected),color_sprites=len(entries),
+                shadow_masks=len({m["mask"] for m in entries.values()}),png_files=len(actual_png),
+                bytes=total,megabytes=round(total/1e6,3),resolution="1024 px long side, even dimensions",errors=0)
+    print(json.dumps(result,ensure_ascii=False,indent=2))
+
+
+if __name__=="__main__": main()

@@ -1,0 +1,51 @@
+"""Descarga pública reproducible: fichas CC0 + MP3; sin registrar biblioteca."""
+import concurrent.futures,hashlib,json,subprocess,urllib.request
+from pathlib import Path
+ROOT=Path.cwd()
+old=json.loads((ROOT/'work/research/sfxmint-fichas.json').read_text())['sounds']
+def get(row):
+ slug=row['id_requested']; url='https://sfxmint.com/api/v1/sounds/'+slug
+ with urllib.request.urlopen(url,timeout=60) as r: meta=json.load(r)
+ assert meta['license']=='CC0' and meta['slug']==slug
+ url='https://sfxmint.com/dl/'+slug+'.mp3'
+ with urllib.request.urlopen(url,timeout=90) as r:
+  assert r.headers.get_content_type().startswith('audio/')
+  raw=r.read(50*1024*1024)
+ digest=hashlib.sha256(raw).hexdigest()
+ assert digest==meta['format_metadata']['mp3']['sha256'],slug
+ path=ROOT/'assets/sfx'/f'{slug}.mp3';path.write_bytes(raw)
+ pcm=subprocess.check_output(['ffmpeg','-v','error','-threads','1','-i',str(path),'-ar','48000','-ac','2','-f','f32le','-'])
+ duration=len(pcm)/8/48000
+ print(slug,duration,flush=True)
+ return slug,dict(meta,decoded_duration=duration,local_sha256=digest)
+with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool: data=dict(pool.map(get,old))
+(ROOT/'work/sonido/provider-metadata.json').write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n')
+# Los 18 ids estables y los alias que ya emiten los componentes.
+rows=[
+ ('naval-engine-low','ship-diesel-engine-01',-27,.3,.6,False,0,None),
+ ('ship-horn','ship-horn-02',-25,.03,.3,False,0,None),
+ ('helicopter','helicopter-03',-27,.15,.5,False,0,None),
+ ('jet-pass','jet-flyby-01',-25,.05,.35,False,0,None),
+ ('bomber-prop','jet-engine-02',-29,.2,.5,True,0,'Motor de reactor; NO reproduce hélices. Reserva editorial, no usar para un avión de hélice identificado.'),
+ ('bomber-jet','jet-engine-02',-29,.2,.5,True,0,None),
+ ('bomb-whistle','projectile-whistling-through-air-01',-29,.04,.2,False,0,'Proyectil genérico; no es una bomba identificada.'),
+ ('explosion-near','impact-explosion-14',-19,.01,.4,False,0,None),
+ ('explosion-far','impact-explosion-09',-29,.01,.4,False,0,None),
+ ('water-impact','ship-cannon-whistle-splash-01',-26,.05,.5,False,4.2,'Cola de compuesto cañón/silbido/agua desde 4.2 s; recorte provisional sin aprobación auditiva.'),
+ ('missile-pass','magic-scifi-rocket-15',-28,.04,.3,False,0,'Lanzamiento de diseño sci-fi, no una pasada realista.'),
+ ('torpedo','ship-diesel-engine-01',-33,.2,.4,False,0,'Motor naval grave, no propulsión de torpedo ni burbujas submarinas.'),
+ ('sonar-ping','sonar-ping-03',-31,.01,.25,False,0,None),
+ ('industrial-hum','factory-machinery-ambience-02',-33,.3,.6,True,0,None),
+ ('hit-soft','transition-whoosh-74',-33,.02,.15,False,.25,'Fragmento de transición con barrido; no golpe seco aislado.'),
+ ('whoosh','transition-whoosh-74',-33,.02,.2,False,0,None),
+ ('riser','transition-whoosh-74',-33,.15,.1,False,0,'Barrido corto; no crescendo sostenido.'),
+ ('ui-tick','sonar-ping-03',-37,.005,.06,False,0,'Inicio tonal de sonar, no click de interfaz.')]
+sounds=[]
+for id,slug,gain,fi,fo,loop,si,note in rows:
+ m=data[slug]
+ sounds.append(dict(id=id,file='assets/sfx/'+slug+'.mp3',asset_id='',duration=m['decoded_duration'],license='CC0',license_url=m['license_url'],url=m['page_url'],download_url=m['mp3_url'],provider='sfxmint',provider_sound_id=slug,sha256=m['local_sha256'],gain_db=gain,fade_in=fi,fade_out=fo,loop=loop,source_in=si,substitute=bool(note),**({'note':note} if note else {})))
+# 14º candidato también se conserva y puede pedirse explícitamente.
+m=data['ship-cannon-whistle-splash-06']
+sounds.append(dict(sounds[9],id='water-impact-far',file='assets/sfx/ship-cannon-whistle-splash-06.mp3',duration=m['decoded_duration'],source_in=2.6,gain_db=-31,url=m['page_url'],download_url=m['mp3_url'],provider_sound_id=m['slug'],sha256=m['local_sha256'],note='Compuesto cañón/agua: cola provisional desde 2.6 s, pendiente de escucha.'))
+aliases={'naval-horn':'ship-horn','helicopter-rotor':'helicopter','air-jet-pass':'jet-pass','air-prop-pass':'bomber-prop','bomb-fall':'bomb-whistle','industrial-bed':'industrial-hum','transition-soft':'whoosh','footsteps':'hit-soft'}
+(ROOT/'../_tactico/sfx.json').write_text(json.dumps(dict(version=1,file_base='template-root',sounds=sounds,aliases=aliases,notes=['MP3 originales descargados del endpoint público; sin asset_id interno.','Ganancias absolutas: cue.gain_db reemplaza catálogo; ducking adicional -9 dB durante voz.','Loop solo para los dos originales loopable; sin crossfade garantizado.','Los recortes y sustitutos requieren escucha editorial; no son firmas históricas.']),ensure_ascii=False,indent=2)+'\n')

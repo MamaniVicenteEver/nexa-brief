@@ -1,0 +1,103 @@
+{
+  "name": "territory.wash",
+  "family": "territory",
+  "estilo": {
+    "usa": [
+      "ucr2.territorio"
+    ]
+  },
+  "description": "Bandera de país completo con barrido y asentamiento translúcido; conserva islas y huecos. Úsala para explicar control territorial y cambios de frontera.",
+  "duration": 12.35,
+  "loop": true,
+  "layer": 10,
+  "states": [],
+  "params": {
+    "region": {
+      "type": "string",
+      "doc": "Nombre o código del país completo.",
+      "default": null,
+      "range": null,
+      "description": "Nombre o código del país completo."
+    },
+    "flag": {
+      "type": "string",
+      "doc": "Código de la bandera.",
+      "default": null,
+      "range": null,
+      "description": "Código de la bandera."
+    },
+    "reveal": {
+      "type": "number",
+      "default": 1,
+      "min": 0.05,
+      "max": 30,
+      "doc": "Duración del barrido en segundos.",
+      "range": {
+        "min": 0.05,
+        "max": 30
+      },
+      "description": "Duración del barrido en segundos."
+    },
+    "settle": {
+      "type": "number",
+      "default": 0.28,
+      "min": 0,
+      "max": 1,
+      "doc": "Opacidad final sobre el mapa.",
+      "range": {
+        "min": 0,
+        "max": 1
+      },
+      "description": "Opacidad final sobre el mapa."
+    },
+    "from": {
+      "type": "enum",
+      "values": [
+        "izq",
+        "der",
+        "arriba",
+        "abajo",
+        "centro"
+      ],
+      "default": "izq",
+      "doc": "Origen del barrido.",
+      "range": [
+        "izq",
+        "der",
+        "arriba",
+        "abajo",
+        "centro"
+      ],
+      "description": "Origen del barrido."
+    },
+    "border": {
+      "type": "boolean",
+      "default": true,
+      "doc": "Dibuja el contorno del país.",
+      "range": null,
+      "description": "Dibuja el contorno del país."
+    }
+  },
+  "sfx": [
+    "whoosh"
+  ],
+  "example": {
+    "id": "demo-territory-wash",
+    "t": 0,
+    "type": "territory.wash",
+    "region": "IQ",
+    "flag": "IQ",
+    "dur": 12,
+    "reveal": 1.5,
+    "settle": 0.28
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/territory.wash.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "../_atlas/data/geo/admin0.geojson"
+  ]
+}

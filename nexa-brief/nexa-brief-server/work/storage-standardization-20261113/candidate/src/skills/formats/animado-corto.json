@@ -1,0 +1,73 @@
+{
+  "schema": "nexa.format/1",
+  "format_id": "animado-corto",
+  "label": "Corto animado",
+  "duration_seconds": {
+    "min": 150,
+    "default": 180,
+    "max": 240,
+    "step": 15
+  },
+  "selection": {
+    "default_below_seconds": 240,
+    "below_format": "animado-corto",
+    "otherwise_format": "documental-largo"
+  },
+  "structure": {
+    "acts": [
+      3,
+      4
+    ],
+    "hook_max_seconds": 3,
+    "chapters": false,
+    "ending": "pregunta o cierre en bucle"
+  },
+  "media": {
+    "photos": false,
+    "clips": false,
+    "generated_images": false,
+    "only_components": true
+  },
+  "density": {
+    "segments_per_minute": [
+      5,
+      7
+    ],
+    "scenes_per_minute": [
+      15,
+      24
+    ],
+    "photos_per_minute": [
+      0,
+      0
+    ],
+    "clips_per_minute": [
+      0,
+      0
+    ],
+    "lyrics_per_minute": [
+      0.6,
+      1
+    ]
+  },
+  "words_margin": [
+    0.95,
+    1.08
+  ],
+  "chapter_seconds": [
+    75,
+    150
+  ],
+  "domain_components": [],
+  "aspects": [
+    "9:16",
+    "16:9"
+  ],
+  "narrative": {
+    "strategy_variant": "short"
+  },
+  "publication": {
+    "chapters": false,
+    "description_variant": "short"
+  }
+}

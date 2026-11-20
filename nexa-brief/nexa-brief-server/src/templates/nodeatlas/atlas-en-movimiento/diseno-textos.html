@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Estilos de texto · Atlas en Movimiento</title><link rel="icon" href="data:,">
+<style>
+@font-face{font-family:AtlasDisplay;src:url('assets/fonts/AtlasIntroUI.ttf');font-weight:700 900;font-display:block}
+@font-face{font-family:AtlasEditorial;src:url('assets/fonts/AtlasEditorial.ttf');font-weight:700;font-display:block}
+@font-face{font-family:AtlasIntroTitle;src:url('assets/fonts/AtlasIntroTitle.ttf');font-weight:400;font-display:block}
+:root{font:16px/1.5 system-ui,sans-serif;--bg:#0b1620;--fg:#edf0f2;--muted:#b4bec7;--line:#43515c;color:var(--fg);background:var(--bg);color-scheme:dark}
+*{box-sizing:border-box}body{margin:0;background:var(--bg)}body.light{--fg:#17202a;--muted:#405160;--line:#a5a097;color-scheme:light}
+header,main,footer{width:100%;padding:28px 48px}header{padding-bottom:0}h1{font-size:36px;line-height:1.15;margin:0 0 12px}p{margin:8px 0}a{color:inherit}nav{display:flex;gap:24px;flex-wrap:wrap;margin:24px 0}nav a{font-size:14px}.controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:18px 0}label{display:flex;align-items:center;gap:10px}button,select{font:inherit;color:inherit;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:9px 14px}button{cursor:pointer}button:hover{border-color:currentColor}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #66c6e3;outline-offset:3px}input[type=range]{min-width:160px;flex:1;accent-color:#66c6e3}output{font-variant-numeric:tabular-nums;min-width:85px}.muted,.source{color:var(--muted)}.source{font-size:14px;overflow-wrap:anywhere}.group{font-size:34px;margin:60px 0 24px;padding-top:30px;border-top:1px solid var(--line)}article{padding:18px 0 50px;border-bottom:1px solid var(--line);scroll-margin-top:20px}article h3{font-size:25px;font-weight:650;margin:0 0 8px}.mark{font:600 11px/1.4 system-ui,sans-serif;letter-spacing:.07em;display:inline-block;border:1px solid var(--line);padding:3px 7px;border-radius:3px;margin-left:12px;vertical-align:middle}.sample{width:100%;overflow-x:auto;margin:22px 0 18px}canvas{display:block}.swatches{display:flex;gap:14px 28px;flex-wrap:wrap;margin:20px 0}.swatch{display:flex;gap:10px;align-items:center;font-size:14px}.swatch i{width:38px;height:38px;border:1px solid #82919d;display:block;flex:none}.swatch small{display:block;color:var(--muted)}.swatch code{font-size:15px}.spec{display:grid;grid-template-columns:150px 1fr;gap:8px 20px;margin:22px 0}.spec dt{color:var(--muted)}.spec dd{margin:0;overflow-wrap:anywhere}#status{font-size:14px;color:var(--muted)}#error{color:#fa9292;white-space:pre-wrap}footer{color:var(--muted);font-size:14px}#transcripcion .sample{margin:16px 0 0}#transcripcion h3{font-size:30px}
+@media(max-width:700px){header,main,footer{padding-left:20px;padding-right:20px}h1{font-size:30px}.spec{grid-template-columns:110px 1fr;font-size:14px}.group{font-size:28px}}
+</style>
+</head>
+<body>
+<header>
+<p style="padding:14px 18px;border:1px solid #ff0000;background:#000;color:#fff"><a href="diseno-textos-versiones.html" style="font-weight:700;text-decoration:none">VER LAS 4 NUEVAS VERSIONES →</a> · <a href="diseno-textos-v1.html">V1 Negro / blanco / rojo</a> · <a href="diseno-textos-v2.html">V2 Oscura</a> · <a href="diseno-textos-v3.html">V3 Menta</a> · <a href="diseno-textos-v4.html">V4 Blanca / azul</a></p>
+<h1>Los textos del video, en grande</h1>
+<p class="muted">La guerra de los petroleros · Letra, color, contorno y movimiento actuales.</p>
+<div class="controls"><label>Fondo <select id="background"><option value="#0b1620">Oscuro · #0b1620</option><option value="#000000">Negro · #000000</option><option value="#f4efe3">Claro · #f4efe3</option></select></label><button id="play">Pausar</button><label>Velocidad <select id="speed"><option value="0.5">0,5×</option><option value="1" selected>1×</option><option value="1.5">1,5×</option><option value="2">2×</option></select></label></div>
+<nav aria-label="Secciones"><a href="#transcripcion">Transcripción</a><a href="#rotulos">Rótulos</a><a href="#tarjetas">Tarjetas con texto</a><a href="#intro-cierre">Intro y cierre</a></nav>
+<p id="status" role="status">Cargando fuentes locales…</p>
+</header>
+<main><p id="error" role="alert" hidden></p><div id="samples"></div></main>
+<footer>Medidas originales a 1080 × 1920. Las muestras amplían la tipografía al menos 2,5×; las líneas largas se redistribuyen para leerlas. Las cajas que acompañan a las letras son las del estilo original. <a href="work/texto/INVENTARIO.md">Inventario y código de origen</a>.</footer>
+<script type="module" src="work/texto/solo-estilos.js"></script>
+</body></html>

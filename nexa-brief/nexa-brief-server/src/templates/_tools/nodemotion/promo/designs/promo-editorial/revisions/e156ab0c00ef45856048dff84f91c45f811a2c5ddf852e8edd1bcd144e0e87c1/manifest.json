@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-editorial",
+  "family": "promo",
+  "demo_folder": "nodemotion/commercial/promo-editorial",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "assets/media",
+    "components"
+  ],
+  "source_sha256": "78801ec982216de8106498b7987ce6053e8591e6f16be38e24b4c4164f48dc80",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/promo-editorial",
+    "config": "nodemotion/commercial/promo-editorial/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-editorial/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-editorial/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "0e23a36a903f952ed1a34799136df2eddf487e81c9459771b7638fb215e66deb.webp",
+    "assets/media/coach-1.jpg": "e4c7cdf0517d9bbe9c335399e2c256d4c6f3dfbfe7fe23cb2497448ef325b7e1.jpg",
+    "assets/media/coach-2.jpg": "292c85e5524e7e875bdd62aa1f0b30f985612e92b814619e464fc9538ac8b43f.jpg",
+    "assets/media/coach.mp4": "654c277a75d37fe0e91b08ad1012e8a561d2f36228046aac476a8835ae8e8bbb.mp4",
+    "assets/media/graded/coach-1.bw.jpg": "3aaf46083c890b66487014da006b2f12b6712b518b556d67e82f913569cfbe65.jpg",
+    "assets/media/graded/coach-2.bw.jpg": "ffc1184709679af19da48fd98589afe05943bd84f724f6ff331178373b801cf1.jpg",
+    "assets/media/graded/coach.bw.mp4": "4f6a2ad8f1c152eaeee8b42f4cbaf4c4cd69e9e2384575f05520b71ae5b2c035.mp4",
+    "assets/media/graded/match-1.bw.jpg": "5c28012f4c2f1562dbfb917e2bc85c6ef92da4e3838bab432231eafdb38f147d.jpg",
+    "assets/media/graded/match.bw.mp4": "c983a95e7a21d6792209f03eceb84faf993096c7f104d200913a0463a18b614a.mp4",
+    "assets/media/graded/soccer-1.bw.jpg": "3a8befb3d89f8a5924c9a269f5b09f35de982cca29930788c19e26a1e2926db9.jpg",
+    "assets/media/graded/soccer-2.bw.jpg": "59f438a9d96b958da307bc653e7ad0242ea29f1685c8c82722542a229d5502e5.jpg",
+    "assets/media/graded/soccer.bw.mp4": "d184376eda655a58bd6b6a1a1a633a67120fb3b424b0a4187748ba9ea0682443.mp4",
+    "assets/media/graded/stadium-1.bw.jpg": "73b33a3c3c888c10bebbc66f49575d3ad827c298dedca710cff882816c56eeec.jpg",
+    "assets/media/graded/stadium.bw.mp4": "326d75246a3065e3867af58557ee4397a2dc99d2c59958519ef9cc8e61c3e1de.mp4",
+    "assets/media/graded/team-win-1.bw.jpg": "a228c15cd44de9cec04ff651c9b0fc05e61bd61a15786042e07d14ffe6edfc0d.jpg",
+    "assets/media/graded/team-win-2.bw.jpg": "50fa9eecb7d360c6fbb415a690ab7970f5b7eb9eaa453dcaba0a58408acbba6a.jpg",
+    "assets/media/graded/team-win.bw.mp4": "53a8fab2212cf07d88b526436409050aa6aeff55464bf75faafc01691d801ce8.mp4",
+    "assets/media/graded/trophy-1.bw.jpg": "b26b83c48e24a058932e48624bce99593d39e286295069a39d716dd917fef0a7.jpg",
+    "assets/media/graded/trophy.bw.mp4": "aac71f3491dfc68225d7d2adc54f59123469fa841fb3cb6903c3673947cf7939.mp4",
+    "assets/media/match-1.jpg": "629972bf5ec8e660659470137acc398265115641740807a5fb9e268fe2eb0bd3.jpg",
+    "assets/media/match.mp4": "8ae54b7cca82aaa1063c40133e2e1c16cb22c35aa2b9c0993e5dd75609eb919f.mp4",
+    "assets/media/soccer-1.jpg": "c62897fef52e3484e9ec5aeab137ef4f046c6ec55834bc8bb360af57e43004bf.jpg",
+    "assets/media/soccer-2.jpg": "6d2a26279086c0ad23ab7334303b2316358b9e95014bb6301f241e406de6d60c.jpg",
+    "assets/media/soccer.mp4": "a6b6e586f6cdc31a4b57c63e751cc815176d4109b98f487221bec63005081a2d.mp4",
+    "assets/media/stadium-1.jpg": "b3cac420bb746f64347a4322f00f5c14aa0e2b1f769f9199f9cd3e3172b1b378.jpg",
+    "assets/media/stadium.mp4": "5c881d3a88f204cad26abc2059146e1ab6aad32d6a779b85a44017eb8a74daaf.mp4",
+    "assets/media/team-win-1.jpg": "6e23567e7f5fc784b3e81f69d0a8ca5b42ff4ec14e6846fd85a5260c0d44c46b.jpg",
+    "assets/media/team-win-2.jpg": "156c17f2b8f5d4c8260ec82df15a28b1b1b47f1a61e5a8614ec51ffdbbf3862e.jpg",
+    "assets/media/team-win.mp4": "358d7d6286c772f7b676ebfd47534c3c2be5f48678a39afaf6a6dbd5cefc0b0c.mp4",
+    "assets/media/trophy-1.jpg": "949d5045172a4141e1abec26ef4a00fb44c3e909aac2a0a15d52cd3083f446da.jpg",
+    "assets/media/trophy.mp4": "c4b0a61e1f528574ddd035f69b1bdcbdcc0b1daca51b88e752a3f0c2b38208a6.mp4",
+    "assets/song.mp3": "81abb007f7646f57241b671000f3a2fcd8f49d964af612d7061789f449352a03.mp3"
+  },
+  "revision": "e156ab0c00ef45856048dff84f91c45f811a2c5ddf852e8edd1bcd144e0e87c1"
+}

@@ -1,0 +1,282 @@
+{
+  "viewport": [
+    1080,
+    1920
+  ],
+  "flags": [
+    "--use-gl=angle",
+    "--use-angle=swiftshader",
+    "--enable-unsafe-swiftshader",
+    "--ignore-gpu-blocklist",
+    "--num-raster-threads=1",
+    "--renderer-process-limit=1",
+    "--disable-dev-shm-usage"
+  ],
+  "errors": [],
+  "externalRequests": [],
+  "determinism": [
+    {
+      "case": "fx.explosion",
+      "background": "dark",
+      "hashes": {
+        "0.12": "340dd517bdcd7d908f5f5c4d3f54b9fd79fae935f277f5cc3fb09e6dddae545a",
+        "1.0639999999999998": "71f897e83739f382a6e055602d37f800cd2d42f4bbf9c2339a139dea595c65c6",
+        "2.548": "96f15fccb2b0fa26a71aa6164388b75ebe20c94baa233cc13a80ff0dd8b39c35"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.explosion",
+      "background": "light",
+      "hashes": {
+        "0.12": "1f231a60e4823e310f98b90e4ab2c1498ead22ff54c2a23ec3f63820343b4914",
+        "1.0639999999999998": "f4bd898a76ffe3832b120bc11f5c951d428111aeae0fd162689a32faa8e57111",
+        "2.548": "355d8d3773b5afae4b610b5e27f84d4bd4114d203b2b206c90b8c5970cc26f35"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.impact",
+      "background": "dark",
+      "hashes": {
+        "0.12": "8f146a6ec96e4fa574f4a94c51baf4abe73496234c1c00b8893af93b4c8818e7",
+        "0.6080000000000001": "382fa8032e621ec8abebb9c21cc972a69ccb0fc8b18d9b07044d28d6c2bda230",
+        "1.4560000000000002": "cdd83c1b4d6c6f47cc158033523ee865dd5e6f188c3a9aae7d2cb5a96fad9560"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.impact",
+      "background": "light",
+      "hashes": {
+        "0.12": "9a1f2d5de9ae4d5ba860d6452a1b8ef59a962f4f17d1d588f130657708559b9e",
+        "0.6080000000000001": "7df2600fabf02366fd475550386c92c3f5f0cd98a5c50ffc687d17b6b3f19ca5",
+        "1.4560000000000002": "744ef5088d4eca12ce5c3c85a6c2261022d13ce02a225afb776b381ed512c30b"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.shockwave",
+      "background": "dark",
+      "hashes": {
+        "0.12": "ae741c0b243595ab0f3c0ec4a797d2670ae9cce22bfd4bc46d91becab1a76604",
+        "0.9119999999999999": "64ec94010c4bf7ec54e83febe7b964b0d06e76319240437bc7129b1eb250d8bf",
+        "2.184": "88ea607691e7576f24cfe66ba7382f11e6ea72cf216fd0ac16ad711cfa088724"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.shockwave",
+      "background": "light",
+      "hashes": {
+        "0.12": "592dbeca7fe2dc0a87ccc68bffd49df42ea25def927dedafccf02f55fdf6423b",
+        "0.9119999999999999": "8f8dea378f814fc2d9e4d484f42931f1804e7eb4984b8a26b0d8334375f4c161",
+        "2.184": "1eac74e8c4437a8ea45d88e5607e24180603d964b229a69d5e28c166235bb84a"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.smoke",
+      "background": "dark",
+      "hashes": {
+        "0.12": "c9a533429e8f303ddf340ceeb88659d8ddd8ace3a0be1954e229d1211870b0c5",
+        "3.04": "88598a04d9bafb4c98361bbb818843c3c6842438d0496be83fdb6c2547cffd6d",
+        "7.28": "32507f2d9395cffdc27ed9b1633cb802d635a1f4fbf1f2687bf32f36c3cb73d6"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.smoke",
+      "background": "light",
+      "hashes": {
+        "0.12": "3551f73d218f03d53384fcd35927e47fc5549eb3dc4e4619df812883e314c338",
+        "3.04": "944a116ea998cdeeabb59724f6721aa627b3b9aaa599c8843bf209aba117566e",
+        "7.28": "0af91e00ec77577e1c126cad78c8ea47f836b8bb59087d303c9ec6b3684fe5e1"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.fire",
+      "background": "dark",
+      "hashes": {
+        "0.12": "01c03f65fe3c8d82e7efb688684ba0c6bd6c9a143fe5706944ae956975b9791a",
+        "3.04": "f2671c1cb20030f20396f17c5eba99c112ebb0615dc8bbe36661b878e0dfcb03",
+        "7.28": "94e546d4301dfffb5d8fcd53c92c5d0f69ca332c4d7596cec83de479a8b06441"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.fire",
+      "background": "light",
+      "hashes": {
+        "0.12": "927a53ab7520e8bb2b46452c39d14d01b66b12e572812ebf041edec130ce6fb1",
+        "3.04": "6d7257980b950ef73c04a326bc7b3ae56bfc4ebcc86e773d3107bcfd9671a37a",
+        "7.28": "a1065dfde8489f45afaf3c36cdd5eb52b95eb8016d9101c8d8f3c1b3310bd6a8"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.ring",
+      "background": "dark",
+      "hashes": {
+        "0.12": "f532938d144069336205bad204a77bc505e845bdbe60a4383df50db3caf63c5c",
+        "2.2800000000000002": "6be544ea202be572f47165310680bbed5185a191c3e0a9fb698e0982b668d59b",
+        "5.46": "2d0fcbe553fc134284c0ae67a07f4acf8aad4b1a22c7c1550bd8f04adc31e283"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.ring",
+      "background": "light",
+      "hashes": {
+        "0.12": "11830e5bcc9c75229bfaed946e9fe038c57ca2185a94d1a964f7bff25c2524f5",
+        "2.2800000000000002": "e768faa56343ee9dfc55d2257f3aca3fbb29cfd6b10eee05678bb0d097c5570b",
+        "5.46": "7c7aca37b7f8d4cf715521860f83b4f5e403f17a0d217b9f50279714375b44f4"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.flash",
+      "background": "dark",
+      "hashes": {
+        "0.12": "e5e2e80a9c01aedc5775c3cb43cd7ca7cc280a4e7347be83355b7f9ca8b5b383",
+        "0.171": "f273d9b7b24ea36baecc9377d1ff30a2653c1853bdb73eff294f7a3b63830479",
+        "0.40950000000000003": "bb4efa3d853707fa6d90097c661bee491226589b35969baeb347c0ce6dfac968"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.flash",
+      "background": "light",
+      "hashes": {
+        "0.12": "c146b27fbc9eccae8e1124458f4b7f2fcc7c71b3a2ec20942e8bcfd6f97fcef0",
+        "0.171": "29c15aa26bd53630c08ee5db87de9b8836820899d8586f63ad4447140039da7e",
+        "0.40950000000000003": "befe87bec4078ebafccb00ef6a2886b994aca006ad5e0876e3f99f030fb3ede0"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.missile",
+      "background": "dark",
+      "hashes": {
+        "0.12": "c33a8131380dd23c4d2de04ed5add7fab5d0eb89c11af652ef4649e3581da475",
+        "1.68": "2629c4c7ad4ed6273bcb392740efcd77e2c466ea2cf3fbf38f91a530809dada5",
+        "2.8": "f6cf56ea0d687f49f4b0504745d6d64bd9d8c9b7c55af7de7c0f615b9d7246ad"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.missile",
+      "background": "light",
+      "hashes": {
+        "0.12": "378d2ca2f4e7d2e201e1b343b7033a32f5dbea84c8160448ab74c9353ea65de8",
+        "1.68": "b6c58c8bec0118dc23be900e44a22d2b19feb0dbf9d65674a352332d92a7d1fc",
+        "2.8": "86253049610c4867560a586082b6ef391a142ad1a18cec734d96e2ecf1e7f47a"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.salvo",
+      "background": "dark",
+      "hashes": {
+        "0.12": "476a3dc91de68384005cbf16de8e08d05975584752c9064e30f0386da820c2ad",
+        "1.68": "e27218afeb70bbf132b49bcb36df3a38a55a5e423f05ec6c8023f4b4474a450c",
+        "3.2": "b186669c580a35359a3b9c50e7bcb55069a6e8cb7a8e8da446bdebaa0e2f8080"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.salvo",
+      "background": "light",
+      "hashes": {
+        "0.12": "c0a6e3ac7d31d1c04ec1d6c24877d427076a9b2e4167ca2110e0a2b0cfc529b2",
+        "1.68": "3d52360d30bb23e04959a6a58f0c29fc44f220913034f1179a7f977baf873c9b",
+        "3.2": "0671842affe87afd90154162f6ec33818dbac8d290e17b36279e41c7b7908a13"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.torpedo",
+      "background": "dark",
+      "hashes": {
+        "0.12": "101753b0bee67a8e139d57263de6fc1b57d139c30068e86ad4a27d5988579171",
+        "2.8": "b9164cc3e00a6ad5214aebf6731d9bf0872e6733d519d18ddc1c457f3948dbfa",
+        "4.4": "7ea472f7b162465b457e77bd2922eb7d1fb19688fd7d059137a8a09084e12c20"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.torpedo",
+      "background": "light",
+      "hashes": {
+        "0.12": "0088dd7ddb74cf276dce5028af8f780389a56aa104a5e5584f058fe50959fe4d",
+        "2.8": "1a35af088ebc3b2d9274014fb189a0a32c80ade49d986a7951033c402d4416f1",
+        "4.4": "fba0074b647c747874eb875ffbea7a635102370ce00c11c9e9896d420aaf8dc7"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.shell",
+      "background": "dark",
+      "hashes": {
+        "0.12": "4e3e4792b08faacc189c7a8c1d0de31e7ea392ba455d025bcd03b86a39393d0b",
+        "0.385": "b578b44d6c9f91b023f0310c6be63a11f82465dc74d7b89fea89c20af684377d",
+        "0.9500000000000001": "0cb999368473254ee9d81f09ddc817d6b880ec2e44051bba118dc15f474302d9"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "strike.shell",
+      "background": "light",
+      "hashes": {
+        "0.12": "efeead6aa52f59d8c5fc967578ce8a3bda6625721a0e409b5c4d1dd23792eac2",
+        "0.385": "7d13dab929fef0d3f063dc38947751d60f2caa9dad24d0c27f4577855be127fc",
+        "0.9500000000000001": "6950c261c7c24358d973bbba6c78e08f071c4bc475aa7997c8724657154d86da"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "trail.contrail",
+      "background": "dark",
+      "hashes": {
+        "0.3": "fac271d86f312169560f1d28aaae0fa6ce8b783101519f3909124aa36133aea1",
+        "3.8": "2bc1398702c65531bd9f2fa0d97cf2f0cff4ae3c0f936f35db4357e8dca7c588",
+        "7.6": "f1f4c575106052a4ad35e44952207f526062d9dd0ceb6dd902e4103eefa78c79"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "trail.contrail",
+      "background": "light",
+      "hashes": {
+        "0.3": "6dfc639e1715e752a2fb67491bf2a2ef850196a062a7522830986c1009893be9",
+        "3.8": "f8c5b7841f0f889354da81b559da1a9f5c6855f36241370af64340c7e02627a7",
+        "7.6": "bfcced01b478374c6da4b9ce3df6eabae6a429bc2a784ce21c69601f40054065"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.explosion-air",
+      "background": "dark",
+      "hashes": {
+        "0.12": "29567de4e06832dd5f75b2ded23da664387ee43130afbcfb1bba2612fb6ee0b1",
+        "1.0639999999999998": "33727743eb596f7ae93fd5d65bb80c853d58f9e3d953303ab1e0285804633e45",
+        "2.548": "770b15c85fcdccb7c31d7fcd4f3498bf7dfce6267999b3830d127a7b91e20efb"
+      },
+      "reverseSeek": true
+    },
+    {
+      "case": "fx.explosion-air",
+      "background": "light",
+      "hashes": {
+        "0.12": "13170263e8cc23bb93f950e691e9bd01efc47e75a0b671d1681bfd60d593d702",
+        "1.0639999999999998": "64aa0f44aab94570ab36968a8b443cc07394cdd25bd10c0f4fd643693b063fff",
+        "2.548": "b2b50003f935595274fd6cb931e8d0137045d27afa54ccd2dde323ab6e656977"
+      },
+      "reverseSeek": true
+    }
+  ],
+  "benchmarks": [],
+  "fontSubstitution": "Archivo-900.ttf missing in shared workspace; QA server serves local assets/fonts/AtlasEditorial.ttf for labels.js import only. FX draw no text.",
+  "chromium": "151.0.7922.34"
+}

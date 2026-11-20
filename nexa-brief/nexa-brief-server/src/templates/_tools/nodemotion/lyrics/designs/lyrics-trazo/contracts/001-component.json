@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "trazo.intro",
+  "entry_id": "trazo.intro",
+  "kind": "component",
+  "label": "Intro escrita a mano",
+  "summary": "Círculo que crece con rayos, título escrito a mano y artista tecleado.",
+  "component": {
+    "name": "trazo.intro",
+    "label": "Intro escrita a mano",
+    "summary": "Círculo que crece con rayos, título escrito a mano y artista tecleado.",
+    "default": true,
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "Let Out The Beast",
+        "doc": "Título (config.intro.title)"
+      },
+      "artist": {
+        "type": "string",
+        "default": "Ombré ft. KTHLN",
+        "doc": "Artista (config.intro.artist)"
+      },
+      "duration": {
+        "type": "number",
+        "default": 3.2,
+        "doc": "Segundos de la demo",
+        "min": 1,
+        "max": 10
+      }
+    },
+    "tags": [
+      "intro"
+    ],
+    "file": "components/intro.js",
+    "demo": {
+      "title": "Let Out The Beast",
+      "artist": "Ombré ft. KTHLN"
+    },
+    "preview": {
+      "t": 2.6
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "Let Out The Beast",
+      "doc": "Título (config.intro.title)"
+    },
+    "artist": {
+      "type": "string",
+      "default": "Ombré ft. KTHLN",
+      "doc": "Artista (config.intro.artist)"
+    },
+    "duration": {
+      "type": "number",
+      "default": 3.2,
+      "doc": "Segundos de la demo",
+      "min": 1,
+      "max": 10
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/showcase/components.json",
+      "pointer": "/components/0"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

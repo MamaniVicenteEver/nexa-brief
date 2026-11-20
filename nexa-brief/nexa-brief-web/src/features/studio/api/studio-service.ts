@@ -2,8 +2,12 @@ import type { JobStage } from "@/features/create-video/types";
 import { httpClient, resolveApiUrl } from "@/infrastructure/api/http-client";
 import type {
   Draft,
+  DraftDetails,
   DraftRequest,
   DraftStatus,
+  DraftThumbnailOption,
+  DraftThumbnailOptionId,
+  DraftThumbnails,
   MediaPlan,
   RenderOptions,
   StockImportResult,
@@ -18,9 +22,22 @@ const SLOW_TIMEOUT_MS = 60_000;
 
 // ── Drafts ──────────────────────────────────────────────────────────────────
 
+interface DraftDetailsDto {
+  song_name: string;
+  artist: string;
+  language: string | null;
+  copies: Record<string, { title: string; description: string; tags: string[]; strategy: string; pinned_comment?: string }>;
+  generated_at: string | null;
+  edited: boolean;
+  research?: string;
+}
+
 interface DraftDto {
   draft_id: string;
   template_id: string;
+  name?: string;
+  original?: boolean;
+  song_notes?: string;
   status: DraftStatus;
   stage: JobStage;
   errors: string[];
@@ -33,13 +50,55 @@ interface DraftDto {
   preview_url: string | null;
   job_id: string | null;
   recoverable: boolean;
+  details?: DraftDetailsDto | null;
+  thumbnails?: DraftThumbnails | null;
+  thumbnail_error?: string | null;
+  pending?: string[];
+  created_at: string;
   updated_at: string;
+}
+
+function mapDetails(dto: DraftDetailsDto): DraftDetails {
+  return {
+    songName: dto.song_name ?? "",
+    artist: dto.artist ?? "",
+    language: dto.language ?? null,
+    copies: dto.copies ?? {},
+    generatedAt: dto.generated_at ?? null,
+    edited: Boolean(dto.edited),
+    research: dto.research ?? "",
+  };
+}
+
+function detailsDto(details: DraftDetails): DraftDetailsDto {
+  return {
+    song_name: details.songName,
+    artist: details.artist,
+    language: details.language,
+    copies: details.copies as DraftDetailsDto["copies"],
+    generated_at: details.generatedAt,
+    edited: details.edited,
+    research: details.research,
+  };
+}
+
+function mapThumbnails(value: DraftThumbnails | null | undefined): DraftThumbnails | null {
+  if (!value) return null;
+  return {
+    ...value,
+    urls: Object.fromEntries(
+      Object.entries(value.urls ?? {}).map(([option, url]) => [option, resolveApiUrl(url)]),
+    ),
+  };
 }
 
 export function mapDraft(dto: DraftDto): Draft {
   return {
     draftId: dto.draft_id,
     templateId: dto.template_id,
+    name: dto.name ?? "",
+    original: Boolean(dto.original),
+    songNotes: dto.song_notes ?? "",
     status: dto.status,
     stage: dto.stage,
     errors: dto.errors ?? [],
@@ -52,6 +111,11 @@ export function mapDraft(dto: DraftDto): Draft {
     previewUrl: dto.preview_url ? resolveApiUrl(dto.preview_url) : null,
     jobId: dto.job_id,
     recoverable: dto.recoverable,
+    details: dto.details ? mapDetails(dto.details) : null,
+    thumbnails: mapThumbnails(dto.thumbnails),
+    thumbnailError: dto.thumbnail_error ?? null,
+    pending: dto.pending ?? [],
+    createdAt: dto.created_at,
     updatedAt: dto.updated_at,
   };
 }
@@ -84,10 +148,61 @@ export async function renderDraft(draftId: string, options: RenderOptions) {
       method: "POST",
       body: {
         recorder_engine: options.recorderEngine,
+        background_opacity: options.backgroundOpacity,
         publish_accounts: options.publishAccounts,
+        outputs: options.outputs,
+        formats: options.formats,
+        account_formats: options.accountFormats ?? {},
       },
       timeoutMs: SLOW_TIMEOUT_MS,
     },
+  );
+}
+
+/** «Video original»: crea (o devuelve el vigente) el prototipo con la canción y el fondo de la
+ * plantilla; se previsualiza y se prepara solo. */
+export async function createOriginalDraft(templateId: string, songNotes = ""): Promise<Draft> {
+  return mapDraft(
+    await httpClient<DraftDto>(
+      `/api/v1/templates/${encodeURIComponent(templateId)}/original-draft`,
+      {
+        method: "POST",
+        body: { song_notes: songNotes.trim() || null },
+        timeoutMs: SLOW_TIMEOUT_MS,
+      },
+    ),
+  );
+}
+
+export async function renameDraft(draftId: string, name: string): Promise<Draft> {
+  return mapDraft(
+    await httpClient<DraftDto>(`/api/v1/drafts/${draftId}`, { method: "PATCH", body: { name } }),
+  );
+}
+
+export async function deleteDraft(draftId: string): Promise<void> {
+  await httpClient(`/api/v1/drafts/${draftId}`, { method: "DELETE" });
+}
+
+/** Genera los textos de publicación (responde enseguida; el resultado llega por draft_changed). */
+/** Genera los textos; `songNotes` = información de la canción para la IA (opcional). */
+export async function prepareDraft(draftId: string, songNotes = ""): Promise<Draft> {
+  return mapDraft(
+    await httpClient<DraftDto>(`/api/v1/drafts/${draftId}/prepare`, {
+      method: "POST",
+      body: { song_notes: songNotes.trim() },
+      timeoutMs: SLOW_TIMEOUT_MS,
+    }),
+  );
+}
+
+export async function saveDraftDetails(draftId: string, details: DraftDetails): Promise<Draft> {
+  return mapDraft(
+    await httpClient<DraftDto>(`/api/v1/drafts/${draftId}/details`, {
+      method: "PUT",
+      body: detailsDto(details),
+      timeoutMs: 120_000,
+    }),
   );
 }
 
@@ -114,10 +229,16 @@ export async function searchStock(
   });
 }
 
-export async function importStockItem(item: StockItem): Promise<StockImportResult> {
+export async function importStockItem(
+  item: StockItem,
+  templateId?: string,
+  category?: string,
+): Promise<StockImportResult> {
   return httpClient<StockImportResult>("/api/v1/stock/import", {
     method: "POST",
     body: {
+      template_id: templateId,
+      category,
       provider: item.provider,
       provider_id: item.provider_id,
       kind: item.kind,
@@ -156,4 +277,51 @@ export async function acceptMediaPlan(planId: string) {
 /** Mismo formato que `candidate_ref` del backend. */
 export function candidateRef(item: StockItem): string {
   return `${item.provider}:${item.provider_id}`;
+}
+
+export async function prepareDraftThumbnails(draftId: string): Promise<Draft> {
+  return mapDraft(
+    await httpClient<DraftDto>(`/api/v1/drafts/${draftId}/thumbnails`, { method: "POST" }),
+  );
+}
+
+export async function chooseDraftThumbnail(
+  draftId: string,
+  option: DraftThumbnailOptionId,
+): Promise<Draft> {
+  return mapDraft(
+    await httpClient<DraftDto>(`/api/v1/drafts/${draftId}/thumbnails`, {
+      method: "PUT",
+      body: { option },
+    }),
+  );
+}
+
+/** Guarda el copy y el manifest visual de una opción sin volver a capturar imágenes. */
+export async function updateDraftThumbnailOption(
+  draftId: string,
+  option: DraftThumbnailOptionId,
+  value: DraftThumbnailOption,
+): Promise<Draft> {
+  return mapDraft(
+    await httpClient<DraftDto>(`/api/v1/drafts/${draftId}/thumbnails/${option}`, {
+      method: "PUT",
+      body: { text: value.text, design: value.design ?? {} },
+      timeoutMs: SLOW_TIMEOUT_MS,
+    }),
+  );
+}
+
+/** Una imagen normalizada del fondo; el diseño solo guarda su identificador. */
+export function uploadDraftThumbnailBackground(
+  draftId: string,
+  file: File,
+): Promise<{ asset: string }> {
+  const body = new FormData();
+  body.append("file", file);
+  return httpClient(`/api/v1/drafts/${draftId}/thumbnail-background`, {
+    method: "POST",
+    body,
+    timeoutMs: 30_000,
+  });
 }

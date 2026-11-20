@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "noir.outrov1",
+  "entry_id": "noir.outrov1",
+  "kind": "component",
+  "label": "Outro v1",
+  "summary": "Título slab con cursor rojo, subtítulo espaciado y fundido.",
+  "component": {
+    "name": "noir.outrov1",
+    "label": "Outro v1",
+    "summary": "Título slab con cursor rojo, subtítulo espaciado y fundido.",
+    "group": "outro",
+    "default": true,
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "Gracias",
+        "doc": "config.outro.title"
+      },
+      "sub": {
+        "type": "string",
+        "default": "por escuchar",
+        "doc": "config.outro.sub"
+      },
+      "feats": {
+        "type": "string",
+        "default": "Suscríbete · NodeMotion",
+        "doc": "config.outro.feats"
+      }
+    },
+    "tags": [
+      "outro"
+    ],
+    "file": "components/outro-v1.js",
+    "demo": {},
+    "preview": {
+      "t": 2.4
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "Gracias",
+      "doc": "config.outro.title"
+    },
+    "sub": {
+      "type": "string",
+      "default": "por escuchar",
+      "doc": "config.outro.sub"
+    },
+    "feats": {
+      "type": "string",
+      "default": "Suscríbete · NodeMotion",
+      "doc": "config.outro.feats"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/showcase/components.json",
+      "pointer": "/components/1"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

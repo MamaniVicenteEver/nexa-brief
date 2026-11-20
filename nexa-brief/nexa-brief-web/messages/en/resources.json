@@ -2,12 +2,19 @@
   "resources": {
     "navLabel": "Resources",
     "title": "Resources",
-    "subtitle": "Your songs, images and videos to use in templates. Songs are transcribed automatically when uploaded.",
-    "tabs": { "music": "Songs", "images": "Images", "videos": "Videos" },
+    "subtitle": "Songs, images, videos and sounds for your templates.",
+    "tabs": {
+      "music": "Songs",
+      "images": "Images",
+      "videos": "Videos",
+      "sounds": "Sound effects",
+      "research": "Research"
+    },
     "searchPlaceholder": {
       "music": "Search by name, artist or tag…",
       "images": "Search by name, description or tag…",
-      "videos": "Search by name, description or tag…"
+      "videos": "Search by name, description or tag…",
+      "sounds": "Search sound, description, use or tag…"
     },
     "clearSearch": "Clear search",
     "categoryLabel": "Category",
@@ -16,12 +23,19 @@
     "empty": {
       "music": "You haven't uploaded any songs yet",
       "images": "You haven't uploaded any images yet",
-      "videos": "You haven't uploaded any videos yet"
+      "videos": "You haven't uploaded any videos yet",
+      "sounds": "No sound effects saved yet"
     },
     "emptyFiltered": "No results match those filters",
-    "emptyHint": "Drag files onto the upload area to add them.",
+    "emptyHint": "Use the first card to upload files.",
     "upload": {
-      "title": { "music": "Upload songs", "images": "Upload images", "videos": "Upload videos" },
+      "title": {
+        "music": "Upload songs",
+        "images": "Upload images",
+        "videos": "Upload videos",
+        "sounds": "Upload sound effects"
+      },
+      "invalidType": "This file type does not match the selected tab.",
       "hint": "Drag and drop, or click to choose",
       "state": {
         "queued": "Queued",
@@ -30,7 +44,43 @@
         "error": "Failed"
       }
     },
-    "card": { "edit": "Edit", "delete": "Delete", "lyrics": "View lyrics" },
+    "card": {
+      "edit": "Edit",
+      "delete": "Delete",
+      "lyrics": "View lyrics",
+      "sound": "Sound effect",
+      "recommendedUses": "Suggested uses",
+      "usageCount": "{count, plural, one {# use} other {# uses}}",
+      "status": {
+        "pending": "Needs review",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "soundCategory": "Sound effects",
+      "enrich": {
+        "action": "Complete data",
+        "running": "Researching…",
+        "complete": "Data complete",
+        "missing": "Missing: {fields}",
+        "done": "Data completed: {fields}",
+        "unchanged": "The sources have no new data for this song.",
+        "notFound": "I couldn't find this song on MusicBrainz or Wikipedia. Fill it in by hand.",
+        "error": "Couldn't research it right now. Try again in a moment.",
+        "regenerate": "Regenerate",
+        "regenerating": "Regenerating…",
+        "regenerateHint": "Replaces the description and tags with what MusicBrainz and Wikipedia find.",
+        "regenerateTitle": "Regenerate the details of «{title}»?",
+        "regenerateBody": "This replaces the current description and tags with what MusicBrainz and Wikipedia find. If you wrote them, they will be lost. The title, category and license don't change.",
+        "regenerateConfirm": "Regenerate",
+        "cancel": "Cancel",
+        "fields": {
+          "artist": "artist",
+          "genre": "genre",
+          "description": "description",
+          "tags": "tags"
+        }
+      }
+    },
     "transcription": {
       "pending": "Pending",
       "running": "Transcribing",
@@ -57,7 +107,14 @@
       "category": "Category",
       "cancel": "Cancel",
       "save": "Save",
-      "saved": "Changes saved"
+      "saved": "Changes saved",
+      "recommendedUses": "Suggested uses",
+      "recommendedUsesHint": "One suggestion per line.",
+      "approvalStatus": "Review",
+      "pending": "Needs review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "genre": "Genre"
     },
     "delete": {
       "title": "Delete this resource?",
@@ -70,7 +127,77 @@
       "search": "Search your library…",
       "loading": "Loading…",
       "empty": "Your library is empty.",
-      "noResults": "No results."
+      "noResults": "No results.",
+      "scopeCategory": "Scope: {category}",
+      "lyricsFilterLabel": "Lyrics availability",
+      "lyricsFilterAll": "With or without lyrics",
+      "lyricsFilterReady": "Lyrics ready only",
+      "lyricsFilterMissing": "No lyrics ready",
+      "lyricsFilterRequired": "Only songs with lyrics ready",
+      "versions": "{count} versions",
+      "version": "Version {number}"
+    },
+    "typeLabel": "Resource type",
+    "retry": "Try again",
+    "retryCategories": "Categories could not load. Try again",
+    "research": {
+      "sync": "Update from folders",
+      "syncing": "Updating…",
+      "syncDone": "Research updated: {created} new and {merged} already registered.",
+      "syncError": "Couldn't update. Try again in a moment.",
+      "searchPlaceholder": "Search by topic, folder or tag…",
+      "clearSearch": "Clear search",
+      "categoryLabel": "Folder",
+      "allCategories": "All folders",
+      "summary": "{total, plural, one {# research item} other {# research items}}",
+      "empty": "No research registered yet",
+      "emptyFiltered": "No research matches these filters",
+      "emptyHint": "Use “Update from folders” to register the research your videos already have.",
+      "error": "We couldn't load the research.",
+      "retry": "Try again",
+      "noCover": "No images",
+      "view": "View research",
+      "versions": "{count, plural, one {# version} other {# versions}}",
+      "origin": {
+        "production": "Production",
+        "sandbox": "Sandbox"
+      },
+      "counts": {
+        "findings": "{count, plural, one {# finding} other {# findings}}",
+        "sources": "{count, plural, one {# source} other {# sources}}",
+        "images": "{count, plural, one {# image} other {# images}}",
+        "videos": "{count, plural, one {# video} other {# videos}}"
+      },
+      "detail": {
+        "loading": "Loading research…",
+        "error": "We couldn't open this research.",
+        "versions": "Versions",
+        "baseVersion": "base",
+        "tabs": {
+          "summary": "Summary",
+          "findings": "Findings",
+          "images": "Images",
+          "videos": "Videos",
+          "files": "Files"
+        },
+        "noSummary": "This research has no text summary.",
+        "noFindings": "It has no structured findings: check the summary.",
+        "strength": "Strength {value}",
+        "discarded": "Discarded",
+        "noImages": "No images saved in this research.",
+        "licenseUnverified": "License not verified",
+        "author": "Author",
+        "source": "Source",
+        "noVideos": "No video uses it yet. When one does, it will appear here.",
+        "download": "Download"
+      }
+    },
+    "pagination": {
+      "label": "Resource pages",
+      "previous": "Previous page",
+      "next": "Next 12",
+      "range": "{start}–{end} of {total}",
+      "page": "{page} / {pages}"
     }
   }
 }

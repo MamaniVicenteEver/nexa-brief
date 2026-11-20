@@ -1,6 +1,6 @@
 import type { ChannelPlatform } from "../types";
 
-export const PLATFORMS: readonly ChannelPlatform[] = ["youtube", "tiktok", "facebook"];
+export const PLATFORMS: readonly ChannelPlatform[] = ["youtube", "tiktok", "facebook", "instagram"];
 
 interface PlatformMeta {
   label: string;
@@ -14,6 +14,7 @@ export const PLATFORM_META: Record<ChannelPlatform, PlatformMeta> = {
   youtube: { label: "YouTube", color: "#FF0033", aliasBase: "canal" },
   tiktok: { label: "TikTok", color: "#111111", aliasBase: "cuenta" },
   facebook: { label: "Facebook", color: "#1877F2", aliasBase: "pagina" },
+  instagram: { label: "Instagram", color: "#C13584", aliasBase: "instagram" },
 };
 
 /** Same charset the backend accepts in `platform:alias` selectors. */

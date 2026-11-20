@@ -159,7 +159,8 @@
           B.tag(G, p.cta, cx, subY, { u, size: 2.4, bg: C.ink, color: C.bg, alpha: a * subQ }); G.restore();
           drawDirectNotification(bell, bellQ, a, lt);
           supportLines.forEach((line, i) => B.mono(G, line, cx, subY + u * (portrait ? 13 + i * 3.1 : 11 + i * 2.7), { u, size: supportSize, color: supportColor, alpha: a * 0.82 * prog(lt, supportAt + i * supportGap, supportDur), spacing: u * 0.1 }));
-          if (p.handle) B.mono(G, p.handle, cx, subY + u * (portrait ? 13 + supportLines.length * 3.1 : 11 + supportLines.length * 2.7), { u, size: 1.4, color: C.ink, alpha: a * prog(lt, supportAt + supportLines.length * supportGap, supportDur) });
+          /* el usuario del canal va un poco separado del mensaje de apoyo (+1 u ≈ 10 px en 1080) */
+          if (p.handle) B.mono(G, p.handle, cx, subY + u * (portrait ? 14 + supportLines.length * 3.1 : 12 + supportLines.length * 2.7), { u, size: 1.4, color: C.ink, alpha: a * prog(lt, supportAt + supportLines.length * supportGap, supportDur) });
         },
         dispose() { root.remove(); like.ripple.remove(); },
       };

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-mixtas",
+  "id": "layout.whiteCenter",
+  "entry_id": "layout.whiteCenter",
+  "name": "whiteCenter",
+  "kind": "layout",
+  "label": "whiteCenter",
+  "summary": "Existing layout configuration: whiteCenter.",
+  "params": {
+    "weight": {
+      "default": 1.0
+    },
+    "bgs": {
+      "default": [
+        "paper"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.0,
+    "bgs": [
+      "paper"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+      "pointer": "/configs/0/layouts/whiteCenter"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-urban",
+  "id": "config.brand",
+  "entry_id": "config.brand",
+  "name": "brand",
+  "kind": "configuration",
+  "label": "brand",
+  "summary": "Existing configuration configuration: brand.",
+  "params": {
+    "tagTop": {
+      "default": "NEXA BRIEF\nSPORT GROUP"
+    },
+    "tagRight": {
+      "default": "STREET SERIES"
+    },
+    "year": {
+      "default": "2026"
+    },
+    "blurb": {
+      "default": "ENTRENAMOS CADA DÍA EN LA CALLE, EN LA CANCHA\nY EN LA PISTA. DEPORTE URBANO SIN FILTROS,\nHECHO POR ATLETAS PARA ATLETAS."
+    }
+  },
+  "example": {
+    "tagTop": "NEXA BRIEF\nSPORT GROUP",
+    "tagRight": "STREET SERIES",
+    "year": "2026",
+    "blurb": "ENTRENAMOS CADA DÍA EN LA CALLE, EN LA CANCHA\nY EN LA PISTA. DEPORTE URBANO SIN FILTROS,\nHECHO POR ATLETAS PARA ATLETAS."
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-urban/assets/config.json",
+      "pointer": "/configs/0/brand"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

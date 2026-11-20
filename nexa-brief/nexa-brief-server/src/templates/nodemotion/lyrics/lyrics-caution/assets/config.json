@@ -4,7 +4,9 @@
     {
       "id": "default",
       "description": "Kinetic typography de cortes duros estilo 'Caution' — cada palabra acentuada es un cartón nuevo sobre rojo, papel blanco fotocopiado o negro grunge, con tipografía extendida y condensada gigante, etiquetas, barras rojas, tickers y un mosaico final de escenas. — metadata para marketing/SEO, la plantilla no la usa todavía.",
-      "audio": { "src": "assets/song.mp3" },
+      "audio": {
+        "src": "assets/song.mp3"
+      },
       "lyricsUrl": "assets/lyrics.json",
       "fonts": {
         "googleUrl": "https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wdth,wght@62..125,100..900&family=Oswald:wght@500;600;700&display=swap",
@@ -12,12 +14,20 @@
         "condensed": "\"Anton\", sans-serif",
         "condensedAlt": "\"Oswald\", sans-serif"
       },
-      "colors": { "primary": "#C80202", "dark": "#000000", "light": "#FFFFFF" },
+      "colors": {
+        "primary": "#C80202",
+        "dark": "#000000",
+        "light": "#FFFFFF"
+      },
       "intro": {
-        "artist": "Skrxlla",
-        "title": "Caution",
-        "album": "Cold Fashion",
-        "labels": { "artist": "Artist", "title": "Sound", "album": "Album" },
+        "artist": "Ombré ft. KTHLN",
+        "title": "Let Out The Beast",
+        "album": "",
+        "labels": {
+          "artist": "Artist",
+          "title": "Sound",
+          "album": "Album"
+        },
         "cardSec": 1.0
       },
       "outro": {
@@ -25,9 +35,11 @@
         "leadSec": 3,
         "title": "Gracias",
         "sub": "Por ver",
-        "feats": "Suscríbete · NEXA BRIEF"
+        "feats": "Suscribite | NodeMotion"
       },
-      "timing": { "leadSec": 0.12 },
+      "timing": {
+        "leadSec": 0.12
+      },
       "scenes": {
         "gapSec": 0.6,
         "maxWords": 4,
@@ -42,22 +54,109 @@
         "stopwords": []
       },
       "layouts": {
-        "giant":     { "weight": 3.0, "bgs": ["red", "black", "white"] },
-        "type":      { "weight": 2.0, "bgs": ["black"] },
-        "editorial": { "weight": 1.4, "bgs": ["white"] },
-        "build":     { "weight": 1.4, "bgs": ["white", "black"] },
-        "mirror":    { "weight": 1.2, "bgs": ["white", "red", "black"] },
-        "sandwich":  { "weight": 1.0, "bgs": ["white"] },
-        "pair":      { "weight": 1.0, "bgs": ["red"] },
-        "tracking":  { "weight": 1.0, "bgs": ["white"] },
-        "stack":     { "weight": 1.0, "bgs": ["white"] },
-        "outline":   { "weight": 1.0, "bgs": ["white"] },
-        "band":      { "weight": 0.9, "bgs": ["white"] },
-        "duo":       { "weight": 1.0, "bgs": ["black"] },
-        "side":      { "weight": 0.9, "bgs": ["black"] },
-        "scatter":   { "weight": 0.9, "bgs": ["black", "white"] },
-        "dash":      { "weight": 0.9, "bgs": ["white"] },
-        "split":     { "weight": 0.8, "bgs": ["white", "black"] }
+        "giant": {
+          "weight": 3.0,
+          "bgs": [
+            "red",
+            "black",
+            "white"
+          ]
+        },
+        "type": {
+          "weight": 2.0,
+          "bgs": [
+            "black"
+          ]
+        },
+        "editorial": {
+          "weight": 1.4,
+          "bgs": [
+            "white"
+          ]
+        },
+        "build": {
+          "weight": 1.4,
+          "bgs": [
+            "white",
+            "black"
+          ]
+        },
+        "mirror": {
+          "weight": 1.2,
+          "bgs": [
+            "white",
+            "red",
+            "black"
+          ]
+        },
+        "sandwich": {
+          "weight": 1.0,
+          "bgs": [
+            "white"
+          ]
+        },
+        "pair": {
+          "weight": 1.0,
+          "bgs": [
+            "red"
+          ]
+        },
+        "tracking": {
+          "weight": 1.0,
+          "bgs": [
+            "white"
+          ]
+        },
+        "stack": {
+          "weight": 1.0,
+          "bgs": [
+            "white"
+          ]
+        },
+        "outline": {
+          "weight": 1.0,
+          "bgs": [
+            "white"
+          ]
+        },
+        "band": {
+          "weight": 0.9,
+          "bgs": [
+            "white"
+          ]
+        },
+        "duo": {
+          "weight": 1.0,
+          "bgs": [
+            "black"
+          ]
+        },
+        "side": {
+          "weight": 0.9,
+          "bgs": [
+            "black"
+          ]
+        },
+        "scatter": {
+          "weight": 0.9,
+          "bgs": [
+            "black",
+            "white"
+          ]
+        },
+        "dash": {
+          "weight": 0.9,
+          "bgs": [
+            "white"
+          ]
+        },
+        "split": {
+          "weight": 0.8,
+          "bgs": [
+            "white",
+            "black"
+          ]
+        }
       },
       "mosaic": {
         "enabled": true,
@@ -69,8 +168,13 @@
         "rows": 4,
         "swapSec": 0.45
       },
-      "texture": { "grain": 0.1, "patches": true },
-      "debug": { "enabled": false },
+      "texture": {
+        "grain": 0.1,
+        "patches": true
+      },
+      "debug": {
+        "enabled": false
+      },
       "seed": 7
     }
   ]

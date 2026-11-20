@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "config.overrides",
+  "entry_id": "config.overrides",
+  "name": "overrides",
+  "kind": "configuration",
+  "label": "overrides",
+  "summary": "Existing configuration configuration: overrides.",
+  "params": {},
+  "example": [
+    {
+      "match": "snapped",
+      "scene": "gigante"
+    },
+    {
+      "match": "map",
+      "scene": "ancho"
+    },
+    {
+      "match": "selfish",
+      "scene": "rojo"
+    }
+  ],
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/assets/config.json",
+      "pointer": "/configs/0/overrides"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

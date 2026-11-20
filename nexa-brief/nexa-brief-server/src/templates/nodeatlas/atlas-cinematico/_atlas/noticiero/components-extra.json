@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "components": [
+    {
+      "name": "noticiero.alert",
+      "label": "Alerta editorial",
+      "summary": "Alerta roja con mensaje grande y contexto breve.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD",
+        "alertas"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "description": "Texto del tema; no usar las cifras ilustrativas del ejemplo como evidencia."
+        },
+        "t": {
+          "type": "anchor",
+          "description": "Segundo o @frase real de la transcripción."
+        },
+        "out": {
+          "type": "anchor",
+          "description": "Salida antes del próximo mensaje importante."
+        },
+        "news": {
+          "type": "object",
+          "description": "Excepciones a defaults del estilo: size, labelSize, font, color, width, x, y, priority; portrait/landscape para orientación."
+        }
+      },
+      "demo": {
+        "type": "alert",
+        "t": 0.2,
+        "out": 6,
+        "text": "ALERTA DE EJEMPLO",
+        "detail": "Mensaje ilustrativo · comprobar la fuente",
+        "kicker": "ÚLTIMA HORA"
+      }
+    },
+    {
+      "name": "noticiero.headline",
+      "label": "Titular destacado",
+      "summary": "Un hecho importante en grande sobre una placa azul.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD",
+        "destacados"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "description": "Texto del tema; no usar las cifras ilustrativas del ejemplo como evidencia."
+        },
+        "t": {
+          "type": "anchor",
+          "description": "Segundo o @frase real de la transcripción."
+        },
+        "out": {
+          "type": "anchor",
+          "description": "Salida antes del próximo mensaje importante."
+        },
+        "news": {
+          "type": "object",
+          "description": "Excepciones a defaults del estilo: size, labelSize, font, color, width, x, y, priority; portrait/landscape para orientación."
+        }
+      },
+      "demo": {
+        "type": "headline",
+        "t": 0.2,
+        "out": 6,
+        "text": "UNA DECISIÓN CAMBIA EL ESCENARIO",
+        "detail": "Titular ilustrativo"
+      }
+    },
+    {
+      "name": "noticiero.key-figure",
+      "label": "Dato clave",
+      "summary": "Una cifra grande, unidad y contexto legible.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD",
+        "destacados"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "description": "Texto del tema; no usar las cifras ilustrativas del ejemplo como evidencia."
+        },
+        "t": {
+          "type": "anchor",
+          "description": "Segundo o @frase real de la transcripción."
+        },
+        "out": {
+          "type": "anchor",
+          "description": "Salida antes del próximo mensaje importante."
+        },
+        "news": {
+          "type": "object",
+          "description": "Excepciones a defaults del estilo: size, labelSize, font, color, width, x, y, priority; portrait/landscape para orientación."
+        }
+      },
+      "demo": {
+        "type": "key-figure",
+        "t": 0.2,
+        "out": 6,
+        "value": 72,
+        "suffix": " %",
+        "label": "DATO ILUSTRATIVO",
+        "source": "Añadir fuente y período"
+      }
+    },
+    {
+      "name": "noticiero.date-card",
+      "label": "Fecha clave",
+      "summary": "Fecha protagonista con explicación breve.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD",
+        "destacados"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "description": "Texto del tema; no usar las cifras ilustrativas del ejemplo como evidencia."
+        },
+        "t": {
+          "type": "anchor",
+          "description": "Segundo o @frase real de la transcripción."
+        },
+        "out": {
+          "type": "anchor",
+          "description": "Salida antes del próximo mensaje importante."
+        },
+        "news": {
+          "type": "object",
+          "description": "Excepciones a defaults del estilo: size, labelSize, font, color, width, x, y, priority; portrait/landscape para orientación."
+        }
+      },
+      "demo": {
+        "type": "date-card",
+        "t": 0.2,
+        "out": 6,
+        "text": "09 NOV 2026",
+        "label": "FECHA ILUSTRATIVA",
+        "detail": "Indicar qué ocurre y por qué importa"
+      }
+    },
+    {
+      "name": "noticiero.message",
+      "label": "Mensaje importante",
+      "summary": "Tarjeta de contexto con jerarquía clara.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD",
+        "destacados"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "description": "Texto del tema; no usar las cifras ilustrativas del ejemplo como evidencia."
+        },
+        "t": {
+          "type": "anchor",
+          "description": "Segundo o @frase real de la transcripción."
+        },
+        "out": {
+          "type": "anchor",
+          "description": "Salida antes del próximo mensaje importante."
+        },
+        "news": {
+          "type": "object",
+          "description": "Excepciones a defaults del estilo: size, labelSize, font, color, width, x, y, priority; portrait/landscape para orientación."
+        }
+      },
+      "demo": {
+        "type": "message",
+        "t": 0.2,
+        "out": 6,
+        "text": "QUÉ CAMBIA",
+        "detail": "Una idea breve por tarjeta; mantener el mapa visible."
+      }
+    }
+  ]
+}

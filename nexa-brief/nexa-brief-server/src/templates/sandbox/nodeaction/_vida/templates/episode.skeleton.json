@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "id": "nuevo-episodio",
+  "title": "Un tema nuevo",
+  "language": "es-419",
+  "format": {"width": 1080, "height": 1920, "fps": 30},
+  "camera": {"style": "estable"},
+  "framing": "fit",
+  "resources": {"timing": "timing.json", "audioBase": ".", "dialogue": "dialogue.mp3"},
+  "cast": {"tomas": "tomas", "nico": "nico"},
+  "script": [
+    {"id": "L01", "who": "tomas", "emotion": "neutral", "text": "¿Qué podemos aprender hoy?"},
+    {"id": "L02", "who": "nico", "emotion": "neutral", "text": "Empecemos con un ejemplo sencillo."}
+  ],
+  "scenes": [
+    {"id": "escena-001", "set": "escuela-entrada", "actors": {"tomas": {"at": 580}, "nico": {"at": 820}}, "steps": [{"wait": 3}]}
+  ]
+}

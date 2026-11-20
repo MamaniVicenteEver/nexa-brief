@@ -33,10 +33,21 @@ def _read(path: Path) -> dict:
 
 def available_design_ids(kit_dir: Path = KIT_DIR) -> list[str]:
     listed = _read(kit_dir / "showcase" / "designs.json").get("designs") or []
-    return [d for d in listed if (kit_dir / "designs" / d / "design.json").exists()]
+    ids = [d for d in listed if (kit_dir / "designs" / d / "design.json").exists()]
+    if kit_dir == KIT_DIR:
+        from src.core.explainer.native_production import refresh_native_designs
+        NATIVE_DESIGNS = refresh_native_designs()
+        ids += [ident for ident in NATIVE_DESIGNS if ident not in ids]
+    return ids
 
 
 def load_design(design_id: str, kit_dir: Path = KIT_DIR) -> KitDesign | None:
+    if kit_dir == KIT_DIR:
+        from src.core.explainer.native_production import refresh_native_designs
+        NATIVE_DESIGNS = refresh_native_designs()
+        if design_id in NATIVE_DESIGNS:
+            native = NATIVE_DESIGNS[design_id]
+            return KitDesign(design_id, native["name"], "Escena nativa por JSON con estilos intercambiables", voice="Charon", category_path=native["category"])
     data = _read(kit_dir / "designs" / design_id / "design.json")
     if not data:
         return None

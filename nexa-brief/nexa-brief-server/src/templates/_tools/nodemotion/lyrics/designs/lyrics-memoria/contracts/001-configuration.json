@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-memoria",
+  "id": "config.lyricsFilter",
+  "entry_id": "config.lyricsFilter",
+  "name": "lyricsFilter",
+  "kind": "configuration",
+  "label": "lyricsFilter",
+  "summary": "Existing configuration configuration: lyricsFilter.",
+  "params": {
+    "minLogprob": {
+      "default": -0.6
+    },
+    "drop": {
+      "default": [
+        "gracias por ver",
+        "subt[ií]tulos",
+        "amara\\.org",
+        "audio ?jungle",
+        "suscr[ií]bete"
+      ]
+    }
+  },
+  "example": {
+    "minLogprob": -0.6,
+    "drop": [
+      "gracias por ver",
+      "subt[ií]tulos",
+      "amara\\.org",
+      "audio ?jungle",
+      "suscr[ií]bete"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-memoria/assets/config.json",
+      "pointer": "/configs/0/lyricsFilter"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

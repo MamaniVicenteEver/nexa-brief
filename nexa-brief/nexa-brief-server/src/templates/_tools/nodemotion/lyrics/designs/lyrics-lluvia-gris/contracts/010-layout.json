@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-lluvia-gris",
+  "id": "layout.melt",
+  "entry_id": "layout.melt",
+  "name": "melt",
+  "kind": "layout",
+  "label": "melt",
+  "summary": "Existing layout configuration: melt.",
+  "params": {
+    "weight": {
+      "default": 1.6
+    },
+    "media": {
+      "default": [
+        "drops",
+        "rain-window"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.6,
+    "media": [
+      "drops",
+      "rain-window"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
+      "pointer": "/configs/0/layouts/melt"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

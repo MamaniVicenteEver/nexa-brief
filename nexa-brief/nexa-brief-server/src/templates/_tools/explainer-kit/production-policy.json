@@ -1,0 +1,62 @@
+{
+  "max_agent_runs_per_phase": 2,
+  "max_agent_runs_total": 4,
+  "max_tokens": 4000000,
+  "style_policies": {
+    "titanes": {
+      "version": 1,
+      "guide": "designs/titanes/FABRICA.md",
+      "media": {
+        "photo_seconds": [4, 10],
+        "video_seconds": [8, 16],
+        "photo_components": ["titanes.foto", "titanes.introv1", "titanes.introv2"],
+        "max_uses_per_asset": 2,
+        "review_required": true
+      },
+      "custom_min": 1,
+      "long_video_min_spans": 0,
+      "text_only": {"max_share": 0.12, "max_consecutive": 2}
+    },
+    "imperio": {
+      "version": 2,
+      "guide": "guides/imperio-production.md",
+      "media": {
+        "video_seconds": [
+          8,
+          16
+        ],
+        "photo_seconds": [
+          6,
+          12
+        ],
+        "scope": "documentary media, including campaign plates; graphics excluded",
+        "measure": "visible main window bounded by next main, outro and audio; nested plate bounded by parent",
+        "non_overlapping_plates": true
+      },
+      "audio": {
+        "continuous_narration": true,
+        "narration_source_field": "audio.narrationSrc",
+        "playback_source_field": "audio.src",
+        "reuse_library_first": true,
+        "image_effects": "optional, relevant to the visible or narrated subject",
+        "effects_gain_multiplier_from_base": 1.1550000000000002,
+        "effects_gain_db_from_base": 1.251639684563264,
+        "narration_gain_multiplier": 1.0,
+        "background_matches_support_window": true,
+        "require_support_mapping": true,
+        "window_tolerance_seconds": 0.01,
+        "music_direction": "multiple acts with deliberate silence, low-level ducking and licensed library tracks"
+      },
+      "editorial_identity": "imperio-narrador-cinematico-v1",
+      "openings": {
+        "image_required": [
+          "imperio.introv2",
+          "common.tabloid"
+        ],
+        "text_required": true,
+        "keyword_accent": "red",
+        "text_only_background": "full_world_no_flag"
+      }
+    }
+  }
+}

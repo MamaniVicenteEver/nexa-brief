@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-lluvia-gris",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-lluvia-gris",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "6bf6af8cfb6925e2fa8f3cffc94682190d55141c38d7ce500bb692a67371c3ee",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-lluvia-gris",
+    "config": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-lluvia-gris/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-lluvia-gris/README.md"
+  },
+  "revision": "c0f197e5cfe1c750325f757e4e057ad8f7f08ff9712f78e15259f1c89230a4b0"
+}

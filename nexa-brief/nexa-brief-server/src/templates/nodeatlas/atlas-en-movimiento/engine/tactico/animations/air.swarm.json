@@ -1,0 +1,167 @@
+{
+  "name": "air.swarm",
+  "family": "air",
+  "estilo": {
+    "usa": [
+      "ucr2.aire"
+    ]
+  },
+  "description": "Hasta ochenta drones en oleadas; interceptación y destellos deterministas. Úsala para mostrar vuelos, maniobras y operaciones aéreas.",
+  "duration": 10.35,
+  "loop": true,
+  "layer": 50,
+  "states": [
+    "normal",
+    "intercepted"
+  ],
+  "params": {
+    "label": {
+      "type": "string",
+      "default": "",
+      "doc": "Rótulo visible.",
+      "range": null,
+      "description": "Rótulo visible."
+    },
+    "flag": {
+      "type": "string",
+      "default": "",
+      "doc": "Bandera u origen indicado en el rótulo.",
+      "range": null,
+      "description": "Bandera u origen indicado en el rótulo."
+    },
+    "from": {
+      "type": "place",
+      "doc": "Origen del enjambre.",
+      "default": null,
+      "range": null,
+      "description": "Origen del enjambre."
+    },
+    "to": {
+      "type": "place",
+      "doc": "Objetivo del enjambre.",
+      "default": null,
+      "range": null,
+      "description": "Objetivo del enjambre."
+    },
+    "path": {
+      "type": "object",
+      "default": null,
+      "doc": "Trayectoria opcional con via.",
+      "range": null,
+      "description": "Trayectoria opcional con via."
+    },
+    "count": {
+      "type": "number",
+      "default": 24,
+      "min": 1,
+      "max": 80,
+      "doc": "Número total de drones.",
+      "range": {
+        "min": 1,
+        "max": 80
+      },
+      "description": "Número total de drones."
+    },
+    "spread": {
+      "type": "number",
+      "default": 90,
+      "min": 0,
+      "max": 500,
+      "doc": "Dispersión en píxeles de diseño.",
+      "range": {
+        "min": 0,
+        "max": 500
+      },
+      "description": "Dispersión en píxeles de diseño."
+    },
+    "waves": {
+      "type": "number",
+      "default": 1,
+      "min": 1,
+      "max": 12,
+      "doc": "Número de oleadas escalonadas.",
+      "range": {
+        "min": 1,
+        "max": 12
+      },
+      "description": "Número de oleadas escalonadas."
+    },
+    "waveGap": {
+      "type": "number",
+      "default": 0.6,
+      "min": 0,
+      "max": 10,
+      "doc": "Separación de oleadas en segundos.",
+      "range": {
+        "min": 0,
+        "max": 10
+      },
+      "description": "Separación de oleadas en segundos."
+    },
+    "scale": {
+      "type": "number",
+      "default": 1,
+      "min": 0.2,
+      "max": 4,
+      "doc": "Escala de los drones.",
+      "range": {
+        "min": 0.2,
+        "max": 4
+      },
+      "description": "Escala de los drones."
+    },
+    "interceptRate": {
+      "type": "number",
+      "default": 0.5,
+      "min": 0,
+      "max": 1,
+      "doc": "Fracción interceptada en estado intercepted.",
+      "range": {
+        "min": 0,
+        "max": 1
+      },
+      "description": "Fracción interceptada en estado intercepted."
+    },
+    "fx": {
+      "type": "boolean",
+      "default": true,
+      "doc": "Destello breve al impactar.",
+      "range": null,
+      "description": "Destello breve al impactar."
+    }
+  },
+  "sfx": [
+    "drone-buzz"
+  ],
+  "example": {
+    "id": "demo-air-swarm",
+    "t": 0,
+    "type": "air.swarm",
+    "from": [
+      49.8,
+      28.5
+    ],
+    "to": [
+      51.5,
+      27.5
+    ],
+    "count": 60,
+    "waves": 3,
+    "waveGap": 0.6,
+    "spread": 80,
+    "flag": "UA",
+    "label": "ENJAMBRE",
+    "state": "intercepted",
+    "interceptRate": 0.35,
+    "dur": 10
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/air.swarm.jpg",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "engine/tactico/sprites/sprites.json"
+  ]
+}

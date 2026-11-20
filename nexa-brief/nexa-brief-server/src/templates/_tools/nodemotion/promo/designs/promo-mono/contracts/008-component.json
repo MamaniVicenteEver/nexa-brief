@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.chips",
+  "entry_id": "mono.chips",
+  "kind": "component",
+  "label": "Lluvia de píldoras de texto alrededor de un titular (float) ",
+  "summary": "Lluvia de píldoras de texto alrededor de un titular (float) o apiladas (pile)",
+  "component": {
+    "name": "mono.chips",
+    "label": "Lluvia de píldoras de texto alrededor de un titular (float) ",
+    "summary": "Lluvia de píldoras de texto alrededor de un titular (float) o apiladas (pile)",
+    "tags": [
+      "escena"
+    ],
+    "scene_type": "chips",
+    "params": {
+      "mode": {
+        "type": "string",
+        "options": [
+          "float",
+          "pile"
+        ],
+        "default": "float"
+      },
+      "count": {
+        "type": "number",
+        "min": 4.0,
+        "max": 90.0,
+        "default": 26.0
+      },
+      "emoticons": {
+        "type": "boolean",
+        "default": true
+      },
+      "headline": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "time": 13.4
+    },
+    "preview": {
+      "t": 13.4
+    }
+  },
+  "params": {
+    "mode": {
+      "type": "string",
+      "options": [
+        "float",
+        "pile"
+      ],
+      "default": "float"
+    },
+    "count": {
+      "type": "number",
+      "min": 4.0,
+      "max": 90.0,
+      "default": 26.0
+    },
+    "emoticons": {
+      "type": "boolean",
+      "default": true
+    },
+    "headline": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/4"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

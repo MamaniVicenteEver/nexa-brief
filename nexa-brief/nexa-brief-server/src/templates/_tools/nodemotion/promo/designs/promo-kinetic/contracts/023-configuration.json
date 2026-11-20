@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-kinetic",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "bg": {
+      "default": "#1C1C1D"
+    },
+    "white": {
+      "default": "#BDBDB8"
+    },
+    "red": {
+      "default": "#9B1F1F"
+    },
+    "green": {
+      "default": "#1E8A2E"
+    },
+    "teal": {
+      "default": "#2E9C74"
+    },
+    "orange": {
+      "default": "#A23A12"
+    },
+    "yellow": {
+      "default": "#D9C21A"
+    }
+  },
+  "example": {
+    "bg": "#1C1C1D",
+    "white": "#BDBDB8",
+    "red": "#9B1F1F",
+    "green": "#1E8A2E",
+    "teal": "#2E9C74",
+    "orange": "#A23A12",
+    "yellow": "#D9C21A"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-kinetic/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

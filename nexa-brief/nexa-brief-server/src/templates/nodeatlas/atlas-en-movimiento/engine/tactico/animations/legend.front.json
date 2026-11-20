@@ -1,0 +1,54 @@
+{
+  "name": "legend.front",
+  "family": "legend",
+  "estilo": {
+    "usa": [
+      "estilos.leyenda",
+      "ranuras.leyenda",
+      "trazos.frente.linea"
+    ]
+  },
+  "description": "Leyenda de método: muestra del trazo discontinuo del frente y texto, siempre secundaria. Úsala como recurso visual en una escena.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 90,
+  "states": [],
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "Frente aproximado · flechas: direcciones",
+      "range": null,
+      "description": "Texto que se muestra."
+    },
+    "muestra": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Valor de muestra para la composición de legend.front."
+    },
+    "screen": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-legend-front",
+    "t": 0,
+    "type": "legend.front",
+    "text": "Frente aproximado · flechas: direcciones",
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "assets/scene.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/legend.front.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

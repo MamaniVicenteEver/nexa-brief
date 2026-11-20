@@ -44,7 +44,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   });
   await accessRequestRepo.markApproved(id);
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  const appUrl = process.env.PUBLIC_APP_URL ?? "http://localhost:3000";
   try {
     const { subject, html } = buildCredentialsEmail({
       name: accessRequest.name,

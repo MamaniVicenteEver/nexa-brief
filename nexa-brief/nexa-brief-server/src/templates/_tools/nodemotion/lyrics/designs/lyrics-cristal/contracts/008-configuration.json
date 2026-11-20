@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-cristal",
+  "id": "config.shatter",
+  "entry_id": "config.shatter",
+  "name": "shatter",
+  "kind": "configuration",
+  "label": "shatter",
+  "summary": "Existing configuration configuration: shatter.",
+  "params": {
+    "chance": {
+      "default": 0.22
+    },
+    "everyMin": {
+      "default": 2
+    },
+    "everyMax": {
+      "default": 4
+    },
+    "damageMax": {
+      "default": 10
+    },
+    "modeWeights": {
+      "default": {
+        "estallido": 0.4,
+        "derrumbe": 0.3,
+        "rafaga": 0.3
+      }
+    },
+    "rays": {
+      "default": [
+        12,
+        18
+      ]
+    },
+    "rings": {
+      "default": 6
+    },
+    "flash": {
+      "default": 0.32
+    }
+  },
+  "example": {
+    "chance": 0.22,
+    "everyMin": 2,
+    "everyMax": 4,
+    "damageMax": 10,
+    "modeWeights": {
+      "estallido": 0.4,
+      "derrumbe": 0.3,
+      "rafaga": 0.3
+    },
+    "rays": [
+      12,
+      18
+    ],
+    "rings": 6,
+    "flash": 0.32
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-cristal/assets/config.json",
+      "pointer": "/configs/0/shatter"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

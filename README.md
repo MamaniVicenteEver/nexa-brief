@@ -18,3 +18,5 @@ Otras carpetas:
 | `nexa-docs/` | Documentación e investigaciones |
 | `html-templates-poc/`, `nexa-brief-web-scraping/` | Pruebas de concepto |
 | `nexa-branding/` | Marca |
+
+

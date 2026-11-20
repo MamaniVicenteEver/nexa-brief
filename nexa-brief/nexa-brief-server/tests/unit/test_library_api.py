@@ -282,3 +282,79 @@ def test_existing_list_endpoints_still_work(client: TestClient):
     assert client.get("/api/v1/library/categories", params={"kind": "nope"}).status_code == 400
     assert client.get("/api/v1/library/configs").json() == []
     assert client.get("/api/v1/library/images/nope").status_code == 404
+
+
+def test_music_groups_keep_versions_together_before_pagination(monkeypatch: pytest.MonkeyPatch):
+    def song(asset_id: str, title: str, artist: str = "", *, category: str = "node_motion"):
+        return asset_library.MusicLibraryEntry(
+            asset_id=asset_id, category=category, category_id=category,
+            relative_path=f"{asset_id}.mp3", source="upload", track_name=title,
+            artist=artist, added_at="2026-01-01", duration_seconds=int(asset_id[-2:]),
+        )
+
+    # The same recording label can contain different recordings and letters.
+    # Equal titles with different artists must stay separate.
+    entries = [song("version01", "  Canción  especial ", "Artista"),
+               song("version02", "cancion especial", "ARTISTA"),
+               song("version03", "Canción especial", "Otro artista")]
+    entries += [song(f"track{i:02}", f"Tema {i}") for i in range(1, 13)]
+    entries += [song("empty01", ""), song("empty02", "")]
+
+    def search(kind, q=None, category=None):
+        assert kind == "music"
+        return [entry for entry in entries
+                if (not category or entry.category_id == category)
+                and (not q or asset_library._fold(q) in asset_library._fold(entry.track_name))]
+
+    monkeypatch.setattr(asset_library, "search_assets", search)
+    first, total = asset_library.page_music_groups(page=1, page_size=12)
+    second, total_second = asset_library.page_music_groups(page=2, page_size=12)
+    assert total == total_second == 16
+    assert len(first) == 12 and len(second) == 4
+    combined = first + second
+    assert len({item.asset_id for group in combined for item in group}) == len(entries)
+    assert any({item.asset_id for item in group} == {"version01", "version02"} for group in combined)
+    assert any([item.asset_id for item in group] == ["version03"] for group in combined)
+    assert sum(1 for group in combined if not group[0].track_name) == 2
+    assert asset_library.page_music_groups(page=1, q="especial")[1] == 2
+    assert asset_library.page_music_groups(page=1, category="otra")[1] == 0
+
+
+def test_music_group_endpoint_returns_full_versions(client: TestClient, monkeypatch: pytest.MonkeyPatch):
+    entries = [asset_library.MusicLibraryEntry(
+        asset_id=f"v{i}", category="node_motion", relative_path=f"v{i}.mp3",
+        source="upload", track_name="Una canción", artist="Cantante", added_at=f"2026-01-0{i}",
+        duration_seconds=90 + i,
+    ) for i in (1, 2)]
+    seen = {}
+
+    def search(kind, q=None, category=None):
+        seen.update(kind=kind, q=q, category=category)
+        return entries.copy()
+
+    async def reconcile():
+        pass
+
+    monkeypatch.setattr(asset_library, "search_assets", search)
+    monkeypatch.setattr(library_router, "_reconcile_transcriptions", reconcile)
+    response = client.get("/api/v1/library/page/music/groups", params={
+        "q": "canción", "category": "node_motion", "page": 1, "page_size": 12,
+    })
+    assert response.status_code == 200
+    body = response.json()
+    assert seen == {"kind": "music", "q": "canción", "category": "node_motion"}
+    assert body["total"] == 1
+    assert [item["asset_id"] for item in body["items"][0]["items"]] == ["v2", "v1"]
+    assert [item["duration_seconds"] for item in body["items"][0]["items"]] == [92, 91]
+    assert client.get("/api/v1/library/page/music/groups?page=0").status_code == 422
+
+
+def test_template_config_texts_preserve_lists():
+    from src.presentation.api.schemas.library_schema import TemplateConfigEntryResponse
+
+    entry = asset_library.TemplateConfigEntry(
+        job_id="job", template_id="lyrics-decadas", niche_id="lyrics",
+        config_path="job", texts={"title": "Décadas", "tags": ["DIC-97", "LADO A"]},
+    )
+    response = TemplateConfigEntryResponse(**entry.model_dump())
+    assert response.model_dump()["texts"] == {"title": "Décadas", "tags": ["DIC-97", "LADO A"]}

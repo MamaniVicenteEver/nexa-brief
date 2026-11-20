@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "trio",
+  "entry_id": "trio",
+  "kind": "component",
+  "label": "Palabra ×3 con rótulo",
+  "summary": "La palabra fuerte tres veces con el resto pequeño encima de cada una; caja oscura opcional sobre fondos claros.",
+  "component": {
+    "name": "trio",
+    "label": "Palabra ×3 con rótulo",
+    "summary": "La palabra fuerte tres veces con el resto pequeño encima de cada una; caja oscura opcional sobre fondos claros.",
+    "group": "scene",
+    "tags": [
+      "lyrics-hologram",
+      "scene"
+    ],
+    "params": {
+      "textIn": {
+        "type": "enum",
+        "options": [
+          "slide",
+          "stamp",
+          "glitch",
+          "spread",
+          "fade",
+          "cut"
+        ],
+        "default": "cut"
+      },
+      "box": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "t": 29.8,
+      "query": null,
+      "layout": {
+        "weight": 0.9,
+        "bgs": [
+          "holo",
+          "void"
+        ]
+      }
+    },
+    "preview": {
+      "gallery": "gallery.html?only=trio"
+    }
+  },
+  "params": {
+    "textIn": {
+      "type": "enum",
+      "options": [
+        "slide",
+        "stamp",
+        "glitch",
+        "spread",
+        "fade",
+        "cut"
+      ],
+      "default": "cut"
+    },
+    "box": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/10"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

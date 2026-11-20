@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "common.flash",
+  "description": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "color": {
+      "type": "string",
+      "description": "Color del destello.",
+      "default": "palette.ink"
+    },
+    "strength": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Opacidad máxima.",
+      "default": 0.85
+    }
+  },
+  "required": [],
+  "$defs": {},
+  "examples": [
+    {
+      "color": "palette.ink"
+    }
+  ],
+  "x-layer": "overlay",
+  "x-units": {
+    "coordinates": "WGS84 [longitud, latitud], grados",
+    "timing": "segundos relativos al beat o @ancla exacta de la narración",
+    "screenPosition": "x/y normalizados 0..1 solo en texto de pantalla"
+  }
+}

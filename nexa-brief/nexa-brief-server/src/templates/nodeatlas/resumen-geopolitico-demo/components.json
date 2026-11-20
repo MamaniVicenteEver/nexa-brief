@@ -1,0 +1,6199 @@
+{
+  "version": 1,
+  "components": [
+    {
+      "name": "noticiero.brand",
+      "label": "Marca de agua",
+      "summary": "Marca del canal sobre el globo.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "brand",
+        "text": "NODEPOLITICS",
+        "opacity": 0.7,
+        "t": 0.2
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.topic",
+      "label": "Cintillo de noticia",
+      "summary": "Titular con punto de color y revelado.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "topic",
+        "text": "ÚLTIMOS ACONTECIMIENTOS",
+        "dot": "blue",
+        "t": 0.2
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.lower-title",
+      "label": "Título editorial",
+      "summary": "Título de varias líneas con fecha y degradado.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "lower-title",
+        "lines": [
+          {
+            "text": "Resumen"
+          },
+          {
+            "text": "GEOPOLÍTICO",
+            "size": 52,
+            "gradient": [
+              "blue",
+              "#7cc4ff"
+            ]
+          }
+        ],
+        "meta": "EDICIÓN SEMANAL",
+        "t": 0.2
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.hemicycle",
+      "label": "Hemiciclo",
+      "summary": "Escaños y estadísticas configurables.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "hemicycle",
+        "x": 0.5,
+        "y": 0.35,
+        "seats": 100,
+        "rows": 7,
+        "radius": 160,
+        "title": "Cámara",
+        "steps": [
+          {
+            "t": 0.2,
+            "groups": [
+              {
+                "n": 54,
+                "color": "blue"
+              },
+              {
+                "n": 40,
+                "color": "red"
+              }
+            ],
+            "stats": [
+              {
+                "value": 54,
+                "label": "Grupo A",
+                "color": "blue"
+              },
+              {
+                "value": 40,
+                "label": "Grupo B",
+                "color": "red"
+              }
+            ]
+          }
+        ],
+        "t": 0.2
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.counter",
+      "label": "Contador",
+      "summary": "Cifra animada con etiqueta.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "counter",
+        "value": 289,
+        "label": "DATOS",
+        "color": "blue",
+        "size": 76,
+        "t": 0.2
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.portrait",
+      "label": "Retrato octogonal",
+      "summary": "Retrato con nombre y cargo.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "portrait",
+        "src": "media/pena.jpg",
+        "name": "Santiago Peña",
+        "role": "Presidente de Paraguay",
+        "size": 110,
+        "color": "white",
+        "t": 0.2
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.photo-frame",
+      "label": "Ventana de fotografía",
+      "summary": "Fotografía enmarcada con leyenda.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "photo-frame",
+        "src": "media/capitolio.jpg",
+        "w": 420,
+        "aspect": 1.5,
+        "caption": "Capitolio · Washington",
+        "color": "blue",
+        "t": 0.2
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.chip",
+      "label": "Chip con icono",
+      "summary": "Icono o glifo con etiqueta y color.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "chip",
+        "icon": "chart",
+        "label": "ECONOMÍA",
+        "color": "green",
+        "size": 70,
+        "t": 0.2
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.city",
+      "label": "Ciudad",
+      "summary": "Marcador geográfico con nombre y pulso.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "city",
+        "at": [
+          -77.04,
+          38.9
+        ],
+        "text": "Washington",
+        "pulse": true,
+        "color": "blue",
+        "t": 0.2
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.note",
+      "label": "Nota de mapa",
+      "summary": "Etiqueta breve con punto de color.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "note",
+        "text": "REGIÓN DE INTERÉS",
+        "dot": "blue",
+        "t": 0.2
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.glow",
+      "label": "Resplandor",
+      "summary": "Pulso luminoso sobre puntos geográficos.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "glow",
+        "points": [
+          [
+            -77.04,
+            38.9
+          ]
+        ],
+        "color": "#3ddc84",
+        "r": 80,
+        "t": 0.2
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.outrov1",
+      "label": "Cierre 1",
+      "summary": "Globo en giro con título editorial.",
+      "family": "cierres",
+      "target": "scene",
+      "tags": [
+        "cierre",
+        "outro"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "duration": 7,
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              -32,
+              14
+            ],
+            "span": 125,
+            "pitch": 0
+          },
+          {
+            "t": 0.1,
+            "focus": [
+              65,
+              14
+            ],
+            "span": 125,
+            "pitch": 0,
+            "dur": 6.5
+          }
+        ],
+        "hud": [
+          {
+            "type": "lower-title",
+            "t": 0.6,
+            "lines": [
+              {
+                "text": "Resumen"
+              },
+              {
+                "text": "GEOPOLÍTICO",
+                "size": 52,
+                "gradient": [
+                  "blue",
+                  "#7cc4ff"
+                ]
+              }
+            ],
+            "meta": "NODEPOLITICS",
+            "scalePortrait": 1.3,
+            "scaleLandscape": 1.5
+          }
+        ]
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.outrov2",
+      "label": "Cierre 2",
+      "summary": "Cierre con cintillo y mensaje final.",
+      "family": "cierres",
+      "target": "scene",
+      "tags": [
+        "cierre",
+        "outro"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "duration": 7,
+        "camera": [
+          {
+            "t": 0,
+            "center": [
+              -32,
+              -15
+            ],
+            "span": 155,
+            "pitch": 0
+          },
+          {
+            "t": 0.1,
+            "focus": [
+              20,
+              -15
+            ],
+            "span": 155,
+            "pitch": 0,
+            "dur": 6.5
+          }
+        ],
+        "hud": [
+          {
+            "type": "topic",
+            "t": 0.4,
+            "text": "EL MUNDO EN PERSPECTIVA",
+            "dot": "blue"
+          },
+          {
+            "type": "lower-title",
+            "t": 1,
+            "x": 0.5,
+            "y": 0.3,
+            "lines": [
+              {
+                "text": "RESUMEN",
+                "size": 85
+              },
+              {
+                "text": "GEOPOLÍTICO",
+                "size": 88,
+                "gradient": [
+                  "blue",
+                  "#7cc4ff"
+                ]
+              }
+            ],
+            "meta": "NODEPOLITICS",
+            "align": "center",
+            "gap": 95,
+            "metaSize": 42
+          }
+        ]
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.territorio",
+      "label": "Territorio resaltado",
+      "summary": "Resaltado geográfico con el estilo del noticiero.",
+      "family": "noticiero",
+      "target": "layers",
+      "tags": [
+        "mapa",
+        "territorio"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "highlight",
+        "region": "US",
+        "style": "blue",
+        "t": 0,
+        "dur": 1,
+        "border": true
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.territorio-rayado",
+      "label": "Territorio rayado",
+      "summary": "Resaltado geográfico con el estilo del noticiero.",
+      "family": "noticiero",
+      "target": "layers",
+      "tags": [
+        "mapa",
+        "territorio"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "type": "highlight",
+        "region": "US",
+        "style": "hatch-orange",
+        "t": 0,
+        "dur": 1,
+        "border": true
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.arco",
+      "label": "Arco geográfico",
+      "summary": "Conexión animada entre dos lugares.",
+      "family": "noticiero",
+      "target": "scene",
+      "tags": [
+        "noticiero"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "layers": [
+          {
+            "type": "arc",
+            "from": [
+              -100,
+              35
+            ],
+            "to": [
+              -60,
+              -15
+            ],
+            "t": 0.2,
+            "dur": 2,
+            "color": "#5fb2ff",
+            "width": 4,
+            "head": "arrow",
+            "keep": true,
+            "lift": 40
+          }
+        ],
+        "camera": [
+          {
+            "t": 0,
+            "focus": [
+              -75,
+              10
+            ],
+            "span": 115,
+            "pitch": 35
+          }
+        ]
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.vuelo",
+      "label": "Vuelo de cámara",
+      "summary": "Transición de una región a otra sobre el globo.",
+      "family": "noticiero",
+      "target": "scene",
+      "tags": [
+        "noticiero"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "camera": [
+          {
+            "t": 0,
+            "focus": [
+              -95,
+              39
+            ],
+            "span": 75,
+            "pitch": 45
+          },
+          {
+            "t": 0.5,
+            "focus": [
+              -58,
+              -23
+            ],
+            "span": 45,
+            "pitch": 50,
+            "dur": 5
+          }
+        ]
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.apertura",
+      "label": "Apertura editorial",
+      "summary": "Título, marca y retratos sobre el globo.",
+      "family": "noticiero",
+      "target": "scene",
+      "tags": [
+        "noticiero"
+      ],
+      "params": {
+        "news": {
+          "type": "object",
+          "description": "Excepciones del estilo: size, labelSize, font, width, x, y, priority. portrait/landscape para orientación; mínimos de lectura y zonas seguras prevalecen."
+        }
+      },
+      "demo": {
+        "camera": [
+          {
+            "t": 0,
+            "focus": [
+              -40,
+              15
+            ],
+            "span": 125,
+            "pitch": 0
+          }
+        ],
+        "hud": [
+          {
+            "type": "lower-title",
+            "t": 0.5,
+            "lines": [
+              {
+                "text": "Resumen"
+              },
+              {
+                "text": "GEOPOLÍTICO",
+                "size": 52,
+                "gradient": [
+                  "blue",
+                  "#7cc4ff"
+                ]
+              }
+            ],
+            "meta": "EDICIÓN SEMANAL",
+            "scalePortrait": 1.3,
+            "scaleLandscape": 1.5
+          },
+          {
+            "type": "portrait",
+            "t": 0.7,
+            "x": 0.7,
+            "y": 0.45,
+            "src": "media/pena.jpg",
+            "name": "Santiago Peña",
+            "color": "white",
+            "size": 80
+          }
+        ]
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.alert",
+      "label": "Alerta editorial",
+      "summary": "Alerta roja con mensaje grande y contexto breve.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD",
+        "alertas"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "description": "Texto del tema; no usar las cifras ilustrativas del ejemplo como evidencia."
+        },
+        "t": {
+          "type": "anchor",
+          "description": "Segundo o @frase real de la transcripción."
+        },
+        "out": {
+          "type": "anchor",
+          "description": "Salida antes del próximo mensaje importante."
+        },
+        "news": {
+          "type": "object",
+          "description": "Excepciones a defaults del estilo: size, labelSize, font, color, width, x, y, priority; portrait/landscape para orientación."
+        }
+      },
+      "demo": {
+        "type": "alert",
+        "t": 0.2,
+        "out": 6,
+        "text": "ALERTA DE EJEMPLO",
+        "detail": "Mensaje ilustrativo · comprobar la fuente",
+        "kicker": "ÚLTIMA HORA"
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.headline",
+      "label": "Titular destacado",
+      "summary": "Un hecho importante en grande sobre una placa azul.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD",
+        "destacados"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "description": "Texto del tema; no usar las cifras ilustrativas del ejemplo como evidencia."
+        },
+        "t": {
+          "type": "anchor",
+          "description": "Segundo o @frase real de la transcripción."
+        },
+        "out": {
+          "type": "anchor",
+          "description": "Salida antes del próximo mensaje importante."
+        },
+        "news": {
+          "type": "object",
+          "description": "Excepciones a defaults del estilo: size, labelSize, font, color, width, x, y, priority; portrait/landscape para orientación."
+        }
+      },
+      "demo": {
+        "type": "headline",
+        "t": 0.2,
+        "out": 6,
+        "text": "UNA DECISIÓN CAMBIA EL ESCENARIO",
+        "detail": "Titular ilustrativo"
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.key-figure",
+      "label": "Dato clave",
+      "summary": "Una cifra grande, unidad y contexto legible.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD",
+        "destacados"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "description": "Texto del tema; no usar las cifras ilustrativas del ejemplo como evidencia."
+        },
+        "t": {
+          "type": "anchor",
+          "description": "Segundo o @frase real de la transcripción."
+        },
+        "out": {
+          "type": "anchor",
+          "description": "Salida antes del próximo mensaje importante."
+        },
+        "news": {
+          "type": "object",
+          "description": "Excepciones a defaults del estilo: size, labelSize, font, color, width, x, y, priority; portrait/landscape para orientación."
+        }
+      },
+      "demo": {
+        "type": "key-figure",
+        "t": 0.2,
+        "out": 6,
+        "value": 72,
+        "suffix": " %",
+        "label": "DATO ILUSTRATIVO",
+        "source": "Añadir fuente y período"
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.date-card",
+      "label": "Fecha clave",
+      "summary": "Fecha protagonista con explicación breve.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD",
+        "destacados"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "description": "Texto del tema; no usar las cifras ilustrativas del ejemplo como evidencia."
+        },
+        "t": {
+          "type": "anchor",
+          "description": "Segundo o @frase real de la transcripción."
+        },
+        "out": {
+          "type": "anchor",
+          "description": "Salida antes del próximo mensaje importante."
+        },
+        "news": {
+          "type": "object",
+          "description": "Excepciones a defaults del estilo: size, labelSize, font, color, width, x, y, priority; portrait/landscape para orientación."
+        }
+      },
+      "demo": {
+        "type": "date-card",
+        "t": 0.2,
+        "out": 6,
+        "text": "09 NOV 2026",
+        "label": "FECHA ILUSTRATIVA",
+        "detail": "Indicar qué ocurre y por qué importa"
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.message",
+      "label": "Mensaje importante",
+      "summary": "Tarjeta de contexto con jerarquía clara.",
+      "family": "noticiero",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "HUD",
+        "destacados"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "description": "Texto del tema; no usar las cifras ilustrativas del ejemplo como evidencia."
+        },
+        "t": {
+          "type": "anchor",
+          "description": "Segundo o @frase real de la transcripción."
+        },
+        "out": {
+          "type": "anchor",
+          "description": "Salida antes del próximo mensaje importante."
+        },
+        "news": {
+          "type": "object",
+          "description": "Excepciones a defaults del estilo: size, labelSize, font, color, width, x, y, priority; portrait/landscape para orientación."
+        }
+      },
+      "demo": {
+        "type": "message",
+        "t": 0.2,
+        "out": 6,
+        "text": "QUÉ CAMBIA",
+        "detail": "Una idea breve por tarjeta; mantener el mapa visible."
+      },
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.icon-grid",
+      "label": "Biblioteca de iconos",
+      "summary": "Elegir pictogramas para el plan visual.",
+      "family": "identidad",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "identidad",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "names": [
+          "tank",
+          "missile",
+          "fighter-jet",
+          "warship",
+          "soldier",
+          "cpu",
+          "satellite",
+          "hospital",
+          "handshake",
+          "barrel"
+        ],
+        "cols": 5,
+        "size": 42,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir pictogramas para el plan visual.",
+      "receta": "chip con el nombre elegido",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.icon-grid-conflicto",
+      "label": "Iconos · conflicto",
+      "summary": "Elegir iconos de conflicto para una noticia.",
+      "family": "iconos",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "iconos",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "category": "conflicto",
+        "cols": 5,
+        "size": 30,
+        "labelSize": 20,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir iconos de conflicto para una noticia.",
+      "receta": "chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.icon-grid-politica",
+      "label": "Iconos · politica",
+      "summary": "Elegir iconos de politica para una noticia.",
+      "family": "iconos",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "iconos",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "category": "politica",
+        "cols": 5,
+        "size": 30,
+        "labelSize": 20,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir iconos de politica para una noticia.",
+      "receta": "chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.icon-grid-economia",
+      "label": "Iconos · economia",
+      "summary": "Elegir iconos de economia para una noticia.",
+      "family": "iconos",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "iconos",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "category": "economia",
+        "cols": 5,
+        "size": 30,
+        "labelSize": 20,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir iconos de economia para una noticia.",
+      "receta": "chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.icon-grid-energia",
+      "label": "Iconos · energia",
+      "summary": "Elegir iconos de energia para una noticia.",
+      "family": "iconos",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "iconos",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "category": "energia",
+        "cols": 5,
+        "size": 30,
+        "labelSize": 20,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir iconos de energia para una noticia.",
+      "receta": "chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.icon-grid-transporte",
+      "label": "Iconos · transporte",
+      "summary": "Elegir iconos de transporte para una noticia.",
+      "family": "iconos",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "iconos",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "category": "transporte",
+        "cols": 5,
+        "size": 30,
+        "labelSize": 20,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir iconos de transporte para una noticia.",
+      "receta": "chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.icon-grid-tecnologia",
+      "label": "Iconos · tecnologia",
+      "summary": "Elegir iconos de tecnologia para una noticia.",
+      "family": "iconos",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "iconos",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "category": "tecnologia",
+        "cols": 5,
+        "size": 30,
+        "labelSize": 20,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir iconos de tecnologia para una noticia.",
+      "receta": "chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.icon-grid-salud",
+      "label": "Iconos · salud",
+      "summary": "Elegir iconos de salud para una noticia.",
+      "family": "iconos",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "iconos",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "category": "salud",
+        "cols": 5,
+        "size": 30,
+        "labelSize": 20,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir iconos de salud para una noticia.",
+      "receta": "chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.icon-grid-clima",
+      "label": "Iconos · clima",
+      "summary": "Elegir iconos de clima para una noticia.",
+      "family": "iconos",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "iconos",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "category": "clima",
+        "cols": 5,
+        "size": 30,
+        "labelSize": 20,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir iconos de clima para una noticia.",
+      "receta": "chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.icon-grid-personas",
+      "label": "Iconos · personas",
+      "summary": "Elegir iconos de personas para una noticia.",
+      "family": "iconos",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "iconos",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "category": "personas",
+        "cols": 5,
+        "size": 30,
+        "labelSize": 20,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir iconos de personas para una noticia.",
+      "receta": "chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.icon-grid-lugares",
+      "label": "Iconos · lugares",
+      "summary": "Elegir iconos de lugares para una noticia.",
+      "family": "iconos",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "iconos",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "category": "lugares",
+        "cols": 5,
+        "size": 30,
+        "labelSize": 20,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir iconos de lugares para una noticia.",
+      "receta": "chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.icon-grid-medios",
+      "label": "Iconos · medios",
+      "summary": "Elegir iconos de medios para una noticia.",
+      "family": "iconos",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "iconos",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "category": "medios",
+        "cols": 5,
+        "size": 30,
+        "labelSize": 20,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir iconos de medios para una noticia.",
+      "receta": "chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.icon-grid-general",
+      "label": "Iconos · general",
+      "summary": "Elegir iconos de general para una noticia.",
+      "family": "iconos",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "iconos",
+        "icon-grid"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "icon-grid",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "names": {
+          "type": "array",
+          "default": null,
+          "description": "Nombres explícitos; tiene prioridad sobre category."
+        },
+        "category": {
+          "type": "string",
+          "default": "conflicto",
+          "description": "Categoría de noticiero-icons.json; se usa conflicto si no se indican names ni category. Para ver toda la biblioteca, recorrer las 12 galerías."
+        },
+        "cols": {
+          "type": "number",
+          "default": null,
+          "description": "Columnas; 4 vertical y 6 horizontal por defecto."
+        },
+        "size": {
+          "type": "number",
+          "default": 32,
+          "description": "Semilado del icono en píxeles de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 960,
+          "description": "Ancho en píxeles de diseño, limitado a 90% del cuadro."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Letra de los nombres, con salto por guiones."
+        }
+      },
+      "demo": {
+        "type": "icon-grid",
+        "category": "general",
+        "cols": 6,
+        "size": 30,
+        "labelSize": 20,
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Elegir iconos de general para una noticia.",
+      "receta": "chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.flag-chip",
+      "label": "Bandera de país",
+      "summary": "Identificar un país junto a una cifra o portavoz.",
+      "family": "identidad",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "identidad",
+        "flag-chip"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "flag-chip",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "code": {
+          "type": "string",
+          "default": null,
+          "description": "ISO2 sin distinguir mayúsculas; src tiene prioridad."
+        },
+        "src": {
+          "type": "string",
+          "default": null,
+          "description": "Imagen alternativa relativa a assets del episodio."
+        },
+        "label": {
+          "type": "string",
+          "default": null,
+          "description": "Nombre del país."
+        },
+        "size": {
+          "type": "number",
+          "default": 112,
+          "description": "Ancho en píxeles de diseño."
+        },
+        "shape": {
+          "type": "string",
+          "default": "rect",
+          "description": "rect para 4:3, round para círculo (imagen completa contenida)."
+        },
+        "plate": {
+          "type": "boolean",
+          "default": true,
+          "description": "Fondo oscuro; false transparente."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Altura de etiqueta."
+        }
+      },
+      "demo": {
+        "type": "flag-chip",
+        "code": "PY",
+        "label": "Paraguay",
+        "size": 210,
+        "x": 0.5,
+        "y": 0.46,
+        "color": "white",
+        "t": 0.2
+      },
+      "uso": "Identificar un país junto a una cifra o portavoz.",
+      "receta": "counter + portrait",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.logo-chip",
+      "label": "Logotipo de entidad",
+      "summary": "Identificar una empresa, institución u organización.",
+      "family": "identidad",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "identidad",
+        "logo-chip"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "logo-chip",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia tipográfica; omitir hereda scene.hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso de texto."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Color por nombre del tema o CSS/hex."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 0,
+          "description": "Espaciado tipográfico donde corresponda."
+        },
+        "src": {
+          "type": "string",
+          "default": null,
+          "description": "PNG/JPG/SVG relativo a assets; ausente muestra iniciales y avisa."
+        },
+        "label": {
+          "type": "string",
+          "default": null,
+          "description": "Entidad e iniciales de reserva."
+        },
+        "size": {
+          "type": "number",
+          "default": 100,
+          "description": "Lado del logotipo; contiene imagen sin deformarla."
+        },
+        "shape": {
+          "type": "string",
+          "default": "rect",
+          "description": "rect redondeado o round circular."
+        },
+        "plate": {
+          "type": "boolean|string",
+          "default": true,
+          "description": "true blanco, false transparente, o color CSS/nombre."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 20,
+          "description": "Altura de etiqueta."
+        }
+      },
+      "demo": {
+        "type": "logo-chip",
+        "src": "media/noticiero-logo-test.svg",
+        "label": "Nexa Brief",
+        "size": 180,
+        "shape": "rect",
+        "plate": true,
+        "color": "blue",
+        "y": 0.46,
+        "t": 0.2
+      },
+      "uso": "Identificar una empresa, institución u organización.",
+      "receta": "topic + counter",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.flag-fill",
+      "label": "Bandera sobre territorio",
+      "summary": "Presentar el país sobre su territorio en el globo.",
+      "family": "mapa",
+      "target": "layers",
+      "tags": [
+        "noticiero",
+        "original",
+        "mapa",
+        "flag-fill"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "flag-fill",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.8,
+          "description": "Duración de entrada en segundos."
+        },
+        "region": {
+          "type": "string",
+          "default": null,
+          "description": "ISO2 o región declarada."
+        },
+        "src": {
+          "type": "string",
+          "default": null,
+          "description": "Imagen relativa a assets; ver FLAG_FILL.md para banderas compartidas."
+        },
+        "fit": {
+          "type": "string",
+          "default": "global",
+          "description": "global o landmass."
+        },
+        "opacity": {
+          "type": "number",
+          "default": 1,
+          "description": "Opacidad entre 0 y 1."
+        },
+        "fadeOut": {
+          "type": "number",
+          "default": 0.4,
+          "description": "Duración de salida."
+        },
+        "opacityKeys": {
+          "type": "array",
+          "default": [],
+          "description": "Claves {t,value} ordenadas."
+        }
+      },
+      "demo": {
+        "type": "flag-fill",
+        "region": "US",
+        "src": "/api/v1/explainer/files/sandbox/nodehistory/_atlas/assets/flags/us.svg",
+        "fit": "landmass",
+        "t": 0,
+        "dur": 0.8,
+        "opacity": 0.94
+      },
+      "uso": "Presentar el país sobre su territorio en el globo.",
+      "receta": "flag-chip + topic",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ],
+      "catalogo_origen": "noticiero/componentes.json"
+    },
+    {
+      "name": "noticiero.bar-compare",
+      "label": "Comparación de barras",
+      "summary": "Comparar magnitudes de dos a seis países, sectores o períodos.",
+      "family": "Datos y economía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "datos",
+        "bar-compare"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "bar-compare",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.44,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia opcional; omitir usa hudTheme.fonts.ui en etiquetas y hudTheme.fonts.num en cifras."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; hereda el campo weight de la pieza."
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "description": "Color por nombre del tema o CSS/hex. Omitir: azul de borde, blanco de texto, paleta de series y color automático de variaciones."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "width": {
+          "type": "number",
+          "default": 900,
+          "description": "Ancho del panel en unidades de diseño (mínimo efectivo 360); se ajusta entero al cuadro y por encima de y=.8."
+        },
+        "size": {
+          "type": "number",
+          "default": 30,
+          "description": "Tamaño base de los textos; cifras usan fuente numérica del tema."
+        },
+        "locale": {
+          "type": "string",
+          "default": "es-ES",
+          "description": "Idioma BCP47 de las cifras (es-ES, en-US…). Agrupa también cuatro dígitos: 1.234,5."
+        },
+        "decimals": {
+          "type": "integer",
+          "default": 0,
+          "description": "Decimales fijos de 0 a 8."
+        },
+        "count": {
+          "type": "number",
+          "default": 1.1,
+          "description": "Segundos de crecimiento/conteo por estado, desde t o el step activo."
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.12,
+          "description": "Retraso entre barras, filas o series, en segundos."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "description": "Unidad añadida a las cifras; cada barra/fila puede sustituirla."
+        },
+        "bars": {
+          "type": "array",
+          "default": [],
+          "description": "De 2 a 6 barras; orden de entrada = orden del array. label debe ser único.",
+          "fields": {
+            "label": {
+              "type": "string",
+              "default": null,
+              "description": "Etiqueta de la barra/parte/cotización."
+            },
+            "value": {
+              "type": "number",
+              "default": 0,
+              "description": "Valor finito; barras y partes requieren valores no negativos."
+            },
+            "unit": {
+              "type": "string",
+              "default": null,
+              "description": "Unidad propia; omitir hereda unit de la pieza."
+            },
+            "color": {
+              "type": "string",
+              "default": null,
+              "description": "Color por nombre del tema o CSS/hex; omitir hereda la pieza."
+            }
+          }
+        },
+        "orientation": {
+          "type": "string",
+          "default": "horizontal",
+          "description": "horizontal o vertical; disposición fija para todos los steps."
+        },
+        "max": {
+          "type": "number",
+          "default": null,
+          "description": "Máximo del eje; omitir usa la mayor barra del estado actual y anterior."
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "description": "Título del panel."
+        },
+        "highlight": {
+          "type": "string",
+          "default": null,
+          "description": "label exacto de la barra destacada; atenúa las otras."
+        },
+        "steps": {
+          "type": "array",
+          "default": [],
+          "description": "Estados parciales ordenados por t; cada uno hereda el estado anterior y sustituye sus arrays completos. Campos permitidos: t, bars, title, highlight, max, unit, locale, decimals, count, stagger. Primer estado: datos de la pieza, o vacío si solo hay steps. Seek puro; números interpolan desde el estado anterior por etiqueta/nombre, nuevos desde cero. Usa anclas reales en episodios.",
+          "fields": {
+            "t": {
+              "type": "number|string",
+              "default": 0,
+              "description": "Segundo o ancla de voz absoluta, como @inflacion; obligatorio."
+            }
+          }
+        }
+      },
+      "demo": {
+        "type": "bar-compare",
+        "t": 0.2,
+        "out": 6.5,
+        "title": "EXPORTACIONES · EJEMPLO",
+        "unit": "M€",
+        "decimals": 1,
+        "highlight": "Alemania",
+        "steps": [
+          {
+            "t": 0.2,
+            "bars": [
+              {
+                "label": "Alemania",
+                "value": 1234.5,
+                "color": "blue"
+              },
+              {
+                "label": "Francia",
+                "value": 986.2,
+                "color": "yellow"
+              },
+              {
+                "label": "Italia",
+                "value": 754.8,
+                "color": "green"
+              }
+            ]
+          }
+        ]
+      },
+      "uso": "Comparar magnitudes de dos a seis países, sectores o períodos.",
+      "receta": "topic + highlight + bar-compare; delta para explicar la variación.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.line-series",
+      "label": "Series de evolución",
+      "summary": "Mostrar una evolución de una a tres series y señalar un momento del relato.",
+      "family": "Datos y economía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "datos",
+        "line-series"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "line-series",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.44,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia opcional; omitir usa hudTheme.fonts.ui en etiquetas y hudTheme.fonts.num en cifras."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; hereda el campo weight de la pieza."
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "description": "Color por nombre del tema o CSS/hex. Omitir: azul de borde, blanco de texto, paleta de series y color automático de variaciones."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "width": {
+          "type": "number",
+          "default": 900,
+          "description": "Ancho del panel en unidades de diseño (mínimo efectivo 360); se ajusta entero al cuadro y por encima de y=.8."
+        },
+        "size": {
+          "type": "number",
+          "default": 30,
+          "description": "Tamaño base de los textos; cifras usan fuente numérica del tema."
+        },
+        "locale": {
+          "type": "string",
+          "default": "es-ES",
+          "description": "Idioma BCP47 de las cifras (es-ES, en-US…). Agrupa también cuatro dígitos: 1.234,5."
+        },
+        "decimals": {
+          "type": "integer",
+          "default": 0,
+          "description": "Decimales fijos de 0 a 8."
+        },
+        "count": {
+          "type": "number",
+          "default": 1.1,
+          "description": "Segundos de crecimiento/conteo por estado, desde t o el step activo."
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.12,
+          "description": "Retraso entre barras, filas o series, en segundos."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "description": "Unidad añadida a las cifras; cada barra/fila puede sustituirla."
+        },
+        "series": {
+          "type": "array",
+          "default": [],
+          "description": "De 1 a 3 series; cada una con label, color y points. Entre 2 y 1000 puntos por serie, todos [x,y] o todos {label,value}.",
+          "fields": {
+            "label": {
+              "type": "string",
+              "default": "",
+              "description": "Nombre de la serie."
+            },
+            "color": {
+              "type": "string",
+              "default": null,
+              "description": "Nombre del tema o CSS/hex; por defecto blue, yellow, green."
+            },
+            "points": {
+              "type": "array",
+              "default": [],
+              "description": "Puntos ordenados por x o por índice; no mezclar formatos.",
+              "fields": {
+                "x": {
+                  "type": "number",
+                  "default": null,
+                  "description": "Primera coordenada de [x,y]; estrictamente creciente."
+                },
+                "y": {
+                  "type": "number",
+                  "default": null,
+                  "description": "Segunda coordenada de [x,y]."
+                },
+                "label": {
+                  "type": "string",
+                  "default": null,
+                  "description": "Etiqueta de punto {label,value}; posición x = índice."
+                },
+                "value": {
+                  "type": "number",
+                  "default": null,
+                  "description": "Valor de punto {label,value}."
+                }
+              }
+            }
+          }
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "description": "Título del gráfico."
+        },
+        "min": {
+          "type": "number",
+          "default": null,
+          "description": "Mínimo del eje y; omitir usa mínimo de los puntos."
+        },
+        "max": {
+          "type": "number",
+          "default": null,
+          "description": "Máximo del eje y; omitir usa máximo de los puntos."
+        },
+        "marker": {
+          "type": "object",
+          "default": null,
+          "description": "Marcador vertical opcional; aparece a partir de su t absoluta.",
+          "fields": {
+            "t": {
+              "type": "number|string",
+              "default": null,
+              "description": "Ancla o segundo de entrada; omitir usa t del estado."
+            },
+            "x": {
+              "type": "number",
+              "default": null,
+              "description": "Coordenada x numérica; alternativa a label."
+            },
+            "label": {
+              "type": "string",
+              "default": null,
+              "description": "Etiqueta exacta de un punto {label,value}; alternativa a x."
+            },
+            "text": {
+              "type": "string",
+              "default": "",
+              "description": "Rótulo del marcador; omitir usa label."
+            },
+            "color": {
+              "type": "string",
+              "default": "white",
+              "description": "Nombre del tema o CSS/hex."
+            }
+          }
+        },
+        "steps": {
+          "type": "array",
+          "default": [],
+          "description": "Estados parciales ordenados por t; cada uno hereda el estado anterior y sustituye sus arrays completos. Campos permitidos: t, series, title, marker, min, max, unit, locale, decimals, count, stagger. Primer estado: datos de la pieza, o vacío si solo hay steps. Seek puro; números interpolan desde el estado anterior por etiqueta/nombre, nuevos desde cero. Usa anclas reales en episodios.",
+          "fields": {
+            "t": {
+              "type": "number|string",
+              "default": 0,
+              "description": "Segundo o ancla de voz absoluta, como @inflacion; obligatorio."
+            }
+          }
+        }
+      },
+      "demo": {
+        "type": "line-series",
+        "t": 0.2,
+        "out": 6.5,
+        "title": "INFLACIÓN · EJEMPLO",
+        "unit": "%",
+        "decimals": 1,
+        "steps": [
+          {
+            "t": 0.2,
+            "series": [
+              {
+                "label": "Zona euro",
+                "color": "blue",
+                "points": [
+                  {
+                    "label": "ENE",
+                    "value": 6.8
+                  },
+                  {
+                    "label": "FEB",
+                    "value": 6.2
+                  },
+                  {
+                    "label": "MAR",
+                    "value": 5.7
+                  },
+                  {
+                    "label": "ABR",
+                    "value": 5.9
+                  },
+                  {
+                    "label": "MAY",
+                    "value": 4.8
+                  }
+                ]
+              },
+              {
+                "label": "Estados Unidos",
+                "color": "yellow",
+                "points": [
+                  {
+                    "label": "ENE",
+                    "value": 5.8
+                  },
+                  {
+                    "label": "FEB",
+                    "value": 5.4
+                  },
+                  {
+                    "label": "MAR",
+                    "value": 5.2
+                  },
+                  {
+                    "label": "ABR",
+                    "value": 4.6
+                  },
+                  {
+                    "label": "MAY",
+                    "value": 4.1
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "marker": {
+          "t": 1.6,
+          "label": "MAR",
+          "text": "CAMBIO DE TENDENCIA"
+        }
+      },
+      "uso": "Mostrar una evolución de una a tres series y señalar un momento del relato.",
+      "receta": "topic + line-series + delta; marcador t:\"@palabra\" cuando se menciona el hito.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.delta",
+      "label": "Variación",
+      "summary": "Destacar la subida o caída de un precio, indicador o porcentaje.",
+      "family": "Datos y economía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "datos",
+        "delta"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "delta",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.44,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia opcional; omitir usa hudTheme.fonts.ui en etiquetas y hudTheme.fonts.num en cifras."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; hereda el campo weight de la pieza."
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "description": "Color por nombre del tema o CSS/hex. Omitir: azul de borde, blanco de texto, paleta de series y color automático de variaciones."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "width": {
+          "type": "number",
+          "default": 900,
+          "description": "Ancho del panel en unidades de diseño (mínimo efectivo 360); se ajusta entero al cuadro y por encima de y=.8."
+        },
+        "size": {
+          "type": "number",
+          "default": 76,
+          "description": "Tamaño base de los textos; cifras usan fuente numérica del tema."
+        },
+        "locale": {
+          "type": "string",
+          "default": "es-ES",
+          "description": "Idioma BCP47 de las cifras (es-ES, en-US…). Agrupa también cuatro dígitos: 1.234,5."
+        },
+        "decimals": {
+          "type": "integer",
+          "default": 1,
+          "description": "Decimales fijos de 0 a 8."
+        },
+        "count": {
+          "type": "number",
+          "default": 1.1,
+          "description": "Segundos de crecimiento/conteo por estado, desde t o el step activo."
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.12,
+          "description": "Retraso entre barras, filas o series, en segundos."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "description": "Unidad añadida a las cifras; cada barra/fila puede sustituirla."
+        },
+        "value": {
+          "type": "number",
+          "default": 0,
+          "description": "Variación final con signo."
+        },
+        "from": {
+          "type": "number",
+          "default": 0,
+          "description": "Valor inicial del primer estado."
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "description": "Nombre del indicador."
+        },
+        "labelSize": {
+          "type": "number",
+          "default": 30,
+          "description": "Tamaño del nombre y período."
+        },
+        "period": {
+          "type": "string",
+          "default": "",
+          "description": "Período de referencia."
+        },
+        "good": {
+          "type": "string",
+          "default": "up",
+          "description": "up: subida verde, caída roja. down invierte el juicio. Cero en dim. color explícito sustituye el automático."
+        },
+        "steps": {
+          "type": "array",
+          "default": [],
+          "description": "Estados parciales ordenados por t; cada uno hereda el estado anterior y sustituye sus arrays completos. Campos permitidos: t, value, from, label, period, good, unit, locale, decimals, count. Primer estado: datos de la pieza, o vacío si solo hay steps. Seek puro; números interpolan desde el estado anterior por etiqueta/nombre, nuevos desde cero. Usa anclas reales en episodios. También acepta title.",
+          "fields": {
+            "t": {
+              "type": "number|string",
+              "default": 0,
+              "description": "Segundo o ancla de voz absoluta, como @inflacion; obligatorio."
+            }
+          }
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "description": "Título opcional del panel."
+        }
+      },
+      "demo": {
+        "type": "delta",
+        "t": 0.2,
+        "out": 6.5,
+        "label": "PETRÓLEO · EJEMPLO",
+        "unit": "%",
+        "period": "RESPECTO AL CIERRE ANTERIOR",
+        "steps": [
+          {
+            "t": 0.2,
+            "value": 4.2
+          }
+        ]
+      },
+      "uso": "Destacar la subida o caída de un precio, indicador o porcentaje.",
+      "receta": "topic + delta + line-series; good:\"down\" para inflación o desempleo.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.ranking",
+      "label": "Clasificación",
+      "summary": "Ordenar de tres a cinco países, empresas o sectores por magnitud.",
+      "family": "Datos y economía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "datos",
+        "ranking"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "ranking",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.44,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia opcional; omitir usa hudTheme.fonts.ui en etiquetas y hudTheme.fonts.num en cifras."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; hereda el campo weight de la pieza."
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "description": "Color por nombre del tema o CSS/hex. Omitir: azul de borde, blanco de texto, paleta de series y color automático de variaciones."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "width": {
+          "type": "number",
+          "default": 900,
+          "description": "Ancho del panel en unidades de diseño (mínimo efectivo 360); se ajusta entero al cuadro y por encima de y=.8."
+        },
+        "size": {
+          "type": "number",
+          "default": 30,
+          "description": "Tamaño base de los textos; cifras usan fuente numérica del tema."
+        },
+        "locale": {
+          "type": "string",
+          "default": "es-ES",
+          "description": "Idioma BCP47 de las cifras (es-ES, en-US…). Agrupa también cuatro dígitos: 1.234,5."
+        },
+        "decimals": {
+          "type": "integer",
+          "default": 0,
+          "description": "Decimales fijos de 0 a 8."
+        },
+        "count": {
+          "type": "number",
+          "default": 1.1,
+          "description": "Segundos de crecimiento/conteo por estado, desde t o el step activo."
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.12,
+          "description": "Retraso entre barras, filas o series, en segundos."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "description": "Unidad añadida a las cifras; cada barra/fila puede sustituirla."
+        },
+        "items": {
+          "type": "array",
+          "default": [],
+          "description": "De 3 a 5 elementos en el orden publicado; no se reordenan automáticamente. Puesto = índice + 1.",
+          "fields": {
+            "label": {
+              "type": "string",
+              "default": null,
+              "description": "Etiqueta de la barra/parte/cotización."
+            },
+            "value": {
+              "type": "number",
+              "default": 0,
+              "description": "Valor finito; barras y partes requieren valores no negativos."
+            },
+            "unit": {
+              "type": "string",
+              "default": null,
+              "description": "Unidad propia; omitir hereda unit de la pieza."
+            },
+            "color": {
+              "type": "string",
+              "default": null,
+              "description": "Color por nombre del tema o CSS/hex; omitir hereda la pieza."
+            },
+            "name": {
+              "type": "string",
+              "default": null,
+              "description": "Nombre del elemento; alternativa prioritaria a label."
+            },
+            "flag": {
+              "type": "string",
+              "default": null,
+              "description": "Código de bandera de la biblioteca A, como US. Sin distinguir mayúsculas; tiene prioridad sobre icon."
+            },
+            "icon": {
+              "type": "string",
+              "default": null,
+              "description": "Nombre válido de la biblioteca de la tarea A; alternativa a flag."
+            }
+          }
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "description": "Título del ranking."
+        },
+        "steps": {
+          "type": "array",
+          "default": [],
+          "description": "Estados parciales ordenados por t; cada uno hereda el estado anterior y sustituye sus arrays completos. Campos permitidos: t, items, title, unit, locale, decimals, count, stagger. Primer estado: datos de la pieza, o vacío si solo hay steps. Seek puro; números interpolan desde el estado anterior por etiqueta/nombre, nuevos desde cero. Usa anclas reales en episodios.",
+          "fields": {
+            "t": {
+              "type": "number|string",
+              "default": 0,
+              "description": "Segundo o ancla de voz absoluta, como @inflacion; obligatorio."
+            }
+          }
+        }
+      },
+      "demo": {
+        "type": "ranking",
+        "t": 0.2,
+        "out": 6.5,
+        "title": "PIB · DATOS ILUSTRATIVOS",
+        "unit": "M€",
+        "steps": [
+          {
+            "t": 0.2,
+            "items": [
+              {
+                "name": "Estados Unidos",
+                "flag": "US",
+                "value": 27360,
+                "color": "blue"
+              },
+              {
+                "name": "China",
+                "flag": "CN",
+                "value": 17795,
+                "color": "yellow"
+              },
+              {
+                "name": "Alemania",
+                "flag": "DE",
+                "value": 4456,
+                "color": "green"
+              },
+              {
+                "name": "Japón",
+                "flag": "JP",
+                "value": 4213,
+                "color": "white"
+              }
+            ]
+          }
+        ]
+      },
+      "uso": "Ordenar de tres a cinco países, empresas o sectores por magnitud.",
+      "receta": "topic + ranking + flag-chip; counter o delta para el primer puesto.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.stacked-bar",
+      "label": "Reparto apilado",
+      "summary": "Mostrar la composición porcentual de un resultado, presupuesto o bloque.",
+      "family": "Datos y economía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "datos",
+        "stacked-bar"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "stacked-bar",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.44,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia opcional; omitir usa hudTheme.fonts.ui en etiquetas y hudTheme.fonts.num en cifras."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; hereda el campo weight de la pieza."
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "description": "Color por nombre del tema o CSS/hex. Omitir: azul de borde, blanco de texto, paleta de series y color automático de variaciones."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "width": {
+          "type": "number",
+          "default": 900,
+          "description": "Ancho del panel en unidades de diseño (mínimo efectivo 360); se ajusta entero al cuadro y por encima de y=.8."
+        },
+        "size": {
+          "type": "number",
+          "default": 30,
+          "description": "Tamaño base de los textos; cifras usan fuente numérica del tema."
+        },
+        "locale": {
+          "type": "string",
+          "default": "es-ES",
+          "description": "Idioma BCP47 de las cifras (es-ES, en-US…). Agrupa también cuatro dígitos: 1.234,5."
+        },
+        "decimals": {
+          "type": "integer",
+          "default": 0,
+          "description": "Decimales fijos de 0 a 8."
+        },
+        "count": {
+          "type": "number",
+          "default": 1.1,
+          "description": "Segundos de crecimiento/conteo por estado, desde t o el step activo."
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.12,
+          "description": "Retraso entre barras, filas o series, en segundos."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "description": "Unidad añadida a las cifras; cada barra/fila puede sustituirla."
+        },
+        "parts": {
+          "type": "array",
+          "default": [],
+          "description": "De 1 a 12 partes no negativas y de suma positiva; se normalizan al 100 %. label único. Leyenda por fila, también para partes pequeñas.",
+          "fields": {
+            "label": {
+              "type": "string",
+              "default": null,
+              "description": "Etiqueta de la barra/parte/cotización."
+            },
+            "value": {
+              "type": "number",
+              "default": 0,
+              "description": "Valor finito; barras y partes requieren valores no negativos."
+            },
+            "unit": {
+              "type": "string",
+              "default": null,
+              "description": "Unidad propia; omitir hereda unit de la pieza."
+            },
+            "color": {
+              "type": "string",
+              "default": null,
+              "description": "Color por nombre del tema o CSS/hex; omitir hereda la pieza."
+            }
+          }
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "description": "Título del reparto."
+        },
+        "total": {
+          "type": "number",
+          "default": null,
+          "description": "Total rotulado; omitir suma los valores finales del estado. No cambia la normalización de la barra."
+        },
+        "steps": {
+          "type": "array",
+          "default": [],
+          "description": "Estados parciales ordenados por t; cada uno hereda el estado anterior y sustituye sus arrays completos. Campos permitidos: t, parts, title, total, unit, locale, decimals, count, stagger. Primer estado: datos de la pieza, o vacío si solo hay steps. Seek puro; números interpolan desde el estado anterior por etiqueta/nombre, nuevos desde cero. Usa anclas reales en episodios.",
+          "fields": {
+            "t": {
+              "type": "number|string",
+              "default": 0,
+              "description": "Segundo o ancla de voz absoluta, como @inflacion; obligatorio."
+            }
+          }
+        }
+      },
+      "demo": {
+        "type": "stacked-bar",
+        "t": 0.2,
+        "out": 6.5,
+        "title": "REPARTO DE ESCAÑOS · EJEMPLO",
+        "unit": "escaños",
+        "steps": [
+          {
+            "t": 0.2,
+            "parts": [
+              {
+                "label": "Bloque azul",
+                "value": 180,
+                "color": "blue"
+              },
+              {
+                "label": "Bloque rojo",
+                "value": 156,
+                "color": "red"
+              },
+              {
+                "label": "Coalición verde",
+                "value": 11,
+                "color": "green"
+              },
+              {
+                "label": "Otros",
+                "value": 3,
+                "color": "dim"
+              }
+            ]
+          }
+        ]
+      },
+      "uso": "Mostrar la composición porcentual de un resultado, presupuesto o bloque.",
+      "receta": "topic + stacked-bar + hemicycle para escaños; todas las etiquetas se conservan en una leyenda debajo.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.ticker",
+      "label": "Cotizaciones",
+      "summary": "Resumir de dos a seis cotizaciones con sus variaciones en una franja fija.",
+      "family": "Datos y economía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "datos",
+        "ticker"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "ticker",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada en segundos o ancla de voz."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada en segundos."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración de salida en segundos."
+        },
+        "x": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Centro horizontal como fracción del cuadro."
+        },
+        "y": {
+          "type": "number",
+          "default": 0.69,
+          "description": "Centro vertical como fracción del cuadro."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar declarado o [longitud,latitud]; sustituye x,y."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal en píxeles de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical en píxeles de diseño."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia opcional; omitir usa hudTheme.fonts.ui en etiquetas y hudTheme.fonts.num en cifras."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; hereda el campo weight de la pieza."
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "description": "Color por nombre del tema o CSS/hex. Omitir: azul de borde, blanco de texto, paleta de series y color automático de variaciones."
+        },
+        "upper": {
+          "type": "boolean",
+          "default": true,
+          "description": "Mayúsculas en etiquetas; icon-grid conserva nombres ingleses."
+        },
+        "width": {
+          "type": "number",
+          "default": 900,
+          "description": "Ancho del panel en unidades de diseño (mínimo efectivo 360); se ajusta entero al cuadro y por encima de y=.8."
+        },
+        "size": {
+          "type": "number",
+          "default": 30,
+          "description": "Tamaño base de los textos; cifras usan fuente numérica del tema."
+        },
+        "locale": {
+          "type": "string",
+          "default": "es-ES",
+          "description": "Idioma BCP47 de las cifras (es-ES, en-US…). Agrupa también cuatro dígitos: 1.234,5."
+        },
+        "decimals": {
+          "type": "integer",
+          "default": 1,
+          "description": "Decimales fijos de 0 a 8."
+        },
+        "count": {
+          "type": "number",
+          "default": 1.1,
+          "description": "Segundos de crecimiento/conteo por estado, desde t o el step activo."
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.12,
+          "description": "Retraso entre barras, filas o series, en segundos."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "description": "Unidad añadida a las cifras; cada barra/fila puede sustituirla."
+        },
+        "items": {
+          "type": "array",
+          "default": [],
+          "description": "De 2 a 6 cotizaciones; rejilla fija de 2 columnas vertical o 3 horizontal. Entrada escalonada, sin marquesina.",
+          "fields": {
+            "label": {
+              "type": "string",
+              "default": null,
+              "description": "Etiqueta de la barra/parte/cotización."
+            },
+            "value": {
+              "type": "number",
+              "default": 0,
+              "description": "Valor finito; barras y partes requieren valores no negativos."
+            },
+            "unit": {
+              "type": "string",
+              "default": null,
+              "description": "Unidad propia; omitir hereda unit de la pieza."
+            },
+            "change": {
+              "type": "number",
+              "default": 0,
+              "description": "Variación porcentual con signo; color automático verde/rojo, cero dim."
+            }
+          }
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "description": "Título opcional de la franja."
+        },
+        "good": {
+          "type": "string",
+          "default": "up",
+          "description": "up: subida verde; down invierte los colores de variación."
+        },
+        "steps": {
+          "type": "array",
+          "default": [],
+          "description": "Estados parciales ordenados por t; cada uno hereda el estado anterior y sustituye sus arrays completos. Campos permitidos: t, items, title, good, unit, locale, decimals, count, stagger. Primer estado: datos de la pieza, o vacío si solo hay steps. Seek puro; números interpolan desde el estado anterior por etiqueta/nombre, nuevos desde cero. Usa anclas reales en episodios.",
+          "fields": {
+            "t": {
+              "type": "number|string",
+              "default": 0,
+              "description": "Segundo o ancla de voz absoluta, como @inflacion; obligatorio."
+            }
+          }
+        }
+      },
+      "demo": {
+        "type": "ticker",
+        "t": 0.2,
+        "out": 6.5,
+        "title": "MERCADOS · EJEMPLO",
+        "steps": [
+          {
+            "t": 0.2,
+            "items": [
+              {
+                "label": "Brent",
+                "value": 83.4,
+                "unit": "USD",
+                "change": 4.2
+              },
+              {
+                "label": "Oro",
+                "value": 2345.6,
+                "unit": "USD",
+                "change": -0.8
+              },
+              {
+                "label": "EUR/USD",
+                "value": 1.1,
+                "change": 0.4
+              },
+              {
+                "label": "Gas natural",
+                "value": 32.8,
+                "unit": "EUR",
+                "change": -2.1
+              }
+            ]
+          }
+        ]
+      },
+      "uso": "Resumir de dos a seis cotizaciones con sus variaciones en una franja fija.",
+      "receta": "topic + ticker en el centro inferior; line-series para ampliar una cotización.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.range-ring",
+      "label": "Radio de alcance",
+      "summary": "Mostrar un radio geográfico en kilómetros desde un lugar.",
+      "family": "Mapa y geografía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "range-ring"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "range-ring",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada absoluta en segundos o ancla de voz @palabra."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida absoluta; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada/trazado/viaje en segundos, función de t."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración del fundido de salida en segundos."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño de diseño; no altera radios geográficos en km."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia de texto; omitir hereda hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; algunas etiquetas secundarias usan 500."
+        },
+        "color": {
+          "type": "string",
+          "default": "blue",
+          "description": "Nombre de hudTheme.colors o color CSS/hex; el texto de tarjetas es blanco si se omite."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar de scene.places o [lon,lat]; sigue la proyección y se oculta detrás del globo."
+        },
+        "x": {
+          "type": "number",
+          "default": null,
+          "description": "Centro horizontal; omitir usa .5 o .17 para timeline vertical, si no hay at."
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "description": "Centro vertical; por defecto depende de la pieza y orientación."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal del ancla en unidades de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical del ancla en unidades de diseño."
+        },
+        "radiusKm": {
+          "type": "number",
+          "default": 1500,
+          "description": "Radio geodésico en km; 0 < radio < 20000."
+        },
+        "rings": {
+          "type": "array",
+          "default": null,
+          "description": "De 1 a 8 radios en km; sustituye radiusKm y dibuja anillos concéntricos."
+        },
+        "label": {
+          "type": "string",
+          "default": null,
+          "description": "Rótulo alternativo solo con un anillo; varios usan cifras es-ES + km."
+        },
+        "size": {
+          "type": "number",
+          "default": 26,
+          "description": "Tamaño del rótulo en unidades de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 2,
+          "description": "Grosor del borde en unidades de diseño."
+        },
+        "fillOpacity": {
+          "type": "number",
+          "default": 0.08,
+          "description": "Opacidad del relleno de cada anillo; 0–1. Al cruzar el horizonte se dibuja solo el borde visible para evitar cierres falsos."
+        }
+      },
+      "demo": {
+        "type": "range-ring",
+        "t": 0.2,
+        "out": 6.5,
+        "at": [
+          -77,
+          38.9
+        ],
+        "rings": [
+          500,
+          1000,
+          1500
+        ],
+        "dur": 2,
+        "color": "yellow"
+      },
+      "uso": "Mostrar un radio geográfico en kilómetros desde un lugar.",
+      "receta": "topic + city + range-ring + counter para alcance o área afectada.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.pulse",
+      "label": "Pulso de radar",
+      "summary": "Marcar una señal, explosión o epicentro con ondas repetidas.",
+      "family": "Mapa y geografía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "pulse"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "pulse",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada absoluta en segundos o ancla de voz @palabra."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida absoluta; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada/trazado/viaje en segundos, función de t."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración del fundido de salida en segundos."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño de diseño; no altera radios geográficos en km."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia de texto; omitir hereda hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; algunas etiquetas secundarias usan 500."
+        },
+        "color": {
+          "type": "string",
+          "default": "blue",
+          "description": "Nombre de hudTheme.colors o color CSS/hex; el texto de tarjetas es blanco si se omite."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar de scene.places o [lon,lat]; sigue la proyección y se oculta detrás del globo."
+        },
+        "x": {
+          "type": "number",
+          "default": null,
+          "description": "Centro horizontal; omitir usa .5 o .17 para timeline vertical, si no hay at."
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "description": "Centro vertical; por defecto depende de la pieza y orientación."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal del ancla en unidades de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical del ancla en unidades de diseño."
+        },
+        "period": {
+          "type": "number",
+          "default": 1.8,
+          "description": "Periodo positivo de repetición en segundos; tres ondas desfasadas, función pura de t."
+        },
+        "r": {
+          "type": "number",
+          "default": 110,
+          "description": "Radio máximo en unidades de diseño, no km; se aplana con pitch."
+        },
+        "width": {
+          "type": "number",
+          "default": 3,
+          "description": "Grosor de las ondas."
+        }
+      },
+      "demo": {
+        "type": "pulse",
+        "t": 0.2,
+        "out": 6.5,
+        "at": [
+          -77,
+          38.9
+        ],
+        "color": "orange",
+        "r": 150,
+        "period": 1.8
+      },
+      "uso": "Marcar una señal, explosión o epicentro con ondas repetidas.",
+      "receta": "topic + pulse + range-ring + counter para desastre o explosión.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.route-icon",
+      "label": "Vehículo en ruta",
+      "summary": "Mostrar un vehículo que recorre un trayecto con rumbo y estela.",
+      "family": "Mapa y geografía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "route-icon"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "route-icon",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada absoluta en segundos o ancla de voz @palabra."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida absoluta; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada/trazado/viaje en segundos, función de t."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración del fundido de salida en segundos."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño de diseño; no altera radios geográficos en km."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia de texto; omitir hereda hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; algunas etiquetas secundarias usan 500."
+        },
+        "color": {
+          "type": "string",
+          "default": "blue",
+          "description": "Nombre de hudTheme.colors o color CSS/hex; el texto de tarjetas es blanco si se omite."
+        },
+        "from": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar o [lon,lat] de origen."
+        },
+        "to": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar o [lon,lat] de destino."
+        },
+        "via": {
+          "type": "array",
+          "default": [],
+          "description": "Hasta 16 lugares/[lon,lat] intermedios; tiempo repartido por longitud geodésica de cada tramo."
+        },
+        "icon": {
+          "type": "string",
+          "default": "plane",
+          "description": "Nombre de biblioteca. Rumbo calibrado: plane, fighter-jet, ship (proa arriba), warship y tank (derecha). warship/tank se reflejan hacia el oeste para conservar su base abajo. Otros: ajustar iconAngle."
+        },
+        "iconAngle": {
+          "type": "number",
+          "default": null,
+          "description": "Rumbo intrínseco del dibujo en grados desde la derecha; omitir usa calibración. ship es vista frontal, warship lateral facilita lectura del rumbo."
+        },
+        "path": {
+          "type": "string",
+          "default": "great-circle",
+          "description": "great-circle, straight o curve; misma función de proyección y elevación que arc."
+        },
+        "lift": {
+          "type": "number",
+          "default": 100,
+          "description": "Elevación de pantalla del centro de cada tramo, unidades de diseño; 0 sigue el suelo."
+        },
+        "size": {
+          "type": "number",
+          "default": 30,
+          "description": "Semitamaño del icono en unidades de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 3,
+          "description": "Grosor de la estela."
+        },
+        "tail": {
+          "type": "number",
+          "default": 0.28,
+          "description": "Fracción de longitud total visible de estela; 0–1."
+        },
+        "keep": {
+          "type": "boolean",
+          "default": true,
+          "description": "Conservar icono y estela al llegar hasta out; false los oculta al completar dur."
+        }
+      },
+      "demo": {
+        "type": "route-icon",
+        "t": 0.2,
+        "out": 6.5,
+        "from": [
+          -95,
+          39
+        ],
+        "via": [
+          [
+            -82,
+            44
+          ]
+        ],
+        "to": [
+          -65,
+          39
+        ],
+        "icon": "plane",
+        "dur": 5,
+        "keep": true,
+        "color": "yellow",
+        "size": 34
+      },
+      "uso": "Mostrar un vehículo que recorre un trayecto con rumbo y estela.",
+      "receta": "topic + city + route-icon; front-line para contexto de conflicto.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.route-icon-barco",
+      "label": "Ruta marítima hacia el oeste",
+      "summary": "Mostrar un vehículo que recorre un trayecto con rumbo y estela.",
+      "family": "Mapa y geografía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "route-icon"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "route-icon",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada absoluta en segundos o ancla de voz @palabra."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida absoluta; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada/trazado/viaje en segundos, función de t."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración del fundido de salida en segundos."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño de diseño; no altera radios geográficos en km."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia de texto; omitir hereda hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; algunas etiquetas secundarias usan 500."
+        },
+        "color": {
+          "type": "string",
+          "default": "blue",
+          "description": "Nombre de hudTheme.colors o color CSS/hex; el texto de tarjetas es blanco si se omite."
+        },
+        "from": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar o [lon,lat] de origen."
+        },
+        "to": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar o [lon,lat] de destino."
+        },
+        "via": {
+          "type": "array",
+          "default": [],
+          "description": "Hasta 16 lugares/[lon,lat] intermedios; tiempo repartido por longitud geodésica de cada tramo."
+        },
+        "icon": {
+          "type": "string",
+          "default": "plane",
+          "description": "Nombre de biblioteca. Rumbo calibrado: plane, fighter-jet, ship (proa arriba), warship y tank (derecha). warship/tank se reflejan hacia el oeste para conservar su base abajo. Otros: ajustar iconAngle."
+        },
+        "iconAngle": {
+          "type": "number",
+          "default": null,
+          "description": "Rumbo intrínseco del dibujo en grados desde la derecha; omitir usa calibración. ship es vista frontal, warship lateral facilita lectura del rumbo."
+        },
+        "path": {
+          "type": "string",
+          "default": "great-circle",
+          "description": "great-circle, straight o curve; misma función de proyección y elevación que arc."
+        },
+        "lift": {
+          "type": "number",
+          "default": 100,
+          "description": "Elevación de pantalla del centro de cada tramo, unidades de diseño; 0 sigue el suelo."
+        },
+        "size": {
+          "type": "number",
+          "default": 30,
+          "description": "Semitamaño del icono en unidades de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 3,
+          "description": "Grosor de la estela."
+        },
+        "tail": {
+          "type": "number",
+          "default": 0.28,
+          "description": "Fracción de longitud total visible de estela; 0–1."
+        },
+        "keep": {
+          "type": "boolean",
+          "default": true,
+          "description": "Conservar icono y estela al llegar hasta out; false los oculta al completar dur."
+        }
+      },
+      "demo": {
+        "type": "route-icon",
+        "t": 0.2,
+        "out": 6.5,
+        "from": [
+          -65,
+          34
+        ],
+        "to": [
+          -95,
+          37
+        ],
+        "icon": "warship",
+        "dur": 5,
+        "keep": true,
+        "color": "blue",
+        "size": 34
+      },
+      "uso": "Mostrar un vehículo que recorre un trayecto con rumbo y estela.",
+      "receta": "city + route-icon parametrizado; comparte geometría y dibujante.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.route-icon-tanque",
+      "label": "Ruta terrestre hacia el este",
+      "summary": "Mostrar un vehículo que recorre un trayecto con rumbo y estela.",
+      "family": "Mapa y geografía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "route-icon"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "route-icon",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada absoluta en segundos o ancla de voz @palabra."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida absoluta; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada/trazado/viaje en segundos, función de t."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración del fundido de salida en segundos."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño de diseño; no altera radios geográficos en km."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia de texto; omitir hereda hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; algunas etiquetas secundarias usan 500."
+        },
+        "color": {
+          "type": "string",
+          "default": "blue",
+          "description": "Nombre de hudTheme.colors o color CSS/hex; el texto de tarjetas es blanco si se omite."
+        },
+        "from": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar o [lon,lat] de origen."
+        },
+        "to": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar o [lon,lat] de destino."
+        },
+        "via": {
+          "type": "array",
+          "default": [],
+          "description": "Hasta 16 lugares/[lon,lat] intermedios; tiempo repartido por longitud geodésica de cada tramo."
+        },
+        "icon": {
+          "type": "string",
+          "default": "plane",
+          "description": "Nombre de biblioteca. Rumbo calibrado: plane, fighter-jet, ship (proa arriba), warship y tank (derecha). warship/tank se reflejan hacia el oeste para conservar su base abajo. Otros: ajustar iconAngle."
+        },
+        "iconAngle": {
+          "type": "number",
+          "default": null,
+          "description": "Rumbo intrínseco del dibujo en grados desde la derecha; omitir usa calibración. ship es vista frontal, warship lateral facilita lectura del rumbo."
+        },
+        "path": {
+          "type": "string",
+          "default": "great-circle",
+          "description": "great-circle, straight o curve; misma función de proyección y elevación que arc."
+        },
+        "lift": {
+          "type": "number",
+          "default": 100,
+          "description": "Elevación de pantalla del centro de cada tramo, unidades de diseño; 0 sigue el suelo."
+        },
+        "size": {
+          "type": "number",
+          "default": 30,
+          "description": "Semitamaño del icono en unidades de diseño."
+        },
+        "width": {
+          "type": "number",
+          "default": 3,
+          "description": "Grosor de la estela."
+        },
+        "tail": {
+          "type": "number",
+          "default": 0.28,
+          "description": "Fracción de longitud total visible de estela; 0–1."
+        },
+        "keep": {
+          "type": "boolean",
+          "default": true,
+          "description": "Conservar icono y estela al llegar hasta out; false los oculta al completar dur."
+        }
+      },
+      "demo": {
+        "type": "route-icon",
+        "t": 0.2,
+        "out": 6.5,
+        "from": [
+          -85,
+          34
+        ],
+        "to": [
+          -71,
+          39
+        ],
+        "icon": "tank",
+        "dur": 5,
+        "keep": true,
+        "color": "green",
+        "size": 34
+      },
+      "uso": "Mostrar un vehículo que recorre un trayecto con rumbo y estela.",
+      "receta": "city + route-icon parametrizado; comparte geometría y dibujante.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.front-line",
+      "label": "Frente o frontera",
+      "summary": "Dibujar una línea discontinua de frente o frontera en disputa.",
+      "family": "Mapa y geografía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "front-line"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "front-line",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada absoluta en segundos o ancla de voz @palabra."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida absoluta; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada/trazado/viaje en segundos, función de t."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración del fundido de salida en segundos."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño de diseño; no altera radios geográficos en km."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia de texto; omitir hereda hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; algunas etiquetas secundarias usan 500."
+        },
+        "color": {
+          "type": "string",
+          "default": "blue",
+          "description": "Nombre de hudTheme.colors o color CSS/hex; el texto de tarjetas es blanco si se omite."
+        },
+        "points": {
+          "type": "array",
+          "default": [],
+          "description": "2–256 puntos [lon,lat], interpolados por círculo máximo; dibujo progresivo por distancia."
+        },
+        "label": {
+          "type": "string",
+          "default": null,
+          "description": "Rótulo opcional junto al extremo visible."
+        },
+        "width": {
+          "type": "number",
+          "default": 4,
+          "description": "Grosor de línea."
+        },
+        "dash": {
+          "type": "number",
+          "default": 12,
+          "description": "Longitud de guion."
+        },
+        "gap": {
+          "type": "number",
+          "default": 8,
+          "description": "Separación entre guiones."
+        },
+        "glow": {
+          "type": "number",
+          "default": 14,
+          "description": "Radio de resplandor."
+        },
+        "size": {
+          "type": "number",
+          "default": 26,
+          "description": "Tamaño del rótulo."
+        }
+      },
+      "demo": {
+        "type": "front-line",
+        "t": 0.2,
+        "out": 6.5,
+        "points": [
+          [
+            -87,
+            31
+          ],
+          [
+            -83,
+            35
+          ],
+          [
+            -81,
+            39
+          ],
+          [
+            -75,
+            43
+          ]
+        ],
+        "color": "red",
+        "label": "FRENTE · ILUSTRATIVO",
+        "dur": 3
+      },
+      "uso": "Dibujar una línea discontinua de frente o frontera en disputa.",
+      "receta": "topic + highlight + front-line + city; rotular aproximado si la geometría lo es.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.geo-label",
+      "label": "Rótulo geográfico",
+      "summary": "Identificar mares, estrechos o regiones con texto discreto.",
+      "family": "Mapa y geografía",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "geo-label"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "geo-label",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada absoluta en segundos o ancla de voz @palabra."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida absoluta; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada/trazado/viaje en segundos, función de t."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración del fundido de salida en segundos."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño de diseño; no altera radios geográficos en km."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia de texto; omitir hereda hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 500,
+          "description": "Peso del texto; algunas etiquetas secundarias usan 500."
+        },
+        "color": {
+          "type": "string",
+          "default": "white",
+          "description": "Nombre de hudTheme.colors o color CSS/hex; el texto de tarjetas es blanco si se omite."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar de scene.places o [lon,lat]; sigue la proyección y se oculta detrás del globo."
+        },
+        "x": {
+          "type": "number",
+          "default": null,
+          "description": "Centro horizontal; omitir usa .5 o .17 para timeline vertical, si no hay at."
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "description": "Centro vertical; por defecto depende de la pieza y orientación."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal del ancla en unidades de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical del ancla en unidades de diseño."
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "description": "Nombre geográfico; se dibuja en mayúsculas y cursiva suave."
+        },
+        "angle": {
+          "type": "number",
+          "default": 0,
+          "description": "Ángulo de pantalla en grados."
+        },
+        "tracking": {
+          "type": "number",
+          "default": 5,
+          "description": "Espaciado de letras en unidades de diseño."
+        },
+        "opacity": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Opacidad 0–1."
+        },
+        "size": {
+          "type": "number",
+          "default": 30,
+          "description": "Tamaño de letra."
+        }
+      },
+      "demo": {
+        "type": "geo-label",
+        "t": 0.2,
+        "out": 6.5,
+        "at": [
+          -65,
+          32
+        ],
+        "text": "ATLÁNTICO NORTE",
+        "angle": -18,
+        "color": "white",
+        "size": 34,
+        "opacity": 0.65
+      },
+      "uso": "Identificar mares, estrechos o regiones con texto discreto.",
+      "receta": "topic + geo-label + city; route-icon para explicar un corredor.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.choropleth",
+      "label": "Mapa de valores",
+      "summary": "Comparar valores de muchos países o estados con un solo relleno.",
+      "family": "Mapa y geografía",
+      "target": "layers",
+      "tags": [
+        "noticiero",
+        "original",
+        "choropleth"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "choropleth",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada absoluta en segundos o ancla de voz @palabra."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida absoluta; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada/trazado/viaje en segundos, función de t."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración del fundido de salida en segundos."
+        },
+        "scale": {
+          "type": "array",
+          "default": [
+            "blue",
+            "yellow",
+            "red"
+          ],
+          "description": "2–3 colores del tema o hex; aquí scale es la escala de color, no de tamaño."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia de texto; omitir hereda hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 500,
+          "description": "Peso del texto; algunas etiquetas secundarias usan 500."
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "description": "Nombre de hudTheme.colors o color CSS/hex; el texto de tarjetas es blanco si se omite."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar de scene.places o [lon,lat]; sigue la proyección y se oculta detrás del globo."
+        },
+        "x": {
+          "type": "number",
+          "default": null,
+          "description": "Centro horizontal; omitir usa .5 o .17 para timeline vertical, si no hay at."
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "description": "Centro vertical; por defecto depende de la pieza y orientación."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal del ancla en unidades de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical del ancla en unidades de diseño."
+        },
+        "values": {
+          "type": "object",
+          "default": {},
+          "description": "Código de país ISO2/estado (US-TX) o scene.regions → valor finito; UNA colección/capa, propiedad value."
+        },
+        "domain": {
+          "type": "array",
+          "default": null,
+          "description": "[mínimo,máximo] o tres umbrales crecientes para tres colores. Omitir deriva extremos de values; valores externos se saturan."
+        },
+        "opacity": {
+          "type": "number",
+          "default": 0.65,
+          "description": "Opacidad del relleno 0–1, animada en t/out sin actualizar fuente."
+        },
+        "unit": {
+          "type": "string",
+          "default": "",
+          "description": "Unidad de los extremos de la leyenda."
+        },
+        "width": {
+          "type": "number",
+          "default": 900,
+          "description": "Ancho de leyenda; se ajusta entero por encima de subtítulos."
+        },
+        "size": {
+          "type": "number",
+          "default": 28,
+          "description": "Tamaño de los extremos de leyenda."
+        }
+      },
+      "demo": {
+        "type": "choropleth",
+        "t": 0.2,
+        "out": 6.5,
+        "values": {
+          "US": 0.4,
+          "CA": 0.65,
+          "MX": 0.9,
+          "GT": 1.15,
+          "HN": 1.4,
+          "NI": 1.65,
+          "CR": 1.9,
+          "PA": 2.15,
+          "CU": 2.4,
+          "HT": 2.65,
+          "DO": 2.9,
+          "JM": 3.15,
+          "CO": 3.4,
+          "VE": 3.65,
+          "EC": 3.9,
+          "PE": 4.15,
+          "BO": 4.4,
+          "BR": 4.65,
+          "PY": 4.9,
+          "UY": 5.15,
+          "AR": 5.4,
+          "CL": 5.65,
+          "GB": 5.9,
+          "FR": 6.15,
+          "ES": 6.4,
+          "PT": 6.65,
+          "DE": 6.9,
+          "IT": 7.15,
+          "NL": 7.4,
+          "BE": 7.65,
+          "NO": 7.9,
+          "SE": 8.15,
+          "FI": 8.4,
+          "JP": 8.65,
+          "AU": 8.9
+        },
+        "scale": [
+          "#2467c9",
+          "#ffd21a",
+          "#ef445c"
+        ],
+        "domain": [
+          0,
+          9
+        ],
+        "unit": "%",
+        "y": 0.72
+      },
+      "uso": "Comparar valores de muchos países o estados con un solo relleno.",
+      "receta": "topic + choropleth + delta o bar-compare para sanciones, aranceles o impactos.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.quote-card",
+      "label": "Cita atribuida",
+      "summary": "Mostrar una declaración breve atribuida, con retrato opcional.",
+      "family": "Narrativa",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "quote-card"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "quote-card",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada absoluta en segundos o ancla de voz @palabra."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida absoluta; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada/trazado/viaje en segundos, función de t."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración del fundido de salida en segundos."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño de diseño; no altera radios geográficos en km."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia de texto; omitir hereda hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 600,
+          "description": "Peso del texto; algunas etiquetas secundarias usan 500."
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "description": "Nombre de hudTheme.colors o color CSS/hex; el texto de tarjetas es blanco si se omite."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar de scene.places o [lon,lat]; sigue la proyección y se oculta detrás del globo."
+        },
+        "x": {
+          "type": "number",
+          "default": null,
+          "description": "Centro horizontal; omitir usa .5 o .17 para timeline vertical, si no hay at."
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "description": "Centro vertical; por defecto depende de la pieza y orientación."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal del ancla en unidades de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical del ancla en unidades de diseño."
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "description": "Cita de hasta 160 caracteres Unicode. Si excede: aviso único y 159 + …."
+        },
+        "src": {
+          "type": "string",
+          "default": null,
+          "description": "Retrato opcional relativo a assets, precargado en ready; validar archivo y crédito."
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "description": "Nombre obligatorio de quien habla."
+        },
+        "role": {
+          "type": "string",
+          "default": "",
+          "description": "Cargo opcional."
+        },
+        "width": {
+          "type": "number",
+          "default": 900,
+          "description": "Ancho del panel; ajuste íntegro al cuadro y por encima de y=.8."
+        },
+        "size": {
+          "type": "number",
+          "default": 40,
+          "description": "Tamaño de cita; revelado horizontal por dur. Textos excesivamente anchos se ajustan a cinco líneas."
+        }
+      },
+      "demo": {
+        "type": "quote-card",
+        "t": 0.2,
+        "out": 6.5,
+        "text": "El acuerdo abre una nueva etapa de cooperación entre nuestros países.",
+        "name": "DECLARACIÓN DE EJEMPLO",
+        "role": "Cumbre internacional · ilustración",
+        "y": 0.42,
+        "color": "yellow"
+      },
+      "uso": "Mostrar una declaración breve atribuida, con retrato opcional.",
+      "receta": "topic + quote-card + timeline para cumbre con acuerdo.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    },
+    {
+      "name": "noticiero.timeline",
+      "label": "Cronología",
+      "summary": "Ordenar de tres a seis hitos y marcar el actual con anclas de voz.",
+      "family": "Narrativa",
+      "target": "hud",
+      "tags": [
+        "noticiero",
+        "original",
+        "timeline"
+      ],
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "timeline",
+          "description": "Tipo de pieza."
+        },
+        "t": {
+          "type": "number|string",
+          "default": 0,
+          "description": "Entrada absoluta en segundos o ancla de voz @palabra."
+        },
+        "out": {
+          "type": "number|string",
+          "default": null,
+          "description": "Inicio de salida absoluta; omitir conserva la pieza."
+        },
+        "dur": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Duración de entrada/trazado/viaje en segundos, función de t."
+        },
+        "exit": {
+          "type": "number",
+          "default": 0.35,
+          "description": "Duración del fundido de salida en segundos."
+        },
+        "scale": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador de tamaño de diseño; no altera radios geográficos en km."
+        },
+        "scalePortrait": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 9:16."
+        },
+        "scaleLandscape": {
+          "type": "number",
+          "default": 1,
+          "description": "Multiplicador adicional en 16:9."
+        },
+        "font": {
+          "type": "string",
+          "default": null,
+          "description": "Familia de texto; omitir hereda hudTheme.fonts.ui."
+        },
+        "weight": {
+          "type": "number",
+          "default": 700,
+          "description": "Peso del texto; algunas etiquetas secundarias usan 500."
+        },
+        "color": {
+          "type": "string",
+          "default": null,
+          "description": "Nombre de hudTheme.colors o color CSS/hex; el texto de tarjetas es blanco si se omite."
+        },
+        "at": {
+          "type": "string|array",
+          "default": null,
+          "description": "Lugar de scene.places o [lon,lat]; sigue la proyección y se oculta detrás del globo."
+        },
+        "x": {
+          "type": "number",
+          "default": null,
+          "description": "Centro horizontal; omitir usa .5 o .17 para timeline vertical, si no hay at."
+        },
+        "y": {
+          "type": "number",
+          "default": null,
+          "description": "Centro vertical; por defecto depende de la pieza y orientación."
+        },
+        "dx": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento horizontal del ancla en unidades de diseño."
+        },
+        "dy": {
+          "type": "number",
+          "default": 0,
+          "description": "Desplazamiento vertical del ancla en unidades de diseño."
+        },
+        "events": {
+          "type": "array",
+          "default": [],
+          "description": "3–6 hitos ordenados por tiempo; se iluminan y se marca el último activo.",
+          "fields": {
+            "date": {
+              "type": "string",
+              "default": "",
+              "description": "Fecha/hora corta visible."
+            },
+            "label": {
+              "type": "string",
+              "default": "",
+              "description": "Descripción breve, hasta dos líneas."
+            },
+            "icon": {
+              "type": "string",
+              "default": null,
+              "description": "Nombre opcional válido de la biblioteca."
+            },
+            "t": {
+              "type": "number|string",
+              "default": null,
+              "description": "Ancla de voz absoluta o segundo; omitir usa t de pieza + índice × interval."
+            }
+          }
+        },
+        "interval": {
+          "type": "number",
+          "default": 1.5,
+          "description": "Intervalo entre hitos sin t explícito."
+        },
+        "width": {
+          "type": "number",
+          "default": null,
+          "description": "Ancho: 900 horizontal / 260 vertical. Vertical al lado izquierdo, centro y subtítulos libres."
+        },
+        "size": {
+          "type": "number",
+          "default": 28,
+          "description": "Tamaño del texto de hitos."
+        }
+      },
+      "demo": {
+        "type": "timeline",
+        "t": 0.2,
+        "out": 6.5,
+        "events": [
+          {
+            "date": "08:00",
+            "label": "Alerta",
+            "icon": "radio",
+            "t": 0.3
+          },
+          {
+            "date": "10:30",
+            "label": "Reunión",
+            "icon": "people",
+            "t": 1.4
+          },
+          {
+            "date": "12:00",
+            "label": "Acuerdo",
+            "icon": "handshake",
+            "t": 2.3
+          },
+          {
+            "date": "14:00",
+            "label": "Firma",
+            "icon": "doc",
+            "t": 4.2
+          }
+        ],
+        "color": "yellow"
+      },
+      "uso": "Ordenar de tres a seis hitos y marcar el actual con anclas de voz.",
+      "receta": "topic + timeline + quote-card para cumbre; pulse + timeline para emergencia.",
+      "catalogo_origen": "noticiero/componentes.json",
+      "used_by": [
+        "resumen-geopolitico-demo"
+      ]
+    }
+  ]
+}

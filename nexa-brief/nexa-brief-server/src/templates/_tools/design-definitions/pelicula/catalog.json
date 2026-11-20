@@ -1,0 +1,3003 @@
+{
+  "schema_version": 1,
+  "design_id": "pelicula",
+  "revision": "4abbc5e104179763b736ac23f0b9f97b67bac0e56d9d85827826949da4b42399",
+  "entries": [
+    {
+      "id": "common.punch",
+      "name": "common.punch",
+      "label": "common.punch",
+      "kind": "component",
+      "summary": "Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento.",
+      "tags": [
+        "impacto",
+        "texto",
+        "énfasis"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto; '\\n' parte renglones; '^x^' = acento.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del ancho del cuadro que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 1
+        },
+        "style": {
+          "type": "enum",
+          "default": "solid",
+          "doc": "solid = relleno, outline = contorno, glitch = entra cortado.",
+          "required": false,
+          "options": [
+            "solid",
+            "outline",
+            "glitch"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.035,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hideCaptions": {
+          "type": "bool",
+          "default": true,
+          "doc": "Oculta los subtítulos mientras está en pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "MILLONES\nDE ^VIDAS^",
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=common.punch",
+      "data": {
+        "native_name": "common.punch"
+      }
+    },
+    {
+      "id": "common.tag",
+      "name": "common.tag",
+      "label": "common.tag",
+      "kind": "component",
+      "summary": "Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose.",
+      "tags": [
+        "contexto",
+        "lugar",
+        "fecha"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto del rótulo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "top",
+          "doc": "Posición.",
+          "required": false,
+          "options": [
+            "top",
+            "bottom",
+            "center"
+          ],
+          "min": null,
+          "max": null
+        },
+        "boxed": {
+          "type": "bool",
+          "default": true,
+          "doc": "Con caja de color (true) o solo texto. Duración: usar 'dur' del beat.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "BLETCHLEY PARK · 1940",
+        "pos": "top"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=common.tag",
+      "data": {
+        "native_name": "common.tag"
+      }
+    },
+    {
+      "id": "common.flash",
+      "name": "common.flash",
+      "label": "common.flash",
+      "kind": "component",
+      "summary": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+      "tags": [
+        "transición",
+        "golpe"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "palette.ink",
+          "doc": "Color del destello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Opacidad máxima.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "color": "palette.ink",
+        "dur": 0.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=common.flash",
+      "data": {
+        "native_name": "common.flash"
+      }
+    },
+    {
+      "id": "common.endcard",
+      "name": "common.endcard",
+      "label": "common.endcard",
+      "kind": "component",
+      "summary": "Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse).",
+      "tags": [
+        "cierre",
+        "marca"
+      ],
+      "params": {
+        "line": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase de cierre ('\\n' para renglones, '^x^' acento).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "brand": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca / canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "",
+          "doc": "Llamado a la acción (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "line": "SEGUIMOS\nPREGUNTANDO",
+        "brand": "NEXA BRIEF",
+        "cta": "SUSCRÍBETE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=common.endcard",
+      "data": {
+        "native_name": "common.endcard"
+      }
+    },
+    {
+      "id": "common.lyric",
+      "name": "common.lyric",
+      "label": "common.lyric",
+      "kind": "component",
+      "summary": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+      "tags": [
+        "impacto",
+        "letra",
+        "frase",
+        "clímax"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras (sin tildes ni mayúsculas importa) que van en color de acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Fracción del ancho que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "maxChars": {
+          "type": "number",
+          "default": 0,
+          "doc": "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dimPast": {
+          "type": "bool",
+          "default": true,
+          "doc": "Atenuar las palabras ya dichas (efecto karaoke).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "accent": [
+          "vidas"
+        ],
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=common.lyric",
+      "data": {
+        "native_name": "common.lyric"
+      }
+    },
+    {
+      "id": "common.logo",
+      "name": "common.logo",
+      "label": "common.logo",
+      "kind": "component",
+      "summary": "Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.",
+      "tags": [
+        "logo",
+        "obsoleto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=common.logo",
+      "data": {
+        "native_name": "common.logo"
+      }
+    },
+    {
+      "id": "common.clip",
+      "name": "common.clip",
+      "label": "common.clip",
+      "kind": "component",
+      "summary": "Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.",
+      "tags": [
+        "video",
+        "clip",
+        "metraje",
+        "foto",
+        "lugar",
+        "máquina"
+      ],
+      "params": {
+        "src": {
+          "type": "video",
+          "default": null,
+          "doc": "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo del clip desde el que arranca.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si es más corto que el beat; evita congelar el último cuadro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full).",
+          "required": false,
+          "options": [
+            "auto",
+            "full",
+            "frame"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "ar": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 0.06,
+          "doc": "Cuánto se acerca a lo largo del beat (empuje lento).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tone": {
+          "type": "enum",
+          "default": "design",
+          "doc": "design = filtro del diseño (defaults.clip.filter); color = el clip tal cual.",
+          "required": false,
+          "options": [
+            "design",
+            "color"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": -1,
+          "doc": "Oscurecido (para leer los subtítulos); -1 = el del diseño.",
+          "required": false,
+          "options": null,
+          "min": -1,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo (qué se ve); vacío = sin rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textColor": {
+          "type": "enum",
+          "default": "ink",
+          "doc": "Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords.",
+          "required": false,
+          "options": [
+            "ink",
+            "accent",
+            "mix"
+          ],
+          "min": null,
+          "max": null
+        },
+        "accentWords": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras o frases del rótulo que van en color de acento cuando textColor=mix.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textSide": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Ubicación del texto grande en layout full.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "bottom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del texto grande, controlada por el reloj del beat.",
+          "required": false,
+          "options": [
+            "slide",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/servidores.mp4",
+        "layout": "full",
+        "caption": "Una ^conversación^ digital",
+        "textColor": "mix",
+        "textSide": "left",
+        "sub": "Una historia real"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=common.clip",
+      "data": {
+        "native_name": "common.clip"
+      }
+    },
+    {
+      "id": "common.tabloid",
+      "name": "common.tabloid",
+      "label": "common.tabloid",
+      "kind": "component",
+      "summary": "Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.",
+      "tags": [
+        "miniatura",
+        "intro",
+        "alerta",
+        "tabloide",
+        "gancho"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular corto; máximo 6 palabras recomendado.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto opcional; también sirve de respaldo del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "srcAfter": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto del split.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip .mp4 local de assets/media; ocupa el lugar de src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poster": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si termina antes que el beat; evita congelar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "muted": {
+          "type": "bool",
+          "default": true,
+          "doc": "El clip siempre se reproduce mudo; false se ignora por el contrato del motor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase destacada con el acento del diseño (rojo en alert).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bullet": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra y leyenda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bulletScale": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la cifra y su recuadro.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 1.5
+        },
+        "beforeLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del antes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "afterLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del después.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "imageSide": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado de foto horizontal.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "impact",
+          "doc": "Foto única o split.",
+          "required": false,
+          "options": [
+            "impact",
+            "split"
+          ],
+          "min": null,
+          "max": null
+        },
+        "palette": {
+          "type": "enum",
+          "default": "brand",
+          "doc": "Identidad del diseño o estilo clásico de alerta.",
+          "required": false,
+          "options": [
+            "brand",
+            "alert"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strap": {
+          "type": "string",
+          "default": "",
+          "doc": "Cintillo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seal": {
+          "type": "string",
+          "default": "",
+          "doc": "Sello opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tapeText": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de cinta opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "marker": {
+          "type": "bool",
+          "default": false,
+          "doc": "Marca alrededor del foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": null,
+          "doc": "[x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": [
+            0.72,
+            0.52
+          ],
+          "doc": "Obsoleto: usar focus con radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de cada renglón del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Separación en segundos entre renglones.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "accentIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del acento después de su renglón.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bulletIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de la cifra después del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "inDuration": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Duración en segundos de cada entrada.",
+          "required": false,
+          "options": null,
+          "min": 0.05,
+          "max": 2
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "TÚ ERES EL SIGUIENTE",
+        "accent": "SIGUIENTE",
+        "strap": "AMAZON · IA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=common.tabloid",
+      "data": {
+        "native_name": "common.tabloid"
+      }
+    },
+    {
+      "id": "common.question",
+      "name": "common.question",
+      "label": "common.question",
+      "kind": "component",
+      "summary": "Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.",
+      "tags": [
+        "pregunta",
+        "comentarios",
+        "cierre",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta exacta del guion (máximo 8 palabras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro vertical de la tarjeta (fracción del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 0.8
+        }
+      },
+      "example": {
+        "text": "¿La IA te quita trabajo?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=common.question",
+      "data": {
+        "native_name": "common.question"
+      }
+    },
+    {
+      "id": "pelicula.title",
+      "name": "pelicula.title",
+      "label": "pelicula.title",
+      "kind": "component",
+      "summary": "Apertura (ref 0–3 s): foto de archivo que entra desenfocada y hace foco, dos filas de perforaciones arriba y una abajo que entran deslizándose, arcos finos, y el bloque año + titular + subtítulo que CAE desde arriba con estela y hace glitch de franjas.",
+      "tags": [
+        "apertura",
+        "título",
+        "año"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de fondo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "year": {
+          "type": "string",
+          "default": "",
+          "doc": "Número GIGANTE naranja (año, fecha, cifra: '1989', '28', '23:30').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Titular en mayúsculas crema ('\\n' parte renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo chico con barra roja delante.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo mínimo arriba del titular (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "under",
+          "doc": "under = titular debajo del año (1930); over = titular arriba del año (1940).",
+          "required": false,
+          "options": [
+            "under",
+            "over"
+          ],
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "enum",
+          "default": "orange",
+          "doc": "Color del número: naranja (#c9501f) o rojo (#c4352a).",
+          "required": false,
+          "options": [
+            "orange",
+            "red"
+          ],
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "right",
+          "doc": "Posición del bloque. bigLeft/bigRight = gigante y cortado por el borde.",
+          "required": false,
+          "options": [
+            "center",
+            "left",
+            "right",
+            "topLeft",
+            "topRight",
+            "bottomLeft",
+            "bottomRight",
+            "bigLeft",
+            "bigRight"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.44,
+          "doc": "Ancho del número como fracción del ancho del cuadro (en 9:16 se agranda solo).",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 1.2
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "drop",
+          "doc": "Entrada del bloque: drop (cae desde arriba con estela), rise (sube), glitch, flash (aparece tras el destello), fade.",
+          "required": false,
+          "options": [
+            "drop",
+            "rise",
+            "glitch",
+            "flash",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textAt": {
+          "type": "number",
+          "default": 0.28,
+          "doc": "Segundos desde el inicio del plano hasta que entra el bloque.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "glitches": {
+          "type": "array",
+          "default": [
+            0.68
+          ],
+          "doc": "Segundos (desde el inicio del plano) donde el bloque hace glitch de franjas 0.3 s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "drift": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Deriva lenta del bloque después de entrar (se frena en ~3 s).",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] 0..1 del encuadre.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "focus",
+          "doc": "Entrada del plano: barrido (whip/whipR/whipUp/whipDown) con motion blur, zoom radial, foco, glitch de franjas, fundido o corte.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "whipR",
+            "whipUp",
+            "whipDown",
+            "zoom",
+            "focus",
+            "glitch",
+            "fade"
+          ],
+          "min": null,
+          "max": null
+        },
+        "exit": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Salida en los últimos 0.3 s (barrido/zoom). Combinada con la entrada del plano siguiente arma el 'whip pan' completo.",
+          "required": false,
+          "options": [
+            "none",
+            "whip",
+            "whipR",
+            "whipUp",
+            "whipDown",
+            "zoom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "leak": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Destello al entrar: burn (naranja→blanco, tapa el corte), prism (banda rojo-blanco-verde), flash, bar (barra de luz).",
+          "required": false,
+          "options": [
+            "none",
+            "burn",
+            "prism",
+            "flash",
+            "bar"
+          ],
+          "min": null,
+          "max": null
+        },
+        "leakDir": {
+          "type": "enum",
+          "default": "ltr",
+          "doc": "Dirección del destello.",
+          "required": false,
+          "options": [
+            "ltr",
+            "rtl"
+          ],
+          "min": null,
+          "max": null
+        },
+        "flush": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rubor rojo-marrón en el último segundo del plano (como antes de varios cortes de la referencia).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/muro-gente.jpg",
+        "year": "1989",
+        "title": "LA NOCHE QUE\nCAYÓ EL MURO",
+        "sub": "BERLÍN · 9 DE NOVIEMBRE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=pelicula.title",
+      "data": {
+        "native_name": "pelicula.title"
+      }
+    },
+    {
+      "id": "pelicula.year",
+      "name": "pelicula.year",
+      "label": "pelicula.year",
+      "kind": "component",
+      "summary": "Plano principal de la referencia: número GIGANTE naranja/rojo + titular crema + subtítulo con barra roja sobre una foto virada con filas de perforaciones en doble exposición. Entradas del bloque (cae / sube / glitch / tras destello), cámara (in/out/rise…) y 'punch' opcional: corte a otra escala del mismo bloque escondido por un prisma de luz.",
+      "tags": [
+        "año",
+        "fecha",
+        "cifra",
+        "titular",
+        "foto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de fondo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto (tira lateral o doble exposición).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "year": {
+          "type": "string",
+          "default": "",
+          "doc": "Número GIGANTE naranja (año, fecha, cifra: '1989', '28', '23:30').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Titular en mayúsculas crema ('\\n' parte renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo chico con barra roja delante.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo mínimo arriba del titular (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "under",
+          "doc": "under = titular debajo del año (1930); over = titular arriba del año (1940).",
+          "required": false,
+          "options": [
+            "under",
+            "over"
+          ],
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "enum",
+          "default": "orange",
+          "doc": "Color del número: naranja (#c9501f) o rojo (#c4352a).",
+          "required": false,
+          "options": [
+            "orange",
+            "red"
+          ],
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "right",
+          "doc": "Posición del bloque. bigLeft/bigRight = gigante y cortado por el borde.",
+          "required": false,
+          "options": [
+            "center",
+            "left",
+            "right",
+            "topLeft",
+            "topRight",
+            "bottomLeft",
+            "bottomRight",
+            "bigLeft",
+            "bigRight"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Ancho del número como fracción del ancho del cuadro (en 9:16 se agranda solo).",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 1.2
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "drop",
+          "doc": "Entrada del bloque: drop (cae desde arriba con estela), rise (sube), glitch, flash (aparece tras el destello), fade.",
+          "required": false,
+          "options": [
+            "drop",
+            "rise",
+            "glitch",
+            "flash",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textAt": {
+          "type": "number",
+          "default": 0.28,
+          "doc": "Segundos desde el inicio del plano hasta que entra el bloque.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "glitches": {
+          "type": "array",
+          "default": [],
+          "doc": "Segundos (desde el inicio del plano) donde el bloque hace glitch de franjas 0.3 s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "drift": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Deriva lenta del bloque después de entrar (se frena en ~3 s).",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strips": {
+          "type": "enum",
+          "default": "frame",
+          "doc": "Perforaciones: frame (arriba y abajo), top, bottom, double (filas grandes cruzando), side (tira vertical con src2), none.",
+          "required": false,
+          "options": [
+            "frame",
+            "top",
+            "bottom",
+            "double",
+            "side",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "camera": {
+          "type": "enum",
+          "default": "in",
+          "doc": "Movimiento de cámara: in/out (Ken Burns), left/right (paneo), rise (todo sube, ref 1932), fall, still.",
+          "required": false,
+          "options": [
+            "in",
+            "out",
+            "left",
+            "right",
+            "rise",
+            "fall",
+            "still"
+          ],
+          "min": null,
+          "max": null
+        },
+        "ghost": {
+          "type": "number",
+          "default": 0,
+          "doc": "Opacidad de src2 en doble exposición sobre toda la escena.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.6
+        },
+        "punch": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundos (o '@palabra') en que el plano corta a la versión punch del bloque (−1 = sin punch).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "punchPos": {
+          "type": "enum",
+          "default": "bigLeft",
+          "doc": "Posición del bloque después del punch.",
+          "required": false,
+          "options": [
+            "center",
+            "left",
+            "right",
+            "topLeft",
+            "topRight",
+            "bottomLeft",
+            "bottomRight",
+            "bigLeft",
+            "bigRight"
+          ],
+          "min": null,
+          "max": null
+        },
+        "punchSize": {
+          "type": "number",
+          "default": 0.95,
+          "doc": "Tamaño del número después del punch.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 1.4
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] 0..1.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "whip",
+          "doc": "Entrada del plano: barrido (whip/whipR/whipUp/whipDown) con motion blur, zoom radial, foco, glitch de franjas, fundido o corte.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "whipR",
+            "whipUp",
+            "whipDown",
+            "zoom",
+            "focus",
+            "glitch",
+            "fade"
+          ],
+          "min": null,
+          "max": null
+        },
+        "exit": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Salida en los últimos 0.3 s (barrido/zoom). Combinada con la entrada del plano siguiente arma el 'whip pan' completo.",
+          "required": false,
+          "options": [
+            "none",
+            "whip",
+            "whipR",
+            "whipUp",
+            "whipDown",
+            "zoom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "leak": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Destello al entrar: burn (naranja→blanco, tapa el corte), prism (banda rojo-blanco-verde), flash, bar (barra de luz).",
+          "required": false,
+          "options": [
+            "none",
+            "burn",
+            "prism",
+            "flash",
+            "bar"
+          ],
+          "min": null,
+          "max": null
+        },
+        "leakDir": {
+          "type": "enum",
+          "default": "ltr",
+          "doc": "Dirección del destello.",
+          "required": false,
+          "options": [
+            "ltr",
+            "rtl"
+          ],
+          "min": null,
+          "max": null
+        },
+        "flush": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rubor rojo-marrón en el último segundo del plano (como antes de varios cortes de la referencia).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "year": "1961",
+        "title": "SE LEVANTA EL MURO",
+        "sub": "AGOSTO · BERLÍN",
+        "pos": "right",
+        "strips": "frame",
+        "punch": 3.2
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=pelicula.year",
+      "data": {
+        "native_name": "pelicula.year"
+      }
+    },
+    {
+      "id": "pelicula.photo",
+      "name": "pelicula.photo",
+      "label": "pelicula.photo",
+      "kind": "component",
+      "summary": "Foto de archivo a pantalla completa (ref 18.6–24 s y 30.6–32.4 s): fila de perforaciones cortada por el borde, Ken Burns lento, arcos finos, doble exposición opcional y un titular chico opcional. Entra con barrido horizontal con motion blur.",
+      "tags": [
+        "foto",
+        "lugar",
+        "personas",
+        "evidencia"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto en doble exposición (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ghost": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Opacidad de la doble exposición.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.6
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Titular chico (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo con barra roja (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "bottomLeft",
+          "doc": "Posición del titular.",
+          "required": false,
+          "options": [
+            "center",
+            "left",
+            "right",
+            "topLeft",
+            "topRight",
+            "bottomLeft",
+            "bottomRight",
+            "bigLeft",
+            "bigRight"
+          ],
+          "min": null,
+          "max": null
+        },
+        "perfs": {
+          "type": "enum",
+          "default": "top",
+          "doc": "Fila de perforaciones cortada por el borde.",
+          "required": false,
+          "options": [
+            "top",
+            "bottom",
+            "both",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "camera": {
+          "type": "enum",
+          "default": "in",
+          "doc": "Movimiento de cámara.",
+          "required": false,
+          "options": [
+            "in",
+            "out",
+            "left",
+            "right",
+            "rise",
+            "fall",
+            "still"
+          ],
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.45
+          ],
+          "doc": "Punto de interés [x,y] 0..1.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "whip",
+          "doc": "Entrada del plano: barrido (whip/whipR/whipUp/whipDown) con motion blur, zoom radial, foco, glitch de franjas, fundido o corte.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "whipR",
+            "whipUp",
+            "whipDown",
+            "zoom",
+            "focus",
+            "glitch",
+            "fade"
+          ],
+          "min": null,
+          "max": null
+        },
+        "exit": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Salida en los últimos 0.3 s (barrido/zoom). Combinada con la entrada del plano siguiente arma el 'whip pan' completo.",
+          "required": false,
+          "options": [
+            "none",
+            "whip",
+            "whipR",
+            "whipUp",
+            "whipDown",
+            "zoom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "leak": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Destello al entrar: burn (naranja→blanco, tapa el corte), prism (banda rojo-blanco-verde), flash, bar (barra de luz).",
+          "required": false,
+          "options": [
+            "none",
+            "burn",
+            "prism",
+            "flash",
+            "bar"
+          ],
+          "min": null,
+          "max": null
+        },
+        "leakDir": {
+          "type": "enum",
+          "default": "ltr",
+          "doc": "Dirección del destello.",
+          "required": false,
+          "options": [
+            "ltr",
+            "rtl"
+          ],
+          "min": null,
+          "max": null
+        },
+        "flush": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rubor rojo-marrón en el último segundo del plano (como antes de varios cortes de la referencia).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/bornholmer.jpg",
+        "title": "BORNHOLMER STRASSE",
+        "sub": "PASO FRONTERIZO · BERLÍN"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=pelicula.photo",
+      "data": {
+        "native_name": "pelicula.photo"
+      }
+    },
+    {
+      "id": "pelicula.strip",
+      "name": "pelicula.strip",
+      "label": "pelicula.strip",
+      "kind": "component",
+      "summary": "Montaje en tiras de película (ref 3.6–6.8 s y 38–43.7 s): 2–3 fotos como cuadros de tiras horizontales que corren en sentidos opuestos, perforaciones en los bordes, doble exposición y una barra de luz que cruza el cuadro.",
+      "tags": [
+        "montaje",
+        "collage",
+        "varias fotos",
+        "contexto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto 1 (cuadro grande).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 2.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src3": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto 3 (tira de abajo / fondo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "split",
+          "doc": "split = tira grande arriba + tira chica abajo (ref 4 s); band = una tira ancha al medio sobre la foto de fondo (ref 39 s).",
+          "required": false,
+          "options": [
+            "split",
+            "band"
+          ],
+          "min": null,
+          "max": null
+        },
+        "sweep": {
+          "type": "bool",
+          "default": true,
+          "doc": "Barra de luz que cruza el cuadro a mitad del plano.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "whip",
+          "doc": "Entrada del plano: barrido (whip/whipR/whipUp/whipDown) con motion blur, zoom radial, foco, glitch de franjas, fundido o corte.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "whipR",
+            "whipUp",
+            "whipDown",
+            "zoom",
+            "focus",
+            "glitch",
+            "fade"
+          ],
+          "min": null,
+          "max": null
+        },
+        "exit": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Salida en los últimos 0.3 s (barrido/zoom). Combinada con la entrada del plano siguiente arma el 'whip pan' completo.",
+          "required": false,
+          "options": [
+            "none",
+            "whip",
+            "whipR",
+            "whipUp",
+            "whipDown",
+            "zoom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "leak": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Destello al entrar: burn (naranja→blanco, tapa el corte), prism (banda rojo-blanco-verde), flash, bar (barra de luz).",
+          "required": false,
+          "options": [
+            "none",
+            "burn",
+            "prism",
+            "flash",
+            "bar"
+          ],
+          "min": null,
+          "max": null
+        },
+        "leakDir": {
+          "type": "enum",
+          "default": "ltr",
+          "doc": "Dirección del destello.",
+          "required": false,
+          "options": [
+            "ltr",
+            "rtl"
+          ],
+          "min": null,
+          "max": null
+        },
+        "flush": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rubor rojo-marrón en el último segundo del plano (como antes de varios cortes de la referencia).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/mauerbau.jpg",
+        "src2": "assets/media/bornholmer.jpg",
+        "src3": "assets/media/muro-gente.jpg",
+        "layout": "split"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=pelicula.strip",
+      "data": {
+        "native_name": "pelicula.strip"
+      }
+    },
+    {
+      "id": "pelicula.reel",
+      "name": "pelicula.reel",
+      "label": "pelicula.reel",
+      "kind": "component",
+      "summary": "Rollo vertical (ref 13–15 s y 53–55.6 s): la foto como cuadros de una tira vertical con perforaciones a ambos lados que corre hacia arriba, tira lateral a la derecha y fondo lavado en blanco; bloque de año/titular opcional al costado.",
+      "tags": [
+        "foto",
+        "documento",
+        "retrato",
+        "rollo"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto principal (cuadros del rollo).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto alternada en el rollo / tira lateral.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src3": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de la tira lateral (si falta, src2).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "year": {
+          "type": "string",
+          "default": "",
+          "doc": "Número GIGANTE naranja (año, fecha, cifra: '1989', '28', '23:30').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "title": {
+          "type": "string",
+          "default": "",
+          "doc": "Titular en mayúsculas crema ('\\n' parte renglones).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo chico con barra roja delante.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo mínimo arriba del titular (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "under",
+          "doc": "under = titular debajo del año (1930); over = titular arriba del año (1940).",
+          "required": false,
+          "options": [
+            "under",
+            "over"
+          ],
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "enum",
+          "default": "orange",
+          "doc": "Color del número: naranja (#c9501f) o rojo (#c4352a).",
+          "required": false,
+          "options": [
+            "orange",
+            "red"
+          ],
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "right",
+          "doc": "Posición del bloque. bigLeft/bigRight = gigante y cortado por el borde.",
+          "required": false,
+          "options": [
+            "center",
+            "left",
+            "right",
+            "topLeft",
+            "topRight",
+            "bottomLeft",
+            "bottomRight",
+            "bigLeft",
+            "bigRight"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Ancho del número como fracción del ancho del cuadro (en 9:16 se agranda solo).",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 1.2
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "flash",
+          "doc": "Entrada del bloque: drop (cae desde arriba con estela), rise (sube), glitch, flash (aparece tras el destello), fade.",
+          "required": false,
+          "options": [
+            "drop",
+            "rise",
+            "glitch",
+            "flash",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textAt": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Segundos desde el inicio del plano hasta que entra el bloque.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "glitches": {
+          "type": "array",
+          "default": [],
+          "doc": "Segundos (desde el inicio del plano) donde el bloque hace glitch de franjas 0.3 s.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "drift": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Deriva lenta del bloque después de entrar (se frena en ~3 s).",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "up",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "speed": {
+          "type": "number",
+          "default": 0.05,
+          "doc": "Velocidad del rollo (fracción del alto por segundo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.4
+        },
+        "enter": {
+          "type": "enum",
+          "default": "whipUp",
+          "doc": "Entrada del plano: barrido (whip/whipR/whipUp/whipDown) con motion blur, zoom radial, foco, glitch de franjas, fundido o corte.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "whipR",
+            "whipUp",
+            "whipDown",
+            "zoom",
+            "focus",
+            "glitch",
+            "fade"
+          ],
+          "min": null,
+          "max": null
+        },
+        "exit": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Salida en los últimos 0.3 s (barrido/zoom). Combinada con la entrada del plano siguiente arma el 'whip pan' completo.",
+          "required": false,
+          "options": [
+            "none",
+            "whip",
+            "whipR",
+            "whipUp",
+            "whipDown",
+            "zoom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "leak": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Destello al entrar: burn (naranja→blanco, tapa el corte), prism (banda rojo-blanco-verde), flash, bar (barra de luz).",
+          "required": false,
+          "options": [
+            "none",
+            "burn",
+            "prism",
+            "flash",
+            "bar"
+          ],
+          "min": null,
+          "max": null
+        },
+        "leakDir": {
+          "type": "enum",
+          "default": "ltr",
+          "doc": "Dirección del destello.",
+          "required": false,
+          "options": [
+            "ltr",
+            "rtl"
+          ],
+          "min": null,
+          "max": null
+        },
+        "flush": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rubor rojo-marrón en el último segundo del plano (como antes de varios cortes de la referencia).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/nota.jpg",
+        "src2": "assets/media/schabowski.jpg",
+        "title": "LA NOTA",
+        "sub": "9 DE NOVIEMBRE DE 1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=pelicula.reel",
+      "data": {
+        "native_name": "pelicula.reel"
+      }
+    },
+    {
+      "id": "pelicula.quote",
+      "name": "pelicula.quote",
+      "label": "pelicula.quote",
+      "kind": "component",
+      "summary": "Frase narrada en titular grande (ref 15.5–17 s, el punch de 'NO PLUGINS REQUIRED'): las palabras dichas dentro del plano caen en mayúsculas crema erosionadas justo cuando la voz las dice; 'accent' las pinta naranja; número gigante opcional detrás y subtítulo con barra roja.",
+      "tags": [
+        "frase",
+        "cita",
+        "impacto",
+        "letra"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto de fondo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src2": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto en doble exposición (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras en naranja (sin importar tildes/mayúsculas).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "ghost": {
+          "type": "string",
+          "default": "",
+          "doc": "Número gigante naranja detrás de la frase (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtítulo con barra roja debajo (opcional).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strips": {
+          "type": "enum",
+          "default": "side",
+          "doc": "Perforaciones (ver pelicula.year).",
+          "required": false,
+          "options": [
+            "frame",
+            "top",
+            "bottom",
+            "double",
+            "side",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "camera": {
+          "type": "enum",
+          "default": "in",
+          "doc": "Movimiento de cámara.",
+          "required": false,
+          "options": [
+            "in",
+            "out",
+            "left",
+            "right",
+            "rise",
+            "fall",
+            "still"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.8,
+          "doc": "Ancho máximo del renglón más largo (fracción del ancho).",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "maxChars": {
+          "type": "number",
+          "default": 0,
+          "doc": "Caracteres por renglón (0 = 17 en 16:9, 11 en 9:16).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "enter": {
+          "type": "enum",
+          "default": "cut",
+          "doc": "Entrada del plano: barrido (whip/whipR/whipUp/whipDown) con motion blur, zoom radial, foco, glitch de franjas, fundido o corte.",
+          "required": false,
+          "options": [
+            "cut",
+            "whip",
+            "whipR",
+            "whipUp",
+            "whipDown",
+            "zoom",
+            "focus",
+            "glitch",
+            "fade"
+          ],
+          "min": null,
+          "max": null
+        },
+        "exit": {
+          "type": "enum",
+          "default": "none",
+          "doc": "Salida en los últimos 0.3 s (barrido/zoom). Combinada con la entrada del plano siguiente arma el 'whip pan' completo.",
+          "required": false,
+          "options": [
+            "none",
+            "whip",
+            "whipR",
+            "whipUp",
+            "whipDown",
+            "zoom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "leak": {
+          "type": "enum",
+          "default": "prism",
+          "doc": "Destello al entrar: burn (naranja→blanco, tapa el corte), prism (banda rojo-blanco-verde), flash, bar (barra de luz).",
+          "required": false,
+          "options": [
+            "none",
+            "burn",
+            "prism",
+            "flash",
+            "bar"
+          ],
+          "min": null,
+          "max": null
+        },
+        "leakDir": {
+          "type": "enum",
+          "default": "ltr",
+          "doc": "Dirección del destello.",
+          "required": false,
+          "options": [
+            "ltr",
+            "rtl"
+          ],
+          "min": null,
+          "max": null
+        },
+        "flush": {
+          "type": "bool",
+          "default": false,
+          "doc": "Rubor rojo-marrón en el último segundo del plano (como antes de varios cortes de la referencia).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/schabowski.jpg",
+        "accent": [
+          "inmediato"
+        ],
+        "ghost": "1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=pelicula.quote",
+      "data": {
+        "native_name": "pelicula.quote"
+      }
+    },
+    {
+      "id": "pelicula.leak",
+      "name": "pelicula.leak",
+      "label": "pelicula.leak",
+      "kind": "component",
+      "summary": "Destello de película (light leak) que tapa un corte: burn (naranja→ámbar→blanco desde un costado, ref 13.1/24.3/31.8/45.9/55.7 s), prism (banda rojo-blanco-verde que cruza, ref 3.1/15.2/37.4/49.3 s), flash (golpe blanco cálido, ref 20.6/27.1 s) o bar (barra de luz, ref 4.3 s). Dura lo que dure el beat ('dur').",
+      "tags": [
+        "transición",
+        "luz",
+        "destello",
+        "corte"
+      ],
+      "params": {
+        "kind": {
+          "type": "enum",
+          "default": "burn",
+          "doc": "Tipo de destello.",
+          "required": false,
+          "options": [
+            "burn",
+            "prism",
+            "flash",
+            "bar"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dir": {
+          "type": "enum",
+          "default": "ltr",
+          "doc": "Desde qué costado entra.",
+          "required": false,
+          "options": [
+            "ltr",
+            "rtl"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 1,
+          "doc": "Intensidad.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1.3
+        }
+      },
+      "example": {
+        "kind": "burn",
+        "dir": "ltr"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=pelicula.leak",
+      "data": {
+        "native_name": "pelicula.leak"
+      }
+    },
+    {
+      "id": "pelicula.glitch",
+      "name": "pelicula.glitch",
+      "label": "pelicula.glitch",
+      "kind": "component",
+      "summary": "Glitch de franjas de TODO el cuadro (foto + texto): bandas horizontales desplazadas y duplicadas que cambian cada cuadro (ref 32.7–33.2, 45.3, 50.6, 55.0 s). Duración = 'dur' del beat (0.2–0.5 s).",
+      "tags": [
+        "transición",
+        "glitch",
+        "golpe"
+      ],
+      "params": {
+        "strength": {
+          "type": "number",
+          "default": 1,
+          "doc": "Desplazamiento de las franjas.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 2
+        },
+        "flicker": {
+          "type": "number",
+          "default": 0.75,
+          "doc": "Fracción de cuadros con glitch (el resto, limpio).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "strength": 1
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=pelicula.glitch",
+      "data": {
+        "native_name": "pelicula.glitch"
+      }
+    },
+    {
+      "id": "pelicula.introv1",
+      "name": "pelicula.introv1",
+      "label": "pelicula.introv1",
+      "kind": "component",
+      "summary": "GANCHO de apertura (lo primero que se ve). Arranca con la cuenta regresiva del líder de película (3-2-1, aguja que barre) y un destello; después un titular GIGANTE que entra palabra por palabra con barrido y estela (motion blur), golpea con sacudida y glitch de franjas ('^palabra^' en naranja con barra roja). Impacto (burnAt): la película se traba en la ventanilla y se QUEMA (agujero incandescente) → destello naranja→blanco. Fondo adaptable (bg: strips | projector | reel | leader | image con src | component con use/useParams | none). Sale con barrido.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "título",
+        "impacto",
+        "cuenta regresiva"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular gancho, corto (2–6 palabras). '\\n' = renglón; '^x^' = palabra en naranja con barra roja (un signo pegado no se separa: '^MURO^?').",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba (lugar · fecha), con barra roja.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica debajo del titular, con barra roja.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "countdown": {
+          "type": "number",
+          "default": 0.9,
+          "doc": "Segundos de la cuenta regresiva 3-2-1 del líder al empezar (0 = sin cuenta).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 3
+        },
+        "wordAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del primer golpe de palabra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.28,
+          "doc": "Segundos entre palabra y palabra.",
+          "required": false,
+          "options": null,
+          "min": 0.08,
+          "max": null
+        },
+        "burnAt": {
+          "type": "number",
+          "default": 2.9,
+          "doc": "Impacto: segundo en que la película se traba y se quema (acepta '@palabra'; −1 = sin quemado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: strips, projector, reel, leader; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "strips",
+            "projector",
+            "reel",
+            "leader",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿POR QUÉ CAYÓ\nEL ^MURO^?",
+        "kicker": "Berlín · 9 nov 1989",
+        "sub": "la noche que nadie vio venir",
+        "burnAt": 2.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=pelicula.introv1",
+      "data": {
+        "native_name": "pelicula.introv1"
+      }
+    },
+    {
+      "id": "pelicula.introv2",
+      "name": "pelicula.introv2",
+      "label": "pelicula.introv2",
+      "kind": "component",
+      "summary": "GANCHO tipo intertítulo de cine mudo. Se abre el iris; la pregunta gigante se EXPONE letra por letra (cada letra destella al aparecer) entre filetes dobles con rombo, y la respuesta llega en una TIRA DE PELÍCULA que cruza con barrido y estela, golpea con sacudida y destello, y queda atravesada (p. ej. 'NADIE DIO LA ORDEN'). Fondo adaptable (bg: projector | strips | reel | leader | image con src | component con use/useParams | none). Sale cerrando el iris.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "pregunta",
+        "intertítulo",
+        "cine mudo"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta gancho ('\\n' = renglón).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba, con barra roja.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stamp": {
+          "type": "string",
+          "default": "",
+          "doc": "Respuesta que llega en la tira de película (vacío = sin tira).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stampAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo en que entra la tira (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "typeAt": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Segundo en que empieza a exponerse la pregunta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cps": {
+          "type": "number",
+          "default": 18,
+          "doc": "Letras por segundo.",
+          "required": false,
+          "options": null,
+          "min": 4,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: strips, projector, reel, leader; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "strips",
+            "projector",
+            "reel",
+            "leader",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿QUIÉN ABRIÓ\nEL MURO?",
+        "kicker": "Archivo · Berlín 1989",
+        "stamp": "NADIE DIO LA ORDEN",
+        "stampAt": 2.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=pelicula.introv2",
+      "data": {
+        "native_name": "pelicula.introv2"
+      }
+    },
+    {
+      "id": "pelicula.outro",
+      "name": "pelicula.outro",
+      "label": "pelicula.outro",
+      "kind": "component",
+      "summary": "Cierre del canal SIN recuadro (bg: projector | strips | reel | leader | image con src | component con use/useParams). Por defecto sala oscura con el haz del proyector, polvo flotando y rollos girando. GRACIAS POR VER → nombre del canal GIGANTE naranja que cae con estela, hace glitch y se asienta sobre la barra roja (con quemado de luz) → cuadro de película LIKE que se expone en naranja y se marca con lápiz graso rojo → flecha a lápiz graso → tira roja SUSCRÍBETE que entra con barrido + campana que suena → mensaje de apoyo expuesto letra a letra → youtube.com/@canal. Fundido a negro al final. Tiempos sincronizables con la despedida narrada (likeAt, subscribeAt, bellAt, supportAt).",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse",
+        "proyector"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Rótulo inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODETECH",
+          "doc": "Nombre del canal (grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón de suscripción.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Apoya el canal y comparte la historia.",
+          "doc": "Mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodetech",
+          "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": true,
+          "doc": "Flecha del LIKE a SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del LIKE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la campana.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo del mensaje de apoyo y la dirección.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: projector, strips, reel, leader; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "projector",
+            "strips",
+            "reel",
+            "leader",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.66,
+          "doc": "Oscurecido del fondo foto/componente (el cierre tiene mucho texto).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "ARCHIVO 35",
+        "cta": "SUSCRÍBETE",
+        "support": "Tu apoyo nos ayuda a seguir rescatando historias.",
+        "handle": "youtube.com/@archivo35"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=pelicula&c=pelicula.outro",
+      "data": {
+        "native_name": "pelicula.outro"
+      }
+    }
+  ]
+}

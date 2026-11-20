@@ -1,0 +1,549 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-pulse",
+  "id": "scene.full",
+  "entry_id": "scene.full",
+  "name": "full",
+  "kind": "scene",
+  "label": "full",
+  "summary": "video completo con palabra, medidor y frase",
+  "variants": [
+    {
+      "type": "full",
+      "media": [
+        "stride"
+      ],
+      "trans": "zoomBlur",
+      "pos": "center",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "boxing"
+      ],
+      "trans": "zoomBlur",
+      "pos": "br",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "pushup"
+      ],
+      "trans": "cut",
+      "brackets": true,
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "runners"
+      ],
+      "trans": "zoomBlur",
+      "pos": "l",
+      "brackets": true,
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "kart"
+      ],
+      "trans": "cut",
+      "pos": "br",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "ropes"
+      ],
+      "trans": "zoomBlur",
+      "pos": "center",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "bmx"
+      ],
+      "trans": "cut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "fighter"
+      ],
+      "trans": "zoomBlur",
+      "pos": "br",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "bag"
+      ],
+      "trans": "cut",
+      "pos": "center",
+      "textIn": "cut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "stride"
+      ],
+      "trans": "whip",
+      "pos": "r",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "kart"
+      ],
+      "trans": "cut",
+      "pos": "l",
+      "brackets": true,
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "skater"
+      ],
+      "trans": "whip",
+      "pos": "br",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "ridge"
+      ],
+      "trans": "zoomBlur",
+      "pos": "center",
+      "textIn": "rise",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "sprint"
+      ],
+      "trans": "cut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "boxing"
+      ],
+      "trans": "cut",
+      "pos": "br",
+      "brackets": true,
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "fighter"
+      ],
+      "trans": "whip",
+      "pos": "l",
+      "max_text_lines": 2
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 2,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "stride",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 5,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "boxing",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 6,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "pushup",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 10,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "runners",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 12,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "kart",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 16,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "ropes",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 18,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "bmx",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 22,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "fighter",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 23,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "bag",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 25,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "stride",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 29,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "kart",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 32,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "skater",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 35,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "ridge",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 37,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "sprint",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 41,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "boxing",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 44,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "fighter",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, renglones en lines (renglón 1 = palabra principal, renglón 2 = complemento). La primera escena es la intro y la última el outro.",
+    "brand_texts": {
+      "brand.name": "marca del cierre",
+      "brand.url": "dirección del cierre si el último segmento no trae renglón 2",
+      "brand.cta": "caja verde del Outro v2",
+      "brand.corner": "rótulo fijo arriba a la derecha (vacío = sin rótulo)",
+      "brand.footer": "pie fijo (vacío = sin pie)"
+    },
+    "design_limitations": "Escenas counter requieren un número entero al inicio del renglón 1; si no lo hay se dibujan como framed. knockout usa palabras cortas (≤ 10 letras) para que el video se lea dentro.",
+    "scene_cycle_note": "Las longitudes recomendadas no garantizan legibilidad: revisar ambos formatos.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/1"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/4"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/5"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/9"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/11"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/15"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/17"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/21"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/22"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/24"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/28"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/31"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/34"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/36"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/40"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/default_scenes/43"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/1"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/4"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/5"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/9"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/11"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/15"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/17"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/21"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/22"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/24"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/28"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/31"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/34"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/36"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/40"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-pulse.json",
+      "pointer": "/scene_cycle/43"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

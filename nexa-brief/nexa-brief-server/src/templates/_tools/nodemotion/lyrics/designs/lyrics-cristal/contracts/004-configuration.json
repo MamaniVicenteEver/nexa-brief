@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-cristal",
+  "id": "config.worlds",
+  "entry_id": "config.worlds",
+  "name": "worlds",
+  "kind": "configuration",
+  "label": "worlds",
+  "summary": "Existing configuration configuration: worlds.",
+  "params": {},
+  "example": [
+    {
+      "type": "bokeh",
+      "colors": [
+        "#FF2E88",
+        "#FFB347",
+        "#35E0FF",
+        "#8A5CFF"
+      ],
+      "bg": [
+        "#0B0616",
+        "#1C0A2E"
+      ],
+      "figure": {
+        "src": "assets/figures/figura-01.png",
+        "side": "right",
+        "height": 0.9,
+        "glow": "#FF2E88"
+      }
+    },
+    {
+      "type": "video",
+      "src": "assets/humo.mp4",
+      "rate": 0.85,
+      "tint": "#9B3BFF",
+      "tintAlpha": 0.8,
+      "darken": 0.1,
+      "lights": true
+    },
+    {
+      "type": "rayos",
+      "colors": [
+        "#35E0FF",
+        "#FF2E88",
+        "#FFFFFF"
+      ],
+      "bg": [
+        "#03040C",
+        "#0B1030"
+      ],
+      "figure": {
+        "src": "assets/figures/figura-02.png",
+        "side": "left",
+        "height": 0.86,
+        "glow": "#35E0FF"
+      }
+    },
+    {
+      "type": "aurora",
+      "colors": [
+        "#FF2E88",
+        "#FF7A18",
+        "#6A00FF",
+        "#00C2FF"
+      ],
+      "bg": [
+        "#06030A",
+        "#140620"
+      ]
+    },
+    {
+      "type": "video",
+      "src": "assets/humo.mp4",
+      "rate": 1.15,
+      "tint": "#FF3A2E",
+      "tintAlpha": 0.75,
+      "darken": 0.12,
+      "lights": true,
+      "figure": {
+        "src": "assets/figures/figura-03.png",
+        "side": "center",
+        "height": 0.84,
+        "glow": "#FFB347"
+      }
+    }
+  ],
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-cristal/assets/config.json",
+      "pointer": "/configs/0/worlds"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

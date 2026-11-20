@@ -1,0 +1,229 @@
+{
+  "name": "front.line",
+  "family": "front",
+  "estilo": {
+    "usa": [
+      "trazos.frente",
+      "estilos.frente.a"
+    ]
+  },
+  "description": "Frente discontinuo rotulado «aproximado»; interpola posiciones fechadas de avance o retirada. Úsala para mostrar un frente y sus cambios en el tiempo.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 15,
+  "states": [
+    "advance",
+    "retreat",
+    "hold"
+  ],
+  "params": {
+    "via": {
+      "type": "array",
+      "default": [
+        [
+          49,
+          28
+        ],
+        [
+          56.3,
+          26.5
+        ],
+        [
+          59,
+          24
+        ]
+      ],
+      "range": null,
+      "description": "Waypoints de la trayectoria en orden."
+    },
+    "width": {
+      "type": "number",
+      "default": null,
+      "min": 1,
+      "max": 40,
+      "range": {
+        "min": 1,
+        "max": 40
+      },
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": null,
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "dash": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Valor de dash para la composición de front.line."
+    },
+    "punta": {
+      "type": "enum",
+      "values": [
+        "rellena",
+        "abierta"
+      ],
+      "default": null,
+      "range": [
+        "rellena",
+        "abierta"
+      ],
+      "description": "Valor de punta para la composición de front.line."
+    },
+    "largoPunta": {
+      "type": "number",
+      "default": null,
+      "min": 2,
+      "max": 100,
+      "range": {
+        "min": 2,
+        "max": 100
+      },
+      "description": "Valor de largoPunta para la composición de front.line."
+    },
+    "anchoPunta": {
+      "type": "number",
+      "default": null,
+      "min": 2,
+      "max": 100,
+      "range": {
+        "min": 2,
+        "max": 100
+      },
+      "description": "Valor de anchoPunta para la composición de front.line."
+    },
+    "camisa": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Valor de camisa para la composición de front.line."
+    },
+    "camisaWidth": {
+      "type": "number",
+      "default": null,
+      "min": 0,
+      "max": 60,
+      "range": {
+        "min": 0,
+        "max": 60
+      },
+      "description": "Valor de camisaWidth para la composición de front.line."
+    },
+    "bando": {
+      "type": "enum",
+      "values": [
+        "atacante",
+        "otro"
+      ],
+      "default": "atacante",
+      "range": [
+        "atacante",
+        "otro"
+      ],
+      "description": "Valor de bando para la composición de front.line."
+    },
+    "reveal": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Duración del revelado progresivo en segundos."
+    },
+    "approximate": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Indica que la cifra representada es aproximada."
+    },
+    "dientes": {
+      "type": "boolean",
+      "default": null,
+      "range": null,
+      "description": "Valor de dientes para la composición de front.line."
+    },
+    "text": {
+      "type": "string",
+      "default": "FRENTE · APROXIMADO",
+      "range": null,
+      "description": "Texto que se muestra."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-front-line",
+    "t": 0,
+    "type": "front.line",
+    "via": [
+      [
+        47,
+        33
+      ],
+      [
+        48.5,
+        31.5
+      ],
+      [
+        49,
+        30
+      ]
+    ],
+    "states": [
+      {
+        "at": 1,
+        "state": "advance",
+        "via": [
+          [
+            48,
+            33
+          ],
+          [
+            49.5,
+            31.5
+          ],
+          [
+            50,
+            30
+          ]
+        ],
+        "dur": 1.5
+      },
+      {
+        "at": 3.5,
+        "state": "retreat",
+        "via": [
+          [
+            47.3,
+            33
+          ],
+          [
+            48.8,
+            31.5
+          ],
+          [
+            49.3,
+            30
+          ]
+        ],
+        "dur": 1
+      }
+    ],
+    "color": "danger",
+    "dur": 6,
+    "out": 5.5,
+    "note": "Frente esquemático sin valor histórico."
+  },
+  "usedBy": [
+    "assets/scene.caption-propio.json",
+    "assets/scene.clasico.json",
+    "assets/scene.json",
+    "work/tactico/items-routes.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/front.line.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

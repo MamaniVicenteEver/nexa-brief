@@ -1,0 +1,259 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-mixtas",
+  "family": "lyrics",
+  "display_name": "Escenas Mixtas",
+  "description": "Lyric pack de estilos mezclados: cada frase cae en una escena distinta — metraje cinematográfico, rojo plano, papel blanco o negro grunge — con tipografía extendida, condensada y liviana, ecos apilados, palabras gigantes con etiqueta, tickers y un solo acento lima, rojo o naranja. Para pop, R&B y baladas urbanas.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "naturaleza y cielo: océano, playa, noche, nebulosa"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-mixtas/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-mixtas",
+    "config": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-mixtas/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-mixtas/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-mixtas/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.lyricsFilter",
+      "kind": "configuration",
+      "label": "lyricsFilter",
+      "summary": "Existing configuration configuration: lyricsFilter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.lyricsFilter",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.phrases",
+      "kind": "configuration",
+      "label": "phrases",
+      "summary": "Existing configuration configuration: phrases.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.phrases",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.timing",
+      "kind": "configuration",
+      "label": "timing",
+      "summary": "Existing configuration configuration: timing.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timing",
+      "contract": "contracts/006-configuration.json"
+    },
+    {
+      "entry_id": "layout.echoCenter",
+      "kind": "layout",
+      "label": "echoCenter",
+      "summary": "Existing layout configuration: echoCenter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.echoCenter",
+      "contract": "contracts/007-layout.json"
+    },
+    {
+      "entry_id": "layout.duoLight",
+      "kind": "layout",
+      "label": "duoLight",
+      "summary": "Existing layout configuration: duoLight.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.duoLight",
+      "contract": "contracts/008-layout.json"
+    },
+    {
+      "entry_id": "layout.condensed",
+      "kind": "layout",
+      "label": "condensed",
+      "summary": "Existing layout configuration: condensed.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.condensed",
+      "contract": "contracts/009-layout.json"
+    },
+    {
+      "entry_id": "layout.fadeStack",
+      "kind": "layout",
+      "label": "fadeStack",
+      "summary": "Existing layout configuration: fadeStack.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.fadeStack",
+      "contract": "contracts/010-layout.json"
+    },
+    {
+      "entry_id": "layout.redFlat",
+      "kind": "layout",
+      "label": "redFlat",
+      "summary": "Existing layout configuration: redFlat.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.redFlat",
+      "contract": "contracts/011-layout.json"
+    },
+    {
+      "entry_id": "layout.paperMix",
+      "kind": "layout",
+      "label": "paperMix",
+      "summary": "Existing layout configuration: paperMix.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.paperMix",
+      "contract": "contracts/012-layout.json"
+    },
+    {
+      "entry_id": "layout.spacedOut",
+      "kind": "layout",
+      "label": "spacedOut",
+      "summary": "Existing layout configuration: spacedOut.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.spacedOut",
+      "contract": "contracts/013-layout.json"
+    },
+    {
+      "entry_id": "layout.giantSpread",
+      "kind": "layout",
+      "label": "giantSpread",
+      "summary": "Existing layout configuration: giantSpread.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.giantSpread",
+      "contract": "contracts/014-layout.json"
+    },
+    {
+      "entry_id": "layout.outlineRows",
+      "kind": "layout",
+      "label": "outlineRows",
+      "summary": "Existing layout configuration: outlineRows.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.outlineRows",
+      "contract": "contracts/015-layout.json"
+    },
+    {
+      "entry_id": "layout.leftRight",
+      "kind": "layout",
+      "label": "leftRight",
+      "summary": "Existing layout configuration: leftRight.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.leftRight",
+      "contract": "contracts/016-layout.json"
+    },
+    {
+      "entry_id": "layout.band",
+      "kind": "layout",
+      "label": "band",
+      "summary": "Existing layout configuration: band.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.band",
+      "contract": "contracts/017-layout.json"
+    },
+    {
+      "entry_id": "layout.ticker",
+      "kind": "layout",
+      "label": "ticker",
+      "summary": "Existing layout configuration: ticker.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.ticker",
+      "contract": "contracts/018-layout.json"
+    },
+    {
+      "entry_id": "layout.rightStack",
+      "kind": "layout",
+      "label": "rightStack",
+      "summary": "Existing layout configuration: rightStack.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.rightStack",
+      "contract": "contracts/019-layout.json"
+    },
+    {
+      "entry_id": "layout.whiteCenter",
+      "kind": "layout",
+      "label": "whiteCenter",
+      "summary": "Existing layout configuration: whiteCenter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.whiteCenter",
+      "contract": "contracts/020-layout.json"
+    },
+    {
+      "entry_id": "layout.blackStack",
+      "kind": "layout",
+      "label": "blackStack",
+      "summary": "Existing layout configuration: blackStack.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.blackStack",
+      "contract": "contracts/021-layout.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/022-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/023-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/024-configuration.json"
+    }
+  ]
+}

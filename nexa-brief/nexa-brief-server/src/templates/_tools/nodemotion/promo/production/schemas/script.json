@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/schemas/nodemotion-promo/guion.json",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "template": {
+      "type": "string"
+    },
+    "duration_seconds": {
+      "type": "number",
+      "minimum": 60,
+      "maximum": 120
+    },
+    "notes": {},
+    "media_slots": {
+      "type": "object"
+    },
+    "brand": {
+      "type": "object"
+    },
+    "thumbnails": {
+      "type": "object"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "guion"
+        },
+        "audio_duration_sec": {
+          "type": "number",
+          "minimum": 60,
+          "maximum": 120
+        }
+      },
+      "required": [
+        "kind",
+        "audio_duration_sec"
+      ],
+      "additionalProperties": false
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "n": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "scene": {
+            "type": "string",
+            "minLength": 1
+          },
+          "facts": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "start": {
+            "type": "number",
+            "minimum": 0
+          },
+          "end": {
+            "type": "number",
+            "minimum": 0
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "words": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "word": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "start": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "end": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "probability": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "required": [
+                "word",
+                "start",
+                "end"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 0
+          },
+          "kind": {
+            "enum": [
+              "fact",
+              "creative",
+              "cta"
+            ]
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "id",
+              "start",
+              "end",
+              "text",
+              "lines"
+            ]
+          },
+          {
+            "required": [
+              "n",
+              "scene",
+              "lines"
+            ]
+          }
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "segments"
+  ],
+  "anyOf": [
+    {
+      "required": [
+        "metadata"
+      ]
+    },
+    {
+      "required": [
+        "template",
+        "duration_seconds"
+      ]
+    }
+  ],
+  "additionalProperties": false
+}

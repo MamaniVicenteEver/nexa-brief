@@ -1,0 +1,48 @@
+/* lyrics-grunge-rojo · estilos compartidos por el video (index.html) y la galería (showcase/). */
+#stage { position: fixed; inset: 0; overflow: hidden; background: #070707; }
+.gr-scene { position: absolute; inset: 0; overflow: hidden; }
+.gr-bg { position: absolute; inset: 0; background: #0A0A0A; background-size: cover; background-position: center; }
+.gr-slot { position: absolute; inset: 0; background-size: cover; background-position: center; transform-origin: 50% 50%; }
+.gr-slot video { width: 100%; height: 100%; object-fit: cover; display: block; filter: contrast(1.25) brightness(.82); }
+.gr-vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 45%, rgba(0,0,0,.65) 100%); }
+.gr-vignette-soft { background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 40%, rgba(0,0,0,.35) 100%); }
+.gr-fog, .gr-leak, .gr-over { position: absolute; inset: 0; pointer-events: none; }
+.gr-over { z-index: 6; }
+.gr-txt { position: absolute; inset: 0; z-index: 2; -webkit-mask-image: var(--gr-distress, none); mask-image: var(--gr-distress, none); -webkit-mask-size: 256px 256px; mask-size: 256px 256px; }
+.gr-svg { position: absolute; inset: 0; overflow: visible; pointer-events: none; z-index: 3; }
+.gr-strip { z-index: 4; }
+.gr-over.gr-svg { z-index: 6; }
+.gr-chalk { filter: drop-shadow(0 0 1px rgba(0,0,0,.4)); opacity: .95; }
+.gr-brush { opacity: .92; }
+.gr-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; white-space: nowrap; }
+.gr-inline { flex-direction: row; align-items: baseline; gap: .25em; }
+.gr-stack { gap: .02em; }
+.gr-left { align-items: flex-start; }
+.gr-row { line-height: .92; white-space: nowrap; text-align: center; }
+.gr-w { display: inline-block; }
+.gr-spaced { text-indent: .4em; }
+.gr-faded { opacity: .55; }
+.gr-hollow { color: transparent !important; -webkit-text-stroke: 2px rgba(241,241,239,.55); }
+.gr-hollow .gr-w { color: transparent; }
+.gr-inl { display: inline-block; vertical-align: top; }
+.gr-sup { margin-left: .2em; }
+.gr-blur .gr-w { filter: blur(.6px); }
+.gr-giant { position: absolute; left: 50%; transform: translateX(-50%); display: grid; width: max-content; }
+.gr-giant > .gr-row, .gr-giant-wrap > .gr-row { grid-area: 1 / 1; }
+.gr-giant .gr-row { line-height: .8; }
+.gr-giant .gr-ghost, .gr-giant-wrap .gr-ghost { opacity: .8; mix-blend-mode: screen; }
+.gr-giant-wrap { display: grid; width: max-content; }
+.gr-low, .gr-under { position: absolute; left: 50%; transform: translateX(-50%); white-space: nowrap; }
+.gr-on-paper .gr-w { text-shadow: 0 .03em .08em rgba(0,0,0,.55); }
+.gr-rbar { position: absolute; left: -10%; width: 120%; height: 11%; display: flex; align-items: center; overflow: hidden; }
+.gr-rbar-t { white-space: nowrap; letter-spacing: .02em; padding-left: 4%; }
+.gr-glitch { z-index: 6; }
+.gr-gbar { position: absolute; left: 0; width: 100%; mix-blend-mode: screen; }
+.gr-grid { position: absolute; left: 50%; top: 50%; width: 140%; display: flex; flex-wrap: wrap; gap: .1em .6em; justify-content: center; transform: translate(-50%, -50%); }
+.gr-cell { line-height: .9; white-space: nowrap; }
+.gr-collage { position: absolute; inset: 0; }
+.gr-piece { position: absolute; white-space: nowrap; line-height: .9; }
+.gr-band { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); height: 18%; display: flex; align-items: center; justify-content: center; z-index: 5; }
+.gr-band-t { white-space: nowrap; }
+.gr-feats { position: absolute; left: 0; right: 0; bottom: 10%; text-align: center; white-space: nowrap; z-index: 5; }
+#grain { position: fixed; inset: -50px; pointer-events: none; z-index: 8; mix-blend-mode: overlay; opacity: .9; }

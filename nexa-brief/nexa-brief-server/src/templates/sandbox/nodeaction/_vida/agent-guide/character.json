@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "topic": "Crear o actualizar un personaje Vida",
+  "path_base": "Todas las rutas son relativas a _vida/.",
+  "concept": "El rig y las acciones son compartidos. La ficha describe apariencia y voz, no contiene animaciones propias. El episodio determina acciones, expresiones y tiempos.",
+  "when_to_read": {
+    "voice": "agent-guide/voice.json si necesita hablar, cambiar voz o elegir una nueva.",
+    "extension": "agent-guide/extension/components.json si el rasgo solicitado no existe; agent-guide/extension/animations.json si requiere un movimiento nuevo.",
+    "episode": "docs/EPISODIO.md solo para montar escenas y diálogos."
+  },
+  "inputs": [
+    "id único en minúsculas y guiones, nombre, descripción visual, voz o intención vocal, diferencias de tamaño y personalidad solicitadas.",
+    "Si faltan detalles visuales menores elegir valores razonables y explicitar las suposiciones; no inventar un perfil vocal existente ni prometer un rasgo no soportado."
+  ],
+  "files": {
+    "character": "characters/<id>.json; id debe coincidir con el nombre del archivo.",
+    "authority": "schema/character.schema.json (fuente de verdad de validación).",
+    "existing_example": "characters/nico.json",
+    "catalog_generator": "tools/catalog.mjs",
+    "showcase_generator": "tools/showcase.mjs",
+    "thumbnail_generator": "tools/showcase-thumbs.mjs",
+    "voice_samples": "showcase/voice-samples.json: índice opcional por id para escuchar una muestra existente; cada ruta es sandbox/... y la fuente debe identificar si otra persona comparte la voz. Si falta, Showcase muestra que no hay muestra.",
+    "showcase_character_details": "tools/showcase.mjs publica characterFile en sprites.json; Showcase lee characters/<id>.json y voices/<voice>.json al abrir la ficha. Regenerar sprites tras cambiar la muestra."
+  },
+  "required_fields": {
+    "id": "cadena ^[a-z][a-z0-9-]*$, única",
+    "name": "nombre no vacío",
+    "voice": "id de perfil existente en voices/, ver salvedad en voice.json",
+    "seed": "entero 0..4294967295",
+    "height": "0.7..1.3",
+    "skin": "color #RRGGBB",
+    "head": "objeto con radius 0.15..0.19; roundness opcional 0.95..1.10",
+    "hair": "objeto style y color",
+    "outfit": "objeto style, color y shadow",
+    "shoes": "objeto style y color",
+    "face": "objeto expression"
+  },
+  "available_options": {
+    "hair.style": [
+      "spiky",
+      "ponytail",
+      "curly",
+      "buzz"
+    ],
+    "outfit.style": [
+      "tshirt",
+      "hoodie",
+      "dress",
+      "skirt",
+      "pants",
+      "apron"
+    ],
+    "shoes.style": [
+      "oval",
+      "sneaker"
+    ],
+    "accessories.cap": [
+      "forward",
+      "backward"
+    ],
+    "accessories.glasses": [
+      true,
+      false
+    ],
+    "face.expression": [
+      "neutral",
+      "smile",
+      "smirk",
+      "grin",
+      "laugh",
+      "sad",
+      "worry",
+      "surprise",
+      "shock",
+      "annoyed",
+      "skeptical",
+      "shy",
+      "love",
+      "think"
+    ]
+  },
+  "optional_fields": {
+    "skinShadow": "#RRGGBB",
+    "ink": "color #RRGGBB y width 0.006..0.025",
+    "body.width": "0.8..1.25",
+    "hair": "shadow, highlight, tie: colores",
+    "accessories": "cap, capColor, glasses, glassesColor",
+    "outfit": "trim, apronColor, skirtColor, pantsColor: colores",
+    "shoes.sole": "color",
+    "face.eyeScale": "0.7..1.4"
+  },
+  "example_valid_character": {
+    "id": "lucia",
+    "name": "Lucía",
+    "voice": "valeria",
+    "seed": 5021,
+    "height": 1.0,
+    "skin": "#e8b694",
+    "head": {
+      "radius": 0.166,
+      "roundness": 1.0
+    },
+    "hair": {
+      "style": "curly",
+      "color": "#493331"
+    },
+    "outfit": {
+      "style": "tshirt",
+      "color": "#80b8a6",
+      "shadow": "#5c8e80"
+    },
+    "shoes": {
+      "style": "sneaker",
+      "color": "#496c91"
+    },
+    "face": {
+      "expression": "smile"
+    }
+  },
+  "example_explanation": "Ejemplo de ficha visual validable, usa perfil valeria existente. No garantiza que un personaje llamado lucia pueda generar voz: script.who requiere voices/lucia.json; ver voice.json.",
+  "steps": [
+    "Comprobar IDs existentes en characters/ y no sobrescribir al crear. Para actualizar, leer solo la ficha solicitada y preservar campos no pedidos.",
+    "Escribir ficha acorde a schema; propiedades desconocidas se rechazan. No añadir campos como personalidad o animaciones sin soporte.",
+    "Comprobar que la voz referenciada existe. Para actuación hablada seguir voice.json y usar la ficha en el cast del episodio.",
+    "Desde _vida/ ejecutar node tools/validate.mjs. Para un episodio editado, ejecutar node tools/validate.mjs ../<episodio>/assets/episode.json y la revisión visual de SKILL.md.",
+    "Si el usuario pidió visibilidad en Showcase: node tools/catalog.mjs, node tools/showcase.mjs y node tools/showcase-thumbs.mjs. El segundo regenera componentes, sprites y dos posters de episodios; el tercero regenera todas las miniaturas y requiere Chromium instalado. No omitir comprobar errores ni presentar tarjeta inexistente como terminada."
+  ],
+  "impact": "Una ficha compartida afecta episodios que usen su id. Antes de actualizar, buscar referencias puntuales en episodios y verificar una vista representativa; no regenerar audio solo por un cambio visual.",
+  "known_limits": [
+    "height es relativo al cuerpo; en algunas vistas del catálogo se normaliza el tamaño.",
+    "La lista de opciones proviene del esquema; para otras formas o prendas seguir la guía de componentes, no inventar strings.",
+    "La hoja de grupo ?sheet=group todavía usa solo tomas, nico, valeria y mama; revisar personajes añadidos con su hoja individual."
+  ],
+  "studio": "Tras regenerar catalog.json, studio.html carga los cuatro personajes originales y añade los IDs del catálogo. Seleccionar el nuevo personaje y abrir ?sheet=<id> para revisar su hoja individual. Si el catálogo falla se conserva el elenco original; una entrada sin ficha se omite y se informa en la consola."
+}

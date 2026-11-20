@@ -1,0 +1,15 @@
+---
+interface Props extends astroHTML.JSX.ButtonHTMLAttributes {
+  variant?: 'primary' | 'secondary' | 'quiet';
+  href?: string;
+  target?: string;
+  rel?: string;
+  download?: string;
+}
+const { variant = 'primary', href, class: className, ...attributes } = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag class:list={['button', `button--${variant}`, className]} href={href} {...attributes}>
+  <slot />
+</Tag>

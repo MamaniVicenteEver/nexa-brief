@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "grunge.garabatos",
+  "entry_id": "grunge.garabatos",
+  "kind": "component",
+  "label": "Tiza y pincel rojo",
+  "summary": "Círculo, flecha, subrayado, marco, corona, rayo, cruces, ojos, tachón, barra o mancha.",
+  "component": {
+    "name": "grunge.garabatos",
+    "label": "Tiza y pincel rojo",
+    "summary": "Círculo, flecha, subrayado, marco, corona, rayo, cruces, ojos, tachón, barra o mancha.",
+    "default": true,
+    "params": {
+      "doodle": {
+        "type": "string",
+        "default": "circle",
+        "options": [
+          "circle",
+          "arrow",
+          "underline",
+          "box",
+          "crown",
+          "bolt",
+          "xmarks",
+          "eyes",
+          "strike",
+          "slash",
+          "smear"
+        ]
+      }
+    },
+    "tags": [
+      "adorno"
+    ],
+    "file": "components/garabatos.js",
+    "demo": {
+      "doodle": "strike"
+    },
+    "preview": {
+      "t": 1.0
+    }
+  },
+  "params": {
+    "doodle": {
+      "type": "string",
+      "default": "circle",
+      "options": [
+        "circle",
+        "arrow",
+        "underline",
+        "box",
+        "crown",
+        "bolt",
+        "xmarks",
+        "eyes",
+        "strike",
+        "slash",
+        "smear"
+      ]
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/showcase/components.json",
+      "pointer": "/components/6"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

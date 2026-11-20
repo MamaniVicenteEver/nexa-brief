@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "config.outro",
+  "entry_id": "config.outro",
+  "name": "outro",
+  "kind": "configuration",
+  "label": "outro",
+  "summary": "Existing configuration configuration: outro.",
+  "params": {
+    "title": {
+      "default": "Gracias"
+    },
+    "sub": {
+      "default": "por ver"
+    },
+    "feats": {
+      "default": "Suscríbete · NodeMotion"
+    },
+    "brand": {
+      "default": "NodeMotion"
+    },
+    "line": {
+      "default": "NodeMotion producciones"
+    },
+    "leadSec": {
+      "default": 0.4
+    },
+    "minSec": {
+      "default": 3
+    },
+    "maxSec": {
+      "default": 6
+    }
+  },
+  "example": {
+    "title": "Gracias",
+    "sub": "por ver",
+    "feats": "Suscríbete · NodeMotion",
+    "brand": "NodeMotion",
+    "line": "NodeMotion producciones",
+    "leadSec": 0.4,
+    "minSec": 3,
+    "maxSec": 6
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+      "pointer": "/configs/0/outro"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

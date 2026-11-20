@@ -34,6 +34,18 @@ function fraction(stages: JobStage[], stage: JobStage) {
 export function DraftProgress({ draft, dirty }: { draft: Draft; dirty: boolean }) {
   const t = useTranslations("studio.progress");
 
+  if (draft.status === "preparing") {
+    return (
+      <p
+        className="flex items-center gap-1.5 text-[12px] font-semibold text-nb-ink"
+        aria-live="polite"
+      >
+        <Loader2 className="size-3.5 animate-spin" />
+        {t("preparing")}
+      </p>
+    );
+  }
+
   if (draft.status === "previewing" || draft.status === "rendering") {
     const rendering = draft.status === "rendering";
     const value = fraction(rendering ? RENDER_STAGES : PREVIEW_STAGES, draft.stage);
@@ -89,7 +101,7 @@ export function DraftProgress({ draft, dirty }: { draft: Draft; dirty: boolean }
   return (
     <p className="flex items-center gap-1.5 text-[12px] font-semibold text-nb-ink">
       <CheckCircle2 className="size-3.5 text-nb-green-dark" />
-      {dirty ? t("changed") : t("ready")}
+      {dirty ? t("changed") : draft.status === "prepared" ? t("prepared") : t("ready")}
     </p>
   );
 }

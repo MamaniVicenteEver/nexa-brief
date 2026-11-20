@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Avatar · estudio</title>
+<!-- Estudio del avatar: probar gestos y mover cada parámetro a mano.
+     ?c=<personaje> (chica por defecto) · ?g=<gesto> repite ese gesto · ?rest muestra la pose de reposo quieta -->
+<style>
+  :root { --bg: #f3f1ee; --ink: #1a1816; --mut: #77716b; --line: #ddd7d0; --acc: #d2453a; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--ink); font: 14px/1.35 system-ui, sans-serif; }
+  body { display: grid; grid-template-columns: 1fr 340px; }
+  #view { position: relative; overflow: hidden; }
+  #view canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  aside { border-left: 1px solid var(--line); padding: 14px; overflow: auto; background: #fff; }
+  h1 { font-size: 15px; margin: 0 0 4px; } p { margin: 0 0 12px; color: var(--mut); font-size: 12px; }
+  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--mut); margin: 16px 0 6px; }
+  .g { display: flex; flex-wrap: wrap; gap: 6px; }
+  button { border: 1px solid var(--line); background: #faf9f7; border-radius: 6px; padding: 6px 9px; cursor: pointer; font: inherit; font-size: 12px; }
+  button:hover { border-color: var(--ink); } button.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  label { display: grid; grid-template-columns: 92px 1fr 40px; align-items: center; gap: 6px; font-size: 12px; margin: 3px 0; }
+  label span:last-child { text-align: right; color: var(--mut); font-variant-numeric: tabular-nums; }
+  input[type=range] { width: 100%; }
+  select { font: inherit; font-size: 12px; }
+  @media (max-width: 800px) { body { grid-template-columns: 1fr; grid-template-rows: 60vh auto; } aside { border-left: 0; border-top: 1px solid var(--line); } }
+</style>
+</head>
+<body>
+<div id="view"><canvas id="cv"></canvas></div>
+<aside>
+  <h1>Avatar · estudio</h1>
+  <p>En reposo es la imagen original sin cambios. Los gestos mueven la malla de la imagen; las manos de gesto y la boca que habla son dibujos en código.</p>
+  <h2>Gestos (lado)</h2>
+  <div class="g" style="margin-bottom:6px"><button data-side="L">izquierda</button><button data-side="R" class="on">derecha</button></div>
+  <div class="g" id="gest"></div>
+  <h2>Hablar</h2>
+  <div class="g"><button id="talk">hablar (bla bla)</button><button id="still">quieta (sin idle)</button></div>
+  <h2>Pose manual</h2>
+  <div id="sliders"></div>
+</aside>
+<script src="avatar.js"></script>
+<script src="gestures.js"></script>
+<script>
+(async () => {
+  "use strict";
+  const QS = new URLSearchParams(location.search);
+  const ch = await Avatar.load("characters/" + (QS.get("c") || "chica") + "/");
+  const R = Avatar.renderer(), cv = document.getElementById("cv"), g = cv.getContext("2d");
+  const { G } = AvatarGestures;
+  let side = "R", active = QS.get("g"), t0 = 0, talking = false, still = QS.has("rest"), manual = null;
+  // voz falsa para probar los labios: "hola a todos como estan hoy"
+  const fake = []; { let t = 0.2; for (const w of "hola a todos como están hoy vamos a ver esto juntos".split(" ")) { const d = 0.12 + w.length * 0.055; fake.push({ word: w, start: t, end: t + d }); t += d + 0.08; } }
+  let S = AvatarGestures.compile({ timeline: [] }, { T: v => +v || 0, words: [], END: 60, ch });
+
+  // botones de gestos
+  const box = document.getElementById("gest");
+  for (const id of Object.keys(G)) {
+    const b = document.createElement("button"); b.textContent = id; b.onclick = () => { active = id; t0 = performance.now() / 1000; manual = null; mark(); };
+    box.appendChild(b);
+  }
+  const mark = () => box.querySelectorAll("button").forEach(b => b.classList.toggle("on", b.textContent === active));
+  document.querySelectorAll("[data-side]").forEach(b => b.onclick = () => { side = b.dataset.side; document.querySelectorAll("[data-side]").forEach(x => x.classList.toggle("on", x === b)); });
+  document.getElementById("talk").onclick = e => { talking = !talking; e.target.classList.toggle("on", talking); t0 = performance.now() / 1000; };
+  document.getElementById("still").onclick = e => { still = !still; e.target.classList.toggle("on", still); };
+
+  // deslizadores (pose manual: al tocar uno, la pose queda fija en esos valores)
+  const SL = [["arms.L.up", -40, 180], ["arms.L.bend", -170, 170], ["arms.L.wrist", -60, 60], ["arms.R.up", -40, 180], ["arms.R.bend", -170, 170], ["arms.R.wrist", -60, 60],
+    ["head.tilt", -15, 15], ["head.turn", -1, 1], ["head.nod", -1, 1], ["eyes.blink", 0, 1], ["brows.L", -1, 1], ["brows.R", -1, 1], ["brows.knit", -1, 1],
+    ["mouth.open", 0, 1], ["mouth.wide", 0, 1], ["mouth.round", 0, 1], ["lean", -6, 6]];
+  const sl = document.getElementById("sliders"), get = (o, p) => p.split(".").reduce((a, k) => a[k], o), set = (o, p, v) => { const k = p.split("."); const l = k.pop(); k.reduce((a, x) => a[x], o)[l] = v; };
+  for (const [p, a, b] of SL) {
+    const L = document.createElement("label"); L.innerHTML = `<span>${p}</span><input type="range" min="${a}" max="${b}" step="${(b - a) / 200}" value="0"><span>0</span>`;
+    const inp = L.querySelector("input"), out = L.lastChild;
+    inp.oninput = () => { manual = manual || Avatar.rest(); set(manual, p, +inp.value); out.textContent = (+inp.value).toFixed(2); active = null; mark(); };
+    sl.appendChild(L);
+  }
+  for (const s of ["L", "R"]) {
+    const L = document.createElement("label"); L.innerHTML = `<span>mano ${s}</span><select>${["rest", ...ch.rig.hands.shapes].map(h => `<option>${h}</option>`).join("")}</select><span></span>`;
+    L.querySelector("select").onchange = e => { manual = manual || Avatar.rest(); manual.arms[s].hand = e.target.value; manual.arms[s].handK = 1; };
+    sl.appendChild(L);
+  }
+
+  function pose(t) {
+    if (manual) return manual;
+    const words = talking ? fake.map(w => ({ ...w, start: w.start + Math.floor(t / 5) * 5, end: w.end + Math.floor(t / 5) * 5 })) : [];
+    const acts = active ? [{ t: 0, do: active, side }] : [];
+    const ctx = { T: v => +v || 0, words, END: 600, ch };
+    S = AvatarGestures.compile({ timeline: acts, idle: still ? 0 : 1 }, ctx);
+    if (active) { const a = S.acts[0]; const lt = t % (a.dur + 0.8); return AvatarGestures.poseAt(S, lt); }
+    return still && !talking ? Avatar.rest() : AvatarGestures.poseAt(S, t);
+  }
+
+  function frame(now) {
+    const W = cv.width = cv.clientWidth * devicePixelRatio, H = cv.height = cv.clientHeight * devicePixelRatio;
+    const t = window.__labT ?? (now / 1000 - t0);
+    g.fillStyle = "#f3f1ee"; g.fillRect(0, 0, W, H);
+    const h = H * 0.94;
+    R.size(W, H); R.clear();
+    R.draw(ch, window.__labPose || pose(t), window.__labPlace || { x: W / 2, y: H * 0.97, h });
+    g.drawImage(R.canvas, 0, 0);
+    if (!window.__labHold) requestAnimationFrame(frame);
+  }
+  window.__lab = { ch, R, frame, pose, ready: true };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

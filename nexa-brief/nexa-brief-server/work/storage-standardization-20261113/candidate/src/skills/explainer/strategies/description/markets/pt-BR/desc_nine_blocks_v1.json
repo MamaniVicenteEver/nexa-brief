@@ -1,0 +1,40 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "desc_nine_blocks_v1",
+  "piece": "description",
+  "locale": "pt-BR",
+  "status": "draft",
+  "intent": "Organizar nove blocos úteis: gancho, contexto, capítulos, reflexão, agradecimento, pergunta, fontes, créditos e hashtags.",
+  "templates": {
+    "hook": "{consequência concreta}. {uma dúvida em aberto}.",
+    "context": "O que {fonte identificada} afirma e o que os dados não provam.",
+    "reflection": "Essa diferença importa quando você {ação concreta}.",
+    "question": "Você faria {opção A} ou {opção B}?"
+  },
+  "examples": [
+    "Apagar um chat e apagar todas as cópias guardadas são promessas diferentes. Veja qual delas vale para a sua conta."
+  ],
+  "conventions": [
+    "Datas no padrão brasileiro; não mude a data do fato nem o valor ao adaptar unidades.",
+    "Separe fontes dos créditos de imagens e música: autor, licença, URL e alterações.",
+    "Os tempos, links e créditos vêm dos dados da produção; não invente referências."
+  ],
+  "sounds_false": [
+    "Embarque nesta jornada fascinante pelo futuro.",
+    "Um pedido de inscrição repetido em cada bloco."
+  ],
+  "overrides": {
+    "headings": {
+      "chapters": "CAPÍTULOS",
+      "sources": "FONTES",
+      "credits": "CRÉDITOS DE IMAGENS E MÚSICA"
+    }
+  },
+  "variants": {
+    "short": {
+      "instructions": [
+        "Não inclua capítulos; preserve gancho, contexto, fontes, créditos e uma pergunta."
+      ]
+    }
+  }
+}

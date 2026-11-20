@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "layout.silhouette",
+  "entry_id": "layout.silhouette",
+  "name": "silhouette",
+  "kind": "layout",
+  "label": "silhouette",
+  "summary": "Existing layout configuration: silhouette.",
+  "params": {
+    "weight": {
+      "default": 1.0
+    },
+    "bgs": {
+      "default": [
+        "void",
+        "violet",
+        "red"
+      ]
+    },
+    "media": {
+      "default": [
+        "sil-duo",
+        "sil-solo",
+        "sil-trio"
+      ]
+    }
+  },
+  "example": {
+    "weight": 1.0,
+    "bgs": [
+      "void",
+      "violet",
+      "red"
+    ],
+    "media": [
+      "sil-duo",
+      "sil-solo",
+      "sil-trio"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+      "pointer": "/configs/0/layouts/silhouette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

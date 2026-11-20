@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "config.fonts",
+  "entry_id": "config.fonts",
+  "name": "fonts",
+  "kind": "configuration",
+  "label": "fonts",
+  "summary": "Existing configuration configuration: fonts.",
+  "params": {
+    "expanded": {
+      "default": {
+        "family": "Noir Expanded",
+        "src": "assets/fonts/ArchivoExpanded-Black.woff2",
+        "weight": 900,
+        "lineHeight": 0.88,
+        "tracking": 0
+      }
+    },
+    "condensed": {
+      "default": {
+        "family": "Noir Condensed",
+        "src": "assets/fonts/Anton-Regular.woff2",
+        "weight": 400,
+        "lineHeight": 0.94,
+        "tracking": 0.005
+      }
+    },
+    "slab": {
+      "default": {
+        "family": "Noir Slab",
+        "src": "assets/fonts/AlfaSlabOne-Regular.woff2",
+        "weight": 400,
+        "lineHeight": 0.98,
+        "tracking": 0
+      }
+    },
+    "sans": {
+      "default": {
+        "family": "Noir Sans",
+        "src": "assets/fonts/Archivo.woff2",
+        "weight": 800,
+        "lineHeight": 1.15,
+        "tracking": 0.28,
+        "weightRange": "100 900"
+      }
+    },
+    "script": {
+      "default": {
+        "family": "Noir Script",
+        "src": "assets/fonts/KaushanScript-Regular.woff2",
+        "weight": 400,
+        "lineHeight": 1.1,
+        "tracking": 0
+      }
+    }
+  },
+  "example": {
+    "expanded": {
+      "family": "Noir Expanded",
+      "src": "assets/fonts/ArchivoExpanded-Black.woff2",
+      "weight": 900,
+      "lineHeight": 0.88,
+      "tracking": 0
+    },
+    "condensed": {
+      "family": "Noir Condensed",
+      "src": "assets/fonts/Anton-Regular.woff2",
+      "weight": 400,
+      "lineHeight": 0.94,
+      "tracking": 0.005
+    },
+    "slab": {
+      "family": "Noir Slab",
+      "src": "assets/fonts/AlfaSlabOne-Regular.woff2",
+      "weight": 400,
+      "lineHeight": 0.98,
+      "tracking": 0
+    },
+    "sans": {
+      "family": "Noir Sans",
+      "src": "assets/fonts/Archivo.woff2",
+      "weight": 800,
+      "lineHeight": 1.15,
+      "tracking": 0.28,
+      "weightRange": "100 900"
+    },
+    "script": {
+      "family": "Noir Script",
+      "src": "assets/fonts/KaushanScript-Regular.woff2",
+      "weight": 400,
+      "lineHeight": 1.1,
+      "tracking": 0
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/assets/config.json",
+      "pointer": "/configs/0/fonts"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

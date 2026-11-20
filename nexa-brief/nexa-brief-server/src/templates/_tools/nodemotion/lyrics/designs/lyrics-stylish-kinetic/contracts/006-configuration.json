@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-stylish-kinetic",
+  "id": "config.timing",
+  "entry_id": "config.timing",
+  "name": "timing",
+  "kind": "configuration",
+  "label": "timing",
+  "summary": "Existing configuration configuration: timing.",
+  "params": {
+    "leadSec": {
+      "default": 0.1
+    },
+    "longWordSec": {
+      "default": 0.5
+    },
+    "longWordLead": {
+      "default": 0.35
+    },
+    "exitSec": {
+      "default": 0.38
+    },
+    "holdSec": {
+      "default": 1.0
+    },
+    "interludeSec": {
+      "default": 3.0
+    }
+  },
+  "example": {
+    "leadSec": 0.1,
+    "longWordSec": 0.5,
+    "longWordLead": 0.35,
+    "exitSec": 0.38,
+    "holdSec": 1.0,
+    "interludeSec": 3.0
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
+      "pointer": "/configs/0/timing"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

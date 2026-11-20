@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "bg": {
+      "default": "#000000"
+    },
+    "fg": {
+      "default": "#FFFFFF"
+    },
+    "muted": {
+      "default": "#8A8A8A"
+    },
+    "chip": {
+      "default": "#FFFFFF"
+    },
+    "chipText": {
+      "default": "#111111"
+    }
+  },
+  "example": {
+    "bg": "#000000",
+    "fg": "#FFFFFF",
+    "muted": "#8A8A8A",
+    "chip": "#FFFFFF",
+    "chipText": "#111111"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

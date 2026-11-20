@@ -9,6 +9,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 from src.core import preview_tracker
+from src.core.library.resource_metadata import ResourceOrigin
 
 # Unión de todos los nombres de archivo reales usados por required_output_assets
 # en cualquier src/templates/*/manifest.json — whitelist estática de lo que el
@@ -37,8 +38,10 @@ class TemplateMediaSlot(BaseModel):
     min: int = 1
     max: int = 1
     orientation: Literal["landscape", "portrait", "square"] | None = None
-    # "source" = va como imagen/video de fondo del job; "media" = reemplaza config.media.
-    target: Literal["source", "media"] = "source"
+    # "source" = va como imagen/video de fondo del job; "media" = reemplaza config.media;
+    # "config" = el archivo se escribe en la ruta `path` del config (fondo opcional).
+    target: Literal["source", "media", "config"] = "source"
+    path: str | None = None
     label: str
     hint: str = ""
 
@@ -50,12 +53,25 @@ class TemplateTextField(BaseModel):
     default: str | None = None
 
 
+class TemplateDefaultAsset(BaseModel):
+    asset_id: str
+    kind: Literal["image", "video"] = "video"
+
+
+class TemplateDefaults(BaseModel):
+    """Lo que la plantilla trae puesto: canción de la biblioteca y medios por lugar, en orden."""
+    audio_asset_id: str | None = None
+    media: dict[str, list[TemplateDefaultAsset]] = {}
+
+
 class TemplateRequirementsResponse(BaseModel):
     """GET /templates/{template_id}/requirements — ver template_manifest.get_template_inputs."""
+    resource_context: ResourceOrigin | None = None
     audio: TemplateAudioRequirement
     media: list[TemplateMediaSlot] = []
     texts: list[TemplateTextField] = []
     brief: bool = False
+    defaults: TemplateDefaults = TemplateDefaults()
 
 
 class TemplateResponse(BaseModel):
@@ -123,12 +139,15 @@ class PreviewStatusResponse(BaseModel):
         files: list[PreviewFileInfo] = []
         if output_dir:
             out = Path(output_dir)
+            assets = Path(record["assets_dir"]) if record.get("assets_dir") else out
             for filename in sorted(PREVIEW_ALLOWED_FILENAMES):
-                if (out / filename).exists():
+                source = out if filename == "index.html" else assets
+                if (source / filename).exists():
+                    prefix = "assets/" if source != out else ""
                     files.append(
                         PreviewFileInfo(
                             filename=filename,
-                            url=f"/api/v1/templates/preview/{preview_id}/{filename}",
+                            url=f"/api/v1/templates/preview/{preview_id}/{prefix}{filename}",
                         )
                     )
 

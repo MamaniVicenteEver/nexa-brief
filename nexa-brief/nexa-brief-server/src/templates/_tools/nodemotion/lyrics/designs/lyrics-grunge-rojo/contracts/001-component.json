@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "grunge.intro",
+  "entry_id": "grunge.intro",
+  "kind": "component",
+  "label": "Intro rasgada",
+  "summary": "Metraje B/N con papel rasgado; título rojo con estela, artista espaciado, corona de tiza y destello.",
+  "component": {
+    "name": "grunge.intro",
+    "label": "Intro rasgada",
+    "summary": "Metraje B/N con papel rasgado; título rojo con estela, artista espaciado, corona de tiza y destello.",
+    "default": true,
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "Roll Up 20",
+        "doc": "config.intro.title"
+      },
+      "artist": {
+        "type": "string",
+        "default": "Pista de demostración",
+        "doc": "config.intro.artist"
+      }
+    },
+    "tags": [
+      "intro"
+    ],
+    "file": "components/intro.js",
+    "demo": {},
+    "preview": {
+      "t": 1.8
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "Roll Up 20",
+      "doc": "config.intro.title"
+    },
+    "artist": {
+      "type": "string",
+      "default": "Pista de demostración",
+      "doc": "config.intro.artist"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/showcase/components.json",
+      "pointer": "/components/0"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

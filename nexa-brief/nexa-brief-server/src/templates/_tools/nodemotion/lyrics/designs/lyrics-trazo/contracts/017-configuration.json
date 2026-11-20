@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "config.timing",
+  "entry_id": "config.timing",
+  "name": "timing",
+  "kind": "configuration",
+  "label": "timing",
+  "summary": "Existing configuration configuration: timing.",
+  "params": {
+    "leadSec": {
+      "default": 0.05
+    },
+    "minWordSec": {
+      "default": 0.16
+    },
+    "maxMergeChars": {
+      "default": 12
+    },
+    "gapSec": {
+      "default": 0.85
+    },
+    "holdSec": {
+      "default": 0.4
+    }
+  },
+  "example": {
+    "leadSec": 0.05,
+    "minWordSec": 0.16,
+    "maxMergeChars": 12,
+    "gapSec": 0.85,
+    "holdSec": 0.4
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "pointer": "/configs/0/timing"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

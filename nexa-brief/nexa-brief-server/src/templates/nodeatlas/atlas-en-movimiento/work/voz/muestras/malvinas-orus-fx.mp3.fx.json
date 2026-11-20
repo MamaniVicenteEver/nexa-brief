@@ -1,0 +1,24 @@
+{
+  "input": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/sandbox/nodehistory/atlas-en-movimiento/work/voz/muestras/malvinas-orus.wav",
+  "output": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/sandbox/nodehistory/atlas-en-movimiento/work/voz/muestras/malvinas-orus-fx.mp3",
+  "duration_s": 14.44,
+  "filter_complex": [
+    "[0:a]aformat=sample_fmts=fltp:channel_layouts=mono,highpass=f=70,bass=g=2.2:f=150:w=0.7,equalizer=f=3000:t=q:w=0.8:g=1.2,lowpass=f=7500,aeval=exprs='tanh(1.10*val(0))/tanh(1.10)',aecho=in_gain=0.98:out_gain=1:delays=29|43:decays=0.035|0.020[v]",
+    "[v]amix=inputs=1:duration=first:normalize=0,atrim=duration=14.44,asetpts=PTS-STARTPTS[mix]"
+  ],
+  "breaths": [],
+  "loudnorm_first_pass": {
+    "input_i": "-16.85",
+    "input_tp": "-0.19",
+    "input_lra": "3.70",
+    "input_thresh": "-27.62",
+    "output_i": "-16.36",
+    "output_tp": "-1.50",
+    "output_lra": "3.10",
+    "output_thresh": "-27.19",
+    "normalization_type": "dynamic",
+    "target_offset": "0.36"
+  },
+  "final_ffmpeg_log": "[aist#0:0/pcm_f32le @ 0x55c0d41d88c0] Guessed Channel Layout: mono\nInput #0, wav, from '/tmp/fx-veterano-wk_d5m5p/mezcla.wav':\n  Metadata:\n    encoder         : Lavf62.3.100\n  Duration: 00:00:14.44, bitrate: 1536 kb/s\n  Stream #0:0: Audio: pcm_f32le ([3][0][0][0] / 0x0003), 48000 Hz, mono, flt, 1536 kb/s\nStream mapping:\n  Stream #0:0 -> #0:0 (pcm_f32le (native) -> mp3 (libmp3lame))\nOutput #0, mp3, to '/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-server/src/templates/sandbox/nodehistory/atlas-en-movimiento/work/voz/muestras/malvinas-orus-fx.mp3':\n  Metadata:\n    TSSE            : Lavf62.3.100\n  Stream #0:0: Audio: mp3, 48000 Hz, mono, fltp, 192 kb/s\n    Metadata:\n      encoder         : Lavc62.11.100 libmp3lame\n[Parsed_loudnorm_0 @ 0x7363700024c0] \n{\n\t\"input_i\" : \"-16.85\",\n\t\"input_tp\" : \"-0.19\",\n\t\"input_lra\" : \"3.70\",\n\t\"input_thresh\" : \"-27.62\",\n\t\"output_i\" : \"-16.08\",\n\t\"output_tp\" : \"-1.50\",\n\t\"output_lra\" : \"3.00\",\n\t\"output_thresh\" : \"-26.91\",\n\t\"normalization_type\" : \"dynamic\",\n\t\"target_offset\" : \"0.08\"\n}\n[out#0/mp3 @ 0x55c0d41d8c00] video:0KiB audio:338KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.179100%\nsize=     339KiB time=00:00:14.44 bitrate= 192.1kbits/s speed=48.4x elapsed=0:00:00.29    \n",
+  "note": "EQ, saturación y sala modifican color, no convierten una voz en otra. Revisar escucha y pico después de MP3."
+}

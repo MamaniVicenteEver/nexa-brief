@@ -18,8 +18,11 @@ dependencies = [
     "openai>=2.41.1",
     "orjson>=3.11.9",
     "pillow>=11.0.0",
+    "pyshp>=2.3,<3",
+    "shapely>=2.0,<3",
     "playwright>=1.60.0",
     "pydantic>=2.13.4",
+    "pypdf>=7,<8",
     "pydantic-settings>=2.14.1",
     "python-dotenv>=1.2.2",
     "python-multipart>=0.0.32",
@@ -36,6 +39,7 @@ dev = [
     "pytest-asyncio>=1.4.0",
     "pytest-cov>=7.1.0",
     "ruff>=0.15.17",
+    "watchfiles>=1.0,<2",
 ]
 
 [tool.pytest.ini_options]

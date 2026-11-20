@@ -1,0 +1,42 @@
+{
+  "model": "gemini-3.8-flash-tts",
+  "input": [
+    {
+      "type": "user_input",
+      "content": [
+        {
+          "type": "text",
+          "text": "Veinticuatro de julio de mil novecientos ochenta y siete. <short pause> El capitán Frank Seitz navega bajo protección estadounidense.",
+          "annotations": [
+            {
+              "type": "speech_metadata",
+              "style": "Narrador de documental histórico, voz masculina madura, grave y cercana, español latinoamericano neutro (sin ceceo). Sobrio, sin dramatizar de más. No imitar a ninguna persona real. Ritmo pausado y natural, alrededor de 130 palabras por minuto: deja respirar el final de cada oración. Objetivo de 130 palabras por minuto para este relato: sin apuro, con pausas naturales entre ideas. Empieza bajo y cercano, con intriga contenida, como quien cuenta un secreto. Ritmo moderado. Intensidad media. Documental sobrio, español latino neutro. Ritmo de ciento veinticinco palabras por minuto, sin acelerar nombres ni fechas. Sin tono triunfal."
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": "Entonces, el Bridgeton golpea una mina al oeste de Farsi.",
+          "annotations": [
+            {
+              "type": "speech_metadata",
+              "style": "Narrador de documental histórico, voz masculina madura, grave y cercana, español latinoamericano neutro (sin ceceo). Sobrio, sin dramatizar de más. No imitar a ninguna persona real. Ritmo pausado y natural, alrededor de 130 palabras por minuto: deja respirar el final de cada oración. Objetivo de 130 palabras por minuto para este relato: sin apuro, con pausas naturales entre ideas. Tensión controlada: voz firme, un poco más grave, sin dramatizar. Intensidad alta. Documental sobrio, español latino neutro. Ritmo de ciento veinticinco palabras por minuto, sin acelerar nombres ni fechas. Sin tono triunfal."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "response_format": {
+    "type": "audio",
+    "mime_type": "audio/wav",
+    "sample_rate": 24000
+  },
+  "generation_config": {
+    "speech_config": [
+      {
+        "voice": "Achird"
+      }
+    ]
+  }
+}

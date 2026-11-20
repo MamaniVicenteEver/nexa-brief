@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Perfil vocal Vida v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "voice",
+    "model",
+    "language",
+    "direction",
+    "pace",
+    "postprocess",
+    "lead",
+    "tail",
+    "approved"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]*$"
+    },
+    "voice": {
+      "type": "string",
+      "minLength": 1,
+      "not": {
+        "enum": [
+          "Puck",
+          "puck",
+          "PUCK"
+        ]
+      }
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "language": {
+      "const": "es-419"
+    },
+    "direction": {
+      "type": "string",
+      "minLength": 50
+    },
+    "pace": {
+      "type": "number",
+      "minimum": 60,
+      "maximum": 240
+    },
+    "postprocess": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tempo",
+        "pitch_preserved",
+        "lufs",
+        "true_peak_db"
+      ],
+      "properties": {
+        "tempo": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2
+        },
+        "pitch_preserved": {
+          "const": true
+        },
+        "lufs": {
+          "type": "number",
+          "minimum": -24,
+          "maximum": -12
+        },
+        "true_peak_db": {
+          "type": "number",
+          "minimum": -6,
+          "maximum": -1
+        }
+      }
+    },
+    "lead": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 0.5
+    },
+    "tail": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 0.8
+    },
+    "approved": {
+      "const": false
+    }
+  }
+}

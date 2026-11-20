@@ -32,3 +32,37 @@ client_secret*.json
 .DS_Store
 .idea/
 .vscode/
+
+# Imágenes locales de ejemplos de posts
+/nexa-brief-web/public/ejemplos-posts/**/*.[jJ][pP][gG]
+/nexa-brief-web/public/ejemplos-posts/**/*.[jJ][pP][eE][gG]
+/nexa-brief-web/public/ejemplos-posts/**/*.[pP][nN][gG]
+/nexa-brief-web/public/ejemplos-posts/**/*.[wW][eE][bB][pP]
+/nexa-brief-web/public/ejemplos-posts/**/*.[gG][iI][fF]
+/nexa-brief-web/public/ejemplos-posts/**/*.[aA][vV][iI][fF]
+/nexa-brief-web/public/ejemplos-posts/**/*.[sS][vV][gG]
+/nexa-brief-web/public/ejemplos-posts/**/*.[bB][mM][pP]
+/nexa-brief-web/public/ejemplos-posts/**/*.[iI][cC][oO]
+/nexa-brief-web/public/ejemplos-posts/**/*.[tT][iI][fF]
+/nexa-brief-web/public/ejemplos-posts/**/*.[tT][iI][fF][fF]
+
+# Shared encrypted connections, private migration backups and local service logs
+.runtime/
+
+# External profile compatibility links (symlinks also stay outside Git)
+/nexa-brief-server/data
+/nexa-brief-server/output
+/nexa-brief-web/data
+/nexa-tiktok/data
+
+# Datos administrativos offline del motor Atlas
+!/nexa-brief-server/src/templates/sandbox/nodehistory/_atlas/data/
+/nexa-brief-server/src/templates/sandbox/nodehistory/_atlas/data/*
+!/nexa-brief-server/src/templates/sandbox/nodehistory/_atlas/data/geo/
+
+# Identidades locales de Atlas en movimiento
+/nexa-brief-server/src/templates/sandbox/nodehistory/atlas-en-movimiento/identidad/
+/nexa-brief-server/src/templates/sandbox/nodehistory/atlas-en-movimiento/identidad-opus/
+/nexa-brief-server/src/templates/sandbox/nodehistory/atlas-en-movimiento/identidad-opus-2/
+/nexa-brief-server/src/templates/sandbox/nodehistory/atlas-en-movimiento/identidad-opus-respaldo-v5/
+/nexa-brief-server/src/templates/sandbox/nodehistory/atlas-en-movimiento/identidad-2/

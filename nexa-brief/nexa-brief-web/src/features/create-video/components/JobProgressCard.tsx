@@ -117,10 +117,20 @@ function SuccessBody({ jobId, data }: { jobId: string; data: JobDetail }) {
 }
 
 /** One job's live status: queue position → % + current step + ETA → result. Reused by the jobs tray. */
-export function JobProgressCard({ job, actions }: { job: JobHandle; actions?: React.ReactNode }) {
+export function JobProgressCard({
+  job,
+  actions,
+  label,
+}: {
+  job: JobHandle;
+  actions?: React.ReactNode;
+  /** Nombre de la grabación (Estudio de NodeMotion); el nicho queda como subtítulo. */
+  label?: string;
+}) {
   const t = useTranslations("createVideo.jobProgress");
   const { data } = useJobStatus(job.jobId);
-  const name = useNicheName(data?.category ?? job.category);
+  const nicheName = useNicheName(data?.category ?? job.category);
+  const name = label || nicheName;
   const view = deriveJobProgress(data, job.stage);
   const fillWidth = view.status === "running" && view.percent !== null ? view.percent : 0;
 
@@ -139,7 +149,14 @@ export function JobProgressCard({ job, actions }: { job: JobHandle; actions?: Re
       />
       <div className="relative flex flex-col gap-2.5">
         <header className="flex items-center gap-2 pr-6">
-          <h3 className="min-w-0 flex-1 truncate text-[13.5px] font-bold text-nb-ink">{name}</h3>
+          <h3 className="min-w-0 flex-1 truncate text-[13.5px] font-bold text-nb-ink">
+            {name}
+            {label && (
+              <span className="block truncate text-[11px] font-normal text-nb-mute">
+                {nicheName}
+              </span>
+            )}
+          </h3>
           <StatusPill view={view} />
         </header>
         {actions && <div className="absolute -top-1 -right-1">{actions}</div>}

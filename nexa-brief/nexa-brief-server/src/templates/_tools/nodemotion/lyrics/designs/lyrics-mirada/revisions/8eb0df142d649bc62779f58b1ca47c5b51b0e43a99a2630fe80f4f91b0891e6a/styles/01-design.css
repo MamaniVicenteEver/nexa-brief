@@ -1,0 +1,230 @@
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* tema — config.json (fonts/palette) puede pisar cualquiera de estas variables */
+  :root {
+    --fontRound: "Fredoka", sans-serif;
+    --fontColumn: "League Gothic", sans-serif;
+    --fontSlab: "Alfa Slab One", serif;
+    --night: #0A0807; --tan: #B39A7C; --tanLight: #D3BC9D; --tanDeep: #88705A;
+    --umber: #5B4737; --cream: #EDE2CF; --teal: #1F6D69; --crimson: #8E1C16;
+  }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: var(--night); cursor: pointer; }
+
+  #bgMedia {
+    position: fixed; inset: -6%; width: 112%; height: 112%; object-fit: cover; z-index: 0;
+    opacity: 0; transition: opacity 2.4s ease; pointer-events: none;
+    animation: mediaDrift 40s ease-in-out infinite alternate;
+  }
+  @keyframes mediaDrift { 0% { transform: translate(0, 0) scale(1); } 100% { transform: translate(-2.5%, 1.5%) scale(1.07); } }
+
+  #camera { position: fixed; inset: 0; z-index: 2; overflow: hidden; will-change: transform; transition: opacity 1.8s ease; }
+  .scene { position: absolute; inset: 0; overflow: hidden; }
+  .wash { position: absolute; inset: 0; opacity: 0; transition: opacity 0.8s cubic-bezier(0.65, 0, 0.35, 1); }
+  .wash.tan {
+    background:
+      radial-gradient(ellipse 75% 65% at 50% 48%, rgba(214, 192, 160, 0.35), transparent 70%),
+      linear-gradient(180deg, #7C654E 0%, #A58C70 34%, #B9A083 60%, #9A8266 100%);
+  }
+  .wash.umber {
+    background:
+      radial-gradient(ellipse 70% 70% at 50% 50%, #86705B 0%, #6A5646 45%, #3E3027 100%);
+  }
+  .scene.light .wash { opacity: 1; }
+
+  /* bloque de texto genérico: centrado en (left, top) */
+  .block { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); text-align: center; white-space: nowrap; pointer-events: none; }
+  .block .inner { position: relative; }
+  .block .ln { display: block; }
+  .w { display: inline-block; opacity: 0; will-change: transform, opacity; }
+
+  /* ---- escena 1 · MIRADA: ojos en la penumbra + mano que se estira ---- */
+  .mirada { background: radial-gradient(ellipse at 58% 42%, #3E2B20 0%, #160F0C 48%, #050403 100%); }
+  .mirada .eyesWrap { position: absolute; left: 50%; top: 1vh; width: min(68vw, 120vh); transform-origin: 50% 42%; }
+  .mirada .eyesPhase { transition: opacity 0.9s ease; }
+  .mirada.light .eyesPhase { opacity: 0; }
+  .mirada .eyesWrap svg { width: 100%; height: auto; display: block; }
+  .mirada .handWrap { position: absolute; left: -2vw; bottom: -17vh; height: 66vh; transform-origin: 50% 100%; }
+  .mirada .handWrap svg { height: 100%; width: auto; display: block; overflow: visible; }
+  .hand .hf { fill: #A88C6B; transition: fill-opacity 0.8s ease, fill 0.8s ease; }
+  .hand .hn { fill: #C9B393; transition: fill-opacity 0.8s ease; }
+  .hand .hs { fill: none; stroke: #4A3829; stroke-opacity: 0.38; stroke-linecap: round; transition: stroke-opacity 0.8s ease; }
+  .hand .hh { fill: none; stroke: #DCC8AA; stroke-opacity: 0.45; stroke-linecap: round; transition: stroke-opacity 0.8s ease; }
+  .hand .hl { fill: none; stroke: #241A12; stroke-linecap: round; stroke-linejoin: round; transition: stroke 0.8s ease; }
+  .mirada.light .hand .hf, .mirada.light .hand .hn { fill-opacity: 0.1; }
+  .mirada.light .hand .hs, .mirada.light .hand .hh { stroke-opacity: 0.08; }
+  .mirada.light .hand .hl { stroke: #19120C; }
+  .mirada .block { color: var(--tan); font-family: var(--fontRound); text-shadow: 0 0 3vh rgba(0, 0, 0, 0.55); }
+  .mirada .block.onLight { color: var(--night); text-shadow: none; }
+
+  /* ---- escena 2 · COLUMNAS: palabras altísimas que desbordan el cuadro ---- */
+  .columnas .block { font-family: var(--fontColumn); text-transform: uppercase; }
+  .columnas .block.onDark .w {
+    background: linear-gradient(180deg, var(--tanLight) 0%, var(--tan) 48%, var(--tanDeep) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .columnas .block.onLight .w { color: var(--night); }
+  .star5 { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); pointer-events: none; }
+  .star5 .spin { width: 100%; height: 100%; animation: spin 70s linear infinite; }
+  .star5 svg { width: 100%; height: 100%; display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---- escena 3 · ÁNGEL: la figura vive dentro de las letras + estallido ---- */
+  .angel .burst { position: absolute; left: 50%; top: 50%; pointer-events: none; }
+  .angel .burst svg { width: 100%; height: 100%; display: block; }
+  .angel .burst polygon { fill: var(--teal); transition: fill 0.7s ease; }
+  .angel:not(.light) .burst polygon { fill: var(--crimson); }
+  .angel .block { font-family: var(--fontColumn); text-transform: uppercase; }
+  .angel .block .w {
+    background-image: var(--angelImg), var(--fillGrad);
+    background-size: auto 112%, 100% 100%; background-position: 2% 35%, 0 0; background-repeat: no-repeat;
+    background-blend-mode: var(--angelBlend, normal);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* ---- escena 4 · NOCHE: cielo, luna, nubes, estrellas ---- */
+  .noche .sky { position: absolute; inset: -8% 0 0 0; }
+  .noche .st { position: absolute; border-radius: 50%; background: var(--cream); animation: twinkle var(--d) ease-in-out infinite; animation-delay: var(--dl); }
+  @keyframes twinkle { 0%, 100% { opacity: var(--o1); transform: scale(0.8); } 50% { opacity: var(--o2); transform: scale(1.15); } }
+  .noche .moon {
+    position: absolute; border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 38%, rgba(90, 70, 50, 0.28) 0 6%, transparent 7%),
+      radial-gradient(circle at 58% 62%, rgba(90, 70, 50, 0.22) 0 9%, transparent 10%),
+      radial-gradient(circle at 44% 20%, rgba(90, 70, 50, 0.18) 0 4%, transparent 5%),
+      radial-gradient(circle at 70% 34%, rgba(90, 70, 50, 0.2) 0 5%, transparent 6%),
+      radial-gradient(circle at 36% 72%, rgba(90, 70, 50, 0.16) 0 3.5%, transparent 4.5%),
+      radial-gradient(circle at 38% 36%, #D7C2A2 0%, #B89E7F 42%, #8E765C 78%, #5E4C3B 100%);
+    box-shadow: 0 0 9vh 1.5vh rgba(196, 168, 128, 0.2), inset -2vh -1.5vh 4vh rgba(40, 28, 18, 0.45);
+  }
+  .noche .cloud { position: absolute; filter: blur(1.1vh); opacity: 0.72; }
+  .noche .cloud svg { width: 100%; height: auto; display: block; }
+  .noche .streak {
+    position: absolute; height: 0.22vh; width: 16vw; border-radius: 1vh; opacity: 0;
+    background: linear-gradient(90deg, transparent, rgba(237, 226, 207, 0.9));
+  }
+  .noche .block { color: var(--tan); }
+  .noche .block.slab .w {
+    background: linear-gradient(180deg, var(--tanLight) 0%, var(--tan) 55%, var(--tanDeep) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* ---- escena 5 · PALOMAS: plumas que caen, palomas que cruzan, escalera ---- */
+  .palomas .panel {
+    position: absolute; left: 0; top: 0; bottom: 0; clip-path: inset(0 100% 0 0);
+    background:
+      radial-gradient(ellipse 90% 70% at 40% 45%, rgba(214, 192, 160, 0.3), transparent 70%),
+      linear-gradient(180deg, #86705A 0%, #B09779 50%, #9A8266 100%);
+  }
+  .palomas .layer { position: absolute; inset: 0; pointer-events: none; }
+  .palomas .sw {
+    position: absolute; left: 0; top: 0; line-height: 1; white-space: nowrap; transform-origin: 0 0;
+    font-family: var(--fontRound); color: var(--tan); transition: color 0.8s ease;
+  }
+  .palomas .sw.onPanel { color: var(--night); }
+  .feather, .dove { position: absolute; left: 0; top: 0; will-change: transform; }
+  .feather svg, .dove svg { width: 100%; height: auto; display: block; overflow: visible; }
+
+  /* ---- escena 6 · OJO: ojo gigante, texto dentro del iris, mira telescópica ---- */
+  .ojo .shards { position: absolute; pointer-events: none; }
+  .ojo .shards svg { width: 100%; height: 100%; display: block; }
+  .ojo .eyeBox { position: absolute; left: 50%; top: 50%; }
+  .ojo .eyeInner { position: relative; width: 100%; }
+  .ojo .eyeInner svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .ojo .eyeText { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+  .ojo .block { color: var(--tan); font-family: var(--fontRound); }
+
+  /* ---- escena 7 · RECORTE: palabra de cartón recortado / palabra en tinta ---- */
+  .recorte .block { font-family: var(--fontRound); }
+  .recorte .block.cut .w {
+    background: var(--paperTex), linear-gradient(180deg, #C6AD8D 0%, #B39A7C 55%, #9C8367 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: url(#paperEdge) drop-shadow(0 0.9vh 1.1vh rgba(0, 0, 0, 0.6));
+  }
+  .recorte .block.ink .w { color: #0D0A08; }
+
+  /* ---- capas globales ---- */
+  #flicker { position: fixed; inset: 0; z-index: 4; pointer-events: none; background: #000; opacity: 0; }
+  #vignette {
+    position: fixed; inset: 0; z-index: 5; pointer-events: none;
+    background: radial-gradient(ellipse 78% 74% at 50% 48%, transparent 52%, rgba(6, 4, 3, 0.55) 100%);
+  }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 6; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.75 0 0 0 0 0.62 0 0 0 0 0.48 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    opacity: 0.09; mix-blend-mode: overlay; animation: grainShift 0.9s steps(5) infinite;
+  }
+  @keyframes grainShift { 0% { transform: translate(0, 0); } 20% { transform: translate(-3%, 2%); } 40% { transform: translate(2%, -3%); } 60% { transform: translate(-2%, -1%); } 80% { transform: translate(3%, 2%); } 100% { transform: translate(0, 0); } }
+
+  .cardScreen {
+    position: fixed; inset: 0; z-index: 8; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; pointer-events: none; gap: 1.2vh;
+  }
+  .cardScreen .artist { font-family: var(--fontRound); font-weight: 500; font-size: 2.6vh; letter-spacing: 0.32em; padding-left: 0.32em; color: var(--tan); text-transform: uppercase; }
+  .cardScreen .title {
+    font-family: var(--fontColumn); font-size: 22vh; line-height: 0.9; text-transform: uppercase; letter-spacing: 0.01em;
+    background: linear-gradient(180deg, var(--tanLight), var(--tan) 55%, var(--tanDeep));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .cardScreen .sub { font-family: var(--fontRound); font-weight: 600; font-size: 4.4vh; color: var(--tan); text-transform: lowercase; }
+  .cardScreen .feats { font-family: var(--fontSlab); font-size: 1.7vh; letter-spacing: 0.3em; padding-left: 0.3em; color: var(--tanDeep); text-transform: uppercase; margin-top: 1.4vh; }
+  .cardScreen .rule { width: 7vh; height: 0.25vh; background: var(--tanDeep); border-radius: 1vh; }
+  .cardScreen > * { opacity: 0; }
+  #intro { transition: opacity 1.2s ease; }
+  #intro.gone { opacity: 0; }
+  #outro {
+    opacity: 0; transition: opacity 1.8s ease;
+    background: radial-gradient(ellipse 70% 70% at 50% 50%, rgba(22, 16, 11, 0.72), rgba(6, 4, 3, 0.97));
+  }
+  #outro.show { opacity: 1; }
+  #outro .feathers { position: absolute; inset: 0; opacity: 1; overflow: hidden; }
+  body.outroActive #camera { opacity: 0.14; }
+  #hint {
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 9;
+    font-family: var(--fontRound); font-weight: 500; font-size: 1.6vh; letter-spacing: 0.5em; color: var(--tan);
+    animation: hintPulse 2.2s ease infinite; pointer-events: none;
+  }
+  @keyframes hintPulse { 0%, 100% { opacity: 0.25; } 50% { opacity: 0.8; } }
+  #debug {
+    position: fixed; left: 1vh; top: 1vh; z-index: 10; font: 12px/1.4 monospace; color: #F0E2C8;
+    background: rgba(0, 0, 0, 0.6); padding: 6px 9px; border-radius: 4px; pointer-events: none; white-space: pre;
+  }
+
+  /* ---- index1: capas de video real (ojos, mano, iris, palomas, luna) ---- */
+  .eyesVid {
+    display: block; width: 100%; height: auto;
+    filter: brightness(1.55) contrast(1.12);
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 55%, transparent 100%);
+    mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 55%, transparent 100%);
+  }
+  .mirada .eyesWrap { top: 0; width: min(100vw, 150vh); }
+  .mirada .handWrap { left: -2vw; bottom: -12vh; height: 96vh; }
+  .handVid {
+    display: block; height: 100%; width: auto; opacity: 1; filter: brightness(1.15) contrast(1.1);
+    transition: filter 0.8s ease;
+    -webkit-mask-image: linear-gradient(0deg, transparent 0%, #000 22%, #000 88%, transparent 100%);
+    mask-image: linear-gradient(0deg, transparent 0%, #000 22%, #000 88%, transparent 100%);
+  }
+  .mirada.light .handVid { filter: grayscale(1) brightness(0.3) contrast(1.4); }
+  .noche .moonVid, .ojo .irisVid, .palomas .doveVid { position: absolute; object-fit: cover; }
+  .noche .moonVid { left: -10%; top: -59%; width: 180%; height: 180%; filter: brightness(1.05) contrast(1.05); animation: moonDrift 60s ease-in-out infinite alternate; }
+  @keyframes moonDrift { 0% { transform: translate(0, 0); } 100% { transform: translate(-3%, 2%); } }
+  .noche .block { text-shadow: 0 0 2.6vh rgba(0,0,0,.9), 0 0 0.8vh rgba(0,0,0,.7); }
+  .noche .moon, .noche .cloud { display: none; }
+  .noche .st { mix-blend-mode: screen; }
+  .palomas .doveVid { inset: 0; width: 100%; height: 100%; opacity: 0.95; filter: blur(0.6px) brightness(1.08); }
+  .ojo .irisVid {
+    left: 0; top: 0; width: 100%; height: 100%; filter: brightness(1.05) contrast(1.15);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 560' preserveAspectRatio='none'%3E%3Cpath d='M 30 280 C 240 40 760 40 970 280 C 760 520 240 520 30 280 Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 560' preserveAspectRatio='none'%3E%3Cpath d='M 30 280 C 240 40 760 40 970 280 C 760 520 240 520 30 280 Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  }
+  .ojo .eyeInner svg { position: relative; }
+  .ojo .block { text-shadow: 0 0 2.4vh rgba(0,0,0,.85), 0 0 0.6vh rgba(0,0,0,.7); }
+
+  @media (orientation: portrait) {
+    .mirada .eyesWrap { width: 160vw; top: 6vh; }
+    .mirada .handWrap { height: 64vh; left: -8vw; bottom: -8vh; }
+    .cardScreen .title { font-size: min(16vh, 26vw); }
+    .cardScreen .artist { font-size: min(2.4vh, 3.8vw); }
+    .cardScreen .sub { font-size: min(4vh, 6.4vw); }
+    .cardScreen .feats { font-size: min(1.6vh, 2.8vw); }
+  }

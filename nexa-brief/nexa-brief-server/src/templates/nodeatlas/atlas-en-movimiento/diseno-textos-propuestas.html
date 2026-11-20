@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="es">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atlas · Propuestas de tipografía</title>
+<link rel="stylesheet" href="work/texto/propuestas/app.css">
+<body>
+<header class="masthead"><a href="index.html">ATLAS EN MOVIMIENTO</a><span>ESTUDIO DE TEXTO / 03</span></header>
+<main>
+ <div class="lead"><div><p class="eyebrow">LA GUERRA DE LOS PETROLEROS · DIRECCIÓN TIPOGRÁFICA</p><h1>Tres maneras<br>de contar.</h1></div><p class="intro-copy">Un mismo relato. Tres sistemas completos.<br>Texto ampliado, movimiento y lectura en pantalla.<br><span id="status" role="status">Preparando fuentes locales…</span></p></div>
+ <nav class="toolbar" aria-label="Propuestas"><div role="tablist" aria-label="Diseño de texto"><button role="tab" id="tab-ACTUAL" data-tab="ACTUAL" aria-controls="design">ACTUAL</button><button role="tab" id="tab-A" data-tab="A" aria-controls="design">A <span>Monocromo</span></button><button role="tab" id="tab-B" data-tab="B" aria-controls="design">B <span>Acero</span></button><button role="tab" id="tab-C" data-tab="C" aria-controls="design">C <span>Archivo</span></button></div><label>Fondo de prueba <select id="background"><option value="#24282b">Oscuro</option><option value="#000000">Negro</option><option value="#f5f5f5">Claro</option></select></label><button id="repeat">Repetir todo</button></nav>
+ <section id="design" role="tabpanel" aria-labelledby="tab-A"><div class="design-heading"><div><p class="eyebrow" id="design-id"></p><h2 id="design-name"></h2><p id="design-idea"></p></div><div id="palette"></div></div>
+ <p class="reading-note">Muestras de detalle a <strong>2,5×</strong> respecto de U a 1080. Las maquetas de pantalla usan su escala real y se identifican aparte. Solo texto y fondos lisos. Cada muestra entra, permanece y sale; se anima automáticamente al entrar en vista (máximo seis).</p>
+ <section id="caption-section"><div id="caption-sample"></div>
+ <div class="screen-section"><div class="section-label"><h3>La transcripción en su lugar.</h3><span>UNA U = min(ancho, alto) / 1080</span></div><div class="screens"><div><h4>MÓVIL · 540 × 960 CSS · 1:1</h4><div class="screen-scroll"><div class="screen-shell mobile-shell"><div class="screen mobile" data-format="mobile"><div class="safe-line"></div><div class="screen-caption"></div></div></div></div><p id="mobile-metrics" class="metrics"></p></div><div class="desktop-column"><h4>DESKTOP · lienzo 1920 × 1080 CSS</h4><div class="screen-scroll"><div class="screen-shell desktop-shell"><div class="screen desktop" data-format="desktop"><div class="safe-line"></div><div class="screen-caption"></div></div></div></div><p id="desktop-metrics" class="metrics"></p><button id="native-desktop" aria-pressed="false">Ver desktop 1:1</button><p class="metrics">Las dos pantallas muestran las mismas palabras y el mismo instante. La guía discontinua marca la línea base central del subtítulo; no forma parte del diseño.</p><div class="size-proof" id="size-proof"></div></div></div></div>
+ </section>
+ <section id="comparison"><div class="section-label"><h3>La misma frase. Cuatro decisiones.</h3><span>DETALLE 2,5× · INSTANTE SINCRONIZADO</span></div><div id="comparison-rows"></div></section>
+ <div class="section-label"><h3>El sistema completo.</h3><span id="coverage"></span></div><div id="samples"></div>
+ </section>
+ <footer>Fuentes locales con licencia OFL · <a href="work/texto/propuestas/LEEME.md">Ideas, tokens y compatibilidad</a> · <a href="work/texto/INVENTARIO.md">Inventario de origen</a><p>Estudio aislado. Los tokens de presentación se interpretan en esta página; el motor actual fija algunas formas de rótulo. La integración se documenta para la aplicación posterior.</p></footer>
+</main><script type="module" src="work/texto/propuestas/app.js"></script>
+</body></html>

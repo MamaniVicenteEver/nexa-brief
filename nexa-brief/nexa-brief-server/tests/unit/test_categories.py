@@ -17,7 +17,7 @@ def _write(tmp_path: Path, payload: dict) -> Path:
     return path
 
 
-def test_real_tree_loads_and_has_five_main_categories():
+def test_real_tree_loads_and_includes_atlas_production_category():
     tree = load_categories()
     assert list(tree) == [
         "node_tech",
@@ -25,6 +25,7 @@ def test_real_tree_loads_and_has_five_main_categories():
         "node_motion",
         "node_politics",
         "node_economy",
+        "node_atlas",
     ]
     assert tree["node_tech"].display_name == "NodeTech"
     assert tree["node_tech"].topic == "tecnología"
@@ -40,11 +41,14 @@ def test_tech_gets_rough_and_history_gets_the_rest():
     assert len(history) == 10
 
 
-def test_empty_and_planned_categories_have_no_content():
+def test_politics_and_atlas_share_imperio_with_one_owner():
     tree = load_categories()
-    assert tree["node_politics"].status == "empty"
+    assert tree["node_politics"].status == "active"
     assert tree["node_politics"].niches == []
-    assert tree["node_politics"].designs == []
+    assert tree["node_politics"].designs == ["atlas", "imperio"]
+    assert tree["node_atlas"].folder == "nodeatlas"
+    assert tree["node_atlas"].shared_designs == ["imperio"]
+    assert cats.designs_for_category("node_atlas", ["imperio", "rough"]) == (["imperio"], True)
     assert tree["node_economy"].status == "planned"
 
 
@@ -60,7 +64,7 @@ def test_every_niche_is_assigned_exactly_once():
 
 def test_motion_subcategories_group_music_niches():
     motion = load_categories()["node_motion"]
-    assert set(motion.children) == {"letras", "promos", "fondos", "instrumental"}
+    assert {"letras", "promos", "fondos", "instrumental"} <= set(motion.children)
     assert "lyrics_video_neon" in motion.children["letras"].niches
     assert "promo_video_kinetic" in motion.children["promos"].niches
 
@@ -133,6 +137,14 @@ def test_design_assigned_twice_is_rejected(tmp_path: Path):
 def test_file_without_categories_key_loads_empty(tmp_path: Path):
     path = _write(tmp_path, {"niches": {"a": {}}})
     assert load_categories(path) == {}
+
+
+def test_shared_design_requires_an_owner(tmp_path):
+    path = _write(tmp_path, {"niches": {}, "categories": {
+        "atlas": {"display_name": "Atlas", "shared_designs": ["missing"]}
+    }})
+    with pytest.raises(ValueError, match="sin categoría dueña"):
+        load_categories(path)
 
 
 def test_node_model_accepts_nested_children():

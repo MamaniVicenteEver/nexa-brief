@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-rasgado",
+  "id": "config.look",
+  "entry_id": "config.look",
+  "name": "look",
+  "kind": "configuration",
+  "label": "look",
+  "summary": "Existing configuration configuration: look.",
+  "params": {
+    "doodles": {
+      "default": 1
+    },
+    "tornEdges": {
+      "default": 0.7
+    },
+    "tilt": {
+      "default": 1
+    },
+    "paperGrain": {
+      "default": 0.5
+    },
+    "mediaLime": {
+      "default": 0.55
+    }
+  },
+  "example": {
+    "doodles": 1,
+    "tornEdges": 0.7,
+    "tilt": 1,
+    "paperGrain": 0.5,
+    "mediaLime": 0.55
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-rasgado/assets/config.json",
+      "pointer": "/configs/0/look"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

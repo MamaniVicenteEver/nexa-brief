@@ -1,0 +1,94 @@
+{
+  "id": "malvinas-muestra-B",
+  "design": "binary",
+  "title": "Malvinas: una campaña a distancia",
+  "language": "es-419",
+  "voice": "Algenib",
+  "voice_direction": "Narrador masculino de edad madura, grave y ligeramente ronco, con una aspereza orgánica discreta. Español latinoamericano neutro, dicción nítida. Cansado pero firme, cercano y sobrio, como alguien que carga recuerdos difíciles. Ritmo de 100 a 115 palabras por minuto sobre la narración completa, incluidas sus pausas internas; articulación fluida, sin arrastrar sílabas. Separa ideas con aire y deja que cada dato se asiente. Antes de una fecha decisiva o un hecho duro, una pausa larga medida. Respira bajo entre ideas; uno o dos suspiros pequeños por minuto, nunca un jadeo teatral. Empieza contenido. En el momento clave sube brevemente el tono y endurece la intención, con un pequeño aumento de energía, sin gritar; después vuelve a bajar y cierra en descenso. Respeta a las víctimas, sin triunfo, arenga ni voz de tráiler. No imites la identidad de una persona real; toma únicamente los patrones de ritmo, contraste y cierre estudiados.",
+  "target_minutes": 0.31666666666666665,
+  "target_duration_seconds": 19,
+  "production_note": "Tres frases idénticas para Algenib y Orus. No es la narración completa. Sin lead/tail añadido.",
+  "segments": [
+    {
+      "id": "m03",
+      "block": 3,
+      "chapter": "Un bombardero desde tierra",
+      "tone": "explicativo",
+      "intensity": 0.4,
+      "text": "<long pause> Desde Ascensión, un Vulcan bombardea la pista de Stanley. <short pause> Una bomba daña la pista, sin inutilizarla por completo.",
+      "source_facts": [
+        "M03",
+        "M04"
+      ],
+      "event_date": "1982-05-01",
+      "delivery_note": "Aire discreto antes de Desde Ascensión. Peso en sin inutilizarla por completo, sin elevar volumen.",
+      "anchors": [
+        {
+          "id": "malvinas-03",
+          "block": 3,
+          "segment_id": "m03",
+          "phrase": "Desde Ascensión, un Vulcan bombardea la pista de Stanley.",
+          "word": null,
+          "start": null,
+          "end": null,
+          "source_facts": [
+            "M03",
+            "M04"
+          ],
+          "event_date": "1982-05-01",
+          "status": "pending_whisper",
+          "note": "Frase en el guion; todavía no hay audio ni tiempos por palabra."
+        },
+        {
+          "id": "pista-dano",
+          "block": 3,
+          "segment_id": "m03",
+          "phrase": "Una bomba daña la pista, sin inutilizarla por completo.",
+          "word": null,
+          "start": null,
+          "end": null,
+          "source_facts": [
+            "M04"
+          ],
+          "status": "pending_whisper",
+          "note": "Solo guion; sincronizar con la voz de la futura tarea."
+        }
+      ]
+    },
+    {
+      "id": "m04",
+      "block": 4,
+      "chapter": "El ataque al Sheffield",
+      "tone": "peso",
+      "intensity": 0.7,
+      "text": "<long pause> Super Étendard argentinos alcanzan al Sheffield con un Exocet.",
+      "source_facts": [
+        "M05"
+      ],
+      "event_date": "1982-05-04",
+      "delivery_note": "Único punto de endurecimiento: +2 a +3 dB y +2 a +4 semitonos en alcanzan al Sheffield; volver a bajar al terminar Exocet. Pausa previa de 0,7 a 1,0 s, sin suspiro heroico.",
+      "anchors": [
+        {
+          "id": "malvinas-04",
+          "block": 4,
+          "segment_id": "m04",
+          "phrase": "Super Étendard argentinos alcanzan al Sheffield con un Exocet.",
+          "word": null,
+          "start": null,
+          "end": null,
+          "source_facts": [
+            "M05"
+          ],
+          "event_date": "1982-05-04",
+          "status": "pending_whisper",
+          "note": "Frase en el guion; todavía no hay audio ni tiempos por palabra."
+        }
+      ]
+    }
+  ],
+  "voice_candidates": [
+    "Algenib",
+    "Orus"
+  ],
+  "voice_selection_status": "pending_sample_listening"
+}

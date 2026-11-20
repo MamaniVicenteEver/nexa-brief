@@ -1,0 +1,1455 @@
+{
+  "version": 1,
+  "date": "2026-11-03",
+  "ok": true,
+  "components": [
+    "army.advance",
+    "army.banner",
+    "army.clash",
+    "army.encircle",
+    "army.hold",
+    "army.retreat",
+    "army.supply",
+    "fx.dust",
+    "ground.ambulance",
+    "ground.apc",
+    "ground.artillery",
+    "ground.convoy",
+    "ground.jeep",
+    "ground.launcher",
+    "ground.tank",
+    "ground.truck"
+  ],
+  "testsPassed": 52,
+  "validation": {
+    "errors": [],
+    "warnings": []
+  },
+  "captureCases": 27,
+  "fullFrames": 81,
+  "subjectCrops": 81,
+  "motionFrames": 80,
+  "galleryComponents": 16,
+  "finalHashesMatch": true,
+  "army40": {
+    "type": "army.advance",
+    "instances": 1,
+    "tokensPerInstance": 40,
+    "scale": 1,
+    "samples": 60,
+    "forcedMs": {
+      "mean": 11.073333333556851,
+      "p95": 11.5
+    },
+    "controlMs": {
+      "mean": 7.254999999701977,
+      "p95": 7.200000002980232
+    },
+    "submissionMs": {
+      "mean": 0.5450000000496705,
+      "p95": 0.6000000014901161
+    },
+    "netMs": 3.8183333338548744,
+    "drawAndBarrier1pxMs": {
+      "mean": 4.469999999925494,
+      "p95": 4.700000002980232
+    },
+    "cache": {
+      "entries": 3,
+      "pixels": 33536,
+      "limit": 8000000
+    }
+  },
+  "mixedFamilies": [
+    {
+      "type": "ground",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 0.65,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 15.378333333258828,
+        "p95": 22.400000005960464
+      },
+      "controlMs": {
+        "mean": 7.103333333631356,
+        "p95": 7.399999998509884
+      },
+      "submissionMs": {
+        "mean": 1.9083333329608043,
+        "p95": 2.7999999970197678
+      },
+      "netMs": 8.274999999627472,
+      "cache": {
+        "entries": 13,
+        "pixels": 257792,
+        "limit": 8000000
+      }
+    },
+    {
+      "type": "army",
+      "instances": 20,
+      "tokensPerInstance": null,
+      "scale": 0.48,
+      "samples": 60,
+      "forcedMs": {
+        "mean": 19.378333333258826,
+        "p95": 20.200000002980232
+      },
+      "controlMs": {
+        "mean": 7.138333333283663,
+        "p95": 7.5
+      },
+      "submissionMs": {
+        "mean": 2.493333333233992,
+        "p95": 3
+      },
+      "netMs": 12.239999999975163,
+      "cache": {
+        "entries": 14,
+        "pixels": 270336,
+        "limit": 8000000
+      }
+    }
+  ],
+  "sources": [
+    {
+      "path": "engine/tactico/components/ground.js",
+      "bytes": 32798,
+      "sha256": "c6be0a573cffa4fc9bda44801715d5a53dc04c8bde8fc7905e99ed2846214e8c"
+    },
+    {
+      "path": "engine/tactico/components/army.js",
+      "bytes": 20693,
+      "sha256": "1efb5ed741f38a150f1792f05c00c78aa7d93cea6e842dba6e58a7a95b923850"
+    },
+    {
+      "path": "engine/tactico/units.json",
+      "bytes": 9962,
+      "sha256": "ef4c9db2315d0190fe69ff8d511e4433ecdd5e11f3f4ebe200fb6fe6420e2bf1"
+    },
+    {
+      "path": "engine/tactico/components.json",
+      "bytes": 152165,
+      "sha256": "8894ae69465347a92b90069658ea8f993f7a3cb37a2017d980ed49f561709337"
+    },
+    {
+      "path": "work/tactico/terrestre.html",
+      "bytes": 1108,
+      "sha256": "3948a5635307bd1a8b7cfc07b68818d75c56475ae3b12a6aab67c51507197a7a"
+    },
+    {
+      "path": "work/tactico/terrestre-qa.js",
+      "bytes": 9937,
+      "sha256": "8d930c4efa2817425ffc766bfad92c008dbfa6330d0aded4173c26904b64c4dd"
+    },
+    {
+      "path": "work/tactico/terrestre.test.mjs",
+      "bytes": 8313,
+      "sha256": "b638cebe645a62ce59b294a6a6f78050e71dfd8d8eaa5d565bc7abc9a5d04f9b"
+    },
+    {
+      "path": "work/tactico/check-terrestre.py.txt",
+      "bytes": 14022,
+      "sha256": "f98ab475f4a84e9893f4860d9dabee5ccad670ac8c03e1708d68baa99b0b1d8d"
+    },
+    {
+      "path": "work/tactico/cases-terrestre.json",
+      "bytes": 46453,
+      "sha256": "934caed914b179a2c50103b28c721078535075a19a111b21291ad552c6e11ebf"
+    },
+    {
+      "path": "work/tactico/items-terrestre.json",
+      "bytes": 9452,
+      "sha256": "7afb0503590917e195a08e94ca8ad451075b2f4f1fdc8375053225a3f7d440d1"
+    },
+    {
+      "path": "work/tactico/scene-terrestre.json",
+      "bytes": 1812,
+      "sha256": "53206c6d3a8b16feb2303fbd1c5ba41a9e4e4a1c6917110831092640bd263fe9"
+    },
+    {
+      "path": "work/results/tactico-terrestre.md",
+      "bytes": 16415,
+      "sha256": "f3815b601622c878d15f5585c80a67c8e650dce9328779e304a77dd40fb5b361"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "work/tactico/sheets/army-tira-10fps.jpg",
+      "bytes": 1432533,
+      "sha256": "0de62e60cbac992b73576941254de0c417717a8eebf02aee0a80230227f2974e"
+    },
+    {
+      "path": "work/tactico/sheets/terrestre.jpg",
+      "bytes": 1993915,
+      "sha256": "55f54f14d6657ddaa30252a0b659e08d6f5f3aa88c7d0c2b080de21006b6ca44"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-0-full.png",
+      "bytes": 2090284,
+      "sha256": "d1b28fd5992ca386a9e993ae92e38ca9fd79e13944b83f95168900db82949b65"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-0.png",
+      "bytes": 361607,
+      "sha256": "f377bd6f74ab4a57c291b46e1b0cf61b1f06e014cce03e36eca82d490a2dc7fa"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-1-full.png",
+      "bytes": 2112516,
+      "sha256": "c7ce7e9464eed8738c830dd3a5bdf77b722bb141b95706063d0c2701be3971e3"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-1.png",
+      "bytes": 373972,
+      "sha256": "7fc4172b63f321e6cdda12abbb050e9e0be91f6b7897abba48c9aac4a2e9a593"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-2-full.png",
+      "bytes": 2108843,
+      "sha256": "ff1f87374bb2f5ae74fb3cdde0ef25d78b921e187764c6b6287aaf3324ae9ce1"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-2.png",
+      "bytes": 352216,
+      "sha256": "154fbfed74318265baaf4da94a6eee95641a0ab68c8a4d25c9784c4415902d9d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-40-0-full.png",
+      "bytes": 2100652,
+      "sha256": "52954ce1b00266db79ea0732fd04edb62bbcba8818514b10f1d9d6e24d1f6bbc"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-40-0.png",
+      "bytes": 368766,
+      "sha256": "e8f9b905be4adcfe09f2e200391e08921b28466890031dbfc65dc347ca817d97"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-40-1-full.png",
+      "bytes": 2127360,
+      "sha256": "6ceeee9935e9c2c4b938e9b1b875dc4688e819cdaef5252ef76c3df5a4572332"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-40-1.png",
+      "bytes": 385962,
+      "sha256": "0a570c2a5ec1ed0cb736d566376952dba729ddf9cc30defe7c24452ee1086f34"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-40-2-full.png",
+      "bytes": 2124157,
+      "sha256": "1faa9704f304c1cacdd62c80a8fb5f1f9c21b400e3796ba335977e039e09e26d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-40-2.png",
+      "bytes": 366062,
+      "sha256": "0235a641b91d26ff67459e44954c7993a05b25af9c25563388e3b2069a4a11f7"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-8-0-full.png",
+      "bytes": 2065794,
+      "sha256": "8962d437b3bb27603d6df9ecf9c5ded8219c0a6b12fbf8ce7ca20ba043b8e82b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-8-0.png",
+      "bytes": 337907,
+      "sha256": "3eb0faca1f252204bfc54036db1859649bf4098d60f3e429e05b318a748589cd"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-8-1-full.png",
+      "bytes": 2074205,
+      "sha256": "6ff7073ddf5b65cbe8bd7b9fe235d4b10084adeee4849e6cb1d2d3f87321c3a8"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-8-1.png",
+      "bytes": 339461,
+      "sha256": "9694add4fd42e2242bfa239755a4884fff8832b9db6a59662b303075ef2a6d27"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-8-2-full.png",
+      "bytes": 2074242,
+      "sha256": "146112e603c0e9aeab0ee7147fd0177169dbe24a2c5305930adc6be0b05eb31c"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-advance-8-2.png",
+      "bytes": 319331,
+      "sha256": "7f6fb01d4047189ad552ac3109d7c2879901eb21a00043ea63d4dd0e34e834a8"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-banner-0-full.png",
+      "bytes": 2047786,
+      "sha256": "78b2b85c3bc1fced37cedf2edce449a7f74f4fe0788cf5dde107807f26622ba1"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-banner-0.png",
+      "bytes": 307080,
+      "sha256": "e883ddaabd13cfe6d4041e08f6142edf6e846876619f4180500e022209ab7dea"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-banner-1-full.png",
+      "bytes": 2044440,
+      "sha256": "3d6de8fdcd96ed8721a1b1368ad39e22df2f4581d5667ecb81f15cf98e6874aa"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-banner-1.png",
+      "bytes": 302416,
+      "sha256": "1a5a329395dfb2b0a48acb3e58cb1a71476ddbdcad8be46c5a77c4fb8f6d1323"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-banner-2-full.png",
+      "bytes": 2048895,
+      "sha256": "9a91a7bbe8d5907da1e817c80554e6036abac7ca8b0f440545c3593d853d41cb"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-banner-2.png",
+      "bytes": 307619,
+      "sha256": "ae7f2fc4804f69494e4186e2b53b2da03c5546edfd652fd6f7c2a198f170ce3a"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-clash-0-full.png",
+      "bytes": 2077846,
+      "sha256": "734289d6fe4f5a2db0ee3cb72c98cf24a80496e722beac1de1236a2c87dc07cc"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-clash-0.png",
+      "bytes": 331977,
+      "sha256": "fc9ff6f0c92229762054e1a2978c12bc44554975fbb69c013756619b031fb046"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-clash-1-full.png",
+      "bytes": 2092756,
+      "sha256": "96cf45311002bb5411cd0efc81e0ec34b48b2520d5a2f94835cd1de88be08677"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-clash-1.png",
+      "bytes": 345009,
+      "sha256": "4b582ae88934386c925673be054e5f83166a8a6b7e52e0c58545171291b9f064"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-clash-2-full.png",
+      "bytes": 2087023,
+      "sha256": "09776d1df3277473826b5e63bf0adc8d3deefb3b926f1b0f6f74ad7b526ad854"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-clash-2.png",
+      "bytes": 340296,
+      "sha256": "20c86419f07811c792867cf90cfa0d0319f97dd9c8f962845c0cec92df8a39ee"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-encircle-0-full.png",
+      "bytes": 2071774,
+      "sha256": "8a215c2954fb5820de5c68fe317f2461e5948892ad012328f3e5e8a69deaeaf2"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-encircle-0.png",
+      "bytes": 326454,
+      "sha256": "e7539e25cb7af3f141ceb26a0b787a2032efd649a8a68af57259e99ce57ce405"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-encircle-1-full.png",
+      "bytes": 2095795,
+      "sha256": "3fad20a8f79efe088889a5dc0d1a339cbb22961772ae34365de9e61c742bb934"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-encircle-1.png",
+      "bytes": 348468,
+      "sha256": "da1797b3ba459b80c302cc4ed091a189aa906c32bb5a6f562036c50ce4ca94a6"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-encircle-2-full.png",
+      "bytes": 2091149,
+      "sha256": "f01be9a94971a3fa1f82e02753a744ff325073290f2f7396560f79a3e563308d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-encircle-2.png",
+      "bytes": 343711,
+      "sha256": "ae1ae7276d0d29fa61c425873b206f6b43f9aebedf1b79efa1e55d3d46a3aa88"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-hold-0-full.png",
+      "bytes": 2085381,
+      "sha256": "41e8484d179612c83aa3769197eb0335945b6b0bbe9e171c42de84426608a691"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-hold-0.png",
+      "bytes": 340483,
+      "sha256": "1decf28f5917cb164d0cd9958dcdcb1c3185f054cb4500f77418ded7b4fefbb9"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-hold-1-full.png",
+      "bytes": 2101511,
+      "sha256": "952000a83750e7d4fe5a43cf8a8ce4751b2206b89d5f72ca62f44abd736f7be1"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-hold-1.png",
+      "bytes": 352443,
+      "sha256": "43e5f022eea7859c1760c01029be792cf21f691cf2e110d8390db701040b9798"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-hold-2-full.png",
+      "bytes": 2100433,
+      "sha256": "4f0f324829890736ffa372e4647dc7cfb5169b83a02c29cba5e1a79d40340b50"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-hold-2.png",
+      "bytes": 353571,
+      "sha256": "fbdd4dacdbad57abb3eb9a506ef5001032ac16a79ce99e5160b6c84b0980527c"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-retreat-0-full.png",
+      "bytes": 2088645,
+      "sha256": "334e05be71212d016ef81bd1657e858c129a64df0be78a96c3de54dba16d08a3"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-retreat-0.png",
+      "bytes": 334080,
+      "sha256": "3bd4e4c9004f33d853474207917e66e52c1913e2f52081453eee1408b676e596"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-retreat-1-full.png",
+      "bytes": 2108550,
+      "sha256": "df682e511a5c261dee9297e650b28ad03141dfba9067f1126055ded078797821"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-retreat-1.png",
+      "bytes": 350256,
+      "sha256": "fa249d10adbe702d0ddafa05aa2bfb4828d59cb09da24fff6bf2b674e00f3846"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-retreat-2-full.png",
+      "bytes": 2105949,
+      "sha256": "2256b8a69c53102f5090adb53161538c16ffaa523ae4a2d6ca86da01eff532e8"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-retreat-2.png",
+      "bytes": 371006,
+      "sha256": "73778fdeba1b55f3e29b25d74008a41078b3f4c2bd13166253c2afec2cd1e55e"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-supply-0-full.png",
+      "bytes": 2050701,
+      "sha256": "f0c796a59cc73d94e538ae3a8a6cc8ed918adf5eb33d166ca0ca55649833e03c"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-supply-0.png",
+      "bytes": 306761,
+      "sha256": "c2908e83d6910f016984d359988ef5b6516b3a8c375c7c58fcca94c8a360a373"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-supply-1-full.png",
+      "bytes": 2055048,
+      "sha256": "fe28af6d793476201eb7f9eddec78586200252c7fd2feb25ffd474d16be75b50"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-supply-1.png",
+      "bytes": 313772,
+      "sha256": "166a177ccd2a1dd254a2cc5407ed057b486c8c5da5c5830581f36452aa0b3158"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-supply-2-full.png",
+      "bytes": 2053389,
+      "sha256": "92d5d2a35ca39e378ce588695def3ba1e72d178b1281d473d803e5d987a194d5"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/army-supply-2.png",
+      "bytes": 308784,
+      "sha256": "46954f9edcf6545f54c5f159e2be4d485f4f39513a9f76c076b959dc1d5e5406"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/fx-dust-0-full.png",
+      "bytes": 2041093,
+      "sha256": "721259feade45367bfeb2c82759376bea33759379b658fb210604f4253d1bc68"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/fx-dust-0.png",
+      "bytes": 298208,
+      "sha256": "1774a72488d527f603cb8f7e960a4a5d01a0cb7128274069c96e39ce9b49e6f1"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/fx-dust-1-full.png",
+      "bytes": 2049283,
+      "sha256": "44767eae16d840b885b3ff7aef3eb401d6aeeed265da5585c65ead5c7bd6371a"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/fx-dust-1.png",
+      "bytes": 331839,
+      "sha256": "380d165193181cc83e3df47491b3ac661f066f72114427875fa4965bd0320d7c"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/fx-dust-2-full.png",
+      "bytes": 2041143,
+      "sha256": "42b061910fb20d38d1f9f0aa89e1802a2671466936ef17275acc536354cbb822"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/fx-dust-2.png",
+      "bytes": 298021,
+      "sha256": "b3c74243bf1a442369585cfab81cb103c0e6a8570d85a5cd4f0446a108065055"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-ambulance-0-full.png",
+      "bytes": 2047600,
+      "sha256": "0055b4bb7a7b679bd8ddbd54d3e4e44129a572002f78b9bef28c5a77bec87835"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-ambulance-0.png",
+      "bytes": 318594,
+      "sha256": "d4a50577f01f3536786d5a40decc0fa199651044ce6f34bd7ed7035d75073c10"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-ambulance-1-full.png",
+      "bytes": 2052980,
+      "sha256": "c6f4ab73ef7f577b9addada5a9c3bc91bc5b69685b1053985fd6009cb1512836"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-ambulance-1.png",
+      "bytes": 324001,
+      "sha256": "52c26dda51457400640a58c19d0d204944d049f9a399a42c2e25de91ed45435e"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-ambulance-2-full.png",
+      "bytes": 2049971,
+      "sha256": "06a6c6c418a3b27d640b8dbc68bacd8be75f45869fd2d5b620286677362ed8da"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-ambulance-2.png",
+      "bytes": 309302,
+      "sha256": "d4e1cb13824d434b1560847cb24d8d7312831dec02117c736a5dac1401d9ec79"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-ambulance-crescent-0-full.png",
+      "bytes": 2048601,
+      "sha256": "210de62237b9d0cafa7210e674ad39b5d9bfb835507451c657d32cb86a112e9e"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-ambulance-crescent-0.png",
+      "bytes": 318529,
+      "sha256": "a5cc592995a1f1f834c1091e4dc8f619d334091d1da623d3256033ac32883d15"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-ambulance-crescent-1-full.png",
+      "bytes": 2054051,
+      "sha256": "d30968a25cc1a18ef66e96ab30bb233739a0439617075b1289428e6b168b4c3d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-ambulance-crescent-1.png",
+      "bytes": 323988,
+      "sha256": "fdba5930cb20d1920937c24f9210c0ae6f62887fcd1978c5cbbeec421df7c04a"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-ambulance-crescent-2-full.png",
+      "bytes": 2050980,
+      "sha256": "d5b4335b3b3851adce71ed13d5d65be5c29273f3840b5980b498ab6788ed56ea"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-ambulance-crescent-2.png",
+      "bytes": 309301,
+      "sha256": "b98ce2c23089a4649422d6ba25d421459fc81ed15843144f64a1c7a5a918488f"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-apc-0-full.png",
+      "bytes": 2046313,
+      "sha256": "a1fa73150e91e297ef4c7e494dc7c666c5dad42aa3ae3d89d590a698247bb52a"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-apc-0.png",
+      "bytes": 318217,
+      "sha256": "c8f889e904f26931cde432d17542129db323a49adf5579a4a3114e89b177f637"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-apc-1-full.png",
+      "bytes": 2052384,
+      "sha256": "adc94af40812f355de0b7c013aecbbc6b3b4608526c1ef838561d27144ff9bde"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-apc-1.png",
+      "bytes": 324680,
+      "sha256": "d6a67976cadad8589248130168eac62e25c74d432e9ebb14a5c9948d4ce6ec2a"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-apc-2-full.png",
+      "bytes": 2048846,
+      "sha256": "dc28a4be42801c136df3127d1b2121fb8ac69fb4a2ac99f8c42804c4ef19049d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-apc-2.png",
+      "bytes": 309305,
+      "sha256": "4fce3bc8ac1f53e520c1d088cd6ce8c80dd4023038dc59a59460ac8d64a52006"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-artillery-0-full.png",
+      "bytes": 2047140,
+      "sha256": "c74e0d02837fccd7366760a3f515165330be38041bbcb3bcee4fdfbba261b246"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-artillery-0.png",
+      "bytes": 318002,
+      "sha256": "f577efa8ab8a57283b565a010a9a2652b71848b6bba340533d1781cb55cc9f9f"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-artillery-1-full.png",
+      "bytes": 2053305,
+      "sha256": "6e790b21556f458ecd789c6566a3c781a07b0feb42a5837507293d4a2143d589"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-artillery-1.png",
+      "bytes": 324326,
+      "sha256": "d062e9903e72bc57f2ddcf674c11a14f4675175ead71f2659ee9c650c6f98361"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-artillery-2-full.png",
+      "bytes": 2050113,
+      "sha256": "ac13ae5f536b2656f36ff982404a68cc3205cbd5ffa51b4d1a9de4d9cd4a93ab"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-artillery-2.png",
+      "bytes": 309186,
+      "sha256": "2e6c7da6aef0387f3e485883c29b1a1277ef568a326f21177fd25daf5c491d4b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-artillery-self-0-full.png",
+      "bytes": 2049896,
+      "sha256": "6d05f99ef04824383b6217a05ae1d1cf8cf4248b0dd8baf12f164dffca65c0a7"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-artillery-self-0.png",
+      "bytes": 319969,
+      "sha256": "0d199a630b7d9b22e05f7e1e46875464f510d275787622f6a3823b2267982047"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-artillery-self-1-full.png",
+      "bytes": 2057147,
+      "sha256": "c7bf96f91a89a72859c114bbb951cdbc282fa608c139ef903cf1ceb0b15266fb"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-artillery-self-1.png",
+      "bytes": 327036,
+      "sha256": "0538f699a3214e4241e1f2a025905931cf74b7902835f03774ea44fd33dce1c6"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-artillery-self-2-full.png",
+      "bytes": 2052807,
+      "sha256": "7fcb1ce8233b1bde7e8dc8647651f315c75ed281f97df9387db295efc1bec916"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-artillery-self-2.png",
+      "bytes": 310670,
+      "sha256": "e30573c2fc1ede5e8f9b3ded7e1ccadb90949b310ec3d8573e531798bbff59d1"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-convoy-0-full.png",
+      "bytes": 2059936,
+      "sha256": "a8784c53f46a2cc25bee8738724def71730c54eefd406d2d3cbd44fe6ef42a66"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-convoy-0.png",
+      "bytes": 341314,
+      "sha256": "3479cc2b71d2a9da37bdf513b92a7e908c156e30e1e8852f6cb7193615bfb45f"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-convoy-1-full.png",
+      "bytes": 2075411,
+      "sha256": "4bac176ca48c1f39cd24524d816e7e9b0dafead8d71c16fdc2221d05df515cec"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-convoy-1.png",
+      "bytes": 355870,
+      "sha256": "fdcb40bc5233c051f2fffb8c5581cef7480087daac5137180d761b32908ed524"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-convoy-2-full.png",
+      "bytes": 2067414,
+      "sha256": "7499058908e9f46ef1acaca16d1efbb379ff56274e3e39312c73ec3784692d14"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-convoy-2.png",
+      "bytes": 348046,
+      "sha256": "9aa8367a26289d8d7c85951011c8fd2926823843408d040b0c5de6e84f76d630"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-fire-state-0-full.png",
+      "bytes": 2047500,
+      "sha256": "2977a737cb89dafdf99d82a9bcc6b617873b44e358214d3617bdfd4f02246fff"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-fire-state-0.png",
+      "bytes": 318002,
+      "sha256": "f577efa8ab8a57283b565a010a9a2652b71848b6bba340533d1781cb55cc9f9f"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-fire-state-1-full.png",
+      "bytes": 2054364,
+      "sha256": "c0fea1ffeabba161a2c373de075b798173e7de801afc3cadcb6dd1798a7f2eb0"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-fire-state-1.png",
+      "bytes": 323661,
+      "sha256": "67e99f5be93596f059fbb6ae3e4165ed47149347a9f6ad2144e1ccfd9d087f65"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-fire-state-2-full.png",
+      "bytes": 2050471,
+      "sha256": "e8a30e8ccadd7c81858e93d17cabea1fbd2d6955b919cccd9f2a346bb65f39ee"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-fire-state-2.png",
+      "bytes": 309186,
+      "sha256": "2e6c7da6aef0387f3e485883c29b1a1277ef568a326f21177fd25daf5c491d4b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-jeep-0-full.png",
+      "bytes": 2047383,
+      "sha256": "293abc645a34fbd3cbbb91f5fb7d3fdbecbf012ee5c58097cfbd29b72a17812a"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-jeep-0.png",
+      "bytes": 318981,
+      "sha256": "c8f774e4f13401430403338ccd22fb151c40e8b25e3ae9d4d882a914071ee4ac"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-jeep-1-full.png",
+      "bytes": 2052837,
+      "sha256": "404a1cc4f802891cdf671961f04533fc6c2f429e317c068aeed4c868978c15cd"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-jeep-1.png",
+      "bytes": 324791,
+      "sha256": "6381ca5742bd532831fc8075b1742d4d95c0d7e5603e4a5c597483621cfdc57b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-jeep-2-full.png",
+      "bytes": 2049781,
+      "sha256": "dd713db149407bb103bce0b7433dfd45acb6e4e3cde790e6acfef53aed884263"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-jeep-2.png",
+      "bytes": 310077,
+      "sha256": "d21045755ebed6f32169152c96d32e1f077543ddd0fbcfae8b36b3d6321e8a5b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-launch-fire-0-full.png",
+      "bytes": 2048001,
+      "sha256": "482f9adcb08c268d83062171c71fc201db6c86789989058a54d2a097b3f9cb97"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-launch-fire-0.png",
+      "bytes": 319191,
+      "sha256": "824109ce3a6be042b28d83ca0139ac65d72002f252bd96908282a7fd3a1f8b90"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-launch-fire-1-full.png",
+      "bytes": 2054400,
+      "sha256": "0c8b666e0c371666df1138c69bf11709d876451f577d17ea14a6a3020dc492ae"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-launch-fire-1.png",
+      "bytes": 328465,
+      "sha256": "d1b8a5046597854ce9c4d265eadd0ca21af074c52d9f3f5adff075763c5fb497"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-launch-fire-2-full.png",
+      "bytes": 2050266,
+      "sha256": "c93d66e31fbffd6f1025349f770597f7277685463a583a12d0805141272925cd"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-launch-fire-2.png",
+      "bytes": 309974,
+      "sha256": "8d2721a58dddf0f8fc7f13ae6223aebcb61d8b67e4ab66e3317aecce3929187b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-launcher-0-full.png",
+      "bytes": 2047942,
+      "sha256": "25e3228e92a1e078688c3b08757a7152fa5bc9e89cb751e81624e6f460f1e94b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-launcher-0.png",
+      "bytes": 319191,
+      "sha256": "824109ce3a6be042b28d83ca0139ac65d72002f252bd96908282a7fd3a1f8b90"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-launcher-1-full.png",
+      "bytes": 2057158,
+      "sha256": "1fb733b5f49271eb194d0cd54213f6b4e1ed14fc5a377c2712cf1ef3e07cc96e"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-launcher-1.png",
+      "bytes": 322470,
+      "sha256": "af3abce98118611ae1ac39a7d7599d752c2f819466e1ce28bcb62f1613afa339"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-launcher-2-full.png",
+      "bytes": 2050211,
+      "sha256": "b82380d152be473c2a084b850c2a706073c9e65342467fc1145d7618c2e4bf29"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-launcher-2.png",
+      "bytes": 309974,
+      "sha256": "8d2721a58dddf0f8fc7f13ae6223aebcb61d8b67e4ab66e3317aecce3929187b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-burning-0-full.png",
+      "bytes": 2050021,
+      "sha256": "1d926b7c5788c5d38c3741bb09b7d4bd2b6c4aa2bcc29d450097df83e51d1a60"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-burning-0.png",
+      "bytes": 320210,
+      "sha256": "04dd236202de62d3a58288b02c93ef29ee81c560d9aa4a0a0f1ad1999836d639"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-burning-1-full.png",
+      "bytes": 2056499,
+      "sha256": "bab2081ff241caa2dabf3f322d0a7dda6f0ab8fe651ab9d657625e1a96caaac7"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-burning-1.png",
+      "bytes": 323212,
+      "sha256": "f0f0b8ed3b9bd6d17d3323b8bb94d65664e2429b95d7812c9d98747c3cac637d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-burning-2-full.png",
+      "bytes": 2054081,
+      "sha256": "f2473db3190afc36237356298c77946ff4c1889679f81a6dae1415235109eb6f"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-burning-2.png",
+      "bytes": 307055,
+      "sha256": "69b3dd0eb70657cfad42442516a840556abe208c6b393ad363f87b6fce134d27"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-destroyed-0-full.png",
+      "bytes": 2050909,
+      "sha256": "f7fd0758aa5c95922414fa93b0d965f39a15d96aa3bb42c6672e0a8454fff91a"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-destroyed-0.png",
+      "bytes": 320210,
+      "sha256": "04dd236202de62d3a58288b02c93ef29ee81c560d9aa4a0a0f1ad1999836d639"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-destroyed-1-full.png",
+      "bytes": 2048360,
+      "sha256": "ca78f074e4ccfe1adbf914f2d7c2702009c7f1a2fb124f0d799f46b31df388c3"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-destroyed-1.png",
+      "bytes": 314439,
+      "sha256": "5d776c823f3e0bf52e486bd28880a07843bda9dcac2f19c5b9a9ff5d67a0312d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-destroyed-2-full.png",
+      "bytes": 2051678,
+      "sha256": "10f6c8141eaac0ca7fce337850ace8c29cd18d7fa718de03e6433a8d57ff96bd"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-destroyed-2.png",
+      "bytes": 309132,
+      "sha256": "45d7c03583f449202475a3cb74972fcac049371bca9a7c12f8d19af704eb1503"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-hit-0-full.png",
+      "bytes": 2049430,
+      "sha256": "f5be50fddac9b0f9016267733a13e4046ed8bdb58c021f09dfb4b58e6c7af7f1"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-hit-0.png",
+      "bytes": 320210,
+      "sha256": "04dd236202de62d3a58288b02c93ef29ee81c560d9aa4a0a0f1ad1999836d639"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-hit-1-full.png",
+      "bytes": 2056141,
+      "sha256": "631edfd7dfb6fe715c2f30113cdb9da44f8b0d7fcfe1959fe89684f0e7c37d43"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-hit-1.png",
+      "bytes": 326610,
+      "sha256": "771e25bc22aa7c1024ce5d0890abb00b74d1f16d28653508f8b18c680e077118"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-hit-2-full.png",
+      "bytes": 2052044,
+      "sha256": "32d1ba17c55903906af648a5e4538c8deb65d2823cfe487d48d08b4a6bf4551b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-state-hit-2.png",
+      "bytes": 310785,
+      "sha256": "bcd828a3b9c9dc272d9dfcf8860ce5ccd7b60534cda5a79c3b34ceefbcf0505d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-tank-0-full.png",
+      "bytes": 2049013,
+      "sha256": "2b448d9e7d39032cb47e5d38ca70571b9aedf39e80228603a8eeb57643743624"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-tank-0.png",
+      "bytes": 320210,
+      "sha256": "04dd236202de62d3a58288b02c93ef29ee81c560d9aa4a0a0f1ad1999836d639"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-tank-1-full.png",
+      "bytes": 2056272,
+      "sha256": "3720d87166922b541fe341659fd930631c1c64da7f5bbcb241a3bd8566cfe5ac"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-tank-1.png",
+      "bytes": 327066,
+      "sha256": "448a98fe954e14e634e6aba58ca656e6d40739d2852123f53fbb37df94f47296"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-tank-2-full.png",
+      "bytes": 2051912,
+      "sha256": "2e567aacd7ebc11ca2e870fa4ecc8a92e0e504bc160fd1d2acdd3a3bbac6eee2"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-tank-2.png",
+      "bytes": 311116,
+      "sha256": "fd63b3538eebe361d4034c8fdc4317803ccfa08674d41b498be3655981bf16ac"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-tank-light-0-full.png",
+      "bytes": 2048301,
+      "sha256": "572bd30a32c2b6c5b23982423533a19571a1fc8a28cbd6af9e91cf381ea95f3a"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-tank-light-0.png",
+      "bytes": 319012,
+      "sha256": "c7a6613f00534bf3ce6ec742bc8910b858eeb40679c5eea09b6a6f29bf282227"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-tank-light-1-full.png",
+      "bytes": 2055845,
+      "sha256": "8d0f99c6874390e48fbeea6f825f0548ad7ab1ab9b5c02e17c8b743c053d5b5f"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-tank-light-1.png",
+      "bytes": 326559,
+      "sha256": "dd5983ed4a04d1d2740169cc4431e9acaa50f3acf51a8ba8ae14021190b4b0f9"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-tank-light-2-full.png",
+      "bytes": 2051399,
+      "sha256": "1a47ee3ae5f3753646a1129f32c7b0dbdbadd2450c64f14b8e3c054c68c8f957"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-tank-light-2.png",
+      "bytes": 310652,
+      "sha256": "49c019bcc0da32789c8b3a7a1cdb976cda89ec010f6fb76c54752953bffbdb1b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-truck-0-full.png",
+      "bytes": 2046443,
+      "sha256": "5e896715e646924a0168f1b1fe47c5917a0028db4cdadb568501f79a9c2e4baf"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-truck-0.png",
+      "bytes": 318162,
+      "sha256": "89baf8d91574c51aa7cc6a59432fa9113929c5d1f6ddaf6bc25965536ab8dd71"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-truck-1-full.png",
+      "bytes": 2052726,
+      "sha256": "45077f868c91ead5a01f057e3c9684b9b933216b1732e26c6e0d6866016f22fe"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-truck-1.png",
+      "bytes": 324352,
+      "sha256": "63c3e11eb0de85635d961e8a8a8f15b10ef2bb1de94cac8739793604379ae3ba"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-truck-2-full.png",
+      "bytes": 2048945,
+      "sha256": "1c8edaaa36412388835c50eb27e8f52d95c6246a3689bd7551848e1207e52c6f"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-truck-2.png",
+      "bytes": 309083,
+      "sha256": "e082ac1b1f3201db66515230c1d5ffb304c2eb9fe8228d20ac0df41423f19850"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-truck-fuel-0-full.png",
+      "bytes": 2047542,
+      "sha256": "c3989e7428dfe8d37f88bc2194a13915c0589ab2774d72047a7df6f2f2f3c73d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-truck-fuel-0.png",
+      "bytes": 318822,
+      "sha256": "c840c6e23df9d353ca0ffaafe04c743e3f706e5c01114358da39fc6b9dc0eb6e"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-truck-fuel-1-full.png",
+      "bytes": 2053988,
+      "sha256": "2fc395513a18a36434ec944ea1504667104c3650f0da41a26ceacfcc020d328e"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-truck-fuel-1.png",
+      "bytes": 325087,
+      "sha256": "c53357d954fdca8fc2a5b9846a36e9434289974fac9504535882434117940ede"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-truck-fuel-2-full.png",
+      "bytes": 2050234,
+      "sha256": "e2f1e86a9d1ea534784a99b59d45a25c04be78841f571fe1e58632775cdd2ce8"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/ground-truck-fuel-2.png",
+      "bytes": 309931,
+      "sha256": "9554ecdc2479b7e420e1cb59c6487923e76da439fd2229553932e9821e6861fd"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-gallery-items-terrestre.png",
+      "bytes": 1937545,
+      "sha256": "aa9cfb3b7521546c19d8431c516d6599e6702360988cbbc85b34af73a3a9467e"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-gallery-scene-terrestre.png",
+      "bytes": 1981301,
+      "sha256": "29d556f358e7262c7fca902afae35d35e7c610adeec204e1044ba6190bf0487d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-00.png",
+      "bytes": 387293,
+      "sha256": "1aa3e5049ebed56499cd65fd99a9b276f2acf54ee7b87d20e44d6925ff0d6c58"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-01.png",
+      "bytes": 386879,
+      "sha256": "f6ebf25c4708f1af751af9e2deb4740be491bceb1b8a538700d5cb7f665e9b66"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-02.png",
+      "bytes": 387941,
+      "sha256": "6f37d3339ec4c4198de912d6b1c0e89d72581ee1af09cc4af04719c8a5581e8e"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-03.png",
+      "bytes": 388470,
+      "sha256": "91e068ce333dbdc541c0f652dc9426304733d8942739b80110202a6d6c1c7940"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-04.png",
+      "bytes": 389212,
+      "sha256": "f83c3052de99da2d443a1d993c5e395c62a62fbe5f397a36fefc9531acad6b07"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-05.png",
+      "bytes": 389558,
+      "sha256": "d33464b055695c9e6fa8c29a19e3769ba4704f60d2e5c4fc725f52d5e3c321a7"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-06.png",
+      "bytes": 389842,
+      "sha256": "de97c42568efe2c47472a9d7b2c77fed7a1ddb6ec379f969c0e2e911d969df23"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-07.png",
+      "bytes": 390511,
+      "sha256": "c5922d3c4b5adb6a4d74a7b268ce4729295b7e1508ab1e5bccfd43160c271893"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-08.png",
+      "bytes": 389653,
+      "sha256": "0c973ffff87cff716115eaed740da7fd73a90b9bd2241a20953a8199efa50c19"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-09.png",
+      "bytes": 387546,
+      "sha256": "4fcd381fbdfbc8433a72ec24d818ca4d83ddb44e897482191cb9f2626ed183eb"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-10.png",
+      "bytes": 387183,
+      "sha256": "9c68c0fa6ffe56f874010148f7d54505978f6cf66e913dbdc19b8cdf8ee4d5b9"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-11.png",
+      "bytes": 386435,
+      "sha256": "e1908ac093b81695fec8457074c59f7344dd3a2fe07cca69e907f4c64d133ff9"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-12.png",
+      "bytes": 386408,
+      "sha256": "bb585c51ae240506c82e5ccffd3f4abc5003b9281f9e6dabe16d2c77350f6b10"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-13.png",
+      "bytes": 386529,
+      "sha256": "a7c875d2d3dc4559b447627eb42792f7c0c0392c320fd6635ac2e16c76fdf7a4"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-14.png",
+      "bytes": 386405,
+      "sha256": "0bf6d201390c01b95931fba4563de3f095b951ede8e8ba99c964754ec04b1376"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-15.png",
+      "bytes": 385856,
+      "sha256": "8a9870120ded69a39776c7b8df90ed3937f344501fe088671557e5f9341c4037"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-16.png",
+      "bytes": 385240,
+      "sha256": "f2c1ba777362cb8d8da0c087092dcbb2bc511e19e26f69639c426fa777d8b420"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-17.png",
+      "bytes": 384526,
+      "sha256": "f1f084514697cc9c891dba4a2933345990ff6c0e8a97b3e7ce98a8d60ecb3c6c"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-18.png",
+      "bytes": 383961,
+      "sha256": "b7f49e17327404f30ce893a8d2e4cb51ad2cfd5f3215748fefdaf96369c6c667"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-19.png",
+      "bytes": 383035,
+      "sha256": "4cfbe8f5eae96ff7fefa431110b7db8e847cecbcb599f8dba53b7f241ab1daa5"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-20.png",
+      "bytes": 383336,
+      "sha256": "8c251097044526ca65c08c5aa0e9dc75bd610bd7c3d7400f1ef7fd780152d6ac"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-21.png",
+      "bytes": 381256,
+      "sha256": "460fcf8e82f6501c58a8da14179f7f299237def2308ef3f2ad7c55d5f9673e6e"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-22.png",
+      "bytes": 381808,
+      "sha256": "ed5ff668d65f19097c97837591772fb58a35d73894dad0ca40bd3028098bf0a5"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-23.png",
+      "bytes": 381271,
+      "sha256": "8d8b64cb2583e4c4942c9a26cf8f2d063aaa1c9e26ddb356b9aff9f5cd91ae33"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-24.png",
+      "bytes": 381114,
+      "sha256": "8e54c947863938fde6d714c91817aef64186e60359cb880e2bbda602cab1d8fa"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-25.png",
+      "bytes": 381713,
+      "sha256": "6577cf504523b0f6bccea5b1d5d27b792ee652907c7044cdb4fc04cbdfffea03"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-26.png",
+      "bytes": 380827,
+      "sha256": "76df69711557a2cbdb12cdce6bd3c9ba2631c028975a98e425c30e36097b18c3"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-27.png",
+      "bytes": 380137,
+      "sha256": "d944b7e7f0fee454ac3469f4b6ac2754a9d5434c75034b9f2b0c65b361cab47c"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-28.png",
+      "bytes": 378629,
+      "sha256": "81f021bbad075ffc1a1f30aa6f27ad12810e31bb56e3ae5d3966fc0b478338aa"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-29.png",
+      "bytes": 378465,
+      "sha256": "8b0c11a55485ac322f58b4b31012532f2c5b31b8ec877a64c8d0ff156bf1bea6"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-30.png",
+      "bytes": 377283,
+      "sha256": "aa98e453c71681916d43c23c44999132421a9fd3802466759a3b42fe28c9f470"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-31.png",
+      "bytes": 377323,
+      "sha256": "af35d34582987f78967b64328472809485e8279b6083e7eb35707913811342de"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-32.png",
+      "bytes": 373817,
+      "sha256": "2f17c424b819552123d5b50de7024abd7f92980deabcf8c0d480c121b22d0766"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-33.png",
+      "bytes": 373214,
+      "sha256": "198a92b7117367edf21006642371cb9cf0f0f29892f49e6fa742bb5012b25180"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-34.png",
+      "bytes": 372726,
+      "sha256": "267e23efff738a833a7c22e5fcc37cb5ae1c6950a54f0e36697c1fc5d1bca46d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-35.png",
+      "bytes": 373103,
+      "sha256": "fa4a6020df654be9967dc51284848deba7a72a3aab573d994dcacd4083a2e07f"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-36.png",
+      "bytes": 371796,
+      "sha256": "27e0a99d2e2f42bb7ca6dc79c934f631fa251a21fa5657e528a814c29aba212b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-37.png",
+      "bytes": 372385,
+      "sha256": "170dc6c4e4fe8d2830656bb9e4b8c7d3d823200f9017f97ca3dcb3ff49b1bbfd"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-38.png",
+      "bytes": 371627,
+      "sha256": "2894a318716800a7e084db69bfceaad2e19eee3a56502b53d7c5babf3d2509bf"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-army-advance-40-39.png",
+      "bytes": 368469,
+      "sha256": "e7a81ceeed083f62095d9281c3a747ebd759e81c9afe337a1b51a5456b6d820e"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-00.png",
+      "bytes": 345392,
+      "sha256": "a25d2dfed7ad3ab9536dfe3b4d593531edd3e20b6c018073c1b891ca5012ef83"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-01.png",
+      "bytes": 345293,
+      "sha256": "579a9f80a999174b87da3a7bcf128b89169c6ee57148440f5986c47a811ff844"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-02.png",
+      "bytes": 345674,
+      "sha256": "77dfaac0e8df160cae581b88b5194530516978739633abd4c8b907a7c946343c"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-03.png",
+      "bytes": 346193,
+      "sha256": "443e2db3285aa0f7f6c30099f13b9661e81de705c2e373088654d967690e0811"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-04.png",
+      "bytes": 347334,
+      "sha256": "9d8d0fef13d7abe5096885c2f49128cae000628cf705551363241b0cd582b17d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-05.png",
+      "bytes": 347673,
+      "sha256": "c7b010ff6693c41ac4a0bb2396418dae3da0ff16f1c9d6b264328ab80eb612be"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-06.png",
+      "bytes": 348351,
+      "sha256": "74a99d0026878efeed8d71adae2209470532a69106064573ab9abb0438e47c19"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-07.png",
+      "bytes": 347932,
+      "sha256": "a4ed0ead62d65becaf5e2c0f12b35f20365d1485615d031b8a71e4032c4a6a2b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-08.png",
+      "bytes": 348842,
+      "sha256": "0dc0a00d036ddc96ed2b490e2da21fd0dab77e2acdc57bc6dc3cfabe1db5017b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-09.png",
+      "bytes": 349173,
+      "sha256": "ab8b41a21ab1bcbc921036fd1d293576041e501d4f799d7c730be99da2c8f548"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-10.png",
+      "bytes": 349535,
+      "sha256": "553714304814ff9f35bb9a1b96d56b6e058381e6115de31c3e7c0d4ca063bad5"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-11.png",
+      "bytes": 351792,
+      "sha256": "93833024bc1f9558a7c0aae5ebd9aa9a8e4135c0ad096ca50b773101dd972872"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-12.png",
+      "bytes": 351947,
+      "sha256": "8fee6ee76db0de31036f04e229c0f24578fff5b4b3686ea9f5eb2bfc6789f657"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-13.png",
+      "bytes": 352104,
+      "sha256": "a57d9e1d94601dadd396462ff95ad89d8d2515f2eebb9ad47f168e31d1799bc2"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-14.png",
+      "bytes": 352581,
+      "sha256": "936d639312bff3ca1a4da9b52ae9ebf38f78ba0c3488915fb36b9fe0f8e7a89d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-15.png",
+      "bytes": 352221,
+      "sha256": "c421f2af0d71ffbb340099f89f0d9383d727dfe98ccaf12bca3026d4cc672aeb"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-16.png",
+      "bytes": 353116,
+      "sha256": "44a351c1ab86b77d778eddd6268824fefdd649620bb373b01c47d5ff2dfac53b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-17.png",
+      "bytes": 353266,
+      "sha256": "211307fa864f01c612026940bdaffceeafb120331daaf037cd2f2d3c2d2d0975"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-18.png",
+      "bytes": 353794,
+      "sha256": "29fa35d8016193e926dd2c688b7bc34fbb90bcd085810768c0893cc157ea8325"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-19.png",
+      "bytes": 353908,
+      "sha256": "1af08bd30cb170b9d3399ebc9bd03a1dc70a203d1214596a46b1b6264ff47923"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-20.png",
+      "bytes": 354333,
+      "sha256": "32abc43a0101740885aac7aac48382892137a9f6a4ca1db84108235f11ffdbb4"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-21.png",
+      "bytes": 355402,
+      "sha256": "d24d871d64813d5d85bb456db651b590b3f780d319d54d4e148fb6a8ee8bfb85"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-22.png",
+      "bytes": 356862,
+      "sha256": "d6c55ff547f48647cf50f42f3a1e18fcd165cf980ecd902881b82fb880445772"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-23.png",
+      "bytes": 356151,
+      "sha256": "8d7fbf19062793731e60da886b44201bc1b0131368312494d783c2a8b617d886"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-24.png",
+      "bytes": 355710,
+      "sha256": "61a8c281625ea066dccbccfb0e181621c7cd15db01303eff1bdfdf9722f9e87d"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-25.png",
+      "bytes": 356094,
+      "sha256": "b4c93d5e0a60ed0c5d16957516e579b927f26b1b3b95b5ae0ee3996d5fa872f7"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-26.png",
+      "bytes": 357389,
+      "sha256": "ec63e6548b4252ab21bd70361947d8af2960ff39bd89b022e9e5352a50b6bfb1"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-27.png",
+      "bytes": 356592,
+      "sha256": "1bb560932e80d7f8f250c7a28839a70b216a44c44449e04dc3dcd7845a767c2f"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-28.png",
+      "bytes": 356733,
+      "sha256": "e3071435b00ae17d1ff4679684d075f6e0d86d84fbbf93f02ea90e600608db20"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-29.png",
+      "bytes": 357651,
+      "sha256": "0d6e1e69c155837d6c9b91e2e5fece2d12a24f2b45fbc15f3ac33c1bb3851e88"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-30.png",
+      "bytes": 357984,
+      "sha256": "d89d199fb75b06505ec2ecc77b5404b6854bf19817334b1cb66b3420bc37da32"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-31.png",
+      "bytes": 358872,
+      "sha256": "c07b9273d3d8b0ceb84eb0b7ef7f83d6bec62af8ea46da14be00a396232c04f0"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-32.png",
+      "bytes": 358729,
+      "sha256": "3c2c5b08a5f3f28da47b7f47ae53bf2b90a19d8fc377d84724bf52e05be08cfc"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-33.png",
+      "bytes": 358422,
+      "sha256": "9033d8ee4ed6aeb984fb2ae47371592b86a0e41177fa574d1b97503499e936d2"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-34.png",
+      "bytes": 359402,
+      "sha256": "fb33db66c311f6a721173969aca91a85f3da3c82164630e22d837ab502bcf9e8"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-35.png",
+      "bytes": 359888,
+      "sha256": "6b8d3114c5b3f93335abdb81b9db4048a4e9cacaa304921caa4ead1b5df3b9cd"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-36.png",
+      "bytes": 359887,
+      "sha256": "3b9b59eaa079bada6021187ff7d4a3de64446543a529c7471d82d6dab1aab467"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-37.png",
+      "bytes": 358789,
+      "sha256": "2d1779e91efaa86a57eadab40d888d6a2983679bd397c2f7266bd2b8f084ac5c"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-38.png",
+      "bytes": 358252,
+      "sha256": "be7bfc4b3a6f2948fc170a6d571862cca98e41526c1152bd6be908af28394e7b"
+    },
+    {
+      "path": "work/tactico/shots/terrestre/terrestre-motion-ground-convoy-39.png",
+      "bytes": 357824,
+      "sha256": "a5e86714ed3273b9ed499d26b241f42dbe29a9cb9a930b1c7e386934db5a4c20"
+    },
+    {
+      "path": "work/tactico/terrestre-captures-qa.json",
+      "bytes": 59250,
+      "sha256": "69254b5c07d02efee095db4ec663cfb004a5b0d03d72d6aad5f018742d4a3a4b"
+    },
+    {
+      "path": "work/tactico/terrestre-focused-qa.json",
+      "bytes": 1188,
+      "sha256": "8114bb414195631efa599273003a31ce9057f615af8d7483d28b660709604ad8"
+    },
+    {
+      "path": "work/tactico/terrestre-gallery-qa.json",
+      "bytes": 4807,
+      "sha256": "4019e7e1c8f7df31b4cae4fa2b223884f1a948f8f6ce2ee2f45bac4a51271b47"
+    },
+    {
+      "path": "work/tactico/terrestre-motion-qa.json",
+      "bytes": 9674,
+      "sha256": "ebb88d671294e4c3cc656da76803bb70274897cd0b94de1b0504946584663f91"
+    },
+    {
+      "path": "work/tactico/terrestre-perf-qa.json",
+      "bytes": 10484,
+      "sha256": "ac8f1833039e0312041cde9e6b07af034c57cafd63b08c27580165fc47d9b4a5"
+    },
+    {
+      "path": "work/tactico/terrestre-tests.log",
+      "bytes": 4480,
+      "sha256": "055d4cdf9e5b793023ef28e5e28cd8e22f70e6a577949b88e6cb7497740dd8e1"
+    },
+    {
+      "path": "work/tactico/terrestre-validation.json",
+      "bytes": 37,
+      "sha256": "e0c2924b0cf38903b5cc04c6b7491eb4acbcdfb846f4563bd1fe20d4953aff75"
+    },
+    {
+      "path": "work/tactico/terrestre-verify-qa.json",
+      "bytes": 4795,
+      "sha256": "57b03a7f101a5e58d24b02223d64e11ba55e8c380a72ab1e38937faccbe91bbb"
+    }
+  ],
+  "limitations": {
+    "twentyInstanceFamiliesReach5ms": false,
+    "mainSpriteManifestPresent": true,
+    "extraSpriteManifestPresent": false,
+    "tilesComplete": false
+  }
+}

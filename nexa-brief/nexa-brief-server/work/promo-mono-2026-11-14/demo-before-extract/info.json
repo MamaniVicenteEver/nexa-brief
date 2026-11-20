@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "id": "promo-mono",
+  "title": "Promo Mono",
+  "summary": "Promo de marca o servicio con interfaz minimalista en blanco y negro: píldoras de chat, botón de reproducir, pin, metraje en semitono, cifras, patrón óptico, móvil con chat, cupón, código y contacto.",
+  "engine": "promo compiler: core.js + component-player.js (orquestador compartido) + components/*.js",
+  "based_on": "promo-pulse (contrato de componentes y orquestador)",
+  "is_new_design": true,
+  "reference": "Video de un anuncio de una app de transporte entregado por el usuario el 2026-11-14 (PROMO/4688cc4cd50be8a0d616501bcb85cf7a_720w.mp4). Solo referencia visual: no se usan su marca, su audio, sus textos ni sus clips.",
+  "created_at": "2026-11-14",
+  "libraries": [],
+  "state": "lista para revisar",
+  "inputs": {
+    "audio": "song.mp3 (opcional)",
+    "timeline": "assets/lyrics.json (guion: un segmento = una escena)",
+    "config": "config.json",
+    "media": "config.media (videos)"
+  },
+  "components": [
+    {
+      "name": "mono.intro",
+      "label": "Intro",
+      "summary": "Logotipo de la marca.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "mono.outroV1",
+      "label": "Outro v1",
+      "summary": "Logotipo y llamado en píldora.",
+      "group": "outro",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "mono.outroV2",
+      "label": "Outro v2",
+      "summary": "Chips que se apartan y píldora con pin.",
+      "group": "outro",
+      "params": {}
+    }
+  ],
+  "catalog": {
+    "components": "showcase/components.json",
+    "gallery": "showcase/index.html"
+  },
+  "notes": "Diseño nuevo creado directamente en producción por instrucción del usuario. Preparación por chat de promos (TEMPLATES, PROMO_IDS, contrato de producción) pendiente. No habilitado para HyperFrames hasta render de validación."
+}

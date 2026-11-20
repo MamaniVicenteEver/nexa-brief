@@ -1,0 +1,296 @@
+{
+  "activeId": "default",
+  "configs": [
+    {
+      "id": "default",
+      "description": "Prototipo de promo-mono: campaña de adopción de un refugio ficticio («Patas Libres»).",
+      "audio": {
+        "src": "assets/song.mp3"
+      },
+      "lyricsUrl": "assets/lyrics.json",
+      "fonts": {
+        "googleUrl": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+        "display": "Inter",
+        "label": "Inter"
+      },
+      "palette": {
+        "bg": "#000000",
+        "fg": "#FFFFFF",
+        "muted": "#8A8A8A",
+        "chip": "#FFFFFF",
+        "chipText": "#111111"
+      },
+      "brand": {
+        "name": "Patas Libres",
+        "cta": "Adopta, no compres",
+        "url": "@patas.libres.demo"
+      },
+      "chips": [
+        "Vamos al parque",
+        "Vamos a correr",
+        "Vamos por la pelota",
+        "Vamos a la playa",
+        "Siesta al sol",
+        "Vamos de paseo",
+        "Hora de jugar",
+        "Vamos al lago",
+        "Vamos por un premio",
+        "Baño de espuma",
+        "Vamos a la montaña",
+        "Carrera en el pasto",
+        "Vamos en bici",
+        "Vamos a nadar",
+        "Hora de la cena",
+        "Vamos al río",
+        "Abrazo largo",
+        "Vamos de picnic",
+        "Vamos de viaje",
+        "Paseo al atardecer",
+        "Vamos a dormir",
+        "Juego del palo",
+        "Vamos al campo",
+        "Vamos a la nieve"
+      ],
+      "grades": {
+        "mono": {
+          "type": "duo",
+          "dark": "#050505",
+          "light": "#F2F2F2",
+          "contrast": 1.3
+        }
+      },
+      "look": {
+        "dotScale": 1,
+        "dotContrast": 1.25,
+        "chipScale": 1,
+        "stroke": 1
+      },
+      "anim": {
+        "textIn": "type",
+        "speed": 1,
+        "intensity": 1
+      },
+      "intro": {
+        "enabled": true,
+        "title": "Patas Libres",
+        "sub": ""
+      },
+      "outro": {
+        "enabled": true,
+        "version": "v2",
+        "minSec": 4,
+        "title": "Patas Libres",
+        "cta": "Adopta, no compres"
+      },
+      "transition": {
+        "overlapSec": 0.3,
+        "duration": 0.32,
+        "weights": {
+          "cut": 4,
+          "dots": 1,
+          "lineSweep": 1,
+          "blink": 1,
+          "fade": 1
+        }
+      },
+      "hud": {
+        "enabled": false
+      },
+      "texture": {
+        "grain": 0
+      },
+      "render": {
+        "kbVideo": false
+      },
+      "media": [
+        {
+          "id": "jack-flores",
+          "type": "video",
+          "src": "assets/media/jack-flores.mp4",
+          "poster": "assets/media/jack-flores-1.jpg"
+        },
+        {
+          "id": "perro-palo",
+          "type": "video",
+          "src": "assets/media/perro-palo.mp4",
+          "poster": "assets/media/perro-palo-1.jpg"
+        },
+        {
+          "id": "husky",
+          "type": "video",
+          "src": "assets/media/husky.mp4",
+          "poster": "assets/media/husky-1.jpg"
+        },
+        {
+          "id": "husky-bici",
+          "type": "video",
+          "src": "assets/media/husky-bici.mp4",
+          "poster": "assets/media/husky-bici-1.jpg"
+        },
+        {
+          "id": "playa",
+          "type": "video",
+          "src": "assets/media/playa.mp4",
+          "poster": "assets/media/playa-1.jpg"
+        },
+        {
+          "id": "atardecer",
+          "type": "video",
+          "src": "assets/media/atardecer.mp4",
+          "poster": "assets/media/atardecer-1.jpg"
+        },
+        {
+          "id": "cachorro",
+          "type": "video",
+          "src": "assets/media/cachorro.mp4",
+          "poster": "assets/media/cachorro-1.jpg"
+        },
+        {
+          "id": "pug",
+          "type": "video",
+          "src": "assets/media/pug.mp4",
+          "poster": "assets/media/pug-1.jpg"
+        },
+        {
+          "id": "pelota",
+          "type": "video",
+          "src": "assets/media/pelota.mp4",
+          "poster": "assets/media/pelota-1.jpg"
+        },
+        {
+          "id": "ventanilla",
+          "type": "video",
+          "src": "assets/media/ventanilla.mp4",
+          "poster": "assets/media/ventanilla-1.jpg"
+        }
+      ],
+      "scenes": [
+        {
+          "type": "intro"
+        },
+        {
+          "type": "playline",
+          "trans": "cut"
+        },
+        {
+          "type": "cardfan",
+          "media": [
+            "cachorro",
+            "pug",
+            "husky",
+            "jack-flores",
+            "pelota",
+            "playa",
+            "atardecer"
+          ],
+          "trans": "blink"
+        },
+        {
+          "type": "wordgrid",
+          "media": [
+            "cachorro",
+            "husky-bici",
+            "pelota",
+            "pug",
+            "playa"
+          ],
+          "split": "hyphen",
+          "trans": "cut"
+        },
+        {
+          "type": "chips",
+          "mode": "float",
+          "count": 28,
+          "trans": "cut"
+        },
+        {
+          "type": "chips",
+          "mode": "pile",
+          "count": 70,
+          "trans": "cut"
+        },
+        {
+          "type": "linetext",
+          "squiggle": true,
+          "trans": "lineSweep"
+        },
+        {
+          "type": "pin",
+          "trans": "cut"
+        },
+        {
+          "type": "footage",
+          "media": [
+            "cachorro"
+          ],
+          "dotsIn": true,
+          "trans": "cut"
+        },
+        {
+          "type": "footage",
+          "media": [
+            "playa"
+          ],
+          "icon": "bars",
+          "trans": "dots"
+        },
+        {
+          "type": "footage",
+          "media": [
+            "pelota"
+          ],
+          "trans": "blink"
+        },
+        {
+          "type": "numbers",
+          "trans": "dots"
+        },
+        {
+          "type": "pattern",
+          "icon": "play",
+          "trans": "cut"
+        },
+        {
+          "type": "footage",
+          "media": [
+            "ventanilla"
+          ],
+          "style": "squares",
+          "cell": 8,
+          "icon": "play",
+          "trans": "dots"
+        },
+        {
+          "type": "spaced",
+          "echo": 3,
+          "trans": "blink"
+        },
+        {
+          "type": "phonechat",
+          "trans": "cut"
+        },
+        {
+          "type": "phonechat",
+          "squiggle": true,
+          "trans": "cut"
+        },
+        {
+          "type": "coupon",
+          "count": 4,
+          "trans": "blink"
+        },
+        {
+          "type": "codeinput",
+          "trans": "cut"
+        },
+        {
+          "type": "contact",
+          "trans": "pillPop"
+        },
+        {
+          "type": "outro"
+        }
+      ]
+    }
+  ]
+}

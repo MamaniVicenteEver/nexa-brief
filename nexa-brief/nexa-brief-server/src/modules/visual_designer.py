@@ -117,7 +117,7 @@ async def run(job: Job, ai: AIPort, niche_cfg: NicheConfig) -> Job:
     except Exception as exc:
         raise AIValidationError(f"VisualDesign validation failed: {exc}\nRaw: {raw}") from exc
 
-    logs_dir: Path = job.artifacts.output_dir / "logs"
+    logs_dir: Path = (job.artifacts.log_dir or job.artifacts.output_dir / "logs")
     logs_dir.mkdir(parents=True, exist_ok=True)
     (logs_dir / "02_diseno_visual.json").write_text(design.model_dump_json(indent=2), encoding="utf-8")
 
@@ -157,7 +157,7 @@ async def _run_vision_extraction(job: Job, ai: AIPort, niche_cfg: NicheConfig) -
         asset_id=artifacts.image_asset_id,
     )
 
-    logs_dir: Path = artifacts.output_dir / "logs"
+    logs_dir: Path = (artifacts.log_dir or artifacts.output_dir / "logs")
     logs_dir.mkdir(parents=True, exist_ok=True)
 
     # Nichos con template.requires_video=True (ej. motion-backdrop): no hay

@@ -1,0 +1,23 @@
+"""Compara PNG completos. No modifica los cuadros; SSIM a resolución nativa."""
+import argparse,json,math,os
+from pathlib import Path
+import numpy as np
+from PIL import Image
+from skimage.metrics import structural_similarity
+os.sched_setaffinity(0,sorted(os.sched_getaffinity(0))[:2])
+p=argparse.ArgumentParser();p.add_argument('reference',type=Path);p.add_argument('candidate',type=Path);p.add_argument('--out',type=Path,required=True);p.add_argument('--require-all',action='store_true');a=p.parse_args()
+missing=[f.name for f in sorted((a.reference/'full').glob('*.png')) if not (a.candidate/'full'/f.name).exists()]
+if a.require_all and missing:raise RuntimeError(f'Faltan {len(missing)} pares: {missing}')
+rows=[]
+for file in sorted((a.reference/'full').glob('*.png')):
+    other=a.candidate/'full'/file.name
+    if not other.exists():continue
+    x=np.asarray(Image.open(file).convert('RGBA'),dtype=np.float32);y=np.asarray(Image.open(other).convert('RGBA'),dtype=np.float32)
+    d=np.abs(x-y);mse=float(np.mean((x[:,:,:3]-y[:,:,:3])**2))
+    ssim=1. if not mse else float(structural_similarity(x[:,:,:3],y[:,:,:3],data_range=255,channel_axis=-1))
+    row={'file':file.name,'meanRGBA':float(d.mean()),'meanRGB':float(d[:,:,:3].mean()),'maxRGBA':int(d.max()),'mseRGB':mse,'psnrRGB':10*math.log10(255**2/mse) if mse else None,'ssimRGB':ssim}
+    rows.append(row);print(file.name,round(row['meanRGBA'],4),round(ssim,6),flush=True)
+if not rows:raise RuntimeError('Sin pares de capturas')
+mse=sum(r['mseRGB'] for r in rows)/len(rows)
+report={'frames':len(rows),'missingPairs':missing,'resolution':[int(x.shape[1]),int(x.shape[0])],'alpha':'255 en ambas fuentes','meanRGBA':sum(r['meanRGBA'] for r in rows)/len(rows),'psnrRGB':10*math.log10(255**2/mse) if mse else None,'meanSSIM':sum(r['ssimRGB'] for r in rows)/len(rows),'minSSIM':min(r['ssimRGB'] for r in rows),'maxMeanRGBA':max(r['meanRGBA'] for r in rows),'framesMetrics':rows}
+a.out.write_text(json.dumps(report,indent=2)+'\n');print({k:v for k,v in report.items() if k!='framesMetrics'})

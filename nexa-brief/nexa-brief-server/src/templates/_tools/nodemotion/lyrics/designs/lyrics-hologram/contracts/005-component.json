@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "assemble",
+  "entry_id": "assemble",
+  "kind": "component",
+  "label": "Letras que se ensamblan",
+  "summary": "Letras repartidas que se ensamblan en su sitio mientras cruza un panel holográfico (1-2 palabras).",
+  "component": {
+    "name": "assemble",
+    "label": "Letras que se ensamblan",
+    "summary": "Letras repartidas que se ensamblan en su sitio mientras cruza un panel holográfico (1-2 palabras).",
+    "group": "scene",
+    "tags": [
+      "lyrics-hologram",
+      "scene"
+    ],
+    "params": {
+      "spread": {
+        "type": "number",
+        "min": 1,
+        "max": 3,
+        "default": 1.9
+      },
+      "holo": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "t": 7.91,
+      "query": null,
+      "layout": {
+        "weight": 0.8,
+        "bgs": [
+          "void"
+        ]
+      }
+    },
+    "preview": {
+      "gallery": "gallery.html?only=assemble"
+    }
+  },
+  "params": {
+    "spread": {
+      "type": "number",
+      "min": 1,
+      "max": 3,
+      "default": 1.9
+    },
+    "holo": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/4"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

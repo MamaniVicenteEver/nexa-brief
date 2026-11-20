@@ -1,0 +1,1311 @@
+{
+  "template_id": "promo-pulse",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 18,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "acción en movimiento, entrenamiento, velocidad; se gradan cinematográficos"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.name",
+        "label": "Marca",
+        "max": 30,
+        "default": "NEXA BRIEF"
+      },
+      {
+        "key": "brand.url",
+        "label": "Dirección o usuario",
+        "max": 40,
+        "default": "@nexabrief"
+      },
+      {
+        "key": "brand.cta",
+        "label": "Llamada (caja verde del cierre v2)",
+        "max": 24,
+        "default": "SUSCRÍBETE"
+      },
+      {
+        "key": "brand.corner",
+        "label": "Rótulo de esquina",
+        "max": 30,
+        "default": "NEXA BRIEF"
+      },
+      {
+        "key": "brand.footer",
+        "label": "Pie",
+        "max": 60,
+        "default": "Diseño y animación · NEXA BRIEF"
+      }
+    ],
+    "brief": true
+  },
+  "default_brand": {
+    "name": "NEXA BRIEF",
+    "url": "@nexabrief",
+    "cta": "SUSCRÍBETE",
+    "corner": "NEXA BRIEF",
+    "footer": "Diseño y animación · NEXA BRIEF"
+  },
+  "default_media": [
+    {
+      "id": "fighter",
+      "type": "video"
+    },
+    {
+      "id": "bag",
+      "type": "video"
+    },
+    {
+      "id": "pushup",
+      "type": "video"
+    },
+    {
+      "id": "bmx",
+      "type": "video"
+    },
+    {
+      "id": "moto",
+      "type": "video"
+    },
+    {
+      "id": "ridge",
+      "type": "video"
+    },
+    {
+      "id": "kart",
+      "type": "video"
+    },
+    {
+      "id": "runners",
+      "type": "video"
+    },
+    {
+      "id": "skater",
+      "type": "video"
+    },
+    {
+      "id": "dancer",
+      "type": "video"
+    },
+    {
+      "id": "stride",
+      "type": "video"
+    },
+    {
+      "id": "hoop",
+      "type": "video"
+    },
+    {
+      "id": "basket",
+      "type": "video"
+    },
+    {
+      "id": "sprint",
+      "type": "video"
+    },
+    {
+      "id": "boxing",
+      "type": "video"
+    },
+    {
+      "id": "skate",
+      "type": "video"
+    },
+    {
+      "id": "ropes",
+      "type": "video"
+    },
+    {
+      "id": "soccer",
+      "type": "video"
+    }
+  ],
+  "default_scenes": [
+    {
+      "type": "intro",
+      "media": [
+        "bag"
+      ],
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "stride"
+      ],
+      "trans": "zoomBlur",
+      "pos": "center",
+      "max_text_lines": 2
+    },
+    {
+      "type": "framed",
+      "media": [
+        "fighter"
+      ],
+      "trans": "whip",
+      "max_text_lines": 2
+    },
+    {
+      "type": "badge",
+      "media": [
+        "moto"
+      ],
+      "trans": "greenFlash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "boxing"
+      ],
+      "trans": "zoomBlur",
+      "pos": "br",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "pushup"
+      ],
+      "trans": "cut",
+      "brackets": true,
+      "max_text_lines": 2
+    },
+    {
+      "type": "knockout",
+      "media": [
+        "dancer"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    },
+    {
+      "type": "split3",
+      "media": [
+        "moto",
+        "bmx",
+        "kart"
+      ],
+      "trans": "panels",
+      "max_text_lines": 2
+    },
+    {
+      "type": "framed",
+      "media": [
+        "hoop"
+      ],
+      "trans": "whip",
+      "side": "right",
+      "textPos": "left",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "runners"
+      ],
+      "trans": "zoomBlur",
+      "pos": "l",
+      "brackets": true,
+      "max_text_lines": 2
+    },
+    {
+      "type": "knockout",
+      "media": [
+        "soccer"
+      ],
+      "trans": "greenFlash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "kart"
+      ],
+      "trans": "cut",
+      "pos": "br",
+      "max_text_lines": 2
+    },
+    {
+      "type": "framed",
+      "media": [
+        "ridge"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    },
+    {
+      "type": "marquee",
+      "media": [
+        "skater"
+      ],
+      "trans": "whip",
+      "max_text_lines": 2
+    },
+    {
+      "type": "counter",
+      "media": [
+        "ropes"
+      ],
+      "trans": "panels",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "ropes"
+      ],
+      "trans": "zoomBlur",
+      "pos": "center",
+      "max_text_lines": 2
+    },
+    {
+      "type": "badge",
+      "media": [
+        "bmx"
+      ],
+      "trans": "greenFlash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "bmx"
+      ],
+      "trans": "cut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "framed",
+      "media": [
+        "dancer"
+      ],
+      "trans": "whip",
+      "max_text_lines": 2
+    },
+    {
+      "type": "knockout",
+      "media": [
+        "skate"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    },
+    {
+      "type": "split3",
+      "media": [
+        "runners",
+        "sprint",
+        "stride"
+      ],
+      "trans": "panels",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "fighter"
+      ],
+      "trans": "zoomBlur",
+      "pos": "br",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "bag"
+      ],
+      "trans": "cut",
+      "pos": "center",
+      "textIn": "cut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "framed",
+      "media": [
+        "hoop"
+      ],
+      "trans": "zoomBlur",
+      "frame": 0.9,
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "stride"
+      ],
+      "trans": "whip",
+      "pos": "r",
+      "max_text_lines": 2
+    },
+    {
+      "type": "marquee",
+      "media": [
+        "moto"
+      ],
+      "trans": "whip",
+      "rows": 5,
+      "max_text_lines": 2
+    },
+    {
+      "type": "framed",
+      "media": [
+        "soccer"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    },
+    {
+      "type": "counter",
+      "media": [
+        "sprint"
+      ],
+      "trans": "panels",
+      "side": "left",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "kart"
+      ],
+      "trans": "cut",
+      "pos": "l",
+      "brackets": true,
+      "max_text_lines": 2
+    },
+    {
+      "type": "badge",
+      "media": [
+        "boxing"
+      ],
+      "trans": "greenFlash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "knockout",
+      "media": [
+        "pushup"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "skater"
+      ],
+      "trans": "whip",
+      "pos": "br",
+      "max_text_lines": 2
+    },
+    {
+      "type": "framed",
+      "media": [
+        "hoop"
+      ],
+      "trans": "zoomBlur",
+      "side": "left",
+      "textPos": "right",
+      "max_text_lines": 2
+    },
+    {
+      "type": "split3",
+      "media": [
+        "bmx",
+        "moto",
+        "kart"
+      ],
+      "trans": "panels",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "ridge"
+      ],
+      "trans": "zoomBlur",
+      "pos": "center",
+      "textIn": "rise",
+      "max_text_lines": 2
+    },
+    {
+      "type": "knockout",
+      "media": [
+        "dancer"
+      ],
+      "trans": "greenFlash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "sprint"
+      ],
+      "trans": "cut",
+      "max_text_lines": 2
+    },
+    {
+      "type": "marquee",
+      "media": [
+        "basket"
+      ],
+      "trans": "whip",
+      "max_text_lines": 2
+    },
+    {
+      "type": "framed",
+      "media": [
+        "basket"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    },
+    {
+      "type": "counter",
+      "media": [
+        "stride"
+      ],
+      "trans": "panels",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "boxing"
+      ],
+      "trans": "cut",
+      "pos": "br",
+      "brackets": true,
+      "max_text_lines": 2
+    },
+    {
+      "type": "badge",
+      "media": [
+        "skate"
+      ],
+      "trans": "greenFlash",
+      "max_text_lines": 2
+    },
+    {
+      "type": "knockout",
+      "media": [
+        "runners"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    },
+    {
+      "type": "full",
+      "media": [
+        "fighter"
+      ],
+      "trans": "whip",
+      "pos": "l",
+      "max_text_lines": 2
+    },
+    {
+      "type": "framed",
+      "media": [
+        "ropes"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    },
+    {
+      "type": "outro",
+      "media": [
+        "dancer"
+      ],
+      "trans": "zoomBlur",
+      "max_text_lines": 2
+    }
+  ],
+  "default_duration_seconds": 100.0,
+  "target_duration_seconds": {
+    "min": 60,
+    "max": 120
+  },
+  "script": "Whisper: segments, un segmento por escena, renglones en lines (renglón 1 = palabra principal, renglón 2 = complemento). La primera escena es la intro y la última el outro.",
+  "thumbnail": {
+    "title": "renglón 1 del primer segmento (máximo cinco palabras); si no existe, título del draft",
+    "extra": [
+      "brand.name",
+      "brand.url"
+    ],
+    "A": "palabra crema en itálica sobre video enmarcado con palabra gigante en contorno verde detrás",
+    "B": "palabra calada con la foto dentro sobre fondo oscuro, medidor verde y frase corta",
+    "common": "A y B parten del mismo título; fondo configurable (fotograma, imagen o color). Ver MINIATURAS.md."
+  },
+  "media_slot_order": {
+    "clips": [
+      "fighter",
+      "bag",
+      "pushup",
+      "bmx",
+      "moto",
+      "ridge",
+      "kart",
+      "runners",
+      "skater",
+      "dancer",
+      "stride",
+      "hoop",
+      "basket",
+      "sprint",
+      "boxing",
+      "skate",
+      "ropes",
+      "soccer"
+    ]
+  },
+  "scene_cycle": [
+    {
+      "scene": 1,
+      "type": "intro",
+      "shows": "intro: titular del renglón 1 y subtítulo del renglón 2",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "bag",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 2,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "stride",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 3,
+      "type": "framed",
+      "shows": "video enmarcado con palabra y contorno gigante",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "fighter",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 4,
+      "type": "badge",
+      "shows": "palabra en caja verde + palabra crema",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "moto",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 5,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "boxing",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 6,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "pushup",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 7,
+      "type": "knockout",
+      "shows": "palabra calada con el video dentro",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "dancer",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 8,
+      "type": "split3",
+      "shows": "tres columnas de video + palabra",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "moto",
+          "kind": "video"
+        },
+        {
+          "slot": "bmx",
+          "kind": "video"
+        },
+        {
+          "slot": "kart",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 9,
+      "type": "framed",
+      "shows": "video enmarcado con palabra y contorno gigante",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "hoop",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 10,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "runners",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 11,
+      "type": "knockout",
+      "shows": "palabra calada con el video dentro",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "soccer",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 12,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "kart",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 13,
+      "type": "framed",
+      "shows": "video enmarcado con palabra y contorno gigante",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "ridge",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 14,
+      "type": "marquee",
+      "shows": "bandas de la palabra que corren + frase en caja",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "skater",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 15,
+      "type": "counter",
+      "shows": "cifra que cuenta + video enmarcado",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "ropes",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 16,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "ropes",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 17,
+      "type": "badge",
+      "shows": "palabra en caja verde + palabra crema",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "bmx",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 18,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "bmx",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 19,
+      "type": "framed",
+      "shows": "video enmarcado con palabra y contorno gigante",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "dancer",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 20,
+      "type": "knockout",
+      "shows": "palabra calada con el video dentro",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "skate",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 21,
+      "type": "split3",
+      "shows": "tres columnas de video + palabra",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "runners",
+          "kind": "video"
+        },
+        {
+          "slot": "sprint",
+          "kind": "video"
+        },
+        {
+          "slot": "stride",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 22,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "fighter",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 23,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "bag",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 24,
+      "type": "framed",
+      "shows": "video enmarcado con palabra y contorno gigante",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "hoop",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 25,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "stride",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 26,
+      "type": "marquee",
+      "shows": "bandas de la palabra que corren + frase en caja",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "moto",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 27,
+      "type": "framed",
+      "shows": "video enmarcado con palabra y contorno gigante",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "soccer",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 28,
+      "type": "counter",
+      "shows": "cifra que cuenta + video enmarcado",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "sprint",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 29,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "kart",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 30,
+      "type": "badge",
+      "shows": "palabra en caja verde + palabra crema",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "boxing",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 31,
+      "type": "knockout",
+      "shows": "palabra calada con el video dentro",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "pushup",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 32,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "skater",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 33,
+      "type": "framed",
+      "shows": "video enmarcado con palabra y contorno gigante",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "hoop",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 34,
+      "type": "split3",
+      "shows": "tres columnas de video + palabra",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "bmx",
+          "kind": "video"
+        },
+        {
+          "slot": "moto",
+          "kind": "video"
+        },
+        {
+          "slot": "kart",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 35,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "ridge",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 36,
+      "type": "knockout",
+      "shows": "palabra calada con el video dentro",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "dancer",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 37,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "sprint",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 38,
+      "type": "marquee",
+      "shows": "bandas de la palabra que corren + frase en caja",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "basket",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 39,
+      "type": "framed",
+      "shows": "video enmarcado con palabra y contorno gigante",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "basket",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 40,
+      "type": "counter",
+      "shows": "cifra que cuenta + video enmarcado",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "stride",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 41,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "boxing",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 42,
+      "type": "badge",
+      "shows": "palabra en caja verde + palabra crema",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "skate",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 43,
+      "type": "knockout",
+      "shows": "palabra calada con el video dentro",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 14,
+      "media": [
+        {
+          "slot": "runners",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 44,
+      "type": "full",
+      "shows": "video completo con palabra, medidor y frase",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "fighter",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 45,
+      "type": "framed",
+      "shows": "video enmarcado con palabra y contorno gigante",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "ropes",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    },
+    {
+      "scene": 46,
+      "type": "outro",
+      "shows": "cierre con marca y llamada (Outro v1/v2)",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "dancer",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad del ejemplo; ver DESIGN.md para el comportamiento de cada tipo."
+    }
+  ],
+  "rhythm": {
+    "recommended_seconds_per_segment": {
+      "min": 1.4,
+      "max": 2.4
+    },
+    "typical_duration_seconds": {
+      "min": 60,
+      "max": 120
+    },
+    "note": "Un ciclo = 46 segmentos (≈ 100 s en el ejemplo). La primera escena es la intro y la última el outro elegido."
+  },
+  "brand_texts": {
+    "brand.name": "marca del cierre",
+    "brand.url": "dirección del cierre si el último segmento no trae renglón 2",
+    "brand.cta": "caja verde del Outro v2",
+    "brand.corner": "rótulo fijo arriba a la derecha (vacío = sin rótulo)",
+    "brand.footer": "pie fijo (vacío = sin pie)"
+  },
+  "design_limitations": "Escenas counter requieren un número entero al inicio del renglón 1; si no lo hay se dibujan como framed. knockout usa palabras cortas (≤ 10 letras) para que el video se lea dentro.",
+  "scene_cycle_note": "Las longitudes recomendadas no garantizan legibilidad: revisar ambos formatos.",
+  "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base."
+}

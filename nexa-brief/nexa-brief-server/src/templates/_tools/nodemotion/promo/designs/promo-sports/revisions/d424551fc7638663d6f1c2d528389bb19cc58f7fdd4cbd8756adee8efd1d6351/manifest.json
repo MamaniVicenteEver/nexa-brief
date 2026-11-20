@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-sports",
+  "family": "promo",
+  "demo_folder": "nodemotion/commercial/promo-sports",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "source_sha256": "809a945389cac55dfdc250b86a851fee557d82f1cdd808d28bb6a70724522e90",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/promo-sports",
+    "config": "nodemotion/commercial/promo-sports/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-sports/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-sports/README.md"
+  },
+  "revision": "d424551fc7638663d6f1c2d528389bb19cc58f7fdd4cbd8756adee8efd1d6351"
+}

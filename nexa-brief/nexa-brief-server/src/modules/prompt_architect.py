@@ -316,7 +316,7 @@ async def run(job: Job, niche_cfg: NicheConfig) -> Job:
             user_context_block=user_context_block,
         )
 
-    logs_dir: Path = job.artifacts.output_dir / "logs"
+    logs_dir: Path = (job.artifacts.log_dir or job.artifacts.output_dir / "logs")
     logs_dir.mkdir(parents=True, exist_ok=True)
     (logs_dir / "03_prompt_generacion.txt").write_text(prompt, encoding="utf-8")
 
@@ -398,7 +398,7 @@ async def _run_config_mapper_prompt(job: Job, niche_cfg: NicheConfig) -> Job:
             text_content_block=text_content_block,
         )
 
-    logs_dir: Path = job.artifacts.output_dir / "logs"
+    logs_dir: Path = (job.artifacts.log_dir or job.artifacts.output_dir / "logs")
     logs_dir.mkdir(parents=True, exist_ok=True)
     (logs_dir / "03_prompt_generacion.txt").write_text(prompt, encoding="utf-8")
 

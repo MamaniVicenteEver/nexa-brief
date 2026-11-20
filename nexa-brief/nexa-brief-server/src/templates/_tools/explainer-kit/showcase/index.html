@@ -27,6 +27,7 @@
   .pv .ph { position:absolute; inset:0; display:grid; place-items:center; color:#444; font:12px var(--mono) }
   .pv .tools { position:absolute; right:8px; top:8px; display:flex; gap:6px; z-index:2 }
   .pv .tools a, .pv .tools button { background:rgba(0,0,0,.65); color:var(--ink); border:1px solid #333; border-radius:6px; padding:3px 7px; font:11px var(--mono); cursor:pointer; text-decoration:none }
+  .pv .tools { flex-wrap:wrap; justify-content:flex-end }
   .body { padding:12px 14px 14px; display:flex; flex-direction:column; gap:8px }
   .name { font:700 14px var(--mono); color:var(--acc) }
   .layer { font:11px var(--mono); color:var(--muted); margin-left:6px }
@@ -44,6 +45,33 @@
   details summary { cursor:pointer; color:var(--muted); font:12px var(--mono) }
   pre { margin:6px 0 0; background:#0c0c0e; border:1px solid var(--line); border-radius:8px; padding:8px; font:11px/1.4 var(--mono); white-space:pre-wrap; word-break:break-word; color:#d6d6d2 }
   .empty { padding:40px; color:var(--muted) }
+  dialog { width:min(1400px, calc(100% - 32px)); max-width:none; max-height:calc(100dvh - 32px); padding:0; color:var(--ink); background:#18181b; border:1px solid #39393e; border-radius:18px; box-shadow:0 24px 80px #000b; overflow:auto }
+  dialog::backdrop { background:rgba(0,0,0,.82) }
+  .modal-head { display:flex; align-items:center; gap:12px; padding:18px 20px; border-bottom:1px solid var(--line) }
+  .modal-head h2 { margin:0; font:700 15px var(--mono); overflow-wrap:anywhere; flex:1 }
+  .modal-close { border:0; background:transparent; color:#ddd; font-size:26px; line-height:1; cursor:pointer }
+  .modal-layout { display:grid; grid-template-columns:minmax(0, 1fr) minmax(300px, 360px) }
+  .modal-player { min-width:0; padding:18px; background:#101012 }
+  .modal-controls { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:16px }
+  .modal-controls button, .copy { border:0; border-radius:999px; background:#ffffff1a; color:#eee; padding:8px 13px; font:600 12px Inter,system-ui; cursor:pointer }
+  .modal-controls button[aria-pressed="true"] { background:#fff; color:#111 }
+  .modal-controls button:hover, .copy:hover { filter:brightness(1.3) }
+  .modal-canvas { display:flex; align-items:center; justify-content:center; min-height:260px; height:min(62dvh, 700px); background:#080809; border-radius:12px; overflow:hidden }
+  .modal-frame { width:min(100%, calc(min(62dvh, 700px) * 16 / 9)); max-height:100%; aspect-ratio:16/9; border:0; background:#000 }
+  .modal-frame.mobile { width:auto; height:100%; max-width:100%; aspect-ratio:9/16 }
+  .modal-sidebar { padding:20px; border-left:1px solid var(--line); overflow-wrap:anywhere }
+  .modal-sidebar h3 { margin:20px 0 8px; font-size:13px }
+  .modal-sidebar h3:first-child { margin-top:0 }
+  .modal-sidebar p { margin:4px 0 12px; color:#cfcfcc }
+  .modal-sidebar table { table-layout:auto }
+  .modal-sidebar td:first-child { white-space:normal }
+  .param { border-top:1px solid var(--line); padding:8px 0; font-size:12px }
+  .param-name { font-family:var(--mono); color:var(--ink) }
+  .param-meta { color:var(--muted); font-family:var(--mono); margin:3px 0 }
+  .param-doc { color:#cfcfcc }
+  .modal-sidebar pre { max-height:280px; overflow:auto; user-select:all }
+  .copy { margin-top:8px }
+  @media (max-width:850px) { .modal-layout { grid-template-columns:1fr } .modal-sidebar { border-left:0; border-top:1px solid var(--line) } .modal-canvas { height:min(55dvh, 560px) } .modal-frame { width:min(100%, calc(min(55dvh, 560px) * 16 / 9)) } .modal-frame.mobile { width:auto } }
   @media (max-width:600px) { header { padding:10px 16px } main { padding:12px 16px; --cardw:100% } input { min-width:0; flex:1 } }
 </style>
 </head>
@@ -57,19 +85,36 @@
 </header>
 <p class="intro" id="intro"></p>
 <main id="grid"></main>
+<dialog id="viewer" aria-labelledby="viewer-title">
+  <div class="modal-head"><h2 id="viewer-title"></h2><button class="modal-close" type="button" aria-label="Cerrar">×</button></div>
+  <div class="modal-layout">
+    <section class="modal-player" aria-label="Vista previa del componente">
+      <div class="modal-controls">
+        <button type="button" data-view="16x9" aria-pressed="true">Desktop (16:9)</button>
+        <button type="button" data-view="9x16" aria-pressed="false">Móvil (9:16)</button>
+        <button type="button" id="viewer-replay">Volver a reproducir</button>
+        <button type="button" id="viewer-play">Pausar</button>
+      </div>
+      <div class="modal-canvas"><iframe class="modal-frame" title="Vista previa del componente"></iframe></div>
+    </section>
+    <aside class="modal-sidebar" aria-label="Información del componente"></aside>
+  </div>
+</dialog>
 <script>
 (async () => {
   const $ = s => document.querySelector(s), grid = $("#grid");
-  const cat = await (await fetch("../catalog.json")).json();
-  const ids = (await (await fetch("designs.json")).json()).designs;
-  const designs = {};
-  for (const id of ids) designs[id] = await (await fetch(`../designs/${id}/design.json`)).json();
+  const ids = (await (await fetch("../designs/index.json", { cache: "no-cache" })).json()).designs;
+  const library = (await (await fetch("../component-library.json", { cache: "no-cache" })).json()).components;
+  const designs = Object.fromEntries(await Promise.all(ids.map(async id => [id, await (await fetch(`../designs/${id}/design.json`)).json()])));
+  const commonScripts = [...new Set(ids.flatMap(id => designs[id].scripts.filter(src => src.startsWith("designs/common/"))))];
+  const commonArgs = id => commonScripts.filter(src => !designs[id]?.scripts.includes(src)).map(src => `&js=${encodeURIComponent("../" + src)}`).join("");
   let D = ids[0], orient = "9x16", q = "";
   try { D = localStorage.getItem("kit.design") || D; orient = localStorage.getItem("kit.orient") || orient; } catch (e) {}
-  if (!designs[D]) D = ids[0];
+  if (!designs[D] && D !== "videos") D = ids[0];
 
   const tabs = $("#tabs");
   ids.forEach(id => { const b = document.createElement("button"); b.textContent = `${designs[id].name} · ${id}`; b.dataset.id = id; b.onclick = () => { D = id; save(); draw(); }; tabs.appendChild(b); });
+  const videoTab = document.createElement("button"); videoTab.textContent = "Componentes de videos"; videoTab.dataset.id = "videos"; videoTab.onclick = () => { D = "videos"; save(); draw(); }; tabs.appendChild(videoTab);
   document.querySelectorAll("#orient button").forEach(b => b.onclick = () => { orient = b.dataset.o; save(); draw(); });
   $("#q").oninput = e => { q = e.target.value.toLowerCase(); draw(); };
   const save = () => { try { localStorage.setItem("kit.design", D); localStorage.setItem("kit.orient", orient); } catch (e) {} };
@@ -78,42 +123,109 @@
   const io = new IntersectionObserver(es => es.forEach(e => {
     const pv = e.target, f = pv.querySelector("iframe");
     if (e.isIntersecting && !f) { const fr = document.createElement("iframe"); fr.loading = "lazy"; fr.src = pv.dataset.src; pv.appendChild(fr); }
-    if (!e.isIntersecting && f) f.remove();
   }), { rootMargin: "200px" });
 
+  const catalogs = new Map();
+  function catalogFor(id) {
+    if (!catalogs.has(id)) catalogs.set(id, new Promise((resolve, reject) => {
+      const frame = document.createElement("iframe"); frame.hidden = true;
+      const timer = setTimeout(() => finish(new Error(`No se pudo cargar el catálogo de ${id}`)), 30000);
+      function finish(error, data) { clearTimeout(timer); window.removeEventListener("message", receive); frame.remove(); error ? reject(error) : resolve(data); }
+      function receive(event) { if (event.origin === location.origin && event.source === frame.contentWindow && event.data?.type === "kit-design-catalog") finish(null, event.data.components); }
+      window.addEventListener("message", receive);
+      frame.src = `stage.html?d=${encodeURIComponent(id)}&catalog=1${commonArgs(id)}`; document.body.appendChild(frame);
+    }).catch(error => { catalogs.delete(id); throw error; }));
+    return catalogs.get(id);
+  }
+
   function esc(s) { return String(s ?? "").replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c]); }
-  function draw() {
+  const viewer = $("#viewer"), frame = viewer.querySelector("iframe"), sidebar = viewer.querySelector("aside");
+  let active = null, playing = true, ended = false, previousFocus = null;
+  const send = data => frame.contentWindow?.postMessage(data, location.origin);
+  function updatePlay() { $("#viewer-play").textContent = playing ? "Pausar" : "Reanudar"; }
+  function renderInfo() {
+    const c = active.component, example = { at: "palabras ancla", use: c.name, params: c.example || {} };
+    active.example = JSON.stringify(example, null, 2);
+    const rows = Object.entries(c.params || {}).map(([key, p]) => `<div class="param"><div class="param-name">${esc(key)}${p.required ? ' <span class="req">*</span>' : ""}</div><div class="param-meta">${esc(p.type)}${p.options ? " · " + esc(p.options.join(" | ")) : ""} · default: ${esc(p.default === undefined ? "—" : JSON.stringify(p.default))}</div><div class="param-doc">${esc(p.doc)}</div></div>`).join("");
+    sidebar.innerHTML = `<h3>Diseño</h3><p>${esc(designs[active.design]?.name || active.design)} · ${esc(active.design)}</p>
+      <h3>Resumen</h3><p>${esc(c.summary || "Sin resumen disponible.")}</p>
+      ${c.video ? `<h3>Video de origen</h3><p>${esc(c.video)}</p>` : ""}
+      <h3>Etiquetas</h3><div class="tags">${(c.tags || []).map(t => `<span>${esc(t)}</span>`).join("") || "Sin etiquetas"}</div>
+      <h3>Parámetros</h3>${rows || "<p>Sin parámetros.</p>"}
+      <h3>Ejemplo para storyboard.json</h3><pre>${esc(active.example)}</pre><button class="copy" type="button">Copiar</button><span class="copy-status" role="status"></span>`;
+    sidebar.querySelector(".copy").onclick = async () => {
+      const status = sidebar.querySelector(".copy-status");
+      try {
+        if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(active.example);
+        else { const input = document.createElement("textarea"); input.value = active.example; input.style.position = "fixed"; input.style.opacity = "0"; viewer.appendChild(input); input.select(); const ok = document.execCommand("copy"); input.remove(); if (!ok) throw new Error("copy"); }
+        status.textContent = " Copiado";
+      } catch (_) { status.textContent = " No se pudo copiar; seleccioná el ejemplo."; }
+    };
+  }
+  function openViewer(component, design, src) {
+    previousFocus = document.activeElement; active = { component, design }; playing = true; ended = false;
+    $("#viewer-title").textContent = component.name; renderInfo(); updatePlay();
+    viewer.querySelectorAll("[data-view]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === "16x9")));
+    frame.classList.remove("mobile"); frame.src = `${src}&controls=1&clock=synthetic`;
+    viewer.showModal(); viewer.querySelector(".modal-close").focus();
+  }
+  viewer.querySelector(".modal-close").onclick = () => viewer.close();
+  viewer.addEventListener("click", e => { if (e.target === viewer) viewer.close(); });
+  viewer.addEventListener("close", () => { frame.removeAttribute("src"); active = null; previousFocus?.focus(); });
+  viewer.querySelectorAll("[data-view]").forEach(b => b.onclick = () => {
+    viewer.querySelectorAll("[data-view]").forEach(item => item.setAttribute("aria-pressed", String(item === b)));
+    frame.classList.toggle("mobile", b.dataset.view === "9x16");
+  });
+  $("#viewer-replay").onclick = () => { ended = false; playing = true; send({ type: "nexa-template-seek", time: 0 }); send({ type: "nexa-template-playback", playing: true }); updatePlay(); };
+  $("#viewer-play").onclick = () => { if (ended) { send({ type: "nexa-template-seek", time: 0 }); ended = false; } playing = !playing; send({ type: "nexa-template-playback", playing }); updatePlay(); };
+  window.addEventListener("message", event => {
+    if (!active || event.origin !== location.origin || event.source !== frame.contentWindow) return;
+    const data = event.data || {};
+    if (data.type === "nexa-template-ready") send({ type: "nexa-template-playback", playing });
+    if (data.type === "kit-stage-component" && data.component) { active.component = { ...active.component, ...data.component }; renderInfo(); }
+    if (data.type === "nexa-template-ended") { playing = false; ended = true; send({ type: "nexa-template-seek", time: 5.96 }); updatePlay(); }
+    if (data.type === "kit-stage-close") viewer.close();
+  });
+  let generation = 0;
+  async function draw() {
+    const current = ++generation, selected = D;
     document.querySelectorAll("#tabs button").forEach(b => b.classList.toggle("on", b.dataset.id === D));
     document.querySelectorAll("#orient button").forEach(b => b.classList.toggle("on", b.dataset.o === orient));
-    const des = designs[D], fam = des.family;
-    $("#intro").innerHTML = `<b>${esc(des.name)}</b> — ${esc(des.tagline)}. Voz: ${esc(des.voice?.voice)}. ` +
-      `Cada tarjeta muestra el componente animado (entra a los 1,5 s desde una forma previa), para qué sirve y qué parámetros recibe. ` +
-      `Los <code>common.*</code> sirven en todos los diseños.`;
+    const des = designs[D];
+    $("#intro").innerHTML = D === "videos" ? "Componentes propios de videos incluidos en la biblioteca." : `<b>${esc(des.name)}</b> — ${esc(des.tagline)}. Los <code>common.*</code> sirven en todos los diseños.`;
     document.documentElement.style.setProperty("--ar", orient === "9x16" ? "9/16" : "16/9");
     document.documentElement.style.setProperty("--cardw", orient === "9x16" ? "300px" : "440px");
     io.disconnect(); grid.innerHTML = "";
-    const list = cat.comps.filter(c => (c.name.startsWith(fam + ".") || c.name.startsWith("common.")) &&
-      (!q || (c.name + " " + c.summary + " " + c.tags.join(" ")).toLowerCase().includes(q)))
+    $("#info").textContent = "Cargando componentes…";
+    let components;
+    try { components = selected === "videos" ? library : await catalogFor(selected); }
+    catch (error) { if (current === generation) { $("#info").textContent = "Error al cargar"; grid.textContent = error.message; } return; }
+    if (current !== generation) return;
+    const list = components.filter(c => (selected === "videos" || c.name.startsWith(des.family + ".") || c.name.startsWith("common.")) &&
+      (!q || (c.name + " " + (c.summary || "") + " " + (c.tags || []).join(" ") + " " + (c.video || "")).toLowerCase().includes(q)))
       .sort((a, b) => (a.name.startsWith("common.") - b.name.startsWith("common.")));   /* primero los del diseño */
     $("#info").textContent = `${list.length} componentes`;
     if (!list.length) grid.innerHTML = `<div class="empty">Nada coincide con “${esc(q)}”.</div>`;
     for (const c of list) {
-      const src = `stage.html?d=${D}&c=${encodeURIComponent(c.name)}&loop&dur=6`;
+      const design = selected === "videos" ? c.name.split(".")[0] : selected;
+      const source = selected === "videos" && c.source ? `&js=${encodeURIComponent("../../../" + c.source)}` : "";
+      const src = `stage.html?d=${encodeURIComponent(design)}&c=${encodeURIComponent(c.name)}&solo&dur=6&gallery${commonArgs(design)}${source}`;
       const el = document.createElement("article"); el.className = "card";
-      const rows = Object.entries(c.params).map(([k, p]) =>
+      const rows = Object.entries(c.params || {}).map(([k, p]) =>
         `<tr><td>${esc(k)}${p.required ? ' <span class="req">*</span>' : ""}</td><td class="t">${esc(p.type)}${p.options ? " · " + esc(p.options.join("|")) : ""}</td><td class="d">${esc(p.doc)}${p.default !== undefined && p.default !== null && p.default !== "" ? ` <span class="t">(=${esc(JSON.stringify(p.default))})</span>` : ""}</td></tr>`).join("");
       el.innerHTML = `
         <div class="pv" data-src="${src}"><div class="ph">cargando…</div>
-          <div class="tools"><button title="reiniciar">↻</button><a href="${src}" target="_blank" title="abrir solo">↗</a></div></div>
+          <div class="tools"><button type="button">Volver a reproducir</button><button type="button" class="view">Ver</button></div></div>
         <div class="body">
           <div><span class="name">${esc(c.name)}</span><span class="layer">${esc(c.layer)}</span></div>
-          <div class="sum">${esc(c.summary)}</div>
-          <div class="tags">${c.tags.map(t => `<span>${esc(t)}</span>`).join("")}</div>
+          <div class="sum">${esc(c.summary)}${c.video ? ` · ${esc(c.video)}` : ""}</div>
+          <div class="tags">${(c.tags || []).map(t => `<span>${esc(t)}</span>`).join("")}</div>
           <table><colgroup><col class="k"><col class="ty"><col></colgroup>${rows}</table>
           <details><summary>ejemplo para storyboard.json</summary><pre>${esc(JSON.stringify({ at: "palabras ancla", use: c.name, params: c.example || {} }, null, 1))}</pre></details>
         </div>`;
       const pv = el.querySelector(".pv");
-      el.querySelector(".tools button").onclick = () => { const f = pv.querySelector("iframe"); if (f) f.src = pv.dataset.src; };
+      el.querySelector(".tools button").onclick = () => { let f = pv.querySelector("iframe"); if (!f) { f = document.createElement("iframe"); pv.appendChild(f); } f.src = pv.dataset.src; };
+      el.querySelector(".view").onclick = () => openViewer(c, design, src);
       grid.appendChild(el); io.observe(pv);
     }
   }

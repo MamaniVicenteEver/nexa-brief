@@ -12,10 +12,13 @@ from __future__ import annotations
 
 import json
 import pathlib
+import sys
 
 KIT = pathlib.Path(__file__).resolve().parents[1]
 TEMPLATES = KIT.parents[1]                  # src/templates/
 SERVER = KIT.parents[3]                     # nexa-brief-server/
+if str(SERVER) not in sys.path:
+    sys.path.insert(0, str(SERVER))
 DEFAULT_FOLDER = "nodehistory"
 
 
@@ -41,12 +44,48 @@ def folder_for_design(design: str) -> str:
 
 def find_video(video_id: str) -> pathlib.Path | None:
     """Busca primero en producción y después en la casa de pruebas (sandbox/)."""
-    for folder in [*folders(), *(f"sandbox/{f}" for f in folders())]:
-        d = TEMPLATES / folder / video_id
+    if not video_id or pathlib.Path(video_id).name != video_id or video_id in {".", ".."}:
+        return None
+    from src.config.content_paths import production_root, sandbox_root
+    roots = [production_root() / f for f in folders()]
+    roots += [sandbox_root() / f for f in folders()]
+    from src.config.profile_layout import layout_for_settings
+    from src.config.settings import settings
+    layout = layout_for_settings(settings)
+    if layout.schema_version >= 3:
+        from src.core.explainer.production_templates import shared_demo
+        principal = shared_demo(settings.templates_dir, video_id)
+        if principal is not None:
+            return principal
+        # The selected profile registry owns episode IDs and their canonical
+        # folders. Legacy niches.json is only a bundled design catalogue.
+        from src.core.content_registry import get_video
+        from src.config.content_paths import resolve_content_key
+        try:
+            registered = get_video(video_id)
+            key = ((registered or {}).get("details") or {}).get("folder_key")
+            parts = pathlib.PurePosixPath(key or "").parts
+            allowed = {"productions": production_root(), "sandbox": sandbox_root()}
+            if len(parts) != 3 or parts[0] not in allowed or parts[-1] != video_id:
+                return None
+            directory = resolve_content_key(key)
+            if (directory.is_symlink() or not directory.is_dir()
+                    or not directory.resolve().is_relative_to(allowed[parts[0]].resolve())
+                    or directory.resolve().name != video_id):
+                return None
+            return directory
+        except (ValueError, TypeError):
+            return None
+    if layout.schema_version < 2:
+        roots += [TEMPLATES / f for f in folders()]
+        roots += [TEMPLATES / "sandbox" / f for f in folders()]
+    for root in dict.fromkeys(roots):
+        d = root / video_id
         if d.exists():
             return d
     return None
 
 
 def is_sandbox(video_dir: pathlib.Path) -> bool:
-    return (TEMPLATES / "sandbox") in video_dir.parents
+    from src.config.content_paths import sandbox_root
+    return sandbox_root() in video_dir.parents or (TEMPLATES / "sandbox") in video_dir.parents

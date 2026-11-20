@@ -222,3 +222,7 @@ Note: "safe_typography_zones.typography_style" must be one of "default",
 "condensed", "serif-display", "black-rounded".
 
 Note: "safe_typography_zones.preferred_anchor" must be one of "top", "middle", "bottom".
+
+## Calidad
+
+Describe only what is visible; never infer identities, historical facts, figures, outcomes or quotations. Avoid generic suggested text such as «UNA IDEA» or «EN MOVIMIENTO»; use a specific label such as «DARTMOUTH · 1956» only if visibly supported. No emojis, «LETRAS» or unrelated labels. Respect the exact output schema; do not invent credits or licenses.

@@ -7,6 +7,7 @@ import type { LibraryAsset } from "@/features/library/api/library-assets-service
 import { cn } from "@/lib/utils";
 import { useUploadAsset } from "../hooks/useResources";
 import { ACCEPT_BY_KIND, type ResourceKind, toApiKind } from "../kinds";
+import { useResourceScope } from "../ResourceScope";
 
 interface UploadItem {
   id: number;
@@ -22,6 +23,7 @@ interface UploadDropzoneProps {
   /** Una sola vez: para pickers donde subir = elegir. */
   single?: boolean;
   compact?: boolean;
+  card?: boolean;
   className?: string;
 }
 
@@ -33,9 +35,11 @@ export function UploadDropzone({
   onUploaded,
   single,
   compact,
+  card,
   className,
 }: UploadDropzoneProps) {
   const t = useTranslations("resources.upload");
+  const scope = useResourceScope();
   const apiKind = toApiKind(kind);
   const upload = useUploadAsset(apiKind);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -60,9 +64,24 @@ export function UploadDropzone({
     ]);
     for (const [index, file] of files.entries()) {
       const { id } = queued[index];
+      const accepted = ACCEPT_BY_KIND[apiKind]
+        .split(",")
+        .some((type) =>
+          type.endsWith("/*")
+            ? file.type.startsWith(type.slice(0, -1))
+            : file.name.toLowerCase().endsWith(type),
+        );
+      if (!accepted) {
+        patchItem(id, { state: "error", error: t("invalidType") });
+        continue;
+      }
       patchItem(id, { state: "uploading" });
       try {
-        const result = await upload.mutateAsync({ file });
+        const result = await upload.mutateAsync({
+          file,
+          category: scope.categoryId,
+          templateId: scope.templateId,
+        });
         patchItem(id, { state: result.created ? "done" : "duplicate" });
         onUploaded?.(result.asset);
       } catch (error) {
@@ -75,23 +94,28 @@ export function UploadDropzone({
   }
 
   return (
-    <div className={cn("flex flex-col gap-2", className)}>
+    <div className={cn("flex min-w-0 flex-col gap-2", card && "h-full", className)}>
       <button
         type="button"
+        aria-label={t(`title.${apiKind}`)}
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => {
           e.preventDefault();
+          e.dataTransfer.dropEffect = "copy";
           setDragging(true);
         }}
-        onDragLeave={() => setDragging(false)}
+        onDragLeave={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setDragging(false);
+        }}
         onDrop={(e) => {
           e.preventDefault();
           setDragging(false);
           void handleFiles(e.dataTransfer.files);
         }}
         className={cn(
-          "flex w-full flex-col items-center justify-center gap-1.5 rounded-nb-xs border-2 border-dashed border-nb-line bg-nb-surface text-center transition-colors hover:border-nb-green-dark",
+          "flex w-full flex-col items-center justify-center gap-1.5 rounded-nb-xs border-2 border-dashed border-nb-line bg-nb-surface text-center transition-colors hover:border-nb-green-dark focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-nb-green/40",
           compact ? "px-4 py-4" : "px-6 py-8",
+          card && "min-h-56 flex-1 rounded-2xl bg-nb-surface/65 hover:bg-nb-green/10",
           dragging && "border-nb-green-dark bg-nb-green/15",
         )}
       >
@@ -102,6 +126,7 @@ export function UploadDropzone({
       <input
         ref={inputRef}
         type="file"
+        aria-label={t(`title.${apiKind}`)}
         accept={ACCEPT_BY_KIND[apiKind]}
         multiple={!single}
         className="hidden"
@@ -111,7 +136,10 @@ export function UploadDropzone({
         }}
       />
       {items.length > 0 && (
-        <ul className="flex flex-col gap-1.5">
+        <ul
+          aria-live="polite"
+          className={cn("flex flex-col gap-1.5", card && "max-h-32 overflow-y-auto")}
+        >
           {items.map((item) => (
             <li
               key={item.id}

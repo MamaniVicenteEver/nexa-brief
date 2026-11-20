@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-collage",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "ink": {
+      "default": "#17130F"
+    },
+    "paper": {
+      "default": "#E7DFC7"
+    },
+    "paperWhite": {
+      "default": "#F5EFDD"
+    },
+    "red": {
+      "default": "#B81F19"
+    }
+  },
+  "example": {
+    "ink": "#17130F",
+    "paper": "#E7DFC7",
+    "paperWhite": "#F5EFDD",
+    "red": "#B81F19"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-collage/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

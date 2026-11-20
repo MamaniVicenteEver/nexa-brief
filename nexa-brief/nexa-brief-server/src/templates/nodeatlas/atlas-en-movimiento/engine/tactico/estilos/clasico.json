@@ -1,0 +1,5081 @@
+{
+  "esquema": 1,
+  "id": "clasico",
+  "nombre": "Clásico",
+  "idea": "Valores históricos; los componentes aún conservan sus literales.",
+  "colores": {
+    "tinta": "#F4F1E9",
+    "tinta2": "#CFC9BC",
+    "tinta3": "#9A9488",
+    "acento": "#DA3B2C",
+    "panel": "#0A0D0F",
+    "sombra": "#070A0C",
+    "fondo": "#0B0E10"
+  },
+  "fuentes": {
+    "titulo": "Archivo",
+    "texto": "Archivo",
+    "datos": "Archivo"
+  },
+  "sombras": {
+    "color": "#000000",
+    "halo": [
+      [
+        0,
+        0,
+        2,
+        0.95
+      ],
+      [
+        0,
+        0,
+        6,
+        0.8
+      ],
+      [
+        0,
+        0,
+        16,
+        0.55
+      ]
+    ],
+    "texto": [
+      [
+        0,
+        2,
+        3,
+        0.8
+      ],
+      [
+        0,
+        0,
+        16,
+        0.6
+      ]
+    ],
+    "ninguna": []
+  },
+  "mapa": {
+    "grado": {
+      "aplicar": true,
+      "saturacion": 0.5,
+      "brillo": 0.6,
+      "contraste": 1.08,
+      "balance": [
+        0.97,
+        0.99,
+        1.03
+      ],
+      "gamma": 1.08
+    },
+    "gananciaHorizontal": 0.9,
+    "reticula": {
+      "visible": false,
+      "color": "tinta",
+      "opacidad": 0.1,
+      "grosor": 1
+    }
+  },
+  "velos": {
+    "visible": false,
+    "opacidad": 1,
+    "portada": {
+      "color": "#080B0D",
+      "opacidad": 0.46
+    }
+  },
+  "paneles": {
+    "visible": false,
+    "opacidad": 0.35,
+    "color": "panel",
+    "desenfoque": 0,
+    "borde": {
+      "visible": false,
+      "grosor": 0,
+      "color": "tinta3",
+      "lado": "arriba"
+    },
+    "radio": 6,
+    "por": {}
+  },
+  "territorios": {
+    "irak": {
+      "relleno": "acento@.14",
+      "borde": {
+        "grosor": 3,
+        "color": "acento",
+        "dash": null
+      }
+    },
+    "iran": {
+      "relleno": "tinta@.05",
+      "borde": {
+        "grosor": 2,
+        "color": "tinta2@.6",
+        "dash": [
+          8,
+          7
+        ]
+      }
+    },
+    "control": {
+      "atacante": "acento@.36",
+      "otro": "#2FA64F@.34"
+    }
+  },
+  "trazos": {
+    "flecha": {
+      "camisa": {
+        "grosor": 16,
+        "color": "sombra@.7"
+      },
+      "linea": {
+        "grosor": 8,
+        "color": "acento",
+        "dash": [
+          20,
+          11
+        ],
+        "cap": "butt"
+      },
+      "punta": "rellena",
+      "largoPunta": 36,
+      "anchoPunta": 25,
+      "todas": true,
+      "otra": "tinta",
+      "grosor": 5,
+      "color": "acento",
+      "dash": []
+    },
+    "ruta": {
+      "grosor": 2.5,
+      "color": "tinta2",
+      "opacidad": 1,
+      "dash": [
+        10,
+        8
+      ],
+      "cap": "butt",
+      "punta": "triangulo",
+      "largoPunta": 18,
+      "anchoPunta": 12,
+      "camisa": {
+        "visible": false,
+        "grosor": 2,
+        "color": "sombra"
+      },
+      "linea": {
+        "grosor": 3,
+        "color": "tinta2",
+        "dash": [
+          12,
+          8
+        ]
+      }
+    },
+    "frente": {
+      "camisa": {
+        "grosor": 11,
+        "color": "sombra@.7"
+      },
+      "linea": {
+        "grosor": 5,
+        "color": "acento",
+        "dash": [
+          18,
+          10
+        ],
+        "cap": "butt"
+      },
+      "dientes": {
+        "visible": true,
+        "color": "acento",
+        "paso": 46,
+        "largo": 14,
+        "alto": 12
+      },
+      "grosor": 4,
+      "color": "acento",
+      "dash": [
+        12,
+        8
+      ],
+      "punta": "triangulo",
+      "largoPunta": 18,
+      "anchoPunta": 12
+    },
+    "guia": {
+      "grosor": 3,
+      "color": "tinta",
+      "dash": [],
+      "punta": "triangulo",
+      "largoPunta": 18,
+      "anchoPunta": 12,
+      "camisa": {
+        "visible": false,
+        "grosor": 2,
+        "color": "sombra"
+      },
+      "linea": {
+        "grosor": 1.5,
+        "color": "tinta2",
+        "dash": []
+      }
+    },
+    "reticula": {
+      "forma": "esquinas",
+      "color": "acento",
+      "grosor": 3
+    },
+    "impacto": {
+      "anillo": "acento",
+      "grosor": 4,
+      "salpicadura": "tinta"
+    },
+    "humo": {
+      "color": "tinta2@.5"
+    }
+  },
+  "marcadores": {
+    "unidadTierra": {
+      "forma": "cuadrado",
+      "tam": 18,
+      "grosor": 3,
+      "atacante": {
+        "relleno": "acento",
+        "borde": "acento"
+      },
+      "otro": {
+        "relleno": null,
+        "borde": "tinta"
+      },
+      "paso": 1.9
+    },
+    "lugar": {
+      "forma": "cuadrado",
+      "tam": 22,
+      "grosor": 3,
+      "relleno": "tinta",
+      "borde": "sombra"
+    }
+  },
+  "animacion": {
+    "fundido": 0.3,
+    "entrada": {
+      "tipo": "barrido",
+      "encabezado": 0.45,
+      "titular": 0.5,
+      "anio": 0.6,
+      "ficha": 0.55,
+      "desplazamiento": 12
+    },
+    "escalonFichas": 0.2,
+    "subtitulo": {
+      "tipo": "ninguna",
+      "duracion": 0.18
+    }
+  },
+  "estilos": {
+    "encabezado": {
+      "disposicion": "pila",
+      "marca": {
+        "visible": true,
+        "tam": 16,
+        "color": "acento",
+        "margen": 12,
+        "alinea": ".02em"
+      },
+      "fecha": {
+        "fuente": "titulo",
+        "tam": 28.3,
+        "peso": 700,
+        "ancho": 100,
+        "interlinea": 1.1,
+        "color": "tinta2",
+        "sombra": "texto",
+        "mayusculas": true,
+        "espaciado": 0.1
+      },
+      "lugar": {
+        "fuente": "titulo",
+        "tam": 38,
+        "peso": 800,
+        "ancho": 82,
+        "interlinea": 1.05,
+        "color": "tinta",
+        "sombra": "texto",
+        "mayusculas": true,
+        "espaciado": 0.04,
+        "margenArriba": 6
+      },
+      "separador": {
+        "tipo": "ninguno"
+      }
+    },
+    "titular": {
+      "anchoMax": 800,
+      "relleno": [
+        2,
+        0,
+        4,
+        24
+      ],
+      "barra": {
+        "visible": true,
+        "grosor": 6,
+        "color": "acento"
+      },
+      "principal": {
+        "fuente": "titulo",
+        "tam": 61.1,
+        "peso": 750,
+        "ancho": 84,
+        "interlinea": 1.06,
+        "color": "tinta",
+        "sombra": "texto",
+        "espaciado": 0
+      },
+      "secundario": {
+        "fuente": "titulo",
+        "tam": 27.7,
+        "peso": 700,
+        "ancho": 100,
+        "interlinea": 1.2,
+        "color": "tinta2",
+        "sombra": "texto",
+        "mayusculas": true,
+        "espaciado": 0.08,
+        "margenArriba": 8
+      },
+      "salto": {
+        "principal": {
+          "mayusculas": true,
+          "espaciado": 0.14,
+          "tam": 49,
+          "peso": 700
+        }
+      }
+    },
+    "anio": {
+      "texto": {
+        "fuente": "titulo",
+        "tam": 149.4,
+        "peso": 800,
+        "ancho": 66,
+        "interlinea": 0.9,
+        "color": "tinta",
+        "sombra": "texto",
+        "espaciado": 0
+      },
+      "barra": {
+        "visible": true,
+        "grosor": 6,
+        "color": "acento",
+        "margenArriba": 12
+      }
+    },
+    "subtitulo": {
+      "texto": {
+        "fuente": "texto",
+        "tam": 49,
+        "peso": 700,
+        "ancho": 92,
+        "interlinea": 1.05,
+        "color": "tinta",
+        "sombra": "texto",
+        "espaciado": 0
+      },
+      "resalte": {
+        "tipo": "color",
+        "apagado": 0.5
+      }
+    },
+    "portada": {
+      "kicker": {
+        "fuente": "titulo",
+        "tam": 27.7,
+        "peso": 700,
+        "ancho": 100,
+        "interlinea": 1,
+        "color": "tinta2",
+        "sombra": "texto",
+        "mayusculas": true,
+        "espaciado": 0.14
+      },
+      "titulo": {
+        "fuente": "titulo",
+        "tam": 97,
+        "peso": 800,
+        "ancho": 66,
+        "interlinea": 0.9,
+        "color": "tinta",
+        "sombra": "texto",
+        "mayusculas": true,
+        "espaciado": 0.005,
+        "margenArriba": 22
+      },
+      "meta": {
+        "disposicion": "fila",
+        "separacion": 18,
+        "margenArriba": 26
+      },
+      "anio": {
+        "fuente": "titulo",
+        "tam": 27.7,
+        "peso": 700,
+        "ancho": 100,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "ninguna",
+        "espaciado": 0.04,
+        "borde": {
+          "grosor": 2,
+          "color": "tinta2"
+        },
+        "relleno": [
+          6,
+          12,
+          5,
+          12
+        ]
+      },
+      "regla": {
+        "visible": false,
+        "ancho": 44,
+        "grosor": 2,
+        "color": "tinta2"
+      },
+      "sub": {
+        "fuente": "texto",
+        "tam": 32,
+        "peso": 600,
+        "ancho": 92,
+        "interlinea": 1,
+        "color": "tinta2",
+        "sombra": "texto",
+        "espaciado": 0.02
+      }
+    },
+    "unidad": {
+      "nombre": {
+        "fuente": "Barlow Condensed",
+        "tam": 24,
+        "peso": 600,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "halo",
+        "mayusculas": true,
+        "espaciado": 0.07
+      },
+      "principal": {
+        "tam": 27
+      },
+      "lado": "exterior",
+      "ocultarEnTransicion": true,
+      "marcador": {
+        "tipo": "cuadrado",
+        "tam": 12,
+        "grosor": 2,
+        "color": "tinta2",
+        "principal": "acento",
+        "soloPrincipal": false
+      },
+      "guia": {
+        "visible": true,
+        "largo": 30,
+        "grosor": 1.5,
+        "color": "tinta2"
+      },
+      "bandera": {
+        "ancho": 30,
+        "alto": 16
+      },
+      "tipo": {
+        "fuente": "IBM Plex Mono",
+        "tam": 16,
+        "peso": 500,
+        "interlinea": 1,
+        "color": "tinta2",
+        "sombra": "halo",
+        "mayusculas": true,
+        "visible": false,
+        "corto": true
+      }
+    },
+    "pais": {
+      "fuente": "titulo",
+      "tam": 72,
+      "peso": 800,
+      "ancho": 70,
+      "interlinea": 1,
+      "color": "tinta",
+      "sombra": "halo",
+      "mayusculas": true,
+      "espaciado": 0.26
+    },
+    "frente": {
+      "a": {
+        "fuente": "titulo",
+        "tam": 38,
+        "peso": 800,
+        "ancho": 86,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "halo",
+        "mayusculas": true,
+        "espaciado": 0.1
+      },
+      "b": {
+        "fuente": "titulo",
+        "tam": 28,
+        "peso": 600,
+        "ancho": 96,
+        "interlinea": 1,
+        "color": "tinta2",
+        "sombra": "halo",
+        "mayusculas": true,
+        "espaciado": 0.06,
+        "margenArriba": 5
+      }
+    },
+    "tierra": {
+      "visible": true,
+      "separacion": 12,
+      "a": {
+        "fuente": "titulo",
+        "tam": 38,
+        "peso": 800,
+        "ancho": 86,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "halo",
+        "mayusculas": true,
+        "espaciado": 0.06
+      },
+      "b": {
+        "fuente": "titulo",
+        "tam": 38,
+        "peso": 500,
+        "ancho": 92,
+        "interlinea": 1,
+        "color": "tinta2",
+        "sombra": "halo",
+        "espaciado": 0.01
+      }
+    },
+    "ficha": {
+      "disposicion": "fila",
+      "separacion": 14,
+      "relleno": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "anchoTexto": 262,
+      "foto": {
+        "ancho": 128,
+        "alto": 164,
+        "posicion": "50% 18%",
+        "filtro": "grayscale(1) contrast(1.08) brightness(1.02)",
+        "mascara": false
+      },
+      "nombre": {
+        "fuente": "titulo",
+        "tam": 38,
+        "peso": 800,
+        "ancho": 84,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "halo",
+        "mayusculas": true,
+        "espaciado": 0.03
+      },
+      "cargo": {
+        "fuente": "texto",
+        "tam": 28,
+        "peso": 600,
+        "ancho": 94,
+        "interlinea": 1.12,
+        "color": "tinta2",
+        "sombra": "halo",
+        "espaciado": 0,
+        "margenArriba": 8
+      },
+      "pie": {
+        "fuente": "texto",
+        "tam": 28,
+        "peso": 700,
+        "ancho": 94,
+        "interlinea": 1.25,
+        "color": "tinta",
+        "sombra": "halo",
+        "espaciado": 0,
+        "margenArriba": 8
+      },
+      "credito": {
+        "fuente": "texto",
+        "tam": 22,
+        "peso": 500,
+        "ancho": 94,
+        "interlinea": 1.25,
+        "color": "tinta2",
+        "sombra": "halo",
+        "espaciado": 0,
+        "margenArriba": 4
+      }
+    },
+    "leyenda": {
+      "fuente": "titulo",
+      "tam": 28,
+      "peso": 700,
+      "ancho": 96,
+      "interlinea": 1.15,
+      "color": "tinta2",
+      "sombra": "halo",
+      "mayusculas": true,
+      "espaciado": 0.06,
+      "muestra": {
+        "ancho": 60,
+        "grosor": 5,
+        "dash": "dashed"
+      }
+    },
+    "callout": {
+      "relleno": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "a": {
+        "fuente": "titulo",
+        "tam": 42,
+        "peso": 800,
+        "ancho": 86,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "halo",
+        "mayusculas": true,
+        "espaciado": 0.05
+      },
+      "b": {
+        "fuente": "titulo",
+        "tam": 28,
+        "peso": 600,
+        "ancho": 96,
+        "interlinea": 1,
+        "color": "tinta2",
+        "sombra": "halo",
+        "mayusculas": true,
+        "espaciado": 0.04,
+        "margenArriba": 6
+      },
+      "marcador": {
+        "forma": "cuadrado",
+        "tam": 22,
+        "grosor": 3,
+        "color": "tinta"
+      }
+    },
+    "instalacion": {
+      "a": {
+        "fuente": "titulo",
+        "tam": 38,
+        "peso": 800,
+        "ancho": 86,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "halo",
+        "mayusculas": true,
+        "espaciado": 0.05
+      },
+      "b": {
+        "fuente": "titulo",
+        "tam": 28,
+        "peso": 600,
+        "ancho": 96,
+        "interlinea": 1,
+        "color": "tinta2",
+        "sombra": "halo",
+        "mayusculas": true,
+        "espaciado": 0.06
+      },
+      "marcador": {
+        "forma": "cuadrado",
+        "tam": 22,
+        "relleno": "tinta"
+      }
+    },
+    "cifra": {
+      "a": {
+        "fuente": "titulo",
+        "tam": 190,
+        "peso": 800,
+        "ancho": 66,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "halo",
+        "espaciado": 0
+      },
+      "b": {
+        "fuente": "titulo",
+        "tam": 38,
+        "peso": 700,
+        "ancho": 92,
+        "interlinea": 1,
+        "color": "acento",
+        "sombra": "halo",
+        "mayusculas": true,
+        "espaciado": 0.04
+      }
+    },
+    "ruta": {
+      "fuente": "titulo",
+      "tam": 52,
+      "peso": 700,
+      "ancho": 80,
+      "interlinea": 1,
+      "color": "tinta2",
+      "sombra": "halo",
+      "mayusculas": true,
+      "espaciado": 0.34
+    },
+    "documento": {
+      "ancho": 760,
+      "relleno": 16,
+      "foto": {
+        "ancho": 728,
+        "alto": 430,
+        "filtro": "grayscale(1) contrast(1.1)"
+      },
+      "fuenteLinea": {
+        "fuente": "titulo",
+        "tam": 22,
+        "peso": 600,
+        "ancho": 100,
+        "interlinea": 1.2,
+        "color": "tinta2",
+        "sombra": "ninguna",
+        "mayusculas": true,
+        "espaciado": 0.06
+      },
+      "titulo": {
+        "fuente": "titulo",
+        "tam": 54,
+        "peso": 800,
+        "ancho": 84,
+        "interlinea": 1.05,
+        "color": "tinta",
+        "sombra": "ninguna",
+        "espaciado": 0,
+        "barra": {
+          "visible": true,
+          "grosor": 6,
+          "color": "acento"
+        }
+      },
+      "subtitulo": {
+        "fuente": "texto",
+        "tam": 32,
+        "peso": 600,
+        "ancho": 94,
+        "interlinea": 1.1,
+        "color": "tinta2",
+        "sombra": "ninguna",
+        "espaciado": 0
+      }
+    },
+    "cierre": {
+      "alinear": "izq",
+      "k": {
+        "fuente": "titulo",
+        "tam": 28,
+        "peso": 700,
+        "ancho": 100,
+        "interlinea": 1,
+        "color": "acento",
+        "sombra": "ninguna",
+        "mayusculas": true,
+        "espaciado": 0.14
+      },
+      "canal": {
+        "fuente": "titulo",
+        "tam": 150,
+        "peso": 800,
+        "ancho": 66,
+        "interlinea": 0.9,
+        "color": "tinta",
+        "sombra": "ninguna",
+        "mayusculas": true,
+        "espaciado": 0
+      },
+      "t": {
+        "fuente": "texto",
+        "tam": 38,
+        "peso": 600,
+        "ancho": 94,
+        "interlinea": 1.15,
+        "color": "tinta2",
+        "sombra": "ninguna",
+        "espaciado": 0
+      },
+      "h": {
+        "fuente": "titulo",
+        "tam": 28,
+        "peso": 600,
+        "ancho": 100,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "ninguna",
+        "espaciado": 0.02
+      }
+    },
+    "iconos": {
+      "trazo": 3.4,
+      "color": "tinta",
+      "caja": {
+        "visible": true,
+        "grosor": 2,
+        "color": "tinta2",
+        "lado": 96
+      }
+    },
+    "atribucion": {
+      "fuente": "texto",
+      "tam": 18,
+      "peso": 500,
+      "ancho": 100,
+      "interlinea": 1.2,
+      "color": "tinta3",
+      "sombra": "halo",
+      "espaciado": 0.02
+    },
+    "rotuloUnidad": {
+      "nombre": {
+        "fuente": "Barlow Condensed",
+        "tam": 24,
+        "peso": 600,
+        "interlinea": 1,
+        "color": "tinta",
+        "sombra": "halo",
+        "mayusculas": true,
+        "espaciado": 0.07
+      },
+      "principal": {
+        "tam": 27
+      },
+      "lado": "exterior",
+      "ocultarEnTransicion": true,
+      "marcador": {
+        "tipo": "cuadrado",
+        "tam": 12,
+        "grosor": 2,
+        "color": "tinta2",
+        "principal": "acento",
+        "soloPrincipal": false
+      },
+      "guia": {
+        "visible": true,
+        "largo": 30,
+        "grosor": 1.5,
+        "color": "tinta2"
+      },
+      "bandera": {
+        "ancho": 30,
+        "alto": 16
+      },
+      "tipo": {
+        "fuente": "IBM Plex Mono",
+        "tam": 16,
+        "peso": 500,
+        "interlinea": 1,
+        "color": "tinta2",
+        "sombra": "halo",
+        "mayusculas": true,
+        "visible": false,
+        "corto": true
+      },
+      "separacion": 8,
+      "antiSolape": "bandera visible; rótulo al lado o desplazado"
+    },
+    "fecha": {
+      "fuente": "titulo",
+      "tam": 28.3,
+      "peso": 700,
+      "ancho": 100,
+      "interlinea": 1.1,
+      "color": "tinta2",
+      "sombra": "texto",
+      "mayusculas": true,
+      "espaciado": 0.1
+    },
+    "transcripcion": {
+      "posicion": "izq",
+      "ancho": 70,
+      "palabras": 3,
+      "alto": 80,
+      "texto": {
+        "fuente": "texto",
+        "tam": 49,
+        "peso": 700,
+        "ancho": 92,
+        "interlinea": 1.05,
+        "color": "tinta",
+        "sombra": "texto",
+        "espaciado": 0
+      }
+    }
+  },
+  "formatos": {
+    "movil": {
+      "ancla": {
+        "golfo": [
+          540,
+          860
+        ],
+        "region": [
+          540,
+          960
+        ],
+        "frente": [
+          540,
+          860
+        ]
+      },
+      "escalaFormacion": 0.85,
+      "zonaSegura": {
+        "arriba": 220,
+        "abajo": 440,
+        "derecha": 150
+      },
+      "ranuras": {
+        "encabezado": {
+          "izq": 72,
+          "arriba": 100,
+          "alinear": "izq"
+        },
+        "titular": {
+          "izq": 72,
+          "arriba": 250,
+          "alinear": "izq"
+        },
+        "salto": {
+          "izq": 72,
+          "arriba": 250,
+          "alinear": "izq"
+        },
+        "anio": {
+          "izq": 72,
+          "arriba": 280,
+          "alinear": "izq"
+        },
+        "subtitulo": {
+          "izq": 72,
+          "ancho": 660,
+          "arriba": 1465,
+          "alto": 80,
+          "alinear": "izq"
+        },
+        "portada": {
+          "izq": 72,
+          "der": 72,
+          "arriba": 220,
+          "alinear": "izq"
+        },
+        "fichaIzq": {
+          "izq": 72,
+          "arriba": 1010
+        },
+        "fichaDer": {
+          "der": 150,
+          "arriba": 1010
+        },
+        "leyenda": {
+          "izq": 72,
+          "arriba": 1395,
+          "alinear": "izq"
+        },
+        "atribucion": {
+          "der": 24,
+          "abajo": 12
+        },
+        "nota": {
+          "izq": 72,
+          "arriba": 480,
+          "alinear": "izq"
+        }
+      },
+      "rotulos": {
+        "callout": {
+          "desplazamiento": [
+            -60,
+            -130
+          ]
+        },
+        "instalacion": {
+          "desplazamiento": [
+            40,
+            40
+          ]
+        },
+        "frente": {
+          "desplazamiento": [
+            -18,
+            -10
+          ],
+          "zona": [
+            320,
+            1040,
+            640,
+            1240
+          ]
+        },
+        "paisLimite": {
+          "izq": 72,
+          "der": 930,
+          "derAlta": 1008,
+          "desplazamiento": [
+            0,
+            -110
+          ],
+          "porPais": {
+            "IRAK": [
+              -120,
+              0
+            ]
+          }
+        },
+        "tierra": {
+          "irakAvanza": {
+            "desplazamiento": [
+              30,
+              -80
+            ],
+            "alinear": "izq"
+          },
+          "iranAvanza": {
+            "desplazamiento": [
+              40,
+              -10
+            ],
+            "alinear": "izq"
+          },
+          "irakRetira": {
+            "desplazamiento": [
+              -50,
+              70
+            ],
+            "alinear": "der"
+          }
+        }
+      },
+      "bandas": {
+        "visible": false
+      },
+      "velos": {
+        "capas": [
+          {
+            "tipo": "lineal",
+            "desde": "arriba",
+            "color": "sombra",
+            "paradas": [
+              [
+                0,
+                0.5
+              ],
+              [
+                520,
+                0
+              ]
+            ]
+          },
+          {
+            "tipo": "lineal",
+            "desde": "abajo",
+            "color": "sombra",
+            "paradas": [
+              [
+                0,
+                0.62
+              ],
+              [
+                480,
+                0.24
+              ],
+              [
+                720,
+                0
+              ]
+            ]
+          },
+          {
+            "tipo": "radial",
+            "color": "#000000",
+            "elipse": [
+              90,
+              65
+            ],
+            "centro": [
+              50,
+              48
+            ],
+            "paradas": [
+              [
+                60,
+                0
+              ],
+              [
+                100,
+                0.3
+              ]
+            ]
+          }
+        ]
+      },
+      "estilos": {}
+    },
+    "escritorio": {
+      "ancla": {
+        "golfo": [
+          1290,
+          540
+        ],
+        "region": [
+          960,
+          560
+        ],
+        "frente": [
+          1060,
+          500
+        ]
+      },
+      "escalaFormacion": 0.8,
+      "zonaSegura": {
+        "izq": 96,
+        "der": 96,
+        "arriba": 54,
+        "abajo": 54
+      },
+      "ranuras": {
+        "encabezado": {
+          "izq": 96,
+          "arriba": 58,
+          "alinear": "izq"
+        },
+        "titular": {
+          "izq": 96,
+          "arriba": 176,
+          "alinear": "izq"
+        },
+        "salto": {
+          "izq": 96,
+          "arriba": 176,
+          "alinear": "izq"
+        },
+        "anio": {
+          "izq": 96,
+          "arriba": 170,
+          "alinear": "izq"
+        },
+        "subtitulo": {
+          "izq": 96,
+          "ancho": 900,
+          "arriba": 917,
+          "alto": 80,
+          "alinear": "izq"
+        },
+        "portada": {
+          "izq": 96,
+          "der": 1000,
+          "arriba": 250,
+          "alinear": "izq"
+        },
+        "fichaIzq": {
+          "izq": 96,
+          "arriba": 280
+        },
+        "fichaDer": {
+          "der": 96,
+          "arriba": 470
+        },
+        "leyenda": {
+          "der": 96,
+          "arriba": 926,
+          "alinear": "der"
+        },
+        "atribucion": {
+          "der": 24,
+          "abajo": 10
+        },
+        "nota": {
+          "izq": 96,
+          "arriba": 340,
+          "alinear": "izq"
+        }
+      },
+      "rotulos": {
+        "callout": {
+          "desplazamiento": [
+            -150,
+            -150
+          ]
+        },
+        "instalacion": {
+          "desplazamiento": [
+            40,
+            40
+          ]
+        },
+        "frente": {
+          "desplazamiento": [
+            -18,
+            -10
+          ],
+          "zona": [
+            820,
+            1824,
+            330,
+            880
+          ]
+        },
+        "paisLimite": {
+          "izq": 96,
+          "der": 1824,
+          "derAlta": 1824
+        },
+        "tierra": {
+          "irakAvanza": {
+            "desplazamiento": [
+              30,
+              75
+            ],
+            "alinear": "izq"
+          },
+          "iranAvanza": {
+            "desplazamiento": [
+              40,
+              -10
+            ],
+            "alinear": "izq"
+          },
+          "irakRetira": {
+            "desplazamiento": [
+              -40,
+              18
+            ],
+            "alinear": "der"
+          }
+        }
+      },
+      "estilos": {
+        "encabezado": {
+          "marca": {
+            "tam": 14
+          },
+          "fecha": {
+            "tam": 23.5
+          },
+          "lugar": {
+            "tam": 29
+          }
+        },
+        "titular": {
+          "anchoMax": 880,
+          "principal": {
+            "tam": 49
+          },
+          "secundario": {
+            "tam": 23.5
+          },
+          "salto": {
+            "principal": {
+              "tam": 39
+            }
+          }
+        },
+        "anio": {
+          "texto": {
+            "tam": 140
+          }
+        },
+        "subtitulo": {
+          "texto": {
+            "tam": 39
+          }
+        },
+        "portada": {
+          "kicker": {
+            "tam": 23.5
+          },
+          "titulo": {
+            "tam": 78
+          },
+          "sub": {
+            "tam": 27
+          },
+          "anio": {
+            "tam": 23.5
+          }
+        },
+        "unidad": {
+          "nombre": {
+            "tam": 26
+          },
+          "principal": {
+            "tam": 30
+          },
+          "tipo": {
+            "visible": true,
+            "tam": 16
+          }
+        },
+        "pais": {
+          "tam": 64
+        },
+        "frente": {
+          "a": {
+            "tam": 32
+          },
+          "b": {
+            "tam": 24
+          }
+        },
+        "tierra": {
+          "a": {
+            "tam": 32
+          },
+          "b": {
+            "tam": 32
+          }
+        },
+        "ficha": {
+          "anchoTexto": 330,
+          "foto": {
+            "ancho": 160,
+            "alto": 208
+          },
+          "nombre": {
+            "tam": 34
+          },
+          "cargo": {
+            "tam": 24
+          },
+          "pie": {
+            "tam": 24
+          },
+          "credito": {
+            "tam": 20
+          }
+        },
+        "leyenda": {
+          "tam": 24
+        },
+        "callout": {
+          "a": {
+            "tam": 36
+          },
+          "b": {
+            "tam": 24
+          }
+        },
+        "instalacion": {
+          "a": {
+            "tam": 32
+          },
+          "b": {
+            "tam": 24
+          }
+        },
+        "atribucion": {
+          "tam": 16
+        },
+        "rotuloUnidad": {
+          "nombre": {
+            "tam": 26
+          },
+          "principal": {
+            "tam": 30
+          },
+          "tipo": {
+            "visible": true,
+            "tam": 16
+          }
+        },
+        "fecha": {
+          "tam": 23.5
+        },
+        "transcripcion": {
+          "texto": {
+            "tam": 39
+          }
+        }
+      },
+      "bandas": {
+        "visible": false
+      },
+      "velos": {
+        "capas": [
+          {
+            "tipo": "lineal",
+            "desde": "arriba",
+            "color": "sombra",
+            "paradas": [
+              [
+                0,
+                0.5
+              ],
+              [
+                330,
+                0
+              ]
+            ]
+          },
+          {
+            "tipo": "lineal",
+            "desde": "abajo",
+            "color": "sombra",
+            "paradas": [
+              [
+                0,
+                0.62
+              ],
+              [
+                200,
+                0.3
+              ],
+              [
+                380,
+                0
+              ]
+            ]
+          },
+          {
+            "tipo": "radial",
+            "color": "#000000",
+            "elipse": [
+              85,
+              80
+            ],
+            "centro": [
+              50,
+              50
+            ],
+            "paradas": [
+              [
+                60,
+                0
+              ],
+              [
+                100,
+                0.3
+              ]
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "hoja": {
+    "sub": "V2 reordenada: las mismas ranuras fijas, una sola familia tipográfica (Archivo, de extracondensada a normal) y cinco tamaños para todo el sistema. Los rótulos de buques conservan su guía, su bandera (la unidad protagonista) y su marca roja; las unidades terrestres y las flechas se rotulan. Cuadros, velos y cuadrícula están desactivados y se encienden desde la barra de opciones.",
+    "reglas": [
+      "Cinco tamaños de letra y no más: D (año, cifra, portada), T (titular, país), B (subtítulo), L (nombres de unidades, lugares, fichas) y M (tipo, fecha, cargo, leyenda); el crédito y la atribución son letra fina. En 16:9 se reducen a la vez, nunca de uno en uno.",
+      "Una sola familia (Archivo): extracondensada para el año y la portada, condensada para nombres y titulares, normal para el subtítulo.",
+      "Tres tintas de texto (marfil, arena y gris) y un solo acento rojo, que marca lo que actúa: la marca de la fecha, la barra del titular, la unidad protagonista, el país que ataca, el frente y las flechas de avance.",
+      "Ranuras fijas por formato: cabecera, titular, subtítulo, leyenda y fichas no comparten zona; la auditoría automática de la página comprueba que ningún texto toca a otro en los 60 s.",
+      "Los rótulos de mapa (buques, lugares, unidades terrestres, frente) llevan siempre una guía o una marca cuadrada junto a su objeto.",
+      "El subtítulo vive en un costado (izquierda por defecto) y se puede mover a izquierda, centro o derecha, cambiar de ancho y de número de palabras desde la barra."
+    ]
+  },
+  "fijos": [
+    "flag.*",
+    "fx.*",
+    "strike.*",
+    "air.*",
+    "naval.*",
+    "ground.*",
+    "trail.*"
+  ],
+  "escalas": {
+    "ejercito": {
+      "movil": {
+        "escala": 0.62,
+        "columnas": 6
+      },
+      "escritorio": {
+        "escala": 0.8,
+        "columnas": 12
+      }
+    },
+    "unidad": {
+      "movil": 0.8,
+      "escritorio": 1
+    },
+    "bandera": {
+      "movil": {
+        "ancho": 30,
+        "alto": 16
+      },
+      "escritorio": {
+        "ancho": 30,
+        "alto": 16
+      }
+    }
+  },
+  "componentes": {
+    "air.bomber": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/air.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "2.5",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "air.drop": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/air.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "2.5",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen",
+        "height": 150
+      }
+    },
+    "air.helicopter": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/air.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "2.5",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "air.jet": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/air.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "2.5",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "air.launch": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/air.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "2.5",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "air.prop": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/air.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "2.5",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "air.recover": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/air.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "2.5",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "army.advance": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/army.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#3c3b6e",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.2",
+          "1.3",
+          "1.5",
+          "1.6",
+          "11",
+          "12",
+          "14",
+          "2",
+          "2.2",
+          "2.4",
+          "24",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "spacing": 59,
+        "radius": 25
+      }
+    },
+    "army.banner": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/army.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#3c3b6e",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.2",
+          "1.3",
+          "1.5",
+          "1.6",
+          "11",
+          "12",
+          "14",
+          "2",
+          "2.2",
+          "2.4",
+          "24",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "army.clash": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/army.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#3c3b6e",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.2",
+          "1.3",
+          "1.5",
+          "1.6",
+          "11",
+          "12",
+          "14",
+          "2",
+          "2.2",
+          "2.4",
+          "24",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "spacing": 59,
+        "radius": 25
+      }
+    },
+    "army.encircle": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/army.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#3c3b6e",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.2",
+          "1.3",
+          "1.5",
+          "1.6",
+          "11",
+          "12",
+          "14",
+          "2",
+          "2.2",
+          "2.4",
+          "24",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "spacing": 59,
+        "radius": 25
+      }
+    },
+    "army.hold": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/army.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#3c3b6e",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.2",
+          "1.3",
+          "1.5",
+          "1.6",
+          "11",
+          "12",
+          "14",
+          "2",
+          "2.2",
+          "2.4",
+          "24",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "spacing": 59,
+        "radius": 25
+      }
+    },
+    "army.retreat": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/army.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#3c3b6e",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.2",
+          "1.3",
+          "1.5",
+          "1.6",
+          "11",
+          "12",
+          "14",
+          "2",
+          "2.2",
+          "2.4",
+          "24",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "spacing": 59,
+        "radius": 25
+      }
+    },
+    "army.supply": {
+      "usa": [
+        "escalas.ejercito",
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/army.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#3c3b6e",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.2",
+          "1.3",
+          "1.5",
+          "1.6",
+          "11",
+          "12",
+          "14",
+          "2",
+          "2.2",
+          "2.4",
+          "24",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "arrow.bolt": {
+      "usa": [
+        "trazos.flecha"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/routes.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "15",
+          "18",
+          "2",
+          "24",
+          "430",
+          "460",
+          "5",
+          "9"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 4,
+        "color": "text"
+      }
+    },
+    "arrow.curve": {
+      "usa": [
+        "trazos.flecha"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/routes.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "15",
+          "18",
+          "2",
+          "24",
+          "430",
+          "460",
+          "5",
+          "9"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 4,
+        "color": "text"
+      }
+    },
+    "arrow.flow": {
+      "usa": [
+        "trazos.flecha"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/routes.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "15",
+          "18",
+          "2",
+          "24",
+          "430",
+          "460",
+          "5",
+          "9"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 4,
+        "color": "text"
+      }
+    },
+    "arrow.route": {
+      "usa": [
+        "trazos.flecha"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/routes.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "15",
+          "18",
+          "2",
+          "24",
+          "430",
+          "460",
+          "5",
+          "9"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 4,
+        "color": "text"
+      }
+    },
+    "badge.count": {
+      "usa": [
+        "colores",
+        "fuentes.titulo"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/labels.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#e9e3ba",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "180",
+          "2",
+          "3",
+          "30",
+          "5",
+          "64",
+          "78",
+          "900",
+          "96"
+        ]
+      },
+      "predeterminadosActuales": {
+        "radius": 66,
+        "color": "success"
+      }
+    },
+    "callout.photo": {
+      "usa": [
+        "estilos.documento",
+        "estilos.ficha.separacion",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "sombras",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/editorial.js",
+        "colores": [
+          "#000000",
+          "#081e2c",
+          "#084c68",
+          "#0F1216",
+          "#20252B",
+          "#20252b",
+          "#25292f",
+          "#47595c",
+          "#bac9ca",
+          "#d8dde3",
+          "#e6e6e6",
+          "#e9e3ba",
+          "#f4f4f4",
+          "#f6edb4",
+          "#f7f8fa",
+          "#ffffff"
+        ],
+        "fuentes": [
+          "700 25px AtlasEditorial, sans-serif"
+        ],
+        "tamanos": [
+          "0",
+          "1.5",
+          "12",
+          "19",
+          "2",
+          "2.5",
+          "20",
+          "21",
+          "22",
+          "24",
+          "25",
+          "28",
+          "29",
+          "3",
+          "33",
+          "39",
+          "4"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "caption.transcript": {
+      "usa": [
+        "estilos.transcripcion.posicion",
+        "estilos.transcripcion.ancho",
+        "estilos.transcripcion.palabras",
+        "estilos.transcripcion.alto",
+        "estilos.transcripcion.texto",
+        "estilos.subtitulo.resalte.apagado",
+        "formatos.*.ranuras.subtitulo"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/captions.js",
+        "colores": [
+          "#000",
+          "#000000",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": []
+      },
+      "predeterminadosActuales": {
+        "color": "#ffffff",
+        "activeColor": "#ffffff",
+        "inactiveColor": "#ffffff",
+        "stroke": true,
+        "strokeColor": "#000000",
+        "font": "AtlasDisplay, sans-serif",
+        "weight": 800,
+        "size": 45,
+        "upper": true,
+        "highlight": "none",
+        "background": "",
+        "padding": 12,
+        "radius": 0
+      }
+    },
+    "debug.dot": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/_base.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {}
+    },
+    "debug.label": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/_base.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 28,
+        "font": "sans-serif"
+      }
+    },
+    "debug.path": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/_base.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 4
+      }
+    },
+    "editorial.press": {
+      "usa": [
+        "estilos.documento",
+        "estilos.ficha.separacion",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "sombras",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/editorial.js",
+        "colores": [
+          "#000000",
+          "#081e2c",
+          "#084c68",
+          "#0F1216",
+          "#20252B",
+          "#20252b",
+          "#25292f",
+          "#47595c",
+          "#bac9ca",
+          "#d8dde3",
+          "#e6e6e6",
+          "#e9e3ba",
+          "#f4f4f4",
+          "#f6edb4",
+          "#f7f8fa",
+          "#ffffff"
+        ],
+        "fuentes": [
+          "700 25px AtlasEditorial, sans-serif"
+        ],
+        "tamanos": [
+          "0",
+          "1.5",
+          "12",
+          "19",
+          "2",
+          "2.5",
+          "20",
+          "21",
+          "22",
+          "24",
+          "25",
+          "28",
+          "29",
+          "3",
+          "33",
+          "39",
+          "4"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "flag.marker": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/territory.js",
+        "colores": [
+          "#000000",
+          "#007a3d",
+          "#399e58",
+          "#ce1126",
+          "#da0000",
+          "#f6edb4",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "2",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "flagWidth": 78,
+        "poleHeight": 98
+      }
+    },
+    "front.line": {
+      "usa": [
+        "trazos.frente",
+        "estilos.frente.a"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/routes.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "15",
+          "18",
+          "2",
+          "24",
+          "430",
+          "460",
+          "5",
+          "9"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 4,
+        "color": "text"
+      }
+    },
+    "fx.clash": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/units.js",
+        "colores": [
+          "#000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#012169",
+          "#081e2c",
+          "#239f40",
+          "#33424b",
+          "#399e58",
+          "#3c3b6e",
+          "#66c6e3",
+          "#82949c",
+          "#b22234",
+          "#c8102e",
+          "#ce1126",
+          "#d1495b",
+          "#d52b1e",
+          "#da0000",
+          "#e69b45",
+          "#e9e3ba",
+          "#ef4135",
+          "#f6edb4",
+          "#ffd700",
+          "#fff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "fx.dust": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/ground.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1",
+          "1.3",
+          "1.4",
+          "2",
+          "2.5",
+          "3",
+          "48"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "fx.explosion": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/fx.js",
+        "colores": [
+          "#081e2c",
+          "#42bfd0",
+          "#d1495b",
+          "#e9e3ba",
+          "#ed7334",
+          "#f4f5ea",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "10",
+          "100",
+          "110",
+          "2",
+          "70",
+          "75",
+          "80",
+          "85"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 100,
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "fx.fire": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/fx.js",
+        "colores": [
+          "#081e2c",
+          "#42bfd0",
+          "#d1495b",
+          "#e9e3ba",
+          "#ed7334",
+          "#f4f5ea",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "10",
+          "100",
+          "110",
+          "2",
+          "70",
+          "75",
+          "80",
+          "85"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 70,
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "fx.flash": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/fx.js",
+        "colores": [
+          "#081e2c",
+          "#42bfd0",
+          "#d1495b",
+          "#e9e3ba",
+          "#ed7334",
+          "#f4f5ea",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "10",
+          "100",
+          "110",
+          "2",
+          "70",
+          "75",
+          "80",
+          "85"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 80,
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "fx.impact": {
+      "usa": [
+        "trazos.impacto"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/fx.js",
+        "colores": [
+          "#081e2c",
+          "#42bfd0",
+          "#d1495b",
+          "#e9e3ba",
+          "#ed7334",
+          "#f4f5ea",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "10",
+          "100",
+          "110",
+          "2",
+          "70",
+          "75",
+          "80",
+          "85"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 75,
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "fx.ring": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/fx.js",
+        "colores": [
+          "#081e2c",
+          "#42bfd0",
+          "#d1495b",
+          "#e9e3ba",
+          "#ed7334",
+          "#f4f5ea",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "10",
+          "100",
+          "110",
+          "2",
+          "70",
+          "75",
+          "80",
+          "85"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 100,
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "fx.shockwave": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/fx.js",
+        "colores": [
+          "#081e2c",
+          "#42bfd0",
+          "#d1495b",
+          "#e9e3ba",
+          "#ed7334",
+          "#f4f5ea",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "10",
+          "100",
+          "110",
+          "2",
+          "70",
+          "75",
+          "80",
+          "85"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 110,
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "fx.smoke": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/fx.js",
+        "colores": [
+          "#081e2c",
+          "#42bfd0",
+          "#d1495b",
+          "#e9e3ba",
+          "#ed7334",
+          "#f4f5ea",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "10",
+          "100",
+          "110",
+          "2",
+          "70",
+          "75",
+          "80",
+          "85"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 85,
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "ground.ambulance": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/ground.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1",
+          "1.3",
+          "1.4",
+          "2",
+          "2.5",
+          "3",
+          "48"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "ground.apc": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/ground.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1",
+          "1.3",
+          "1.4",
+          "2",
+          "2.5",
+          "3",
+          "48"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "ground.artillery": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/ground.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1",
+          "1.3",
+          "1.4",
+          "2",
+          "2.5",
+          "3",
+          "48"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "ground.convoy": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/ground.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1",
+          "1.3",
+          "1.4",
+          "2",
+          "2.5",
+          "3",
+          "48"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "spacing": 110
+      }
+    },
+    "ground.jeep": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/ground.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1",
+          "1.3",
+          "1.4",
+          "2",
+          "2.5",
+          "3",
+          "48"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "ground.launcher": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/ground.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1",
+          "1.3",
+          "1.4",
+          "2",
+          "2.5",
+          "3",
+          "48"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "ground.tank": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/ground.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1",
+          "1.3",
+          "1.4",
+          "2",
+          "2.5",
+          "3",
+          "48"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "ground.truck": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/ground.js",
+        "colores": [
+          "#000000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#239f40",
+          "#b22234",
+          "#ce1126",
+          "#d52b1e",
+          "#da0000",
+          "#ef4135",
+          "#ffd700",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1",
+          "1.3",
+          "1.4",
+          "2",
+          "2.5",
+          "3",
+          "48"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "icon.badge": {
+      "usa": [
+        "colores",
+        "iconos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/labels.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#e9e3ba",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "180",
+          "2",
+          "3",
+          "30",
+          "5",
+          "64",
+          "78",
+          "900",
+          "96"
+        ]
+      },
+      "predeterminadosActuales": {
+        "radius": 60,
+        "color": "accent"
+      }
+    },
+    "intro.title": {
+      "usa": [
+        "estilos.portada",
+        "ranuras.portada"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/intro.js",
+        "colores": [
+          "#000",
+          "#090909",
+          "#151515",
+          "#171717",
+          "#20252b",
+          "#d6d6d6",
+          "#e8e8e8",
+          "#f1f1f1",
+          "#f4f4f4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "10",
+          "3",
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {}
+    },
+    "inventory.units": {
+      "usa": [
+        "estilos.ficha.foto",
+        "estilos.ficha.nombre",
+        "estilos.ficha.pie",
+        "estilos.ficha.separacion",
+        "colores.tinta2",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/editorial.js",
+        "colores": [
+          "#000000",
+          "#081e2c",
+          "#084c68",
+          "#0F1216",
+          "#20252B",
+          "#20252b",
+          "#25292f",
+          "#47595c",
+          "#bac9ca",
+          "#d8dde3",
+          "#e6e6e6",
+          "#e9e3ba",
+          "#f4f4f4",
+          "#f6edb4",
+          "#f7f8fa",
+          "#ffffff"
+        ],
+        "fuentes": [
+          "700 25px AtlasEditorial, sans-serif"
+        ],
+        "tamanos": [
+          "0",
+          "1.5",
+          "12",
+          "19",
+          "2",
+          "2.5",
+          "20",
+          "21",
+          "22",
+          "24",
+          "25",
+          "28",
+          "29",
+          "3",
+          "33",
+          "39",
+          "4"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "label.callout": {
+      "usa": [
+        "estilos.callout",
+        "marcadores.lugar",
+        "sombras.halo",
+        "trazos.guia"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/labels.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#e9e3ba",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "180",
+          "2",
+          "3",
+          "30",
+          "5",
+          "64",
+          "78",
+          "900",
+          "96"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 32,
+        "width": 650,
+        "height": 220,
+        "color": "text"
+      }
+    },
+    "label.chip": {
+      "usa": [
+        "estilos.instalacion.a",
+        "sombras.halo"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/labels.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#e9e3ba",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "180",
+          "2",
+          "3",
+          "30",
+          "5",
+          "64",
+          "78",
+          "900",
+          "96"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 30,
+        "width": 650,
+        "height": 220,
+        "color": "text"
+      }
+    },
+    "label.figure": {
+      "usa": [
+        "colores",
+        "fuentes.titulo",
+        "sombras.halo"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/labels.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#e9e3ba",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "180",
+          "2",
+          "3",
+          "30",
+          "5",
+          "64",
+          "78",
+          "900",
+          "96"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 96,
+        "width": 650,
+        "height": 220,
+        "color": "text"
+      }
+    },
+    "label.front": {
+      "usa": [
+        "estilos.instalacion.a",
+        "sombras.halo"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/text-samples.js",
+        "colores": [
+          "#000000",
+          "#e6e6e6"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "24"
+        ]
+      },
+      "predeterminadosActuales": {
+        "color": "danger",
+        "size": 24,
+        "width": 460
+      }
+    },
+    "label.neon": {
+      "usa": [
+        "estilos.pais",
+        "sombras.halo"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/labels.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#e9e3ba",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "180",
+          "2",
+          "3",
+          "30",
+          "5",
+          "64",
+          "78",
+          "900",
+          "96"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 64,
+        "width": 650,
+        "height": 220,
+        "color": "accent"
+      }
+    },
+    "label.route": {
+      "usa": [
+        "estilos.instalacion.a",
+        "sombras.halo"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/text-samples.js",
+        "colores": [
+          "#000000",
+          "#e6e6e6"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "24"
+        ]
+      },
+      "predeterminadosActuales": {
+        "color": "text",
+        "size": 24,
+        "width": 430
+      }
+    },
+    "label.site": {
+      "usa": [
+        "estilos.instalacion.a"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/text-samples.js",
+        "colores": [
+          "#000000",
+          "#e6e6e6"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "24"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 24,
+        "color": "#e6e6e6",
+        "outlineColor": "#000000",
+        "outlineWidth": 6,
+        "font": "AtlasDisplay, sans-serif",
+        "weight": 800
+      }
+    },
+    "label.unit": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/text-samples.js",
+        "colores": [
+          "#000000",
+          "#e6e6e6"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "24"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 22,
+        "color": "#e6e6e6",
+        "outlineColor": "#000000",
+        "font": "AtlasDisplay, sans-serif"
+      }
+    },
+    "money.flow": {
+      "usa": [
+        "trazos.ruta"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/economy.js",
+        "colores": [
+          "#081e2c",
+          "#399e58",
+          "#47595c",
+          "#e9e3ba",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "140",
+          "2",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "money.stack": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/economy.js",
+        "colores": [
+          "#081e2c",
+          "#399e58",
+          "#47595c",
+          "#e9e3ba",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "140",
+          "2",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "naval.cargo": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/naval.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "2.4",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "naval.carrier": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/naval.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "2.4",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen",
+        "inventoryScale": 0.42
+      }
+    },
+    "naval.group": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/naval.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "2.4",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen",
+        "spacing": 0.82
+      }
+    },
+    "naval.submarine": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/naval.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "2.4",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "naval.warship": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/naval.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2",
+          "2.4",
+          "3"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "outro.channel": {
+      "usa": [
+        "estilos.cierre"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/intro.js",
+        "colores": [
+          "#000",
+          "#090909",
+          "#151515",
+          "#171717",
+          "#20252b",
+          "#d6d6d6",
+          "#e8e8e8",
+          "#f1f1f1",
+          "#f4f4f4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "10",
+          "3",
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "titleColor": "#e8e8e8",
+        "textColor": "#f1f1f1",
+        "secondaryColor": "#d6d6d6"
+      }
+    },
+    "portrait.badge": {
+      "usa": [
+        "estilos.ficha.foto",
+        "estilos.ficha.separacion",
+        "estilos.ficha.anchoTexto",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo",
+        "estilos.ficha.pie",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/editorial.js",
+        "colores": [
+          "#000000",
+          "#081e2c",
+          "#084c68",
+          "#0F1216",
+          "#20252B",
+          "#20252b",
+          "#25292f",
+          "#47595c",
+          "#bac9ca",
+          "#d8dde3",
+          "#e6e6e6",
+          "#e9e3ba",
+          "#f4f4f4",
+          "#f6edb4",
+          "#f7f8fa",
+          "#ffffff"
+        ],
+        "fuentes": [
+          "700 25px AtlasEditorial, sans-serif"
+        ],
+        "tamanos": [
+          "0",
+          "1.5",
+          "12",
+          "19",
+          "2",
+          "2.5",
+          "20",
+          "21",
+          "22",
+          "24",
+          "25",
+          "28",
+          "29",
+          "3",
+          "33",
+          "39",
+          "4"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "portrait.cutout": {
+      "usa": [
+        "estilos.ficha.foto",
+        "estilos.ficha.separacion",
+        "estilos.ficha.anchoTexto",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo",
+        "estilos.ficha.pie",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/editorial.js",
+        "colores": [
+          "#000000",
+          "#081e2c",
+          "#084c68",
+          "#0F1216",
+          "#20252B",
+          "#20252b",
+          "#25292f",
+          "#47595c",
+          "#bac9ca",
+          "#d8dde3",
+          "#e6e6e6",
+          "#e9e3ba",
+          "#f4f4f4",
+          "#f6edb4",
+          "#f7f8fa",
+          "#ffffff"
+        ],
+        "fuentes": [
+          "700 25px AtlasEditorial, sans-serif"
+        ],
+        "tamanos": [
+          "0",
+          "1.5",
+          "12",
+          "19",
+          "2",
+          "2.5",
+          "20",
+          "21",
+          "22",
+          "24",
+          "25",
+          "28",
+          "29",
+          "3",
+          "33",
+          "39",
+          "4"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1
+      }
+    },
+    "range.ring": {
+      "usa": [
+        "trazos.frente"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/routes.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "15",
+          "18",
+          "2",
+          "24",
+          "430",
+          "460",
+          "5",
+          "9"
+        ]
+      },
+      "predeterminadosActuales": {
+        "radiusMode": "geo",
+        "radiusKm": 180,
+        "radius": 160,
+        "color": "danger"
+      }
+    },
+    "route.lanes": {
+      "usa": [
+        "trazos.ruta",
+        "estilos.ruta"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/routes.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "15",
+          "18",
+          "2",
+          "24",
+          "430",
+          "460",
+          "5",
+          "9"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 4,
+        "color": "text",
+        "spacing": 14
+      }
+    },
+    "route.sea": {
+      "usa": [
+        "trazos.ruta"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/routes.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "15",
+          "18",
+          "2",
+          "24",
+          "430",
+          "460",
+          "5",
+          "9"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 4,
+        "color": "text"
+      }
+    },
+    "site.base": {
+      "usa": [
+        "estilos.instalacion.a",
+        "marcadores.lugar",
+        "trazos.guia"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/sites.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#47595c",
+          "#8b999b",
+          "#bac9ca",
+          "#e9e3ba",
+          "#ef8138",
+          "#f6edb4"
+        ],
+        "fuentes": [
+          "bold 17px sans-serif"
+        ],
+        "tamanos": [
+          "1.7",
+          "1.8",
+          "2",
+          "3",
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "zoomScale": true,
+        "labelSize": 24
+      }
+    },
+    "site.oilfield": {
+      "usa": [
+        "estilos.instalacion.a",
+        "marcadores.lugar",
+        "trazos.guia"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/sites.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#47595c",
+          "#8b999b",
+          "#bac9ca",
+          "#e9e3ba",
+          "#ef8138",
+          "#f6edb4"
+        ],
+        "fuentes": [
+          "bold 17px sans-serif"
+        ],
+        "tamanos": [
+          "1.7",
+          "1.8",
+          "2",
+          "3",
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "zoomScale": true,
+        "labelSize": 24
+      }
+    },
+    "site.plant": {
+      "usa": [
+        "estilos.instalacion.a",
+        "marcadores.lugar",
+        "trazos.guia"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/sites.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#47595c",
+          "#8b999b",
+          "#bac9ca",
+          "#e9e3ba",
+          "#ef8138",
+          "#f6edb4"
+        ],
+        "fuentes": [
+          "bold 17px sans-serif"
+        ],
+        "tamanos": [
+          "1.7",
+          "1.8",
+          "2",
+          "3",
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "zoomScale": true,
+        "labelSize": 24
+      }
+    },
+    "site.platform": {
+      "usa": [
+        "estilos.instalacion.a",
+        "marcadores.lugar",
+        "trazos.guia"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/sites.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#47595c",
+          "#8b999b",
+          "#bac9ca",
+          "#e9e3ba",
+          "#ef8138",
+          "#f6edb4"
+        ],
+        "fuentes": [
+          "bold 17px sans-serif"
+        ],
+        "tamanos": [
+          "1.7",
+          "1.8",
+          "2",
+          "3",
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "zoomScale": true,
+        "labelSize": 24
+      }
+    },
+    "site.port": {
+      "usa": [
+        "estilos.instalacion.a",
+        "marcadores.lugar",
+        "trazos.guia"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/sites.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#47595c",
+          "#8b999b",
+          "#bac9ca",
+          "#e9e3ba",
+          "#ef8138",
+          "#f6edb4"
+        ],
+        "fuentes": [
+          "bold 17px sans-serif"
+        ],
+        "tamanos": [
+          "1.7",
+          "1.8",
+          "2",
+          "3",
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "zoomScale": true,
+        "labelSize": 24
+      }
+    },
+    "site.refinery": {
+      "usa": [
+        "estilos.instalacion.a",
+        "marcadores.lugar",
+        "trazos.guia"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/sites.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#47595c",
+          "#8b999b",
+          "#bac9ca",
+          "#e9e3ba",
+          "#ef8138",
+          "#f6edb4"
+        ],
+        "fuentes": [
+          "bold 17px sans-serif"
+        ],
+        "tamanos": [
+          "1.7",
+          "1.8",
+          "2",
+          "3",
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "zoomScale": true,
+        "labelSize": 24
+      }
+    },
+    "strike.missile": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/strike.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2.8",
+          "3",
+          "3.4",
+          "3.5",
+          "4"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 3.4
+      }
+    },
+    "strike.salvo": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/strike.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2.8",
+          "3",
+          "3.4",
+          "3.5",
+          "4"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 3
+      }
+    },
+    "strike.shell": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/strike.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2.8",
+          "3",
+          "3.4",
+          "3.5",
+          "4"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 2.8
+      }
+    },
+    "strike.torpedo": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/strike.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2.8",
+          "3",
+          "3.4",
+          "3.5",
+          "4"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 3.5
+      }
+    },
+    "territory.extrude": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/territory.js",
+        "colores": [
+          "#000000",
+          "#007a3d",
+          "#399e58",
+          "#ce1126",
+          "#da0000",
+          "#f6edb4",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "2",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "color": "success",
+        "opacity": 0.8,
+        "border": true
+      }
+    },
+    "territory.fill": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/territory.js",
+        "colores": [
+          "#000000",
+          "#007a3d",
+          "#399e58",
+          "#ce1126",
+          "#da0000",
+          "#f6edb4",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "2",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "color": "success",
+        "opacity": 0.8,
+        "border": true
+      }
+    },
+    "territory.flag": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/territory.js",
+        "colores": [
+          "#000000",
+          "#007a3d",
+          "#399e58",
+          "#ce1126",
+          "#da0000",
+          "#f6edb4",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "2",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "color": "success",
+        "opacity": 0.8,
+        "border": true,
+        "flagWidth": 78
+      }
+    },
+    "territory.glow": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/territory.js",
+        "colores": [
+          "#000000",
+          "#007a3d",
+          "#399e58",
+          "#ce1126",
+          "#da0000",
+          "#f6edb4",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "2",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "color": "success",
+        "opacity": 0.8,
+        "border": true,
+        "width": 2
+      }
+    },
+    "territory.hatch": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/territory.js",
+        "colores": [
+          "#000000",
+          "#007a3d",
+          "#399e58",
+          "#ce1126",
+          "#da0000",
+          "#f6edb4",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "2",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "color": "success",
+        "opacity": 0.8,
+        "border": true,
+        "spacing": 18,
+        "width": 2
+      }
+    },
+    "territory.state": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/territory.js",
+        "colores": [
+          "#000000",
+          "#007a3d",
+          "#399e58",
+          "#ce1126",
+          "#da0000",
+          "#f6edb4",
+          "#ffffff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "2",
+          "3",
+          "7"
+        ]
+      },
+      "predeterminadosActuales": {
+        "color": "success",
+        "opacity": 0.8,
+        "border": true,
+        "stateColors": {}
+      }
+    },
+    "text.year": {
+      "usa": [
+        "colores",
+        "fuentes.titulo",
+        "sombras.halo"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/labels.js",
+        "colores": [
+          "#081e2c",
+          "#084c68",
+          "#399e58",
+          "#e9e3ba",
+          "#f6edb4"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "1.5",
+          "180",
+          "2",
+          "3",
+          "30",
+          "5",
+          "64",
+          "78",
+          "900",
+          "96"
+        ]
+      },
+      "predeterminadosActuales": {
+        "size": 180,
+        "width": 650,
+        "height": 220,
+        "color": "text"
+      }
+    },
+    "trail.contrail": {
+      "usa": [],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/strike.js",
+        "colores": [],
+        "fuentes": [],
+        "tamanos": [
+          "2.8",
+          "3",
+          "3.4",
+          "3.5",
+          "4"
+        ]
+      },
+      "predeterminadosActuales": {
+        "width": 4
+      }
+    },
+    "unit.advance": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/units.js",
+        "colores": [
+          "#000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#012169",
+          "#081e2c",
+          "#239f40",
+          "#33424b",
+          "#399e58",
+          "#3c3b6e",
+          "#66c6e3",
+          "#82949c",
+          "#b22234",
+          "#c8102e",
+          "#ce1126",
+          "#d1495b",
+          "#d52b1e",
+          "#da0000",
+          "#e69b45",
+          "#e9e3ba",
+          "#ef4135",
+          "#f6edb4",
+          "#ffd700",
+          "#fff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "unit.group": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/units.js",
+        "colores": [
+          "#000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#012169",
+          "#081e2c",
+          "#239f40",
+          "#33424b",
+          "#399e58",
+          "#3c3b6e",
+          "#66c6e3",
+          "#82949c",
+          "#b22234",
+          "#c8102e",
+          "#ce1126",
+          "#d1495b",
+          "#d52b1e",
+          "#da0000",
+          "#e69b45",
+          "#e9e3ba",
+          "#ef4135",
+          "#f6edb4",
+          "#ffd700",
+          "#fff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "unit.move": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/units.js",
+        "colores": [
+          "#000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#012169",
+          "#081e2c",
+          "#239f40",
+          "#33424b",
+          "#399e58",
+          "#3c3b6e",
+          "#66c6e3",
+          "#82949c",
+          "#b22234",
+          "#c8102e",
+          "#ce1126",
+          "#d1495b",
+          "#d52b1e",
+          "#da0000",
+          "#e69b45",
+          "#e9e3ba",
+          "#ef4135",
+          "#f6edb4",
+          "#ffd700",
+          "#fff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "unit.retreat": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/units.js",
+        "colores": [
+          "#000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#012169",
+          "#081e2c",
+          "#239f40",
+          "#33424b",
+          "#399e58",
+          "#3c3b6e",
+          "#66c6e3",
+          "#82949c",
+          "#b22234",
+          "#c8102e",
+          "#ce1126",
+          "#d1495b",
+          "#d52b1e",
+          "#da0000",
+          "#e69b45",
+          "#e9e3ba",
+          "#ef4135",
+          "#f6edb4",
+          "#ffd700",
+          "#fff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "unit.token": {
+      "usa": [
+        "estilos.unidad.bandera",
+        "estilos.unidad.guia",
+        "estilos.unidad.marcador",
+        "estilos.unidad.nombre",
+        "estilos.unidad.principal",
+        "estilos.unidad.tipo",
+        "fijos"
+      ],
+      "overrides": {},
+      "literalesArchivo": {
+        "archivo": "components/units.js",
+        "colores": [
+          "#000",
+          "#0039a6",
+          "#0055a4",
+          "#0057b7",
+          "#012169",
+          "#081e2c",
+          "#239f40",
+          "#33424b",
+          "#399e58",
+          "#3c3b6e",
+          "#66c6e3",
+          "#82949c",
+          "#b22234",
+          "#c8102e",
+          "#ce1126",
+          "#d1495b",
+          "#d52b1e",
+          "#da0000",
+          "#e69b45",
+          "#e9e3ba",
+          "#ef4135",
+          "#f6edb4",
+          "#ffd700",
+          "#fff"
+        ],
+        "fuentes": [],
+        "tamanos": [
+          "4",
+          "6"
+        ]
+      },
+      "predeterminadosActuales": {
+        "scale": 1,
+        "scaleMode": "screen"
+      }
+    },
+    "caption.words": {
+      "usa": [
+        "estilos.transcripcion.posicion",
+        "estilos.transcripcion.ancho",
+        "estilos.transcripcion.palabras",
+        "estilos.transcripcion.alto",
+        "estilos.transcripcion.texto",
+        "estilos.subtitulo.resalte.apagado",
+        "formatos.*.ranuras.subtitulo"
+      ],
+      "overrides": {}
+    },
+    "portrait.card": {
+      "usa": [
+        "estilos.ficha.foto",
+        "estilos.ficha.separacion",
+        "estilos.ficha.anchoTexto",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo",
+        "estilos.ficha.pie",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular"
+      ],
+      "overrides": {}
+    },
+    "portrait.column": {
+      "usa": [
+        "estilos.ficha.foto",
+        "estilos.ficha.separacion",
+        "estilos.ficha.anchoTexto",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo",
+        "estilos.ficha.pie",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular"
+      ],
+      "overrides": {}
+    },
+    "portrait.pair": {
+      "usa": [
+        "estilos.ficha.foto",
+        "estilos.ficha.separacion",
+        "estilos.ficha.anchoTexto",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo",
+        "estilos.ficha.pie",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular"
+      ],
+      "overrides": {}
+    },
+    "document.clip": {
+      "usa": [
+        "estilos.documento",
+        "estilos.ficha.separacion",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "sombras",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo"
+      ],
+      "overrides": {}
+    },
+    "document.stamp": {
+      "usa": [
+        "estilos.documento",
+        "estilos.ficha.separacion",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "sombras",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo"
+      ],
+      "overrides": {}
+    },
+    "image.frame": {
+      "usa": [
+        "estilos.documento",
+        "estilos.ficha.separacion",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "sombras",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo"
+      ],
+      "overrides": {}
+    },
+    "image.strip": {
+      "usa": [
+        "estilos.documento",
+        "estilos.ficha.separacion",
+        "estilos.ficha.credito",
+        "formatos.movil.ranuras.fichaIzq",
+        "formatos.movil.ranuras.fichaDer",
+        "formatos.movil.ranuras.subtitulo",
+        "formatos.escritorio.ranuras.fichaIzq",
+        "formatos.escritorio.ranuras.fichaDer",
+        "formatos.escritorio.ranuras.subtitulo",
+        "paneles",
+        "sombras",
+        "estilos.titular.principal",
+        "formatos.movil.ranuras.titular",
+        "formatos.escritorio.ranuras.titular",
+        "estilos.ficha.nombre",
+        "estilos.ficha.cargo"
+      ],
+      "overrides": {}
+    },
+    "header.date": {
+      "usa": [
+        "estilos.encabezado.fecha",
+        "estilos.encabezado.lugar",
+        "estilos.encabezado.marca",
+        "ranuras.encabezado"
+      ],
+      "overrides": {}
+    },
+    "statement.title": {
+      "usa": [
+        "estilos.titular.barra",
+        "estilos.titular.principal",
+        "estilos.titular.secundario",
+        "ranuras.titular"
+      ],
+      "overrides": {}
+    },
+    "statement.jump": {
+      "usa": [
+        "estilos.titular.principal",
+        "estilos.titular.salto",
+        "ranuras.salto"
+      ],
+      "overrides": {}
+    },
+    "year.big": {
+      "usa": [
+        "estilos.anio.barra",
+        "estilos.anio.texto",
+        "ranuras.anio"
+      ],
+      "overrides": {}
+    },
+    "legend.front": {
+      "usa": [
+        "estilos.leyenda",
+        "ranuras.leyenda",
+        "trazos.frente.linea"
+      ],
+      "overrides": {}
+    },
+    "label.country": {
+      "usa": [
+        "estilos.pais"
+      ],
+      "overrides": {}
+    },
+    "label.landunit": {
+      "usa": [
+        "estilos.tierra",
+        "marcadores.unidadTierra"
+      ],
+      "overrides": {}
+    },
+    "image.hex": {
+      "usa": [
+        "ucr2.imagen"
+      ],
+      "overrides": {}
+    },
+    "image.panel": {
+      "usa": [
+        "ucr2.imagen"
+      ],
+      "overrides": {}
+    },
+    "image.pole": {
+      "usa": [
+        "ucr2.imagen"
+      ],
+      "overrides": {}
+    },
+    "territory.wash": {
+      "usa": [
+        "ucr2.territorio"
+      ],
+      "overrides": {}
+    },
+    "space.satellite": {
+      "usa": [
+        "ucr2.aire"
+      ],
+      "overrides": {}
+    },
+    "air.swarm": {
+      "usa": [
+        "ucr2.aire"
+      ],
+      "overrides": {}
+    },
+    "territory.control": {
+      "usa": [
+        "territorios"
+      ],
+      "overrides": {}
+    },
+    "territory.zone": {
+      "usa": [
+        "ucr2.territorio"
+      ],
+      "overrides": {}
+    }
+  },
+  "camara": {
+    "zoom": {
+      "movil": 0,
+      "escritorio": 0
+    }
+  },
+  "ucr2": {
+    "imagen": {
+      "hex": 260,
+      "hexAlto": 0.94,
+      "panelAncho": 410,
+      "panelAlto": 240,
+      "margen": 38,
+      "separacion": 12,
+      "textoAlto": 150,
+      "rotuloAlto": 100,
+      "zonaSuperior": 0.16,
+      "zonaInferior": 0.12,
+      "guia": "tinta2@.75",
+      "guiaGrosor": 1.5,
+      "punto": "acento",
+      "puntoRadio": 4,
+      "fondo": "panel",
+      "borde": "tinta",
+      "bordeGrosor": 2,
+      "textoFondo": "panel@.88",
+      "textoMargen": 12,
+      "interlinea": 1.12,
+      "titulo": {
+        "fuente": "titulo",
+        "tam": 26,
+        "peso": 800,
+        "color": "tinta"
+      },
+      "descripcion": {
+        "fuente": "texto",
+        "tam": 19,
+        "peso": 600,
+        "color": "tinta2"
+      },
+      "credito": {
+        "fuente": "texto",
+        "tam": 14,
+        "peso": 500,
+        "color": "tinta3"
+      },
+      "hexEscala": 1
+    },
+    "territorio": {
+      "entrada": 0.75,
+      "borde": "tinta2@.65",
+      "grosor": 2,
+      "zona": "#E23B2E@.5",
+      "zonaBorde": "#E23B2E@.9",
+      "zonaTexto": "#FFFFFF",
+      "zonaUcrania": "#F5C518@.5",
+      "zonaUcraniaBorde": "#F5C518@.95",
+      "zonaCheck": "#1A1A1A"
+    },
+    "aire": {
+      "cuerpo": "panel",
+      "borde": "panel",
+      "panel": "acento",
+      "altura": 13,
+      "sombraOpacidad": 0.23,
+      "satelite": 1.5,
+      "enlace": "tinta2@.8",
+      "escaneo": "acento@.65",
+      "hazGrosor": 2,
+      "guion": 8,
+      "pulsoVelocidad": 0.7,
+      "pulsoRadioMin": 7,
+      "pulsoRadio": 60,
+      "drone": 30,
+      "estela": "tinta2@.6",
+      "estelaGrosor": 1.5,
+      "estelaLargo": 16,
+      "interceptAt": 0.82,
+      "impactDur": 0.04,
+      "interceptColor": "acento",
+      "impactColor": "tinta",
+      "rotuloOffset": 32,
+      "rotulo": {
+        "fuente": "titulo",
+        "tam": 22,
+        "peso": 700,
+        "color": "tinta"
+      },
+      "spriteGrosor": 2,
+      "flagAncho": 32,
+      "flagAlto": 20,
+      "flagOffset": 30,
+      "flagBorde": 1,
+      "rotuloHalo": "panel",
+      "rotuloHaloGrosor": 5,
+      "rotuloMaxAncho": 300,
+      "rotuloSatelite": {
+        "fuente": "titulo",
+        "tam": 15.4,
+        "peso": 700,
+        "color": "tinta"
+      }
+    }
+  }
+}

@@ -27,7 +27,24 @@ def _load_catalog() -> dict:
     manifest_path = settings.templates_dir / "templates.json"
     if not manifest_path.exists():
         return {}
-    return json.loads(manifest_path.read_text(encoding="utf-8"))
+    catalog = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert_unique_display_names(catalog)
+    return catalog
+
+
+def assert_unique_display_names(catalog: dict) -> None:
+    """Dos plantillas no pueden compartir nombre visible: el catalogo entero se rechaza."""
+    seen: dict[str, str] = {}
+    for template_id, entry in (catalog.get("templates") or {}).items():
+        name = " ".join(str((entry or {}).get("display_name") or "").split()).casefold()
+        if not name:
+            continue
+        if name in seen:
+            raise ValueError(
+                f"Nombre de plantilla duplicado {name!r}: {seen[name]} y {template_id}. "
+                "Cada plantilla necesita un display_name unico en templates.json."
+            )
+        seen[name] = template_id
 
 
 @lru_cache(maxsize=1)
@@ -117,6 +134,12 @@ def get_template_runtime_assets(template_id: str) -> list[Path]:
         source = (template_root / relative).resolve()
         if source.is_relative_to(template_root.resolve()) and source.exists():
             paths.append(source)
+        else:
+            from src.templates._tools.nodemotion.shared.assemble import registered, resolve_runtime_asset
+            if registered(template_id):
+                canonical = resolve_runtime_asset(template_id, relative)
+                if canonical is not None:
+                    paths.append(canonical)
     return paths
 
 
@@ -126,6 +149,14 @@ def copy_template_runtime_assets(template_id: str, output_dir: Path) -> list[Pat
     if template_root is None:
         return []
     copied: list[Path] = []
+    from src.templates._tools.nodemotion.shared.assemble import registered, runtime_files
+    if registered(template_id):
+        for relative, source in runtime_files(template_id).items():
+            destination = output_dir / relative
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(source, destination)
+            copied.append(destination)
+        return copied
     for source in get_template_runtime_assets(template_id):
         relative = source.relative_to(template_root)
         destination = output_dir / relative
@@ -200,6 +231,13 @@ def get_template_preview_assets(template_id: str) -> dict[str, Path | None]:
         for path in asset_dir.rglob("*")
         if path.is_file()
     }
+    from src.templates._tools.nodemotion.shared.assemble import registered
+    if registered(template_id):
+        from src.core.nodemotion.shared.bundled import demo_aliases, resolve_bundled_key
+        for relative, key in demo_aliases(template_id).items():
+            if relative.startswith("assets/"):
+                files[relative.removeprefix("assets/")] = resolve_bundled_key(key)
+
 
     def first_existing(names: tuple[str, ...], suffixes: set[str]) -> Path | None:
         for name in names:
@@ -212,7 +250,10 @@ def get_template_preview_assets(template_id: str) -> dict[str, Path | None]:
         )
 
     return {
-        "image": first_existing(("bg.png", "bg.jpg", "cover.jpg", "angel.jpg"), _IMAGE_SUFFIXES),
+        "image": first_existing(
+            ("card-poster.webp", "bg.png", "bg.jpg", "cover.jpg", "angel.jpg"),
+            _IMAGE_SUFFIXES,
+        ),
         "video": first_existing(("bg.mp4", "path.mp4", "humo.mp4", "niebla.mp4"), _VIDEO_SUFFIXES),
         "audio": files.get("song.mp3"),
     }
@@ -246,8 +287,11 @@ def _normalize_media_slot(raw: dict) -> dict | None:
         "max": max(min_count, max_count, 1),
         "orientation": raw.get("orientation"),
         # "source" = entra por la imagen/video de fondo del job (MusicSource/
-        # ImageSource/VideoSource); "media" = reemplaza config.media en orden.
+        # ImageSource/VideoSource); "media" = reemplaza config.media en orden;
+        # "config" = el archivo va a la ruta `path` del config (ej. "bg.src": un fondo
+        # opcional que, si no se sube, deja el que trae la plantilla).
         "target": raw.get("target") or "source",
+        "path": raw.get("path") if raw.get("target") == "config" else None,
         "label": raw.get("label") or slot,
         "hint": raw.get("hint") or "",
     }
@@ -269,13 +313,14 @@ def _derived_template_inputs(entry: dict) -> dict:
     }
 
 
-def get_template_inputs(template_id: str) -> dict | None:
+def get_template_inputs(template_id: str, *, fresh: bool = False) -> dict | None:
     """Requisitos normalizados de una plantilla, o None si no está registrada.
 
     Siempre devuelve las cuatro claves (audio, media, texts, brief) con formas
     estables: los slots traen min/max/target/label/hint aunque el JSON los omita.
     """
-    entry = get_template_entry(template_id)
+    path = settings.templates_dir / "templates.json"
+    entry = (json.loads(path.read_text(encoding="utf-8")).get("templates", {}).get(template_id) if path.exists() else None) if fresh else get_template_entry(template_id)
     if not entry:
         return None
     raw = entry.get("inputs") or _derived_template_inputs(entry)
@@ -300,4 +345,64 @@ def get_template_inputs(template_id: str) -> dict | None:
         "media": [slot for slot in map(_normalize_media_slot, raw.get("media") or []) if slot],
         "texts": texts,
         "brief": bool(raw.get("brief", False)),
+        "defaults": _normalize_defaults(raw.get("defaults")),
     }
+
+
+def read_template_html(template_id: str) -> str:
+    """Read the unique NodeMotion engine; other categories retain their entry."""
+    from src.templates._tools.nodemotion.shared.assemble import assemble, registered
+    if registered(template_id):
+        return assemble(template_id).decode("utf-8")
+    path = get_template_paths(template_id)["index_html"]
+    if path is None:
+        raise FileNotFoundError(f"No HTML for template {template_id}")
+    return path.read_text(encoding="utf-8")
+
+
+def resolve_template_content(path: Path) -> bytes | Path | None:
+    """Resolve a demo document or a moved code asset without exposing other roots."""
+    try:
+        relative = path.absolute().relative_to(settings.templates_dir.absolute())
+    except ValueError:
+        return None
+    parts = relative.parts
+    if len(parts) < 4 or parts[0] != "nodemotion" or parts[1] not in {"lyrics", "commercial"}:
+        return None
+    from src.templates._tools.nodemotion.shared.assemble import assemble, demo_folder, registered, resolve_runtime_asset
+    design_id = parts[2]
+    if not registered(design_id) or path.parent == settings.templates_dir:
+        return None
+    try:
+        asset = path.absolute().relative_to(demo_folder(design_id).absolute()).as_posix()
+    except ValueError:
+        return None
+    if asset == "index.html":
+        return assemble(design_id)
+    return resolve_runtime_asset(design_id, asset)
+
+
+def get_template_asset_relative_path(template_id: str, path: Path) -> str:
+    """Keep public demo URLs stable when the physical resource is shared."""
+    root = get_template_asset_dir(template_id)
+    if root is not None and path.is_relative_to(root):
+        return path.relative_to(root).as_posix()
+    from src.core.nodemotion.shared.bundled import demo_aliases, resolve_bundled_key
+    for relative, key in demo_aliases(template_id).items():
+        if relative.startswith("assets/") and resolve_bundled_key(key) == path:
+            return relative.removeprefix("assets/")
+    raise ValueError("Unregistered preview resource")
+
+
+def _normalize_defaults(value: object) -> dict:
+    """Canción y medios por defecto de una plantilla (ids de la biblioteca, en el orden de la plantilla)."""
+    if not isinstance(value, dict):
+        return {"audio_asset_id": None, "media": {}}
+    media: dict[str, list[dict]] = {}
+    for slot, items in (value.get("media") or {}).items():
+        media[str(slot)] = [
+            {"asset_id": str(item["asset_id"]), "kind": str(item.get("kind") or "video")}
+            for item in items or [] if isinstance(item, dict) and item.get("asset_id")
+        ]
+    audio = value.get("audio_asset_id")
+    return {"audio_asset_id": str(audio) if audio else None, "media": media}

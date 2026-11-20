@@ -1,0 +1,56 @@
+ESTUDIO DE ALMACENAMIENTO WEB — ALFRED-SERVER
+Fecha de revisión: 2 de noviembre de 2026, zona America/La_Paz.
+Ruta: /home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-web
+Unidades: GB y MB decimales. Mediciones de bloques ocupados: du -x -B1.
+
+RESULTADO
+La web ocupa 5.045.280.768 bytes (5,05 GB).
+La copia .next/dev.backup-2026-11-01 ocupa 2.758.123.520 bytes (2,76 GB).
+Es una compilación anterior con caché y archivos generados. No encontré referencias operativas a esa ruta en los scripts ni en la configuración revisados. El servidor Next activo abre .next/dev/lock y .next/dev/trace. Docker usa una compilación dentro de su imagen y no monta .next del host.
+Recomendación: eliminar la copia anterior identificada cuando se ejecute la limpieza; el estudio no ha borrado archivos ni reiniciado servicios.
+
+PARA QUÉ SERVÍA ESA COPIA
+Permitiría volver a usar archivos de compilación y caché anteriores. No equivale a un respaldo del proyecto, los usuarios o los videos.
+El nombre y los metadatos son compatibles con que se apartara la compilación del 1 de noviembre como precaución. No encontré el comando de creación ni evidencia suficiente para atribuir quién la creó o el motivo exacto. Sus archivos más recientes son del 1/nov/2026 a las 07:44 -04:00.
+
+CONTENIDO DEL RESPALDO
+4.202 archivos, sin enlaces simbólicos y sin archivos con múltiples enlaces duros.
+2,39 GB en cache, de los cuales 2,38 GB corresponden a cache/turbopack.
+181,7 MB en server; 104,2 MB en static; el resto son trazas, registros, tipos y archivos de compilación.
+Las extensiones principales son .sst y .meta (base de caché), .js y .map.
+La inspección de nombres no encontró MP4, MOV, WAV, MP3, bases .db/.sqlite, accounts.json, users.json ni archivos .env dentro del respaldo.
+
+QUÉ PASARÍA AL ELIMINARLO
+Se perdería solamente esa copia anterior de compilación y caché. El servidor activo usa otro directorio. El código fuente, los recursos public y los datos enlazados a .local están fuera de la copia.
+La web pasaría de 5,05 GB a aproximadamente 2,29 GB, recuperando 2,76 GB (54,7% de su tamaño medido).
+No hay que sumar los 2,39 GB de cache del respaldo a los 2,76 GB: ya están incluidos.
+
+CACHÉ ACTIVA
+.next/dev ocupa 1,34 GB; su cache ocupa 1.131.163.648 bytes (1,13 GB).
+Es caché del compilador Turbopack: sirve para acelerar la compilación y los reinicios de desarrollo. No es un respaldo de videos.
+Se puede regenerar desde el código fuente. Para limpiarla correctamente hay que detener el proceso de desarrollo, eliminar la caché y volver a iniciarlo. No conviene borrar .next/dev mientras ese proceso está funcionando.
+La primera compilación tras limpiarla tardaría más y la caché volvería a crecer con el uso.
+Eliminando el respaldo antiguo y limpiando únicamente la caché activa, se recuperarían aproximadamente 3,89 GB y la carpeta web quedaría en 1,16 GB inicialmente. Es una estimación, no un límite permanente.
+Next.js 16.2.10 tiene turbopackFileSystemCacheForDev=true por defecto. No encontré una configuración específica de esta aplicación que cambie ese valor.
+
+OTRAS CARPETAS
+node_modules: 782,3 MB. Dependencias instaladas que usa el entorno de desarrollo; no recomiendo quitarlas mientras se conserve ese entorno.
+  Next: 180,2 MB; compilador SWC de Next: 130,3 MB; ejecutable Biome: 64,6 MB; lucide-react: 36,8 MB; otras dependencias completan el resto.
+public: 83,8 MB. Recursos visuales de la aplicación; ejemplos-posts concentra 63,8 MB. Su posible depuración requiere revisar referencias concretas y no debe confundirse con caché.
+src: 4,0 MB. Código fuente de la web; conservar.
+.next/standalone: 44,6 MB. Salida generada de producción. El Dockerfile construye su propia salida; no es el consumo principal del host.
+test-results: 1,1 MB. Resultados de pruebas, regenerables; beneficio pequeño.
+
+PREVENCIÓN PROPUESTA
+Evitar copias históricas de .next; preservar fuente y datos, y reconstruir la compilación cuando haga falta.
+Para mantener el desarrollo activo, limpiar su caché en reinicios controlados cuando exceda un umbral acordado. Borrarla una vez no impide que reaparezca.
+Otra opción es servir una compilación de producción en el sitio público y reservar next dev para desarrollo; requiere validar el despliegue y no se aplicó en este estudio.
+Desactivar la caché persistente ahorraría disco a cambio de recompilaciones más lentas; tampoco se cambió esa configuración.
+
+EVIDENCIA Y ALCANCE
+Se revisaron package.json, next.config.ts, Dockerfile, .dockerignore, scripts y Makefile; tamaños, metadatos y extensiones del respaldo; sockets de los puertos 3000/3002; y montajes del contenedor web.
+Se buscaron archivos abiertos dentro del respaldo entre 92 procesos del usuario; no se encontraron referencias. 23 procesos no permitían inspeccionar sus descriptores. Esa comprobación se complementó con configuración, scripts y montajes.
+La inspección no leyó contenidos de credenciales ni bases de usuarios.
+Documentación instalada de Next y documentación oficial:
+https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopackFileSystemCache
+https://nextjs.org/docs/app/api-reference/config/next-config-js/output

@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "id": "lyrics-trazo",
+  "title": "Trazo",
+  "summary": "Video de letras con rotulación a mano palabra por palabra en blanco y negro: cada palabra en otro estilo dibujado, temblor de línea, inversiones de fondo, garabatos, impactos, grietas y ráfagas letra a letra.",
+  "engine": "lyrics-trazo (player.js + components/*.js, DOM/SVG, reloj = audio.currentTime)",
+  "based_on": null,
+  "is_new_design": true,
+  "reference": "Video de Klickpin de rotulación a mano en blanco y negro (pin 927811960715111799), entregado por el usuario el 2026-11-13. Solo referencia visual: no se usa su audio ni sus dibujos.",
+  "created_at": "2026-11-13",
+  "libraries": [],
+  "state": "lista para revisar",
+  "inputs": {
+    "audio": "song.mp3",
+    "lyrics": "lyrics.json (Whisper)",
+    "config": "config.json"
+  },
+  "components": [
+    {
+      "name": "trazo.intro",
+      "label": "Intro",
+      "summary": "Título escrito a mano y artista tecleado.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "trazo.outrov1",
+      "label": "Outro v1",
+      "summary": "Burbuja sobre negro.",
+      "group": "outro",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "trazo.outrov2",
+      "label": "Outro v2",
+      "summary": "Grieta sobre papel blanco.",
+      "group": "outro",
+      "params": {}
+    },
+    {
+      "name": "trazo.interludios",
+      "label": "Interludios",
+      "summary": "Garabatos animados en los silencios.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "trazo.rafaga",
+      "label": "Ráfagas",
+      "summary": "Palabras sostenidas letra a letra.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "trazo.inversion",
+      "label": "Inversiones",
+      "summary": "Cuadros de papel blanco.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "trazo.trama",
+      "label": "Fondo rayado",
+      "summary": "Trama a mano detrás de algunas palabras.",
+      "default": true,
+      "params": {}
+    },
+    {
+      "name": "trazo.garabatos",
+      "label": "Garabatos",
+      "summary": "Rayos, destellos y subrayados sobre palabras.",
+      "default": true,
+      "params": {}
+    }
+  ],
+  "catalog": {
+    "components": "showcase/components.json",
+    "gallery": "showcase/index.html"
+  },
+  "notes": "Creada directamente en producción por instrucción expresa del usuario. No habilitada para HyperFrames hasta pasar render_demo.py. Ver DESIGN.md."
+}

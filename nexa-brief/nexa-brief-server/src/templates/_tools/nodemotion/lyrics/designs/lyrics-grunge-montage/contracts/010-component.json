@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "grunge-montage.scan",
+  "entry_id": "grunge-montage.scan",
+  "kind": "component",
+  "label": "Corte scan",
+  "summary": "Franjas horizontales del propio cuadro desplazadas a los lados con estela roja tenue.",
+  "component": {
+    "name": "grunge-montage.scan",
+    "label": "Corte scan",
+    "summary": "Franjas horizontales del propio cuadro desplazadas a los lados con estela roja tenue.",
+    "default": true,
+    "params": {
+      "scene": {
+        "type": "string",
+        "default": "s08",
+        "doc": "Nombre de la escena de config.timeline que se muestra"
+      },
+      "duration": {
+        "type": "number",
+        "default": 2.0,
+        "doc": "Segundos de la demo",
+        "min": 0.5,
+        "max": 6
+      }
+    },
+    "tags": [
+      "transicion"
+    ],
+    "file": "player.js",
+    "demo": {
+      "scene": "s08"
+    },
+    "preview": {
+      "t": 3.3
+    }
+  },
+  "params": {
+    "scene": {
+      "type": "string",
+      "default": "s08",
+      "doc": "Nombre de la escena de config.timeline que se muestra"
+    },
+    "duration": {
+      "type": "number",
+      "default": 2.0,
+      "doc": "Segundos de la demo",
+      "min": 0.5,
+      "max": 6
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/showcase/components.json",
+      "pointer": "/components/9"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

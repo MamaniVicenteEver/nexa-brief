@@ -1,0 +1,171 @@
+{
+  "name": "arrow.curve",
+  "family": "arrow",
+  "estilo": {
+    "usa": [
+      "trazos.flecha"
+    ]
+  },
+  "description": "Curva cuadrática con punta, revelado y estela luminosa en movimiento. Úsala para dirigir la atención o representar un desplazamiento.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 15,
+  "states": [],
+  "params": {
+    "via": {
+      "type": "array",
+      "default": [
+        [
+          49,
+          28
+        ],
+        [
+          56.3,
+          26.5
+        ],
+        [
+          59,
+          24
+        ]
+      ],
+      "range": null,
+      "description": "Waypoints de la trayectoria en orden."
+    },
+    "width": {
+      "type": "number",
+      "default": null,
+      "min": 1,
+      "max": 40,
+      "range": {
+        "min": 1,
+        "max": 40
+      },
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "color": {
+      "type": "string",
+      "default": null,
+      "range": null,
+      "description": "Color de la paleta o valor CSS."
+    },
+    "dash": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Valor de dash para la composición de arrow.curve."
+    },
+    "punta": {
+      "type": "enum",
+      "values": [
+        "rellena",
+        "abierta"
+      ],
+      "default": null,
+      "range": [
+        "rellena",
+        "abierta"
+      ],
+      "description": "Valor de punta para la composición de arrow.curve."
+    },
+    "largoPunta": {
+      "type": "number",
+      "default": null,
+      "min": 2,
+      "max": 100,
+      "range": {
+        "min": 2,
+        "max": 100
+      },
+      "description": "Valor de largoPunta para la composición de arrow.curve."
+    },
+    "anchoPunta": {
+      "type": "number",
+      "default": null,
+      "min": 2,
+      "max": 100,
+      "range": {
+        "min": 2,
+        "max": 100
+      },
+      "description": "Valor de anchoPunta para la composición de arrow.curve."
+    },
+    "camisa": {
+      "type": "boolean",
+      "default": true,
+      "range": null,
+      "description": "Valor de camisa para la composición de arrow.curve."
+    },
+    "camisaWidth": {
+      "type": "number",
+      "default": null,
+      "min": 0,
+      "max": 60,
+      "range": {
+        "min": 0,
+        "max": 60
+      },
+      "description": "Valor de camisaWidth para la composición de arrow.curve."
+    },
+    "bando": {
+      "type": "enum",
+      "values": [
+        "atacante",
+        "otro"
+      ],
+      "default": "atacante",
+      "range": [
+        "atacante",
+        "otro"
+      ],
+      "description": "Valor de bando para la composición de arrow.curve."
+    },
+    "reveal": {
+      "type": "number",
+      "default": 1,
+      "range": null,
+      "description": "Duración del revelado progresivo en segundos."
+    },
+    "bend": {
+      "type": "number",
+      "default": 0.3,
+      "range": null,
+      "description": "Curvatura de la trayectoria."
+    },
+    "trail": {
+      "type": "number",
+      "default": 0.24,
+      "range": null,
+      "description": "Longitud relativa de la estela de la flecha."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-arrow-curve",
+    "t": 0,
+    "via": [
+      [
+        48,
+        33
+      ],
+      [
+        56,
+        27
+      ]
+    ],
+    "dur": 6,
+    "out": 5.5,
+    "type": "arrow.curve",
+    "color": "text",
+    "width": 9
+  },
+  "usedBy": [
+    "work/tactico/items-routes.json",
+    "work/tactico/scene-territorios.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/arrow.curve.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

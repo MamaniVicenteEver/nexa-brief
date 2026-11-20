@@ -1,0 +1,12 @@
+# Reporte de corrección — Holograma Mundos
+
+- **ID / familia:** lyrics-hologram-worlds / letras (NodeMotion).
+- **Problema:** el preview quedó negro porque el runtime devolvía escenas sin normalizar a la estructura que consume el renderizador (slot.lines).
+- **Corrección del render:** restauré el runtime explícito conocido como funcional y publiqué su revisión ba342641d9b2a0ade7a029426d621bec9a97bd4e7285abdf771caa354604f588. La revisión fallida 5b1a859524388614d6b1de60fef3de6266792f17ec8f33630b030f7a9e534eae sigue archivada; no se sobrescribió ni borró.
+- **Demo protegida:** las frases y tiempos de src/templates/nodemotion/lyrics/lyrics-hologram-worlds/assets/config.json no se cambiaron (SHA-256 verificado: af8cf4f89946418e164a2663cc904af3384521c805ee128502e7850e70676ee3). El original conserva su texto.
+- **Prototipos nuevos:** añadí una preparación exclusiva para lyrics-hologram-worlds en src/core/nodemotion/lyrics/hologram_worlds.py, llamada desde src/modules/html_generator.py. Usa la transcripción cacheada de la canción elegida, coloca palabras temporizadas en el config.json propio del prototipo y mueve el cierre hasta el final del audio. La ruta original de la Demo (timed_content) se omite. No cambia el esquema de API ni toca otros diseños.
+- **Prototipo ya creado:** actualicé únicamente el JSON de 3bf0ffb0cad5 en el perfil: 78 escenas recibieron palabras, se quitaron frases de K/DA de ese proyecto, los seis recursos de video y su configuración de medios permanecieron iguales, y el cierre quedó en 198,391 s.
+- **Autoplay:** al abrir el preview, el audio avanzó con paused=false; el modal sigue solicitando reproducción al completar una nueva previsualización.
+- **Verificación:** py_compile de los módulos tocados; simulación sobre el JSON antes de escribir; lectura del JSON servido por la API; revisión visual del prototipo con texto en pantalla y de la Demo con sus frases estáticas; consola sin errores del runtime. Solo apareció un 404 de favicon.ico y advertencias de rendimiento WebGL del navegador.
+- **Transcripción:** la canción elegida ya tenía 23 segmentos de Whisper; la detección dice inglés con confianza 0,261. La sincronización y el cambio de texto ya funcionan, pero la letra automática puede contener errores o huecos.
+- **Recursos del servidor:** antes y después del preview había entre 6,5 y 6,8 GiB disponibles; el proceso API usó aproximadamente 30 MiB RSS y volvió a ese nivel al cerrar el navegador. No había jobs de video, grabaciones, producciones ni transcripciones activas.

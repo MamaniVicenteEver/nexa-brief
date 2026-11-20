@@ -1,0 +1,98 @@
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* tema (fuentes/color base) — defaults idénticos al caso actual; config.json puede pisarlos */
+  :root { --fontTube: "Monoton", cursive; --fontBlock: "Archivo Black", sans-serif; --neonCore: #FFE9CF; }
+  html, body { width: 100vw; height: 100vh; overflow: hidden; background: #060302; cursor: pointer; }
+
+  /* fondo 16:9 a pantalla completa, filtrado hacia la paleta del neón */
+  #bg, #bgVideo {
+    position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0;
+    filter: grayscale(0.3) sepia(0.4) hue-rotate(-18deg) saturate(1.5) brightness(0.32) contrast(1.18);
+    animation: bgBreath 46s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+  @keyframes bgBreath {
+    0%   { transform: scale(1.02) translate(0, 0); }
+    100% { transform: scale(1.09) translate(-1.2%, 1%); }
+  }
+  #bgTint {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 60%, rgba(255,60,10,0.10) 0%, rgba(30,4,0,0.55) 78%, rgba(8,2,0,0.8) 100%);
+    mix-blend-mode: multiply;
+  }
+
+  #viewport { position: fixed; inset: 0; perspective: 1000px; overflow: hidden; z-index: 2; }
+  #worldTilt { position: absolute; inset: 0; transform-style: preserve-3d; }
+  #world { position: absolute; left: 0; top: 0; transform-style: preserve-3d; will-change: transform; }
+
+  .w {
+    position: absolute; white-space: nowrap; text-transform: uppercase;
+    will-change: transform, opacity; line-height: 0.95;
+    transition: opacity 1.6s ease, filter 1.6s ease;
+  }
+  .w.tube { font-family: var(--fontTube); font-weight: 400; }
+  .w.line {
+    font-family: var(--fontBlock); font-weight: 900;
+    color: transparent !important; letter-spacing: 0.02em;
+  }
+  .w.vert { writing-mode: vertical-rl; text-orientation: mixed; }
+  .w.cold { opacity: 0.42; filter: brightness(0.75); }
+  @keyframes ignite {
+    0%   { opacity: 0; }
+    6%   { opacity: 1; }
+    10%  { opacity: 0.25; }
+    16%  { opacity: 1; }
+    21%  { opacity: 0.35; }
+    27%  { opacity: 1; }
+    34%  { opacity: 0.85; }
+    40%  { opacity: 1; }
+    100% { opacity: 1; }
+  }
+  .w.on { animation: ignite 0.55s steps(1, end) forwards; }
+
+  #vignette {
+    position: fixed; inset: 0; z-index: 4; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 42%, transparent 42%, rgba(0,0,0,0.78) 100%);
+  }
+  #crt {
+    position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0.13;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,0.55) 0 2px, transparent 2px 5px);
+  }
+  #grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%; z-index: 6; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity: 0.06; mix-blend-mode: overlay; animation: gsh 1s steps(4) infinite;
+  }
+  @keyframes gsh { 0%{transform:translate(0,0)} 25%{transform:translate(-2%,1%)} 50%{transform:translate(1%,-2%)} 75%{transform:translate(-1%,2%)} 100%{transform:translate(0,0)} }
+
+  #outro { position: fixed; inset: 0; z-index: 9; pointer-events: none; overflow: hidden; background: #060302;
+    color: var(--neonCore); text-transform: uppercase; text-align: center; opacity: 0; }
+  #outro .outroHaze { position: absolute; inset: 0; opacity: 0;
+    background: radial-gradient(ellipse 50% 30% at 50% 40%, var(--neonDeep), transparent 72%); }
+  #outro .outroStack { position: absolute; left: 4vw; right: 4vw; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; align-items: center; }
+  #outro .outroThanks { font: 400 clamp(14px,3.6vmin,50px) var(--fontTube); letter-spacing: .14em; padding-left: .14em; }
+  #outro .outroChannel { font: 400 16vmin/1.05 var(--fontTube); white-space: nowrap; margin-top: 2vmin; }
+  #outro .outroChannel .ch { display: inline-block; white-space: pre; }
+  #outro .outroCta { font: 400 clamp(18px,4.8vmin,64px) var(--fontBlock); letter-spacing: .08em; margin-top: 5vmin; }
+  #outro .outroSupport { font: 400 clamp(13px,2.9vmin,40px)/1.4 var(--fontBlock); letter-spacing: .03em; text-transform: none; margin-top: 6vmin; max-width: 80vw; }
+  #outro .outroHandle { font: 400 clamp(12px,2.4vmin,34px) var(--fontBlock); letter-spacing: .2em; text-transform: none; margin-top: 2.2vmin; }
+  body.outroActive #viewport { opacity: 0.10; transition: opacity 1.6s ease; }
+  body.outroActive #bg, body.outroActive #bgVideo, body.outroActive #bgTint { opacity: 0.56; transition: opacity 1.6s ease; }
+  #hint {
+    position: fixed; bottom: 6vh; width: 100vw; text-align: center; z-index: 8;
+    font-family: var(--fontBlock); font-size: 1.5vh; letter-spacing: 0.5em;
+    opacity: 0.55; animation: hintPulse 2s ease infinite; pointer-events: none; color: var(--neonCore);
+  }
+  @keyframes hintPulse { 0%,100% { opacity: 0.2; } 50% { opacity: 0.7; } }
+
+
+  /* responsive móvil (solo orientación vertical — desktop queda intacto) */
+  @media (orientation: portrait) {
+    #outro .outroChannel { margin-top: 3vmin; font-size: 10.6vw; }
+    #outro .outroThanks { font-size: 6.2vw; }
+    #outro .outroCta { font-size: 7.6vw; margin-top: 6vmin; }
+    #outro .outroSupport { font-size: 4.6vw; margin-top: 8vmin; max-width: 86vw; }
+    #outro .outroHandle { font-size: 3.8vw; margin-top: 3.6vmin; }
+  }
+

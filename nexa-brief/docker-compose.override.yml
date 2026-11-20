@@ -1,0 +1,7 @@
+services:
+  api:
+    ports: !override
+      - "127.0.0.1:8002:8000"
+  web:
+    ports: !override
+      - "127.0.0.1:3002:3000"

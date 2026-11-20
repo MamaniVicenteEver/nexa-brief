@@ -1,0 +1,15 @@
+# PROPUESTA NO APLICADA. No es un parche autónomo listo para ejecutar.
+# La API naval actual no expone ship-patrol del catálogo sprites3.
+# Antes de aplicar: registrar ship-patrol y sus estados normal/detected/burning/
+# wrecked en el manifiesto consumido por naval, con rutas ../sprites3/,
+# anchor, length_pixels y máscaras copiados de sprites3/sprites3.json.
+# Sigue siendo un patrullero genérico: no certifica una silueta Kaman.
+--- a/engine/tactico/components/naval.js
++++ b/engine/tactico/components/naval.js
+@@
+-  'naval.warship':{destroyer:['warship-destroyer',.45],frigate:['warship-frigate',.38],cruiser:['warship-cruiser',.53]},
++  'naval.warship':{destroyer:['warship-destroyer',.45],frigate:['warship-frigate',.38],cruiser:['warship-cruiser',.53],patrol:['ship-patrol',56/332]},
+# Después: regenerar components.json con el registry del motor; cambiar solo
+# Joshan a variant:patrol y revisar escala/estados con 8 seeks y hojas visuales.
+# Para precisión tipológica total hacen falta modelos propios A-6E, MH-6/AH-6
+# y Kaman y sus registros. No basta con renombrar las siluetas genéricas.

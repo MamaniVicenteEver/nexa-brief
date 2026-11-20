@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-impact",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-impact",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/background-sequence.js": "runtime/components/background-sequence.js",
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/women-dancing.mp4",
+    "components/intro.js",
+    "components/background-sequence.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "3e9f8e880058b2f208999b5343c3af3f99af146a8d6ee9bed3485d7c87429911",
+  "migration_source_sha256": "3e9f8e880058b2f208999b5343c3af3f99af146a8d6ee9bed3485d7c87429911",
+  "migration_runtime_sha256": {
+    "components/background-sequence.js": "44f7b8589d67ede2ebb3d426749edae5672122aaf7a90b0498a02d8c7d1d1e9e",
+    "components/intro.js": "ab1a5a047d1760b5583b08a652cfd7ae5871c38676f8298cb4a76ff2f661a206",
+    "components/outro.js": "54bfcaa868b1d8a58af6aa768390e0dbbb40e0668789562f1271f46a50c851e8"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-impact",
+    "config": "nodemotion/lyrics/lyrics-impact/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-impact/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-impact/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/bg.png": "9c96bee361987b56992fa2308dcf2526d6446088d7812000de7a785185abe948.png",
+    "assets/card-poster.webp": "652c8c44e8c999d56ec8781ddeef884be84cf4c18bb7691c47cbde891d83c7b9.webp",
+    "assets/remix.jpg": "22e483fe12595138eff850e2c6c83c33e85b8ec708935444c6c50845a0e42607.jpg",
+    "assets/song.mp3": "84fa49015ac891d6f7bb5ebc8513885cb620239c280267b51cadaafa32755e96.mp3",
+    "assets/women-dancing.mp4": "b6afa20278e6385d920fbab482dc78f377db2319ad7b2e7b4097f2f446b2a450.mp4"
+  }
+}

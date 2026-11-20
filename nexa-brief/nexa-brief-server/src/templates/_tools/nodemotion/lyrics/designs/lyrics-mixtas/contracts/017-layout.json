@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-mixtas",
+  "id": "layout.band",
+  "entry_id": "layout.band",
+  "name": "band",
+  "kind": "layout",
+  "label": "band",
+  "summary": "Existing layout configuration: band.",
+  "params": {
+    "weight": {
+      "default": 0.7
+    },
+    "bgs": {
+      "default": [
+        "paper"
+      ]
+    }
+  },
+  "example": {
+    "weight": 0.7,
+    "bgs": [
+      "paper"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-mixtas/assets/config.json",
+      "pointer": "/configs/0/layouts/band"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

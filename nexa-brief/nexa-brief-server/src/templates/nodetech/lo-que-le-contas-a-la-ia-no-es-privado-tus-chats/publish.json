@@ -1,0 +1,254 @@
+{
+  "schema_version": 2,
+  "category": "node_tech",
+  "thumbnail": {
+    "text_only": {
+      "lines": [
+        "LO BORRASTE",
+        "PERO ALGUIEN",
+        "LO GUARDÓ"
+      ],
+      "highlight": "LO GUARDÓ",
+      "pair_title": "A"
+    },
+    "with_image": {
+      "text": "NO ERA PRIVADO",
+      "image": "preocupada.jpg",
+      "composition": "Rostro de una mujer con teléfono a la derecha; titular a la izquierda. Es una imagen ilustrativa y no representa a una persona del litigio.",
+      "pair_title": "B",
+      "image_side": "right",
+      "image_review": [
+        {
+          "image": "preocupada.jpg",
+          "verdict": "elegida",
+          "reason": "El rostro preocupado y el teléfono comunican una inquietud personal; se conserva espacio para el texto. Foto ilustrativa, sin vínculo con el caso."
+        },
+        {
+          "image": "persona.jpg",
+          "verdict": "alternativa",
+          "reason": "El teléfono se reconoce, pero el rostro queda fuera del encuadre."
+        }
+      ]
+    },
+    "tabloid": {
+      "text": "TUS CHATS ANTE UN JUEZ",
+      "image": "chat-juicio.png",
+      "image_side": "right",
+      "image_after": null,
+      "accent": "JUEZ",
+      "bullet": "20 MILLONES",
+      "image_review": [
+        {
+          "image": "chat-juicio.png",
+          "verdict": "elegida",
+          "reason": "Ilustración fotográfica generada: chat y mazo judicial reconocibles; no representa un tribunal o hecho real."
+        },
+        {
+          "image": "preocupada.jpg",
+          "verdict": "débil",
+          "reason": "El teléfono no comunica el litigio."
+        }
+      ],
+      "before_label": "",
+      "after_label": "",
+      "mode": "impact",
+      "palette": "brand",
+      "strap": "",
+      "seal": "",
+      "tape_text": "",
+      "marker": false,
+      "target": [
+        0.72,
+        0.4
+      ],
+      "focus": [
+        0.72,
+        0.55,
+        0.15
+      ],
+      "pair_title": "C"
+    },
+    "chosen": "tabloid",
+    "kicker": "CHATGPT · PRIVACIDAD"
+  },
+  "titles": {
+    "youtube": [
+      {
+        "option": "A",
+        "text": "ChatGPT retuvo chats borrados por orden judicial",
+        "strategy": 4,
+        "emotion": "Inquietud"
+      },
+      {
+        "option": "B",
+        "text": "Lo que cuentas a ChatGPT puede llegar a juicio",
+        "strategy": 9,
+        "emotion": "Temor"
+      },
+      {
+        "option": "C",
+        "text": "20 millones de conversaciones como la tuya",
+        "strategy": 1,
+        "emotion": "Tensión"
+      }
+    ],
+    "facebook": {
+      "title": "Veinte millones de chats ante un juez",
+      "first_line": "Una disputa judicial puso una muestra de conversaciones de ChatGPT bajo revisión."
+    },
+    "tiktok": {
+      "caption": "Una orden judicial puso conversaciones de ChatGPT en una disputa legal. ¿Qué guardarías para ti?"
+    },
+    "chosen": "C"
+  },
+  "description": {
+    "hook": "Una orden judicial puso una muestra de veinte millones de conversaciones de ChatGPT en el centro de una disputa legal.",
+    "context": "Distinguimos la conservación de registros de la revisión judicial y de su publicación, revisamos los ajustes de entrenamiento y contamos qué significa realmente un chat temporal. La muestra no demuestra que tu conversación haya sido seleccionada.",
+    "chapters": [
+      {
+        "at": "0:00",
+        "title": "Una orden y tus conversaciones"
+      },
+      {
+        "at": "1:05",
+        "title": "La disputa llega al tribunal"
+      },
+      {
+        "at": "2:26",
+        "title": "Conservar no es publicar"
+      },
+      {
+        "at": "3:12",
+        "title": "La muestra de 20 millones"
+      },
+      {
+        "at": "5:02",
+        "title": "Qué ocurre cuando borras un chat"
+      },
+      {
+        "at": "6:25",
+        "title": "Entrenamiento y retención"
+      },
+      {
+        "at": "7:29",
+        "title": "Los enlaces compartidos"
+      },
+      {
+        "at": "8:49",
+        "title": "Un antecedente: Enron"
+      },
+      {
+        "at": "10:26",
+        "title": "Qué puedes hacer hoy"
+      }
+    ],
+    "reflection": "Un enlace compartido, un historial guardado y un ajuste de entrenamiento tienen efectos diferentes. Saber quién accede a tus datos cambia tus decisiones.",
+    "question": "¿Qué nunca le contarías a una IA?",
+    "gratitude": "G1_identidad",
+    "gratitude_topic": ""
+  },
+  "sources": [
+    "https://cases.justia.com/federal/district-courts/new-york/nysdce/1%3A2023cv11195/612697/551/0.pdf",
+    "https://cases.justia.com/federal/district-courts/new-york/nysdce/1%3A2023cv08292/606655/812/0.pdf",
+    "https://cdn.arstechnica.net/wp-content/uploads/2026/01/NYT-v-OpenAI-Order-1-5-26.pdf",
+    "https://openai.com/index/response-to-nyt-data-demands/",
+    "https://openai.com/new-york-times/",
+    "https://www.youtube.com/watch?v=aYn8VKW6vXA&t=2579s",
+    "https://help.openai.com/en/articles/7730893-data-controls-faq",
+    "https://help.openai.com/en/articles/8914046-temporary-chat-faq",
+    "https://help.openai.com/en/articles/7925741-sharing-conversations-and-scheduled-tasks-in-chatgpt",
+    "https://help.openai.com/en/articles/7039943-how-openai-handles-data-in-consumer-services",
+    "https://storage.courtlistener.com/recap/gov.uscourts.nysd.652137/gov.uscourts.nysd.652137.27.0.pdf",
+    "https://law.justia.com/cases/federal/district-courts/new-york/nysdce/1%3A2023cv08292/606655/1098/",
+    "https://x.com/cryps1s/status/1951041845938499669",
+    "https://www.justice.gov/archive/enron/exhibit/02-14/index.htm"
+  ],
+  "credits": [
+    "Mujer con teléfono — Shixart1985 — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Worried_woman_talking_on_the_phone_by_the_window.jpg",
+    "Mujer con teléfono y café — Nenad Stojkovic — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Close-up_of_a_woman_using_her_smartphone_while_having_coffee.jpg",
+    "Mujer con teléfono en casa — Shixart1985 — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Middle-aged_woman_using_a_smartphone_at_home_closeup.jpg",
+    "Mujer y cojín — Shixart1985 — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Woman_holds_a_cushion_while_using_her_smartphone_at_home.jpg",
+    "Centro de datos — DOE/NREL — dominio público — https://commons.wikimedia.org/wiki/File:Data_center_infrastructure_in_the_United_States.jpg",
+    "Centro de datos — BalticServers.com — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:BalticServers_data_center.jpg",
+    "Tribunal de apelaciones de Nueva York — Kidfly182 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Appellate_Division_Courthouse_of_New_York_State_March_2023.jpg",
+    "Computadora portátil — Olu Eletu — CC0 — https://commons.wikimedia.org/wiki/File:Businessman_typing_on_a_laptop_(Unsplash).jpg",
+    "Manos y teclado — www.Pixel.la — CC0 — https://commons.wikimedia.org/wiki/File:Hand-laptop-notebook-typing_(23698140194).jpg",
+    "Hombre con portátil — Alejandro Escamilla — CC0 — https://commons.wikimedia.org/wiki/File:Man_typing_on_laptop_(Unsplash).jpg",
+    "Video de escritura — Coverr-Free-Footage — Pixabay Content License — https://pixabay.com/videos/id-3188/",
+    "Imagen de chat y mazo judicial — ilustración conceptual generada con OpenAI; no es una fotografía de un juicio real.",
+    "Video de teléfono — conte_public — Pixabay Content License — https://pixabay.com/videos/id-204421/",
+    "Video de centro de datos — FindingFootage — Pixabay Content License — https://pixabay.com/videos/id-4000/",
+    "Video de oficina — chuduyen215 (Pixabay) — Pixabay Content License — https://pixabay.com/videos/id-27091/"
+  ],
+  "tags": {
+    "youtube": [
+      "ChatGPT",
+      "privacidad",
+      "OpenAI",
+      "inteligencia artificial",
+      "datos personales",
+      "chats",
+      "tribunal",
+      "entrenamiento IA",
+      "chat temporal",
+      "enlaces compartidos",
+      "tecnología",
+      "NodeTech"
+    ],
+    "youtube_hashtags": [
+      "#NodeTech",
+      "#ChatGPT",
+      "#Privacidad"
+    ],
+    "tiktok": [
+      "#sabiasque",
+      "#ChatGPT",
+      "#Privacidad"
+    ],
+    "facebook": [
+      "#Tecnología",
+      "#Privacidad"
+    ]
+  },
+  "pinned_comment": "Dato extra: archivar un chat no equivale a borrarlo. ¿Qué nunca le contarías a una IA? ¿Qué tema te gustaría que investiguemos después?",
+  "strategies_used": {
+    "title": "title_alarmista_v1",
+    "thumbnail": "thumb_two_modes_v1",
+    "platforms": "platforms_v1",
+    "description": "desc_nine_blocks_v1",
+    "gratitude": "gratitude_rotation_v1",
+    "tags": "tags_minimal_v1",
+    "pinned": "pinned_fact_two_questions_v1",
+    "narrative": "narrative_amarillista_v1"
+  },
+  "youtube_title": "20 millones de conversaciones como la tuya",
+  "youtube_title_alternatives": [
+    "ChatGPT retuvo chats borrados por orden judicial",
+    "Lo que cuentas a ChatGPT puede llegar a juicio"
+  ],
+  "youtube_description": "Una orden judicial puso una muestra de veinte millones de conversaciones de ChatGPT en el centro de una disputa legal.\n\nDistinguimos la conservación de registros de la revisión judicial y de su publicación, revisamos los ajustes de entrenamiento y contamos qué significa realmente un chat temporal. La muestra no demuestra que tu conversación haya sido seleccionada.\n\nCAPÍTULOS\n0:00 Una orden y tus conversaciones\n1:05 La disputa llega al tribunal\n2:26 Conservar no es publicar\n3:12 La muestra de 20 millones\n5:02 Qué ocurre cuando borras un chat\n6:25 Entrenamiento y retención\n7:29 Los enlaces compartidos\n8:49 Un antecedente: Enron\n10:26 Qué puedes hacer hoy\n\nUn enlace compartido, un historial guardado y un ajuste de entrenamiento tienen efectos diferentes. Saber quién accede a tus datos cambia tus decisiones.\n\nSi llegaste hasta aquí, eres de las personas que se quedan hasta el final de una historia. Gracias de verdad. Cada minuto que le dedicas le dice a YouTube que estas historias valen la pena, y eso nos permite seguir investigando y contando la próxima.\n\n¿Qué nunca le contarías a una IA?\n\nFUENTES\n- https://cases.justia.com/federal/district-courts/new-york/nysdce/1%3A2023cv11195/612697/551/0.pdf\n- https://cases.justia.com/federal/district-courts/new-york/nysdce/1%3A2023cv08292/606655/812/0.pdf\n- https://cdn.arstechnica.net/wp-content/uploads/2026/01/NYT-v-OpenAI-Order-1-5-26.pdf\n- https://openai.com/index/response-to-nyt-data-demands/\n- https://openai.com/new-york-times/\n- https://www.youtube.com/watch?v=aYn8VKW6vXA&t=2579s\n- https://help.openai.com/en/articles/7730893-data-controls-faq\n- https://help.openai.com/en/articles/8914046-temporary-chat-faq\n- https://help.openai.com/en/articles/7925741-sharing-conversations-and-scheduled-tasks-in-chatgpt\n- https://help.openai.com/en/articles/7039943-how-openai-handles-data-in-consumer-services\n- https://storage.courtlistener.com/recap/gov.uscourts.nysd.652137/gov.uscourts.nysd.652137.27.0.pdf\n- https://law.justia.com/cases/federal/district-courts/new-york/nysdce/1%3A2023cv08292/606655/1098/\n- https://x.com/cryps1s/status/1951041845938499669\n- https://www.justice.gov/archive/enron/exhibit/02-14/index.htm\n\nIMÁGENES (Wikimedia Commons)\n- Mujer con teléfono — Shixart1985 — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Worried_woman_talking_on_the_phone_by_the_window.jpg\n- Mujer con teléfono y café — Nenad Stojkovic — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Close-up_of_a_woman_using_her_smartphone_while_having_coffee.jpg\n- Mujer con teléfono en casa — Shixart1985 — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Middle-aged_woman_using_a_smartphone_at_home_closeup.jpg\n- Mujer y cojín — Shixart1985 — CC BY 2.0 — https://commons.wikimedia.org/wiki/File:Woman_holds_a_cushion_while_using_her_smartphone_at_home.jpg\n- Centro de datos — DOE/NREL — dominio público — https://commons.wikimedia.org/wiki/File:Data_center_infrastructure_in_the_United_States.jpg\n- Centro de datos — BalticServers.com — CC BY-SA 3.0 — https://commons.wikimedia.org/wiki/File:BalticServers_data_center.jpg\n- Tribunal de apelaciones de Nueva York — Kidfly182 — CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Appellate_Division_Courthouse_of_New_York_State_March_2023.jpg\n- Computadora portátil — Olu Eletu — CC0 — https://commons.wikimedia.org/wiki/File:Businessman_typing_on_a_laptop_(Unsplash).jpg\n- Manos y teclado — www.Pixel.la — CC0 — https://commons.wikimedia.org/wiki/File:Hand-laptop-notebook-typing_(23698140194).jpg\n- Hombre con portátil — Alejandro Escamilla — CC0 — https://commons.wikimedia.org/wiki/File:Man_typing_on_laptop_(Unsplash).jpg\n- Video de escritura — Coverr-Free-Footage — Pixabay Content License — https://pixabay.com/videos/id-3188/\n- Imagen de chat y mazo judicial — ilustración conceptual generada con OpenAI; no es una fotografía de un juicio real.\n- Video de teléfono — conte_public — Pixabay Content License — https://pixabay.com/videos/id-204421/\n- Video de centro de datos — FindingFootage — Pixabay Content License — https://pixabay.com/videos/id-4000/\n- Video de oficina — chuduyen215 (Pixabay) — Pixabay Content License — https://pixabay.com/videos/id-27091/\n\n#NodeTech #ChatGPT #Privacidad",
+  "youtube_tags": [
+    "ChatGPT",
+    "privacidad",
+    "OpenAI",
+    "inteligencia artificial",
+    "datos personales",
+    "chats",
+    "tribunal",
+    "entrenamiento IA",
+    "chat temporal",
+    "enlaces compartidos",
+    "tecnología",
+    "NodeTech"
+  ],
+  "facebook_title": "Veinte millones de chats ante un juez",
+  "facebook_description": "Una disputa judicial puso una muestra de conversaciones de ChatGPT bajo revisión.\n\nUn enlace compartido, un historial guardado y un ajuste de entrenamiento tienen efectos diferentes. Saber quién accede a tus datos cambia tus decisiones.\n\n¿Qué nunca le contarías a una IA?\n\n#Tecnología #Privacidad",
+  "tiktok_caption": "Una orden judicial puso conversaciones de ChatGPT en una disputa legal. ¿Qué guardarías para ti?",
+  "tiktok_hashtags": [
+    "#sabiasque",
+    "#ChatGPT",
+    "#Privacidad"
+  ],
+  "thumbnail_text": "TUS CHATS ANTE UN JUEZ",
+  "gratitude_used": "G1_identidad"
+}

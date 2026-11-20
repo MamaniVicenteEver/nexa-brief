@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "config.grades",
+  "entry_id": "config.grades",
+  "name": "grades",
+  "kind": "configuration",
+  "label": "grades",
+  "summary": "Existing configuration configuration: grades.",
+  "params": {
+    "holo": {
+      "default": {
+        "type": "duo",
+        "dark": "#0B0A14",
+        "light": "#D6C8FF",
+        "contrast": 1.25
+      }
+    }
+  },
+  "example": {
+    "holo": {
+      "type": "duo",
+      "dark": "#0B0A14",
+      "light": "#D6C8FF",
+      "contrast": 1.25
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/assets/config.json",
+      "pointer": "/configs/0/grades"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

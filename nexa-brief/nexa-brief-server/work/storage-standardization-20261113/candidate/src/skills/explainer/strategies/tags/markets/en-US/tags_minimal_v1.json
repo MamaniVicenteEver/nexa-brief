@@ -1,0 +1,32 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "tags_minimal_v1",
+  "piece": "tags",
+  "locale": "en-US",
+  "status": "draft",
+  "intent": "Use a small set of precise search terms and platform-specific hashtag counts.",
+  "templates": {
+    "tag": "{subject people actually search for}",
+    "hashtag": "#{specific subject}"
+  },
+  "examples": [
+    "ChatGPT privacy",
+    "AI chat history",
+    "OpenAI data retention",
+    "#AI",
+    "#Privacy",
+    "#NodeTech"
+  ],
+  "conventions": [
+    "Keep brand names intact; include useful spelling variants, not keyword stuffing.",
+    "Use the universal tag counts and character limits.",
+    "Do not add US institutions unless the story covers them."
+  ],
+  "sounds_false": [
+    "#fyp #viral attached to every topic.",
+    "A translated Spanish keyword that nobody uses in English."
+  ],
+  "overrides": {
+    "name": "Specific search terms and restrained hashtags"
+  }
+}

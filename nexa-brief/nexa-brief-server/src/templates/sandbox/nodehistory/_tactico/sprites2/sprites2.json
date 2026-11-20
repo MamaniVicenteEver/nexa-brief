@@ -1,0 +1,3369 @@
+{
+  "version": 2,
+  "base_sprites": [
+    "tank-main",
+    "tank-main-rounded",
+    "tank-light",
+    "apc",
+    "truck-military",
+    "truck-fuel",
+    "jeep",
+    "artillery-towed",
+    "artillery-self-propelled",
+    "missile-launcher",
+    "ambulance-cross",
+    "ambulance-crescent",
+    "engineer",
+    "ship-amphibious",
+    "ship-patrol",
+    "ship-tug",
+    "ship-tanker-vlcc",
+    "ship-platform",
+    "air-bomber-heavy",
+    "air-bomber-tactical",
+    "air-transport-jet",
+    "air-fighter-swept",
+    "air-helicopter-heavy",
+    "air-uav"
+  ],
+  "sprites": {
+    "tank-main": {
+      "file": "tank-main.png",
+      "mask": "tank-main-shadow.png",
+      "tint_mask": "tank-main-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1,
+      "length_m": 10.2,
+      "length_pixels": 1010,
+      "variant": "angular",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "tank-main",
+        "detected": "tank-main-detected",
+        "burning": "tank-main-burning",
+        "wrecked": "tank-main-wrecked"
+      },
+      "size": [
+        420,
+        1024
+      ],
+      "base": "tank-main",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.030722891566265058,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/tank-main.blend"
+    },
+    "tank-main-detected": {
+      "file": "tank-main-detected.png",
+      "mask": "tank-main-shadow.png",
+      "tint_mask": "tank-main-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1,
+      "length_m": 10.2,
+      "length_pixels": 1010,
+      "variant": "angular",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "tank-main",
+        "detected": "tank-main-detected",
+        "burning": "tank-main-burning",
+        "wrecked": "tank-main-wrecked"
+      },
+      "size": [
+        420,
+        1024
+      ],
+      "base": "tank-main",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.030722891566265058,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/tank-main.blend"
+    },
+    "tank-main-burning": {
+      "file": "tank-main-burning.png",
+      "mask": "tank-main-shadow.png",
+      "tint_mask": "tank-main-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1,
+      "length_m": 10.2,
+      "length_pixels": 1010,
+      "variant": "angular",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "tank-main",
+        "detected": "tank-main-detected",
+        "burning": "tank-main-burning",
+        "wrecked": "tank-main-wrecked"
+      },
+      "size": [
+        420,
+        1024
+      ],
+      "base": "tank-main",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.030722891566265058,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/tank-main.blend"
+    },
+    "tank-main-wrecked": {
+      "file": "tank-main-wrecked.png",
+      "mask": "tank-main-shadow.png",
+      "tint_mask": "tank-main-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1,
+      "length_m": 10.2,
+      "length_pixels": 1010,
+      "variant": "angular",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "tank-main",
+        "detected": "tank-main-detected",
+        "burning": "tank-main-burning",
+        "wrecked": "tank-main-wrecked"
+      },
+      "size": [
+        420,
+        1024
+      ],
+      "base": "tank-main",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.030722891566265058,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/tank-main.blend"
+    },
+    "tank-main-rounded": {
+      "file": "tank-main-rounded.png",
+      "mask": "tank-main-rounded-shadow.png",
+      "tint_mask": "tank-main-rounded-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1,
+      "length_m": 9.4,
+      "length_pixels": 1010,
+      "variant": "rounded",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "tank-main-rounded",
+        "detected": "tank-main-rounded-detected",
+        "burning": "tank-main-rounded-burning",
+        "wrecked": "tank-main-rounded-wrecked"
+      },
+      "size": [
+        438,
+        1024
+      ],
+      "base": "tank-main-rounded",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.028313253012048192,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/tank-main-rounded.blend"
+    },
+    "tank-main-rounded-detected": {
+      "file": "tank-main-rounded-detected.png",
+      "mask": "tank-main-rounded-shadow.png",
+      "tint_mask": "tank-main-rounded-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1,
+      "length_m": 9.4,
+      "length_pixels": 1010,
+      "variant": "rounded",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "tank-main-rounded",
+        "detected": "tank-main-rounded-detected",
+        "burning": "tank-main-rounded-burning",
+        "wrecked": "tank-main-rounded-wrecked"
+      },
+      "size": [
+        438,
+        1024
+      ],
+      "base": "tank-main-rounded",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.028313253012048192,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/tank-main-rounded.blend"
+    },
+    "tank-main-rounded-burning": {
+      "file": "tank-main-rounded-burning.png",
+      "mask": "tank-main-rounded-shadow.png",
+      "tint_mask": "tank-main-rounded-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1,
+      "length_m": 9.4,
+      "length_pixels": 1010,
+      "variant": "rounded",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "tank-main-rounded",
+        "detected": "tank-main-rounded-detected",
+        "burning": "tank-main-rounded-burning",
+        "wrecked": "tank-main-rounded-wrecked"
+      },
+      "size": [
+        438,
+        1024
+      ],
+      "base": "tank-main-rounded",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.028313253012048192,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/tank-main-rounded.blend"
+    },
+    "tank-main-rounded-wrecked": {
+      "file": "tank-main-rounded-wrecked.png",
+      "mask": "tank-main-rounded-shadow.png",
+      "tint_mask": "tank-main-rounded-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1,
+      "length_m": 9.4,
+      "length_pixels": 1010,
+      "variant": "rounded",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "tank-main-rounded",
+        "detected": "tank-main-rounded-detected",
+        "burning": "tank-main-rounded-burning",
+        "wrecked": "tank-main-rounded-wrecked"
+      },
+      "size": [
+        438,
+        1024
+      ],
+      "base": "tank-main-rounded",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.028313253012048192,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/tank-main-rounded.blend"
+    },
+    "tank-light": {
+      "file": "tank-light.png",
+      "mask": "tank-light-shadow.png",
+      "tint_mask": "tank-light-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.075,
+      "length_m": 7.4,
+      "length_pixels": 1010,
+      "variant": "light",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "tank-light",
+        "detected": "tank-light-detected",
+        "burning": "tank-light-burning",
+        "wrecked": "tank-light-wrecked"
+      },
+      "size": [
+        368,
+        1024
+      ],
+      "base": "tank-light",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.022289156626506025,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/tank-light.blend"
+    },
+    "tank-light-detected": {
+      "file": "tank-light-detected.png",
+      "mask": "tank-light-shadow.png",
+      "tint_mask": "tank-light-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.075,
+      "length_m": 7.4,
+      "length_pixels": 1010,
+      "variant": "light",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "tank-light",
+        "detected": "tank-light-detected",
+        "burning": "tank-light-burning",
+        "wrecked": "tank-light-wrecked"
+      },
+      "size": [
+        368,
+        1024
+      ],
+      "base": "tank-light",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.022289156626506025,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/tank-light.blend"
+    },
+    "tank-light-burning": {
+      "file": "tank-light-burning.png",
+      "mask": "tank-light-shadow.png",
+      "tint_mask": "tank-light-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.075,
+      "length_m": 7.4,
+      "length_pixels": 1010,
+      "variant": "light",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "tank-light",
+        "detected": "tank-light-detected",
+        "burning": "tank-light-burning",
+        "wrecked": "tank-light-wrecked"
+      },
+      "size": [
+        368,
+        1024
+      ],
+      "base": "tank-light",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.022289156626506025,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/tank-light.blend"
+    },
+    "tank-light-wrecked": {
+      "file": "tank-light-wrecked.png",
+      "mask": "tank-light-shadow.png",
+      "tint_mask": "tank-light-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.075,
+      "length_m": 7.4,
+      "length_pixels": 1010,
+      "variant": "light",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "tank-light",
+        "detected": "tank-light-detected",
+        "burning": "tank-light-burning",
+        "wrecked": "tank-light-wrecked"
+      },
+      "size": [
+        368,
+        1024
+      ],
+      "base": "tank-light",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.022289156626506025,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/tank-light.blend"
+    },
+    "apc": {
+      "file": "apc.png",
+      "mask": "apc-shadow.png",
+      "tint_mask": "apc-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.085,
+      "length_m": 8,
+      "length_pixels": 1010,
+      "variant": "wheeled-8x8",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "apc",
+        "detected": "apc-detected",
+        "burning": "apc-burning",
+        "wrecked": "apc-wrecked"
+      },
+      "size": [
+        452,
+        1024
+      ],
+      "base": "apc",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.024096385542168676,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/apc.blend"
+    },
+    "apc-detected": {
+      "file": "apc-detected.png",
+      "mask": "apc-shadow.png",
+      "tint_mask": "apc-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.085,
+      "length_m": 8,
+      "length_pixels": 1010,
+      "variant": "wheeled-8x8",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "apc",
+        "detected": "apc-detected",
+        "burning": "apc-burning",
+        "wrecked": "apc-wrecked"
+      },
+      "size": [
+        452,
+        1024
+      ],
+      "base": "apc",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.024096385542168676,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/apc.blend"
+    },
+    "apc-burning": {
+      "file": "apc-burning.png",
+      "mask": "apc-shadow.png",
+      "tint_mask": "apc-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.085,
+      "length_m": 8,
+      "length_pixels": 1010,
+      "variant": "wheeled-8x8",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "apc",
+        "detected": "apc-detected",
+        "burning": "apc-burning",
+        "wrecked": "apc-wrecked"
+      },
+      "size": [
+        452,
+        1024
+      ],
+      "base": "apc",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.024096385542168676,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/apc.blend"
+    },
+    "apc-wrecked": {
+      "file": "apc-wrecked.png",
+      "mask": "apc-shadow.png",
+      "tint_mask": "apc-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.085,
+      "length_m": 8,
+      "length_pixels": 1010,
+      "variant": "wheeled-8x8",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "apc",
+        "detected": "apc-detected",
+        "burning": "apc-burning",
+        "wrecked": "apc-wrecked"
+      },
+      "size": [
+        452,
+        1024
+      ],
+      "base": "apc",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.024096385542168676,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/apc.blend"
+    },
+    "truck-military": {
+      "file": "truck-military.png",
+      "mask": "truck-military-shadow.png",
+      "tint_mask": "truck-military-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.09,
+      "length_m": 8.3,
+      "length_pixels": 1010,
+      "variant": "canvas",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "truck-military",
+        "detected": "truck-military-detected",
+        "burning": "truck-military-burning",
+        "wrecked": "truck-military-wrecked"
+      },
+      "size": [
+        450,
+        1024
+      ],
+      "base": "truck-military",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.025,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/truck-military.blend"
+    },
+    "truck-military-detected": {
+      "file": "truck-military-detected.png",
+      "mask": "truck-military-shadow.png",
+      "tint_mask": "truck-military-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.09,
+      "length_m": 8.3,
+      "length_pixels": 1010,
+      "variant": "canvas",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "truck-military",
+        "detected": "truck-military-detected",
+        "burning": "truck-military-burning",
+        "wrecked": "truck-military-wrecked"
+      },
+      "size": [
+        450,
+        1024
+      ],
+      "base": "truck-military",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.025,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/truck-military.blend"
+    },
+    "truck-military-burning": {
+      "file": "truck-military-burning.png",
+      "mask": "truck-military-shadow.png",
+      "tint_mask": "truck-military-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.09,
+      "length_m": 8.3,
+      "length_pixels": 1010,
+      "variant": "canvas",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "truck-military",
+        "detected": "truck-military-detected",
+        "burning": "truck-military-burning",
+        "wrecked": "truck-military-wrecked"
+      },
+      "size": [
+        450,
+        1024
+      ],
+      "base": "truck-military",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.025,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/truck-military.blend"
+    },
+    "truck-military-wrecked": {
+      "file": "truck-military-wrecked.png",
+      "mask": "truck-military-shadow.png",
+      "tint_mask": "truck-military-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.09,
+      "length_m": 8.3,
+      "length_pixels": 1010,
+      "variant": "canvas",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "truck-military",
+        "detected": "truck-military-detected",
+        "burning": "truck-military-burning",
+        "wrecked": "truck-military-wrecked"
+      },
+      "size": [
+        450,
+        1024
+      ],
+      "base": "truck-military",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.025,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/truck-military.blend"
+    },
+    "truck-fuel": {
+      "file": "truck-fuel.png",
+      "mask": "truck-fuel-shadow.png",
+      "tint_mask": "truck-fuel-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.095,
+      "length_m": 9,
+      "length_pixels": 1010,
+      "variant": "fuel",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "truck-fuel",
+        "detected": "truck-fuel-detected",
+        "burning": "truck-fuel-burning",
+        "wrecked": "truck-fuel-wrecked"
+      },
+      "size": [
+        418,
+        1024
+      ],
+      "base": "truck-fuel",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.02710843373493976,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/truck-fuel.blend"
+    },
+    "truck-fuel-detected": {
+      "file": "truck-fuel-detected.png",
+      "mask": "truck-fuel-shadow.png",
+      "tint_mask": "truck-fuel-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.095,
+      "length_m": 9,
+      "length_pixels": 1010,
+      "variant": "fuel",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "truck-fuel",
+        "detected": "truck-fuel-detected",
+        "burning": "truck-fuel-burning",
+        "wrecked": "truck-fuel-wrecked"
+      },
+      "size": [
+        418,
+        1024
+      ],
+      "base": "truck-fuel",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.02710843373493976,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/truck-fuel.blend"
+    },
+    "truck-fuel-burning": {
+      "file": "truck-fuel-burning.png",
+      "mask": "truck-fuel-shadow.png",
+      "tint_mask": "truck-fuel-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.095,
+      "length_m": 9,
+      "length_pixels": 1010,
+      "variant": "fuel",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "truck-fuel",
+        "detected": "truck-fuel-detected",
+        "burning": "truck-fuel-burning",
+        "wrecked": "truck-fuel-wrecked"
+      },
+      "size": [
+        418,
+        1024
+      ],
+      "base": "truck-fuel",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.02710843373493976,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/truck-fuel.blend"
+    },
+    "truck-fuel-wrecked": {
+      "file": "truck-fuel-wrecked.png",
+      "mask": "truck-fuel-shadow.png",
+      "tint_mask": "truck-fuel-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.095,
+      "length_m": 9,
+      "length_pixels": 1010,
+      "variant": "fuel",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "truck-fuel",
+        "detected": "truck-fuel-detected",
+        "burning": "truck-fuel-burning",
+        "wrecked": "truck-fuel-wrecked"
+      },
+      "size": [
+        418,
+        1024
+      ],
+      "base": "truck-fuel",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.02710843373493976,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/truck-fuel.blend"
+    },
+    "jeep": {
+      "file": "jeep.png",
+      "mask": "jeep-shadow.png",
+      "tint_mask": "jeep-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.055,
+      "length_m": 4.5,
+      "length_pixels": 1010,
+      "variant": "utility",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "jeep",
+        "detected": "jeep-detected",
+        "burning": "jeep-burning",
+        "wrecked": "jeep-wrecked"
+      },
+      "size": [
+        590,
+        1024
+      ],
+      "base": "jeep",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.01355421686746988,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/jeep.blend"
+    },
+    "jeep-detected": {
+      "file": "jeep-detected.png",
+      "mask": "jeep-shadow.png",
+      "tint_mask": "jeep-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.055,
+      "length_m": 4.5,
+      "length_pixels": 1010,
+      "variant": "utility",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "jeep",
+        "detected": "jeep-detected",
+        "burning": "jeep-burning",
+        "wrecked": "jeep-wrecked"
+      },
+      "size": [
+        590,
+        1024
+      ],
+      "base": "jeep",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.01355421686746988,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/jeep.blend"
+    },
+    "jeep-burning": {
+      "file": "jeep-burning.png",
+      "mask": "jeep-shadow.png",
+      "tint_mask": "jeep-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.055,
+      "length_m": 4.5,
+      "length_pixels": 1010,
+      "variant": "utility",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "jeep",
+        "detected": "jeep-detected",
+        "burning": "jeep-burning",
+        "wrecked": "jeep-wrecked"
+      },
+      "size": [
+        590,
+        1024
+      ],
+      "base": "jeep",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.01355421686746988,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/jeep.blend"
+    },
+    "jeep-wrecked": {
+      "file": "jeep-wrecked.png",
+      "mask": "jeep-shadow.png",
+      "tint_mask": "jeep-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.055,
+      "length_m": 4.5,
+      "length_pixels": 1010,
+      "variant": "utility",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "jeep",
+        "detected": "jeep-detected",
+        "burning": "jeep-burning",
+        "wrecked": "jeep-wrecked"
+      },
+      "size": [
+        590,
+        1024
+      ],
+      "base": "jeep",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.01355421686746988,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/jeep.blend"
+    },
+    "artillery-towed": {
+      "file": "artillery-towed.png",
+      "mask": "artillery-towed-shadow.png",
+      "tint_mask": "artillery-towed-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1,
+      "length_m": 10,
+      "length_pixels": 1010,
+      "variant": "towed",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "artillery-towed",
+        "detected": "artillery-towed-detected",
+        "burning": "artillery-towed-burning",
+        "wrecked": "artillery-towed-wrecked"
+      },
+      "size": [
+        496,
+        1024
+      ],
+      "base": "artillery-towed",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.030120481927710843,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/artillery-towed.blend"
+    },
+    "artillery-towed-detected": {
+      "file": "artillery-towed-detected.png",
+      "mask": "artillery-towed-shadow.png",
+      "tint_mask": "artillery-towed-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1,
+      "length_m": 10,
+      "length_pixels": 1010,
+      "variant": "towed",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "artillery-towed",
+        "detected": "artillery-towed-detected",
+        "burning": "artillery-towed-burning",
+        "wrecked": "artillery-towed-wrecked"
+      },
+      "size": [
+        496,
+        1024
+      ],
+      "base": "artillery-towed",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.030120481927710843,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/artillery-towed.blend"
+    },
+    "artillery-towed-burning": {
+      "file": "artillery-towed-burning.png",
+      "mask": "artillery-towed-shadow.png",
+      "tint_mask": "artillery-towed-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1,
+      "length_m": 10,
+      "length_pixels": 1010,
+      "variant": "towed",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "artillery-towed",
+        "detected": "artillery-towed-detected",
+        "burning": "artillery-towed-burning",
+        "wrecked": "artillery-towed-wrecked"
+      },
+      "size": [
+        496,
+        1024
+      ],
+      "base": "artillery-towed",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.030120481927710843,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/artillery-towed.blend"
+    },
+    "artillery-towed-wrecked": {
+      "file": "artillery-towed-wrecked.png",
+      "mask": "artillery-towed-shadow.png",
+      "tint_mask": "artillery-towed-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1,
+      "length_m": 10,
+      "length_pixels": 1010,
+      "variant": "towed",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "artillery-towed",
+        "detected": "artillery-towed-detected",
+        "burning": "artillery-towed-burning",
+        "wrecked": "artillery-towed-wrecked"
+      },
+      "size": [
+        496,
+        1024
+      ],
+      "base": "artillery-towed",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.030120481927710843,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/artillery-towed.blend"
+    },
+    "artillery-self-propelled": {
+      "file": "artillery-self-propelled.png",
+      "mask": "artillery-self-propelled-shadow.png",
+      "tint_mask": "artillery-self-propelled-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.11,
+      "length_m": 11,
+      "length_pixels": 1010,
+      "variant": "self-propelled",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "artillery-self-propelled",
+        "detected": "artillery-self-propelled-detected",
+        "burning": "artillery-self-propelled-burning",
+        "wrecked": "artillery-self-propelled-wrecked"
+      },
+      "size": [
+        394,
+        1024
+      ],
+      "base": "artillery-self-propelled",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.03313253012048193,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/artillery-self-propelled.blend"
+    },
+    "artillery-self-propelled-detected": {
+      "file": "artillery-self-propelled-detected.png",
+      "mask": "artillery-self-propelled-shadow.png",
+      "tint_mask": "artillery-self-propelled-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.11,
+      "length_m": 11,
+      "length_pixels": 1010,
+      "variant": "self-propelled",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "artillery-self-propelled",
+        "detected": "artillery-self-propelled-detected",
+        "burning": "artillery-self-propelled-burning",
+        "wrecked": "artillery-self-propelled-wrecked"
+      },
+      "size": [
+        394,
+        1024
+      ],
+      "base": "artillery-self-propelled",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.03313253012048193,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/artillery-self-propelled.blend"
+    },
+    "artillery-self-propelled-burning": {
+      "file": "artillery-self-propelled-burning.png",
+      "mask": "artillery-self-propelled-shadow.png",
+      "tint_mask": "artillery-self-propelled-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.11,
+      "length_m": 11,
+      "length_pixels": 1010,
+      "variant": "self-propelled",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "artillery-self-propelled",
+        "detected": "artillery-self-propelled-detected",
+        "burning": "artillery-self-propelled-burning",
+        "wrecked": "artillery-self-propelled-wrecked"
+      },
+      "size": [
+        394,
+        1024
+      ],
+      "base": "artillery-self-propelled",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.03313253012048193,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/artillery-self-propelled.blend"
+    },
+    "artillery-self-propelled-wrecked": {
+      "file": "artillery-self-propelled-wrecked.png",
+      "mask": "artillery-self-propelled-shadow.png",
+      "tint_mask": "artillery-self-propelled-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.11,
+      "length_m": 11,
+      "length_pixels": 1010,
+      "variant": "self-propelled",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "artillery-self-propelled",
+        "detected": "artillery-self-propelled-detected",
+        "burning": "artillery-self-propelled-burning",
+        "wrecked": "artillery-self-propelled-wrecked"
+      },
+      "size": [
+        394,
+        1024
+      ],
+      "base": "artillery-self-propelled",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.03313253012048193,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/artillery-self-propelled.blend"
+    },
+    "missile-launcher": {
+      "file": "missile-launcher.png",
+      "mask": "missile-launcher-shadow.png",
+      "tint_mask": "missile-launcher-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.12,
+      "length_m": 11,
+      "length_pixels": 1010,
+      "variant": "truck-launcher",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "missile-launcher",
+        "detected": "missile-launcher-detected",
+        "burning": "missile-launcher-burning",
+        "wrecked": "missile-launcher-wrecked"
+      },
+      "size": [
+        372,
+        1024
+      ],
+      "base": "missile-launcher",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.03313253012048193,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/missile-launcher.blend"
+    },
+    "missile-launcher-detected": {
+      "file": "missile-launcher-detected.png",
+      "mask": "missile-launcher-shadow.png",
+      "tint_mask": "missile-launcher-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.12,
+      "length_m": 11,
+      "length_pixels": 1010,
+      "variant": "truck-launcher",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "missile-launcher",
+        "detected": "missile-launcher-detected",
+        "burning": "missile-launcher-burning",
+        "wrecked": "missile-launcher-wrecked"
+      },
+      "size": [
+        372,
+        1024
+      ],
+      "base": "missile-launcher",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.03313253012048193,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/missile-launcher.blend"
+    },
+    "missile-launcher-burning": {
+      "file": "missile-launcher-burning.png",
+      "mask": "missile-launcher-shadow.png",
+      "tint_mask": "missile-launcher-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.12,
+      "length_m": 11,
+      "length_pixels": 1010,
+      "variant": "truck-launcher",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "missile-launcher",
+        "detected": "missile-launcher-detected",
+        "burning": "missile-launcher-burning",
+        "wrecked": "missile-launcher-wrecked"
+      },
+      "size": [
+        372,
+        1024
+      ],
+      "base": "missile-launcher",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.03313253012048193,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/missile-launcher.blend"
+    },
+    "missile-launcher-wrecked": {
+      "file": "missile-launcher-wrecked.png",
+      "mask": "missile-launcher-shadow.png",
+      "tint_mask": "missile-launcher-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.12,
+      "length_m": 11,
+      "length_pixels": 1010,
+      "variant": "truck-launcher",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "missile-launcher",
+        "detected": "missile-launcher-detected",
+        "burning": "missile-launcher-burning",
+        "wrecked": "missile-launcher-wrecked"
+      },
+      "size": [
+        372,
+        1024
+      ],
+      "base": "missile-launcher",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.03313253012048193,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/missile-launcher.blend"
+    },
+    "ambulance-cross": {
+      "file": "ambulance-cross.png",
+      "mask": "ambulance-cross-shadow.png",
+      "tint_mask": "ambulance-cross-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.06,
+      "length_m": 6,
+      "length_pixels": 1010,
+      "variant": "red-cross",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "ambulance-cross",
+        "detected": "ambulance-cross-detected",
+        "burning": "ambulance-cross-burning",
+        "wrecked": "ambulance-cross-wrecked"
+      },
+      "size": [
+        610,
+        1024
+      ],
+      "base": "ambulance-cross",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.018072289156626505,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/ambulance-cross.blend"
+    },
+    "ambulance-cross-detected": {
+      "file": "ambulance-cross-detected.png",
+      "mask": "ambulance-cross-shadow.png",
+      "tint_mask": "ambulance-cross-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.06,
+      "length_m": 6,
+      "length_pixels": 1010,
+      "variant": "red-cross",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "ambulance-cross",
+        "detected": "ambulance-cross-detected",
+        "burning": "ambulance-cross-burning",
+        "wrecked": "ambulance-cross-wrecked"
+      },
+      "size": [
+        610,
+        1024
+      ],
+      "base": "ambulance-cross",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.018072289156626505,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/ambulance-cross.blend"
+    },
+    "ambulance-cross-burning": {
+      "file": "ambulance-cross-burning.png",
+      "mask": "ambulance-cross-shadow.png",
+      "tint_mask": "ambulance-cross-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.06,
+      "length_m": 6,
+      "length_pixels": 1010,
+      "variant": "red-cross",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "ambulance-cross",
+        "detected": "ambulance-cross-detected",
+        "burning": "ambulance-cross-burning",
+        "wrecked": "ambulance-cross-wrecked"
+      },
+      "size": [
+        610,
+        1024
+      ],
+      "base": "ambulance-cross",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.018072289156626505,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/ambulance-cross.blend"
+    },
+    "ambulance-cross-wrecked": {
+      "file": "ambulance-cross-wrecked.png",
+      "mask": "ambulance-cross-shadow.png",
+      "tint_mask": "ambulance-cross-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.06,
+      "length_m": 6,
+      "length_pixels": 1010,
+      "variant": "red-cross",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "ambulance-cross",
+        "detected": "ambulance-cross-detected",
+        "burning": "ambulance-cross-burning",
+        "wrecked": "ambulance-cross-wrecked"
+      },
+      "size": [
+        610,
+        1024
+      ],
+      "base": "ambulance-cross",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.018072289156626505,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/ambulance-cross.blend"
+    },
+    "ambulance-crescent": {
+      "file": "ambulance-crescent.png",
+      "mask": "ambulance-crescent-shadow.png",
+      "tint_mask": "ambulance-crescent-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.06,
+      "length_m": 6,
+      "length_pixels": 1010,
+      "variant": "red-crescent",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "ambulance-crescent",
+        "detected": "ambulance-crescent-detected",
+        "burning": "ambulance-crescent-burning",
+        "wrecked": "ambulance-crescent-wrecked"
+      },
+      "size": [
+        610,
+        1024
+      ],
+      "base": "ambulance-crescent",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.018072289156626505,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/ambulance-crescent.blend"
+    },
+    "ambulance-crescent-detected": {
+      "file": "ambulance-crescent-detected.png",
+      "mask": "ambulance-crescent-shadow.png",
+      "tint_mask": "ambulance-crescent-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.06,
+      "length_m": 6,
+      "length_pixels": 1010,
+      "variant": "red-crescent",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "ambulance-crescent",
+        "detected": "ambulance-crescent-detected",
+        "burning": "ambulance-crescent-burning",
+        "wrecked": "ambulance-crescent-wrecked"
+      },
+      "size": [
+        610,
+        1024
+      ],
+      "base": "ambulance-crescent",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.018072289156626505,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/ambulance-crescent.blend"
+    },
+    "ambulance-crescent-burning": {
+      "file": "ambulance-crescent-burning.png",
+      "mask": "ambulance-crescent-shadow.png",
+      "tint_mask": "ambulance-crescent-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.06,
+      "length_m": 6,
+      "length_pixels": 1010,
+      "variant": "red-crescent",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "ambulance-crescent",
+        "detected": "ambulance-crescent-detected",
+        "burning": "ambulance-crescent-burning",
+        "wrecked": "ambulance-crescent-wrecked"
+      },
+      "size": [
+        610,
+        1024
+      ],
+      "base": "ambulance-crescent",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.018072289156626505,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/ambulance-crescent.blend"
+    },
+    "ambulance-crescent-wrecked": {
+      "file": "ambulance-crescent-wrecked.png",
+      "mask": "ambulance-crescent-shadow.png",
+      "tint_mask": "ambulance-crescent-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.06,
+      "length_m": 6,
+      "length_pixels": 1010,
+      "variant": "red-crescent",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "ambulance-crescent",
+        "detected": "ambulance-crescent-detected",
+        "burning": "ambulance-crescent-burning",
+        "wrecked": "ambulance-crescent-wrecked"
+      },
+      "size": [
+        610,
+        1024
+      ],
+      "base": "ambulance-crescent",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.018072289156626505,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/ambulance-crescent.blend"
+    },
+    "engineer": {
+      "file": "engineer.png",
+      "mask": "engineer-shadow.png",
+      "tint_mask": "engineer-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.07,
+      "length_m": 6.2,
+      "length_pixels": 1010,
+      "variant": "bulldozer",
+      "family": "ground",
+      "state": "normal",
+      "states": {
+        "normal": "engineer",
+        "detected": "engineer-detected",
+        "burning": "engineer-burning",
+        "wrecked": "engineer-wrecked"
+      },
+      "size": [
+        714,
+        1024
+      ],
+      "base": "engineer",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.018674698795180723,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/engineer.blend"
+    },
+    "engineer-detected": {
+      "file": "engineer-detected.png",
+      "mask": "engineer-shadow.png",
+      "tint_mask": "engineer-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.07,
+      "length_m": 6.2,
+      "length_pixels": 1010,
+      "variant": "bulldozer",
+      "family": "ground",
+      "state": "detected",
+      "states": {
+        "normal": "engineer",
+        "detected": "engineer-detected",
+        "burning": "engineer-burning",
+        "wrecked": "engineer-wrecked"
+      },
+      "size": [
+        714,
+        1024
+      ],
+      "base": "engineer",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.018674698795180723,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/engineer.blend"
+    },
+    "engineer-burning": {
+      "file": "engineer-burning.png",
+      "mask": "engineer-shadow.png",
+      "tint_mask": "engineer-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.07,
+      "length_m": 6.2,
+      "length_pixels": 1010,
+      "variant": "bulldozer",
+      "family": "ground",
+      "state": "burning",
+      "states": {
+        "normal": "engineer",
+        "detected": "engineer-detected",
+        "burning": "engineer-burning",
+        "wrecked": "engineer-wrecked"
+      },
+      "size": [
+        714,
+        1024
+      ],
+      "base": "engineer",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.018674698795180723,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/engineer.blend"
+    },
+    "engineer-wrecked": {
+      "file": "engineer-wrecked.png",
+      "mask": "engineer-shadow.png",
+      "tint_mask": "engineer-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.07,
+      "length_m": 6.2,
+      "length_pixels": 1010,
+      "variant": "bulldozer",
+      "family": "ground",
+      "state": "wrecked",
+      "states": {
+        "normal": "engineer",
+        "detected": "engineer-detected",
+        "burning": "engineer-burning",
+        "wrecked": "engineer-wrecked"
+      },
+      "size": [
+        714,
+        1024
+      ],
+      "base": "engineer",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.018674698795180723,
+      "scale_basis": "editorial-land",
+      "model_file": "blend/engineer.blend"
+    },
+    "ship-amphibious": {
+      "file": "ship-amphibious.png",
+      "mask": "ship-amphibious-shadow.png",
+      "tint_mask": "ship-amphibious-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.75,
+      "length_m": 249,
+      "length_pixels": 1010,
+      "variant": "amphibious",
+      "family": "ship",
+      "state": "normal",
+      "states": {
+        "normal": "ship-amphibious",
+        "detected": "ship-amphibious-detected",
+        "burning": "ship-amphibious-burning",
+        "wrecked": "ship-amphibious-wrecked"
+      },
+      "size": [
+        294,
+        1024
+      ],
+      "base": "ship-amphibious",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.75,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-amphibious.blend"
+    },
+    "ship-amphibious-detected": {
+      "file": "ship-amphibious-detected.png",
+      "mask": "ship-amphibious-shadow.png",
+      "tint_mask": "ship-amphibious-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.75,
+      "length_m": 249,
+      "length_pixels": 1010,
+      "variant": "amphibious",
+      "family": "ship",
+      "state": "detected",
+      "states": {
+        "normal": "ship-amphibious",
+        "detected": "ship-amphibious-detected",
+        "burning": "ship-amphibious-burning",
+        "wrecked": "ship-amphibious-wrecked"
+      },
+      "size": [
+        294,
+        1024
+      ],
+      "base": "ship-amphibious",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.75,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-amphibious.blend"
+    },
+    "ship-amphibious-burning": {
+      "file": "ship-amphibious-burning.png",
+      "mask": "ship-amphibious-shadow.png",
+      "tint_mask": "ship-amphibious-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.75,
+      "length_m": 249,
+      "length_pixels": 1010,
+      "variant": "amphibious",
+      "family": "ship",
+      "state": "burning",
+      "states": {
+        "normal": "ship-amphibious",
+        "detected": "ship-amphibious-detected",
+        "burning": "ship-amphibious-burning",
+        "wrecked": "ship-amphibious-wrecked"
+      },
+      "size": [
+        294,
+        1024
+      ],
+      "base": "ship-amphibious",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.75,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-amphibious.blend"
+    },
+    "ship-amphibious-wrecked": {
+      "file": "ship-amphibious-wrecked.png",
+      "mask": "ship-amphibious-shadow.png",
+      "tint_mask": "ship-amphibious-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.75,
+      "length_m": 249,
+      "length_pixels": 1010,
+      "variant": "amphibious",
+      "family": "ship",
+      "state": "wrecked",
+      "states": {
+        "normal": "ship-amphibious",
+        "detected": "ship-amphibious-detected",
+        "burning": "ship-amphibious-burning",
+        "wrecked": "ship-amphibious-wrecked"
+      },
+      "size": [
+        294,
+        1024
+      ],
+      "base": "ship-amphibious",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.75,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-amphibious.blend"
+    },
+    "ship-patrol": {
+      "file": "ship-patrol.png",
+      "mask": "ship-patrol-shadow.png",
+      "tint_mask": "ship-patrol-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1686746987951807,
+      "length_m": 56,
+      "length_pixels": 1010,
+      "variant": "patrol",
+      "family": "ship",
+      "state": "normal",
+      "states": {
+        "normal": "ship-patrol",
+        "detected": "ship-patrol-detected",
+        "burning": "ship-patrol-burning",
+        "wrecked": "ship-patrol-wrecked"
+      },
+      "size": [
+        204,
+        1024
+      ],
+      "base": "ship-patrol",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.1686746987951807,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-patrol.blend"
+    },
+    "ship-patrol-detected": {
+      "file": "ship-patrol-detected.png",
+      "mask": "ship-patrol-shadow.png",
+      "tint_mask": "ship-patrol-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1686746987951807,
+      "length_m": 56,
+      "length_pixels": 1010,
+      "variant": "patrol",
+      "family": "ship",
+      "state": "detected",
+      "states": {
+        "normal": "ship-patrol",
+        "detected": "ship-patrol-detected",
+        "burning": "ship-patrol-burning",
+        "wrecked": "ship-patrol-wrecked"
+      },
+      "size": [
+        204,
+        1024
+      ],
+      "base": "ship-patrol",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.1686746987951807,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-patrol.blend"
+    },
+    "ship-patrol-burning": {
+      "file": "ship-patrol-burning.png",
+      "mask": "ship-patrol-shadow.png",
+      "tint_mask": "ship-patrol-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1686746987951807,
+      "length_m": 56,
+      "length_pixels": 1010,
+      "variant": "patrol",
+      "family": "ship",
+      "state": "burning",
+      "states": {
+        "normal": "ship-patrol",
+        "detected": "ship-patrol-detected",
+        "burning": "ship-patrol-burning",
+        "wrecked": "ship-patrol-wrecked"
+      },
+      "size": [
+        204,
+        1024
+      ],
+      "base": "ship-patrol",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.1686746987951807,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-patrol.blend"
+    },
+    "ship-patrol-wrecked": {
+      "file": "ship-patrol-wrecked.png",
+      "mask": "ship-patrol-shadow.png",
+      "tint_mask": "ship-patrol-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.1686746987951807,
+      "length_m": 56,
+      "length_pixels": 1010,
+      "variant": "patrol",
+      "family": "ship",
+      "state": "wrecked",
+      "states": {
+        "normal": "ship-patrol",
+        "detected": "ship-patrol-detected",
+        "burning": "ship-patrol-burning",
+        "wrecked": "ship-patrol-wrecked"
+      },
+      "size": [
+        204,
+        1024
+      ],
+      "base": "ship-patrol",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.1686746987951807,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-patrol.blend"
+    },
+    "ship-tug": {
+      "file": "ship-tug.png",
+      "mask": "ship-tug-shadow.png",
+      "tint_mask": "ship-tug-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.0963855421686747,
+      "length_m": 32,
+      "length_pixels": 1010,
+      "variant": "tug",
+      "family": "ship",
+      "state": "normal",
+      "states": {
+        "normal": "ship-tug",
+        "detected": "ship-tug-detected",
+        "burning": "ship-tug-burning",
+        "wrecked": "ship-tug-wrecked"
+      },
+      "size": [
+        362,
+        1024
+      ],
+      "base": "ship-tug",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.0963855421686747,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-tug.blend"
+    },
+    "ship-tug-detected": {
+      "file": "ship-tug-detected.png",
+      "mask": "ship-tug-shadow.png",
+      "tint_mask": "ship-tug-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.0963855421686747,
+      "length_m": 32,
+      "length_pixels": 1010,
+      "variant": "tug",
+      "family": "ship",
+      "state": "detected",
+      "states": {
+        "normal": "ship-tug",
+        "detected": "ship-tug-detected",
+        "burning": "ship-tug-burning",
+        "wrecked": "ship-tug-wrecked"
+      },
+      "size": [
+        362,
+        1024
+      ],
+      "base": "ship-tug",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.0963855421686747,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-tug.blend"
+    },
+    "ship-tug-burning": {
+      "file": "ship-tug-burning.png",
+      "mask": "ship-tug-shadow.png",
+      "tint_mask": "ship-tug-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.0963855421686747,
+      "length_m": 32,
+      "length_pixels": 1010,
+      "variant": "tug",
+      "family": "ship",
+      "state": "burning",
+      "states": {
+        "normal": "ship-tug",
+        "detected": "ship-tug-detected",
+        "burning": "ship-tug-burning",
+        "wrecked": "ship-tug-wrecked"
+      },
+      "size": [
+        362,
+        1024
+      ],
+      "base": "ship-tug",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.0963855421686747,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-tug.blend"
+    },
+    "ship-tug-wrecked": {
+      "file": "ship-tug-wrecked.png",
+      "mask": "ship-tug-shadow.png",
+      "tint_mask": "ship-tug-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.0963855421686747,
+      "length_m": 32,
+      "length_pixels": 1010,
+      "variant": "tug",
+      "family": "ship",
+      "state": "wrecked",
+      "states": {
+        "normal": "ship-tug",
+        "detected": "ship-tug-detected",
+        "burning": "ship-tug-burning",
+        "wrecked": "ship-tug-wrecked"
+      },
+      "size": [
+        362,
+        1024
+      ],
+      "base": "ship-tug",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.0963855421686747,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-tug.blend"
+    },
+    "ship-tanker-vlcc": {
+      "file": "ship-tanker-vlcc.png",
+      "mask": "ship-tanker-vlcc-shadow.png",
+      "tint_mask": "ship-tanker-vlcc-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.9939759036144579,
+      "length_m": 330,
+      "length_pixels": 1010,
+      "variant": "vlcc",
+      "family": "ship",
+      "state": "normal",
+      "states": {
+        "normal": "ship-tanker-vlcc",
+        "detected": "ship-tanker-vlcc-detected",
+        "burning": "ship-tanker-vlcc-burning",
+        "wrecked": "ship-tanker-vlcc-wrecked"
+      },
+      "size": [
+        204,
+        1024
+      ],
+      "base": "ship-tanker-vlcc",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.9939759036144579,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-tanker-vlcc.blend"
+    },
+    "ship-tanker-vlcc-detected": {
+      "file": "ship-tanker-vlcc-detected.png",
+      "mask": "ship-tanker-vlcc-shadow.png",
+      "tint_mask": "ship-tanker-vlcc-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.9939759036144579,
+      "length_m": 330,
+      "length_pixels": 1010,
+      "variant": "vlcc",
+      "family": "ship",
+      "state": "detected",
+      "states": {
+        "normal": "ship-tanker-vlcc",
+        "detected": "ship-tanker-vlcc-detected",
+        "burning": "ship-tanker-vlcc-burning",
+        "wrecked": "ship-tanker-vlcc-wrecked"
+      },
+      "size": [
+        204,
+        1024
+      ],
+      "base": "ship-tanker-vlcc",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.9939759036144579,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-tanker-vlcc.blend"
+    },
+    "ship-tanker-vlcc-burning": {
+      "file": "ship-tanker-vlcc-burning.png",
+      "mask": "ship-tanker-vlcc-shadow.png",
+      "tint_mask": "ship-tanker-vlcc-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.9939759036144579,
+      "length_m": 330,
+      "length_pixels": 1010,
+      "variant": "vlcc",
+      "family": "ship",
+      "state": "burning",
+      "states": {
+        "normal": "ship-tanker-vlcc",
+        "detected": "ship-tanker-vlcc-detected",
+        "burning": "ship-tanker-vlcc-burning",
+        "wrecked": "ship-tanker-vlcc-wrecked"
+      },
+      "size": [
+        204,
+        1024
+      ],
+      "base": "ship-tanker-vlcc",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.9939759036144579,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-tanker-vlcc.blend"
+    },
+    "ship-tanker-vlcc-wrecked": {
+      "file": "ship-tanker-vlcc-wrecked.png",
+      "mask": "ship-tanker-vlcc-shadow.png",
+      "tint_mask": "ship-tanker-vlcc-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.9939759036144579,
+      "length_m": 330,
+      "length_pixels": 1010,
+      "variant": "vlcc",
+      "family": "ship",
+      "state": "wrecked",
+      "states": {
+        "normal": "ship-tanker-vlcc",
+        "detected": "ship-tanker-vlcc-detected",
+        "burning": "ship-tanker-vlcc-burning",
+        "wrecked": "ship-tanker-vlcc-wrecked"
+      },
+      "size": [
+        204,
+        1024
+      ],
+      "base": "ship-tanker-vlcc",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.9939759036144579,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-tanker-vlcc.blend"
+    },
+    "ship-platform": {
+      "file": "ship-platform.png",
+      "mask": "ship-platform-shadow.png",
+      "tint_mask": "ship-platform-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.27710843373493976,
+      "length_m": 92,
+      "length_pixels": 1010,
+      "variant": "offshore",
+      "family": "ship",
+      "state": "normal",
+      "states": {
+        "normal": "ship-platform",
+        "detected": "ship-platform-detected",
+        "burning": "ship-platform-burning",
+        "wrecked": "ship-platform-wrecked"
+      },
+      "size": [
+        956,
+        1024
+      ],
+      "base": "ship-platform",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.27710843373493976,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-platform.blend"
+    },
+    "ship-platform-detected": {
+      "file": "ship-platform-detected.png",
+      "mask": "ship-platform-shadow.png",
+      "tint_mask": "ship-platform-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.27710843373493976,
+      "length_m": 92,
+      "length_pixels": 1010,
+      "variant": "offshore",
+      "family": "ship",
+      "state": "detected",
+      "states": {
+        "normal": "ship-platform",
+        "detected": "ship-platform-detected",
+        "burning": "ship-platform-burning",
+        "wrecked": "ship-platform-wrecked"
+      },
+      "size": [
+        956,
+        1024
+      ],
+      "base": "ship-platform",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.27710843373493976,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-platform.blend"
+    },
+    "ship-platform-burning": {
+      "file": "ship-platform-burning.png",
+      "mask": "ship-platform-shadow.png",
+      "tint_mask": "ship-platform-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.27710843373493976,
+      "length_m": 92,
+      "length_pixels": 1010,
+      "variant": "offshore",
+      "family": "ship",
+      "state": "burning",
+      "states": {
+        "normal": "ship-platform",
+        "detected": "ship-platform-detected",
+        "burning": "ship-platform-burning",
+        "wrecked": "ship-platform-wrecked"
+      },
+      "size": [
+        956,
+        1024
+      ],
+      "base": "ship-platform",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.27710843373493976,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-platform.blend"
+    },
+    "ship-platform-wrecked": {
+      "file": "ship-platform-wrecked.png",
+      "mask": "ship-platform-shadow.png",
+      "tint_mask": "ship-platform-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.27710843373493976,
+      "length_m": 92,
+      "length_pixels": 1010,
+      "variant": "offshore",
+      "family": "ship",
+      "state": "wrecked",
+      "states": {
+        "normal": "ship-platform",
+        "detected": "ship-platform-detected",
+        "burning": "ship-platform-burning",
+        "wrecked": "ship-platform-wrecked"
+      },
+      "size": [
+        956,
+        1024
+      ],
+      "base": "ship-platform",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.27710843373493976,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/ship-platform.blend"
+    },
+    "air-bomber-heavy": {
+      "file": "air-bomber-heavy.png",
+      "mask": "air-bomber-heavy-shadow.png",
+      "tint_mask": "air-bomber-heavy-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.14457831325301204,
+      "length_m": 48,
+      "length_pixels": 812,
+      "variant": "heavy-four-engine",
+      "family": "air",
+      "state": "normal",
+      "states": {
+        "normal": "air-bomber-heavy",
+        "detected": "air-bomber-heavy-detected",
+        "burning": "air-bomber-heavy-burning",
+        "wrecked": "air-bomber-heavy-wrecked"
+      },
+      "size": [
+        1024,
+        824
+      ],
+      "base": "air-bomber-heavy",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.14457831325301204,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-bomber-heavy.blend",
+      "span_m": 60,
+      "span_relative": 0.18072289156626506,
+      "hero_scale_multiplier": 3.0433333333333334
+    },
+    "air-bomber-heavy-detected": {
+      "file": "air-bomber-heavy-detected.png",
+      "mask": "air-bomber-heavy-shadow.png",
+      "tint_mask": "air-bomber-heavy-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.14457831325301204,
+      "length_m": 48,
+      "length_pixels": 812,
+      "variant": "heavy-four-engine",
+      "family": "air",
+      "state": "detected",
+      "states": {
+        "normal": "air-bomber-heavy",
+        "detected": "air-bomber-heavy-detected",
+        "burning": "air-bomber-heavy-burning",
+        "wrecked": "air-bomber-heavy-wrecked"
+      },
+      "size": [
+        1024,
+        824
+      ],
+      "base": "air-bomber-heavy",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.14457831325301204,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-bomber-heavy.blend",
+      "span_m": 60,
+      "span_relative": 0.18072289156626506,
+      "hero_scale_multiplier": 3.0433333333333334
+    },
+    "air-bomber-heavy-burning": {
+      "file": "air-bomber-heavy-burning.png",
+      "mask": "air-bomber-heavy-shadow.png",
+      "tint_mask": "air-bomber-heavy-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.14457831325301204,
+      "length_m": 48,
+      "length_pixels": 812,
+      "variant": "heavy-four-engine",
+      "family": "air",
+      "state": "burning",
+      "states": {
+        "normal": "air-bomber-heavy",
+        "detected": "air-bomber-heavy-detected",
+        "burning": "air-bomber-heavy-burning",
+        "wrecked": "air-bomber-heavy-wrecked"
+      },
+      "size": [
+        1024,
+        824
+      ],
+      "base": "air-bomber-heavy",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.14457831325301204,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-bomber-heavy.blend",
+      "span_m": 60,
+      "span_relative": 0.18072289156626506,
+      "hero_scale_multiplier": 3.0433333333333334
+    },
+    "air-bomber-heavy-wrecked": {
+      "file": "air-bomber-heavy-wrecked.png",
+      "mask": "air-bomber-heavy-shadow.png",
+      "tint_mask": "air-bomber-heavy-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.14457831325301204,
+      "length_m": 48,
+      "length_pixels": 812,
+      "variant": "heavy-four-engine",
+      "family": "air",
+      "state": "wrecked",
+      "states": {
+        "normal": "air-bomber-heavy",
+        "detected": "air-bomber-heavy-detected",
+        "burning": "air-bomber-heavy-burning",
+        "wrecked": "air-bomber-heavy-wrecked"
+      },
+      "size": [
+        1024,
+        824
+      ],
+      "base": "air-bomber-heavy",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.14457831325301204,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-bomber-heavy.blend",
+      "span_m": 60,
+      "span_relative": 0.18072289156626506,
+      "hero_scale_multiplier": 3.0433333333333334
+    },
+    "air-bomber-tactical": {
+      "file": "air-bomber-tactical.png",
+      "mask": "air-bomber-tactical-shadow.png",
+      "tint_mask": "air-bomber-tactical-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.10843373493975904,
+      "length_m": 36,
+      "length_pixels": 1012,
+      "variant": "tactical-twin-engine",
+      "family": "air",
+      "state": "normal",
+      "states": {
+        "normal": "air-bomber-tactical",
+        "detected": "air-bomber-tactical-detected",
+        "burning": "air-bomber-tactical-burning",
+        "wrecked": "air-bomber-tactical-wrecked"
+      },
+      "size": [
+        912,
+        1024
+      ],
+      "base": "air-bomber-tactical",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.10843373493975904,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-bomber-tactical.blend",
+      "span_m": 32,
+      "span_relative": 0.0963855421686747
+    },
+    "air-bomber-tactical-detected": {
+      "file": "air-bomber-tactical-detected.png",
+      "mask": "air-bomber-tactical-shadow.png",
+      "tint_mask": "air-bomber-tactical-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.10843373493975904,
+      "length_m": 36,
+      "length_pixels": 1012,
+      "variant": "tactical-twin-engine",
+      "family": "air",
+      "state": "detected",
+      "states": {
+        "normal": "air-bomber-tactical",
+        "detected": "air-bomber-tactical-detected",
+        "burning": "air-bomber-tactical-burning",
+        "wrecked": "air-bomber-tactical-wrecked"
+      },
+      "size": [
+        912,
+        1024
+      ],
+      "base": "air-bomber-tactical",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.10843373493975904,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-bomber-tactical.blend",
+      "span_m": 32,
+      "span_relative": 0.0963855421686747
+    },
+    "air-bomber-tactical-burning": {
+      "file": "air-bomber-tactical-burning.png",
+      "mask": "air-bomber-tactical-shadow.png",
+      "tint_mask": "air-bomber-tactical-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.10843373493975904,
+      "length_m": 36,
+      "length_pixels": 1012,
+      "variant": "tactical-twin-engine",
+      "family": "air",
+      "state": "burning",
+      "states": {
+        "normal": "air-bomber-tactical",
+        "detected": "air-bomber-tactical-detected",
+        "burning": "air-bomber-tactical-burning",
+        "wrecked": "air-bomber-tactical-wrecked"
+      },
+      "size": [
+        912,
+        1024
+      ],
+      "base": "air-bomber-tactical",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.10843373493975904,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-bomber-tactical.blend",
+      "span_m": 32,
+      "span_relative": 0.0963855421686747
+    },
+    "air-bomber-tactical-wrecked": {
+      "file": "air-bomber-tactical-wrecked.png",
+      "mask": "air-bomber-tactical-shadow.png",
+      "tint_mask": "air-bomber-tactical-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.10843373493975904,
+      "length_m": 36,
+      "length_pixels": 1012,
+      "variant": "tactical-twin-engine",
+      "family": "air",
+      "state": "wrecked",
+      "states": {
+        "normal": "air-bomber-tactical",
+        "detected": "air-bomber-tactical-detected",
+        "burning": "air-bomber-tactical-burning",
+        "wrecked": "air-bomber-tactical-wrecked"
+      },
+      "size": [
+        912,
+        1024
+      ],
+      "base": "air-bomber-tactical",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.10843373493975904,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-bomber-tactical.blend",
+      "span_m": 32,
+      "span_relative": 0.0963855421686747
+    },
+    "air-transport-jet": {
+      "file": "air-transport-jet.png",
+      "mask": "air-transport-jet-shadow.png",
+      "tint_mask": "air-transport-jet-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.15963855421686746,
+      "length_m": 53,
+      "length_pixels": 1012,
+      "variant": "jet-transport",
+      "family": "air",
+      "state": "normal",
+      "states": {
+        "normal": "air-transport-jet",
+        "detected": "air-transport-jet-detected",
+        "burning": "air-transport-jet-burning",
+        "wrecked": "air-transport-jet-wrecked"
+      },
+      "size": [
+        1006,
+        1024
+      ],
+      "base": "air-transport-jet",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.15963855421686746,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-transport-jet.blend",
+      "span_m": 52,
+      "span_relative": 0.1566265060240964
+    },
+    "air-transport-jet-detected": {
+      "file": "air-transport-jet-detected.png",
+      "mask": "air-transport-jet-shadow.png",
+      "tint_mask": "air-transport-jet-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.15963855421686746,
+      "length_m": 53,
+      "length_pixels": 1012,
+      "variant": "jet-transport",
+      "family": "air",
+      "state": "detected",
+      "states": {
+        "normal": "air-transport-jet",
+        "detected": "air-transport-jet-detected",
+        "burning": "air-transport-jet-burning",
+        "wrecked": "air-transport-jet-wrecked"
+      },
+      "size": [
+        1006,
+        1024
+      ],
+      "base": "air-transport-jet",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.15963855421686746,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-transport-jet.blend",
+      "span_m": 52,
+      "span_relative": 0.1566265060240964
+    },
+    "air-transport-jet-burning": {
+      "file": "air-transport-jet-burning.png",
+      "mask": "air-transport-jet-shadow.png",
+      "tint_mask": "air-transport-jet-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.15963855421686746,
+      "length_m": 53,
+      "length_pixels": 1012,
+      "variant": "jet-transport",
+      "family": "air",
+      "state": "burning",
+      "states": {
+        "normal": "air-transport-jet",
+        "detected": "air-transport-jet-detected",
+        "burning": "air-transport-jet-burning",
+        "wrecked": "air-transport-jet-wrecked"
+      },
+      "size": [
+        1006,
+        1024
+      ],
+      "base": "air-transport-jet",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.15963855421686746,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-transport-jet.blend",
+      "span_m": 52,
+      "span_relative": 0.1566265060240964
+    },
+    "air-transport-jet-wrecked": {
+      "file": "air-transport-jet-wrecked.png",
+      "mask": "air-transport-jet-shadow.png",
+      "tint_mask": "air-transport-jet-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.15963855421686746,
+      "length_m": 53,
+      "length_pixels": 1012,
+      "variant": "jet-transport",
+      "family": "air",
+      "state": "wrecked",
+      "states": {
+        "normal": "air-transport-jet",
+        "detected": "air-transport-jet-detected",
+        "burning": "air-transport-jet-burning",
+        "wrecked": "air-transport-jet-wrecked"
+      },
+      "size": [
+        1006,
+        1024
+      ],
+      "base": "air-transport-jet",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.15963855421686746,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-transport-jet.blend",
+      "span_m": 52,
+      "span_relative": 0.1566265060240964
+    },
+    "air-fighter-swept": {
+      "file": "air-fighter-swept.png",
+      "mask": "air-fighter-swept-shadow.png",
+      "tint_mask": "air-fighter-swept-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.0572289156626506,
+      "length_m": 19,
+      "length_pixels": 1012,
+      "variant": "swept-fighter",
+      "family": "air",
+      "state": "normal",
+      "states": {
+        "normal": "air-fighter-swept",
+        "detected": "air-fighter-swept-detected",
+        "burning": "air-fighter-swept-burning",
+        "wrecked": "air-fighter-swept-wrecked"
+      },
+      "size": [
+        708,
+        1024
+      ],
+      "base": "air-fighter-swept",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.0572289156626506,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-fighter-swept.blend",
+      "span_m": 13,
+      "span_relative": 0.0391566265060241
+    },
+    "air-fighter-swept-detected": {
+      "file": "air-fighter-swept-detected.png",
+      "mask": "air-fighter-swept-shadow.png",
+      "tint_mask": "air-fighter-swept-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.0572289156626506,
+      "length_m": 19,
+      "length_pixels": 1012,
+      "variant": "swept-fighter",
+      "family": "air",
+      "state": "detected",
+      "states": {
+        "normal": "air-fighter-swept",
+        "detected": "air-fighter-swept-detected",
+        "burning": "air-fighter-swept-burning",
+        "wrecked": "air-fighter-swept-wrecked"
+      },
+      "size": [
+        708,
+        1024
+      ],
+      "base": "air-fighter-swept",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.0572289156626506,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-fighter-swept.blend",
+      "span_m": 13,
+      "span_relative": 0.0391566265060241
+    },
+    "air-fighter-swept-burning": {
+      "file": "air-fighter-swept-burning.png",
+      "mask": "air-fighter-swept-shadow.png",
+      "tint_mask": "air-fighter-swept-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.0572289156626506,
+      "length_m": 19,
+      "length_pixels": 1012,
+      "variant": "swept-fighter",
+      "family": "air",
+      "state": "burning",
+      "states": {
+        "normal": "air-fighter-swept",
+        "detected": "air-fighter-swept-detected",
+        "burning": "air-fighter-swept-burning",
+        "wrecked": "air-fighter-swept-wrecked"
+      },
+      "size": [
+        708,
+        1024
+      ],
+      "base": "air-fighter-swept",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.0572289156626506,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-fighter-swept.blend",
+      "span_m": 13,
+      "span_relative": 0.0391566265060241
+    },
+    "air-fighter-swept-wrecked": {
+      "file": "air-fighter-swept-wrecked.png",
+      "mask": "air-fighter-swept-shadow.png",
+      "tint_mask": "air-fighter-swept-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.0572289156626506,
+      "length_m": 19,
+      "length_pixels": 1012,
+      "variant": "swept-fighter",
+      "family": "air",
+      "state": "wrecked",
+      "states": {
+        "normal": "air-fighter-swept",
+        "detected": "air-fighter-swept-detected",
+        "burning": "air-fighter-swept-burning",
+        "wrecked": "air-fighter-swept-wrecked"
+      },
+      "size": [
+        708,
+        1024
+      ],
+      "base": "air-fighter-swept",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.0572289156626506,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-fighter-swept.blend",
+      "span_m": 13,
+      "span_relative": 0.0391566265060241
+    },
+    "air-helicopter-heavy": {
+      "file": "air-helicopter-heavy.png",
+      "mask": "air-helicopter-heavy-shadow.png",
+      "tint_mask": "air-helicopter-heavy-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.09036144578313253,
+      "length_m": 30,
+      "length_pixels": 1011,
+      "variant": "tandem-rotor",
+      "family": "air",
+      "state": "normal",
+      "states": {
+        "normal": "air-helicopter-heavy",
+        "detected": "air-helicopter-heavy-detected",
+        "burning": "air-helicopter-heavy-burning",
+        "wrecked": "air-helicopter-heavy-wrecked"
+      },
+      "size": [
+        540,
+        1024
+      ],
+      "base": "air-helicopter-heavy",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.09036144578313253,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-helicopter-heavy.blend",
+      "span_m": 19,
+      "span_relative": 0.0572289156626506
+    },
+    "air-helicopter-heavy-detected": {
+      "file": "air-helicopter-heavy-detected.png",
+      "mask": "air-helicopter-heavy-shadow.png",
+      "tint_mask": "air-helicopter-heavy-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.09036144578313253,
+      "length_m": 30,
+      "length_pixels": 1011,
+      "variant": "tandem-rotor",
+      "family": "air",
+      "state": "detected",
+      "states": {
+        "normal": "air-helicopter-heavy",
+        "detected": "air-helicopter-heavy-detected",
+        "burning": "air-helicopter-heavy-burning",
+        "wrecked": "air-helicopter-heavy-wrecked"
+      },
+      "size": [
+        540,
+        1024
+      ],
+      "base": "air-helicopter-heavy",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.09036144578313253,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-helicopter-heavy.blend",
+      "span_m": 19,
+      "span_relative": 0.0572289156626506
+    },
+    "air-helicopter-heavy-burning": {
+      "file": "air-helicopter-heavy-burning.png",
+      "mask": "air-helicopter-heavy-shadow.png",
+      "tint_mask": "air-helicopter-heavy-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.09036144578313253,
+      "length_m": 30,
+      "length_pixels": 1011,
+      "variant": "tandem-rotor",
+      "family": "air",
+      "state": "burning",
+      "states": {
+        "normal": "air-helicopter-heavy",
+        "detected": "air-helicopter-heavy-detected",
+        "burning": "air-helicopter-heavy-burning",
+        "wrecked": "air-helicopter-heavy-wrecked"
+      },
+      "size": [
+        540,
+        1024
+      ],
+      "base": "air-helicopter-heavy",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.09036144578313253,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-helicopter-heavy.blend",
+      "span_m": 19,
+      "span_relative": 0.0572289156626506
+    },
+    "air-helicopter-heavy-wrecked": {
+      "file": "air-helicopter-heavy-wrecked.png",
+      "mask": "air-helicopter-heavy-shadow.png",
+      "tint_mask": "air-helicopter-heavy-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.09036144578313253,
+      "length_m": 30,
+      "length_pixels": 1011,
+      "variant": "tandem-rotor",
+      "family": "air",
+      "state": "wrecked",
+      "states": {
+        "normal": "air-helicopter-heavy",
+        "detected": "air-helicopter-heavy-detected",
+        "burning": "air-helicopter-heavy-burning",
+        "wrecked": "air-helicopter-heavy-wrecked"
+      },
+      "size": [
+        540,
+        1024
+      ],
+      "base": "air-helicopter-heavy",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.09036144578313253,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-helicopter-heavy.blend",
+      "span_m": 19,
+      "span_relative": 0.0572289156626506
+    },
+    "air-uav": {
+      "file": "air-uav.png",
+      "mask": "air-uav-shadow.png",
+      "tint_mask": "air-uav-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.03313253012048193,
+      "length_m": 11,
+      "length_pixels": 484,
+      "variant": "uav",
+      "family": "air",
+      "state": "normal",
+      "states": {
+        "normal": "air-uav",
+        "detected": "air-uav-detected",
+        "burning": "air-uav-burning",
+        "wrecked": "air-uav-wrecked"
+      },
+      "size": [
+        1024,
+        498
+      ],
+      "base": "air-uav",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.03313253012048193,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-uav.blend",
+      "span_m": 23,
+      "span_relative": 0.06927710843373494
+    },
+    "air-uav-detected": {
+      "file": "air-uav-detected.png",
+      "mask": "air-uav-shadow.png",
+      "tint_mask": "air-uav-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.03313253012048193,
+      "length_m": 11,
+      "length_pixels": 484,
+      "variant": "uav",
+      "family": "air",
+      "state": "detected",
+      "states": {
+        "normal": "air-uav",
+        "detected": "air-uav-detected",
+        "burning": "air-uav-burning",
+        "wrecked": "air-uav-wrecked"
+      },
+      "size": [
+        1024,
+        498
+      ],
+      "base": "air-uav",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.03313253012048193,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-uav.blend",
+      "span_m": 23,
+      "span_relative": 0.06927710843373494
+    },
+    "air-uav-burning": {
+      "file": "air-uav-burning.png",
+      "mask": "air-uav-shadow.png",
+      "tint_mask": "air-uav-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.03313253012048193,
+      "length_m": 11,
+      "length_pixels": 484,
+      "variant": "uav",
+      "family": "air",
+      "state": "burning",
+      "states": {
+        "normal": "air-uav",
+        "detected": "air-uav-detected",
+        "burning": "air-uav-burning",
+        "wrecked": "air-uav-wrecked"
+      },
+      "size": [
+        1024,
+        498
+      ],
+      "base": "air-uav",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.03313253012048193,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-uav.blend",
+      "span_m": 23,
+      "span_relative": 0.06927710843373494
+    },
+    "air-uav-wrecked": {
+      "file": "air-uav-wrecked.png",
+      "mask": "air-uav-shadow.png",
+      "tint_mask": "air-uav-tint.png",
+      "anchor": [
+        0.5,
+        0.5
+      ],
+      "bow": [
+        0,
+        -1
+      ],
+      "length_relative": 0.03313253012048193,
+      "length_m": 11,
+      "length_pixels": 484,
+      "variant": "uav",
+      "family": "air",
+      "state": "wrecked",
+      "states": {
+        "normal": "air-uav",
+        "detected": "air-uav-detected",
+        "burning": "air-uav-burning",
+        "wrecked": "air-uav-wrecked"
+      },
+      "size": [
+        1024,
+        498
+      ],
+      "base": "air-uav",
+      "shadow_opacity": 0.5,
+      "physical_relative_length": 0.03313253012048193,
+      "scale_basis": "physical-332m",
+      "model_file": "blend/air-uav.blend",
+      "span_m": 23,
+      "span_relative": 0.06927710843373494
+    }
+  },
+  "rendering": {
+    "preview": false,
+    "engine": "Cycles CPU",
+    "threads": 1,
+    "samples": 16,
+    "modeling": "Blender MCP",
+    "source_size": [
+      1280,
+      1280
+    ],
+    "sun_from": [
+      -75,
+      100,
+      145
+    ],
+    "freestyle": false,
+    "compositing": false
+  },
+  "scale_notes": {
+    "ground": "Escala editorial de lectura: tanque .10, camión .09, ambulancia .06, obús .10. physical_relative_length mantiene metros/332.",
+    "air": "length_relative mide fuselaje/332; span_relative mide envergadura/332. Pesado: hero_scale_multiplier lleva su envergadura a .55 del portaaviones. Aplicar multiplicador sólo cuando se desee esa escala editorial."
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-mono",
+  "family": "promo",
+  "source_of_truth": "templates.json#templates/promo-mono",
+  "config_json": "nodemotion/commercial/promo-mono/assets/config.json",
+  "config_prompt": null,
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 12,
+        "target": "media",
+        "label": "Videos",
+        "hint": "personas en movimiento o actividades del tema; se muestran en blanco y negro y en semitono"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.name",
+        "label": "Marca (logotipo)",
+        "max": 24,
+        "default": "Rutalia"
+      },
+      {
+        "key": "brand.cta",
+        "label": "Llamada en la píldora",
+        "max": 30,
+        "default": "Míralo y ve"
+      },
+      {
+        "key": "brand.url",
+        "label": "Dirección o usuario",
+        "max": 40,
+        "default": "@rutalia.demo"
+      },
+      {
+        "key": "intro.title",
+        "label": "Título de la intro",
+        "max": 24,
+        "default": "Rutalia"
+      },
+      {
+        "key": "outro.title",
+        "label": "Título del cierre",
+        "max": 24,
+        "default": "Rutalia"
+      },
+      {
+        "key": "outro.cta",
+        "label": "Llamada del cierre",
+        "max": 30,
+        "default": "Míralo y ve"
+      }
+    ],
+    "brief": false
+  },
+  "sources": {
+    "template": "templates.json#templates/promo-mono",
+    "config": "nodemotion/commercial/promo-mono/assets/config.json",
+    "info.json": "nodemotion/commercial/promo-mono/info.json",
+    "showcase/components.json": "nodemotion/commercial/promo-mono/showcase/components.json",
+    "DESIGN.md": "nodemotion/commercial/promo-mono/DESIGN.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

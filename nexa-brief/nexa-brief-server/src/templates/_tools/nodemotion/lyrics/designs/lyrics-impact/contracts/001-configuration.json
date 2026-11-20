@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-impact",
+  "id": "config.bg",
+  "entry_id": "config.bg",
+  "name": "bg",
+  "kind": "configuration",
+  "label": "bg",
+  "summary": "Existing configuration configuration: bg.",
+  "params": {
+    "type": {
+      "default": "video"
+    },
+    "src": {
+      "default": "assets/women-dancing.mp4"
+    },
+    "filter": {
+      "default": "grayscale(0.5) brightness(0.50) contrast(1.25) saturate(1.3) blur(4px)"
+    },
+    "darkness": {
+      "default": {
+        "center": 0.04,
+        "edge": 0.28,
+        "outer": 0.5,
+        "vignette": 0.35
+      }
+    }
+  },
+  "example": {
+    "type": "video",
+    "src": "assets/women-dancing.mp4",
+    "filter": "grayscale(0.5) brightness(0.50) contrast(1.25) saturate(1.3) blur(4px)",
+    "darkness": {
+      "center": 0.04,
+      "edge": 0.28,
+      "outer": 0.5,
+      "vignette": 0.35
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-impact/assets/config.json",
+      "pointer": "/configs/0/bg"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

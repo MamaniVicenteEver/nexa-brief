@@ -1,0 +1,344 @@
+{
+  "schema_version": 1,
+  "id": "dynamic-news",
+  "nombre": "Dynamic News",
+  "family": "atlas-news",
+  "enabled": true,
+  "revision": 2,
+  "fonts": {
+    "family": "Barlow Condensed",
+    "weight": 700,
+    "strong": 800
+  },
+  "colors": {
+    "primary": "#071B36",
+    "secondary": "#2684FF",
+    "tertiary": "#F7FAFF",
+    "alert": "#EF3340",
+    "important": "#FFD34D",
+    "black": "#020914",
+    "muted": "#BED4F1",
+    "panel": "#071B3633",
+    "blue": "#2684FF",
+    "red": "#EF3340",
+    "yellow": "#FFD34D",
+    "white": "#F7FAFF",
+    "dim": "#BED4F1",
+    "green": "#63B3FF",
+    "orange": "#FFD34D",
+    "shadow": "#020914CC"
+  },
+  "layout": {
+    "safe": {
+      "top": 0.07,
+      "right": 0.05,
+      "bottom": 0.14,
+      "left": 0.05
+    },
+    "gap": 18,
+    "padding": 10,
+    "radius": 6,
+    "minText": 42,
+    "body": 46,
+    "lineHeight": 1.12,
+    "maxWidth": 0.54,
+    "compactWidth": 0.3,
+    "leader": true,
+    "overflow": "report",
+    "slots": {
+      "topic": [
+        0.05,
+        0.09
+      ],
+      "hero": [
+        0.5,
+        0.38
+      ],
+      "detail": [
+        0.5,
+        0.64
+      ],
+      "brand": [
+        0.78,
+        0.06
+      ]
+    },
+    "groupTopics": true,
+    "shadowBlur": 5
+  },
+  "captions": {
+    "font": "Barlow Condensed, sans-serif",
+    "weight": 700,
+    "size": 46,
+    "maxWords": 4,
+    "color": "#F7FAFF",
+    "y": 0.855,
+    "yLandscape": 0.9,
+    "stroke": true
+  },
+  "components": {
+    "brand": {
+      "size": 34,
+      "minSize": 30,
+      "priority": 100,
+      "zone": "brand",
+      "width": 0.28,
+      "textPlate": false
+    },
+    "topic": {
+      "size": 58,
+      "minSize": 54,
+      "priority": 95,
+      "zone": "topic",
+      "width": 1,
+      "accent": "secondary",
+      "textPlate": false
+    },
+    "lower-title": {
+      "size": 96,
+      "minSize": 76,
+      "labelSize": 42,
+      "priority": 80,
+      "zone": "hero",
+      "width": 0.7,
+      "textPlate": false
+    },
+    "hemicycle": {
+      "size": 42,
+      "minSize": 42,
+      "valueSize": 72,
+      "radius": 150,
+      "priority": 70,
+      "zone": "detail",
+      "width": 0.42,
+      "textPlate": false
+    },
+    "counter": {
+      "size": 116,
+      "minSize": 96,
+      "labelSize": 44,
+      "priority": 85,
+      "zone": "detail",
+      "width": 0.32,
+      "accent": "important",
+      "textPlate": false
+    },
+    "portrait": {
+      "size": 76,
+      "minSize": 70,
+      "nameSize": 46,
+      "labelSize": 40,
+      "priority": 60,
+      "zone": "detail",
+      "width": 0.3,
+      "textPlate": false,
+      "mediaScale": 1.4
+    },
+    "photo-frame": {
+      "size": 42,
+      "minSize": 42,
+      "labelSize": 42,
+      "priority": 70,
+      "zone": "hero",
+      "width": 0.5,
+      "aspect": 1.6,
+      "textPlate": false,
+      "mediaScale": 1.6
+    },
+    "chip": {
+      "size": 52,
+      "minSize": 46,
+      "labelSize": 44,
+      "priority": 50,
+      "zone": "detail",
+      "width": 0.28,
+      "textPlate": false,
+      "mediaScale": 1.3
+    },
+    "city": {
+      "size": 44,
+      "minSize": 42,
+      "priority": 45,
+      "zone": "geo",
+      "width": 0.28,
+      "textPlate": false
+    },
+    "note": {
+      "size": 46,
+      "minSize": 42,
+      "priority": 55,
+      "zone": "detail",
+      "width": 0.38,
+      "textPlate": false
+    },
+    "glow": {
+      "size": 34,
+      "minSize": 30,
+      "priority": 10,
+      "zone": "geo",
+      "width": 0.12,
+      "textPlate": false
+    },
+    "alert": {
+      "size": 86,
+      "minSize": 76,
+      "labelSize": 42,
+      "priority": 99,
+      "zone": "hero",
+      "width": 0.64,
+      "accent": "alert",
+      "kicker": "ALERTA",
+      "textPlate": true
+    },
+    "headline": {
+      "size": 106,
+      "minSize": 92,
+      "labelSize": 42,
+      "priority": 90,
+      "zone": "hero",
+      "width": 0.7,
+      "accent": "secondary",
+      "kicker": "EN CONTEXTO",
+      "textPlate": false
+    },
+    "key-figure": {
+      "size": 148,
+      "minSize": 120,
+      "labelSize": 48,
+      "priority": 90,
+      "zone": "hero",
+      "width": 0.52,
+      "accent": "important",
+      "kicker": "EL DATO",
+      "textPlate": false
+    },
+    "date-card": {
+      "size": 112,
+      "minSize": 92,
+      "labelSize": 44,
+      "priority": 88,
+      "zone": "hero",
+      "width": 0.52,
+      "accent": "secondary",
+      "kicker": "FECHA CLAVE",
+      "textPlate": false
+    },
+    "message": {
+      "size": 66,
+      "minSize": 58,
+      "labelSize": 42,
+      "priority": 80,
+      "zone": "detail",
+      "width": 0.58,
+      "accent": "secondary",
+      "kicker": "CLAVES",
+      "textPlate": true
+    }
+  },
+  "formatos": {
+    "movil": {
+      "layout": {
+        "safe": {
+          "top": 0.08,
+          "right": 0.12,
+          "bottom": 0.22,
+          "left": 0.06
+        },
+        "gap": 22,
+        "padding": 10,
+        "maxWidth": 1,
+        "compactWidth": 0.48
+      },
+      "components": {
+        "brand": {
+          "width": 0.5
+        },
+        "lower-title": {
+          "width": 1
+        },
+        "hemicycle": {
+          "width": 0.48,
+          "radius": 135
+        },
+        "counter": {
+          "width": 0.48
+        },
+        "portrait": {
+          "width": 0.48
+        },
+        "photo-frame": {
+          "width": 1
+        },
+        "chip": {
+          "width": 0.48
+        },
+        "city": {
+          "width": 0.48
+        },
+        "note": {
+          "width": 1
+        },
+        "alert": {
+          "width": 1
+        },
+        "headline": {
+          "width": 1
+        },
+        "key-figure": {
+          "width": 1
+        },
+        "date-card": {
+          "width": 1
+        },
+        "message": {
+          "width": 1
+        }
+      }
+    },
+    "escritorio": {
+      "components": {
+        "hemicycle": {
+          "width": 0.3
+        },
+        "photo-frame": {
+          "width": 0.45
+        },
+        "topic": {
+          "width": 0.7
+        }
+      },
+      "layout": {
+        "gap": 12
+      }
+    }
+  },
+  "targets": {
+    "hud": [
+      "brand",
+      "topic",
+      "lower-title",
+      "hemicycle",
+      "counter",
+      "portrait",
+      "photo-frame",
+      "chip",
+      "city",
+      "note",
+      "glow",
+      "alert",
+      "headline",
+      "key-figure",
+      "date-card",
+      "message"
+    ],
+    "layers": [
+      "highlight",
+      "arc"
+    ]
+  },
+  "map": {
+    "labels": {
+      "visible": false
+    }
+  }
+}

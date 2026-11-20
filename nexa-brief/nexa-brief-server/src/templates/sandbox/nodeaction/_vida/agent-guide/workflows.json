@@ -1,0 +1,188 @@
+{
+  "title": "Cómo crear y ampliar Vida en Escena",
+  "summary": "Guías breves para encargar cada tarea a un agente. Cada tarjeta indica las entradas, el proceso y los archivos que debe consultar.",
+  "cards": [
+    {
+      "id": "crear-personaje",
+      "title": "Crear un personaje",
+      "summary": "Crea una ficha reutilizable con el cuerpo, la cara y las acciones que ya ofrece el motor.",
+      "inputs": [
+        "Nombre e identificador",
+        "Apariencia, ropa y accesorios",
+        "Voz deseada o perfil existente"
+      ],
+      "steps": [
+        "Consultar desde _vida/: node tools/agent-guide.mjs show crear-personaje",
+        "Leer la guía de creación y los campos permitidos; reutilizar opciones existentes.",
+        "Crear la ficha, validar y revisar visualmente el personaje.",
+        "Actualizar el catálogo y las miniaturas para verlo en Showcase."
+      ],
+      "documents": [
+        {
+          "label": "Guía de personajes",
+          "path": "agent-guide/character.json"
+        },
+        {
+          "label": "Esquema del personaje",
+          "path": "schema/character.schema.json"
+        }
+      ]
+    },
+    {
+      "id": "actualizar-personaje",
+      "title": "Modificar un personaje",
+      "summary": "Cambia sus datos conservando su identidad y las referencias de los episodios.",
+      "inputs": [
+        "Personaje existente",
+        "Cambios solicitados",
+        "Episodios que utilizan el personaje: su ficha es compartida"
+      ],
+      "steps": [
+        "Consultar desde _vida/: node tools/agent-guide.mjs show actualizar-personaje",
+        "Leer solo su ficha y la guía de edición.",
+        "Aplicar los cambios pedidos, validar y revisar sus vistas.",
+        "Actualizar las miniaturas y comprobar los episodios afectados."
+      ],
+      "documents": [
+        {
+          "label": "Guía de personajes",
+          "path": "agent-guide/character.json"
+        },
+        {
+          "label": "Esquema del personaje",
+          "path": "schema/character.schema.json"
+        }
+      ]
+    },
+    {
+      "id": "voz",
+      "title": "Configurar una voz",
+      "summary": "Reutiliza un perfil o prepara uno nuevo y los clips necesarios para el diálogo solicitado.",
+      "inputs": [
+        "Personaje y hablante del guion",
+        "Idioma, tono y voz deseada",
+        "Frases definitivas si se van a generar clips"
+      ],
+      "steps": [
+        "Consultar desde _vida/: node tools/agent-guide.mjs show voz",
+        "Consultar la guía de voz y comprobar qué perfiles y proveedor están disponibles.",
+        "Alinear el identificador del hablante con el perfil que utiliza el generador.",
+        "Generar y revisar audio y tiempos solo cuando se soliciten; informar cualquier limitación real."
+      ],
+      "documents": [
+        {
+          "label": "Guía de voces",
+          "path": "agent-guide/voice.json"
+        },
+        {
+          "label": "Esquema del perfil",
+          "path": "schema/voice.schema.json"
+        }
+      ]
+    },
+    {
+      "id": "actualizar-voz",
+      "title": "Modificar una voz existente",
+      "summary": "Cambia un perfil vocal y determina qué grabaciones necesitan revisión.",
+      "inputs": [
+        "Perfil y hablante existentes",
+        "Nuevo tono, ritmo o voz solicitados",
+        "Episodios y frases afectados"
+      ],
+      "steps": [
+        "Consultar desde _vida/: node tools/agent-guide.mjs show actualizar-voz",
+        "Leer el perfil y validar las opciones compatibles con el proveedor.",
+        "Aplicar y validar el cambio; identificar clips que utilizan la configuración anterior.",
+        "Regenerar y revisar clips solo cuando el pedido incluya audio."
+      ],
+      "documents": [
+        {
+          "label": "Guía de voces",
+          "path": "agent-guide/voice.json"
+        },
+        {
+          "label": "Esquema del perfil",
+          "path": "schema/voice.schema.json"
+        }
+      ]
+    },
+    {
+      "id": "usar-animacion",
+      "title": "Usar una animación existente",
+      "summary": "Asigna movimientos, gestos y expresiones disponibles a un personaje dentro de una escena.",
+      "inputs": [
+        "Personaje",
+        "Acción o gesto deseado",
+        "Escenario, tiempos y objetos involucrados"
+      ],
+      "steps": [
+        "Consultar desde _vida/: node tools/agent-guide.mjs show usar-animacion",
+        "Consultar las acciones disponibles y el ejemplo pertinente.",
+        "Escribir los pasos de la escena sin cambiar el motor.",
+        "Validar contacto, encuadre y sincronía de la escena."
+      ],
+      "documents": [
+        {
+          "label": "Guía de animaciones",
+          "path": "agent-guide/extension/animations.json"
+        },
+        {
+          "label": "Contrato del episodio",
+          "path": "docs/EPISODIO.md"
+        }
+      ]
+    },
+    {
+      "id": "animacion",
+      "title": "Añadir una animación nueva",
+      "summary": "Amplía el conjunto de acciones reutilizables cuando la capacidad pedida todavía no existe.",
+      "inputs": [
+        "Movimiento y resultado esperado",
+        "Duración, actor y objetos",
+        "Ejemplo o referencia visual si existe"
+      ],
+      "steps": [
+        "Consultar desde _vida/: node tools/agent-guide.mjs show animacion",
+        "Comprobar primero si una acción existente resuelve el pedido.",
+        "Seguir la ruta de extensión y modificar solo los módulos necesarios.",
+        "Validar determinismo, contactos, compatibilidad y ejemplos visuales; actualizar el catálogo."
+      ],
+      "documents": [
+        {
+          "label": "Guía de animaciones",
+          "path": "agent-guide/extension/animations.json"
+        },
+        {
+          "label": "Índice de tareas",
+          "path": "agent-guide/index.json"
+        }
+      ]
+    },
+    {
+      "id": "componente",
+      "title": "Añadir un componente nuevo",
+      "summary": "Incorpora un rasgo, prenda, objeto o efecto que no esté disponible en el catálogo.",
+      "inputs": [
+        "Qué componente falta y cómo debe verse",
+        "Parámetros y variantes deseados",
+        "Dónde debe utilizarse"
+      ],
+      "steps": [
+        "Consultar desde _vida/: node tools/agent-guide.mjs show componente",
+        "Elegir la ruta específica para el tipo de componente.",
+        "Extender el motor y su esquema sin duplicar el personaje ni romper episodios existentes.",
+        "Actualizar catálogo, ejemplo y miniatura; ejecutar las verificaciones de esa ruta."
+      ],
+      "documents": [
+        {
+          "label": "Guía de componentes",
+          "path": "agent-guide/extension/components.json"
+        },
+        {
+          "label": "Índice de tareas",
+          "path": "agent-guide/index.json"
+        }
+      ]
+    }
+  ]
+}

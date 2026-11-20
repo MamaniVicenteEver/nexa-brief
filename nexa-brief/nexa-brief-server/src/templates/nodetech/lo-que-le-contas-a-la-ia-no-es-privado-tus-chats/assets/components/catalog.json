@@ -1,0 +1,98 @@
+{
+ "comps": [
+  {
+   "name": "rough.chatRedaction",
+   "summary": "Globo de conversación con datos ocultados.",
+   "tags": [
+    "chat",
+    "desidentificación"
+   ],
+   "layer": "main",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo opcional.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "title": "DATOS OCULTOS"
+   }
+  },
+  {
+   "name": "rough.legalWarrant",
+   "summary": "Documento y sello de orden judicial.",
+   "tags": [
+    "justicia",
+    "orden"
+   ],
+   "layer": "main",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo opcional.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "title": "ORDEN JUDICIAL"
+   }
+  },
+  {
+   "name": "rough.retentionCalendar",
+   "summary": "Calendario y archivo que representan retención.",
+   "tags": [
+    "retención",
+    "archivo",
+    "tiempo"
+   ],
+   "layer": "main",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo opcional.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "title": "TIEMPO DE RETENCIÓN"
+   }
+  },
+  {
+   "name": "rough.temporaryChat",
+   "summary": "Conversación temporal y reloj de retención.",
+   "tags": [
+    "chat",
+    "retención",
+    "tiempo"
+   ],
+   "layer": "main",
+   "params": {
+    "title": {
+     "type": "string",
+     "default": "",
+     "doc": "Rótulo opcional.",
+     "required": false,
+     "options": null,
+     "min": null,
+     "max": null
+    }
+   },
+   "example": {
+    "title": "CHAT TEMPORAL"
+   }
+  }
+ ]
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-breaking",
+  "family": "promo",
+  "source_of_truth": "templates.json#templates/promo-breaking",
+  "config_json": "nodemotion/commercial/promo-breaking/assets/config.json",
+  "config_prompt": null,
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 15,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "ciudad, multitudes, edificios, pantallas de datos, prensa; se muestran en blanco y negro"
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.name",
+        "label": "Marca",
+        "max": 30,
+        "default": "NEXA BRIEF"
+      },
+      {
+        "key": "brand.tag",
+        "label": "Subtítulo de la marca",
+        "max": 40,
+        "default": "NOTICIAS DEL MUNDO"
+      },
+      {
+        "key": "brand.cta",
+        "label": "Llamada (caja roja del cierre)",
+        "max": 24,
+        "default": "SUSCRÍBETE"
+      },
+      {
+        "key": "brand.url",
+        "label": "Dirección o usuario",
+        "max": 40,
+        "default": "@NEXABRIEF"
+      },
+      {
+        "key": "brand.live",
+        "label": "Rótulo de directo",
+        "max": 16,
+        "default": "EN VIVO"
+      }
+    ],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/promo-breaking",
+    "config": "nodemotion/commercial/promo-breaking/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-breaking/DESIGN.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

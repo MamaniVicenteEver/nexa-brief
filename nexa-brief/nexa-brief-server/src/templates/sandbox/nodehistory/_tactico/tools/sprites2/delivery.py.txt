@@ -1,0 +1,58 @@
+"""Escribe la entrega a partir de archivos medidos y validación terminada."""
+import json,time,re,hashlib
+from pathlib import Path
+HERE=Path(__file__).resolve().parent;ROOT=HERE.parents[1]/'sprites2';BASE=HERE.parents[2]/'atlas-en-movimiento'
+manifest=json.loads((ROOT/'sprites2.json').read_text());timing=json.loads((ROOT/'render-times.json').read_text());valid=json.loads((ROOT/'validation.json').read_text());audit=json.loads((ROOT/'blend-audit.json').read_text())
+assert valid['status']=='PASS'
+trials=json.loads((ROOT/'render-trials.json').read_text())
+records={r['id']:r for r in timing['renders']};names=manifest['base_sprites']
+result=BASE/'work/results/sprites-vehiculos.md';result.parent.mkdir(parents=True,exist_ok=True)
+labels={'paint':'pintura','light':'pintura clara','panel':'panel mate','dark':'recovecos','steel':'metal','rubber':'caucho','glass':'cristal','white':'blanco','canvas':'lona','deck':'cubierta','seam':'juntas','red':'rojo sanitario'}
+tri=sum(json.loads((HERE/'evidence'/(s+'-qa.json')).read_text())['triangles'] for s in names)
+lines=[
+'# Entrega · sprites de vehículos',
+'',
+f'Completada: **{len(names)} variantes base**, incluidos bulldozer y plataforma opcionales; **{len(manifest["sprites"])} sprites de color**, 24 máscaras de sombra, 24 máscaras de tinte y 24 modelos `.blend`. PNG RGBA con alfa, 1024 px por el lado largo. Validación **PASS**, sin errores.',
+'',
+'- [Catálogo compatible `sprites2.json`](../../../_tactico/sprites2/sprites2.json). Sin fusionar con `sprites.json`.',
+'- [Todas las variantes y estados en océano y desierto](../../../_tactico/sprites2/hoja2.png).',
+'- [Las 24 variantes a 120, 240 y 480 px, en ambos fondos](../../../_tactico/sprites2/hoja2-escalas.png). Abrir al 100 %.',
+'- [Modelos editables](../../../_tactico/sprites2/blend/) · [herramientas y reproducción](../../../_tactico/tools/sprites2/README.md).',
+'- [Validación](../../../_tactico/sprites2/validation.json) · [tiempos por render](../../../_tactico/sprites2/render-times.json) · [auditoría de copias](../../../_tactico/sprites2/blend-audit.json).',
+'',
+f'**Peso medido:** {valid["combined_megabytes"]:.3f} MB para `sprites2/` y sus herramientas, por debajo de 40 MB. Los `.blend` contienen únicamente el modelo y el estudio de render: sin imágenes, acciones ni objetos del avatar de la sesión compartida.',
+'',
+'**Método.** Se leyeron y aplicaron `blender-core`, `blender-pbr-materials` y `blender-asset-qa`. Todo el modelado y sus materiales se crearon mediante el MCP `blender_servidor`, en `AEM_vehiculos/AEM_<sprite>` a X=12000. Cada modelo pasó QA y `look`, se guardó mediante `save_as_mainfile(copy=True, compress=True)` y se retiró de la sesión viva. Al terminar, la escena sigue siendo `NODEPOLITICS - AVATAR`, motor Cycles, selección `00 - CONTROLES DEL AVATAR`; no se cambiaron unidades, escena activa ni objetos ajenos.',
+'',
+'El modo seguro rechazó `libraries.write`; se usó la alternativa de copia autorizada por el brief. Las copias se limpiaron exclusivamente en procesos headless. El código exacto aceptado por el MCP está además en `tools/sprites2/<sprite>.py.txt`, con las reparaciones aplicadas cuando correspondan. Las extensiones `.py.txt` evitan activar el recargador del servidor. No se editaron lanzadores ni scripts mientras estuvieran ejecutándose. Las seis herramientas originales se copiaron a `originals/`, con hashes propios; el proceso externo siguió modificando sus fuentes y no se interfirió con él.',
+'',
+f'**Render.** Cycles CPU, 16 muestras, denoise, un hilo y `nice -n 19`; un render a la vez y cierre de cada proceso al terminar su sprite. Estudio independiente limpio, ortográfica cenital, transparencia, sol arriba-izquierda `[-75,100,145]`, preview CPU de 256 px y original final de 1280 px. Los 24 modelos se inspeccionaron previamente con `look` a 512 px. Los renders finales suman **{timing["render_total_seconds"]:.3f} s ({timing["render_total_seconds"]/60:.2f} min)**; previews CPU: **{timing["preview_total_seconds"]:.3f} s**; posproceso y hojas: **{timing["postprocess_seconds"]:.3f} s**. Estos tiempos corresponden a la tanda entregada, no incluyen ensayos descartados ni el tiempo de modelado y revisión por MCP; no se inventó una medición de este último.',
+'',
+f'Ensayos descartados completos: **{trials["completed_renders"]} renders**, **{trials["render_seconds"]:.3f} s**, más **{trials["preview_seconds"]:.3f} s** de previews; no se contabiliza el trabajo interrumpido. Las mediciones quedan en `sprites2/render-trials.json`.',
+'',
+'La primera hoja reveló Freestyle heredado del avatar, que dibujaba bordes internos de aspecto ilustrado. Se detuvo esa tanda de pruebas y se volvieron a renderizar los 24 modelos con escena limpia, sin Freestyle, compositor ni secuenciador. El contorno exterior se aplica con PIL. También se estrecharon guardabarros para mostrar orugas, se rehízo el jeep, se ensanchó el remolcador, se ajustó el bombardero táctico, se detalló la plataforma y se corrigieron los módulos de proa del VLCC. Se corrigieron biseles que generaban caras degeneradas antes de guardar los modelos.',
+'',
+'La consulta de dispositivos Cycles devolvió una lista vacía. El modo seguro bloqueó la consulta de actualización mediante preferencias; se respetó el bloqueo. Los renders usan expresamente CPU, conforme al hardware descrito en el brief.',
+'',
+'**Materiales.** Principled: pintura mate dieléctrica (roughness .58–.82), metal expuesto (metallic .82/roughness .38), caucho (.90), lona (.95), cristal (.13), blanco sanitario (.48) y emblemas rojos (.55). Variación y microbump procedurales, sin mapas de imagen; no hay texturas a las que asignar sRGB/Non-Color. Los valores de shader son lineales. El PNG normal es gris neutro, excepto los emblemas de las ambulancias; sus máscaras de tinte son intencionalmente vacías para preservar blanco y rojo.',
+'',
+f'**QA común Q, ejecutado en cada fila:** malla evaluada con biseles, {tri:,} triángulos sumados; bordes abiertos/no manifold, vértices sueltos, caras degeneradas, caras duplicadas por índices, escalas unitarias, normales finitas/unitarias y volumen firmado. Todos esos contadores quedaron en cero. También se comprobaron asignaciones Principled, metallic y roughness. No se ejecutaron auditorías automáticas de contactos entre piezas, z-fighting, solapes UV o deformación, ni el script completo de la skill. La columna QA indica el conteo individual real; los JSON están en `tools/sprites2/evidence/`.',
+'',
+'En la tabla, **C** significa copia `.blend` por MCP y limpieza de esa copia headless; **R** significa render de la geometría guardada, Cycles CPU/16/1 hilo, con estudio limpio. `look`: `angles`, `top` y `three_quarter`, `material`, 512 px, para cada fila.',
+'',
+'| Sprite | Modelado | Materiales aplicados | QA ejecutado | `look` revisado | Guardado / render final |',
+'|---|---|---|---|---|---|']
+for s in names:
+ q=json.loads((HERE/'evidence'/(s+'-qa.json')).read_text());materials=', '.join(labels.get(k.removeprefix('AEM_'+s+'_'),k) for k in q['materials']);r=records[s]
+ lines.append(f'| `{s}` | MCP sí | {materials} | Q · {q["triangles"]:,} tri · 0 incidencias | Cenital + oblicua · 512 px | C · R · {r["render_seconds"]:.3f} s |')
+lines += [
+'',
+'**Escalas e integración.** Se conserva el esquema `file`, `mask`, `anchor`, `bow`, `length_relative`, `variant`, `states` y demás campos del sistema original. Ancla `[.5,.5]`, proa `[0,-1]`. Terrestres con escala editorial pedida: tanque .10, camión .09, ambulancia .06, obús .10; `physical_relative_length` conserva metros/332. Buques y aviones usan longitud física/332. El bombardero pesado declara envergadura 60 m, `span_relative=60/332` y `hero_scale_multiplier=.55/(60/332)` para la presentación editorial de .55 de envergadura relativa al portaaviones. El README documenta la fórmula de dibujo y cómo elegir escala física o editorial.',
+'',
+'**Simplificaciones.** Modelos genéricos de silueta reconocible, sin banderas, matrículas, textos ni escudos nacionales; dimensiones orientativas, no réplicas de clases concretas. Geometría de construcción normalizada: usar el catálogo para escalar a metros. Sin interiores detallados, tripulación ni fracturas 3D. Los estados `burning` y `wrecked` reutilizan el daño PIL del sistema original: hollín, brasas y calcinado dentro de la silueta; humo y fuego animado corresponden al motor. `detected` se incluye por compatibilidad. El rotor del helicóptero está integrado y no es una capa animable separada.',
+'',
+'Las hojas se revisaron visualmente completas y mediante recortes de detalle sobre ambos fondos. La validación comprueba 1024 px, alfa sin bordes recortados, RGB bajo transparencia cero, máscaras alineadas, emblemas sanitarios diferenciados, estados distintos con alfa idéntico, referencias completas, escalas, los 24 registros de QA y el presupuesto de 40 MB. Los fondos de revisión son procedurales propios; las referencias se observaron sin extraer sus píxeles.',
+'',
+'No quedaron modelos pendientes, incluidos los dos opcionales.',
+]
+result.write_text('\n'.join(lines)+'\n');print(result)

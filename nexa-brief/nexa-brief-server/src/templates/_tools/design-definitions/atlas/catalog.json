@@ -1,0 +1,2686 @@
+{
+  "schema_version": 1,
+  "design_id": "atlas",
+  "revision": "1268249a0e1a1f77f0a731496cca783ff101d776ed28743ff30dda19c1ed8700",
+  "entries": [
+    {
+      "id": "common.punch",
+      "name": "common.punch",
+      "label": "common.punch",
+      "kind": "component",
+      "summary": "Palabra o frase GIGANTE a pantalla (momento de alto impacto, como las plantillas de música): letras que caen con desenfoque y se asientan; '^palabra^' va en color de acento.",
+      "tags": [
+        "impacto",
+        "texto",
+        "énfasis"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto; '\\n' parte renglones; '^x^' = acento.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.86,
+          "doc": "Fracción del ancho del cuadro que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 1
+        },
+        "style": {
+          "type": "enum",
+          "default": "solid",
+          "doc": "solid = relleno, outline = contorno, glitch = entra cortado.",
+          "required": false,
+          "options": [
+            "solid",
+            "outline",
+            "glitch"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.035,
+          "doc": "Segundos entre letra y letra.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "hideCaptions": {
+          "type": "bool",
+          "default": true,
+          "doc": "Oculta los subtítulos mientras está en pantalla.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "MILLONES\nDE ^VIDAS^",
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=common.punch",
+      "data": {
+        "native_name": "common.punch"
+      }
+    },
+    {
+      "id": "common.tag",
+      "name": "common.tag",
+      "label": "common.tag",
+      "kind": "component",
+      "summary": "Rótulo de contexto (lugar · fecha · dato) en mono mayúsculas, arriba o abajo del cuadro; entra escribiéndose.",
+      "tags": [
+        "contexto",
+        "lugar",
+        "fecha"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Texto del rótulo.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pos": {
+          "type": "enum",
+          "default": "top",
+          "doc": "Posición.",
+          "required": false,
+          "options": [
+            "top",
+            "bottom",
+            "center"
+          ],
+          "min": null,
+          "max": null
+        },
+        "boxed": {
+          "type": "bool",
+          "default": true,
+          "doc": "Con caja de color (true) o solo texto. Duración: usar 'dur' del beat.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "BLETCHLEY PARK · 1940",
+        "pos": "top"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=common.tag",
+      "data": {
+        "native_name": "common.tag"
+      }
+    },
+    {
+      "id": "common.flash",
+      "name": "common.flash",
+      "label": "common.flash",
+      "kind": "component",
+      "summary": "Destello de un instante (blanco o color de acento) para marcar un corte o un golpe de sonido.",
+      "tags": [
+        "transición",
+        "golpe"
+      ],
+      "params": {
+        "color": {
+          "type": "color",
+          "default": "palette.ink",
+          "doc": "Color del destello.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strength": {
+          "type": "number",
+          "default": 0.85,
+          "doc": "Opacidad máxima.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "color": "palette.ink",
+        "dur": 0.5
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=common.flash",
+      "data": {
+        "native_name": "common.flash"
+      }
+    },
+    {
+      "id": "common.endcard",
+      "name": "common.endcard",
+      "label": "common.endcard",
+      "kind": "component",
+      "summary": "Tarjeta final sobria: frase de cierre grande, línea y firma de marca (canal / suscribirse).",
+      "tags": [
+        "cierre",
+        "marca"
+      ],
+      "params": {
+        "line": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase de cierre ('\\n' para renglones, '^x^' acento).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "brand": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca / canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "",
+          "doc": "Llamado a la acción (mono).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "line": "SEGUIMOS\nPREGUNTANDO",
+        "brand": "NEXA BRIEF",
+        "cta": "SUSCRÍBETE"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=common.endcard",
+      "data": {
+        "native_name": "common.endcard"
+      }
+    },
+    {
+      "id": "common.lyric",
+      "name": "common.lyric",
+      "label": "common.lyric",
+      "kind": "component",
+      "summary": "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
+      "tags": [
+        "impacto",
+        "letra",
+        "frase",
+        "clímax"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase explícita breve; vacía usa la ventana de narración.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras (sin tildes ni mayúsculas importa) que van en color de acento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0.82,
+          "doc": "Fracción del ancho que ocupa el renglón más largo.",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 1
+        },
+        "maxChars": {
+          "type": "number",
+          "default": 0,
+          "doc": "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dimPast": {
+          "type": "bool",
+          "default": true,
+          "doc": "Atenuar las palabras ya dichas (efecto karaoke).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.46,
+          "doc": "Centro vertical (fracción del alto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "accent": [
+          "vidas"
+        ],
+        "size": 0.9
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=common.lyric",
+      "data": {
+        "native_name": "common.lyric"
+      }
+    },
+    {
+      "id": "common.logo",
+      "name": "common.logo",
+      "label": "common.logo",
+      "kind": "component",
+      "summary": "Obsoleto: el logo debe acompañar una foto o video con el parámetro logo del componente visual.",
+      "tags": [
+        "logo",
+        "obsoleto"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": null,
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {},
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=common.logo",
+      "data": {
+        "native_name": "common.logo"
+      }
+    },
+    {
+      "id": "common.clip",
+      "name": "common.clip",
+      "label": "common.clip",
+      "kind": "component",
+      "summary": "Video mudo a pantalla completa con texto grande y acento del diseño, o dentro de un marco. Sombra y degradado protegen la lectura; todos los ajustes van por JSON.",
+      "tags": [
+        "video",
+        "clip",
+        "metraje",
+        "foto",
+        "lugar",
+        "máquina"
+      ],
+      "params": {
+        "src": {
+          "type": "video",
+          "default": null,
+          "doc": "Clip .mp4 de assets/media/ (preparado con tools/media.py get … nombre.mp4).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo del clip desde el que arranca.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad (0.5 = cámara lenta). El clip debe durar start + duración del beat × rate.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si es más corto que el beat; evita congelar el último cuadro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "full = apoyo preferido de video completo con texto; frame = marco centrado; auto = el del diseño (defaults.clip.layout; si no hay, full).",
+          "required": false,
+          "options": [
+            "auto",
+            "full",
+            "frame"
+          ],
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: fracción del contenido que ocupa; 0 = la del diseño (defaults.clip.size; si no hay, 0.84).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "ar": {
+          "type": "number",
+          "default": 0,
+          "doc": "layout frame: proporción del recorte (0 = la del clip; en 9:16 conviene 0.8).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés [x,y] (0..1): hacia donde se acerca el zoom y qué se conserva al recortar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 0.06,
+          "doc": "Cuánto se acerca a lo largo del beat (empuje lento).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 0.3
+        },
+        "tone": {
+          "type": "enum",
+          "default": "design",
+          "doc": "design = filtro del diseño (defaults.clip.filter); color = el clip tal cual.",
+          "required": false,
+          "options": [
+            "design",
+            "color"
+          ],
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": -1,
+          "doc": "Oscurecido (para leer los subtítulos); -1 = el del diseño.",
+          "required": false,
+          "options": null,
+          "min": -1,
+          "max": 1
+        },
+        "caption": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo (qué se ve); vacío = sin rótulo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica bajo el rótulo (fuente, lugar, año).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textColor": {
+          "type": "enum",
+          "default": "ink",
+          "doc": "Color del texto en layout full. mix pinta de acento las palabras entre ^ ^ o listadas en accentWords.",
+          "required": false,
+          "options": [
+            "ink",
+            "accent",
+            "mix"
+          ],
+          "min": null,
+          "max": null
+        },
+        "accentWords": {
+          "type": "array",
+          "default": [],
+          "doc": "Palabras o frases del rótulo que van en color de acento cuando textColor=mix.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textSide": {
+          "type": "enum",
+          "default": "left",
+          "doc": "Ubicación del texto grande en layout full.",
+          "required": false,
+          "options": [
+            "left",
+            "right",
+            "bottom"
+          ],
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del texto grande, controlada por el reloj del beat.",
+          "required": false,
+          "options": [
+            "slide",
+            "fade",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "assets/media/servidores.mp4",
+        "layout": "full",
+        "caption": "Una ^conversación^ digital",
+        "textColor": "mix",
+        "textSide": "left",
+        "sub": "Una historia real"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=common.clip",
+      "data": {
+        "native_name": "common.clip"
+      }
+    },
+    {
+      "id": "common.tabloid",
+      "name": "common.tabloid",
+      "label": "common.tabloid",
+      "kind": "component",
+      "summary": "Miniatura e intro tabloide con foto o video mudo; focus protege la zona de interés del medio.",
+      "tags": [
+        "miniatura",
+        "intro",
+        "alerta",
+        "tabloide",
+        "gancho"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular corto; máximo 6 palabras recomendado.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto opcional; también sirve de respaldo del video.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "srcAfter": {
+          "type": "image",
+          "default": "",
+          "doc": "Segunda foto del split.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "video": {
+          "type": "video",
+          "default": "",
+          "doc": "Clip .mp4 local de assets/media; ocupa el lugar de src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "poster": {
+          "type": "image",
+          "default": "",
+          "doc": "Imagen del cuadro elegido para la miniatura y el instante inicial; si falta, usa src.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "start": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundo inicial del clip.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "rate": {
+          "type": "number",
+          "default": 1,
+          "doc": "Velocidad del clip.",
+          "required": false,
+          "options": null,
+          "min": 0.25,
+          "max": 2
+        },
+        "loop": {
+          "type": "bool",
+          "default": true,
+          "doc": "Repite el clip si termina antes que el beat; evita congelar.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "muted": {
+          "type": "bool",
+          "default": true,
+          "doc": "El clip siempre se reproduce mudo; false se ignora por el contrato del motor.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "accent": {
+          "type": "string",
+          "default": "",
+          "doc": "Frase destacada con el acento del diseño (rojo en alert).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bullet": {
+          "type": "string",
+          "default": "",
+          "doc": "Cifra y leyenda.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bulletScale": {
+          "type": "number",
+          "default": 1,
+          "doc": "Escala de la cifra y su recuadro.",
+          "required": false,
+          "options": null,
+          "min": 0.5,
+          "max": 1.5
+        },
+        "beforeLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del antes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "afterLabel": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta del después.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "imageSide": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado de foto horizontal.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "mode": {
+          "type": "enum",
+          "default": "impact",
+          "doc": "Foto única o split.",
+          "required": false,
+          "options": [
+            "impact",
+            "split"
+          ],
+          "min": null,
+          "max": null
+        },
+        "palette": {
+          "type": "enum",
+          "default": "brand",
+          "doc": "Identidad del diseño o estilo clásico de alerta.",
+          "required": false,
+          "options": [
+            "brand",
+            "alert"
+          ],
+          "min": null,
+          "max": null
+        },
+        "strap": {
+          "type": "string",
+          "default": "",
+          "doc": "Cintillo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seal": {
+          "type": "string",
+          "default": "",
+          "doc": "Sello opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "tapeText": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto de cinta opcional.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "marker": {
+          "type": "bool",
+          "default": false,
+          "doc": "Marca alrededor del foco.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": null,
+          "doc": "[x,y,r] normalizados respecto al recorte visible de la foto; obligatorio para marcador o sello con foto.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "target": {
+          "type": "array",
+          "default": [
+            0.72,
+            0.52
+          ],
+          "doc": "Obsoleto: usar focus con radio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de cada renglón del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.16,
+          "doc": "Separación en segundos entre renglones.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "accentIn": {
+          "type": "enum",
+          "default": "slide",
+          "doc": "Entrada del acento después de su renglón.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "bulletIn": {
+          "type": "enum",
+          "default": "slam",
+          "doc": "Entrada de la cifra después del titular.",
+          "required": false,
+          "options": [
+            "slam",
+            "slide",
+            "typewriter",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "inDuration": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Duración en segundos de cada entrada.",
+          "required": false,
+          "options": null,
+          "min": 0.05,
+          "max": 2
+        },
+        "logo": {
+          "type": "image",
+          "default": "",
+          "doc": "SVG o PNG transparente en assets/media/logos/.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoName": {
+          "type": "string",
+          "default": "",
+          "doc": "Marca; fallback tipográfico si no carga el archivo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "logoPos": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Esquina de la foto/video; auto evita el foco declarado.",
+          "required": false,
+          "options": [
+            "auto",
+            "top-left",
+            "top-right",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "min": null,
+          "max": null
+        },
+        "logoSize": {
+          "type": "number",
+          "default": 0.22,
+          "doc": "Ancho relativo al medio; el logo conserva proporciones.",
+          "required": false,
+          "options": null,
+          "min": 0.12,
+          "max": 0.35
+        },
+        "logoInvert": {
+          "type": "bool",
+          "default": false,
+          "doc": "Versión blanca para un logo oscuro sobre medio oscuro.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "text": "TÚ ERES EL SIGUIENTE",
+        "accent": "SIGUIENTE",
+        "strap": "AMAZON · IA"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=common.tabloid",
+      "data": {
+        "native_name": "common.tabloid"
+      }
+    },
+    {
+      "id": "common.question",
+      "name": "common.question",
+      "label": "common.question",
+      "kind": "component",
+      "summary": "Tarjeta grande para la pregunta final del video; ocupa el acto completo y se adapta a 9:16 y 16:9.",
+      "tags": [
+        "pregunta",
+        "comentarios",
+        "cierre",
+        "texto"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta exacta del guion (máximo 8 palabras).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Centro vertical de la tarjeta (fracción del cuadro).",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 0.8
+        }
+      },
+      "example": {
+        "text": "¿La IA te quita trabajo?"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=common.question",
+      "data": {
+        "native_name": "common.question"
+      }
+    },
+    {
+      "id": "atlas.world",
+      "name": "atlas.world",
+      "label": "atlas.world",
+      "kind": "component",
+      "summary": "Cámara del mapamundi 2.5D que viaja (zoom + paneo suave) a una región, a varios países o a un punto; opcionalmente pinta países en gris o blanco con parpadeo. Para situar la historia: 'todo empezó en Europa del Este', 'el bloque soviético'.",
+      "tags": [
+        "mapa",
+        "región",
+        "contexto",
+        "cámara",
+        "continente"
+      ],
+      "params": {
+        "region": {
+          "type": "enum",
+          "default": "world",
+          "doc": "Región con nombre (si no hay countries ni center).",
+          "required": false,
+          "options": [
+            "world",
+            "europe",
+            "western-europe",
+            "eastern-europe",
+            "africa",
+            "asia",
+            "middle-east",
+            "north-america",
+            "central-america",
+            "south-america",
+            "latin-america",
+            "americas",
+            "oceania",
+            "east-asia",
+            "southeast-asia",
+            "south-asia",
+            "central-asia"
+          ],
+          "min": null,
+          "max": null
+        },
+        "countries": {
+          "type": "array",
+          "default": [],
+          "doc": "Países (inglés, p. ej. 'Germany') que la cámara encuadra juntos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "center": {
+          "type": "array",
+          "default": [],
+          "doc": "[lon,lat] centro de la cámara (con span).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "span": {
+          "type": "number",
+          "default": 0,
+          "doc": "Ancho visible en grados de longitud (con center).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Multiplica el zoom calculado.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "paint": {
+          "type": "array",
+          "default": [],
+          "doc": "Países que se pintan (con parpadeo escalonado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "state": {
+          "type": "enum",
+          "default": "gray",
+          "doc": "Color de los países pintados.",
+          "required": false,
+          "options": [
+            "white",
+            "gray"
+          ],
+          "min": null,
+          "max": null
+        },
+        "paintAt": {
+          "type": "number",
+          "default": 0.7,
+          "doc": "Segundo en que empieza a pintar (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.12,
+          "doc": "Segundos entre país y país al pintar.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "clear": {
+          "type": "bool",
+          "default": false,
+          "doc": "Borra lo pintado y los alfileres anteriores (empezar un capítulo nuevo).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "move": {
+          "type": "number",
+          "default": 0,
+          "doc": "Segundos del viaje de cámara (0 = automático según distancia).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "pins": {
+          "type": "array",
+          "default": [],
+          "doc": "Alfileres chicos sin etiqueta: [[lon,lat], …] o nombres de país (caen escalonados desde paintAt).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico de cabecera (lugar · fecha).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "region": "europe",
+        "paint": [
+          "Germany",
+          "Poland",
+          "Czechia",
+          "Hungary"
+        ],
+        "state": "gray",
+        "kicker": "Europa · 1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=atlas.world",
+      "data": {
+        "native_name": "atlas.world"
+      }
+    },
+    {
+      "id": "atlas.country",
+      "name": "atlas.country",
+      "label": "atlas.country",
+      "kind": "component",
+      "summary": "LA escena de la referencia: la cámara viaja al país, el país se enciende en blanco con un parpadeo de 8 cuadros (o pasa por gris medio y después blanco), cae un alfiler negro tipo gota con rebote y la etiqueta sale de atrás del alfiler. El alfiler anterior queda chico. Para nombrar un país o una ciudad (pin=[lon,lat]).",
+      "tags": [
+        "país",
+        "lugar",
+        "alfiler",
+        "mapa",
+        "ciudad"
+      ],
+      "params": {
+        "country": {
+          "type": "string",
+          "default": null,
+          "doc": "País (properties.name en inglés: 'Germany', 'United States of America'; acepta alias 'USA' y el nombre en español).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "label": {
+          "type": "string",
+          "default": "",
+          "doc": "Etiqueta (vacío = nombre en español del país; '-' = sin etiqueta).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica debajo de la etiqueta (año, ciudad, dato corto).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pin": {
+          "type": "array",
+          "default": [],
+          "doc": "[lon,lat] del alfiler (ciudad); vacío = centro del país.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto dentro del sello del alfiler (B/N contrastado).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "seal": {
+          "type": "enum",
+          "default": "initials",
+          "doc": "Sello del alfiler si no hay foto: emblema B/N (globe), emblema con iniciales o liso.",
+          "required": false,
+          "options": [
+            "globe",
+            "initials",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "state": {
+          "type": "enum",
+          "default": "white",
+          "doc": "Pintado: blanco, gris medio, gris y después blanco (both, en whiteAt) o sin pintar.",
+          "required": false,
+          "options": [
+            "white",
+            "gray",
+            "both",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "whiteAt": {
+          "type": "number",
+          "default": 1.6,
+          "doc": "Con state=both: segundo en que pasa de gris a blanco (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "span": {
+          "type": "number",
+          "default": 0,
+          "doc": "Ancho visible en grados (0 = automático, ~34° o 2,3× el país). Ciudad: 6–10.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Multiplica el zoom.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "move": {
+          "type": "number",
+          "default": 0.75,
+          "doc": "Segundos del viaje de cámara.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 3
+        },
+        "pinAt": {
+          "type": "number",
+          "default": -1,
+          "doc": "Segundo en que cae el alfiler (-1 = al llegar la cámara).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "side": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Lado de la etiqueta.",
+          "required": false,
+          "options": [
+            "auto",
+            "left",
+            "right"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "country": "Germany",
+        "label": "Alemania",
+        "sub": "1989",
+        "pin": [
+          13.4,
+          52.52
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=atlas.country",
+      "data": {
+        "native_name": "atlas.country"
+      }
+    },
+    {
+      "id": "atlas.route",
+      "name": "atlas.route",
+      "label": "atlas.route",
+      "kind": "component",
+      "summary": "Montaje de la referencia: la cámara salta país por país (≈1 s cada uno), cada país se enciende en blanco, cae su alfiler y su etiqueta; los anteriores quedan chicos. Con line=true une los alfileres con una ruta punteada que avanza. Para listas de países, rutas de escape, expansión de un bloque, giras, contagios.",
+      "tags": [
+        "recorrido",
+        "lista",
+        "países",
+        "montaje",
+        "expansión",
+        "contagio"
+      ],
+      "params": {
+        "items": {
+          "type": "array",
+          "default": null,
+          "doc": "Países en orden: 'Hungary' o { country, label, sub, pin:[lon,lat], state:'white|gray', at } (at = segundos desde el inicio del beat).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundos entre país y país (si el item no trae at).",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": null
+        },
+        "first": {
+          "type": "number",
+          "default": 0.55,
+          "doc": "Segundo del primer país.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "camera": {
+          "type": "enum",
+          "default": "follow",
+          "doc": "follow = viaja a cada país (referencia); fit = encuadra todos de una vez.",
+          "required": false,
+          "options": [
+            "follow",
+            "fit"
+          ],
+          "min": null,
+          "max": null
+        },
+        "line": {
+          "type": "bool",
+          "default": false,
+          "doc": "Ruta punteada blanca que une los alfileres.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "span": {
+          "type": "number",
+          "default": 0,
+          "doc": "Ancho visible en grados en follow (0 = automático).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Multiplica el zoom.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "state": {
+          "type": "enum",
+          "default": "white",
+          "doc": "Color por defecto de los países.",
+          "required": false,
+          "options": [
+            "white",
+            "gray"
+          ],
+          "min": null,
+          "max": null
+        },
+        "clear": {
+          "type": "bool",
+          "default": false,
+          "doc": "Borra lo pintado antes.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico de cabecera.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "items": [
+          "Hungary",
+          "Austria",
+          "Czechia",
+          "Germany"
+        ],
+        "stagger": 1,
+        "line": true
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=atlas.route",
+      "data": {
+        "native_name": "atlas.route"
+      }
+    },
+    {
+      "id": "atlas.border",
+      "name": "atlas.border",
+      "label": "atlas.border",
+      "kind": "component",
+      "summary": "Una línea que se dibuja sobre el mapa: MURO (negro grueso con canto cian que brilla), frontera punteada o ruta con flecha. Rótulos a cada lado (ESTE / OESTE) que entran deslizando. Para fronteras, muros, particiones, líneas de frente, rutas migratorias.",
+      "tags": [
+        "frontera",
+        "muro",
+        "división",
+        "partición",
+        "ruta",
+        "línea"
+      ],
+      "params": {
+        "line": {
+          "type": "array",
+          "default": null,
+          "doc": "Puntos [[lon,lat], …] de la línea, en orden.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "style": {
+          "type": "enum",
+          "default": "wall",
+          "doc": "wall = muro negro con canto cian · border = punteada negra · route = blanca punteada con flecha.",
+          "required": false,
+          "options": [
+            "wall",
+            "border",
+            "route"
+          ],
+          "min": null,
+          "max": null
+        },
+        "drawAt": {
+          "type": "number",
+          "default": 0.5,
+          "doc": "Segundo en que empieza a dibujarse.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "drawSec": {
+          "type": "number",
+          "default": 1.6,
+          "doc": "Segundos que tarda en dibujarse.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": null
+        },
+        "width": {
+          "type": "number",
+          "default": 1,
+          "doc": "Grosor (×).",
+          "required": false,
+          "options": null,
+          "min": 0.3,
+          "max": 4
+        },
+        "tags": {
+          "type": "array",
+          "default": [],
+          "doc": "Rótulos sobre el mapa: [{ text, at:[lon,lat], dark? }] (blancos con sombra; dark = negros con halo, sobre países blancos).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "countries": {
+          "type": "array",
+          "default": [],
+          "doc": "Países que encuadra la cámara (si no, encuadra la línea).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "center": {
+          "type": "array",
+          "default": [],
+          "doc": "[lon,lat] centro de la cámara (con span).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "span": {
+          "type": "number",
+          "default": 0,
+          "doc": "Ancho visible en grados (con center).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Multiplica el zoom.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        },
+        "paint": {
+          "type": "array",
+          "default": [],
+          "doc": "Países que se pintan.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "state": {
+          "type": "enum",
+          "default": "white",
+          "doc": "Color de los países pintados.",
+          "required": false,
+          "options": [
+            "white",
+            "gray"
+          ],
+          "min": null,
+          "max": null
+        },
+        "keep": {
+          "type": "bool",
+          "default": true,
+          "doc": "La línea queda en el mapa después del beat (false = se apaga al salir).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico de cabecera.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "line": [
+          [
+            10.9,
+            54
+          ],
+          [
+            10.75,
+            53.6
+          ],
+          [
+            10.6,
+            53.37
+          ],
+          [
+            11.5,
+            53.05
+          ],
+          [
+            10.95,
+            52.55
+          ],
+          [
+            11,
+            52.2
+          ],
+          [
+            10.6,
+            51.75
+          ],
+          [
+            10.25,
+            51.45
+          ],
+          [
+            10,
+            50.95
+          ],
+          [
+            10.1,
+            50.55
+          ],
+          [
+            10.9,
+            50.33
+          ],
+          [
+            11.9,
+            50.32
+          ],
+          [
+            12.1,
+            50.3
+          ]
+        ],
+        "style": "wall",
+        "tags": [
+          {
+            "text": "OESTE",
+            "at": [
+              8.4,
+              51.6
+            ]
+          },
+          {
+            "text": "ESTE",
+            "at": [
+              12.9,
+              51.9
+            ]
+          }
+        ],
+        "countries": [
+          "Germany"
+        ],
+        "paint": [
+          "Germany"
+        ],
+        "state": "gray",
+        "kicker": "Alemania · 1949–1990"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=atlas.border",
+      "data": {
+        "native_name": "atlas.border"
+      }
+    },
+    {
+      "id": "atlas.title",
+      "name": "atlas.title",
+      "label": "atlas.title",
+      "kind": "component",
+      "summary": "Título de apertura: el mapamundi 2.5D con la costa cian se acerca lento mientras caen alfileres chicos en los países de la historia; el titular condensado blanco GRANDE ('^x^' en cian) se asienta cerrando la interletra. Primer beat del video (t=0).",
+      "tags": [
+        "título",
+        "apertura",
+        "portada",
+        "mundo"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Título ('\\n' = renglón, '^x^' = palabra en cian).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "textPortrait": {
+          "type": "string",
+          "default": "",
+          "doc": "Versión 9:16 (renglones más cortos).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba (lugar · fecha).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica debajo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "region": {
+          "type": "enum",
+          "default": "world",
+          "doc": "Hacia dónde se acerca la cámara.",
+          "required": false,
+          "options": [
+            "world",
+            "europe",
+            "western-europe",
+            "eastern-europe",
+            "africa",
+            "asia",
+            "middle-east",
+            "north-america",
+            "central-america",
+            "south-america",
+            "latin-america",
+            "americas",
+            "oceania",
+            "east-asia",
+            "southeast-asia",
+            "south-asia",
+            "central-asia"
+          ],
+          "min": null,
+          "max": null
+        },
+        "pins": {
+          "type": "array",
+          "default": [],
+          "doc": "Países donde caen alfileres chicos (sin etiqueta).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.42,
+          "doc": "Oscurecido del mapa detrás del título.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "LA NOCHE QUE\nCAYÓ EL ^MURO^",
+        "textPortrait": "LA NOCHE\nQUE CAYÓ\nEL ^MURO^",
+        "kicker": "Berlín · 9 nov 1989",
+        "region": "europe",
+        "pins": [
+          "Germany",
+          "Hungary",
+          "Czechia",
+          "Poland"
+        ]
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=atlas.title",
+      "data": {
+        "native_name": "atlas.title"
+      }
+    },
+    {
+      "id": "atlas.stat",
+      "name": "atlas.stat",
+      "label": "atlas.stat",
+      "kind": "component",
+      "summary": "Cierre de la referencia ('82 COUNTRIES LISTENING'): el mapa se apaga y desenfoca, y aparece una cifra con su texto en condensada blanca (la cifra cuenta hacia arriba si es número). Para el dato duro de la historia: víctimas, votos, años, países.",
+      "tags": [
+        "cifra",
+        "dato",
+        "número",
+        "conteo",
+        "impacto"
+      ],
+      "params": {
+        "value": {
+          "type": "string",
+          "default": null,
+          "doc": "Cifra (si es número entero cuenta desde countFrom).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto que acompaña ('países escuchando', 'muertos en el muro').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "layout": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "inline = una línea como la referencia; stack = cifra gigante arriba y texto abajo.",
+          "required": false,
+          "options": [
+            "auto",
+            "inline",
+            "stack"
+          ],
+          "min": null,
+          "max": null
+        },
+        "countFrom": {
+          "type": "number",
+          "default": 0,
+          "doc": "Desde dónde cuenta.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "countSec": {
+          "type": "number",
+          "default": 1.1,
+          "doc": "Segundos del conteo (0 = sin conteo).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "accent": {
+          "type": "bool",
+          "default": false,
+          "doc": "Cifra en cian (si es EL dato del video).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "region": {
+          "type": "enum",
+          "default": "",
+          "doc": "Mover la cámara detrás (vacío = se queda donde estaba).",
+          "required": false,
+          "options": [
+            "",
+            "world",
+            "europe",
+            "western-europe",
+            "eastern-europe",
+            "africa",
+            "asia",
+            "middle-east",
+            "north-america",
+            "central-america",
+            "south-america",
+            "latin-america",
+            "americas",
+            "oceania",
+            "east-asia",
+            "southeast-asia",
+            "south-asia",
+            "central-asia"
+          ],
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "value": "140",
+        "text": "muertos en el muro",
+        "kicker": "Berlín · 1961–1989"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=atlas.stat",
+      "data": {
+        "native_name": "atlas.stat"
+      }
+    },
+    {
+      "id": "atlas.compare",
+      "name": "atlas.compare",
+      "label": "atlas.compare",
+      "kind": "component",
+      "summary": "Dos países encendidos a la vez en el mapa, cada uno con su alfiler y su etiqueta, y abajo su cifra GRANDE en condensada blanca con un 'VS' cian en el medio. Para comparar dos países (población, votos, gasto, muertos, años).",
+      "tags": [
+        "comparación",
+        "versus",
+        "dos países",
+        "dato"
+      ],
+      "params": {
+        "left": {
+          "type": "object",
+          "default": null,
+          "doc": "{ country, label?, value, sub?, pin?:[lon,lat] }",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "right": {
+          "type": "object",
+          "default": null,
+          "doc": "{ country, label?, value, sub?, pin?:[lon,lat] }",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "vs": {
+          "type": "string",
+          "default": "VS",
+          "doc": "Texto del medio.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico de cabecera.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "zoom": {
+          "type": "number",
+          "default": 1,
+          "doc": "Multiplica el zoom.",
+          "required": false,
+          "options": null,
+          "min": 0.2,
+          "max": 6
+        }
+      },
+      "example": {
+        "left": {
+          "country": "Germany",
+          "value": "83 M",
+          "sub": "habitantes"
+        },
+        "right": {
+          "country": "France",
+          "value": "68 M",
+          "sub": "habitantes"
+        },
+        "kicker": "Población · 2024"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=atlas.compare",
+      "data": {
+        "native_name": "atlas.compare"
+      }
+    },
+    {
+      "id": "atlas.photo",
+      "name": "atlas.photo",
+      "label": "atlas.photo",
+      "kind": "component",
+      "summary": "Foto clavada en el mapa: un alfiler GIGANTE cae con rebote sobre el lugar con la foto dentro de su cabeza (B/N contrastado, como el sello de la referencia) o una tarjeta con borde blanco y puntero; nombre y rol al lado. Al salir se achica y queda un alfiler chico con la foto en el mapa. Para personas, lugares, documentos.",
+      "tags": [
+        "foto",
+        "persona",
+        "lugar",
+        "retrato",
+        "alfiler"
+      ],
+      "params": {
+        "src": {
+          "type": "image",
+          "default": null,
+          "doc": "Foto.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.42
+          ],
+          "doc": "Punto de interés [x,y] (0..1) para el recorte.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": "",
+          "doc": "País donde se clava (se enciende en blanco).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pin": {
+          "type": "array",
+          "default": [],
+          "doc": "[lon,lat] exacto (ciudad); vacío = centro del país.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "name": {
+          "type": "string",
+          "default": "",
+          "doc": "Nombre (grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "role": {
+          "type": "string",
+          "default": "",
+          "doc": "Rol / lugar / fecha (chico).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "frame": {
+          "type": "enum",
+          "default": "pin",
+          "doc": "pin = foto dentro del alfiler gigante; card = tarjeta rectangular con puntero.",
+          "required": false,
+          "options": [
+            "pin",
+            "card"
+          ],
+          "min": null,
+          "max": null
+        },
+        "span": {
+          "type": "number",
+          "default": 26,
+          "doc": "Ancho visible en grados detrás.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": null
+        },
+        "keep": {
+          "type": "bool",
+          "default": true,
+          "doc": "Deja un alfiler chico con la foto al salir.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "example": {
+        "src": "turing.jpg",
+        "country": "United Kingdom",
+        "pin": [
+          -0.74,
+          52
+        ],
+        "name": "Alan Turing",
+        "role": "Bletchley Park · 1940"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=atlas.photo",
+      "data": {
+        "native_name": "atlas.photo"
+      }
+    },
+    {
+      "id": "atlas.introv1",
+      "name": "atlas.introv1",
+      "label": "atlas.introv1",
+      "kind": "component",
+      "summary": "GANCHO de apertura tipo golpe: la cámara se lanza del mundo entero hacia la región mientras los países de la historia se encienden en BLANCO en ráfaga (parpadeo de 8 cuadros cada uno, con alfileres chicos) y el titular condensado GIGANTE golpea palabra por palabra con sacudida ('^x^' en cian). Fondo adaptable: world (mapa), dark, image (src), component.",
+      "tags": [
+        "intro",
+        "gancho",
+        "apertura",
+        "golpe",
+        "mapa"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Titular gancho (2–6 palabras). '\\n' = renglón; '^x^' = palabra en cian.",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba (lugar · fecha).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Línea chica debajo del titular.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "countries": {
+          "type": "array",
+          "default": [],
+          "doc": "Países que se encienden en ráfaga (inglés).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "region": {
+          "type": "enum",
+          "default": "world",
+          "doc": "Hacia dónde se lanza la cámara (si no hay countries).",
+          "required": false,
+          "options": [
+            "world",
+            "europe",
+            "western-europe",
+            "eastern-europe",
+            "africa",
+            "asia",
+            "middle-east",
+            "north-america",
+            "central-america",
+            "south-america",
+            "latin-america",
+            "americas",
+            "oceania",
+            "east-asia",
+            "southeast-asia",
+            "south-asia",
+            "central-asia"
+          ],
+          "min": null,
+          "max": null
+        },
+        "wordAt": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Segundo del primer golpe.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Segundos entre palabras.",
+          "required": false,
+          "options": null,
+          "min": 0.08,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: world, dark; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "world",
+            "dark",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿POR QUÉ CAYÓ\nEL ^MURO^?",
+        "kicker": "Berlín · 9 nov 1989",
+        "sub": "la noche que nadie vio venir",
+        "countries": [
+          "Germany",
+          "Poland",
+          "Czechia",
+          "Hungary",
+          "Austria"
+        ],
+        "region": "europe"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=atlas.introv1",
+      "data": {
+        "native_name": "atlas.introv1"
+      }
+    },
+    {
+      "id": "atlas.introv2",
+      "name": "atlas.introv2",
+      "label": "atlas.introv2",
+      "kind": "component",
+      "summary": "GANCHO pregunta + revelación: la pregunta se tipea letra a letra en condensada blanca sobre el mundo apagado; en revealAt el mapa se enciende, la pregunta sube y se achica, la cámara cae sobre el país, que parpadea en blanco, y cae el alfiler con la RESPUESTA como etiqueta. Fondo adaptable (world, dark, image, component).",
+      "tags": [
+        "intro",
+        "gancho",
+        "pregunta",
+        "revelación",
+        "país"
+      ],
+      "params": {
+        "text": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta ('\\n' = renglón, '^x^' = cian).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "answer": {
+          "type": "string",
+          "default": "",
+          "doc": "Respuesta: etiqueta del alfiler (vacío = nombre del país).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "country": {
+          "type": "string",
+          "default": null,
+          "doc": "País de la revelación (inglés).",
+          "required": true,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pin": {
+          "type": "array",
+          "default": [],
+          "doc": "[lon,lat] del alfiler (ciudad).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "pinSrc": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto dentro del sello del alfiler.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "span": {
+          "type": "number",
+          "default": 0,
+          "doc": "Ancho visible en grados al revelar (0 = automático).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rótulo chico arriba.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "revealAt": {
+          "type": "number",
+          "default": 2.4,
+          "doc": "Segundo de la revelación (acepta '@palabra').",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "typeAt": {
+          "type": "number",
+          "default": 0.3,
+          "doc": "Segundo en que empieza el tipeo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cps": {
+          "type": "number",
+          "default": 22,
+          "doc": "Letras por segundo.",
+          "required": false,
+          "options": null,
+          "min": 4,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: world, dark; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "world",
+            "dark",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Oscurecido del fondo foto/componente (0 = nada).",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "text": "¿DÓNDE CAYÓ\nEL MURO?",
+        "answer": "Berlín",
+        "country": "Germany",
+        "pin": [
+          13.4,
+          52.52
+        ],
+        "kicker": "9 nov 1989",
+        "revealAt": 2.2
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=atlas.introv2",
+      "data": {
+        "native_name": "atlas.introv2"
+      }
+    },
+    {
+      "id": "atlas.outro",
+      "name": "atlas.outro",
+      "label": "atlas.outro",
+      "kind": "component",
+      "summary": "Cierre del canal SIN recuadro: la cámara se aleja al mundo entero con todo lo encendido y el mapa se apaga (final de la referencia). GRACIAS POR VER → canal en condensada gigante → alfiler LIKE que cae con el pulgar en el sello → ruta cian → placa blanca SUSCRÍBETE que se enciende con el parpadeo de los países + campana → apoyo tipeado → youtube.com/@canal. Tiempos sincronizables con la despedida (likeAt, subscribeAt, bellAt, supportAt).",
+      "tags": [
+        "cierre",
+        "canal",
+        "like",
+        "suscribirse",
+        "mapa"
+      ],
+      "params": {
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Rótulo inicial.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "channel": {
+          "type": "string",
+          "default": "NODEPOLITICS",
+          "doc": "Nombre del canal (grande).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRÍBETE",
+          "doc": "Texto del botón de suscripción.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Apoya el canal y comparte el mapa.",
+          "doc": "Mensaje de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "youtube.com/@nodepolitics",
+          "doc": "Dirección del canal (sin '@' al principio: el motor toma '@x' como ancla).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": true,
+          "doc": "Flecha del LIKE a SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Segundo del LIKE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Segundo de SUSCRÍBETE.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Segundo de la campana.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Segundo del mensaje de apoyo y la dirección.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": null
+        },
+        "bg": {
+          "type": "enum",
+          "default": "auto",
+          "doc": "Fondo: auto = el del diseño; presets: world, dark; image = foto en src; component = otro componente (use/useParams); none = liso.",
+          "required": false,
+          "options": [
+            "auto",
+            "world",
+            "dark",
+            "image",
+            "component",
+            "none"
+          ],
+          "min": null,
+          "max": null
+        },
+        "src": {
+          "type": "image",
+          "default": "",
+          "doc": "Foto de fondo (bg=image o para el componente de fondo): encuadre cover con zoom lento y el tratamiento de color del diseño.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "focus": {
+          "type": "array",
+          "default": [
+            0.5,
+            0.5
+          ],
+          "doc": "Punto de interés de la foto [x,y] (0..1).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "use": {
+          "type": "string",
+          "default": "",
+          "doc": "Componente de fondo (bg=component), p. ej. 'enmienda.map'.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "useParams": {
+          "type": "object",
+          "default": {},
+          "doc": "Parámetros del componente de fondo (si no trae foto, recibe src).",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": 0.6,
+          "doc": "Oscurecido del fondo foto/componente.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        }
+      },
+      "example": {
+        "thanks": "GRACIAS POR VER",
+        "channel": "NODEPOLITICS",
+        "cta": "SUSCRÍBETE",
+        "support": "Apoya el canal y comparte el mapa.",
+        "handle": "youtube.com/@nodepolitics"
+      },
+      "preview_kind": "iframe",
+      "preview_url": "/api/v1/explainer/files/_tools/explainer-kit/showcase/stage.html?d=atlas&c=atlas.outro",
+      "data": {
+        "native_name": "atlas.outro"
+      }
+    }
+  ]
+}

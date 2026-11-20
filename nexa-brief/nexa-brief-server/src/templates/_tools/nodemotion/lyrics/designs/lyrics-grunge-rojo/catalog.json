@@ -1,0 +1,310 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "family": "lyrics",
+  "display_name": "Grunge Rojo Glitch",
+  "description": "Grunge de rap con metraje urbano en blanco y negro duro: papel gris rasgado, letra condensada blanca y roja que entra con estela, palabras gigantes con eco rojo, frases repetidas en filas, bloques anchos sobre papel, iconos de reproductor, tiza blanca y pincel rojo (círculos, tachones, flechas, coronas), glitch y destellos; en los silencios largos repasa frases ya cantadas — para rap, trap y drill.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "videos",
+        "kind": "video",
+        "min": 0,
+        "max": 6,
+        "target": "media",
+        "label": "Videos (opcional)",
+        "hint": "Metraje urbano: calle, baile, multitud, retrato; mejor en blanco y negro o de alto contraste. Si no subes nada, se usan los de la plantilla."
+      }
+    ],
+    "texts": [
+      {
+        "key": "intro.title",
+        "label": "Título en la intro",
+        "max": 40,
+        "default": ""
+      },
+      {
+        "key": "intro.artist",
+        "label": "Artista en la intro",
+        "max": 40,
+        "default": ""
+      },
+      {
+        "key": "outro.title",
+        "label": "Título del cierre",
+        "max": 24,
+        "default": "Gracias"
+      },
+      {
+        "key": "outro.sub",
+        "label": "Subtítulo del cierre",
+        "max": 24,
+        "default": "por ver"
+      },
+      {
+        "key": "outro.feats",
+        "label": "Línea final del cierre",
+        "max": 40,
+        "default": "Suscríbete · NodeMotion"
+      }
+    ],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-grunge-rojo/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "player.js",
+    "components",
+    "assets/fonts",
+    "assets/media"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-grunge-rojo",
+    "config": "nodemotion/lyrics/lyrics-grunge-rojo/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-grunge-rojo/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-grunge-rojo/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-grunge-rojo/DESIGN.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-grunge-rojo/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "grunge.intro",
+      "kind": "component",
+      "label": "Intro rasgada",
+      "summary": "Metraje B/N con papel rasgado; título rojo con estela, artista espaciado, corona de tiza y destello.",
+      "constraints_status": "documented",
+      "id": "grunge.intro",
+      "contract": "contracts/001-component.json"
+    },
+    {
+      "entry_id": "grunge.outrov1",
+      "kind": "component",
+      "label": "Outro v1 Rasgado",
+      "summary": "Hoja rasgada que cruza, título gigante con eco rojo, sub espaciado, subrayado y feats.",
+      "constraints_status": "documented",
+      "id": "grunge.outrov1",
+      "contract": "contracts/002-component.json"
+    },
+    {
+      "entry_id": "grunge.outrov2",
+      "kind": "component",
+      "label": "Outro v2 Collage",
+      "summary": "Collage de frases cantadas y tiza sobre papel; franja roja con el título y feats.",
+      "constraints_status": "documented",
+      "id": "grunge.outrov2",
+      "contract": "contracts/003-component.json"
+    },
+    {
+      "entry_id": "grunge.papel",
+      "kind": "component",
+      "label": "Papel rasgado",
+      "summary": "Tiras de papel gris rasgado arriba o abajo.",
+      "constraints_status": "unknown",
+      "id": "grunge.papel",
+      "contract": "contracts/004-component.json"
+    },
+    {
+      "entry_id": "grunge.garabatos",
+      "kind": "component",
+      "label": "Tiza y pincel rojo",
+      "summary": "Círculo, flecha, subrayado, marco, corona, rayo, cruces, ojos, tachón, barra o mancha.",
+      "constraints_status": "documented",
+      "id": "grunge.garabatos",
+      "contract": "contracts/005-component.json"
+    },
+    {
+      "entry_id": "grunge.niebla",
+      "kind": "component",
+      "label": "Niebla",
+      "summary": "Neblina sobre el metraje.",
+      "constraints_status": "unknown",
+      "id": "grunge.niebla",
+      "contract": "contracts/006-component.json"
+    },
+    {
+      "entry_id": "grunge.grano",
+      "kind": "component",
+      "label": "Grano",
+      "summary": "Grano de película.",
+      "constraints_status": "unknown",
+      "id": "grunge.grano",
+      "contract": "contracts/007-component.json"
+    },
+    {
+      "entry_id": "grunge.desgaste",
+      "kind": "component",
+      "label": "Desgaste",
+      "summary": "Tinta gastada en las letras.",
+      "constraints_status": "unknown",
+      "id": "grunge.desgaste",
+      "contract": "contracts/008-component.json"
+    },
+    {
+      "entry_id": "grunge.repaso",
+      "kind": "component",
+      "label": "Repaso de frases",
+      "summary": "En silencios largos vuelve a mostrar frases ya cantadas (nunca inventa letra).",
+      "constraints_status": "documented",
+      "id": "grunge.repaso",
+      "contract": "contracts/009-component.json"
+    },
+    {
+      "entry_id": "grunge.escena",
+      "kind": "component",
+      "label": "Escena de letra",
+      "summary": "Una de las 11 composiciones con un fragmento de letra.",
+      "constraints_status": "documented",
+      "id": "grunge.escena",
+      "contract": "contracts/010-component.json"
+    },
+    {
+      "entry_id": "grunge.transiciones",
+      "kind": "component",
+      "label": "Transiciones",
+      "summary": "Papel rasgado, glitch, destello blanco o rojo, desenfoque o corte.",
+      "constraints_status": "documented",
+      "id": "grunge.transiciones",
+      "contract": "contracts/011-component.json"
+    },
+    {
+      "entry_id": "grunge.interludios",
+      "kind": "component",
+      "label": "Interludios",
+      "summary": "Silencios: metraje con ojos de tiza, franjas rojas o rejilla de frase.",
+      "constraints_status": "documented",
+      "id": "grunge.interludios",
+      "contract": "contracts/012-component.json"
+    },
+    {
+      "entry_id": "config.lyricsFilter",
+      "kind": "configuration",
+      "label": "lyricsFilter",
+      "summary": "Existing configuration configuration: lyricsFilter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.lyricsFilter",
+      "contract": "contracts/013-configuration.json"
+    },
+    {
+      "entry_id": "config.colors",
+      "kind": "configuration",
+      "label": "colors",
+      "summary": "Existing configuration configuration: colors.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.colors",
+      "contract": "contracts/014-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/015-configuration.json"
+    },
+    {
+      "entry_id": "config.components",
+      "kind": "configuration",
+      "label": "components",
+      "summary": "Existing configuration configuration: components.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.components",
+      "contract": "contracts/016-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/017-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/018-configuration.json"
+    },
+    {
+      "entry_id": "config.timing",
+      "kind": "configuration",
+      "label": "timing",
+      "summary": "Existing configuration configuration: timing.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timing",
+      "contract": "contracts/019-configuration.json"
+    },
+    {
+      "entry_id": "config.scenes",
+      "kind": "configuration",
+      "label": "scenes",
+      "summary": "Existing configuration configuration: scenes.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.scenes",
+      "contract": "contracts/020-configuration.json"
+    },
+    {
+      "entry_id": "config.variants",
+      "kind": "configuration",
+      "label": "variants",
+      "summary": "Existing configuration configuration: variants.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.variants",
+      "contract": "contracts/021-configuration.json"
+    },
+    {
+      "entry_id": "config.transitions",
+      "kind": "configuration",
+      "label": "transitions",
+      "summary": "Existing configuration configuration: transitions.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.transitions",
+      "contract": "contracts/022-configuration.json"
+    },
+    {
+      "entry_id": "config.motion",
+      "kind": "configuration",
+      "label": "motion",
+      "summary": "Existing configuration configuration: motion.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.motion",
+      "contract": "contracts/023-configuration.json"
+    },
+    {
+      "entry_id": "config.interludes",
+      "kind": "configuration",
+      "label": "interludes",
+      "summary": "Existing configuration configuration: interludes.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.interludes",
+      "contract": "contracts/024-configuration.json"
+    },
+    {
+      "entry_id": "config.recap",
+      "kind": "configuration",
+      "label": "recap",
+      "summary": "Existing configuration configuration: recap.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.recap",
+      "contract": "contracts/025-configuration.json"
+    },
+    {
+      "entry_id": "config.overrides",
+      "kind": "configuration",
+      "label": "overrides",
+      "summary": "Existing configuration configuration: overrides.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.overrides",
+      "contract": "contracts/026-configuration.json"
+    }
+  ]
+}

@@ -18,12 +18,14 @@ Uso (desde nexa-brief-server/):
       --voice Charon [--model gemini-3.8-flash-tts] [--parts 1] [--dry]
 """
 from __future__ import annotations
-import argparse, json, pathlib, re, subprocess, sys, unicodedata, wave
+import argparse, json, pathlib, re, subprocess, sys, time, unicodedata, wave
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
 import tts  # noqa: E402
+import edition_context  # noqa: E402
 
 BASE = ("Narrador de documental, voz humana madura y cercana, español latinoamericano neutro "
-        "(sin ceceo ni acento de España). No imitar a ninguna persona real. Dicción clara, respiración natural.")
+        "(sin ceceo ni acento de España). No imitar a ninguna persona real. Dicción clara, respiración natural. "
+        "Ritmo objetivo de 130 palabras por minuto; deja pausas naturales entre ideas y respirar al final de cada oración.")
 STYLE = {
     "intriga": "Empieza bajo y cercano, con intriga contenida, como quien cuenta un secreto. Ritmo moderado.",
     "suspenso": "Suspenso: voz contenida, casi susurrada al principio, frases cortas con aire entre ellas.",
@@ -47,23 +49,23 @@ STYLE = {
     "alivio": "Alivio: suelta el aire, voz emocionada y cálida, más lenta, sonrisa.",
     "reflexivo": "Reflexivo, sereno, ritmo medio-lento.",
     "cercano": "Cercano, como hablándole a una sola persona; cálido.",
+    "alarma": "Alarma: firme y apurada, como un aviso urgente de noticiero; cada cifra golpeada, sin gritar.",
     "admiración": "Con admiración y respeto; el nombre propio dicho con claridad y una mínima pausa antes.",
 }
-SLOW = {"intriga", "suspenso", "asombro", "peso", "silencio", "dolor contenido", "duelo", "cierre", "reflexivo", "alivio"}
 BEFORE_LONG = {"silencio", "dolor contenido", "duelo"}
-BEFORE_BREATH = {"clímax", "urgencia", "tensión creciente"}
+BEFORE_BREATH = {"clímax", "urgencia", "tensión creciente", "alarma"}
 
 def mark(seg: dict, prev: dict | None) -> str:
     """inserta etiquetas de ritmo según el tono (y el del segmento anterior)."""
     t = seg["text"].strip()
-    if seg["tone"] in SLOW:          # pausa corta entre oraciones
-        t = re.sub(r"([.?!])\s+(?=[¿¡A-ZÁÉÍÓÚÑ])", r"\1 <short pause> ", t)
+    t = re.sub(r"([.?!])\s+(?=[¿¡A-ZÁÉÍÓÚÑ])", r"\1 <short pause> ", t)
     if prev is not None and seg["tone"] in BEFORE_LONG: t = "<long pause> " + t
     elif seg["tone"] in BEFORE_BREATH: t = "<breath> " + t
     return t
 
 def chunks(script: dict, base: str = None) -> list[dict]:
-    base = base or BASE
+    base = re.sub(r"alrededor de \d+ palabras por minuto", "alrededor de 130 palabras por minuto", base or BASE, flags=re.I)
+    base += " Objetivo de 130 palabras por minuto para este relato: sin apuro, con pausas naturales entre ideas."
     out, prev = [], None
     for s in script["segments"]:
         inten = s.get("intensity", 0.5)
@@ -74,6 +76,36 @@ def chunks(script: dict, base: str = None) -> list[dict]:
         out.append({"id": s["id"], "text": mark(s, prev), "style": style})
         prev = s
     return out
+
+_CAPS = "A-ZÁÉÍÓÚÂÊÔÃÕÇÑÜ"
+_LEVELS_EN = ((0.3, "very low"), (0.5, "low"), (0.75, "medium"), (0.95, "high"), (9.0, "maximum"))
+
+
+def mark_edition(seg: dict, prev: dict | None, ctx) -> str:
+    """Como mark(), para otro idioma: mayúsculas con acentos de PT/EN y léxico de pronunciación."""
+    t = seg["text"].strip()
+    t = re.sub(rf"([.?!])\s+(?=[\"“¿¡{_CAPS}])", r"\1 <short pause> ", t)
+    if prev is not None and seg.get("tone") in BEFORE_LONG: t = "<long pause> " + t
+    elif seg.get("tone") in BEFORE_BREATH: t = "<breath> " + t
+    return ctx.speakable(t)
+
+
+def chunks_edition(script: dict, ctx) -> list[dict]:
+    """Bloques con dirección de voz de la edición (en inglés para el TTS; la nota de interpretación
+    de cada segmento viene escrita en el idioma de la edición)."""
+    base = f"{ctx.direction} Language: {ctx.language_name} ({ctx.locale}). Target pace: about {ctx.target_wpm} words per minute."
+    out, prev = [], None
+    for s in script["segments"]:
+        inten = s.get("intensity", 0.5)
+        lvl = next(name for limit, name in _LEVELS_EN if inten < limit)
+        tone = s.get("tone", "")
+        style = f"{base} Delivery: {tts.TAG_BY_TONE.get(tone, tone or 'natural, documentary')}. Intensity {lvl}."
+        if s.get("delivery_note"):
+            style += f" {s['delivery_note']}"
+        out.append({"id": s["id"], "text": mark_edition(s, prev, ctx), "style": style})
+        prev = s
+    return out
+
 
 def norm(s: str) -> list[str]:
     s = unicodedata.normalize("NFD", s.lower())
@@ -95,7 +127,7 @@ def es_num(n: int) -> str:
 def NUMW(w: str) -> str:
     return es_num(int(w)) if w.isdigit() and len(w) < 10 else w
 
-def qc(script: dict, wav: pathlib.Path, files=None) -> dict:
+def qc(script: dict, wav: pathlib.Path, files=None, language: str = "es") -> dict:
     """transcribe con faster-whisper y compara con el guion (alineación por diferencias)."""
     import difflib
     from faster_whisper import WhisperModel
@@ -104,10 +136,11 @@ def qc(script: dict, wav: pathlib.Path, files=None) -> dict:
     # frases que el TTS dijo una sola vez (falso positivo visto en producción)
     hyp_txt = ""
     for f in (files or [wav]):
-        segs, info = m.transcribe(str(f), language="es", word_timestamps=False, vad_filter=True, beam_size=5, condition_on_previous_text=False)
+        segs, info = m.transcribe(str(f), language=language, word_timestamps=False, vad_filter=True, beam_size=5, condition_on_previous_text=False)
         hyp_txt += " " + " ".join(s.text for s in segs)
     hyp = []
-    for w in norm(hyp_txt): hyp += NUMW(w).split()
+    numw = edition_context.NUMBER_WORDS.get(language)
+    for w in norm(hyp_txt): hyp += ((numw(int(w)) if numw and w.isdigit() and len(w) < 10 else w) if language != "es" else NUMW(w)).split()
     ref = norm(" ".join(s["text"] for s in script["segments"]))
     sm = difflib.SequenceMatcher(a=ref, b=hyp, autojunk=False)
     missing, extra = [], []
@@ -131,37 +164,92 @@ def load_design(d: str) -> dict:
     if not p.exists(): p = pathlib.Path(__file__).resolve().parents[1] / "designs" / d / "design.json"
     return json.loads(p.read_text())
 
+VIDEO_DIR = None   # carpeta del video (assets/script.json → ../): ahí va el registro de uso
+
 def generate_group(script, grp, f, voice, model):
     """una parte con un modelo, rotando claves. 3.1 no tiene `interactions`: va por prompt de director."""
+    started = time.time()
+    tts.LAST_USAGE.clear()  # A failure before HTTP must never reuse the previous part's usage.
+    try:
+        result = _generate_group(script, grp, f, voice, model)
+    except Exception as exc:
+        _record_voice(model, started, ok=False, note=f"{type(exc).__name__}: {exc}"[:200])
+        raise
+    _record_voice(model, started, ok=True, note=f"{len(grp)} bloques")
+    return result
+
+def _record_voice(model, started, ok, note):
+    if EDITION is not None and not EDITION.is_source:
+        return  # The native observer records each HTTP attempt, never the ES ledger.
+    if VIDEO_DIR is None: return
+    import usage
+    u = dict(tts.LAST_USAGE)  # Failed audio responses can still report billable usage.
+    usage.record(VIDEO_DIR, provider="gemini_tts", model=model, role="voice", step=pathlib.Path(model).name,
+                 seconds=time.time() - started, ok=ok, note=note,
+                 input_tokens=u.get("promptTokenCount"), output_tokens=u.get("candidatesTokenCount"),
+                 reasoning_tokens=u.get("thoughtsTokenCount"),
+                 cached_input_tokens=u.get("cachedContentTokenCount"),
+                 provider_usage=u.get("provider_usage"),
+                 provider_result_id=(u.get("provider_usage") or {}).get("interaction_id"))
+
+EDITION = None    # contexto de edición (otro idioma); None = comportamiento original
+
+
+def _generate_group(script, grp, f, voice, model):
     def call(key):
         if "3.1" in model:
             segs = [dict(x, text=c["text"]) for x, c in zip([x for x in script["segments"] if x["id"] in {c["id"] for c in grp}], grp)]
-            return tts.gemini_director(tts.director_prompt(script, segs), f, voice=voice, model=model, api_key=key)
+            if EDITION is not None:
+                prompt = tts.director_prompt(script, segs, profile=EDITION.direction,
+                                             pace=f"Aim for about {EDITION.target_wpm} words per minute, unhurried.",
+                                             language=EDITION.language_name)
+            else:
+                prompt = tts.director_prompt(script, segs)
+            return tts.gemini_director(prompt, f, voice=voice, model=model, api_key=key)
         return tts.gemini_annotated([{"text": c["text"], "style": c["style"]} for c in grp], f, voice=voice, model=model, api_key=key)
+    if EDITION is not None and not EDITION.is_source:
+        import edition_usage
+        with edition_usage.observe(EDITION, tts, model=model, role="voice", step=pathlib.Path(model).name):
+            return tts.with_key_rotation(model, call)
     return tts.with_key_rotation(model, call)
 
 def main():
+    global EDITION
+    EDITION = edition_context.from_argv()
     ap = argparse.ArgumentParser()
     ap.add_argument("script"); ap.add_argument("out")
     ap.add_argument("--design", default="", help="id o ruta de design.json: voz, modelos, silencios y estilo base")
     ap.add_argument("--voice", default=""); ap.add_argument("--model", default="", help="forzar un modelo (si no, la cadena del diseño)")
-    ap.add_argument("--parts", type=int, default=0, help="0 = automático (1 pedido; si el servidor falla, 3 partes)")
+    ap.add_argument("--parts", type=int, default=0, help="0 = automático: un pedido cada ~650 palabras (lengths.json); si el servidor falla, el doble de partes")
     ap.add_argument("--only-part", type=int, default=-1)
     ap.add_argument("--dry", action="store_true"); ap.add_argument("--no-qc", action="store_true")
     ap.add_argument("--lead", type=float, default=None); ap.add_argument("--tail", type=float, default=None)
     a = ap.parse_args()
     script = json.loads(pathlib.Path(a.script).read_text())
-    D = load_design(a.design or script.get("design", "binary"))
-    V = D.get("voice", {})
+    global VIDEO_DIR
+    if EDITION is not None:
+        VIDEO_DIR = EDITION.production
+        V = EDITION.voice
+    else:
+        if pathlib.Path(a.script).resolve().parent.name == "assets":
+            VIDEO_DIR = pathlib.Path(a.script).resolve().parents[1]
+        D = load_design(a.design or script.get("design", "binary"))
+        V = D.get("voice", {})
     voice = a.voice or script.get("voice") or V.get("voice", "Charon")
     models = [a.model] if a.model else V.get("models", ["gemini-3.8-flash-tts"])
     lead = a.lead if a.lead is not None else V.get("lead", 1.2); tail = a.tail if a.tail is not None else V.get("tail", 6.0)
-    cs = chunks(script, V.get("base"))
+    cs = chunks_edition(script, EDITION) if EDITION is not None else chunks(script, V.get("base"))
     if a.dry:
         for c in cs: print(f"[{c['id']}] {c['style']}\n   {c['text']}\n")
         return
     out = pathlib.Path(a.out); out.parent.mkdir(parents=True, exist_ok=True)
-    plans = [a.parts] if a.parts else [1, 3]
+    if a.parts:
+        plans = [a.parts]
+    else:
+        # un guion largo (10–30 min) en un solo pedido falla o se corta: partes por largo (lengths.json)
+        from lengths import voice_parts
+        first = min(len(cs), voice_parts(sum(len(c["text"].split()) for c in cs)))
+        plans = list(dict.fromkeys([first, min(len(cs), max(3, first * 2))]))
     prov, files, n = [], [], 1
     for n in plans:
         size = -(-len(cs) // n); groups = [cs[i:i + size] for i in range(0, len(cs), size)]
@@ -198,8 +286,10 @@ def main():
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(wav), "-af",
                     ",".join(filters), "-ar", "44100", "-b:a", "192k", str(out.with_suffix(".mp3"))], check=True)
     r = {"voice": voice, "parts": n, "provenance": prov, "lead": lead, "tail": tail}
+    if EDITION is not None:
+        r["locale"] = EDITION.locale
     if not a.no_qc:
-        r.update(qc(script, wav, files if n > 1 else None))
+        r.update(qc(script, wav, files if n > 1 else None, language=EDITION.whisper_language if EDITION is not None else "es"))
         print(f"QC: {r['dur_s']} s · {r['wpm']} ppm · WER≈{r['wer_aprox']} · faltan {r['faltan'][:6]} · sobran {r['sobran'][:6]}")
     out.with_suffix(".qc.json").write_text(json.dumps(r, ensure_ascii=False, indent=2))
 

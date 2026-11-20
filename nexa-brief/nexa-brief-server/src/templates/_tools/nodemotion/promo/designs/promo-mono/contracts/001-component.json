@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.intro",
+  "entry_id": "mono.intro",
+  "kind": "component",
+  "label": "Intro: logotipo de la marca",
+  "summary": "Intro: logotipo de la marca",
+  "component": {
+    "name": "mono.intro",
+    "label": "Intro: logotipo de la marca",
+    "summary": "Intro: logotipo de la marca",
+    "default": true,
+    "params": {
+      "size": {
+        "type": "number",
+        "min": 0.5,
+        "max": 1.6,
+        "default": 1.0
+      },
+      "sub": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "tags": [
+      "intro"
+    ],
+    "scene_type": "intro",
+    "demo": {
+      "time": 1.6
+    },
+    "preview": {
+      "t": 1.6
+    }
+  },
+  "params": {
+    "size": {
+      "type": "number",
+      "min": 0.5,
+      "max": 1.6,
+      "default": 1.0
+    },
+    "sub": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/15"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

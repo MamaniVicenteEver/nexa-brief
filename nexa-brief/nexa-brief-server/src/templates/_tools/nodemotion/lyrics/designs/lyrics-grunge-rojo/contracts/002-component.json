@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-rojo",
+  "id": "grunge.outrov1",
+  "entry_id": "grunge.outrov1",
+  "kind": "component",
+  "label": "Outro v1 Rasgado",
+  "summary": "Hoja rasgada que cruza, título gigante con eco rojo, sub espaciado, subrayado y feats.",
+  "component": {
+    "name": "grunge.outrov1",
+    "label": "Outro v1 Rasgado",
+    "summary": "Hoja rasgada que cruza, título gigante con eco rojo, sub espaciado, subrayado y feats.",
+    "group": "outro",
+    "default": true,
+    "params": {
+      "title": {
+        "type": "string",
+        "default": "Gracias",
+        "doc": "config.outro.title"
+      },
+      "sub": {
+        "type": "string",
+        "default": "por ver",
+        "doc": "config.outro.sub"
+      },
+      "feats": {
+        "type": "string",
+        "default": "Suscríbete · NodeMotion",
+        "doc": "config.outro.feats"
+      }
+    },
+    "tags": [
+      "outro"
+    ],
+    "file": "components/outro-v1.js",
+    "demo": {},
+    "preview": {
+      "t": 3.4
+    }
+  },
+  "params": {
+    "title": {
+      "type": "string",
+      "default": "Gracias",
+      "doc": "config.outro.title"
+    },
+    "sub": {
+      "type": "string",
+      "default": "por ver",
+      "doc": "config.outro.sub"
+    },
+    "feats": {
+      "type": "string",
+      "default": "Suscríbete · NodeMotion",
+      "doc": "config.outro.feats"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-rojo/showcase/components.json",
+      "pointer": "/components/1"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

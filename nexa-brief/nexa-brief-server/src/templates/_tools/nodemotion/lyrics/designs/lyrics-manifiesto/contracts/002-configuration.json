@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-manifiesto",
+  "id": "config.colors",
+  "entry_id": "config.colors",
+  "name": "colors",
+  "kind": "configuration",
+  "label": "colors",
+  "summary": "Existing configuration configuration: colors.",
+  "params": {
+    "paper": {
+      "default": "#F4F2EE"
+    },
+    "ink": {
+      "default": "#0A0A0A"
+    }
+  },
+  "example": {
+    "paper": "#F4F2EE",
+    "ink": "#0A0A0A"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-manifiesto/assets/config.json",
+      "pointer": "/configs/0/colors"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

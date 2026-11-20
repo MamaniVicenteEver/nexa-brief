@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-caution",
+  "id": "config.timing",
+  "entry_id": "config.timing",
+  "name": "timing",
+  "kind": "configuration",
+  "label": "timing",
+  "summary": "Existing configuration configuration: timing.",
+  "params": {
+    "leadSec": {
+      "default": 0.12
+    }
+  },
+  "example": {
+    "leadSec": 0.12
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-caution/assets/config.json",
+      "pointer": "/configs/0/timing"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

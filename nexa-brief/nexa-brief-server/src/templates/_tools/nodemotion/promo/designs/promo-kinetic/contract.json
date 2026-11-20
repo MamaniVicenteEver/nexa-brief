@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-kinetic",
+  "family": "promo",
+  "source_of_truth": "templates.json#templates/promo-kinetic",
+  "config_json": "nodemotion/commercial/promo-kinetic/assets/config.json",
+  "config_prompt": null,
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [],
+    "texts": [
+      {
+        "key": "brand.tag",
+        "label": "Marca",
+        "max": 20,
+        "default": "NEXA"
+      }
+    ],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/promo-kinetic",
+    "config": "nodemotion/commercial/promo-kinetic/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-kinetic/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-kinetic/README.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

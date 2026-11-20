@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-cristal",
+  "id": "config.layout",
+  "entry_id": "config.layout",
+  "name": "layout",
+  "kind": "configuration",
+  "label": "layout",
+  "summary": "Existing configuration configuration: layout.",
+  "params": {
+    "maxWordsPerPhrase": {
+      "default": 8
+    },
+    "rowCharsPortrait": {
+      "default": 9
+    },
+    "rowCharsLandscape": {
+      "default": 15
+    },
+    "modeWeights": {
+      "default": {
+        "impacto": 0.42,
+        "grabado": 0.3,
+        "vaho": 0.28
+      }
+    },
+    "fillWeights": {
+      "default": {
+        "fill": 0.65,
+        "ragged": 0.35
+      }
+    },
+    "alignWeights": {
+      "default": {
+        "center": 0.5,
+        "left": 0.25,
+        "right": 0.25
+      }
+    },
+    "accentWeights": {
+      "default": {
+        "hot": 0.45,
+        "cool": 0.25,
+        "none": 0.3
+      }
+    },
+    "heroSoloChance": {
+      "default": 0.6
+    },
+    "crackChance": {
+      "default": 0.8
+    },
+    "rowRotMax": {
+      "default": 2.5
+    },
+    "dutchMax": {
+      "default": 2.2
+    },
+    "tiltMax": {
+      "default": 3.5
+    },
+    "zoom": {
+      "default": [
+        1.0,
+        1.07
+      ]
+    },
+    "shakePx": {
+      "default": 16
+    },
+    "glassTint": {
+      "default": 0.14
+    }
+  },
+  "example": {
+    "maxWordsPerPhrase": 8,
+    "rowCharsPortrait": 9,
+    "rowCharsLandscape": 15,
+    "modeWeights": {
+      "impacto": 0.42,
+      "grabado": 0.3,
+      "vaho": 0.28
+    },
+    "fillWeights": {
+      "fill": 0.65,
+      "ragged": 0.35
+    },
+    "alignWeights": {
+      "center": 0.5,
+      "left": 0.25,
+      "right": 0.25
+    },
+    "accentWeights": {
+      "hot": 0.45,
+      "cool": 0.25,
+      "none": 0.3
+    },
+    "heroSoloChance": 0.6,
+    "crackChance": 0.8,
+    "rowRotMax": 2.5,
+    "dutchMax": 2.2,
+    "tiltMax": 3.5,
+    "zoom": [
+      1.0,
+      1.07
+    ],
+    "shakePx": 16,
+    "glassTint": 0.14
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-cristal/assets/config.json",
+      "pointer": "/configs/0/layout"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -38,9 +38,77 @@
   const QS = new URLSearchParams(location.search);
   if (QS.get("controls") !== "1") return;
 
+  /* Las vistas aisladas de componentes no tienen pista de audio. Les damos un
+     reloj virtual con el mismo protocolo para que el modal pueda reproducir,
+     pausar y buscar dentro de la animación. */
+  if (QS.get("clock") === "synthetic") {
+    const parentPost = msg => { try { window.parent.postMessage(msg, "*"); } catch (_) {} };
+    const duration = Math.max(0.1, Number(QS.get("dur")) || 7);
+    const clock = { currentTime: 0, duration, paused: true, ready: false };
+    window.__nexaClock = clock;
+    let lastTick = 0, lastSent = -1, rafPending = false;
+    const report = force => {
+      if (!force && Math.abs(clock.currentTime - lastSent) < 0.15) return;
+      lastSent = clock.currentTime;
+      parentPost({ type: "nexa-template-time", currentTime: clock.currentTime, duration });
+      if (clock.currentTime > 0.05) parentPost({ type: "nexa-template-started" });
+    };
+    const reportState = () => parentPost({ type: "nexa-template-state", playing: !clock.paused });
+    function schedule() {
+      if (!rafPending && clock.ready && !clock.paused) {
+        rafPending = true;
+        requestAnimationFrame(tick);
+      }
+    }
+    function tick(now) {
+      rafPending = false;
+      if (clock.paused) return;
+      if (lastTick) clock.currentTime = Math.min(duration, clock.currentTime + (now - lastTick) / 1000);
+      lastTick = now;
+      report(false);
+      if (clock.currentTime >= duration) {
+        clock.paused = true;
+        report(true);
+        reportState();
+        parentPost({ type: "nexa-template-ended" });
+      } else schedule();
+    }
+    function seek(time) {
+      clock.currentTime = Math.max(0, Math.min(duration, Number(time) || 0));
+      lastTick = performance.now();
+      report(true);
+      schedule();
+    }
+    window.addEventListener("message", event => {
+      const d = event.data || {};
+      switch (d.type) {
+        case "nexa-template-playback":
+          clock.paused = !Boolean(d.playing);
+          lastTick = performance.now();
+          reportState();
+          report(true);
+          schedule();
+          break;
+        case "nexa-template-seek": seek(d.time); break;
+        case "nexa-template-skip": seek(clock.currentTime + (Number(d.seconds) || 0)); break;
+        case "nexa-template-reset":
+          clock.paused = true;
+          seek(0);
+          reportState();
+          break;
+        case "nexa-template-volume": break; // El componente no tiene audio.
+        default: return;
+      }
+    });
+    report(true);
+    return;
+  }
+
   const audio = () => document.getElementById("audio");
   const parentPost = msg => { try { window.parent.postMessage(msg, "*"); } catch (_) {} };
   const want = { playing: false, volume: Number(QS.get("volume") ?? 1), muted: false, seek: null };
+  let visualReady = false;
+  let audioLoadRequested = false;
   if (!Number.isFinite(want.volume)) want.volume = 1;
 
   const ready = a => a && a.readyState >= 1 && Number.isFinite(a.duration);
@@ -51,7 +119,17 @@
     if (!a) return;
     a.volume = Math.max(0, Math.min(1, want.volume));
     a.muted = want.muted;
-    if (!ready(a)) return;   /* se reintenta en loadedmetadata */
+    if (!ready(a)) {
+      /* El preview inicia la descarga solo después del primer cuadro y al recibir
+         la orden de reproducir. loadedmetadata vuelve a llamar apply(). */
+      if (want.playing && visualReady && !audioLoadRequested && (a.currentSrc || a.src)) {
+        audioLoadRequested = true;
+        a.preload = "auto";
+        a.load();
+      }
+      return;
+    }
+    if (want.playing && !visualReady) return;
     if (want.seek != null) { a.currentTime = clampT(a, want.seek); want.seek = null; }
     if (want.playing && a.paused) play(a, 0);
     if (!want.playing && !a.paused) a.pause();
@@ -112,5 +190,17 @@
     apply();
   }
   wire();
-  parentPost({ type: "nexa-template-ready" });
+  /* La app no inicia el audio hasta que Kit.boot ya dibujó y el navegador pintó el primer cuadro. */
+  const kitReady = window.KitReady;
+  if (kitReady && typeof kitReady.then === "function") {
+    kitReady.then(() => {
+      visualReady = true;
+      apply();
+      report(true);
+      parentPost({ type: "nexa-template-ready" });
+    }).catch(error => {
+      console.error("[player] no se pudo preparar el primer cuadro", error);
+      parentPost({ type: "nexa-template-error" });
+    });
+  }
 })();

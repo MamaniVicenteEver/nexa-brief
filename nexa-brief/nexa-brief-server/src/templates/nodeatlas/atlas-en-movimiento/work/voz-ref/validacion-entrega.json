@@ -1,0 +1,60 @@
+{
+  "checked_utc": "2026-11-03T17:03:19.091231+00:00",
+  "status": "ok",
+  "api_paid_calls": 0,
+  "local_transcription_complete": true,
+  "required_files": [
+    "transcripcion.json",
+    "transcripcion.txt",
+    "analisis.json",
+    "01-panorama.png",
+    "02-distribuciones.png",
+    "03-frases.png",
+    "04-prueba-fx.png",
+    "VOZ-REFERENCIA.md",
+    "perfiles-tts.json",
+    "fx-veterano.sh",
+    "prueba-fx-antes.mp3",
+    "prueba-fx-despues.mp3",
+    "kit-chunks-A.json",
+    "kit-chunks-B.json"
+  ],
+  "local_links_checked": 37,
+  "annotated_sentences": 8,
+  "json_valid": true,
+  "script_B_words": 104,
+  "script_B_blocks": 7,
+  "long_pauses_B": 4,
+  "source_language": "es",
+  "source_language_probability": 0.9924392700195312,
+  "asr_short_word_exclusions": 2,
+  "pitch_frames_rejected_with_raw_retained": 122,
+  "graphs_visually_reviewed": [
+    "01-panorama.png",
+    "02-distribuciones.png",
+    "03-frases.png",
+    "04-prueba-fx.png"
+  ],
+  "graph_corrections": [
+    "Ráfagas altas de F0 excluidas sin rellenar; curva cruda preservada",
+    "Títulos de frases completos, en varias líneas",
+    "Histograma incluye la pausa máxima de 2,84 s",
+    "Prueba movida de huecos ASR con energía alta a ventanas acústicas bajas"
+  ],
+  "demo_excerpt": [
+    190,
+    210
+  ],
+  "demo_mp3_lufs": [
+    "-16.99",
+    "-16.99"
+  ],
+  "demo_clipping_samples": [
+    0,
+    0
+  ],
+  "downloaded_CC0_count": 2,
+  "human_listening_performed": false,
+  "server_tools_modified": false,
+  "result_sha256": "ce8de26e2d257bb061b10685b4b96441c88e21ed28b40700017cf180e425e95f"
+}

@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-caution",
+  "id": "layout.side",
+  "entry_id": "layout.side",
+  "name": "side",
+  "kind": "layout",
+  "label": "side",
+  "summary": "Existing layout configuration: side.",
+  "params": {
+    "weight": {
+      "default": 0.9
+    },
+    "bgs": {
+      "default": [
+        "black"
+      ]
+    }
+  },
+  "example": {
+    "weight": 0.9,
+    "bgs": [
+      "black"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-caution/assets/config.json",
+      "pointer": "/configs/0/layouts/side"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

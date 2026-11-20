@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-memoria",
+  "family": "lyrics",
+  "display_name": "Memoria Velada",
+  "description": "Recuerdos que se desvanecen: películas caseras de 8 mm y VHS en sepia lavado, polaroids que caen, proyector que titila, fecha VHS, máquina de escribir que escribe y borra la letra, letra manuscrita que se esfuma, destellos de luz cálida y fotogramas que se queman. Para canciones de nostalgia y pérdida.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "recuerdos: video casero antiguo, familia, niños, manos"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/lyrics/lyrics-memoria/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-memoria/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-memoria",
+    "config": "nodemotion/lyrics/lyrics-memoria/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-memoria/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-memoria/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-memoria/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.lyricsFilter",
+      "kind": "configuration",
+      "label": "lyricsFilter",
+      "summary": "Existing configuration configuration: lyricsFilter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.lyricsFilter",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.render",
+      "kind": "configuration",
+      "label": "render",
+      "summary": "Existing configuration configuration: render.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.render",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.phrases",
+      "kind": "configuration",
+      "label": "phrases",
+      "summary": "Existing configuration configuration: phrases.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.phrases",
+      "contract": "contracts/006-configuration.json"
+    },
+    {
+      "entry_id": "config.timing",
+      "kind": "configuration",
+      "label": "timing",
+      "summary": "Existing configuration configuration: timing.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timing",
+      "contract": "contracts/007-configuration.json"
+    },
+    {
+      "entry_id": "config.transition",
+      "kind": "configuration",
+      "label": "transition",
+      "summary": "Existing configuration configuration: transition.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.transition",
+      "contract": "contracts/008-configuration.json"
+    },
+    {
+      "entry_id": "layout.polaroid",
+      "kind": "layout",
+      "label": "polaroid",
+      "summary": "Existing layout configuration: polaroid.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.polaroid",
+      "contract": "contracts/009-layout.json"
+    },
+    {
+      "entry_id": "layout.homevideo",
+      "kind": "layout",
+      "label": "homevideo",
+      "summary": "Existing layout configuration: homevideo.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.homevideo",
+      "contract": "contracts/010-layout.json"
+    },
+    {
+      "entry_id": "layout.album",
+      "kind": "layout",
+      "label": "album",
+      "summary": "Existing layout configuration: album.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.album",
+      "contract": "contracts/011-layout.json"
+    },
+    {
+      "entry_id": "layout.projector",
+      "kind": "layout",
+      "label": "projector",
+      "summary": "Existing layout configuration: projector.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.projector",
+      "contract": "contracts/012-layout.json"
+    },
+    {
+      "entry_id": "layout.fading",
+      "kind": "layout",
+      "label": "fading",
+      "summary": "Existing layout configuration: fading.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.fading",
+      "contract": "contracts/013-layout.json"
+    },
+    {
+      "entry_id": "layout.filmBurn",
+      "kind": "layout",
+      "label": "filmBurn",
+      "summary": "Existing layout configuration: filmBurn.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.filmBurn",
+      "contract": "contracts/014-layout.json"
+    },
+    {
+      "entry_id": "layout.double",
+      "kind": "layout",
+      "label": "double",
+      "summary": "Existing layout configuration: double.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.double",
+      "contract": "contracts/015-layout.json"
+    },
+    {
+      "entry_id": "layout.dateCard",
+      "kind": "layout",
+      "label": "dateCard",
+      "summary": "Existing layout configuration: dateCard.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.dateCard",
+      "contract": "contracts/016-layout.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/017-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/018-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/019-configuration.json"
+    }
+  ]
+}

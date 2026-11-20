@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram-worlds",
+  "id": "config.art",
+  "entry_id": "config.art",
+  "name": "art",
+  "kind": "configuration",
+  "label": "art",
+  "summary": "Existing configuration configuration: art.",
+  "params": {
+    "emb-blades": {
+      "default": 0.9875
+    },
+    "emb-crest": {
+      "default": 0.9575
+    },
+    "emb-crown": {
+      "default": 1.4706
+    },
+    "emb-scales": {
+      "default": 1.0949
+    },
+    "emb-star": {
+      "default": 0.8842
+    },
+    "emb-wings": {
+      "default": 2.0
+    },
+    "obj-ball": {
+      "default": 0.9878
+    },
+    "obj-diamond": {
+      "default": 1.2535
+    },
+    "obj-trophy": {
+      "default": 0.8089
+    },
+    "sil-bun": {
+      "default": 0.8383
+    },
+    "sil-hair-flow": {
+      "default": 1.3953
+    },
+    "sil-hood": {
+      "default": 0.9108
+    },
+    "sil-lineup": {
+      "default": 2.0
+    },
+    "sil-ponytail": {
+      "default": 1.2146
+    },
+    "sil-profile": {
+      "default": 0.6617
+    },
+    "sil-spiky": {
+      "default": 0.77
+    },
+    "sil-stand": {
+      "default": 0.38
+    }
+  },
+  "example": {
+    "emb-blades": 0.9875,
+    "emb-crest": 0.9575,
+    "emb-crown": 1.4706,
+    "emb-scales": 1.0949,
+    "emb-star": 0.8842,
+    "emb-wings": 2.0,
+    "obj-ball": 0.9878,
+    "obj-diamond": 1.2535,
+    "obj-trophy": 0.8089,
+    "sil-bun": 0.8383,
+    "sil-hair-flow": 1.3953,
+    "sil-hood": 0.9108,
+    "sil-lineup": 2.0,
+    "sil-ponytail": 1.2146,
+    "sil-profile": 0.6617,
+    "sil-spiky": 0.77,
+    "sil-stand": 0.38
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram-worlds/assets/config.json",
+      "pointer": "/configs/0/art"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

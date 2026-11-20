@@ -7,7 +7,8 @@ export function useTemplateRequirements(templateId: string, enabled = true) {
     queryKey: ["template-requirements", templateId],
     queryFn: ({ signal }) => getTemplateRequirements(templateId, signal),
     enabled,
-    staleTime: Number.POSITIVE_INFINITY,
+    staleTime: 0,
+    refetchOnMount: "always",
     gcTime: 30 * 60 * 1000,
   });
 }

@@ -14,11 +14,21 @@
    antes eran ~15 pedidos en cadena y, por red (LAN/Tailscale), el video tardaba
    ~5 s en arrancar. Mientras bajan los scripts se adelantan config.json, el audio
    y lyrics/storyboard del video, y se le pasan a Kit.boot() ya cargados.
+
+   Componentes propios del video: `components` del config.json del video (rutas
+   relativas a la página, p. ej. "assets/components/ajedrez.js") se cargan después
+   de los del diseño y antes de arrancar (guides/components.md §6).
    ========================================================================== */
 (function () {
   const me = document.currentScript;
   const KIT = me.src.replace(/engine\/loader\.js.*$/, "");
   const design = me.dataset.design || "binary";
+  const query = new URLSearchParams(location.search);
+  const livePreview = query.get("controls") === "1" && query.get("clock") !== "synthetic" && !query.has("t");
+  if (livePreview) {
+    const audio = document.getElementById("audio");
+    if (audio) audio.preload = "none";
+  }
 
   const css = href => new Promise(res => { const l = document.createElement("link"); l.rel = "stylesheet"; l.href = href; l.onload = l.onerror = res; document.head.appendChild(l); });
   /* async=false: se descargan todos a la vez y se ejecutan en el orden en que se agregan */
@@ -30,7 +40,19 @@
 
   window.KitReady = (async () => {
     const noboot = me.hasAttribute("data-noboot");
-    const configP = noboot ? Promise.resolve(null) : getJSON("config.json", "assets/config.json");
+    const edition = query.get("edition");
+    const revision = query.get("revision");
+    const editionQuery = new URLSearchParams({ edition });
+    if (revision) editionQuery.set("revision", revision);
+    const production = /\/productions\/[^/]+\/[^/]+\/index\.html$/.test(location.pathname);
+    const configUrls = me.dataset.config ? [me.dataset.config]
+      : production ? ["assets/config.json"] : ["config.json", "assets/config.json"];
+    const configP = noboot ? Promise.resolve(null) : edition
+      ? getJSON("assets/config.json?" + editionQuery.toString()).then(raw => {
+          if (!raw) throw new Error("No se pudo cargar la edición solicitada");
+          return raw;
+        })
+      : getJSON(...configUrls);
     const D = await (await fetch(KIT + "designs/" + design + "/design.json")).json();
     D.root = KIT;
     document.documentElement.dataset.family = D.family;
@@ -47,6 +69,7 @@
     const dataP = configP.then(async raw => {
       const C0 = raw && raw.configs ? raw.configs[0] : raw;
       if (!C0) return {};
+      if (edition && C0.locale) document.documentElement.lang = C0.locale;
       const defs = D.defaults || {};
       const src = C0.audio?.src ?? defs.audio?.src;
       const audio = document.getElementById("audio");
@@ -59,7 +82,10 @@
 
     await loaded;
     window.Kit.design = D;
-    if (!noboot) await window.Kit.boot({ design: D, ...(await dataP) });
+    const data = await dataP;
+    const C0 = data.config && (data.config.configs ? data.config.configs[0] : data.config);
+    for (const src of (C0 && C0.components) || []) await js(src);
+    if (!noboot) await window.Kit.boot({ design: D, ...data });
     return D;
   })();
 })();

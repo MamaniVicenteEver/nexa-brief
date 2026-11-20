@@ -136,3 +136,7 @@ Return EXCLUSIVELY a raw JSON object. No markdown, no commentary.
 Note: `image_dimensions` mirrors `image.width_px`/`image.height_px` exactly —
 top-level convention every Vision Extractor in this system must emit, used by
 the pipeline to force `img.w`/`img.h` in `config.json` directly in Python.
+
+## Calidad
+
+Describe only what is visible; never infer identities, historical facts, figures, outcomes or quotations. Avoid generic suggested text such as «UNA IDEA» or «EN MOVIMIENTO»; use a specific label such as «DARTMOUTH · 1956» only if visibly supported. No emojis, «LETRAS» or unrelated labels. Respect the exact output schema; do not invent credits or licenses.

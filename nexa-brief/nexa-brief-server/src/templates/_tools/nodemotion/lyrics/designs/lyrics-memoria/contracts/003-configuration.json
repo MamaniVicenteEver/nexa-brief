@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-memoria",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "dark": {
+      "default": "#1A1410"
+    },
+    "cream": {
+      "default": "#EADFC8"
+    },
+    "sepia": {
+      "default": "#A88B62"
+    },
+    "rose": {
+      "default": "#B9877A"
+    },
+    "ink": {
+      "default": "#3A2A1E"
+    },
+    "vhs": {
+      "default": "#E8A84A"
+    }
+  },
+  "example": {
+    "dark": "#1A1410",
+    "cream": "#EADFC8",
+    "sepia": "#A88B62",
+    "rose": "#B9877A",
+    "ink": "#3A2A1E",
+    "vhs": "#E8A84A"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-memoria/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

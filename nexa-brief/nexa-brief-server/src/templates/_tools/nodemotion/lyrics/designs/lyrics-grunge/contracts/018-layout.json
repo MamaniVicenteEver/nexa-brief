@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge",
+  "id": "layout.strike",
+  "entry_id": "layout.strike",
+  "name": "strike",
+  "kind": "layout",
+  "label": "strike",
+  "summary": "Existing layout configuration: strike.",
+  "params": {
+    "weight": {
+      "default": 1.0
+    }
+  },
+  "example": {
+    "weight": 1.0
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge/assets/config.json",
+      "pointer": "/configs/0/layouts/strike"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

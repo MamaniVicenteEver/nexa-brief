@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge",
+  "family": "lyrics",
+  "display_name": "Grunge Rojo",
+  "description": "Lyric video grunge de rap: metraje urbano en blanco y negro duro con niebla y papel rasgado, letra condensada gastada en blanco y rojo con fantasmas de movimiento, grillas de frases repetidas y garabatos de tiza que se dibujan solos. Para rap, trap y drill.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "cultura urbana: baile callejero, túnel, multitud, noche"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/lyrics/lyrics-grunge/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-grunge/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-grunge",
+    "config": "nodemotion/lyrics/lyrics-grunge/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-grunge/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-grunge/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-grunge/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.lyricsFilter",
+      "kind": "configuration",
+      "label": "lyricsFilter",
+      "summary": "Existing configuration configuration: lyricsFilter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.lyricsFilter",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.phrases",
+      "kind": "configuration",
+      "label": "phrases",
+      "summary": "Existing configuration configuration: phrases.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.phrases",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.timing",
+      "kind": "configuration",
+      "label": "timing",
+      "summary": "Existing configuration configuration: timing.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timing",
+      "contract": "contracts/006-configuration.json"
+    },
+    {
+      "entry_id": "layout.slam",
+      "kind": "layout",
+      "label": "slam",
+      "summary": "Existing layout configuration: slam.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.slam",
+      "contract": "contracts/007-layout.json"
+    },
+    {
+      "entry_id": "layout.twoTone",
+      "kind": "layout",
+      "label": "twoTone",
+      "summary": "Existing layout configuration: twoTone.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.twoTone",
+      "contract": "contracts/008-layout.json"
+    },
+    {
+      "entry_id": "layout.circle",
+      "kind": "layout",
+      "label": "circle",
+      "summary": "Existing layout configuration: circle.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.circle",
+      "contract": "contracts/009-layout.json"
+    },
+    {
+      "entry_id": "layout.spacedWide",
+      "kind": "layout",
+      "label": "spacedWide",
+      "summary": "Existing layout configuration: spacedWide.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.spacedWide",
+      "contract": "contracts/010-layout.json"
+    },
+    {
+      "entry_id": "layout.grid",
+      "kind": "layout",
+      "label": "grid",
+      "summary": "Existing layout configuration: grid.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.grid",
+      "contract": "contracts/011-layout.json"
+    },
+    {
+      "entry_id": "layout.stackCols",
+      "kind": "layout",
+      "label": "stackCols",
+      "summary": "Existing layout configuration: stackCols.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.stackCols",
+      "contract": "contracts/012-layout.json"
+    },
+    {
+      "entry_id": "layout.torn",
+      "kind": "layout",
+      "label": "torn",
+      "summary": "Existing layout configuration: torn.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.torn",
+      "contract": "contracts/013-layout.json"
+    },
+    {
+      "entry_id": "layout.vertical",
+      "kind": "layout",
+      "label": "vertical",
+      "summary": "Existing layout configuration: vertical.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.vertical",
+      "contract": "contracts/014-layout.json"
+    },
+    {
+      "entry_id": "layout.frameBox",
+      "kind": "layout",
+      "label": "frameBox",
+      "summary": "Existing layout configuration: frameBox.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.frameBox",
+      "contract": "contracts/015-layout.json"
+    },
+    {
+      "entry_id": "layout.stack3",
+      "kind": "layout",
+      "label": "stack3",
+      "summary": "Existing layout configuration: stack3.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.stack3",
+      "contract": "contracts/016-layout.json"
+    },
+    {
+      "entry_id": "layout.blurGiant",
+      "kind": "layout",
+      "label": "blurGiant",
+      "summary": "Existing layout configuration: blurGiant.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.blurGiant",
+      "contract": "contracts/017-layout.json"
+    },
+    {
+      "entry_id": "layout.strike",
+      "kind": "layout",
+      "label": "strike",
+      "summary": "Existing layout configuration: strike.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.strike",
+      "contract": "contracts/018-layout.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/019-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/020-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/021-configuration.json"
+    }
+  ]
+}

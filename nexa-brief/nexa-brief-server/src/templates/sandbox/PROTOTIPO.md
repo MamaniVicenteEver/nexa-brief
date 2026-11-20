@@ -1,0 +1,171 @@
+Antes: [CALIDAD.md](../../skills/CALIDAD.md) (manda) y, si orquestas, [ORQUESTACION.md](../../skills/ORQUESTACION.md).
+Al delegar: [PLANTILLA-BRIEF.md](../../skills/PLANTILLA-BRIEF.md). Al entregar: [PLANTILLA-INFORME.md](../../skills/PLANTILLA-INFORME.md) como `INFORME.md`.
+
+## Específico de esta skill
+
+# PROTOTIPO — crear una plantilla nueva a partir de una referencia
+
+> **Excepción NodeMotion (vigente desde 2026-11-16):** las plantillas NodeMotion (letras y promos) no siguen esta guía. Ver el estándar en `AGENTS.md` de la raíz (sección «Estándar vigente…») y en `docs/nodemotion-template-authoring.md` (sección 2). Motor en `src/templates/nodemotion/<cat>/<id>/`, prototipos en `productions/nodemotion/<cat>/<id>/`.
+
+Punto de entrada único. Si te pasaron este archivo (o su URL) sos el **agente líder** de un
+prototipo: una plantilla NUEVA del sandbox de la que después salen cientos de videos. No es hacer
+un video con una plantilla que ya existe (para eso: `_tools/explainer-kit/AGENTS.md`).
+
+## Diseños NodeMotion de letras o promos
+Lee [crear e integrar plantillas](../../../docs/nodemotion-template-authoring.md): fuente compartida, componentes, datos, recursos y registro.
+El prototipo queda dentro del Sandbox autorizado; el integrador completa el motor compartido y sus registros. No confundir con preparar un video de una plantilla existente.
+
+## Contrato de entrega obligatorio
+
+Leé y aplicá [PREPARAR-PRODUCCION.md](PREPARAR-PRODUCCION.md) antes del plan y
+al cerrar. Define los archivos, rutas, catálogo y reporte que necesita el flujo
+**Preparar para producción → Pasar a producción → Completar preparación con IA**.
+La revisión y el traslado no generan textos ni requieren IA. Este contrato sustituye
+las indicaciones históricas de traslado manual o de exigir publicación/voz para mover.
+
+En el ejecutor aislado v3, el backend entrega el contrato y el brief dentro de
+`work/agent-context/`. Se trabaja solo en la carpeta asignada, sin comandos,
+delegación, navegador ni render: no sigas los comandos de esta guía fuera de los
+permisos del ejecutor. Registrá las comprobaciones pendientes sin afirmar que se hicieron.
+
+## 0. Dónde y con qué
+
+- Servidor: `ssh alfred-server`, repo `~/Projects/Git-Projects/nexa-brief/nexa-brief`.
+  En v2/v3 el proyecto, sus referencias y evidencia están en `$NEXA_PROFILE_DIR/sandbox/`;
+  motores y herramientas compartidas están en `nexa-brief-server/src/templates/`.
+  Verifica el perfil efectivo antes de escribir y exporta `NEXA_SANDBOX_DIR="$NEXA_PROFILE_DIR/sandbox"`
+  para las herramientas de sandbox; desde la raíz usa bash para `source scripts/profile-env.sh`. No crees copias de proyectos en el repositorio.
+  Las rutas de proyectos `sandbox/...` de este documento se refieren al Sandbox
+  del perfil; las rutas de motores/herramientas/docs se resuelven en el repositorio.
+  No guardes proyectos, referencias ni copias históricas en `src/templates/sandbox/`.
+  La demo principal validada se incorpora después, por el servicio, a
+  `src/templates/<categoría>/<id>/` con nombre de carpeta estable sin fecha;
+  los episodios se trasladan al `productions/` del perfil. El motor de producción
+  usa una única raíz compartida fuera del sandbox del repositorio. Sigue
+  [la norma de almacenamiento](../../../docs/ubicacion-demos-pruebas-episodios.md).
+  Algunas herramientas antiguas todavía suponen el layout anterior; no las ejecutes
+  sin confirmar su destino. En particular `compare.py` todavía sirve el árbol del
+  repositorio y no está adaptado al sandbox de perfil.
+- Herramientas: `_tools/sandbox/` (correlas con `nexa-brief-server/.venv/bin/python`).
+- Tu entrada es el **brief de la idea**: `sandbox/referencias/<cat>/<idea>/BRIEF.md` (o la URL
+  `/api/v1/agent/prototipo/<cat>/<idea>`): notas del usuario, archivos de referencia, categoría y
+  plantillas parecidas que ya existen.
+- Si recibís el brief como URL firmada, hacé un GET HTTP directo (curl) y verificá `200 text/markdown`;
+  no la uses como búsqueda web. Si no podés leer el brief o no podés ejecutar comandos, detenete
+  antes de la fase 0 y avisá: no gastes tokens adivinando.
+- El usuario revisa el resultado en https://nexa-brief.everdev.space/plantillas?cat=sandbox
+  (local: http://192.168.20.23:3000/es/plantillas?cat=sandbox).
+- API :8000 y web :3000 ya corren. No las reinicies. Sin commits salvo que te lo pidan.
+
+## 1. Lecturas específicas, después del tronco común
+
+1. Este archivo.
+2. El BRIEF de la idea y su `NOTAS.md`.
+3. `_tools/sandbox/engines.json` → elegí el motor más cercano y leé SOLO su doc y su
+   `components.json` (o el `catalog.json` del explainer-kit).
+4. El `info.json` (campo `notes`) de las plantillas parecidas que lista el brief.
+5. `sandbox/PREPARAR-PRODUCCION.md`: contrato obligatorio para entregar la demo o episodio listo para la verificación técnica.
+6. `sandbox/SANDBOX.md` solo si algo no queda claro.
+
+No recorras el repo "para entender". Si te falta un dato, buscalo con `rg` puntual.
+
+## 2. Decisiones y ejecución
+
+El productor decide y revisa. Si se autoriza delegar trabajo mecánico, consulta el rol
+`prototype_worker` en `src/skills/models/roles.json` y la política del tronco:
+
+```
+_tools/sandbox/delegate.sh <cat>/<id> <tarea> [--bg]
+```
+
+1. Usa la plantilla de brief común para `sandbox/<cat>/<id>/work/briefs/<tarea>.md`; añade lo que requiera la herramienta de sandbox.
+2. Completalo: objetivo, qué leer (rutas exactas), qué archivos puede tocar, entregable y cómo
+   verificarlo. Una tarea por brief.
+3. Lanzalo. Con `--bg` podés tener hasta 2 en paralelo, siempre que toquen archivos distintos.
+4. Leé solo `work/results/<tarea>.md` y las imágenes que pidas. El log únicamente si falló.
+
+**Tareas mecánicas delegables cuando esté permitido:** extraer frames y analizar la referencia, buscar y bajar medios, escribir
+JSON de escenas largos, sincronizar con audio, ajustes repetitivos, capturas y comparaciones.
+**Hacé vos:** decidir el motor, diseñar la estética, crear o modificar componentes
+reutilizables, revisar cada entrega y hablar con el usuario.
+
+## 3. Fases (siempre las mismas)
+
+| # | Fase | Comando / entregable | Puerta |
+|---|---|---|---|
+| 0 | Arranque | `new_prototype.py <cat> <id> --ref <cat>/<idea> --engine <motor> [--based-on <id>] [--new-design]` | — |
+| 1 | Análisis | delegar `analizar`: `analyze_ref.py <ref> --out sandbox/<cat>/<id>/work/ref` | vos mirás `contact.jpg` + `ANALISIS.md` |
+| 2 | Plan | vos: `PLAN.md` (motor, componentes que reutiliza, componentes nuevos, escenas, audio/JSON existentes que sirven) | si el motor es nuevo → justificá la elección y seguí dentro del alcance pedido |
+| 3 | Componentes | vos: componentes nuevos en el motor + entrada en su `components.json` (`used_by`) | demo de cada uno en el navegador |
+| 4 | Ensamblado | delegar `ensamblar`: `index.html`, `assets/` (escenas JSON, medios, voz, sincronía) | — |
+| 5 | Comparación | delegar `comparar`: comparación manual o herramienta compatible con el perfil; no usar `compare.py` con rutas históricas | vos mirás `compare.jpg`, pedís ajustes (vuelve a 3/4) |
+| 6 | Cierre | checklist de abajo | aparece en el sandbox |
+
+Solo una copia de trabajo del medio puede vivir en `assets/`; conserva el original y ficha única en el registro del perfil conforme a CALIDAD y MEDIOS.
+
+Partí siempre de la plantilla más parecida (`--based-on`). Diseño desde cero (`--new-design`)
+solo si ningún motor sirve; registrá la decisión y el motivo.
+
+## 4. Componentes reutilizables
+
+La primera plantilla de un motor paga los componentes; las siguientes solo los llaman. Un
+componente:
+- recibe todo por parámetros: textos, colores, tiempos, medios. Nada propio de un video queda
+  escrito dentro.
+- vive en la carpeta del motor, no en la plantilla.
+- se registra en el `components.json` del motor, con el formato de `_tools/explainer-kit/catalog.json`
+  (`name`, `summary`, `tags`, `layer`, `params` con tipos y defaults, `file`, `demo`, `used_by`).
+- funciona con el reloj del motor: seek determinista, sin `Date.now()` ni azar sin semilla.
+  Tiene que verse igual en vivo, con `?controls=1` y en la grabación.
+
+Antes de crear uno, buscalo en el catálogo. Si existe algo parecido, extendelo con un parámetro.
+
+## 5. Reutilizar lo que ya existe
+
+- **Audio y letras:** las plantillas de NodeMotion traen `song.mp3` + `lyrics.json` (Whisper). La
+  voz de los explainer se genera con `kit.py voice` (Gemini TTS) y se transcribe con Whisper.
+- **Medios:** priorizá material real libre y seguí `src/skills/MEDIOS.md`. Ya hay medios dentro de
+  las plantillas parecidas.
+- **Controles y miniatura:** los da gratis el motor (`_tools/player/bridge.js` con `?controls=1`)
+  y la API (miniatura automática). No los programes en la plantilla.
+
+## 6. Presupuesto de tokens
+
+- `info.json` → `is_new_design` y `based_on` siempre completos.
+- Meta: una plantilla que sigue a otra cuesta ¼–½ de la base de su motor
+  (`_tools/sandbox/info.py show <cat>/<id>` muestra la base y el pronóstico).
+- Si vas por más de la mitad del presupuesto, registrá la causa y ajustá el plan sin abandonar el entregable.
+
+## 7. Cierre (checklist)
+
+- [ ] `index.html` carga sin errores de consola, con y sin `?controls=1`.
+- [ ] `info.json`: `title`, `summary`, `engine`, `based_on`, `is_new_design`, `libraries`,
+      `inputs`, `notes` (lo que el próximo agente tiene que saber) y `status: "lista para revisar"`.
+- [ ] Contrato `PREPARAR-PRODUCCION.md` cumplido: demo principal con catálogo/galería o episodio con manifest, rutas portables y recursos reales.
+- [ ] `work/results/entrega-produccion.md` con inventario y pruebas; lo no comprobado queda explícitamente pendiente. No simular validación ni mover automáticamente.
+- [ ] Miniaturas existentes inventariadas y conservadas por estilo; sin generación editorial para habilitar el traslado.
+- [ ] Tokens registrados: los del trabajador ya los anotó `delegate.sh`. Los tuyos:
+      `info.py add-usage <cat>/<id> --provider claude|codex --model <modelo> --role prototype_lead --in N --out N [--cached N]`
+      (Claude Code: `/cost`; Codex: el total del final de la sesión).
+- [ ] Componentes nuevos registrados en `components.json` con `used_by`.
+- [ ] `INFORME.md` según la plantilla común y respuesta al usuario: URL del sandbox, qué se reutilizó, qué componentes nuevos quedaron,
+      tokens totales vs pronóstico y qué falta para producción.
+
+## 8. Prohibido
+
+Tocar plantillas en producción (`nodetech/`, `nodehistory/`, `nodemotion/` fuera de `sandbox/`)
+salvo autorización o una modificación compartida necesaria para el diseño solicitado. Reiniciar la API o la web. Borrar referencias. Copiar un motor
+entero dentro de la plantilla. Editar un `.sh` mientras se está ejecutando.
+
+## Modo smoke (prueba del circuito)
+
+Si el brief dice `mode: smoke`: hacé solo la fase 0 con id `zz-smoke-<idea>` y delegá una tarea
+trivial ("escribí work/results/smoke.md con OK"). Registrá tokens, reportá y **borrá la carpeta**.
+
+
+## Componentes elegibles en el visor del Sandbox
+Un prototipo que use _proto/proto.js puede declarar componentes en su info.json (por ejemplo outro v1 / v2, o un interruptor para mostrar u ocultar una parte) y el visor muestra la seccion Componentes. Contrato completo, sintaxis when/$by/$param y la API (POST /explainer/component-previews con scope sandbox) en _proto/COMPONENTES.md. Consulta ejemplos por ID en la ficha del diseño: no presupongas que una antigua carpeta de demo sigue en el Sandbox del repositorio.
+
+## Componentes para la biblioteca
+
+Todo prototipo nuevo con partes elegibles (variantes, cierres, fichas u otras partes intercambiables) debe declarar `components` en su `info.json` según `_proto/COMPONENTES.md`. Al entregar el resultado, informá la lista de componentes declarados.

@@ -1,0 +1,27 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "platforms_v1",
+  "piece": "platforms",
+  "locale": "pt-BR",
+  "status": "draft",
+  "intent": "No Facebook, a primeira linha apresenta o motivo para assistir; no TikTok e Reels, o assunto aparece na abertura e na legenda.",
+  "templates": {
+    "facebook": "{assunto identificado}: {consequência concreta}.",
+    "tiktok": "{assunto que o público pesquisa}. {uma pergunta em aberto}?"
+  },
+  "examples": [
+    "Privacidade no ChatGPT: o que some quando você apaga um chat?"
+  ],
+  "conventions": [
+    "Primeira linha do Facebook até 125 caracteres; legenda do TikTok até 150.",
+    "Respeite a pontuação brasileira, o alcance da fonte e os limites de hashtags.",
+    "O texto nos primeiros três segundos precisa dizer do que se trata."
+  ],
+  "sounds_false": [
+    "Link na bio sem link configurado.",
+    "#paravoce #viral no lugar de identificar o assunto."
+  ],
+  "overrides": {
+    "name": "Primeiras linhas e legendas com assunto claro"
+  }
+}

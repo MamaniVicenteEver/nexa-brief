@@ -2,8 +2,9 @@
 
 import { Play } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { useVisualStyles } from "@/features/showcase/hooks/useVisualStyles";
 import {
   Dialog,
   DialogContent,
@@ -11,14 +12,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/components/ui/dialog";
+import { useCaraCharacters } from "../hooks/useCaraCharacters";
 import {
   useCreateProduction,
   useDesignGroups,
   useExplainerOptions,
   useGenerateBrief,
 } from "../hooks/useExplainer";
-import type { AgentName, ExplainerBrief, TextProvider } from "../types";
+import type { AgentName, ExplainerBrief, TextProvider, TitleLevel } from "../types";
 import { BriefEditor } from "./BriefEditor";
+import { NarrativePicker } from "./NarrativePicker";
 import { PreviewFrame } from "./PreviewFrameModal";
 
 const MEDIA_ACCEPT = "image/jpeg,image/png,image/webp,video/mp4,video/quicktime,video/webm";
@@ -46,33 +49,72 @@ export function CreateExplainerVideoModal({
   const t = useTranslations("explainer");
   // Todas las plantillas del kit: primero las de esta categoría, debajo las de las demás.
   const { data: designGroups = [] } = useDesignGroups(categoryPath);
-  const { data: options } = useExplainerOptions();
+  const { data: options } = useExplainerOptions(categoryPath);
   const briefMutation = useGenerateBrief();
   const productionMutation = useCreateProduction();
 
   const [topic, setTopic] = useState(initialTopic);
   const [description, setDescription] = useState("");
   const [design, setDesign] = useState("");
+  const [characterId, setCharacterId] = useState("leo");
   const [files, setFiles] = useState<File[]>([]);
   const [provider, setProvider] = useState<TextProvider | "">("");
   const [agent, setAgent] = useState<AgentName | "">("");
   const [autoRecord, setAutoRecord] = useState(false);
   const [brief, setBrief] = useState<ExplainerBrief | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  // duración: un preset (5 · 10 · 15 · 30) o "custom" con minutos a mano (lengths.json)
+  const [lengthChoice, setLengthChoice] = useState<string>("");
+  const [customMinutes, setCustomMinutes] = useState(45);
+  // narrativa y nivel de título: vacío = la default de la categoría (la manda el servidor)
+  const [narrativeId, setNarrativeId] = useState("");
+  const [titleLevel, setTitleLevel] = useState<TitleLevel | null>(null);
 
   const designs = designGroups.flatMap((g) => g.designs);
   const selectedDesign = designs.find((d) => d.designId === design) ?? designs[0] ?? null;
+  const caraDesign = selectedDesign?.designId === "cara-a-cara";
+  const characters = useCaraCharacters(open && caraDesign);
+  const selectedCharacter = characters.data?.find((character) => character.id === characterId);
+  const [estilo, setEstilo] = useState("");
+  const visualStyles = useVisualStyles(selectedDesign?.designId ?? "", open);
+  useEffect(() => {
+    setEstilo(visualStyles.data?.default ?? "");
+  }, [visualStyles.data, selectedDesign?.designId]);
+  const nativeDesign =
+    selectedDesign?.designId === "mapas-satelitales" ||
+    selectedDesign?.designId === "atlas-en-movimiento";
+  const selectedPreviewUrl = (() => {
+    if (!selectedDesign?.previewUrl || !estilo) return selectedDesign?.previewUrl;
+    const preview = new URL(selectedDesign.previewUrl, "https://preview.invalid");
+    preview.searchParams.set("estilo", estilo);
+    return preview.origin === "https://preview.invalid"
+      ? `${preview.pathname}${preview.search}${preview.hash}`
+      : preview.toString();
+  })();
   const selectedProvider = provider || options?.defaultTextProvider || "deepseek";
-  const selectedAgent = agent || options?.defaultAgent || "claude";
+  const selectedAgent = agent || options?.defaultAgent || "codex";
   const providerAvailable = (name: string) =>
     options?.textProviders.find((p) => p.name === name)?.available ?? true;
   const agentAvailable = (name: string) =>
     options?.agents.find((a) => a.name === name)?.available ?? true;
+  const lengths = options?.lengths;
+  const lengthValue = lengthChoice || String(lengths?.defaultMinutes ?? 10);
+  const minutes =
+    lengthValue === "custom"
+      ? Math.min(lengths?.maxMinutes ?? 60, Math.max(lengths?.minMinutes ?? 5, customMinutes))
+      : Number(lengthValue);
+  const narratives = options?.narratives ?? [];
+  const selectedNarrativeId = narrativeId || options?.defaultNarrative || "";
+  const selectedNarrative = narratives.find((n) => n.id === selectedNarrativeId) ?? null;
+  const selectedTitleLevel = selectedNarrative?.titleLevels.length
+    ? (titleLevel ?? selectedNarrative.defaultTitleLevel ?? undefined)
+    : undefined;
 
   const busy = briefMutation.isPending || productionMutation.isPending;
   const topicOk = topic.trim().length >= 3;
   const canBrief = topicOk && !busy;
-  const canProduce = topicOk && selectedDesign !== null && !busy;
+  const canProduce =
+    topicOk && selectedDesign !== null && !busy && (!caraDesign || !!selectedCharacter);
 
   const addFiles = (list: FileList | null) => {
     if (!list) return;
@@ -92,6 +134,9 @@ export function CreateExplainerVideoModal({
         design: selectedDesign?.designId,
         provider: selectedProvider,
         mediaNames: files.map((f) => f.name),
+        minutes,
+        narrativeId: selectedNarrativeId || undefined,
+        titleLevel: selectedTitleLevel,
       },
       { onSuccess: (result) => setBrief(result) },
     );
@@ -103,12 +148,17 @@ export function CreateExplainerVideoModal({
       {
         categoryPath,
         design: selectedDesign.designId,
+        characterId: caraDesign ? selectedCharacter?.id : undefined,
+        estilo: estilo || undefined,
         topic: topic.trim(),
         description: description.trim(),
         agent: selectedAgent,
         brief,
-        autoRecord,
+        narrativeId: selectedNarrativeId || undefined,
+        titleLevel: selectedTitleLevel,
+        autoRecord: nativeDesign ? false : autoRecord,
         files,
+        minutes,
       },
       {
         onSuccess: (production) => {
@@ -136,15 +186,24 @@ export function CreateExplainerVideoModal({
           {/* Columna izquierda: datos del video + textos generados */}
           <div className="flex flex-col gap-3.5">
             <label className="flex flex-col gap-1.5">
-              <span className={LABEL_CLASS}>{t("fields.topic")} *</span>
+              <span className={LABEL_CLASS}>
+                {categoryPath === "node_actualidad" ? t("fields.newsTopic") : t("fields.topic")} *
+              </span>
               <input
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 maxLength={300}
-                placeholder={t("fields.topicPlaceholder")}
+                placeholder={
+                  categoryPath === "node_actualidad"
+                    ? t("fields.newsTopicPlaceholder")
+                    : t("fields.topicPlaceholder")
+                }
                 disabled={busy}
                 className={INPUT_CLASS}
               />
+              {categoryPath === "node_actualidad" && (
+                <p className="text-[11.5px] text-nb-mute">{t("create.newsSourceHint")}</p>
+              )}
             </label>
 
             <label className="flex flex-col gap-1.5">
@@ -158,6 +217,9 @@ export function CreateExplainerVideoModal({
                 disabled={busy}
                 className={INPUT_CLASS}
               />
+              {categoryPath === "node_actualidad" && (
+                <p className="text-[11.5px] text-nb-mute">{t("create.newsContextHint")}</p>
+              )}
             </label>
 
             <div className="flex flex-col gap-1.5">
@@ -215,12 +277,93 @@ export function CreateExplainerVideoModal({
               </div>
             </div>
 
+            {caraDesign && (
+              <div className="flex flex-col gap-1.5">
+                <label className={LABEL_CLASS} htmlFor="production-character">
+                  Personaje *
+                </label>
+                <select
+                  id="production-character"
+                  required
+                  value={selectedCharacter?.id ?? ""}
+                  onChange={(event) => {
+                    setCharacterId(event.target.value);
+                    setBrief(null);
+                  }}
+                  disabled={busy || characters.isPending || characters.isError}
+                  className={INPUT_CLASS}
+                >
+                  {!selectedCharacter && <option value="">Selecciona un personaje</option>}
+                  {(characters.data ?? []).map((character) => (
+                    <option key={character.id} value={character.id}>
+                      {character.name}
+                    </option>
+                  ))}
+                </select>
+                {selectedCharacter && (
+                  <p className="text-xs text-nb-mute">
+                    {selectedCharacter.topic}
+                    {selectedCharacter.voice && ` · Voz: ${selectedCharacter.voice}`}
+                  </p>
+                )}
+                {characters.isPending && (
+                  <p role="status" className="text-xs text-nb-mute">
+                    Cargando personajes…
+                  </p>
+                )}
+                {characters.isError && (
+                  <p role="alert" className="text-xs text-red-600">
+                    No se pudieron cargar los personajes. Vuelve a abrir el modal para reintentar.
+                  </p>
+                )}
+              </div>
+            )}
+
+            {!!visualStyles.data?.styles.length && (
+              <div className="space-y-2">
+                <label className={LABEL_CLASS} htmlFor="production-estilo">
+                  Estilo visual
+                </label>
+                <select
+                  id="production-estilo"
+                  value={estilo}
+                  onChange={(event) => setEstilo(event.target.value)}
+                  className={INPUT_CLASS}
+                >
+                  {visualStyles.data.styles.map((style) => (
+                    <option key={style.id} value={style.id}>
+                      {style.name}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-nb-mute">
+                  El agente recibirá los componentes, tamaños y posiciones de este estilo.
+                </p>
+              </div>
+            )}
             {selectedDesign && (
               <p className="-mt-1.5 text-[12px] text-nb-mute">
                 <span className="font-semibold text-nb-ink-soft">{selectedDesign.name}</span>
                 {selectedDesign.tagline && ` · ${selectedDesign.tagline}`}
               </p>
             )}
+
+            <NarrativePicker
+              narratives={narratives}
+              defaultId={options?.defaultNarrative ?? null}
+              value={selectedNarrativeId}
+              onChange={(id) => {
+                setNarrativeId(id);
+                setTitleLevel(null);
+                setBrief(null);
+              }}
+              titleLevel={selectedTitleLevel ?? null}
+              onTitleLevelChange={(level) => {
+                setTitleLevel(level);
+                setBrief(null);
+              }}
+              disabled={busy}
+            />
 
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="flex flex-col gap-1.5">
@@ -278,6 +421,42 @@ export function CreateExplainerVideoModal({
               )}
             </div>
 
+            <div className="flex flex-col gap-1.5">
+              <span className={LABEL_CLASS}>{t("fields.length")}</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <select
+                  aria-label={t("fields.length")}
+                  value={lengthValue}
+                  onChange={(e) => {
+                    setLengthChoice(e.target.value);
+                    setBrief(null);
+                  }}
+                  disabled={busy}
+                  className={INPUT_CLASS}
+                >
+                  {(lengths?.presets ?? []).map((preset) => (
+                    <option key={preset.id} value={String(preset.minutes)}>
+                      {t("fields.lengthOption", { minutes: preset.minutes, label: preset.label })}
+                    </option>
+                  ))}
+                  <option value="custom">{t("fields.lengthCustom")}</option>
+                </select>
+                {lengthValue === "custom" && (
+                  <input
+                    type="number"
+                    aria-label={t("fields.lengthMinutes")}
+                    min={lengths?.minMinutes ?? 5}
+                    max={lengths?.maxMinutes ?? 60}
+                    value={customMinutes}
+                    onChange={(e) => setCustomMinutes(Number(e.target.value))}
+                    disabled={busy}
+                    className={`${INPUT_CLASS} w-24`}
+                  />
+                )}
+              </div>
+              <p className="text-[11.5px] text-nb-mute">{t("fields.lengthHint")}</p>
+            </div>
+
             <div className="grid gap-3 sm:grid-cols-2">
               <label className="flex flex-col gap-1.5">
                 <span className={LABEL_CLASS}>{t("fields.agent")}</span>
@@ -297,11 +476,11 @@ export function CreateExplainerVideoModal({
               <label className="flex items-center gap-2 self-end pb-2 text-[13px] text-nb-ink">
                 <input
                   type="checkbox"
-                  checked={autoRecord}
+                  checked={!nativeDesign && autoRecord}
                   onChange={(e) => setAutoRecord(e.target.checked)}
-                  disabled={busy}
+                  disabled={busy || nativeDesign}
                 />
-                {t("fields.autoRecord")}
+                {nativeDesign ? "Preparar escena para revisión" : t("fields.autoRecord")}
               </label>
             </div>
 
@@ -326,7 +505,7 @@ export function CreateExplainerVideoModal({
               >
                 {productionMutation.isPending
                   ? t("create.producing")
-                  : autoRecord
+                  : autoRecord && !nativeDesign
                     ? t("create.produceAndRecord")
                     : t("create.produce")}
               </button>
@@ -345,7 +524,11 @@ export function CreateExplainerVideoModal({
             )}
 
             {brief && (
-              <BriefEditor brief={brief} onChange={setBrief} voice={selectedDesign?.voice} />
+              <BriefEditor
+                brief={brief}
+                onChange={setBrief}
+                voice={caraDesign ? selectedCharacter?.voice : selectedDesign?.voice}
+              />
             )}
           </div>
 
@@ -353,7 +536,7 @@ export function CreateExplainerVideoModal({
           <aside className="flex flex-col gap-2 lg:sticky lg:top-0 lg:self-start">
             <div className="flex items-center justify-between gap-2">
               <span className={LABEL_CLASS}>{t("create.previewHeading")}</span>
-              {selectedDesign?.previewUrl && (
+              {selectedDesign && selectedPreviewUrl && (
                 <button
                   type="button"
                   onClick={() => setShowPreview((v) => !v)}
@@ -363,9 +546,9 @@ export function CreateExplainerVideoModal({
                 </button>
               )}
             </div>
-            {selectedDesign?.previewUrl ? (
+            {selectedDesign && selectedPreviewUrl ? (
               showPreview ? (
-                <PreviewFrame url={selectedDesign.previewUrl} title={selectedDesign.name} />
+                <PreviewFrame url={selectedPreviewUrl} title={selectedDesign.name} />
               ) : (
                 // Portada del demo: se ve al instante; un clic reproduce el video.
                 <button

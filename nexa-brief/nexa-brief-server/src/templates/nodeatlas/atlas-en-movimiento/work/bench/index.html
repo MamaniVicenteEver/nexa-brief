@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Atlas · comparación de bases</title>
+<link rel="icon" href="data:,">
+<style>html,body{margin:0;height:100%;background:#081e2c;overflow:hidden}#stage,#stage>canvas{position:fixed;inset:0;display:block}</style>
+</head><body><audio id="audio" preload="none"></audio><div id="stage"></div>
+<script type="module">
+import {PROTO,atlasURL} from '../../engine/plano/paths.js';
+const proto=document.createElement('script');proto.src=PROTO;document.head.appendChild(proto);
+await new Promise((resolve,reject)=>{proto.onload=resolve;proto.onerror=reject;});
+// Instrumentación de prueba: solo observa el contexto; no altera Atlas ni su dibujo.
+const run=Proto.run;
+Proto.run=options=>{
+  const previous=options.onReady;
+  options.onReady=c=>{window.__benchContext=c;previous?.(c);};
+  return run(options);
+};
+const base=new URLSearchParams(location.search).get('base')||'plano';
+await import(base==='atlas3d'?'./atlas-raster.js':'../../engine/plano/plano.js');
+</script></body></html>

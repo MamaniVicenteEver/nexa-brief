@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-vacio",
+  "id": "layout.crumble",
+  "entry_id": "layout.crumble",
+  "name": "crumble",
+  "kind": "layout",
+  "label": "crumble",
+  "summary": "Existing layout configuration: crumble.",
+  "params": {
+    "weight": {
+      "default": 1.4
+    }
+  },
+  "example": {
+    "weight": 1.4
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-vacio/assets/config.json",
+      "pointer": "/configs/0/layouts/crumble"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

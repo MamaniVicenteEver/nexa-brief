@@ -14,10 +14,16 @@ Ambas devuelven PCM 16-bit mono 24 kHz → se guarda como WAV.
 """
 from __future__ import annotations
 import base64, hashlib, json, os, pathlib, re, time, wave, urllib.request, urllib.error
+from contextlib import contextmanager
+from contextvars import ContextVar
 
-# claves: se leen de estos .env (en orden) o de variables de entorno; NUNCA se imprimen
-ENV_FILES = [pathlib.Path("/home/university/Documentos/Proyectos/nexa-brief/nexa-brief/nexa-brief-server/.env"),
-             pathlib.Path("/home/university/Documentos/Proyectos/nexa-brief/nexa-explainer/nexa-explainer-server/.env")]
+# claves: se leen de estos .env (en orden) o de variables de entorno; NUNCA se imprimen.
+# Rutas relativas al repo (tools → explainer-kit → _tools → templates → src → nexa-brief-server),
+# así funcionan en cualquier máquina; antes eran absolutas de una sola computadora y en el
+# servidor el kit se quedaba sin claves ("sin claves con cuota").
+_SERVER = pathlib.Path(__file__).resolve().parents[5]
+ENV_FILES = [_SERVER / ".env",
+             _SERVER.parents[1] / "nexa-explainer" / "nexa-explainer-server" / ".env"]
 STATE = pathlib.Path(__file__).resolve().parents[1] / ".state" / "gemini-quota.json"
 
 class QuotaError(RuntimeError):
@@ -49,8 +55,15 @@ def _state():
     try: return json.loads(STATE.read_text())
     except Exception: return {}
 def _mark_exhausted(keyname, model):
-    st = _state(); st.setdefault(model, {})[keyname] = time.time() + 23.5 * 3600
-    STATE.parent.mkdir(exist_ok=True); STATE.write_text(json.dumps(st, indent=1))
+    import fcntl, tempfile
+    STATE.parent.mkdir(exist_ok=True)
+    with STATE.with_suffix(".lock").open("a") as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        st = _state(); st.setdefault(model, {})[keyname] = time.time() + 23.5 * 3600
+        with tempfile.NamedTemporaryFile("w", dir=STATE.parent, delete=False) as tmp:
+            json.dump(st, tmp, indent=1)
+            temp_path = pathlib.Path(tmp.name)
+        os.replace(temp_path, STATE)
 def _available(model):
     st = _state().get(model, {}); now = time.time()
     return [(k, v) for k, v in gemini_keys() if st.get(k, 0) < now]
@@ -67,13 +80,62 @@ def with_key_rotation(model, call):
             print(f"  · {name} sin cuota para {model} → siguiente clave", flush=True); _mark_exhausted(name, model)
     raise QuotaError(f"todas las claves agotadas para {model}")
 
+LAST_USAGE: dict = {}   # usageMetadata de la última respuesta (narrate.py lo anota en el registro del video)
+_USAGE_OBSERVER = ContextVar("native_tts_usage_observer", default=None)
+
+
+@contextmanager
+def observe_usage(callback):
+    """Opt-in host observer; original-language calls retain their existing ledger."""
+    token = _USAGE_OBSERVER.set(callback)
+    try:
+        yield
+    finally:
+        _USAGE_OBSERVER.reset(token)
+
+
+def _notify_usage(started, *, ok, data=None, error=None):
+    callback = _USAGE_OBSERVER.get()
+    if callback is not None:
+        callback({"ok": ok, "seconds": time.monotonic() - started,
+                  "usage": extract_usage_metadata(data) if isinstance(data, dict) else {},
+                  "model": data.get("modelVersion") if isinstance(data, dict) else None,
+                  "error_type": type(error).__name__ if error is not None else None})
+
+
+def extract_usage_metadata(data: dict) -> dict:
+    """Retain usage from both Gemini response schemas, never audio/content/keys."""
+    if isinstance(data.get("usageMetadata"), dict):
+        raw = data["usageMetadata"]
+        normalized = dict(raw)
+        source = "generateContent.usageMetadata"
+    elif isinstance(data.get("usage"), dict):
+        raw = data["usage"]
+        fields = {"total_input_tokens": "promptTokenCount", "total_output_tokens": "candidatesTokenCount",
+                  "total_thought_tokens": "thoughtsTokenCount", "total_cached_tokens": "cachedContentTokenCount",
+                  "total_tokens": "totalTokenCount"}
+        normalized = {target: raw[key] for key, target in fields.items()
+                      if isinstance(raw.get(key), int) and not isinstance(raw[key], bool) and raw[key] >= 0}
+        source = "interactions.usage"
+    else:
+        return {}
+    normalized["provider_usage"] = {"source": source, "usage": dict(raw),
+                                    "interaction_id": data.get("id") if isinstance(data.get("id"), str) else None}
+    return normalized
+
 def _post(url: str, body: dict, headers: dict, timeout=300) -> dict:
     req = urllib.request.Request(url, data=json.dumps(body).encode(), headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) nexa-explainer-kit/1.0", **headers}, method="POST")
     for attempt in range(4):
+        LAST_USAGE.clear()
+        started = time.monotonic()
         try:
             with urllib.request.urlopen(req, timeout=timeout) as r:
-                return json.loads(r.read())
+                data = json.loads(r.read())
+                LAST_USAGE.clear(); LAST_USAGE.update(extract_usage_metadata(data))
+                _notify_usage(started, ok=True, data=data)
+                return data
         except urllib.error.HTTPError as e:
+            _notify_usage(started, ok=False, error=e)
             msg = e.read().decode(errors="replace")[:400]
             # en el plan gratuito CADA intento cuenta para la cuota: no reintentar un 429 diario y
             # reintentar un 503 (alta demanda) una sola vez
@@ -82,9 +144,13 @@ def _post(url: str, body: dict, headers: dict, timeout=300) -> dict:
                 time.sleep(20 * (attempt + 1)); continue
             raise RuntimeError(f"HTTP {e.code}: {msg}") from None
         except (urllib.error.URLError, TimeoutError, ConnectionError) as e:   # red caída / DNS: reintentar
+            _notify_usage(started, ok=False, error=e)
             if attempt < 3:
                 time.sleep(10 * (attempt + 1)); continue
             raise RuntimeError(f"red: {e}") from None
+        except BaseException as e:
+            _notify_usage(started, ok=False, error=e)
+            raise
 
 def _save_pcm(pcm: bytes, dest: pathlib.Path, rate=24000) -> float:
     dest.parent.mkdir(parents=True, exist_ok=True)
@@ -150,15 +216,24 @@ TAG_BY_TONE = {
     "curiosidad": "thoughtful", "revelación": "revealing, emphatic", "dolor contenido": "with contained sorrow, slow",
     "duelo": "very quietly, grieving, long pauses", "reparación": "measured, a little hope", "cierre": "firm and warm",
     "urgencia": "urgent, fast but clear", "alivio": "relieved, breath out", "reflexivo": "reflectively",
-    "cercano": "warmly, close", "admiración": "with admiration",
+    "cercano": "warmly, close", "alarma": "urgently, like a breaking-news alert", "admiración": "with admiration",
 }
 
-def director_prompt(script: dict, segs: list[dict]) -> str:
+def director_prompt(script: dict, segs: list[dict], profile: str | None = None, pace: str | None = None,
+                    language: str | None = None) -> str:
     lines = "\n\n".join(f"[{TAG_BY_TONE.get(s['tone'], 'naturally')}] {s['text']}" for s in segs)
+    if profile is not None:   # edición en otro idioma: perfil y ritmo de la identidad del canal
+        return ("GENERATE SPEECH AUDIO ONLY.\nDo not read section titles or bracketed delivery notes aloud.\n\n"
+                f"AUDIO PROFILE\n{profile}\n\n"
+                f"SCENE\nA short documentary for social media: {script['title']}.\n\n"
+                f"DIRECTOR'S NOTES\n{script.get('voice_direction', '')} {pace or ''} "
+                f"Natural human breathing, clear diction. Numbers read naturally in {language or 'the transcript language'}.\n\n"
+                f"TRANSCRIPT BEGINS\n{lines}\nTRANSCRIPT ENDS")
     return ("GENERATE SPEECH AUDIO ONLY.\nDo not read section titles or bracketed delivery notes aloud.\n\n"
             "AUDIO PROFILE\nOne mature, close, natural Latin American Spanish documentary narrator. Neutral Latin American accent "
             "(no Castilian ceceo). Do not imitate a real person.\n\n"
             f"SCENE\nA short documentary for social media: {script['title'].title()}.\n\n"
-            f"DIRECTOR'S NOTES\n{script['voice_direction']} Natural human breathing, clear diction, let short pauses breathe "
-            "between sentences. Numbers read naturally in Spanish.\n\n"
+            f"DIRECTOR'S NOTES\n{script['voice_direction']} Aim for 130 Spanish words per minute, unhurried. "
+            "Natural human breathing, clear diction, let short pauses breathe between sentences and ideas. "
+            "Numbers read naturally in Spanish.\n\n"
             f"TRANSCRIPT BEGINS\n{lines}\nTRANSCRIPT ENDS")

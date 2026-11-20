@@ -1,0 +1,33 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "title_alarmista_v1",
+  "piece": "title",
+  "locale": "en-US",
+  "status": "draft",
+  "intent": "Write three distinct, truthful alarm hooks for viewers who know nothing about the topic.",
+  "templates": {
+    "paradox": "The {small object} that {large consequence}",
+    "countdown": "{N} seconds to {action}",
+    "near_miss": "{familiar thing} almost {verified outcome}",
+    "personal_stake": "Your {everyday object} is not as {assumed property} as you think"
+  },
+  "examples": [
+    "Your AI chats could end up in court",
+    "You deleted it. Who kept a copy?",
+    "The privacy promise you need to read"
+  ],
+  "conventions": [
+    "Keep each title at 60 characters or fewer; make the first 40 count.",
+    "Use three different emotions, not the same claim reworded.",
+    "Use natural sentence case and reserve capitals for a key word.",
+    "Write the actual risk: could or almost when the event did not happen."
+  ],
+  "sounds_false": [
+    "Discover the fascinating revolution that changes EVERYTHING.",
+    "You are next: a universal prediction without evidence.",
+    "A technical acronym before the viewer knows the stakes."
+  ],
+  "overrides": {
+    "name": "Three clear, evidence-based alarm titles"
+  }
+}

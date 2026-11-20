@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "family": "lyrics",
+  "display_name": "Trazo",
+  "description": "Rotulación a mano palabra por palabra en blanco y negro: cada palabra cantada aparece dibujada en otro estilo (marcador, burbuja, tiza, pincel, firma, garabato, trama), con temblor de línea, inversiones a papel blanco, rayos y destellos dibujados, ráfagas letra a letra en las palabras sostenidas e interludios de impactos, grietas y garabatos en los silencios — para rap, rock, drill y pop con energía.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [
+      {
+        "key": "intro.title",
+        "label": "Título en la intro",
+        "max": 40,
+        "default": ""
+      },
+      {
+        "key": "intro.artist",
+        "label": "Artista en la intro",
+        "max": 40,
+        "default": ""
+      },
+      {
+        "key": "outro.title",
+        "label": "Título del cierre",
+        "max": 24,
+        "default": "Gracias"
+      },
+      {
+        "key": "outro.sub",
+        "label": "Subtítulo del cierre",
+        "max": 24,
+        "default": "por ver"
+      },
+      {
+        "key": "outro.feats",
+        "label": "Línea final del cierre",
+        "max": 40,
+        "default": "Suscríbete · NodeMotion"
+      }
+    ],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "player.js",
+    "components",
+    "assets/fonts"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-trazo",
+    "config": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-trazo/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-trazo/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-trazo/DESIGN.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-trazo/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "trazo.intro",
+      "kind": "component",
+      "label": "Intro escrita a mano",
+      "summary": "Círculo que crece con rayos, título escrito a mano y artista tecleado.",
+      "constraints_status": "documented",
+      "id": "trazo.intro",
+      "contract": "contracts/001-component.json"
+    },
+    {
+      "entry_id": "trazo.outrov1",
+      "kind": "component",
+      "label": "Outro v1 Burbuja",
+      "summary": "Fondo negro, título en burbuja con rebote, firma y línea final tecleada.",
+      "constraints_status": "documented",
+      "id": "trazo.outrov1",
+      "contract": "contracts/002-component.json"
+    },
+    {
+      "entry_id": "trazo.outrov2",
+      "kind": "component",
+      "label": "Outro v2 Grieta",
+      "summary": "Papel blanco, grieta que se abre, letras de estilos mezclados e impactos.",
+      "constraints_status": "documented",
+      "id": "trazo.outrov2",
+      "contract": "contracts/003-component.json"
+    },
+    {
+      "entry_id": "trazo.interludios",
+      "kind": "component",
+      "label": "Interludios",
+      "summary": "Silencios: sol que crece, impactos, grieta, ovillo o destello.",
+      "constraints_status": "documented",
+      "id": "trazo.interludios",
+      "contract": "contracts/004-component.json"
+    },
+    {
+      "entry_id": "trazo.rafaga",
+      "kind": "component",
+      "label": "Ráfaga letra a letra",
+      "summary": "Palabra sostenida: la palabra y sus letras gigantes alternan estilo y fondo.",
+      "constraints_status": "documented",
+      "id": "trazo.rafaga",
+      "contract": "contracts/005-component.json"
+    },
+    {
+      "entry_id": "trazo.inversion",
+      "kind": "component",
+      "label": "Inversión de fondo",
+      "summary": "Cuadros de papel blanco y tinta negra con destello de entrada.",
+      "constraints_status": "documented",
+      "id": "trazo.inversion",
+      "contract": "contracts/006-component.json"
+    },
+    {
+      "entry_id": "trazo.trama",
+      "kind": "component",
+      "label": "Fondo rayado",
+      "summary": "Trama de rayas a mano detrás de la palabra, con halo para que se lea.",
+      "constraints_status": "documented",
+      "id": "trazo.trama",
+      "contract": "contracts/007-component.json"
+    },
+    {
+      "entry_id": "trazo.garabatos",
+      "kind": "component",
+      "label": "Garabatos sobre palabra",
+      "summary": "Rayos, destello, subrayado, círculo o flecha dibujados alrededor de la palabra.",
+      "constraints_status": "documented",
+      "id": "trazo.garabatos",
+      "contract": "contracts/008-component.json"
+    },
+    {
+      "entry_id": "trazo.palabra",
+      "kind": "component",
+      "label": "Palabra rotulada",
+      "summary": "Una palabra a pantalla grande con estilo, disposición, movimiento y transición.",
+      "constraints_status": "documented",
+      "id": "trazo.palabra",
+      "contract": "contracts/009-component.json"
+    },
+    {
+      "entry_id": "config.lyricsFilter",
+      "kind": "configuration",
+      "label": "lyricsFilter",
+      "summary": "Existing configuration configuration: lyricsFilter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.lyricsFilter",
+      "contract": "contracts/010-configuration.json"
+    },
+    {
+      "entry_id": "config.colors",
+      "kind": "configuration",
+      "label": "colors",
+      "summary": "Existing configuration configuration: colors.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.colors",
+      "contract": "contracts/011-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/012-configuration.json"
+    },
+    {
+      "entry_id": "config.styles",
+      "kind": "configuration",
+      "label": "styles",
+      "summary": "Existing configuration configuration: styles.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.styles",
+      "contract": "contracts/013-configuration.json"
+    },
+    {
+      "entry_id": "config.components",
+      "kind": "configuration",
+      "label": "components",
+      "summary": "Existing configuration configuration: components.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.components",
+      "contract": "contracts/014-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/015-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/016-configuration.json"
+    },
+    {
+      "entry_id": "config.timing",
+      "kind": "configuration",
+      "label": "timing",
+      "summary": "Existing configuration configuration: timing.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timing",
+      "contract": "contracts/017-configuration.json"
+    },
+    {
+      "entry_id": "config.size",
+      "kind": "configuration",
+      "label": "size",
+      "summary": "Existing configuration configuration: size.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.size",
+      "contract": "contracts/018-configuration.json"
+    },
+    {
+      "entry_id": "layout.deck",
+      "kind": "layout",
+      "label": "deck",
+      "summary": "Existing layout configuration: deck.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.deck",
+      "contract": "contracts/019-layout.json"
+    },
+    {
+      "entry_id": "layout.stackMinLetters",
+      "kind": "layout",
+      "label": "stackMinLetters",
+      "summary": "Existing layout configuration: stackMinLetters.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.stackMinLetters",
+      "contract": "contracts/020-layout.json"
+    },
+    {
+      "entry_id": "layout.verticalMaxLetters",
+      "kind": "layout",
+      "label": "verticalMaxLetters",
+      "summary": "Existing layout configuration: verticalMaxLetters.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.verticalMaxLetters",
+      "contract": "contracts/021-layout.json"
+    },
+    {
+      "entry_id": "layout.portraitStackBoost",
+      "kind": "layout",
+      "label": "portraitStackBoost",
+      "summary": "Existing layout configuration: portraitStackBoost.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.portraitStackBoost",
+      "contract": "contracts/022-layout.json"
+    },
+    {
+      "entry_id": "config.motion",
+      "kind": "configuration",
+      "label": "motion",
+      "summary": "Existing configuration configuration: motion.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.motion",
+      "contract": "contracts/023-configuration.json"
+    },
+    {
+      "entry_id": "config.transitions",
+      "kind": "configuration",
+      "label": "transitions",
+      "summary": "Existing configuration configuration: transitions.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.transitions",
+      "contract": "contracts/024-configuration.json"
+    },
+    {
+      "entry_id": "config.invert",
+      "kind": "configuration",
+      "label": "invert",
+      "summary": "Existing configuration configuration: invert.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.invert",
+      "contract": "contracts/025-configuration.json"
+    },
+    {
+      "entry_id": "config.hatch",
+      "kind": "configuration",
+      "label": "hatch",
+      "summary": "Existing configuration configuration: hatch.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.hatch",
+      "contract": "contracts/026-configuration.json"
+    },
+    {
+      "entry_id": "config.doodles",
+      "kind": "configuration",
+      "label": "doodles",
+      "summary": "Existing configuration configuration: doodles.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.doodles",
+      "contract": "contracts/027-configuration.json"
+    },
+    {
+      "entry_id": "config.interludes",
+      "kind": "configuration",
+      "label": "interludes",
+      "summary": "Existing configuration configuration: interludes.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.interludes",
+      "contract": "contracts/028-configuration.json"
+    },
+    {
+      "entry_id": "config.burst",
+      "kind": "configuration",
+      "label": "burst",
+      "summary": "Existing configuration configuration: burst.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.burst",
+      "contract": "contracts/029-configuration.json"
+    },
+    {
+      "entry_id": "config.overrides",
+      "kind": "configuration",
+      "label": "overrides",
+      "summary": "Existing configuration configuration: overrides.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.overrides",
+      "contract": "contracts/030-configuration.json"
+    }
+  ]
+}

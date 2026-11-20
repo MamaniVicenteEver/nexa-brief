@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-dynamic",
+  "family": "promo",
+  "demo_folder": "nodemotion/commercial/promo-dynamic",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "source_sha256": "06f848a708e8497244666e8cb1bbd10a586f89aac2e72df2e136f71be395bc07",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/promo-dynamic",
+    "config": "nodemotion/commercial/promo-dynamic/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-dynamic/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-dynamic/README.md"
+  },
+  "revision": "aad4c9a47bc1ff959e72b08c54e2adcf49487c05296e4adc54c0c5560cad316e"
+}

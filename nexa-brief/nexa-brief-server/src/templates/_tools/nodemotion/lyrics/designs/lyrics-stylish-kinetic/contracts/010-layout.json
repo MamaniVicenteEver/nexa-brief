@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-stylish-kinetic",
+  "id": "layout.type",
+  "entry_id": "layout.type",
+  "name": "type",
+  "kind": "layout",
+  "label": "type",
+  "summary": "Existing layout configuration: type.",
+  "params": {
+    "weight": {
+      "default": 1.2
+    }
+  },
+  "example": {
+    "weight": 1.2
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-stylish-kinetic/assets/config.json",
+      "pointer": "/configs/0/layouts/type"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "intro",
+  "entry_id": "intro",
+  "kind": "component",
+  "label": "Intro · emblema holográfico + título",
+  "summary": "Intro: emblema geométrico propio con relleno holográfico, silueta holográfica opcional, título (intro.title) condensado holo y artista (intro.artist) espaciado.",
+  "component": {
+    "name": "intro",
+    "label": "Intro · emblema holográfico + título",
+    "summary": "Intro: emblema geométrico propio con relleno holográfico, silueta holográfica opcional, título (intro.title) condensado holo y artista (intro.artist) espaciado.",
+    "group": "intro",
+    "tags": [
+      "lyrics-hologram",
+      "intro"
+    ],
+    "params": {
+      "emblem": {
+        "type": "enum",
+        "options": [
+          "crest",
+          "diamond",
+          "none"
+        ],
+        "default": "crest"
+      },
+      "media": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "t": 2.59,
+      "query": null,
+      "layout": null
+    },
+    "preview": {
+      "gallery": "gallery.html?only=intro"
+    }
+  },
+  "params": {
+    "emblem": {
+      "type": "enum",
+      "options": [
+        "crest",
+        "diamond",
+        "none"
+      ],
+      "default": "crest"
+    },
+    "media": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/0"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

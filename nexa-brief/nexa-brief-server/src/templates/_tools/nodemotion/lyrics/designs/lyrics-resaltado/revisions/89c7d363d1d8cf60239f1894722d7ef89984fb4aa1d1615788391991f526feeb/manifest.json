@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-resaltado",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-resaltado",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [],
+  "source_sha256": "171e9e40af35a525aeca9888acd9b48e8471c92ea8de5c78cbd2e034f963401c",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-resaltado",
+    "config": "nodemotion/lyrics/lyrics-resaltado/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-resaltado/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-resaltado/README.md"
+  },
+  "revision": "89c7d363d1d8cf60239f1894722d7ef89984fb4aa1d1615788391991f526feeb"
+}

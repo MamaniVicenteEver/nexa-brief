@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-ceniza",
+  "id": "config.outro",
+  "entry_id": "config.outro",
+  "name": "outro",
+  "kind": "configuration",
+  "label": "outro",
+  "summary": "Existing configuration configuration: outro.",
+  "params": {
+    "enabled": {
+      "default": true
+    },
+    "sec": {
+      "default": 4.0
+    },
+    "title": {
+      "default": "Gracias"
+    },
+    "sub": {
+      "default": "Por ver"
+    },
+    "feats": {
+      "default": "Suscribite | NodeMotion"
+    }
+  },
+  "example": {
+    "enabled": true,
+    "sec": 4.0,
+    "title": "Gracias",
+    "sub": "Por ver",
+    "feats": "Suscribite | NodeMotion"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-ceniza/assets/config.json",
+      "pointer": "/configs/0/outro"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-romantic",
+  "id": "config.bokeh",
+  "entry_id": "config.bokeh",
+  "name": "bokeh",
+  "kind": "configuration",
+  "label": "bokeh",
+  "summary": "Existing configuration configuration: bokeh.",
+  "params": {
+    "count": {
+      "default": 16
+    },
+    "tint": {
+      "default": "216,140,140"
+    }
+  },
+  "example": {
+    "count": 16,
+    "tint": "216,140,140"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-romantic/assets/config.json",
+      "pointer": "/configs/0/bokeh"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

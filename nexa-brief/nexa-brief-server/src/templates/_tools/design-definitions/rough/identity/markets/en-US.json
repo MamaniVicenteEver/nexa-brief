@@ -1,0 +1,80 @@
+{
+  "schema": "nexa.identity-market/1",
+  "persona_id": "rough-prototipo",
+  "market": "en-US",
+  "status": "draft",
+  "voice": {
+    "voice": "Iapetus",
+    "alternatives": [
+      "Sadaltager",
+      "Orus",
+      "Charon"
+    ],
+    "models": [
+      "gemini-3.8-flash-tts",
+      "gemini-3.8-flash-lite-tts",
+      "gemini-3.1-flash-tts-preview"
+    ],
+    "lead": 1.2,
+    "tail": 6.0,
+    "base": "A clear male tech-documentary narrator with a neutral American accent and restrained energy. Curious, precise, and approachable. Sound like a knowledgeable friend explaining what matters to the viewer. Never imitate a real person. Let the evidence carry the tension; breathe between ideas and land each sentence naturally. Aim for about 150 words per minute, without racing numbers or caveats.",
+    "target_wpm": [
+      140,
+      160
+    ],
+    "direction": "A clear male tech-documentary narrator with a neutral American accent and restrained energy. Curious, precise, and approachable. Sound like a knowledgeable friend explaining what matters to the viewer. Never imitate a real person. Let the evidence carry the tension; breathe between ideas and land each sentence naturally. Aim for about 150 words per minute, without racing numbers or caveats.",
+    "lexicon_ref": "extras/lexicon/en-US.json"
+  },
+  "channel": {
+    "name": "NodeTech",
+    "handle": "youtube.com/@nodetech",
+    "language": "en-US"
+  },
+  "expression": {
+    "register": "conversational, informed, never salesy",
+    "sentence_length": "short to medium",
+    "rhetorical_devices": [
+      "a concrete what-if",
+      "a plainspoken contrast",
+      "a consequence in your daily life"
+    ],
+    "signature_phrases": [
+      "Here's the part that matters.",
+      "That changes what you can assume."
+    ],
+    "avoid": [
+      "corporate hype",
+      "British idioms",
+      "a fake breaking-news voice",
+      "You will not believe what happened next"
+    ]
+  },
+  "texts": {
+    "outro": {
+      "thanks": "THANKS FOR WATCHING",
+      "cta": "SUBSCRIBE",
+      "support": "Your support helps us keep asking better questions about the technology in your life.",
+      "channel": "NODETECH",
+      "handle": "youtube.com/@nodetech"
+    },
+    "outro_spoken": {
+      "text": "Thanks for sticking with us to the end. If this was useful, give it a like, subscribe, and tap the bell so you never miss the next one. Your support helps us keep asking better questions about the tech in your life.",
+      "cues": {
+        "likeAt": "like",
+        "subscribeAt": "subscribe",
+        "bellAt": "bell",
+        "supportAt": "support"
+      }
+    }
+  },
+  "examples": [
+    {
+      "kind": "hook",
+      "text": "You closed the chat. What happened to the conversation?"
+    },
+    {
+      "kind": "hook",
+      "text": "Your phone knows the route. Who else gets the trip?"
+    }
+  ]
+}

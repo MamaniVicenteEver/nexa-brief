@@ -34,7 +34,10 @@ from pydantic import BaseModel, Field, model_validator
 
 from src.config.exceptions import AssetDownloadError, AssetNotFoundError
 from src.config.settings import settings
-from src.core.data import collection, documents, files
+from src.config.profile_layout import layout_for_settings
+from src.core.data import collection, coordination, documents, files
+from src.core.library.sound_library import SoundLibraryEntry
+from src.core.library.resource_metadata import ResourceMetadata, ResourceOrigin, resource_metadata, belongs_to
 from src.core.realtime.event_bus import get_event_bus
 from src.core.realtime.events import RealtimeEvent
 
@@ -47,10 +50,15 @@ def _now_iso() -> str:
 
 # ── Entry models ──────────────────────────────────────────────────────────────
 
-class ImageLibraryEntry(BaseModel):
+class ImageLibraryEntry(ResourceMetadata):
+    media_type: Literal["image"] = "image"
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     relative_path: str                # clave en FileStorage "images" ({categoría}/{archivo})
+    bundled_key: str | None = None  # validated content-addressed NodeMotion demo resource
     original_filename: str = ""      # nombre con el que se subió/descargó
     source: str                       # "auto" | "url"
     provider: str = ""                # "unsplash" | "pexels" | "pixabay" | "css_fallback" | "user_url"
@@ -82,10 +90,15 @@ class ImageLibraryEntry(BaseModel):
 TranscriptionStatus = Literal["none", "pending", "running", "done", "failed"]
 
 
-class MusicLibraryEntry(BaseModel):
+class MusicLibraryEntry(ResourceMetadata):
+    media_type: Literal["music"] = "music"
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     relative_path: str                # clave en FileStorage "music" ({categoría}/{archivo})
+    bundled_key: str | None = None  # validated content-addressed NodeMotion demo resource
     original_filename: str = ""
     source: str                       # "auto" | "url"
     provider: str = ""                # "pixabay" | "jamendo" | "ytdlp" | "user_url"
@@ -122,12 +135,17 @@ class MusicLibraryEntry(BaseModel):
         return self
 
 
-class VideoLibraryEntry(BaseModel):
+class VideoLibraryEntry(ResourceMetadata):
+    media_type: Literal["video"] = "video"
     """Video de fondo (ej. motion-backdrop) — solo LIBRARY/URL/UPLOAD, no hay
     proveedor de stock de video integrado (a diferencia de imagen/música)."""
+    video_id: str | None = None
+    production_id: str | None = None
+    production_name: str = ""
     asset_id: str
     category: str
     relative_path: str                # clave en FileStorage "videos" ({categoría}/{archivo})
+    bundled_key: str | None = None  # validated content-addressed NodeMotion demo resource
     original_filename: str = ""
     source: str                       # "url" | "upload"
     provider: str = ""                # "user_url" | "user_upload"
@@ -155,7 +173,7 @@ class TemplateConfigEntry(BaseModel):
     music_asset_id: str | None = None
     video_asset_id: str | None = None
     created_at: str = ""
-    texts: dict[str, str] = Field(default_factory=dict)
+    texts: dict[str, Any] = Field(default_factory=dict)
 
 
 # ── Nombres lógicos en el DataStore ──────────────────────────────────────────
@@ -165,6 +183,7 @@ _KINDS: dict[str, tuple[str, str]] = {
     "image": ("image_assets", "images"),
     "music": ("music_assets", "music"),
     "video": ("video_assets", "videos"),
+    "sound": ("sound_assets", "sounds"),
 }
 
 
@@ -204,7 +223,12 @@ def _store_file(kind: str, path: Path, category: str, filename: str | None, fall
             original += path.suffix
     else:
         original = f"{fallback_stem or asset_id}{path.suffix}"
-    key = _storage(kind).save(path, folder=category, filename=original)
+    storage = _storage(kind)
+    from src.config.profile_layout import layout_for_settings
+    from src.config.settings import settings
+    key = (storage.save_asset(path, asset_id=asset_id, filename=original)
+           if layout_for_settings(settings).schema_version >= 3 and hasattr(storage, "save_asset") else
+           storage.save(path, folder=category, filename=original))
     return asset_id, key, original
 
 
@@ -237,6 +261,7 @@ async def register_image(
     fallback = meta.get("label") or (f"{provider}-{meta['image_id']}" if meta.get("image_id") else "")
     asset_id, key, original = _store_file("image", path, category, filename, fallback)
     entry = ImageLibraryEntry(
+        **resource_metadata(category, meta.get("template_id", "")),
         asset_id=asset_id,
         category=category,
         relative_path=key,
@@ -266,7 +291,7 @@ async def register_image(
 
 
 def get_image_entry(asset_id: str) -> ImageLibraryEntry:
-    return ImageLibraryEntry(**_find("image", asset_id))
+    return get_entry("image", asset_id)
 
 
 def list_images(category: str | None = None) -> list[ImageLibraryEntry]:
@@ -274,7 +299,7 @@ def list_images(category: str | None = None) -> list[ImageLibraryEntry]:
 
 
 def resolve_image_path(asset_id: str) -> Path:
-    return _storage("image").local_path(get_image_entry(asset_id).relative_path)
+    return resolve_asset_path("image", asset_id)
 
 
 # ── Music ─────────────────────────────────────────────────────────────────────
@@ -295,6 +320,7 @@ async def register_music(
     fallback = f"{track} - {artist}" if track and artist else track
     asset_id, key, original = _store_file("music", path, category, filename, fallback)
     entry = MusicLibraryEntry(
+        **resource_metadata(category, meta.get("template_id", "")),
         asset_id=asset_id,
         category=category,
         relative_path=key,
@@ -324,7 +350,7 @@ async def register_music(
 
 
 def get_music_entry(asset_id: str) -> MusicLibraryEntry:
-    return MusicLibraryEntry(**_find("music", asset_id))
+    return get_entry("music", asset_id)
 
 
 def list_music(category: str | None = None) -> list[MusicLibraryEntry]:
@@ -332,7 +358,7 @@ def list_music(category: str | None = None) -> list[MusicLibraryEntry]:
 
 
 def resolve_music_path(asset_id: str) -> Path:
-    return _storage("music").local_path(get_music_entry(asset_id).relative_path)
+    return resolve_asset_path("music", asset_id)
 
 
 def _normalize_track_name(text: str) -> str:
@@ -391,6 +417,7 @@ async def register_video(
 ) -> VideoLibraryEntry:
     asset_id, key, original = _store_file("video", path, category, filename, meta.get("label", ""))
     entry = VideoLibraryEntry(
+        **resource_metadata(category, meta.get("template_id", "")),
         asset_id=asset_id,
         category=category,
         relative_path=key,
@@ -417,7 +444,53 @@ async def register_video(
 
 
 def get_video_entry(asset_id: str) -> VideoLibraryEntry:
-    return VideoLibraryEntry(**_find("video", asset_id))
+    return get_entry("video", asset_id)
+
+
+class DuplicateFilenameError(ValueError):
+    """Ya existe un archivo distinto con el mismo nombre en esta categoría."""
+
+
+async def register_uploaded_visual(
+    kind: Literal["image", "video"], path: Path, *, category: str, template_id: str,
+    filename: str, label: str, description: str, tags: str,
+) -> tuple[ImageLibraryEntry | VideoLibraryEntry, bool]:
+    """Registra una carga visual sin duplicados dentro de su categoría.
+
+    La coordinación pertenece al puerto de datos: cubre la consulta y la
+    inserción incluso con varios workers, sin depender del almacenamiento JSON.
+    """
+    safe_name = Path(filename).name
+    normalized = unicodedata.normalize("NFC", safe_name).casefold()
+    async with coordination(f"library-upload-{kind}"):
+        model = ImageLibraryEntry if kind == "image" else VideoLibraryEntry
+        matches = [model(**raw) for raw in _records(kind).list()
+                   if raw.get("original_filename")
+                   and unicodedata.normalize("NFC", Path(raw["original_filename"]).name).casefold() == normalized]
+        matches = [entry for entry in matches if belongs_to(entry, category)]
+        if matches:
+            digest = await asyncio.to_thread(hash_file, path)
+            for entry in matches:
+                try:
+                    old_path = resolve_asset_path(kind, entry.asset_id)
+                except (AssetNotFoundError, FileNotFoundError, ValueError):
+                    continue
+                if old_path.is_file() and await asyncio.to_thread(hash_file, old_path) == digest:
+                    existing = await attach_resource_origin(kind, entry.asset_id, category, template_id)
+                    return existing, False
+            raise DuplicateFilenameError(f"Ya existe un recurso con el nombre '{safe_name}' en esta categoría.")
+        probe = await probe_media(path)
+        shared = dict(category=category, source="upload", provider="user_upload", filename=safe_name,
+                      template_id=template_id, label=label, description=description, tags=tags,
+                      width=int(probe.get("width", 0)), height=int(probe.get("height", 0)))
+        if kind == "image":
+            width, height = shared["width"], shared["height"]
+            ratio = width / height if width and height else 0
+            orientation = "landscape" if ratio > 1.1 else "portrait" if ratio and ratio < 0.9 else "squarish" if ratio else None
+            entry = await register_image(path, **shared, orientation=orientation)
+        else:
+            entry = await register_video(path, **shared, duration_seconds=float(probe.get("duration_seconds", 0)))
+        return entry, True
 
 
 def list_videos(category: str | None = None) -> list[VideoLibraryEntry]:
@@ -425,7 +498,7 @@ def list_videos(category: str | None = None) -> list[VideoLibraryEntry]:
 
 
 def resolve_video_path(asset_id: str) -> Path:
-    return _storage("video").local_path(get_video_entry(asset_id).relative_path)
+    return resolve_asset_path("video", asset_id)
 
 
 # ── Usage tracking (shared by images, music and video) ────────────────────────
@@ -435,9 +508,10 @@ async def touch_usage(asset_id: str, kind: str) -> None:
 
     kind: "image" | "music" | "video"
     """
-    updated = await _records(kind).increment(
-        asset_id, "usage_count", patch={"last_used_at": _now_iso()}
-    )
+    records = _records(kind)
+    if records.get(asset_id) is None and _production_record(kind, asset_id) is not None:
+        records = collection("content_resources")
+    updated = await records.increment(asset_id, "usage_count", patch={"last_used_at": _now_iso()})
     if updated is None:
         raise AssetNotFoundError(f"{kind} asset_id '{asset_id}' not found — cannot record usage.")
 
@@ -452,7 +526,10 @@ def _get_cache(store: str, asset_id: str) -> dict[str, Any] | None:
 
 async def _save_cache(store: str, kind: str, flag: str, asset_id: str, body: dict[str, Any]) -> None:
     documents(store).put(asset_id, body)
-    await _records(kind).update(asset_id, {flag: True})
+    records = _records(kind)
+    if records.get(asset_id) is None and _production_record(kind, asset_id) is not None:
+        records = collection("content_resources")
+    await records.update(asset_id, {flag: True})
     logger.info("asset_library_cache_saved", store=store, asset_id=asset_id)
 
 
@@ -490,7 +567,10 @@ async def update_image_label(asset_id: str, label: str) -> None:
     """
     if not label:
         return
-    await _records("image").update(asset_id, {"label": label})
+    records = _records("image")
+    if records.get(asset_id) is None and _production_record("image", asset_id) is not None:
+        records = collection("content_resources")
+    await records.update(asset_id, {"label": label})
     logger.info("asset_library_image_label_updated", asset_id=asset_id)
 
 
@@ -505,7 +585,7 @@ async def register_template_config(
     music_asset_id: str | None = None,
     video_asset_id: str | None = None,
 ) -> TemplateConfigEntry:
-    documents("template_config_files").put(job_id, config_json)
+    await documents("template_config_files").aput(job_id, config_json)
 
     texts = config_json.get("texts")
     entry = TemplateConfigEntry(
@@ -520,6 +600,9 @@ async def register_template_config(
         texts=texts if isinstance(texts, dict) else {},
     )
     await collection("template_configs").upsert(entry.model_dump(), match=("job_id",))
+    for kind, ident in (("image", image_asset_id), ("music", music_asset_id), ("video", video_asset_id)):
+        if ident:
+            await attach_resource_origin(kind, ident, template_id=template_id)
     logger.info("asset_library_template_config_registered", job_id=job_id, template_id=template_id)
     return entry
 
@@ -545,31 +628,34 @@ def get_template_config(job_id: str) -> dict[str, Any]:
 # y uno que trajo resource_fetcher son indistinguibles para el resto del sistema.
 
 # Nombre en la API (plural, como las rutas /library/images…) → kind interno.
-API_KINDS: dict[str, str] = {"images": "image", "music": "music", "videos": "video"}
+API_KINDS: dict[str, str] = {"images": "image", "music": "music", "videos": "video", "sounds": "sound"}
 _API_NAME = {kind: api for api, kind in API_KINDS.items()}
 
-LibraryEntry = ImageLibraryEntry | MusicLibraryEntry | VideoLibraryEntry
+LibraryEntry = ImageLibraryEntry | MusicLibraryEntry | VideoLibraryEntry | SoundLibraryEntry
 
 _MODELS: dict[str, type[BaseModel]] = {
     "image": ImageLibraryEntry,
     "music": MusicLibraryEntry,
     "video": VideoLibraryEntry,
+    "sound": SoundLibraryEntry,
 }
 
 # Campos que el usuario puede editar por PATCH. El resto (relative_path, hash,
 # usos, cachés…) lo mantiene el sistema y editarlo a mano rompería referencias.
 EDITABLE_FIELDS: dict[str, frozenset[str]] = {
-    "image": frozenset({"label", "description", "tags", "category", "photographer", "license_note"}),
+    "image": frozenset({"display_name", "label", "description", "tags", "category", "photographer", "license_note"}),
     "music": frozenset({
-        "track_name", "artist", "genre", "description", "tags", "language", "category", "license_note",
+        "display_name", "track_name", "artist", "genre", "description", "tags", "language", "category", "license_note",
     }),
-    "video": frozenset({"label", "description", "tags", "category", "license_note"}),
+    "video": frozenset({"display_name", "label", "description", "tags", "category", "license_note"}),
+    "sound": frozenset({"display_name", "title", "description", "tags", "category", "recommended_uses", "approval_status"}),
 }
 
 _SEARCH_FIELDS: dict[str, tuple[str, ...]] = {
     "image": ("label", "tags", "original_filename", "description", "photographer", "category"),
     "music": ("track_name", "artist", "genre", "tags", "original_filename", "description", "category"),
     "video": ("label", "tags", "original_filename", "description", "category"),
+    "sound": ("title", "description", "recommended_uses", "tags", "provider", "original_filename", "category"),
 }
 
 # Cachés por asset que hay que limpiar al borrarlo (si no, quedan huérfanos y
@@ -578,6 +664,7 @@ _CACHE_STORES: dict[str, tuple[str, ...]] = {
     "image": ("image_vision",),
     "music": ("lyrics",),
     "video": ("video_vision",),
+    "sound": (),
 }
 
 
@@ -611,13 +698,122 @@ def _fold(text: str) -> str:
     return "".join(c for c in decomposed if not unicodedata.combining(c)).casefold()
 
 
+class LinkedProductionAssetError(ValueError):
+    """El recurso pertenece a una producción y no se puede editar o borrar aquí."""
+
+
+def _production_record(kind: str, asset_id: str) -> dict | None:
+    if layout_for_settings(settings).schema_version < 2:
+        return None
+    record = collection("content_resources").get(asset_id)
+    return record if record and record.get("kind") == kind else None
+
+
+def _production_metadata(record: dict, video: dict | None = None) -> dict:
+    video = video or {}
+    category = str(record.get("category_id") or video.get("category_id") or video.get("category") or "")
+    parts = Path(record["storage_key"]).parts
+    if not category and len(parts) > 2 and parts[0] in {"productions", "sandbox"}:
+        category = parts[1]
+    metadata = resource_metadata(category)
+    for field in ("category_id", "category_name", "template_id", "template_name", "resource_origins"):
+        if record.get(field):
+            metadata[field] = record[field]
+    return metadata
+
+
+def _production_entry(kind: str, record: dict, *, video: dict | None = None, details: dict | None = None) -> LibraryEntry:
+    video_id = record["video_id"]
+    if video is None:
+        video = collection("content_videos").get(video_id) or {}
+    if details is None:
+        details = documents("content_video_details").get(video_id) or {}
+    title = str(details.get("title") or video_id)
+    filename = Path(record["storage_key"]).name
+    data = {**_production_metadata(record, video),
+            "asset_id": record["asset_id"], "relative_path": record["storage_key"],
+            "category": "production", "source": "production", "provider": "production",
+            "original_filename": filename, "video_id": video_id,
+            "production_id": video.get("production_id"), "production_name": title,
+            "description": f"{title} · {video_id}"}
+    data[{"image": "label", "video": "label", "music": "track_name", "sound": "title"}[kind]] = filename
+    # Solo metadata auxiliar, nunca rutas, identidad ni titularidad de la producción.
+    for field in ("usage_count", "last_used_at", "has_vision_cache", "has_lyrics_cache",
+                  "transcription_status", "transcription_error", "language", "label", "approval_status",
+                  "category_id", "category_name", "template_id", "template_name", "resource_origins"):
+        if field in record:
+            data[field] = record[field]
+    metadata = record.get("library_metadata") or {}
+    data.update({key: value for key, value in metadata.items() if key in EDITABLE_FIELDS[kind]})
+    return _MODELS[kind](**data)  # type: ignore[return-value]
+
+
+def metadata_gaps(kind: str, entry) -> list[str]:
+    """Datos que faltan para publicar un recurso. Vacío = listo."""
+    title = entry.track_name if kind == "music" else (getattr(entry, "label", "") or getattr(entry, "display_name", ""))
+    gaps: list[str] = []
+    if not str(title or "").strip():
+        gaps.append("título")
+    if not str(entry.description or "").strip():
+        gaps.append("descripción")
+    if not str(entry.tags or "").strip():
+        gaps.append("etiquetas")
+    if not str(entry.category or "").strip():
+        gaps.append("categoría")
+    if str(getattr(entry, "license_note", "") or "").strip().lower() in ("", "unknown"):
+        gaps.append("licencia")
+    return gaps
+
+
 def get_entry(kind: str, asset_id: str) -> LibraryEntry:
-    return _MODELS[kind](**_find(kind, asset_id))  # type: ignore[return-value]
+    raw = _records(kind).get(asset_id)
+    if raw is not None:
+        return _MODELS[kind](**raw)  # type: ignore[return-value]
+    record = _production_record(kind, asset_id)
+    if record is None:
+        raise AssetNotFoundError(f"{kind.capitalize()} asset_id '{asset_id}' not found in the local library.")
+    return _production_entry(kind, record)
+
+
+def resolve_asset_entry_path(kind: str, entry: LibraryEntry, *, from_collection: bool) -> Path:
+    """Resolve a validated entry using its known DataStore provenance.
+
+    ``from_collection=True`` is for entries obtained from the corresponding
+    ``list_images/list_music/list_videos`` collection snapshot. A production
+    registry entry must use ``False`` so it goes through the content registry.
+    Storage and bundled-resource path validation are identical to ID lookup.
+    This helper does not cache entries or promise that a snapshot stays current.
+    """
+    model = _MODELS.get(kind)
+    if model is None or not isinstance(entry, model) or type(from_collection) is not bool:
+        raise ValueError("Invalid library entry or provenance")
+    bundled_key = getattr(entry, "bundled_key", None)
+    if bundled_key is not None:
+        if entry.source != "template" or kind not in {"music", "image", "video"}:
+            raise ValueError("Invalid bundled library reference")
+        from src.core.nodemotion.shared.bundled import resolve_bundled_key
+        return resolve_bundled_key(bundled_key)
+    if not from_collection:
+        if entry.source != "production":
+            raise ValueError("Invalid production resource provenance")
+        from src.core.content_registry import resolve_resource
+        try:
+            path = resolve_resource(entry.asset_id)
+        except (ValueError, KeyError) as exc:
+            raise AssetNotFoundError("Ruta de recurso inválida") from exc
+        if path is None:
+            raise AssetNotFoundError("Recurso no encontrado")
+        return path
+    return _storage(kind).local_path(entry.relative_path)
 
 
 def resolve_asset_path(kind: str, asset_id: str) -> Path:
-    """Ruta local del archivo de un asset (genérico para los tres kinds)."""
-    return _storage(kind).local_path(get_entry(kind, asset_id).relative_path)
+    """Ruta local validada; las referencias de producción nunca se copian."""
+    entry = get_entry(kind, asset_id)
+    from_collection = True
+    if entry.source == "production" and getattr(entry, "bundled_key", None) is None:
+        from_collection = _records(kind).get(asset_id) is not None
+    return resolve_asset_entry_path(kind, entry, from_collection=from_collection)
 
 
 def search_assets(kind: str, q: str | None = None, category: str | None = None) -> list[LibraryEntry]:
@@ -629,11 +825,31 @@ def search_assets(kind: str, q: str | None = None, category: str | None = None) 
     cientos de assets, no millones, y el contrato del DataStore solo garantiza
     filtros por igualdad (ver core/ports/data_port.py)."""
     model = _MODELS[kind]
-    entries = [model(**d) for d in _records(kind).list({"category": category} if category else None)]
+    entries = [model(**d) for d in _records(kind).list()]
+    if layout_for_settings(settings).schema_version >= 2:
+        existing = {entry.asset_id for entry in entries}
+        # One metadata scan per request; never reread the whole resource section
+        # for every production asset. Filter ownership before loading details.
+        videos = {row["video_id"]: row for row in collection("content_videos").list()}
+        detail_cache: dict[str, dict] = {}
+        for record in collection("content_resources").list(where={"kind": kind}):
+            if record.get("asset_id") in existing:
+                continue
+            video_id = record["video_id"]
+            video = videos.get(video_id, {})
+            if category and category != "production" and not belongs_to(
+                ResourceMetadata(**_production_metadata(record, video)), category
+            ):
+                continue
+            if video_id not in detail_cache:
+                detail_cache[video_id] = documents("content_video_details").get(video_id) or {}
+            entries.append(_production_entry(kind, record, video=video, details=detail_cache[video_id]))
+    if category:
+        entries = [entry for entry in entries if belongs_to(entry, category)]
     terms = _fold(q).split() if q else []
     if not terms:
         return entries  # type: ignore[return-value]
-    fields = _SEARCH_FIELDS[kind]
+    fields = (*_SEARCH_FIELDS[kind], "display_name", "video_id", "production_id", "production_name")
 
     def matches(entry: BaseModel) -> bool:
         haystack = " ".join(_fold(str(getattr(entry, f, "") or "")) for f in fields)
@@ -641,6 +857,105 @@ def search_assets(kind: str, q: str | None = None, category: str | None = None) 
 
     return [e for e in entries if matches(e)]  # type: ignore[misc]
 
+
+async def attach_resource_origin(kind: str, asset_id: str, category: str = "", template_id: str = "") -> LibraryEntry:
+    """Add provenance with a conditional merge; concurrent uploads retain both origins."""
+    context = resource_metadata(category, template_id)
+    if not context:
+        return get_entry(kind, asset_id)
+    origin = ResourceOrigin(**{k: context[k] for k in ("category_id", "category_name", "template_id", "template_name")})
+    for _ in range(5):
+        current = get_entry(kind, asset_id)
+        records = _records(kind)
+        raw = records.get(asset_id)
+        if raw is None:
+            records = collection("content_resources")
+            raw = records.get(asset_id)
+        if raw is None:
+            raise AssetNotFoundError(f"Asset {asset_id} no longer exists")
+        origins = list(current.resource_origins)
+        if current.category_id and not origins:
+            origins.append(ResourceOrigin(**current.model_dump(include={"category_id", "category_name", "template_id", "template_name"})))
+        if origin in origins and current.category_id:
+            return current
+        if origin not in origins:
+            origins.append(origin)
+        patch = {"resource_origins": [o.model_dump() for o in origins], "media_type": kind}
+        if not current.category_id:
+            patch.update({k: context[k] for k in ("category_id", "category_name", "template_id", "template_name")})
+        updated = await records.update(asset_id, patch, only_if={"resource_origins": raw.get("resource_origins")})
+        if updated is not None:
+            await publish_asset_changed(kind, asset_id, action="updated")
+            return get_entry(kind, asset_id)
+    raise RuntimeError("Concurrent changes to resource provenance; retry the request")
+
+
+def page_music_groups(*, page: int = 1, page_size: int = 12,
+                      q: str | None = None, category: str | None = None,
+                      has_lyrics: bool | None = None) -> tuple[list[list[MusicLibraryEntry]], int]:
+    """Agrupa versiones por título y artista antes de paginar, sin fusionar IDs.
+
+    El orden se deriva del registro más reciente de cada grupo y es estable;
+    cada versión conserva su identidad, letra y metadatos. Un título vacío no
+    identifica una canción, por eso sus registros no se agrupan entre sí.
+    """
+    entries = search_assets("music", q=q, category=category)
+    if has_lyrics is not None:
+        entries = [entry for entry in entries if entry.has_lyrics_cache is has_lyrics]
+    entries.sort(key=lambda entry: (entry.added_at, entry.asset_id), reverse=True)
+    groups: dict[tuple[str, str], list[MusicLibraryEntry]] = {}
+    for entry in entries:
+        title = " ".join(_fold(entry.track_name).split())
+        artist = " ".join(_fold(entry.artist).split())
+        key = (title, artist) if title else ("", entry.asset_id)
+        groups.setdefault(key, []).append(entry)
+    values = list(groups.values())
+    start = (page - 1) * page_size
+    return values[start:start + page_size], len(values)
+
+
+def page_assets(kind: str, *, page: int = 1, page_size: int = 12,
+                q: str | None = None, category: str | None = None) -> tuple[list[LibraryEntry], int]:
+    """Página estable sobre los puertos del DataStore, sin acceder al almacenamiento concreto."""
+    entries = search_assets(kind, q=q, category=category)
+    entries.sort(key=lambda entry: (entry.added_at, entry.asset_id), reverse=True)
+    start = (page - 1) * page_size
+    return entries[start:start + page_size], len(entries)
+
+
+
+async def register_bundled_resource(kind: str, template_id: str, bundled_key: str,
+                                    logical_path: str, *, category: str = "template_originals") -> LibraryEntry:
+    """Register a shared, verified demo resource without copying its bytes."""
+    if kind not in {"music", "image", "video"}:
+        raise ValueError("Unsupported bundled resource kind")
+    from src.core.nodemotion.shared.bundled import demo_aliases, resolve_bundled_key
+    if demo_aliases(template_id).get(logical_path) != bundled_key:
+        raise ValueError("Resource is not declared by this demo")
+    path = resolve_bundled_key(bundled_key)
+    async with coordination(f"library-bundled-{kind}-{bundled_key[:64]}"):
+        for raw in _records(kind).list():
+            if raw.get("source") == "template" and raw.get("bundled_key") == bundled_key:
+                return await attach_resource_origin(kind, raw["asset_id"], category, template_id)
+        filename = Path(logical_path).name
+        ident = uuid.uuid4().hex[:8]
+        values: dict[str, Any] = {
+            **resource_metadata(category, template_id), "asset_id": ident,
+            "category": category, "relative_path": f"_bundled/{bundled_key}",
+            "bundled_key": bundled_key, "original_filename": filename,
+            "source": "template", "provider": "template", "added_at": _now_iso(),
+            "last_used_at": _now_iso(), "usage_count": 1,
+        }
+        if kind == "music":
+            stem = Path(filename).stem.replace("_", " ").replace("-", " ").strip()
+            values["track_name"] = "" if stem.lower() in {"song", "audio", "music", "track", "cancion", "musica"} else stem
+            values["content_hash"] = bundled_key[:64]
+        else:
+            values["label"] = f"{template_id} (fondo)"
+        entry = _MODELS[kind](**values)
+        await _records(kind).insert(entry.model_dump())
+        logger.info("asset_library_bundled_registered", kind=kind, asset_id=ident, path=str(path))
+        return entry
 
 async def update_asset_metadata(kind: str, asset_id: str, patch: dict[str, Any]) -> LibraryEntry:
     """Aplica una edición del usuario. Ignora campos no editables (ver
@@ -652,18 +967,34 @@ async def update_asset_metadata(kind: str, asset_id: str, patch: dict[str, Any])
     if "tags" in changes:
         changes["tags"] = normalize_tags(changes["tags"])
     if "category" in changes:
+        changes["category"] = str(changes["category"]).strip() or current.category
+    if current.source == "production" and _records(kind).get(asset_id) is None:
+        record = _production_record(kind, asset_id)
+        metadata = {**((record or {}).get("library_metadata") or {}), **changes}
+        patch_record: dict[str, Any] = {"library_metadata": metadata}
+        if "approval_status" in changes:
+            patch_record["approval_status"] = changes["approval_status"]
+        updated = await collection("content_resources").update(asset_id, patch_record)
+        if updated is None:
+            raise AssetNotFoundError("Recurso no encontrado")
+        return _production_entry(kind, updated)
+    if "category" in changes:
         new_category = str(changes["category"]).strip()
         if not new_category:
             changes.pop("category")
-        elif new_category != current.category:
+        elif new_category != current.category and not getattr(current, "bundled_key", None):
             storage = _storage(kind)
             old_key = current.relative_path
             old_path = storage.local_path(old_key)
-            if old_path.exists():
+            from src.config.profile_layout import layout_for_settings
+            from src.config.settings import settings
+            if old_path.exists() and layout_for_settings(settings).schema_version < 3:
                 changes["relative_path"] = storage.save(
                     old_path, folder=new_category, filename=old_path.name
                 )
                 storage.delete(old_key)
+            changes["category"] = new_category
+        elif new_category != current.category:
             changes["category"] = new_category
     if not changes:
         return current
@@ -680,7 +1011,22 @@ async def delete_asset(kind: str, asset_id: str) -> LibraryEntry:
     output/. Los config.json archivados que lo referencian quedan apuntando a
     un id inexistente, igual que cualquier referencia a un asset borrado."""
     entry = get_entry(kind, asset_id)
-    _storage(kind).delete(entry.relative_path)
+    if entry.source == "production" and _records(kind).get(asset_id) is None:
+        raise LinkedProductionAssetError("El recurso pertenece a una producción")
+    storage = _storage(kind)
+    from src.config.profile_layout import layout_for_settings
+    from src.config.settings import settings
+    shared = False
+    if layout_for_settings(settings).schema_version >= 3 and not getattr(entry, "bundled_key", None):
+        target = storage.local_path(entry.relative_path)
+        for other in _records(kind).list():
+            if other.get("asset_id") == asset_id or not other.get("relative_path") or other.get("bundled_key"):
+                continue
+            if storage.local_path(other["relative_path"]) == target:
+                shared = True
+                break
+    if not shared and not getattr(entry, "bundled_key", None):
+        storage.delete(entry.relative_path)
     for store in _CACHE_STORES[kind]:
         documents(store).delete(asset_id)
     await _records(kind).delete(asset_id)
@@ -693,10 +1039,16 @@ async def set_transcription_status(
 ) -> MusicLibraryEntry | None:
     """Actualiza el estado de transcripción de una canción. None si ya no existe
     (la borraron mientras se transcribía) — el caller lo trata como no-op."""
-    updated = await _records("music").update(
+    records = _records("music")
+    linked = records.get(asset_id) is None and _production_record("music", asset_id) is not None
+    if linked:
+        records = collection("content_resources")
+    updated = await records.update(
         asset_id, {"transcription_status": status, "transcription_error": error, **extra}
     )
-    return MusicLibraryEntry(**updated) if updated else None
+    if updated is None:
+        return None
+    return _production_entry("music", updated) if linked else MusicLibraryEntry(**updated)
 
 
 async def publish_asset_changed(
@@ -770,7 +1122,11 @@ async def download_url_to(url: str, dest_path: Path) -> None:
         pool=10.0,
     )
     try:
-        async with httpx.AsyncClient(timeout=timeout, follow_redirects=True) as client:
+        async with httpx.AsyncClient(
+            timeout=timeout,
+            follow_redirects=True,
+            headers={"User-Agent": "NexaBrief/1.0 (+https://nexa-brief.everdev.space)"},
+        ) as client:
             async with client.stream("GET", url) as response:
                 if response.status_code != 200:
                     raise AssetDownloadError(

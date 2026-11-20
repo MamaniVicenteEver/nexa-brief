@@ -1,0 +1,231 @@
+{
+  "existingKeys": [
+    "unit.token",
+    "unit.group",
+    "naval.cargo:tanker",
+    "naval.cargo:container",
+    "naval.cargo:bulk",
+    "naval.warship:destroyer",
+    "naval.warship:frigate",
+    "naval.warship:cruiser",
+    "naval.warship:cg",
+    "naval.warship:ddg",
+    "naval.warship:ff",
+    "naval.submarine",
+    "naval.submarine:translucent",
+    "naval.carrier:supercarrier",
+    "naval.carrier:stovl",
+    "naval.carrier:hero",
+    "naval.carrier:inventory",
+    "air.bomber:wing",
+    "air.bomber:swept",
+    "air.jet:attack",
+    "air.jet:a6",
+    "air.jet:fighter",
+    "air.helicopter",
+    "air.prop",
+    "unit.move",
+    "unit.advance",
+    "unit.retreat",
+    "naval.group"
+  ],
+  "existing": {
+    "unit.token": {
+      "sprite": "unit-token",
+      "relativeLength": 0.01,
+      "speedKnots": 3,
+      "sfx": "footsteps",
+      "domain": "land"
+    },
+    "unit.group": {
+      "sprite": "unit-token",
+      "relativeLength": 0.01,
+      "speedKnots": 3,
+      "sfx": "footsteps",
+      "domain": "land"
+    },
+    "naval.cargo:tanker": {
+      "sprite": "cargo-tanker",
+      "relativeLength": 1.05,
+      "speedKnots": 15,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.cargo:container": {
+      "sprite": "cargo-container",
+      "relativeLength": 0.9,
+      "speedKnots": 20,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.cargo:bulk": {
+      "sprite": "cargo-bulk",
+      "relativeLength": 0.85,
+      "speedKnots": 14,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.warship:destroyer": {
+      "sprite": "warship-destroyer",
+      "relativeLength": 0.45,
+      "speedKnots": 30,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.warship:frigate": {
+      "sprite": "warship-frigate",
+      "relativeLength": 0.38,
+      "speedKnots": 28,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.warship:cruiser": {
+      "sprite": "warship-cruiser",
+      "relativeLength": 0.53,
+      "speedKnots": 30,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.warship:cg": {
+      "sprite": "warship-cruiser",
+      "relativeLength": 0.53,
+      "speedKnots": 30,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.warship:ddg": {
+      "sprite": "warship-destroyer",
+      "relativeLength": 0.45,
+      "speedKnots": 30,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.warship:ff": {
+      "sprite": "warship-frigate",
+      "relativeLength": 0.38,
+      "speedKnots": 28,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.submarine": {
+      "sprite": "submarine",
+      "relativeLength": 0.48,
+      "speedKnots": 20,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.submarine:translucent": {
+      "sprite": "submarine-translucent",
+      "relativeLength": 0.48,
+      "speedKnots": 20,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.carrier:supercarrier": {
+      "sprite": "carrier-super-empty",
+      "relativeLength": 1,
+      "speedKnots": 30,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.carrier:stovl": {
+      "sprite": "carrier-stovl",
+      "relativeLength": 0.72,
+      "speedKnots": 25,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.carrier:hero": {
+      "sprite": "carrier-super-empty",
+      "relativeLength": 1,
+      "speedKnots": 30,
+      "sfx": "naval-engine-low",
+      "domain": "sea"
+    },
+    "naval.carrier:inventory": {
+      "sprite": "carrier-super-empty",
+      "relativeLength": 1,
+      "speedKnots": 0,
+      "sfx": false,
+      "domain": "sea"
+    },
+    "air.bomber:wing": {
+      "sprite": "air-bomber-wing",
+      "relativeLength": 0.24,
+      "speedKnots": 480,
+      "sfx": "air-jet-pass",
+      "domain": "air"
+    },
+    "air.bomber:swept": {
+      "sprite": "air-bomber-swept",
+      "relativeLength": 0.23,
+      "speedKnots": 450,
+      "sfx": "air-jet-pass",
+      "domain": "air"
+    },
+    "air.jet:attack": {
+      "sprite": "air-jet-attack",
+      "relativeLength": 0.12,
+      "speedKnots": 420,
+      "sfx": "air-jet-pass",
+      "domain": "air"
+    },
+    "air.jet:a6": {
+      "sprite": "air-jet-attack",
+      "relativeLength": 0.12,
+      "speedKnots": 420,
+      "sfx": "air-jet-pass",
+      "domain": "air"
+    },
+    "air.jet:fighter": {
+      "sprite": "air-jet-fighter",
+      "relativeLength": 0.115,
+      "speedKnots": 550,
+      "sfx": "air-jet-pass",
+      "domain": "air"
+    },
+    "air.helicopter": {
+      "sprite": "air-helicopter-body",
+      "relativeLength": 0.09,
+      "speedKnots": 130,
+      "sfx": "helicopter-rotor",
+      "domain": "air"
+    },
+    "air.prop": {
+      "sprite": "air-prop-transport",
+      "relativeLength": 0.19,
+      "speedKnots": 280,
+      "sfx": "air-prop-pass",
+      "domain": "air"
+    },
+    "unit.move": {
+      "sprite": "unit-token",
+      "relativeLength": 0.01,
+      "speedKnots": 3,
+      "sfx": "footsteps",
+      "domain": "land"
+    },
+    "unit.advance": {
+      "sprite": "unit-token",
+      "relativeLength": 0.01,
+      "speedKnots": 3,
+      "sfx": "footsteps",
+      "domain": "land"
+    },
+    "unit.retreat": {
+      "sprite": "unit-token",
+      "relativeLength": 0.01,
+      "speedKnots": 3,
+      "sfx": "footsteps",
+      "domain": "land"
+    },
+    "naval.group": {
+      "sprite": "carrier-super-empty",
+      "relativeLength": 1,
+      "speedKnots": 30,
+      "sfx": "naval-engine-low",
+      "domain": "sea",
+      "note": "Líder por defecto; cada miembro conserva su tipo y eslora."
+    }
+  }
+}

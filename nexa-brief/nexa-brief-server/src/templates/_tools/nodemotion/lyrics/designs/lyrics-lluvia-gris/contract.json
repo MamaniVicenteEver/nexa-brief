@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-lluvia-gris",
+  "family": "lyrics",
+  "source_of_truth": "templates.json#templates/lyrics-lluvia-gris",
+  "config_json": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-lluvia-gris/prompts/config_mapper.md",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "lluvia: vidrios mojados, calle nocturna, paraguas, ventana"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/lyrics-lluvia-gris",
+    "config": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-lluvia-gris/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-lluvia-gris/README.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

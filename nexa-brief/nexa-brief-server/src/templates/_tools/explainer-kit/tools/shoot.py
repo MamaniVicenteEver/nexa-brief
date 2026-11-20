@@ -23,11 +23,17 @@ CHROMIUM = os.environ.get("PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH") or None
 KIT = pathlib.Path(__file__).resolve().parents[1]
 SANDBOX = KIT.parents[1]                     # src/templates/ (videos y kit)
 
-class _Quiet(http.server.SimpleHTTPRequestHandler):
-    def log_message(self, *a, **k): pass
+import sys
+sys.path.insert(0, str(SANDBOX / "_tools"))
+from http_media import MediaRequestHandler as _Quiet, ProfileContentMixin
+sys.path.insert(0, str(SANDBOX.parent.parent))
+
+
+class ContentHandler(ProfileContentMixin, _Quiet):
+    pass
 
 def serve(root):
-    h = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(_Quiet, directory=str(root)))
+    h = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(ContentHandler, directory=str(root)))
     threading.Thread(target=h.serve_forever, daemon=True).start()
     return h
 
@@ -51,7 +57,8 @@ async def shoot(specs, times, orients, prev, page, dur):
                 pg.on("console", lambda m, n=name: m.type in ("error", "warning") and errors.append(f"[{n}] {m.type}: {m.text}"))
                 pg.on("pageerror", lambda e, n=name: errors.append(f"[{n}] pageerror: {e}"))
                 if page:
-                    url = base + page + ("&" if "?" in page else "?") + "paused"
+                    page_base = f"http://127.0.0.1:{srv.server_port}" if page.startswith("/") else base
+                    url = page_base + page + ("&" if "?" in page else "?") + "paused"
                 else:
                     q = {"c": name, "paused": "1", "dur": str(dur)}
                     if params: q["p"] = params

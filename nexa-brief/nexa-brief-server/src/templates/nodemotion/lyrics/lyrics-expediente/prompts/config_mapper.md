@@ -59,8 +59,8 @@ Start from the DEFAULTS below and only change:
   must stay 100% generative (CSS-only texture).
 - `"intro"` / `"outro"`: from STEP 1. `outro.songTitle` should be the plain
   song title (used as the outro card's byline when there's no separate
-  artist line). Keep `outro.title` "Caso cerrado" and `outro.feats`
-  "Suscríbete · NEXA BRIEF".
+  artist line). Set `outro.title` to "Gracias" and `outro.sub` to "Por ver"; keep `outro.feats`
+  "Suscríbete · NODEMOTION".
 - `"debug".enabled`: always `false` (production; the debug overlay was
   removed from `index.html` entirely — this key only exists for schema
   consistency with the other lyric templates and is otherwise unused).
@@ -96,13 +96,13 @@ and end with `}`.
   "audio": { "src": "song.mp3" },
   "lyricsUrl": "lyrics.json",
   "bg": {},
-  "intro": { "artist": "Expediente Nº 084 — <Artista>", "title": "<Título>", "sub": "<Sub>", "feats": "Material clasificado · NEXA BRIEF" },
+  "intro": { "artist": "Expediente Nº 084 — <Artista>", "title": "<Título>", "sub": "<Sub>", "feats": "Material clasificado · NODEMOTION" },
   "outro": {
     "leadSec": 8,
     "songTitle": "<Título completo>",
-    "title": "Caso cerrado",
-    "sub": "Gracias por ver",
-    "feats": "Suscríbete · NEXA BRIEF"
+    "title": "Gracias",
+    "sub": "Por ver",
+    "feats": "Suscríbete · NODEMOTION"
   },
   "debug": { "enabled": false },
   "board": {
@@ -122,3 +122,7 @@ and end with `}`.
   "seed": 11
 }
 ```
+
+## Calidad
+
+Map only supplied inputs. Never invent facts, figures, results, quotations or names; retain supplied context and date for any figure. Preserve supplied lyrics verbatim. Do not add generic labels such as «UNA IDEA» or «EN MOVIMIENTO»; a topic-specific label such as «DARTMOUTH · 1956» is acceptable only when supplied. No emojis, «LETRAS» or unrelated labels. Keep the exact JSON schema and its documented defaults; credits belong in the publication description, not invented config fields.

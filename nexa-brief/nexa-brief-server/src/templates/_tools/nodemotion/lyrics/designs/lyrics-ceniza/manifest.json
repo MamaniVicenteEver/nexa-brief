@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-ceniza",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-ceniza",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "248ebbb3d72c22b27a7fc90ac731f98699a0d39a2ecbe9e9f57dcd712c68425c",
+  "migration_source_sha256": "248ebbb3d72c22b27a7fc90ac731f98699a0d39a2ecbe9e9f57dcd712c68425c",
+  "migration_runtime_sha256": {
+    "components/intro.js": "5de572ee2febf93e6bf23a7f83777f90c48ebdab8bc4afced6d3227242d6d612",
+    "components/outro.js": "7d736dd04842501ae9469aef0899dfee5f1006e32bf7b24f1f6cad67d3c75e10"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-ceniza",
+    "config": "nodemotion/lyrics/lyrics-ceniza/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-ceniza/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-ceniza/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "366def23cffe2e1f4e30887400e2969d76059d66d38f5ac69d78af964f547589.webp",
+    "assets/media/burning-diary-1.jpg": "9c1e3e45a08f033d6f600a133e8201fb5ba1db0ab4e889794ed33d70ddc16407.jpg",
+    "assets/media/burning-diary-2.jpg": "2fe8f4a4accf2323ff1fe7c6d1dc04a95025e1ab1c8737ac6106be0698fe9f83.jpg",
+    "assets/media/burning-diary.mp4": "4e77d1e21e4ac3a93087f13671c3be5ba271096ff66749cf0a78b4fa40d06e8b.mp4",
+    "assets/media/candles-out-1.jpg": "9601fe9cae6778ec22ff4168570f572d4460ac65f86eb7bf06b257f6b71ea528.jpg",
+    "assets/media/candles-out-2.jpg": "48aa25501f3e67ac458339d2eba44428e6d514dabd7ead9371a080c48697d8f7.jpg",
+    "assets/media/candles-out.mp4": "9019044f2c6ddb9f1c4c7e38baf8c66ef52abe18a32ce37d76a023c57629808b.mp4",
+    "assets/media/crying-1.jpg": "6da948838593c88d0774e5650243072b9c76e4dfeb90a2211e59477abc3f5180.jpg",
+    "assets/media/crying-2.jpg": "7916326f9be530bf1864f264a732ff0fea159c7afdc13fd9d30da075ed89804f.jpg",
+    "assets/media/crying.mp4": "a1f3dbf4bd7fa5d90d5e9dbe9c8b8c9f44dd2aea8697df54a982161916a365eb.mp4",
+    "assets/media/flames-1.jpg": "8044aed9f5be21a962ec54ff30274a5ac91407ccbc511ce82dc18e2def9d30e2.jpg",
+    "assets/media/flames-2.jpg": "d8f331c45815874db58bb31e6d4285079303f7a5e86b7402baf518404e61c380.jpg",
+    "assets/media/flames.mp4": "23001ed6e7be4daacb6d8a1d8e427d6f43919b6013a8bd6b86d903d98263c266.mp4",
+    "assets/media/graded/burning-diary-1.ash.jpg": "36d59fd056ecfd516217c94d025fb4b0b927a3ee414d2018181bcec939ebcde4.jpg",
+    "assets/media/graded/burning-diary-1.ember.jpg": "c2a1c8cfdee1ca309e9902d932a9e32baabfe82620d36bc9d38ab247de5f2e2b.jpg",
+    "assets/media/graded/burning-diary.ash.mp4": "a35255b67e9b657de265822ea26cd6d6afe28863ff66848226c66d04b538ce08.mp4",
+    "assets/media/graded/burning-diary.ember.mp4": "1d7497b3f7e09905f5456cf3c80a1d6bd69eed2de9feeba75abe018975a140de.mp4",
+    "assets/media/graded/candles-out-1.ash.jpg": "8450605e9cf45d7de9ba8a87bbe974f227adee91269255a6be228d142c48e428.jpg",
+    "assets/media/graded/candles-out-1.ember.jpg": "a819c80bcc43a9ad1d65b279c2968af7baa29f90028a69019a051290122ea0f3.jpg",
+    "assets/media/graded/candles-out.ash.mp4": "b139086462f3afd76d6f0c976ff48412c48b101c5a2dd30d9e9f06500fb962f3.mp4",
+    "assets/media/graded/candles-out.ember.mp4": "701d671d3f4151c745ee0e889a0f488ccb0655c5eeb315f3822d04577f028687.mp4",
+    "assets/media/graded/crying-1.ash.jpg": "4e6a943c33ee18dcc358e03422784b9f070cf74b39c7304becced4f028662565.jpg",
+    "assets/media/graded/crying-1.ember.jpg": "b5ebd1fda36305708f68e35751669f50d0ae0a2d2ab56fc9cf83494c1f27b310.jpg",
+    "assets/media/graded/crying.ash.mp4": "b1fca1ebc745543290e87752e004a9242c8b3c6a35ef0e76295693c635036e37.mp4",
+    "assets/media/graded/crying.ember.mp4": "76be0dc7130a2a754126f3007d9d5398932a7c2de0f217c10ccc52e5802f5c38.mp4",
+    "assets/media/graded/flames-1.ash.jpg": "167cd82f53310aac91ea5ba8f7be5c87b6f093fc8af5dc0cecc97c050e80d589.jpg",
+    "assets/media/graded/flames-1.ember.jpg": "15be973d1ddb256ec921fb4f37e29697a7ba0e3cfaa61856b97bd90bbe1d4449.jpg",
+    "assets/media/graded/flames.ash.mp4": "d1d605f2079eb821c7b5267bf7ab8629d7875293e876eba0a2dfc6a2ac57e171.mp4",
+    "assets/media/graded/flames.ember.mp4": "997b89babc3d5f05d22ef025dd450be8558d90901a8b6413fd1ae0f2e6db358b.mp4",
+    "assets/media/graded/smoke-1.ash.jpg": "1fb3de9f127b5d72bd5fe326096be46b85bb7802db182d2d00aab574b8641e77.jpg",
+    "assets/media/graded/smoke-1.ember.jpg": "bb848c0f2e6316ecdbfa595144d060c41546d2adca53895e6251068ed8a07f46.jpg",
+    "assets/media/graded/smoke.ash.mp4": "1525fc4cc786616268bfed09368c8084951c0280ed6d155c241ea11949ef5a57.mp4",
+    "assets/media/graded/smoke.ember.mp4": "5fc1dcb9d7884ec37f1a04b7f066d10abb7beee2b04a282a508252f0f76feb47.mp4",
+    "assets/media/graded/sparks-1.ash.jpg": "98155021e9f50e6a6962558d82ffc85df1ade4d422169a9acf726b2f1937ada3.jpg",
+    "assets/media/graded/sparks-1.ember.jpg": "16129e096aa3232e0dd28cd85862444ba2a52b9802abbf711897a10d481e13f9.jpg",
+    "assets/media/graded/sparks.ash.mp4": "1b4d9f888ce87530e0e08670cca27d7c559a9f996e2559ad9e1204b99ab36a9b.mp4",
+    "assets/media/graded/sparks.ember.mp4": "5ae6abf171d3828686459fffd572445e46183ba5b1d04b2d48ce4c57188b012d.mp4",
+    "assets/media/smoke-1.jpg": "c75584e89cd9c4a70d9abd45b6f602e76806f50a86e7b0aeae836c0ec38d820d.jpg",
+    "assets/media/smoke-2.jpg": "089e338b54f9f52e8b387b772d03509ec06e11354dd596f514b17ab977426b5f.jpg",
+    "assets/media/smoke.mp4": "2216d74eb8960344538d6bc491ea1ef134f9334e9484ba95156031fa56ee28d7.mp4",
+    "assets/media/sparks-1.jpg": "b9a58062a690c94c3fa70ef8c0cb8e68a28ead58008244bc7cc69a1d03acc20d.jpg",
+    "assets/media/sparks-2.jpg": "66641c79f42932be9177fd6cff18b65dd69cdef4d14be61fc05f16a52be8ec25.jpg",
+    "assets/media/sparks.mp4": "114c8141e6d599d78e162481370bb1ce38867c965e6a2c998913dd7ccd229965.mp4",
+    "assets/song.mp3": "f57a042edb8411f95dfb167dec304f06f78bef73080db34cbae1f3f80f638b18.mp3"
+  }
+}

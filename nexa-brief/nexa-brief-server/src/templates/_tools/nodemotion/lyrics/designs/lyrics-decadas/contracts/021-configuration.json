@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "config.motion",
+  "entry_id": "config.motion",
+  "name": "motion",
+  "kind": "configuration",
+  "label": "motion",
+  "summary": "Existing configuration configuration: motion.",
+  "params": {
+    "rollSec": {
+      "default": 0.35
+    },
+    "rollGlyphs": {
+      "default": "0123456789"
+    },
+    "drift": {
+      "default": 0.03
+    },
+    "fragmentSpeed": {
+      "default": 1
+    }
+  },
+  "example": {
+    "rollSec": 0.35,
+    "rollGlyphs": "0123456789",
+    "drift": 0.03,
+    "fragmentSpeed": 1
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+      "pointer": "/configs/0/motion"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

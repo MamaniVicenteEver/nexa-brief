@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "config.overrides",
+  "entry_id": "config.overrides",
+  "name": "overrides",
+  "kind": "configuration",
+  "label": "overrides",
+  "summary": "Existing configuration configuration: overrides.",
+  "params": {},
+  "example": [
+    {
+      "match": "beast",
+      "burst": true
+    },
+    {
+      "match": "jungle",
+      "style": "bubble",
+      "layout": "stack",
+      "doodle": "star",
+      "inverted": true
+    },
+    {
+      "match": "caution",
+      "burst": true
+    },
+    {
+      "match": "cage",
+      "layout": "vertical",
+      "style": "block-hatch",
+      "hatch": true
+    },
+    {
+      "match": "awesome",
+      "style": "signature",
+      "doodle": "rays"
+    }
+  ],
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "pointer": "/configs/0/overrides"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

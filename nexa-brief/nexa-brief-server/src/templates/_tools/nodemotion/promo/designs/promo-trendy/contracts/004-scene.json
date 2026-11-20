@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-trendy",
+  "id": "scene.grid",
+  "entry_id": "scene.grid",
+  "name": "grid",
+  "kind": "scene",
+  "label": "grid",
+  "summary": "palabra sobre mosaico de seis medios repetidos",
+  "variants": [
+    {
+      "type": "grid",
+      "media": [
+        "basket-1",
+        "skate-2",
+        "boxing-1",
+        "soccer-1",
+        "ropes-2",
+        "sprint-2"
+      ],
+      "in": "none",
+      "max_text_lines": 1
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 4,
+      "type": "grid",
+      "shows": "palabra sobre mosaico de seis medios repetidos",
+      "lines_used": 1,
+      "max_characters_per_line_recommended": 18,
+      "media": [
+        {
+          "slot": "basket-1",
+          "kind": "image"
+        },
+        {
+          "slot": "skate-2",
+          "kind": "image"
+        },
+        {
+          "slot": "boxing-1",
+          "kind": "image"
+        },
+        {
+          "slot": "soccer-1",
+          "kind": "image"
+        },
+        {
+          "slot": "ropes-2",
+          "kind": "image"
+        },
+        {
+          "slot": "sprint-2",
+          "kind": "image"
+        }
+      ],
+      "line_usage": "Usa la primera línea.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real.",
+      "media_render_order": "25 mosaicos en orden de media, repitiendo los seis slots cíclicamente"
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+    "brand_texts": {},
+    "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-trendy.json",
+      "pointer": "/default_scenes/3"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-trendy.json",
+      "pointer": "/scene_cycle/3"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

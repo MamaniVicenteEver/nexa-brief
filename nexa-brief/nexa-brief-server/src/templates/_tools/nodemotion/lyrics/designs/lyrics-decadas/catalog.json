@@ -1,0 +1,301 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "family": "lyrics",
+  "display_name": "Décadas",
+  "description": "Tipografía editorial condensada gigante con azul eléctrico sobre negro cálido y celeste: letras enormes una a una rellenas con fotos en semitono, firmas que se trazan, etiquetas que parpadean, barridos azules, textos que ruedan como un contador, créditos tecleados y cierre con firma — para indie, pop alternativo y baladas con estética de documental.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "fotos",
+        "kind": "image",
+        "min": 0,
+        "max": 8,
+        "target": "media",
+        "label": "Fotos (opcional)",
+        "hint": "Retratos o calle; se convierten a semitono en blanco y negro. Si no subes nada, se usan las fotos de la plantilla."
+      }
+    ],
+    "texts": [
+      {
+        "key": "intro.title",
+        "label": "Título en la intro",
+        "max": 40,
+        "default": ""
+      },
+      {
+        "key": "intro.artist",
+        "label": "Artista en la intro",
+        "max": 40,
+        "default": ""
+      },
+      {
+        "key": "outro.title",
+        "label": "Título del cierre",
+        "max": 24,
+        "default": "Gracias"
+      },
+      {
+        "key": "outro.sub",
+        "label": "Subtítulo del cierre",
+        "max": 24,
+        "default": "por ver"
+      },
+      {
+        "key": "outro.feats",
+        "label": "Línea final del cierre",
+        "max": 40,
+        "default": "Suscríbete · NodeMotion"
+      },
+      {
+        "key": "texts.label",
+        "label": "Rótulo vertical",
+        "max": 24,
+        "default": ""
+      },
+      {
+        "key": "texts.credit",
+        "label": "Crédito (pie tecleado)",
+        "max": 40,
+        "default": ""
+      },
+      {
+        "key": "outro.brand",
+        "label": "Firma del cierre",
+        "max": 24,
+        "default": "NodeMotion"
+      }
+    ],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "player.js",
+    "components",
+    "assets/fonts",
+    "assets/media"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-decadas",
+    "config": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-decadas/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-decadas/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-decadas/DESIGN.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-decadas/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "decadas.intro",
+      "kind": "component",
+      "label": "Intro letras gigantes",
+      "summary": "Letras del título una a una con foto y firma; luego el título tecleado con etiquetas.",
+      "constraints_status": "documented",
+      "id": "decadas.intro",
+      "contract": "contracts/001-component.json"
+    },
+    {
+      "entry_id": "decadas.outrov1",
+      "kind": "component",
+      "label": "Outro v1 Firma",
+      "summary": "Línea tecleada y marca escrita a mano en azul que crece al centro.",
+      "constraints_status": "documented",
+      "id": "decadas.outrov1",
+      "contract": "contracts/002-component.json"
+    },
+    {
+      "entry_id": "decadas.outrov2",
+      "kind": "component",
+      "label": "Outro v2 Contador",
+      "summary": "Título azul rodante sobre celeste, rótulos verticales, fragmentos y barra final.",
+      "constraints_status": "documented",
+      "id": "decadas.outrov2",
+      "contract": "contracts/003-component.json"
+    },
+    {
+      "entry_id": "decadas.fotos",
+      "kind": "component",
+      "label": "Fotos en semitono",
+      "summary": "Fotos de config.media convertidas a puntos de imprenta.",
+      "constraints_status": "documented",
+      "id": "decadas.fotos",
+      "contract": "contracts/004-component.json"
+    },
+    {
+      "entry_id": "decadas.etiquetas",
+      "kind": "component",
+      "label": "Etiquetas azules",
+      "summary": "Rótulos pequeños que parpadean sobre el título (texts.tags).",
+      "constraints_status": "documented",
+      "id": "decadas.etiquetas",
+      "contract": "contracts/005-component.json"
+    },
+    {
+      "entry_id": "decadas.firma",
+      "kind": "component",
+      "label": "Firma trazada",
+      "summary": "Firma blanca que se dibuja sobre las letras gigantes.",
+      "constraints_status": "documented",
+      "id": "decadas.firma",
+      "contract": "contracts/006-component.json"
+    },
+    {
+      "entry_id": "decadas.fragmentos",
+      "kind": "component",
+      "label": "Fragmentos gigantes",
+      "summary": "Trozos del rótulo con foto que cruzan detrás del contador.",
+      "constraints_status": "documented",
+      "id": "decadas.fragmentos",
+      "contract": "contracts/007-component.json"
+    },
+    {
+      "entry_id": "decadas.escena",
+      "kind": "component",
+      "label": "Escena de letra",
+      "summary": "Una de las siete escenas del mazo con un fragmento de letra.",
+      "constraints_status": "documented",
+      "id": "decadas.escena",
+      "contract": "contracts/008-component.json"
+    },
+    {
+      "entry_id": "decadas.transiciones",
+      "kind": "component",
+      "label": "Transiciones",
+      "summary": "Destello de foto, barrido azul, letra que cruza o corte.",
+      "constraints_status": "documented",
+      "id": "decadas.transiciones",
+      "contract": "contracts/009-component.json"
+    },
+    {
+      "entry_id": "config.lyricsFilter",
+      "kind": "configuration",
+      "label": "lyricsFilter",
+      "summary": "Existing configuration configuration: lyricsFilter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.lyricsFilter",
+      "contract": "contracts/010-configuration.json"
+    },
+    {
+      "entry_id": "config.colors",
+      "kind": "configuration",
+      "label": "colors",
+      "summary": "Existing configuration configuration: colors.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.colors",
+      "contract": "contracts/011-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/012-configuration.json"
+    },
+    {
+      "entry_id": "config.halftone",
+      "kind": "configuration",
+      "label": "halftone",
+      "summary": "Existing configuration configuration: halftone.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.halftone",
+      "contract": "contracts/013-configuration.json"
+    },
+    {
+      "entry_id": "config.texts",
+      "kind": "configuration",
+      "label": "texts",
+      "summary": "Existing configuration configuration: texts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texts",
+      "contract": "contracts/014-configuration.json"
+    },
+    {
+      "entry_id": "config.components",
+      "kind": "configuration",
+      "label": "components",
+      "summary": "Existing configuration configuration: components.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.components",
+      "contract": "contracts/015-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/016-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/017-configuration.json"
+    },
+    {
+      "entry_id": "config.timing",
+      "kind": "configuration",
+      "label": "timing",
+      "summary": "Existing configuration configuration: timing.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timing",
+      "contract": "contracts/018-configuration.json"
+    },
+    {
+      "entry_id": "config.scenes",
+      "kind": "configuration",
+      "label": "scenes",
+      "summary": "Existing configuration configuration: scenes.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.scenes",
+      "contract": "contracts/019-configuration.json"
+    },
+    {
+      "entry_id": "config.transitions",
+      "kind": "configuration",
+      "label": "transitions",
+      "summary": "Existing configuration configuration: transitions.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.transitions",
+      "contract": "contracts/020-configuration.json"
+    },
+    {
+      "entry_id": "config.motion",
+      "kind": "configuration",
+      "label": "motion",
+      "summary": "Existing configuration configuration: motion.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.motion",
+      "contract": "contracts/021-configuration.json"
+    },
+    {
+      "entry_id": "config.interludes",
+      "kind": "configuration",
+      "label": "interludes",
+      "summary": "Existing configuration configuration: interludes.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.interludes",
+      "contract": "contracts/022-configuration.json"
+    },
+    {
+      "entry_id": "config.overrides",
+      "kind": "configuration",
+      "label": "overrides",
+      "summary": "Existing configuration configuration: overrides.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.overrides",
+      "contract": "contracts/023-configuration.json"
+    }
+  ]
+}

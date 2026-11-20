@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nexa-brief.local/schemas/nodemotion-promo/usage.json",
+  "type": "object",
+  "properties": {
+    "entries": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "usage_available": {
+      "type": "boolean"
+    },
+    "tokens": {
+      "type": "object",
+      "properties": {
+        "input_tokens": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "cached_input_tokens": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "output_tokens": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "reasoning_tokens": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        }
+      },
+      "required": [
+        "input_tokens",
+        "cached_input_tokens",
+        "output_tokens",
+        "reasoning_tokens"
+      ],
+      "additionalProperties": false
+    },
+    "unknown_token_entries": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "steps": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "input_tokens": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "cached_input_tokens": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "output_tokens": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "reasoning_tokens": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          },
+          "reported_total_tokens": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0
+          }
+        },
+        "required": [
+          "entries",
+          "input_tokens",
+          "cached_input_tokens",
+          "output_tokens",
+          "reasoning_tokens"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "reported_total_tokens": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "description": "Total informado sin desglose; no sumarlo otra vez al desglose de la misma llamada."
+    }
+  },
+  "required": [
+    "entries",
+    "usage_available",
+    "tokens",
+    "unknown_token_entries",
+    "steps"
+  ],
+  "additionalProperties": false
+}

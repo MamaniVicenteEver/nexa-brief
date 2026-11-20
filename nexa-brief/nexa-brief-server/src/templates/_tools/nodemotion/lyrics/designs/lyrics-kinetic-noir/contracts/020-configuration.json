@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "config.outro",
+  "entry_id": "config.outro",
+  "name": "outro",
+  "kind": "configuration",
+  "label": "outro",
+  "summary": "Existing configuration configuration: outro.",
+  "params": {
+    "title": {
+      "default": "Gracias"
+    },
+    "sub": {
+      "default": "por escuchar"
+    },
+    "feats": {
+      "default": "Suscríbete · NodeMotion"
+    },
+    "leadSec": {
+      "default": 0.4
+    },
+    "minSec": {
+      "default": 2.8
+    },
+    "maxSec": {
+      "default": 6
+    }
+  },
+  "example": {
+    "title": "Gracias",
+    "sub": "por escuchar",
+    "feats": "Suscríbete · NodeMotion",
+    "leadSec": 0.4,
+    "minSec": 2.8,
+    "maxSec": 6
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/assets/config.json",
+      "pointer": "/configs/0/outro"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -120,3 +120,7 @@ En cada `resultados.json`, `videos` contiene únicamente archivos descargados y
 validados como `video/*`. `videos_referencias` contiene fichas de catálogo con
 enlace público cuando un proveedor reconoce un vídeo pero no entrega un archivo
 directo descargable; esas referencias no se cuentan como vídeos descargados.
+
+## Calidad
+
+Antes de buscar, registra la fecha actual y consulta expresamente los últimos 12 meses para cifras actuales. Contrasta cada cifra con dos fuentes independientes, una oficial; registra fechas del dato y de consulta. No inventes cifras, resultados, declaraciones, citas ni licencias. Evita búsquedas genéricas como «historia increíble» o «hechos interesantes»; sí una consulta concreta como «Dartmouth 1956 propuesta inteligencia artificial». Conserva autor, licencia, URL y modificaciones de cada recurso para los créditos de la descripción.

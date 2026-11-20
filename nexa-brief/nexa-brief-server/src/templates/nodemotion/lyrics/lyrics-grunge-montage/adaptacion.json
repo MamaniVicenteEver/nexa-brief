@@ -1,0 +1,113 @@
+{
+ "version": 1,
+ "descripcion": "Reglas de adaptación de esta plantilla a la canción elegida (las lee src/core/nodemotion/lyrics/song_adapter.py). Cualquier valor se puede cambiar sin tocar código. Las demos conservan su guion original; esto solo rige para canciones nuevas.",
+ "esquema": "pieces",
+ "umbrales": {
+  "coberturaMin": 0.5,
+  "coberturaRehacer": 0.3,
+  "idiomaMin": 0.8,
+  "idiomaRehacer": 0.5,
+  "huecoMaxSec": 15,
+  "logprobMin": -1.0
+ },
+ "frases": {
+  "maxWords": 4,
+  "maxSec": 2.4,
+  "minWords": 2
+ },
+ "tiempos": {
+  "leadSec": 0.1,
+  "holdSec": 0.9,
+  "huecoMinSec": 0.35,
+  "huecoTrozoSec": 3.5,
+  "introMinSec": 0.9,
+  "escenaMinSec": 0.4,
+  "outroSec": null
+ },
+ "recetas": {
+  "enfriamiento": 4,
+  "fraccionTop": 0.3,
+  "mundoBloqueSec": [
+   6,
+   14
+  ]
+ },
+ "entrada": {
+  "porPalabraDesde": 3,
+  "rotuloMaxPalabras": 3
+ },
+ "config": {
+  "timeOffsetSec": 0
+ },
+ "respaldo": {
+  "config": {
+   "layouts": {
+    "slam": {
+     "weight": 2.0
+    },
+    "twoTone": {
+     "weight": 1.6
+    },
+    "circle": {
+     "weight": 1.2
+    },
+    "spacedWide": {
+     "weight": 1.0
+    },
+    "grid": {
+     "weight": 1.0
+    },
+    "stackCols": {
+     "weight": 0.9
+    },
+    "torn": {
+     "weight": 1.0
+    },
+    "vertical": {
+     "weight": 0.7
+    },
+    "frameBox": {
+     "weight": 1.0
+    },
+    "stack3": {
+     "weight": 1.2
+    },
+    "blurGiant": {
+     "weight": 1.2
+    },
+    "strike": {
+     "weight": 1.0
+    }
+   },
+   "phrases": {
+    "maxWords": 5,
+    "maxSec": 2.4,
+    "minWords": 2
+   },
+   "timing": {
+    "leadSec": 0.1,
+    "holdSec": 0.7,
+    "gapSec": 2.0,
+    "echoSec": 0.9,
+    "cooldown": 4
+   },
+   "timeOffsetSec": 0
+  }
+ },
+ "mensajes": {
+  "activo": true,
+  "minHuecoSec": 4,
+  "duracionSec": 2.4,
+  "maxPorHueco": 1,
+  "maxPalabras": 6,
+  "propios": [],
+  "descripcion": "Mensajes en los tramos sin voz. Salen de la canción (título, artista, última frase cantada, estribillo); en `propios` puedes añadir textos tuyos (máx. maxPalabras palabras)."
+ },
+ "intro": {
+  "valoresDemo": [
+   "Double Control",
+   "Pista de demostración"
+  ],
+  "descripcion": "Textos de la demo que no deben aparecer en una canción nueva: se sustituyen por el título y el artista reales."
+ }
+}

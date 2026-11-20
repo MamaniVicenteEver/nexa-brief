@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "config.components",
+  "entry_id": "config.components",
+  "name": "components",
+  "kind": "configuration",
+  "label": "components",
+  "summary": "Existing configuration configuration: components.",
+  "params": {
+    "intro": {
+      "default": true
+    },
+    "outro": {
+      "default": "noir.outrov1"
+    },
+    "glitch": {
+      "default": true
+    },
+    "smoke": {
+      "default": true
+    }
+  },
+  "example": {
+    "intro": true,
+    "outro": "noir.outrov1",
+    "glitch": true,
+    "smoke": true
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/assets/config.json",
+      "pointer": "/configs/0/components"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

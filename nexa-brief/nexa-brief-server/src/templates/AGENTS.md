@@ -1,4 +1,34 @@
+Start with the [content index](../skills/README.md).
+
+## Crear diseños NodeMotion
+La entrada específica es [crear e integrar plantillas](../../docs/nodemotion-template-authoring.md).
+Estas reglas de fuente compartida, datos y recursos prevalecen para NodeMotion sobre las recetas generales de HTML autocontenido o copiado por job que siguen en este archivo.
+Un prototipo aislado respeta su carpeta y entrega pendientes al integrador. Verificar alta, contratos, catálogos, recursos, preview y renderer, además de la apariencia.
+
+## NodeMotion shared-engine contract
+
+For registered NodeMotion lyrics and promos, follow [the current architecture](../../docs/nodemotion-architecture.md).
+Their implementation lives only in `_tools/nodemotion/{lyrics,promo}/designs/`.
+Demos keep their content and a thin entry; new projects keep JSON and registered-resource references.
+Use the shared assembler/resolver for source, assets, preview, recording, and packaging.
+The inline/copy-per-job instructions below describe legacy and image/video contracts; do not use them to duplicate NodeMotion engines.
+Use English filenames. Preserve stable IDs, legacy URLs, colors, fonts, transitions, movement, timing, and composition.
+
+Para crear cualquier contenido empieza por el [índice](../skills/README.md),
+[CALIDAD.md](../skills/CALIDAD.md) (estándar obligatorio) y
+[ORQUESTACION.md](../skills/ORQUESTACION.md) (roles, delegación, terminado e informe).
+
 # AGENTS.md — Reglas para crear o modificar plantillas de video
+
+> **Excepción NodeMotion (vigente desde 2026-11-16):** las plantillas NodeMotion (letras y promos) no siguen esta guía. Ver el estándar en `AGENTS.md` de la raíz (sección «Estándar vigente…») y en `docs/nodemotion-template-authoring.md` (sección 2). Motor en `src/templates/nodemotion/<cat>/<id>/`, prototipos en `productions/nodemotion/<cat>/<id>/`.
+
+> **Ubicación obligatoria (v2/v3):** las demos principales validadas viven en
+> `src/templates/<categoría>/<id>/` del repositorio; los episodios viven en
+> `$NEXA_PROFILE_DIR/productions/<categoría>/<id>/`. Todos los proyectos de
+> prueba, prototipos y referencias viven en `$NEXA_PROFILE_DIR/sandbox/`.
+> El `sandbox/` del repositorio solo contiene motores compartidos experimentales,
+> herramientas y documentación, sin proyectos históricos. Verifica el perfil activo.
+> Norma: [ubicación de demos, pruebas y episodios](../../docs/ubicacion-demos-pruebas-episodios.md).
 
 > Este archivo es para cualquier agente de IA (Codex, Claude, Cursor, Copilot, Gemini…)
 > o persona que vaya a **crear una plantilla nueva** o **modificar una existente** dentro de
@@ -55,7 +85,7 @@ modal, landing y Estudio). Por eso tiene que funcionar en los cuatro contextos.
 ## 3. Estructura obligatoria de una plantilla
 
 ```text
-src/templates/                         ← SOLO PRODUCCIÓN (lo que ya sabemos que funciona)
+src/templates/                         ← código compartido y demos principales validadas
 ├── AGENTS.md                          ← este archivo
 ├── README.md                          ← resumen del catálogo
 ├── templates.json                     ← catálogo: fuente de verdad (sección 4)
@@ -64,11 +94,11 @@ src/templates/                         ← SOLO PRODUCCIÓN (lo que ya sabemos q
 │   ├── commercial/<template-id>/      ← promos
 │   ├── image/<template-id>/           ← basadas en una imagen
 │   └── video/<template-id>/           ← basadas en un video
-├── nodetech/<video-id>/               ← videos del explainer-kit, una carpeta por categoría
-├── nodehistory/<video-id>/              (nodepolitics/, nodeeconomy/ se crean al primer video)
+├── nodetech/<demo-id>/                ← demos principales validadas, sin fecha en carpeta
+├── nodehistory/<demo-id>/             ← demos; nodeatlas/, nodeeconomy/, … según catálogo
 ├── _tools/                            ← motores, generadores y herramientas (sección 8)
 │   └── explainer-kit/                 ← motor de videos explicativos (Tech, History, Politics, Economy)
-└── sandbox/                           ← casa de pruebas: una carpeta por categoría (sandbox/AGENTS.md)
+└── sandbox/                           ← motores experimentales/herramientas/docs; sin proyectos
 ```
 
 > **Las carpetas `node*/` de videos y `_tools/explainer-kit/`** no son plantillas de este catálogo:
@@ -76,10 +106,11 @@ src/templates/                         ← SOLO PRODUCCIÓN (lo que ya sabemos q
 > (cómo producir un video) y el backend las lista por categoría (`niches.json` → `categories`,
 > campos `folder` y `designs`). Cada video es solo datos; el motor no se edita.
 
-> **`sandbox/`** es la casa de pruebas: `sandbox/AGENTS.md` es el índice y cada categoría tiene su
-> `AGENTS.md` con todo lo aprendido (prototipos de música en `sandbox/nodemotion/`, ideas de videos
-> en `sandbox/nodetech/`, `nodehistory/`, …). Las reglas de este archivo se aplican a un prototipo
-> recién cuando se **promueve** a producción.
+> **`sandbox/AGENTS.md`** contiene las instrucciones compartidas de pruebas.
+> Los prototipos de música, ideas de videos y referencias se crean físicamente en
+> `$NEXA_PROFILE_DIR/sandbox/`, nunca junto a esos documentos del repositorio.
+> Para trasladarlos usa **Preparar para producción → Pasar a producción**; las
+> demos validadas van al repositorio y los episodios al perfil. No copies motores.
 
 Cada plantilla:
 
@@ -290,19 +321,21 @@ Todos los comandos se corren desde `nexa-brief-server/`.
 | `_tools/hyperframes/optimize.py` | Inserta o actualiza el reloj HyperFrames y reescribe los timers. Idempotente y reversible. | `.venv/bin/python src/templates/_tools/hyperframes/optimize.py <id>` · `--check <id>` · `--revert <id>` |
 | `_tools/hyperframes/reencode_media.py` | Recodifica los videos con keyframe cada 5 cuadros (CRF 12, sin pérdida visible) y guarda los originales en `media_originals/`. | `.venv/bin/python src/templates/_tools/hyperframes/reencode_media.py <id>` · `--revert <id>` |
 | `_tools/hyperframes/render_demo.py` | Graba N segundos con HyperFrames en todos los formatos del nicho y genera cuadros de control. | `PYTHONPATH=. .venv/bin/python src/templates/_tools/hyperframes/render_demo.py --seconds 30 <id>` |
-| `_tools/commercial/build/build.py` | **Genera** los `index.html` de promos y plantillas por escenas desde `core.js` + un archivo de escenas + un `*.spec.json`. | `python3 src/templates/_tools/commercial/build/build.py <id> …` |
-| `_tools/commercial/grade_media.py` | Pre-grada (color) el metraje de stock de las promos. | ver el docstring del script |
-| `_tools/commercial/render_promo.py` | Render cuadro a cuadro de plantillas pesadas, fuera de la app. | ver el docstring del script |
+| `_tools/nodemotion/promo/compiler/build/build.py` | Compila las promos por escenas desde `core.js`, un archivo de escenas y un `*.spec.json`; los diseños registrados actualizan el motor compartido. | `python3 src/templates/_tools/nodemotion/promo/compiler/build/build.py <id> …` |
+| `_tools/nodemotion/promo/compiler/grade_media.py` | Pre-grada (color) el metraje de stock de las promos. | ver el docstring del script |
+| `_tools/nodemotion/promo/compiler/render_promo.py` | Render cuadro a cuadro de plantillas pesadas, fuera de la app. | ver el docstring del script |
 
 ### Plantillas generadas: no editar el `index.html` a mano
 
 | Plantillas | Generador (editar acá) |
 |---|---|
-| `promo-dynamic`, `promo-editorial`, `promo-kinetic`, `promo-sports`, `promo-trendy`, `promo-urban` | `_tools/commercial/build/` (`<nombre>.js` + `promo-<nombre>.spec.json`) |
-| `lyrics-grunge`, `lyrics-mixtas` | `_tools/lyrics-grunge/build/`, `_tools/lyrics-mixtas/build/` (se arman con el mismo `build.py`) |
-| `lyrics-lluvia-gris`, `lyrics-memoria`, `lyrics-ceniza`, `lyrics-vacio` | `_tools/lyrics-sad/build/` (`sad-common.js` + `<nombre>.js`; ver `_tools/lyrics-sad/README.md`) |
+| `promo-dynamic`, `promo-editorial`, `promo-kinetic`, `promo-sports`, `promo-trendy`, `promo-urban` | `_tools/nodemotion/promo/compiler/build/` (`<nombre>.js` + `promo-<nombre>.spec.json`) |
+| `promo-breaking`, `promo-pulse` | `_tools/nodemotion/promo/compiler/build/promo-<nombre>.spec.json` + `runtime/player.js` y `runtime/components/` en `_tools/nodemotion/promo/designs/promo-<nombre>/` |
+| `lyrics-rasgado` | `_tools/nodemotion/lyrics/compiler/torn/build/lyrics-rasgado.spec.json` + `runtime/player.js` y `runtime/components/` en `_tools/nodemotion/lyrics/designs/lyrics-rasgado/` |
+| `lyrics-grunge`, `lyrics-mixtas` | `_tools/nodemotion/lyrics/compiler/grunge/build/`, `_tools/nodemotion/lyrics/compiler/mixed/build/` (se arman con el mismo `build.py`) |
+| `lyrics-lluvia-gris`, `lyrics-memoria`, `lyrics-ceniza`, `lyrics-vacio` | `_tools/nodemotion/lyrics/compiler/sad/build/` (`sad-common.js` + `<nombre>.js`; ver `_tools/nodemotion/lyrics/compiler/sad/README.md`) |
 
-Todas se arman con `_tools/commercial/build/build.py`, que ya inserta el reloj HyperFrames
+Todas se arman con `_tools/nodemotion/promo/compiler/build/build.py`, que ya inserta el reloj HyperFrames
 al generar. Igual, después de regenerar SIEMPRE corré `optimize.py --check <id>`
 (sección 10.1). Si cambiaste un archivo de escenas compartido (`core.js`, `sad-common.js`),
 **se ven afectadas todas las plantillas que lo usan**: regenerá y validá cada una.
@@ -313,7 +346,7 @@ al generar. Igual, después de regenerar SIEMPRE corré `optimize.py --check <id
 
 1. **Copiá la plantilla más parecida** como base (misma familia y mismo tipo de fondo),
    en vez de empezar de cero: así heredás el contrato de las secciones 5 y 6.
-2. Prototipala primero en `sandbox/nodemotion/<id>/` (ver `sandbox/nodemotion/AGENTS.md`) y después
+2. Prototipala primero en `$NEXA_PROFILE_DIR/sandbox/nodemotion/<id>/` (ver `sandbox/nodemotion/AGENTS.md`) y después
    creá la carpeta `nodemotion/<tipo>/<nuevo-id>/` con la estructura de la sección 3.
 3. Poné en `assets/` una canción, una letra (`lyrics.json` real, formato Whisper) y los
    medios por defecto. Registrá los créditos de stock en el `CREDITS.md` de la familia.
@@ -387,3 +420,8 @@ usuario que hay que actualizarlo.
   los tiempos de 16:9 y 9:16.
 - Cualquier cosa que no pudiste verificar, dicha explícitamente.
 - No hagas `git commit` ni `git push` salvo que el usuario lo pida.
+
+
+## Promos: instrucciones compartidas, sin copias por video
+
+Para Editorial, Sports, Dynamic, Kinetic, Trendy y Urban, usa [el flujo único de promos](_tools/nodemotion/promo/production/OPERATE.md). Los prompts versionados viven en `src/templates/_tools/nodemotion/promo/production/prompts/` del servidor y se resuelven con `promo.py prompt --id ID --stage ETAPA`; nunca crees `work/instrucciones/prompts/`, copias de esos Markdown, otro productor ni scripts de campaña para repetir el flujo. Cada proyecto conserva solo la referencia de versión y hashes, sus datos y evidencias. Las reglas específicas del diseño proceden de `_tools/nodemotion/promo/production/templates/<template-id>.json` y `DESIGN.md`; no se copian al proyecto. `CLAUDE.md` incorpora este archivo mediante `@AGENTS.md`. Las recetas de crear o bifurcar una plantilla nueva no aplican a videos basados en una promo existente.

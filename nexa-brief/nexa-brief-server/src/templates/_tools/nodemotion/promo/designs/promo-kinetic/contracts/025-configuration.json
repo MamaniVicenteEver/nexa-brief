@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-kinetic",
+  "id": "config.duration",
+  "entry_id": "config.duration",
+  "name": "duration",
+  "kind": "configuration",
+  "label": "duration",
+  "summary": "Existing configuration configuration: duration.",
+  "params": {},
+  "example": 54.23,
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-kinetic/assets/config.json",
+      "pointer": "/configs/0/duration"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

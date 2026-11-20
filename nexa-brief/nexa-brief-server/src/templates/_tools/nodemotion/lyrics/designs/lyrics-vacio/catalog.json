@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-vacio",
+  "family": "lyrics",
+  "display_name": "Vacío",
+  "description": "Soledad y vacío: blanco y negro frío con niebla, rutas perdidas, cuartos vacíos y una figura frente al mar; condensada finísima o muy pesada, letras que se separan hasta perderse, palabras que se desmoronan, estelas de eco, reflejos en la bruma, la imagen que se rasga y una palabra que respira en el negro.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "soledad: niebla, ruta vacía, cuarto vacío, mar, nieve, ventana"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/lyrics/lyrics-vacio/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-vacio/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-vacio",
+    "config": "nodemotion/lyrics/lyrics-vacio/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-vacio/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-vacio/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-vacio/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.lyricsFilter",
+      "kind": "configuration",
+      "label": "lyricsFilter",
+      "summary": "Existing configuration configuration: lyricsFilter.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.lyricsFilter",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.grades",
+      "kind": "configuration",
+      "label": "grades",
+      "summary": "Existing configuration configuration: grades.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.grades",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.render",
+      "kind": "configuration",
+      "label": "render",
+      "summary": "Existing configuration configuration: render.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.render",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.phrases",
+      "kind": "configuration",
+      "label": "phrases",
+      "summary": "Existing configuration configuration: phrases.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.phrases",
+      "contract": "contracts/006-configuration.json"
+    },
+    {
+      "entry_id": "config.timing",
+      "kind": "configuration",
+      "label": "timing",
+      "summary": "Existing configuration configuration: timing.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.timing",
+      "contract": "contracts/007-configuration.json"
+    },
+    {
+      "entry_id": "config.transition",
+      "kind": "configuration",
+      "label": "transition",
+      "summary": "Existing configuration configuration: transition.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.transition",
+      "contract": "contracts/008-configuration.json"
+    },
+    {
+      "entry_id": "layout.lonely",
+      "kind": "layout",
+      "label": "lonely",
+      "summary": "Existing layout configuration: lonely.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.lonely",
+      "contract": "contracts/009-layout.json"
+    },
+    {
+      "entry_id": "layout.crumble",
+      "kind": "layout",
+      "label": "crumble",
+      "summary": "Existing layout configuration: crumble.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.crumble",
+      "contract": "contracts/010-layout.json"
+    },
+    {
+      "entry_id": "layout.trail",
+      "kind": "layout",
+      "label": "trail",
+      "summary": "Existing layout configuration: trail.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.trail",
+      "contract": "contracts/011-layout.json"
+    },
+    {
+      "entry_id": "layout.mirror",
+      "kind": "layout",
+      "label": "mirror",
+      "summary": "Existing layout configuration: mirror.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.mirror",
+      "contract": "contracts/012-layout.json"
+    },
+    {
+      "entry_id": "layout.breath",
+      "kind": "layout",
+      "label": "breath",
+      "summary": "Existing layout configuration: breath.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.breath",
+      "contract": "contracts/013-layout.json"
+    },
+    {
+      "entry_id": "layout.fragments",
+      "kind": "layout",
+      "label": "fragments",
+      "summary": "Existing layout configuration: fragments.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.fragments",
+      "contract": "contracts/014-layout.json"
+    },
+    {
+      "entry_id": "layout.tear",
+      "kind": "layout",
+      "label": "tear",
+      "summary": "Existing layout configuration: tear.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.tear",
+      "contract": "contracts/015-layout.json"
+    },
+    {
+      "entry_id": "layout.snow",
+      "kind": "layout",
+      "label": "snow",
+      "summary": "Existing layout configuration: snow.",
+      "constraints_status": "observed_defaults_only",
+      "id": "layout.snow",
+      "contract": "contracts/016-layout.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/017-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/018-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/019-configuration.json"
+    }
+  ]
+}

@@ -27,6 +27,12 @@ export interface CategoryNode {
   children: CategoryNode[];
 }
 
+export interface CreateCategoryInput {
+  displayName: string;
+  topic: string;
+  language: "en" | "es-419";
+}
+
 interface CategoryDto {
   id: string;
   path: string;
@@ -85,6 +91,18 @@ function mapCategory(dto: CategoryDto): CategoryNode {
 export async function getCategories(signal?: AbortSignal): Promise<CategoryNode[]> {
   const dtos = await httpClient<CategoryDto[]>("/api/v1/categories", { signal });
   return dtos.map(mapCategory);
+}
+
+export async function createCategory(input: CreateCategoryInput): Promise<CategoryNode> {
+  const dto = await httpClient<CategoryDto>("/api/v1/categories", {
+    method: "POST",
+    body: {
+      display_name: input.displayName,
+      topic: input.topic,
+      language: input.language,
+    },
+  });
+  return mapCategory(dto);
 }
 
 /** Árbol → lista plana para un <select>: "NodeMotion", "NodeMotion › Videos de letras", … */

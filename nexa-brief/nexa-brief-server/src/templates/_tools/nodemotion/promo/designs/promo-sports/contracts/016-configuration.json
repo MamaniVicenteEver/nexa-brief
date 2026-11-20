@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-sports",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "yellow": {
+      "default": "#EBE609"
+    },
+    "dark": {
+      "default": "#050607"
+    },
+    "white": {
+      "default": "#F3F3F1"
+    },
+    "ink": {
+      "default": "#0B0B0B"
+    }
+  },
+  "example": {
+    "yellow": "#EBE609",
+    "dark": "#050607",
+    "white": "#F3F3F1",
+    "ink": "#0B0B0B"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-sports/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

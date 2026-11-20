@@ -1,5 +1,7 @@
 """AI Adapter Factory — resolves the correct AI adapter by role."""
 
+import structlog
+
 from src.core.ports.ai_port import AIPort
 
 
@@ -19,7 +21,77 @@ def get_codegen_ai() -> AIPort:
     return DeepSeekGeminiFallbackAdapter()
 
 
-TEXT_PROVIDERS = ("claude", "codex", "deepseek")
+_QUOTA_MARKERS = ("age limit", "usage limit", "hit your", "rate limit", "quota", "credits", "límite", "limite")
+
+
+class _OffAI(AIPort):
+    """Sin IA (interruptor apagado o vista previa): cada llamada deja el dato pendiente."""
+
+    async def complete_json(self, system_prompt: str, user_prompt: str) -> dict:
+        from src.core.ai_switch import AIUnavailableError
+
+        raise AIUnavailableError("IA no disponible (interruptor apagado).")
+
+    async def complete_text(self, system_prompt: str, user_prompt: str) -> str:
+        from src.core.ai_switch import AIUnavailableError
+
+        raise AIUnavailableError("IA no disponible (interruptor apagado).")
+
+
+class QuotaFallbackAI(AIPort):
+    """Codex primero. Si falla por cuota o límite, la misma llamada pasa al respaldo (Claude, rol del texto)."""
+
+    def __init__(self, primary: AIPort, fallback: AIPort) -> None:
+        self._primary = primary
+        self._fallback = fallback
+
+    @property
+    def name(self) -> str:
+        return self._primary.name
+
+    @staticmethod
+    def _quota_error(exc: Exception) -> bool:
+        message = str(exc).lower()
+        return any(marker in message for marker in _QUOTA_MARKERS)
+
+    async def complete_json(self, system_prompt: str, user_prompt: str) -> dict:
+        try:
+            return await self._primary.complete_json(system_prompt, user_prompt)
+        except Exception as exc:
+            if not self._quota_error(exc):
+                raise
+            structlog.get_logger(__name__).warning("copy_ai_quota_fallback", error=str(exc)[:200])
+            return await self._fallback.complete_json(system_prompt, user_prompt)
+
+    async def complete_text(self, system_prompt: str, user_prompt: str) -> str:
+        try:
+            return await self._primary.complete_text(system_prompt, user_prompt)
+        except Exception as exc:
+            if not self._quota_error(exc):
+                raise
+            structlog.get_logger(__name__).warning("copy_ai_quota_fallback", error=str(exc)[:200])
+            return await self._fallback.complete_text(system_prompt, user_prompt)
+
+
+def get_copy_ai() -> AIPort:
+    """Textos con Terra high por defecto; Claude solo si Codex no está disponible
+    o si Codex agota la cuota durante una llamada (respaldo del rol)."""
+    from src.core.ai_switch import ai_enabled
+
+    if not ai_enabled():
+        return _OffAI()
+    from src.adapters.agent.factory import agents_status
+    available = {row["name"]: row["available"] for row in agents_status()}
+    if not available.get("codex"):
+        return get_text_ai("claude")
+    primary = get_text_ai("codex")
+    if available.get("claude"):
+        return QuotaFallbackAI(primary, get_text_ai("claude"))
+    return primary
+
+
+
+TEXT_PROVIDERS = ("codex", "claude", "deepseek")
 
 
 def get_text_ai(provider: str) -> AIPort:

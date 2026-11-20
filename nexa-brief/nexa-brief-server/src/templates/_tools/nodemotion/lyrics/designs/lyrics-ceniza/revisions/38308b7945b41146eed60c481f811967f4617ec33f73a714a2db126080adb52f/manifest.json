@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-ceniza",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-ceniza",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "248ebbb3d72c22b27a7fc90ac731f98699a0d39a2ecbe9e9f57dcd712c68425c",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-ceniza",
+    "config": "nodemotion/lyrics/lyrics-ceniza/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-ceniza/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-ceniza/README.md"
+  },
+  "revision": "38308b7945b41146eed60c481f811967f4617ec33f73a714a2db126080adb52f"
+}

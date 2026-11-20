@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.contact",
+  "entry_id": "mono.contact",
+  "kind": "component",
+  "label": "Móvil grande punteado con encabezado y un número o contacto ",
+  "summary": "Móvil grande punteado con encabezado y un número o contacto enorme (renglón 1 = encabezado, 2+ = número)",
+  "component": {
+    "name": "mono.contact",
+    "label": "Móvil grande punteado con encabezado y un número o contacto ",
+    "summary": "Móvil grande punteado con encabezado y un número o contacto enorme (renglón 1 = encabezado, 2+ = número)",
+    "tags": [
+      "escena"
+    ],
+    "scene_type": "contact",
+    "params": {
+      "size": {
+        "type": "number",
+        "min": 0.6,
+        "max": 1.3,
+        "default": 1.05
+      },
+      "brand": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "time": 49.0
+    },
+    "preview": {
+      "t": 49.0
+    }
+  },
+  "params": {
+    "size": {
+      "type": "number",
+      "min": 0.6,
+      "max": 1.3,
+      "default": 1.05
+    },
+    "brand": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/14"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

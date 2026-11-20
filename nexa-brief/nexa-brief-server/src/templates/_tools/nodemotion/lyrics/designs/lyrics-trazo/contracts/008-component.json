@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "trazo.garabatos",
+  "entry_id": "trazo.garabatos",
+  "kind": "component",
+  "label": "Garabatos sobre palabra",
+  "summary": "Rayos, destello, subrayado, círculo o flecha dibujados alrededor de la palabra.",
+  "component": {
+    "name": "trazo.garabatos",
+    "label": "Garabatos sobre palabra",
+    "summary": "Rayos, destello, subrayado, círculo o flecha dibujados alrededor de la palabra.",
+    "default": true,
+    "params": {
+      "doodle": {
+        "type": "string",
+        "default": "rays",
+        "options": [
+          "rays",
+          "star",
+          "underline",
+          "circle",
+          "arrow"
+        ]
+      },
+      "text": {
+        "type": "string",
+        "default": "hear",
+        "doc": "Texto"
+      }
+    },
+    "tags": [
+      "adorno"
+    ],
+    "file": "components/garabatos.js",
+    "demo": {
+      "doodle": "circle"
+    },
+    "preview": {
+      "t": 0.6
+    }
+  },
+  "params": {
+    "doodle": {
+      "type": "string",
+      "default": "rays",
+      "options": [
+        "rays",
+        "star",
+        "underline",
+        "circle",
+        "arrow"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "default": "hear",
+      "doc": "Texto"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/showcase/components.json",
+      "pointer": "/components/6"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

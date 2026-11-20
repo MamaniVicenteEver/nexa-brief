@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "title": "Resumen geopolítico · Atlas noticiero",
+  "summary": "Resumen noticiero sobre globo satelital 3D (Atlas): cámara que vuela de noticia en noticia, titulares, hemiciclos, contadores, retratos, fotos, chips y territorios rayados. Todo es JSON (assets/scene.json).",
+  "engine": "nodehistory/_atlas",
+  "based_on": "atlas-cinematico",
+  "is_new_design": false,
+  "status": "lista para revisar",
+  "created_at": "2026-11-07",
+  "libraries": [
+    {
+      "name": "maplibre-gl",
+      "version": "6.16.0",
+      "purpose": "globo 3D y satélite (motor compartido _atlas)"
+    },
+    {
+      "name": "Barlow Condensed / Poppins",
+      "version": "Google Fonts (OFL), copiadas a _atlas/assets/fonts",
+      "purpose": "tipografía del HUD"
+    }
+  ],
+  "inputs": [
+    "Guion en el estilo del perfil NOTICIERO (voz Gemini 3.8 Flash TTS Charon, tono aceleración) y transcripción faster-whisper large-v3.",
+    "NASA GIBS Blue Marble, Natural Earth y fotos con licencia libre (assets/media/CREDITS.md)."
+  ],
+  "notes": [
+    "Motor compartido nodehistory/_atlas; el video es solo datos: assets/scene.json lo genera work/build_scene.py.",
+    "Cifras y hechos con fuente en work/research/. Sin MP4 hasta que el usuario lo pida.",
+    "Estilo por defecto: original."
+  ],
+  "visual_styles": {
+    "index": "sandbox/nodehistory/_atlas/noticiero/estilos/index.json",
+    "default": "original"
+  }
+}

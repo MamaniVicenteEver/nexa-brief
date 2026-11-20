@@ -1,0 +1,56 @@
+{
+  "name": "header.date",
+  "family": "header",
+  "estilo": {
+    "usa": [
+      "estilos.encabezado.fecha",
+      "estilos.encabezado.lugar",
+      "estilos.encabezado.marca",
+      "ranuras.encabezado"
+    ]
+  },
+  "description": "Encabezado de estilo: marca cuadrada de acento, fecha y lugar en pila, en la ranura «encabezado». Úsala como recurso visual en una escena.",
+  "duration": 5.85,
+  "loop": true,
+  "layer": 90,
+  "states": [],
+  "params": {
+    "fecha": {
+      "type": "string",
+      "default": "24 JUL 1987",
+      "range": null,
+      "description": "Valor de fecha para la composición de header.date."
+    },
+    "lugar": {
+      "type": "string",
+      "default": "AL OESTE DE FARSI",
+      "range": null,
+      "description": "Valor de lugar para la composición de header.date."
+    },
+    "screen": {
+      "type": "array",
+      "default": null,
+      "range": null,
+      "description": "Posición normalizada [x,y] dentro de la pantalla."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-header-date",
+    "t": 0,
+    "type": "header.date",
+    "fecha": "24 JUL 1987",
+    "lugar": "AL OESTE DE FARSI",
+    "dur": 6,
+    "out": 5.5
+  },
+  "usedBy": [
+    "assets/scene.json"
+  ],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/header.date.jpg",
+    "autoplay": true
+  },
+  "dependsOn": []
+}

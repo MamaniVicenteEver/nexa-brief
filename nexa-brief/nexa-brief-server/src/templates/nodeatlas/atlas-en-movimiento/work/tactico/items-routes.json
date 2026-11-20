@@ -1,0 +1,286 @@
+{
+  "format": "atlas-v1",
+  "duration": 48,
+  "lang": "es",
+  "planoLook": "tactico",
+  "intro": false,
+  "outro": false,
+  "captions": {
+    "enabled": false
+  },
+  "tiles": {
+    "provider": "gibs-bluemarble",
+    "manifest": "../bench/cache-inventory.json"
+  },
+  "motionBlur": false,
+  "defs": {
+    "palette": {
+      "text": "#f4f1da",
+      "dark": "#081e2c",
+      "accent": "#f5d86f",
+      "success": "#399e58",
+      "cyan": "#5be1e8",
+      "danger": "#ee695d"
+    },
+    "fonts": {
+      "display": "AtlasDisplay"
+    }
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        52.5,
+        29
+      ],
+      "zoom": 5.1
+    }
+  ],
+  "places": {
+    "Ormuz": [
+      56.4,
+      26.5
+    ],
+    "Bagdad": [
+      44.36,
+      33.31
+    ],
+    "Teheran": [
+      51.39,
+      35.69
+    ],
+    "Mascate": [
+      58.41,
+      23.59
+    ]
+  },
+  "layers": [],
+  "items": [
+    {
+      "via": [
+        [
+          50.5,
+          28.8
+        ],
+        [
+          53,
+          27
+        ],
+        [
+          56.4,
+          26.4
+        ],
+        [
+          58.5,
+          24.8
+        ]
+      ],
+      "t": 0,
+      "dur": 6,
+      "out": 5.5,
+      "type": "arrow.route",
+      "color": "accent",
+      "id": "gallery-routes-0"
+    },
+    {
+      "via": [
+        [
+          48,
+          33
+        ],
+        [
+          56,
+          27
+        ]
+      ],
+      "t": 6,
+      "dur": 6,
+      "out": 11.5,
+      "type": "arrow.curve",
+      "color": "text",
+      "width": 9,
+      "id": "gallery-routes-1"
+    },
+    {
+      "via": [
+        [
+          48,
+          32
+        ],
+        [
+          58,
+          25
+        ]
+      ],
+      "t": 12,
+      "dur": 6,
+      "out": 17.5,
+      "type": "arrow.bolt",
+      "color": "accent",
+      "id": "gallery-routes-2"
+    },
+    {
+      "via": [
+        [
+          50.5,
+          28.8
+        ],
+        [
+          53,
+          27
+        ],
+        [
+          56.4,
+          26.4
+        ],
+        [
+          58.5,
+          24.8
+        ]
+      ],
+      "t": 18,
+      "dur": 6,
+      "out": 23.5,
+      "type": "arrow.flow",
+      "color": "accent",
+      "id": "gallery-routes-3"
+    },
+    {
+      "via": [
+        [
+          50,
+          28
+        ],
+        [
+          52,
+          27
+        ],
+        [
+          54.5,
+          26
+        ],
+        [
+          56.4,
+          26.5
+        ],
+        [
+          57.4,
+          25.3
+        ],
+        [
+          59,
+          24.5
+        ]
+      ],
+      "t": 24,
+      "dur": 6,
+      "out": 29.5,
+      "type": "route.sea",
+      "color": "text",
+      "id": "gallery-routes-4"
+    },
+    {
+      "via": [
+        [
+          50.5,
+          28.8
+        ],
+        [
+          53,
+          27
+        ],
+        [
+          56.4,
+          26.4
+        ],
+        [
+          58.5,
+          24.8
+        ]
+      ],
+      "t": 30,
+      "dur": 6,
+      "out": 35.5,
+      "type": "route.lanes",
+      "text": "ESTRECHO DE ORMUZ",
+      "width": 1.5,
+      "id": "gallery-routes-5"
+    },
+    {
+      "type": "front.line",
+      "via": [
+        [
+          47,
+          33
+        ],
+        [
+          48.5,
+          31.5
+        ],
+        [
+          49,
+          30
+        ]
+      ],
+      "states": [
+        {
+          "at": 37,
+          "state": "advance",
+          "via": [
+            [
+              48,
+              33
+            ],
+            [
+              49.5,
+              31.5
+            ],
+            [
+              50,
+              30
+            ]
+          ],
+          "dur": 1.5
+        },
+        {
+          "at": 39.5,
+          "state": "retreat",
+          "via": [
+            [
+              47.3,
+              33
+            ],
+            [
+              48.8,
+              31.5
+            ],
+            [
+              49.3,
+              30
+            ]
+          ],
+          "dur": 1
+        }
+      ],
+      "color": "danger",
+      "t": 36,
+      "dur": 6,
+      "out": 41.5,
+      "note": "Frente esquemático sin valor histórico.",
+      "id": "gallery-routes-6"
+    },
+    {
+      "type": "range.ring",
+      "at": [
+        53,
+        29
+      ],
+      "radiusKm": 180,
+      "color": "danger",
+      "t": 42,
+      "dur": 6,
+      "out": 47.5,
+      "id": "gallery-routes-7"
+    }
+  ]
+}

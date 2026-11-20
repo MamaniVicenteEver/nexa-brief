@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-grunge",
+  "family": "lyrics",
+  "source_of_truth": "templates.json#templates/lyrics-grunge",
+  "config_json": "nodemotion/lyrics/lyrics-grunge/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-grunge/prompts/config_mapper.md",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "cultura urbana: baile callejero, túnel, multitud, noche"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/lyrics-grunge",
+    "config": "nodemotion/lyrics/lyrics-grunge/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-grunge/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-grunge/README.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

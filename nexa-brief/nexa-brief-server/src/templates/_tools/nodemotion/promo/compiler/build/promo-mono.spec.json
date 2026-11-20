@@ -1,0 +1,548 @@
+{
+  "title": "Promo Mono — interfaz minimalista en blanco y negro",
+  "about": "promo de marca o servicio con interfaz monocroma: píldoras de chat, botón de reproducir, pin de ubicación, metraje en semitono, cifras que parpadean, móvil con chat, cupón y contacto.",
+  "out": "nodemotion/commercial/promo-mono",
+  "js": [
+    "mono.js",
+    "component-player.js"
+  ],
+  "duration": 56.53,
+  "fontLoads": [
+    "500 100px Inter",
+    "600 100px Inter"
+  ],
+  "css": "  :root { --fD: \"Inter\"; --fL: \"Inter\"; }\n  .hd { font-family: var(--fD), sans-serif; font-weight: 500; letter-spacing: -0.02em; }\n  .ui { font-family: var(--fL), sans-serif; font-weight: 500; }\n  .ub { font-family: var(--fL), sans-serif; font-weight: 600; }\n  .sp { font-family: var(--fL), sans-serif; font-weight: 500; text-transform: uppercase; }\n  .num { font-variant-numeric: tabular-nums; }\n  /* cada escena es su propio contexto de apilamiento: los z-index internos no\n     se pintan sobre la escena siguiente durante el solapamiento */\n  .scene { isolation: isolate; }\n",
+  "config": {
+    "id": "default",
+    "description": "Promo «Mono» (demo ficticia Rutalia): interfaz minimalista en blanco y negro con píldoras de texto, metraje en semitono, cifras, móvil con chat, cupón y contacto. — metadata, la plantilla no la usa.",
+    "audio": {
+      "src": "assets/song.mp3"
+    },
+    "lyricsUrl": "assets/lyrics.json",
+    "fonts": {
+      "googleUrl": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      "display": "Inter",
+      "label": "Inter"
+    },
+    "palette": {
+      "bg": "#000000",
+      "fg": "#FFFFFF",
+      "muted": "#8A8A8A",
+      "chip": "#FFFFFF",
+      "chipText": "#111111"
+    },
+    "brand": {
+      "name": "Rutalia",
+      "cta": "Míralo y ve",
+      "url": "@rutalia.demo"
+    },
+    "chips": [
+      "Vamos a la playa",
+      "Vamos al cine",
+      "Vamos por tacos",
+      "Vamos a bailar",
+      "Vamos de camping",
+      "Vamos al estadio",
+      "Vamos por un café",
+      "Vamos a patinar",
+      "Vamos al concierto",
+      "Vamos a correr",
+      "Vamos de compras",
+      "Vamos a la montaña",
+      "Vamos al karaoke",
+      "Vamos por pizza",
+      "Vamos a surfear",
+      "Vamos al museo",
+      "Vamos de picnic",
+      "Vamos al parque",
+      "Vamos a pescar",
+      "Vamos por helado",
+      "Vamos a la feria",
+      "Vamos a nadar",
+      "Vamos de viaje",
+      "Vamos al teatro",
+      "Vamos a pedalear",
+      "Vamos al mercado",
+      "Vamos al gimnasio",
+      "Vamos a ver el mar"
+    ],
+    "grades": {
+      "mono": {
+        "type": "duo",
+        "dark": "#050505",
+        "light": "#F2F2F2",
+        "contrast": 1.3
+      }
+    },
+    "look": {
+      "dotScale": 1,
+      "dotContrast": 1.25,
+      "chipScale": 1,
+      "stroke": 1
+    },
+    "anim": {
+      "textIn": "type",
+      "speed": 1,
+      "intensity": 1
+    },
+    "intro": {
+      "enabled": true,
+      "title": "Rutalia",
+      "sub": ""
+    },
+    "outro": {
+      "enabled": true,
+      "version": "v1",
+      "minSec": 4,
+      "title": "Rutalia",
+      "cta": "Míralo y ve"
+    },
+    "transition": {
+      "overlapSec": 0.3,
+      "duration": 0.32,
+      "weights": {
+        "cut": 4,
+        "dots": 1,
+        "lineSweep": 1,
+        "blink": 1,
+        "fade": 1
+      }
+    },
+    "hud": {
+      "enabled": false
+    },
+    "texture": {
+      "grain": 0
+    },
+    "render": {
+      "kbVideo": false
+    },
+    "media": [
+      {
+        "id": "horses",
+        "type": "video",
+        "src": "assets/media/horses.mp4",
+        "poster": "assets/media/horses-1.jpg"
+      },
+      {
+        "id": "dirtbike",
+        "type": "video",
+        "src": "assets/media/dirtbike.mp4",
+        "poster": "assets/media/dirtbike-1.jpg"
+      },
+      {
+        "id": "cyclist-night",
+        "type": "video",
+        "src": "assets/media/cyclist-night.mp4",
+        "poster": "assets/media/cyclist-night-1.jpg"
+      },
+      {
+        "id": "cyclist-lake",
+        "type": "video",
+        "src": "assets/media/cyclist-lake.mp4",
+        "poster": "assets/media/cyclist-lake-1.jpg"
+      },
+      {
+        "id": "skater",
+        "type": "video",
+        "src": "assets/media/skater.mp4",
+        "poster": "assets/media/skater-1.jpg"
+      },
+      {
+        "id": "roadtrip",
+        "type": "video",
+        "src": "assets/media/roadtrip.mp4",
+        "poster": "assets/media/roadtrip-1.jpg"
+      },
+      {
+        "id": "concert",
+        "type": "video",
+        "src": "assets/media/concert.mp4",
+        "poster": "assets/media/concert-1.jpg"
+      },
+      {
+        "id": "couple",
+        "type": "video",
+        "src": "assets/media/couple.mp4",
+        "poster": "assets/media/couple-1.jpg"
+      },
+      {
+        "id": "crowd",
+        "type": "video",
+        "src": "assets/media/crowd.mp4",
+        "poster": "assets/media/crowd-1.jpg"
+      },
+      {
+        "id": "boat",
+        "type": "video",
+        "src": "assets/media/boat.mp4",
+        "poster": "assets/media/boat-1.jpg"
+      }
+    ],
+    "scenes": [
+      {
+        "type": "intro"
+      },
+      {
+        "type": "playline",
+        "trans": "cut"
+      },
+      {
+        "type": "cardfan",
+        "media": [
+          "concert",
+          "couple",
+          "skater",
+          "horses",
+          "boat",
+          "crowd",
+          "roadtrip"
+        ],
+        "trans": "blink"
+      },
+      {
+        "type": "wordgrid",
+        "media": [
+          "horses",
+          "couple",
+          "concert",
+          "skater",
+          "boat"
+        ],
+        "trans": "cut"
+      },
+      {
+        "type": "chips",
+        "mode": "float",
+        "count": 30,
+        "trans": "cut"
+      },
+      {
+        "type": "chips",
+        "mode": "pile",
+        "count": 72,
+        "trans": "cut"
+      },
+      {
+        "type": "linetext",
+        "squiggle": true,
+        "trans": "lineSweep"
+      },
+      {
+        "type": "pin",
+        "trans": "cut"
+      },
+      {
+        "type": "footage",
+        "media": [
+          "horses"
+        ],
+        "dotsIn": true,
+        "icon": "none",
+        "trans": "cut"
+      },
+      {
+        "type": "footage",
+        "media": [
+          "dirtbike"
+        ],
+        "icon": "bars",
+        "trans": "dots"
+      },
+      {
+        "type": "footage",
+        "media": [
+          "cyclist-lake"
+        ],
+        "trans": "blink"
+      },
+      {
+        "type": "numbers",
+        "trans": "dots"
+      },
+      {
+        "type": "pattern",
+        "icon": "pause",
+        "trans": "cut"
+      },
+      {
+        "type": "footage",
+        "media": [
+          "concert"
+        ],
+        "style": "squares",
+        "cell": 8,
+        "icon": "play",
+        "trans": "dots"
+      },
+      {
+        "type": "spaced",
+        "echo": 3,
+        "trans": "blink"
+      },
+      {
+        "type": "phonechat",
+        "trans": "cut"
+      },
+      {
+        "type": "phonechat",
+        "squiggle": true,
+        "trans": "cut"
+      },
+      {
+        "type": "coupon",
+        "count": 4,
+        "trans": "blink"
+      },
+      {
+        "type": "codeinput",
+        "trans": "cut"
+      },
+      {
+        "type": "contact",
+        "trans": "pillPop"
+      },
+      {
+        "type": "outro"
+      }
+    ]
+  },
+  "script": [
+    {
+      "start": 0.0,
+      "lines": [
+        "Rutalia"
+      ],
+      "words_at": [
+        0.12
+      ]
+    },
+    {
+      "start": 3.53,
+      "lines": [
+        "Dale play"
+      ],
+      "words_at": [
+        3.65,
+        3.69
+      ]
+    },
+    {
+      "start": 5.29,
+      "lines": [
+        "Tus series"
+      ],
+      "words_at": [
+        5.41,
+        5.45
+      ]
+    },
+    {
+      "start": 7.06,
+      "lines": [
+        "maratón"
+      ],
+      "words_at": [
+        7.18
+      ]
+    },
+    {
+      "start": 10.59,
+      "lines": [
+        "Planéalo"
+      ],
+      "words_at": [
+        10.71
+      ]
+    },
+    {
+      "start": 14.12,
+      "lines": [
+        "Planéalo"
+      ],
+      "words_at": [
+        14.24
+      ]
+    },
+    {
+      "start": 17.65,
+      "lines": [
+        "Vamos"
+      ],
+      "words_at": [
+        17.77
+      ]
+    },
+    {
+      "start": 19.41,
+      "lines": [
+        "Míralo y ve"
+      ],
+      "words_at": [
+        19.53,
+        19.57,
+        19.61
+      ]
+    },
+    {
+      "start": 21.18,
+      "lines": [
+        "¡Vamos, caballito!"
+      ],
+      "words_at": [
+        21.3,
+        21.34
+      ]
+    },
+    {
+      "start": 22.94,
+      "lines": [
+        "¡Vamos a la pista!"
+      ],
+      "words_at": [
+        23.06,
+        23.1,
+        23.14,
+        23.18
+      ]
+    },
+    {
+      "start": 24.71,
+      "lines": [
+        "¡Vamos en bici!"
+      ],
+      "words_at": [
+        24.83,
+        24.87,
+        24.91
+      ]
+    },
+    {
+      "start": 26.47,
+      "lines": [
+        "50%",
+        "100%",
+        "30%"
+      ],
+      "words_at": [
+        27.87,
+        27.97,
+        28.07
+      ]
+    },
+    {
+      "start": 30.0,
+      "lines": [
+        "Pausa"
+      ],
+      "words_at": [
+        30.12
+      ]
+    },
+    {
+      "start": 31.76,
+      "lines": [
+        "¡Vamos al concierto!"
+      ],
+      "words_at": [
+        31.88,
+        31.92,
+        31.96
+      ]
+    },
+    {
+      "start": 33.53,
+      "lines": [
+        "Cuando veas un",
+        "vamos"
+      ],
+      "words_at": [
+        33.68,
+        33.72,
+        33.76,
+        34.93
+      ]
+    },
+    {
+      "start": 37.06,
+      "lines": [
+        "Hola, vi un «vamos» en una peli",
+        "¡Bienvenido! Empecemos."
+      ],
+      "words_at": [
+        37.76,
+        37.8,
+        37.84,
+        37.88,
+        37.92,
+        37.96,
+        38.0,
+        39.06,
+        39.1
+      ]
+    },
+    {
+      "start": 40.59,
+      "lines": [
+        "¡Listo! Usa tu código de descuento."
+      ],
+      "words_at": [
+        40.71,
+        40.75,
+        40.79,
+        40.83,
+        40.87,
+        40.91
+      ]
+    },
+    {
+      "start": 42.35,
+      "lines": [
+        "Código promocional"
+      ],
+      "words_at": [
+        42.47,
+        42.51
+      ]
+    },
+    {
+      "start": 44.12,
+      "lines": [
+        "RUTA-8452-XDTR-0041",
+        "Cancelar",
+        "Aplicar"
+      ],
+      "words_at": [
+        44.24,
+        44.59,
+        44.94
+      ]
+    },
+    {
+      "start": 45.88,
+      "lines": [
+        "Escríbenos y vamos",
+        "(11)",
+        "5555",
+        "0142"
+      ],
+      "words_at": [
+        46.48,
+        46.52,
+        46.56,
+        46.88,
+        47.18,
+        47.48
+      ]
+    },
+    {
+      "start": 50.29,
+      "lines": [
+        "Rutalia"
+      ],
+      "words_at": [
+        50.41
+      ]
+    }
+  ]
+}

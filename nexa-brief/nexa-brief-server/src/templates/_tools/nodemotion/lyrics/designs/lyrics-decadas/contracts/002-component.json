@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "decadas.outrov1",
+  "entry_id": "decadas.outrov1",
+  "kind": "component",
+  "label": "Outro v1 Firma",
+  "summary": "Línea tecleada y marca escrita a mano en azul que crece al centro.",
+  "component": {
+    "name": "decadas.outrov1",
+    "label": "Outro v1 Firma",
+    "summary": "Línea tecleada y marca escrita a mano en azul que crece al centro.",
+    "group": "outro",
+    "default": true,
+    "params": {
+      "brand": {
+        "type": "string",
+        "default": "NodeMotion",
+        "doc": "config.outro.brand"
+      },
+      "line": {
+        "type": "string",
+        "default": "NodeMotion producciones",
+        "doc": "config.outro.line"
+      },
+      "title": {
+        "type": "string",
+        "default": "Gracias",
+        "doc": "config.outro.title"
+      },
+      "sub": {
+        "type": "string",
+        "default": "por ver",
+        "doc": "config.outro.sub"
+      }
+    },
+    "tags": [
+      "outro"
+    ],
+    "file": "components/outro-v1.js",
+    "demo": {},
+    "preview": {
+      "t": 3.5
+    }
+  },
+  "params": {
+    "brand": {
+      "type": "string",
+      "default": "NodeMotion",
+      "doc": "config.outro.brand"
+    },
+    "line": {
+      "type": "string",
+      "default": "NodeMotion producciones",
+      "doc": "config.outro.line"
+    },
+    "title": {
+      "type": "string",
+      "default": "Gracias",
+      "doc": "config.outro.title"
+    },
+    "sub": {
+      "type": "string",
+      "default": "por ver",
+      "doc": "config.outro.sub"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/showcase/components.json",
+      "pointer": "/components/1"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

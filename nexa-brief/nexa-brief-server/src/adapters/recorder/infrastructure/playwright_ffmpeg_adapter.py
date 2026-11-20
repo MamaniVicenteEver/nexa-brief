@@ -44,16 +44,20 @@ import asyncio
 import contextlib
 import functools
 import http.server
+import os
 import shutil
 import socket
 import threading
 import time
 from pathlib import Path
 from typing import TYPE_CHECKING
+from urllib.parse import urlsplit
 
 import structlog
 from playwright.async_api import async_playwright
 
+from src.adapters.recorder.infrastructure.render_workspace import render_workspace
+from src.adapters.recorder.infrastructure.subprocess_progress import run_with_progress
 from src.config.exceptions import RecordingError
 from src.config.settings import settings
 from src.core.ports.recorder_port import RecorderPort, RecordingResult
@@ -111,12 +115,18 @@ def _find_free_port() -> int:
 
 
 @contextlib.contextmanager
-def _serve_directory(directory: Path):
+def _serve_directory(directory: Path, *, shared_assets: dict[str, Path] | None = None):
     """Levanta un servidor HTTP efímero sobre *directory* en un hilo daemon.
     Yields la base_url ("http://127.0.0.1:{port}"). Se apaga al salir del bloque.
     """
     port = _find_free_port()
-    handler = functools.partial(_QuietStaticHandler, directory=str(directory))
+    class Handler(_QuietStaticHandler):
+        def translate_path(self, path):
+            # Solo las rutas declaradas por el grabador acceden al componente canónico.
+            shared = (shared_assets or {}).get(urlsplit(path).path)
+            return str(shared) if shared is not None else super().translate_path(path)
+
+    handler = functools.partial(Handler, directory=str(directory))
     httpd = http.server.ThreadingHTTPServer(("127.0.0.1", port), handler)
     thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     thread.start()
@@ -149,10 +159,46 @@ class PlaywrightFFmpegAdapter(RecorderPort):
             raise RecordingError("ffmpeg is not installed or not in PATH.")
 
         output_dir.mkdir(parents=True, exist_ok=True)
-        with _serve_directory(output_dir) as base_url:
-            page_url = f"{base_url}/{html_path.name}"
-            return await self._record_all_formats(
-                page_url, audio_path, output_dir, duration_seconds, niche_cfg
+        # Serve original assets, but write captures and incomplete videos into a
+        # private workspace so failure never replaces previous deliverables.
+        shared = {}
+        if (not (html_path.parent / ".nodemotion-render.json").is_file()
+                and getattr(getattr(niche_cfg, "template", None), "template_id", None) == "promo-editorial"):
+            from src.config.template_manifest import get_template_paths
+            template = get_template_paths("promo-editorial").get("index_html")
+            if template is not None:
+                component = template.parent / "components/outro.js"
+                if component.is_file():
+                    shared = {"/components/outro.js": component, "/assets/components/outro.js": component}
+        with render_workspace(output_dir, "playwright") as workspace:
+            with _serve_directory(html_path.parent, **({"shared_assets": shared} if shared else {})) as base_url:
+                page_url = f"{base_url}/{html_path.name}"
+                result = await self._record_all_formats(
+                    page_url, audio_path, workspace, duration_seconds, niche_cfg
+                )
+            paths = [result.youtube_path, result.reels_path, result.tiktok_path]
+            if niche_cfg:
+                for fmt in niche_cfg.video.formats:
+                    relative = Path(fmt.output_filename)
+                    if relative.is_absolute() or ".." in relative.parts:
+                        raise RecordingError("Invalid format output path")
+                    candidate = workspace / relative
+                    if candidate.is_file():
+                        paths.append(candidate)
+            moved = {}
+            for path in paths:
+                if path is None or path in moved:
+                    continue
+                relative = path.relative_to(workspace)
+                destination = output_dir / relative
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                os.replace(path, destination)
+                moved[path] = destination
+            return RecordingResult(
+                youtube_path=moved[result.youtube_path],
+                reels_path=moved.get(result.reels_path),
+                tiktok_path=moved.get(result.tiktok_path),
+                stats=result.stats,
             )
 
     async def _record_all_formats(
@@ -258,10 +304,18 @@ class PlaywrightFFmpegAdapter(RecorderPort):
         youtube_path = produced.get("youtube")
         reels_path = produced.get("reels")
         if youtube_path is None:
-            raise RecordingError(
-                "No se produjo ningún formato 16:9 — el nicho debe definir un VideoFormat "
-                "con aspect_ratio='16:9' (youtube)."
-            )
+            if reels_path is None:
+                raise RecordingError("No se produjo ningún formato de video")
+            # El puerto requiere un archivo principal; video_recorder registra
+            # este archivo únicamente como vertical cuando no se solicitó 16:9.
+            youtube_path = reels_path
+        elif formats and not any(fmt.aspect_ratio == "16:9" for fmt in formats):
+            # El recorte usa un máster horizontal temporal, que no es una salida elegida.
+            if reels_path is None:
+                raise RecordingError("No se produjo el formato vertical")
+            if youtube_path != reels_path:
+                youtube_path.unlink(missing_ok=True)
+            youtube_path = reels_path
 
         # ── TikTok: clip 61s con fades, derivado del 9:16 disponible (o del 16:9) ──
         # Se salta por completo si el nicho no lo necesita (generate_tiktok_clip=False)
@@ -377,32 +431,41 @@ class PlaywrightFFmpegAdapter(RecorderPort):
                     if settings.playwright_chromium_executable_path:
                         launch_options["executable_path"] = settings.playwright_chromium_executable_path
                     browser = await pw.chromium.launch(**launch_options)
-                    context = await browser.new_context(
-                        viewport={"width": width, "height": height},
-                        record_video_dir=str(output_dir),
-                        record_video_size={"width": width, "height": height},
-                    )
-                    page = await context.new_page()
-                    # Loguear errores de JS/consola — si config.json (u otro fetch) falla
-                    # en cargar, la página queda sin estilos y esto es lo único que lo delata.
-                    page.on("pageerror", lambda exc: logger.warning("recording_page_error", url=page_url, error=str(exc)))
-                    page.on("console", lambda msg: (
-                        logger.warning("recording_console_error", url=page_url, text=msg.text)
-                        if msg.type == "error" else None
-                    ))
-                    await page.goto(page_url)
-                    await page.wait_for_load_state("domcontentloaded")
-                    logger.info("recording_warmup", warmup_seconds=_WARMUP_SECONDS)
-                    await _wait_reporting_progress(_WARMUP_SECONDS + duration_seconds)
-                    await context.close()
-                    await browser.close()
+                    context = None
+                    try:
+                        context = await browser.new_context(
+                            viewport={"width": width, "height": height},
+                            record_video_dir=str(output_dir),
+                            record_video_size={"width": width, "height": height},
+                        )
+                        page = await context.new_page()
+                        # Loguear errores de JS/consola — si config.json (u otro fetch) falla
+                        # en cargar, la página queda sin estilos y esto es lo único que lo delata.
+                        page.on("pageerror", lambda exc: logger.warning("recording_page_error", url=page_url, error=str(exc)))
+                        page.on("console", lambda msg: (
+                            logger.warning("recording_console_error", url=page_url, text=msg.text)
+                            if msg.type == "error" else None
+                        ))
+                        await page.goto(page_url)
+                        await page.wait_for_load_state("domcontentloaded")
+                        logger.info("recording_warmup", warmup_seconds=_WARMUP_SECONDS)
+                        await _wait_reporting_progress(_WARMUP_SECONDS + duration_seconds)
+                        video = page.video
+                        await context.close()
+                        context = None
+                        video_path = Path(await video.path()) if video is not None else None
+                    finally:
+                        try:
+                            if context is not None:
+                                await context.close()
+                        finally:
+                            await browser.close()
         except Exception as exc:
             raise RecordingError(f"Playwright recording failed: {exc}") from exc
 
-        candidates = [f for f in output_dir.glob("*.webm") if f.name != raw_webm.name]
-        if not candidates:
+        if video_path is None or not video_path.is_file():
             raise RecordingError("Playwright did not produce a .webm file.")
-        candidates[0].rename(raw_webm)
+        video_path.rename(raw_webm)
         logger.info("playwright_recording_done", webm=str(raw_webm))
         return raw_webm
 
@@ -507,11 +570,6 @@ class PlaywrightFFmpegAdapter(RecorderPort):
     @staticmethod
     async def _run_ffmpeg(*args: str) -> None:
         cmd = ["ffmpeg", *args]
-        proc = await asyncio.create_subprocess_exec(
-            *cmd,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        _, stderr = await proc.communicate()
-        if proc.returncode != 0:
-            raise RecordingError(f"FFmpeg error:\n{stderr.decode()[-500:]}")
+        result = await run_with_progress(cmd, cwd=Path.cwd(), timeout=None, parse_progress=lambda _: None)
+        if result.returncode != 0:
+            raise RecordingError(f"FFmpeg error:\n{result.stderr_tail[-500:]}")

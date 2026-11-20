@@ -1,0 +1,66 @@
+{
+  "activeId": "running",
+  "configs": [
+    {
+      "id": "running",
+      "palette": {
+        "green": "#FF2E63",
+        "cream": "#F4F1EA",
+        "ink": "#08080A"
+      },
+      "brand": {
+        "name": "CIUDAD 10K",
+        "url": "ciudad10k.org",
+        "cta": "INSCRÍBETE",
+        "corner": "CIUDAD 10K",
+        "footer": "Carrera popular · 2027"
+      },
+      "look": {
+        "accents": 1.5
+      },
+      "outro": {
+        "version": "v2",
+        "title": "CIUDAD 10K",
+        "cta": "ciudad10k.org"
+      },
+      "scenes": [
+        {
+          "type": "intro",
+          "media": [
+            "runners"
+          ]
+        },
+        {
+          "type": "full",
+          "media": [
+            "stride"
+          ],
+          "pos": "br",
+          "brackets": true,
+          "trans": "whip"
+        },
+        {
+          "type": "knockout",
+          "media": [
+            "sprint"
+          ],
+          "trans": "zoomBlur"
+        },
+        {
+          "type": "counter",
+          "media": [
+            "runners"
+          ],
+          "countSec": 1.5,
+          "trans": "panels"
+        },
+        {
+          "type": "outro",
+          "media": [
+            "stride"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-suave",
+  "id": "config.dust",
+  "entry_id": "config.dust",
+  "name": "dust",
+  "kind": "configuration",
+  "label": "dust",
+  "summary": "Existing configuration configuration: dust.",
+  "params": {
+    "count": {
+      "default": 26
+    },
+    "color": {
+      "default": "rgba(210,210,215,0.35)"
+    }
+  },
+  "example": {
+    "count": 26,
+    "color": "rgba(210,210,215,0.35)"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-suave/assets/config.json",
+      "pointer": "/configs/0/dust"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

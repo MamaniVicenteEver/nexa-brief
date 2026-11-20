@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<script data-nb-hf-clock="075fd9c8e584"><!-- nodemotion-fragment:scripts/01-hyperframes-clock.js --></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trazo · NodeMotion</title>
+<!-- lyrics-trazo: rotulación a mano palabra por palabra, en blanco y negro.
+     Cascarón mínimo: los componentes están en components/*.js y el orquestador
+     en player.js. Configuración en config.json (job) o assets/config.json (demo).
+     Servir por HTTP: por file:// el navegador bloquea fetch. Ver DESIGN.md. -->
+<style><!-- nodemotion-fragment:styles/01-design.css --></style>
+<link rel="stylesheet" href="./components/trazo.css">
+<script src="./components/core.js"></script>
+<script src="./components/escenas.js"></script>
+<script src="./components/transiciones.js"></script>
+<script src="./components/garabatos.js"></script>
+<script src="./components/intro.js"></script>
+<script src="./components/outro-v1.js"></script>
+<script src="./components/outro-v2.js"></script>
+</head>
+<body>
+<audio id="audio" preload="auto"></audio>
+<div id="stage"><div id="ink"></div></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs id="tz-defs"></defs></svg>
+<div id="hud"></div>
+<script src="./player.js"></script>
+</body>
+</html>

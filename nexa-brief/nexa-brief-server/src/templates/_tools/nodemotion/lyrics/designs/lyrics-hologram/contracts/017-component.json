@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "outroV2",
+  "entry_id": "outroV2",
+  "kind": "component",
+  "label": "Outro v2 · seda holográfica",
+  "summary": "Outro v2: seda holográfica a pantalla completa, filas del título, título en tinta con ecos, créditos y fundido.",
+  "component": {
+    "name": "outroV2",
+    "label": "Outro v2 · seda holográfica",
+    "summary": "Outro v2: seda holográfica a pantalla completa, filas del título, título en tinta con ecos, créditos y fundido.",
+    "group": "outro",
+    "tags": [
+      "lyrics-hologram",
+      "outro"
+    ],
+    "params": {
+      "fadeSec": {
+        "type": "number",
+        "min": 0,
+        "max": 3,
+        "default": 0.8
+      },
+      "rows": {
+        "type": "number",
+        "min": 0,
+        "max": 8,
+        "default": 4
+      }
+    },
+    "demo": {
+      "t": 134.2,
+      "query": "outro=v2",
+      "layout": null
+    },
+    "preview": {
+      "gallery": "gallery.html?only=outroV2"
+    },
+    "default": false
+  },
+  "params": {
+    "fadeSec": {
+      "type": "number",
+      "min": 0,
+      "max": 3,
+      "default": 0.8
+    },
+    "rows": {
+      "type": "number",
+      "min": 0,
+      "max": 8,
+      "default": 4
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/16"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

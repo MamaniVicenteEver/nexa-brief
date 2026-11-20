@@ -112,10 +112,22 @@ async def update(job: Job) -> None:
     for fmt, file_path in format_paths.items():
         if file_path is not None:
             file_paths[fmt] = str(file_path)
+    # Archivo por relación de aspecto, como los explainer (`recorder._register_for_scheduling`):
+    # "Publicar ahora" y la cola eligen el formato por cuenta con estas claves.
+    aspect_paths: dict[str, str] = dict(record.get("format_paths") or {})
+    if job.input.formats == ["9x16"] and artifacts.reels_video_path is not None and artifacts.youtube_video_path is None:
+        # Un reintento vertical no debe conservar rutas horizontales de un intento anterior.
+        file_paths.pop("youtube", None)
+        aspect_paths.pop("16x9", None)
+    if artifacts.youtube_video_path is not None:
+        aspect_paths["16x9"] = str(artifacts.youtube_video_path)
+    if artifacts.reels_video_path is not None and artifacts.reels_video_path != artifacts.youtube_video_path:
+        aspect_paths["9x16"] = str(artifacts.reels_video_path)
 
     duration_seconds = record.get("duration_seconds")
-    if duration_seconds is None and artifacts.youtube_video_path is not None:
-        duration_seconds = await _get_video_duration_seconds(artifacts.youtube_video_path)
+    duration_path = artifacts.youtube_video_path or artifacts.reels_video_path
+    if duration_seconds is None and duration_path is not None:
+        duration_seconds = await _get_video_duration_seconds(duration_path)
 
     patch: dict[str, Any] = {}
     # Tiempo real de generación (desde que se aceptó el job hasta que quedó
@@ -123,6 +135,16 @@ async def update(job: Job) -> None:
     if job.stage in (JobStage.PACKAGED, JobStage.FAILED) and record.get("generation_seconds") is None:
         patch["generation_seconds"] = _seconds_between(record.get("created_at"), _now_iso())
 
+    # Imágenes capturadas durante la preparación: una selección por destino.
+    patch["thumbnail_paths_by_output"] = {
+        output: str(path) for output, path in artifacts.thumbnail_paths_by_output.items()
+    }
+    if artifacts.assets_dir is not None:
+        patch["assets_dir"] = str(artifacts.assets_dir)
+    if artifacts.render_dir is not None:
+        patch["render_dir"] = str(artifacts.render_dir)
+    if artifacts.log_dir is not None:
+        patch["log_dir"] = str(artifacts.log_dir)
     await _jobs().update(job.job_id, {
         **patch,
         "stage": job.stage.value,
@@ -132,7 +154,25 @@ async def update(job: Job) -> None:
         "duration_seconds": duration_seconds,
         "file_paths": file_paths,
         "ready_formats": list(file_paths.keys()),
+        "format_paths": aspect_paths,
+        "formats": list(aspect_paths),
     })
+
+
+def format_paths(record: dict[str, Any]) -> dict[str, str]:
+    """Archivo por formato ('16x9' / '9x16'). Los jobs anteriores a `format_paths`
+    lo derivan de `file_paths` (el 9:16 solo si es un archivo distinto del 16:9)."""
+    stored = record.get("format_paths")
+    if stored:
+        return dict(stored)
+    files: dict[str, str] = record.get("file_paths") or {}
+    derived: dict[str, str] = {}
+    if files.get("youtube"):
+        derived["16x9"] = files["youtube"]
+    vertical = files.get("reels") or files.get("instagram")
+    if vertical and vertical != files.get("youtube"):
+        derived["9x16"] = vertical
+    return derived
 
 
 def _seconds_between(start_iso: str | None, end_iso: str | None) -> float | None:
@@ -174,7 +214,8 @@ def list_jobs(
     offset: int = 0,
 ) -> tuple[list[dict[str, Any]], int]:
     """Lista jobs, más recientes primero. `stage` filtra por stage exacto si se da."""
-    records = _jobs().list({"stage": stage} if stage is not None else None)
+    records = [r for r in _jobs().list({"stage": stage} if stage is not None else None)
+               if r.get("kind") != "localization"]
     records.sort(key=lambda r: r.get("created_at", ""), reverse=True)
     total = len(records)
     return records[offset : offset + limit], total
@@ -183,7 +224,7 @@ def list_jobs(
 def count_active() -> int:
     """Cuenta jobs cuyo stage todavía no es terminal (pending...packaged/failed)."""
     terminal_values = {s.value for s in _TERMINAL_STAGES}
-    return sum(1 for r in _jobs().list() if r.get("stage") not in terminal_values)
+    return sum(1 for r in _jobs().list() if r.get("kind") != "localization" and r.get("stage") not in terminal_values)
 
 
 def get_summary(job_id: str) -> dict[str, Any] | None:
@@ -205,7 +246,7 @@ def get_summary(job_id: str) -> dict[str, Any] | None:
     output_dir = record.get("output_dir")
     if not output_dir:
         return None
-    summary_path = Path(output_dir) / "logs" / "08_resumen_final.json"
+    summary_path = Path(record.get("log_dir") or (Path(output_dir) / "logs")) / "08_resumen_final.json"
     if not summary_path.exists():
         return None
     raw = summary_path.read_text(encoding="utf-8").strip()

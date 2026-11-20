@@ -1,0 +1,454 @@
+{
+  "comps": [
+    {
+      "name": "proto.intro",
+      "summary": "Intro compartida. v1 revela text palabra por palabra; v2 escribe question y revela answer.",
+      "tags": [
+        "intro",
+        "texto"
+      ],
+      "layer": "main",
+      "params": {
+        "style": {
+          "type": "enum",
+          "default": "v1",
+          "doc": "Estilo.",
+          "required": false,
+          "options": [
+            "v1",
+            "v2"
+          ],
+          "min": null,
+          "max": null
+        },
+        "text": {
+          "type": "string",
+          "default": "",
+          "doc": "Texto multilinea v1; fallback de v2.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "question": {
+          "type": "string",
+          "default": null,
+          "doc": "Pregunta v2.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "answer": {
+          "type": "string",
+          "default": null,
+          "doc": "Respuesta v2.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "kicker": {
+          "type": "string",
+          "default": "",
+          "doc": "Rotulo superior.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "sub": {
+          "type": "string",
+          "default": "",
+          "doc": "Subtitulo v1.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": 5,
+          "doc": "Duracion en segundos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "wordAt": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Inicio de primera palabra v1.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stagger": {
+          "type": "number",
+          "default": 0.28,
+          "doc": "Separacion entre palabras v1.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "revealAt": {
+          "type": "number",
+          "default": null,
+          "doc": "Instante de revelar answer.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dim": {
+          "type": "number",
+          "default": null,
+          "doc": "Oscurecimiento; omitir usa valor del tema.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/_proto/proto.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar",
+        "sandbox/nodehistory/fronteras-demo",
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido",
+        "sandbox/nodeaction/avatar-demo"
+      ]
+    },
+    {
+      "name": "proto.captions",
+      "summary": "Subtitulos sincronizados con las palabras Whisper.",
+      "tags": [
+        "texto",
+        "subtitulos"
+      ],
+      "layer": "main",
+      "params": {
+        "enabled": {
+          "type": "bool",
+          "default": true,
+          "doc": "Activa subtitulos si hay palabras.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "maxWords": {
+          "type": "number",
+          "default": 4,
+          "doc": "Maximo de palabras por grupo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "gap": {
+          "type": "number",
+          "default": 0.45,
+          "doc": "Hueco maximo entre palabras.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "size": {
+          "type": "number",
+          "default": 34,
+          "doc": "Tamano base.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "y": {
+          "type": "number",
+          "default": 0.885,
+          "doc": "Centro vertical en formato vertical.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "yLandscape": {
+          "type": "number",
+          "default": 0.915,
+          "doc": "Centro vertical horizontal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "color": {
+          "type": "string",
+          "default": "#ffd21a",
+          "doc": "Color.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "upper": {
+          "type": "bool",
+          "default": true,
+          "doc": "Mayusculas.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "weight": {
+          "type": "number",
+          "default": 800,
+          "doc": "Peso tipografico.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "font": {
+          "type": "string",
+          "default": "Montserrat, sans-serif",
+          "doc": "Familia.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "stroke": {
+          "type": "bool",
+          "default": true,
+          "doc": "Dibuja contorno.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "strokeColor": {
+          "type": "string",
+          "default": "#000",
+          "doc": "Color de contorno.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/_proto/proto.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar",
+        "sandbox/nodehistory/fronteras-demo",
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido",
+        "sandbox/nodeaction/avatar-demo"
+      ]
+    },
+    {
+      "name": "proto.outro",
+      "summary": "Cierre compartido: gracias, canal, LIKE, flecha, suscripcion/campana, apoyo y handle.",
+      "tags": [
+        "outro",
+        "texto"
+      ],
+      "layer": "main",
+      "params": {
+        "channel": {
+          "type": "string",
+          "default": "NODEHISTORY",
+          "doc": "Nombre canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "handle": {
+          "type": "string",
+          "default": "",
+          "doc": "Direccion del canal.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "dur": {
+          "type": "number",
+          "default": null,
+          "doc": "Duracion total, segundos.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "thanks": {
+          "type": "string",
+          "default": "GRACIAS POR VER",
+          "doc": "Agradecimiento.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "cta": {
+          "type": "string",
+          "default": "SUSCRIBETE",
+          "doc": "Texto del boton.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "support": {
+          "type": "string",
+          "default": "Apoya el canal y comparte el video.",
+          "doc": "Linea de apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "arrow": {
+          "type": "bool",
+          "default": true,
+          "doc": "Muestra flecha.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "likeAt": {
+          "type": "number",
+          "default": 1,
+          "doc": "Inicio de LIKE.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "subscribeAt": {
+          "type": "number",
+          "default": 2.5,
+          "doc": "Inicio suscripcion.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "bellAt": {
+          "type": "number",
+          "default": 3.25,
+          "doc": "Inicio campana.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "supportAt": {
+          "type": "number",
+          "default": 3.65,
+          "doc": "Inicio apoyo.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/_proto/proto.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar",
+        "sandbox/nodehistory/fronteras-demo",
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido"
+      ]
+    },
+    {
+      "name": "proto.word-anchor",
+      "summary": "Los tiempos admiten segundos o anclas @palabra, @frase, #n, :end y desplazamientos +/-segundos.",
+      "tags": [
+        "tiempo",
+        "voz"
+      ],
+      "layer": "main",
+      "params": {},
+      "file": "sandbox/_proto/proto.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar",
+        "sandbox/nodehistory/fronteras-demo",
+        "sandbox/nodeaction/pizarra-demo",
+        "sandbox/nodeaction/pizarra-olvido",
+        "sandbox/nodeaction/avatar-demo"
+      ]
+    },
+    {
+      "name": "proto.media-window",
+      "summary": "Ventanas semitransparentes de foto o video ancladas a la voz y sincronizadas con el reloj del motor.",
+      "tags": [
+        "media",
+        "video",
+        "foto",
+        "voz"
+      ],
+      "layer": "main",
+      "params": {
+        "overlaysUrl": {
+          "type": "string",
+          "default": "assets/overlays.json",
+          "doc": "Ruta del archivo de ventanas; admite el override ?overlays=.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        },
+        "opacity": {
+          "type": "number",
+          "default": 0.88,
+          "doc": "Opacidad de la ventana.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 1
+        },
+        "w": {
+          "type": "number",
+          "default": 34,
+          "doc": "Ancho de la caja como porcentaje del cuadro.",
+          "required": false,
+          "options": null,
+          "min": 1,
+          "max": 100
+        },
+        "margin": {
+          "type": "number",
+          "default": 4,
+          "doc": "Margen como porcentaje del lado menor del cuadro.",
+          "required": false,
+          "options": null,
+          "min": 0,
+          "max": 20
+        },
+        "items": {
+          "type": "array",
+          "default": [],
+          "doc": "Elementos con ancla, duración, tipo, medio, aspecto y crédito.",
+          "required": false,
+          "options": null,
+          "min": null,
+          "max": null
+        }
+      },
+      "file": "sandbox/_proto/proto.js",
+      "demo": "sandbox/nodehistory/bolivia-mar/index.html",
+      "used_by": [
+        "sandbox/nodehistory/bolivia-mar"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1564 @@
+{
+  "reference_words": 27,
+  "reference_text": "  Desde Ascensión, un Vulcan bombardea la pista de Stanley.   Una bomba daña la pista, sin inutilizarla por completo.   Super Étendard argentinos alcanzan al Sheffield con un Exocet.",
+  "method": {
+    "pitch": "Praat AC, 60–400 Hz, paso 10 ms, voicing threshold 0.5; sin corregir octavas; contraste 75–500 Hz",
+    "pauses": "Huecos ASR >=120 ms; incluyen aire. Silencio acústico independiente -40 dBFS, mínimo 120 ms.",
+    "ppm_file": "27 palabras del guion / segundos PCM decodificados * 60; comprobar texto ASR.",
+    "ppm_narration": "27 palabras / (fin última palabra - inicio primera), con pausas internas y sin márgenes.",
+    "loudness": "FFmpeg loudnorm, input_i e input_tp medidos después de decodificar cada archivo.",
+    "subjective_listening": "No realizada. Edad percibida y aspereza quedan para escucha humana.",
+    "acoustic_summary": "Se unen silencios separados por <=40 ms de actividad para evitar fragmentación por chasquidos. Se excluyen márgenes. Span acústico: fin del silencio inicial a inicio del silencio final, umbral -40 dBFS. ASR puede absorber silencios dentro de palabras; se conserva sin corregir."
+  },
+  "transcripts": {
+    "algenib": {
+      "text": "Desde Ascensión, un Vulcan bombardea la pista de Stanley. Una bomba daña la pista, sin inutilizarla por completo. Super Étendard argentinos alcanzan al Sheffield con un Exocet.",
+      "word_objects": 27,
+      "lexical_words": 27,
+      "reference_words": 27,
+      "differences": [],
+      "gaps": [
+        {
+          "start": 0.54,
+          "end": 0.54,
+          "seconds": 0,
+          "after": " Desde",
+          "before": " Ascensión,",
+          "punctuation": "none"
+        },
+        {
+          "start": 1.42,
+          "end": 1.46,
+          "seconds": 0.040000000000000036,
+          "after": " Ascensión,",
+          "before": " un",
+          "punctuation": "comma"
+        },
+        {
+          "start": 2.32,
+          "end": 2.32,
+          "seconds": 0,
+          "after": " un",
+          "before": " Vulcan",
+          "punctuation": "none"
+        },
+        {
+          "start": 2.96,
+          "end": 2.96,
+          "seconds": 0,
+          "after": " Vulcan",
+          "before": " bombardea",
+          "punctuation": "none"
+        },
+        {
+          "start": 3.84,
+          "end": 3.84,
+          "seconds": 0,
+          "after": " bombardea",
+          "before": " la",
+          "punctuation": "none"
+        },
+        {
+          "start": 3.96,
+          "end": 3.96,
+          "seconds": 0,
+          "after": " la",
+          "before": " pista",
+          "punctuation": "none"
+        },
+        {
+          "start": 4.36,
+          "end": 4.36,
+          "seconds": 0,
+          "after": " pista",
+          "before": " de",
+          "punctuation": "none"
+        },
+        {
+          "start": 4.56,
+          "end": 4.56,
+          "seconds": 0,
+          "after": " de",
+          "before": " Stanley.",
+          "punctuation": "none"
+        },
+        {
+          "start": 4.88,
+          "end": 5.42,
+          "seconds": 0.54,
+          "after": " Stanley.",
+          "before": " Una",
+          "punctuation": "sentence"
+        },
+        {
+          "start": 6.18,
+          "end": 6.18,
+          "seconds": 0,
+          "after": " Una",
+          "before": " bomba",
+          "punctuation": "none"
+        },
+        {
+          "start": 6.58,
+          "end": 6.58,
+          "seconds": 0,
+          "after": " bomba",
+          "before": " daña",
+          "punctuation": "none"
+        },
+        {
+          "start": 6.86,
+          "end": 6.86,
+          "seconds": 0,
+          "after": " daña",
+          "before": " la",
+          "punctuation": "none"
+        },
+        {
+          "start": 6.96,
+          "end": 6.96,
+          "seconds": 0,
+          "after": " la",
+          "before": " pista,",
+          "punctuation": "none"
+        },
+        {
+          "start": 7.26,
+          "end": 7.38,
+          "seconds": 0.1200000000000001,
+          "after": " pista,",
+          "before": " sin",
+          "punctuation": "comma"
+        },
+        {
+          "start": 8.28,
+          "end": 8.28,
+          "seconds": 0,
+          "after": " sin",
+          "before": " inutilizarla",
+          "punctuation": "none"
+        },
+        {
+          "start": 9.14,
+          "end": 9.14,
+          "seconds": 0,
+          "after": " inutilizarla",
+          "before": " por",
+          "punctuation": "none"
+        },
+        {
+          "start": 9.36,
+          "end": 9.36,
+          "seconds": 0,
+          "after": " por",
+          "before": " completo.",
+          "punctuation": "none"
+        },
+        {
+          "start": 9.72,
+          "end": 10.06,
+          "seconds": 0.33999999999999986,
+          "after": " completo.",
+          "before": " Super",
+          "punctuation": "sentence"
+        },
+        {
+          "start": 10.82,
+          "end": 10.82,
+          "seconds": 0,
+          "after": " Super",
+          "before": " Étendard",
+          "punctuation": "none"
+        },
+        {
+          "start": 11.56,
+          "end": 11.56,
+          "seconds": 0,
+          "after": " Étendard",
+          "before": " argentinos",
+          "punctuation": "none"
+        },
+        {
+          "start": 12.36,
+          "end": 12.36,
+          "seconds": 0,
+          "after": " argentinos",
+          "before": " alcanzan",
+          "punctuation": "none"
+        },
+        {
+          "start": 13.6,
+          "end": 13.6,
+          "seconds": 0,
+          "after": " alcanzan",
+          "before": " al",
+          "punctuation": "none"
+        },
+        {
+          "start": 13.7,
+          "end": 13.7,
+          "seconds": 0,
+          "after": " al",
+          "before": " Sheffield",
+          "punctuation": "none"
+        },
+        {
+          "start": 14.22,
+          "end": 14.22,
+          "seconds": 0,
+          "after": " Sheffield",
+          "before": " con",
+          "punctuation": "none"
+        },
+        {
+          "start": 14.42,
+          "end": 14.42,
+          "seconds": 0,
+          "after": " con",
+          "before": " un",
+          "punctuation": "none"
+        },
+        {
+          "start": 14.58,
+          "end": 14.58,
+          "seconds": 0,
+          "after": " un",
+          "before": " Exocet.",
+          "punctuation": "none"
+        }
+      ],
+      "word_start": 0.0,
+      "word_end": 15.18,
+      "short_word_objects_under_20ms": []
+    },
+    "orus": {
+      "text": "Desde Ascensión, un Vulcan bombardea la pista de Stanley. Una bomba daña la pista, sin inutilizarla por completo. Super Étendard argentinos alcanzan al Sheffield con un Exocet.",
+      "word_objects": 27,
+      "lexical_words": 27,
+      "reference_words": 27,
+      "differences": [],
+      "gaps": [
+        {
+          "start": 0.52,
+          "end": 0.52,
+          "seconds": 0,
+          "after": " Desde",
+          "before": " Ascensión,",
+          "punctuation": "none"
+        },
+        {
+          "start": 1.46,
+          "end": 1.5,
+          "seconds": 0.040000000000000036,
+          "after": " Ascensión,",
+          "before": " un",
+          "punctuation": "comma"
+        },
+        {
+          "start": 1.98,
+          "end": 1.98,
+          "seconds": 0,
+          "after": " un",
+          "before": " Vulcan",
+          "punctuation": "none"
+        },
+        {
+          "start": 2.52,
+          "end": 2.52,
+          "seconds": 0,
+          "after": " Vulcan",
+          "before": " bombardea",
+          "punctuation": "none"
+        },
+        {
+          "start": 3.24,
+          "end": 3.24,
+          "seconds": 0,
+          "after": " bombardea",
+          "before": " la",
+          "punctuation": "none"
+        },
+        {
+          "start": 3.34,
+          "end": 3.34,
+          "seconds": 0,
+          "after": " la",
+          "before": " pista",
+          "punctuation": "none"
+        },
+        {
+          "start": 3.7,
+          "end": 3.7,
+          "seconds": 0,
+          "after": " pista",
+          "before": " de",
+          "punctuation": "none"
+        },
+        {
+          "start": 3.86,
+          "end": 3.86,
+          "seconds": 0,
+          "after": " de",
+          "before": " Stanley.",
+          "punctuation": "none"
+        },
+        {
+          "start": 4.14,
+          "end": 4.64,
+          "seconds": 0.5,
+          "after": " Stanley.",
+          "before": " Una",
+          "punctuation": "sentence"
+        },
+        {
+          "start": 5.5,
+          "end": 5.5,
+          "seconds": 0,
+          "after": " Una",
+          "before": " bomba",
+          "punctuation": "none"
+        },
+        {
+          "start": 5.98,
+          "end": 5.98,
+          "seconds": 0,
+          "after": " bomba",
+          "before": " daña",
+          "punctuation": "none"
+        },
+        {
+          "start": 6.36,
+          "end": 6.36,
+          "seconds": 0,
+          "after": " daña",
+          "before": " la",
+          "punctuation": "none"
+        },
+        {
+          "start": 6.46,
+          "end": 6.46,
+          "seconds": 0,
+          "after": " la",
+          "before": " pista,",
+          "punctuation": "none"
+        },
+        {
+          "start": 6.78,
+          "end": 6.98,
+          "seconds": 0.20000000000000018,
+          "after": " pista,",
+          "before": " sin",
+          "punctuation": "comma"
+        },
+        {
+          "start": 7.7,
+          "end": 7.7,
+          "seconds": 0,
+          "after": " sin",
+          "before": " inutilizarla",
+          "punctuation": "none"
+        },
+        {
+          "start": 8.58,
+          "end": 8.58,
+          "seconds": 0,
+          "after": " inutilizarla",
+          "before": " por",
+          "punctuation": "none"
+        },
+        {
+          "start": 8.7,
+          "end": 8.7,
+          "seconds": 0,
+          "after": " por",
+          "before": " completo.",
+          "punctuation": "none"
+        },
+        {
+          "start": 9.08,
+          "end": 9.6,
+          "seconds": 0.5199999999999996,
+          "after": " completo.",
+          "before": " Super",
+          "punctuation": "sentence"
+        },
+        {
+          "start": 10.2,
+          "end": 10.2,
+          "seconds": 0,
+          "after": " Super",
+          "before": " Étendard",
+          "punctuation": "none"
+        },
+        {
+          "start": 10.78,
+          "end": 10.78,
+          "seconds": 0,
+          "after": " Étendard",
+          "before": " argentinos",
+          "punctuation": "none"
+        },
+        {
+          "start": 11.42,
+          "end": 11.42,
+          "seconds": 0,
+          "after": " argentinos",
+          "before": " alcanzan",
+          "punctuation": "none"
+        },
+        {
+          "start": 12.32,
+          "end": 12.32,
+          "seconds": 0,
+          "after": " alcanzan",
+          "before": " al",
+          "punctuation": "none"
+        },
+        {
+          "start": 12.44,
+          "end": 12.44,
+          "seconds": 0,
+          "after": " al",
+          "before": " Sheffield",
+          "punctuation": "none"
+        },
+        {
+          "start": 12.96,
+          "end": 12.96,
+          "seconds": 0,
+          "after": " Sheffield",
+          "before": " con",
+          "punctuation": "none"
+        },
+        {
+          "start": 13.24,
+          "end": 13.24,
+          "seconds": 0,
+          "after": " con",
+          "before": " un",
+          "punctuation": "none"
+        },
+        {
+          "start": 13.42,
+          "end": 13.42,
+          "seconds": 0,
+          "after": " un",
+          "before": " Exocet.",
+          "punctuation": "none"
+        }
+      ],
+      "word_start": 0.0,
+      "word_end": 13.94,
+      "short_word_objects_under_20ms": []
+    }
+  },
+  "files": [
+    {
+      "file": "work/voz/muestras/malvinas-algenib.wav",
+      "sha256": "42d785d1971c9be1f49e3850822d63485ab0c68c143a87e81208aba89e3107b3",
+      "duration_decoded_seconds": 15.68,
+      "ppm_file": 103.31632653061224,
+      "ppm_narration": 106.71936758893281,
+      "narration_span_seconds": 15.18,
+      "ASR_pauses_ge120ms": {
+        "n": 3,
+        "p10": 0.16400000000000006,
+        "median": 0.33999999999999986,
+        "p90": 0.5,
+        "min": 0.1200000000000001,
+        "max": 0.54
+      },
+      "ASR_long_pauses_700_1100ms": 0,
+      "ASR_long_pauses_per_minute": 0.0,
+      "ASR_sentence_gaps": [
+        {
+          "start": 4.88,
+          "end": 5.42,
+          "seconds": 0.54,
+          "after": " Stanley.",
+          "before": " Una",
+          "punctuation": "sentence"
+        },
+        {
+          "start": 9.72,
+          "end": 10.06,
+          "seconds": 0.33999999999999986,
+          "after": " completo.",
+          "before": " Super",
+          "punctuation": "sentence"
+        }
+      ],
+      "ASR_comma_gaps": [
+        {
+          "start": 1.42,
+          "end": 1.46,
+          "seconds": 0.040000000000000036,
+          "after": " Ascensión,",
+          "before": " un",
+          "punctuation": "comma"
+        },
+        {
+          "start": 7.26,
+          "end": 7.38,
+          "seconds": 0.1200000000000001,
+          "after": " pista,",
+          "before": " sin",
+          "punctuation": "comma"
+        }
+      ],
+      "internal_acoustic_silences": [
+        {
+          "start": 1.76125,
+          "end": 2.307583,
+          "seconds": 0.5463330000000002
+        },
+        {
+          "start": 5.194583,
+          "end": 6.12625,
+          "seconds": 0.931667
+        },
+        {
+          "start": 7.48275,
+          "end": 8.155625,
+          "seconds": 0.6728750000000003
+        },
+        {
+          "start": 10.001375,
+          "end": 10.579708,
+          "seconds": 0.5783330000000007
+        },
+        {
+          "start": 12.642542,
+          "end": 12.941125,
+          "seconds": 0.29858299999999893
+        }
+      ],
+      "all_acoustic_silences": [
+        {
+          "start": 0.0,
+          "end": 0.33425,
+          "seconds": 0.33425
+        },
+        {
+          "start": 1.76125,
+          "end": 2.307583,
+          "seconds": 0.5463330000000002
+        },
+        {
+          "start": 5.194583,
+          "end": 6.12625,
+          "seconds": 0.931667
+        },
+        {
+          "start": 7.48275,
+          "end": 8.155625,
+          "seconds": 0.6728750000000003
+        },
+        {
+          "start": 10.001375,
+          "end": 10.579708,
+          "seconds": 0.5783330000000007
+        },
+        {
+          "start": 12.642542,
+          "end": 12.941125,
+          "seconds": 0.29858299999999893
+        },
+        {
+          "start": 15.395917,
+          "end": 15.68,
+          "seconds": 0.284082999999999
+        }
+      ],
+      "f0_hz": {
+        "n": 601,
+        "p10": 72.15030643274955,
+        "median": 92.34343768483852,
+        "p90": 116.59705540399665,
+        "min": 60.89967360687526,
+        "max": 394.36683929214536
+      },
+      "f0_p10_p90_semitones": 8.309447128011413,
+      "pitch_alt_disagreement_gt9st_percent": 4.705882352941177,
+      "lufs_i": -19.97,
+      "true_peak_dbTP": -2.71,
+      "loudness_range_LU": 2.6,
+      "speech_frame_rms_dbfs": {
+        "n": 1413,
+        "p10": -70.7299231625559,
+        "median": -24.897184730029736,
+        "p90": -16.337783173403675,
+        "min": -84.84432958975289,
+        "max": -11.44212690670848
+      },
+      "clipped_samples_at_16k": 0,
+      "within_20_seconds": true,
+      "acoustic_summary": {
+        "activity_start": 0.33425,
+        "activity_end": 15.395917,
+        "narration_span_seconds": 15.061667,
+        "ppm_narration": 107.55781547952162,
+        "pause_count_ge120ms": 5,
+        "pauses": [
+          {
+            "start": 1.76125,
+            "end": 2.307583,
+            "seconds": 0.5463330000000002
+          },
+          {
+            "start": 5.194583,
+            "end": 6.12625,
+            "seconds": 0.931667
+          },
+          {
+            "start": 7.48275,
+            "end": 8.155625,
+            "seconds": 0.6728750000000003
+          },
+          {
+            "start": 10.001375,
+            "end": 10.579708,
+            "seconds": 0.5783330000000007
+          },
+          {
+            "start": 12.642542,
+            "end": 12.941125,
+            "seconds": 0.29858299999999893
+          }
+        ],
+        "median_pause_seconds": 0.5783330000000007,
+        "sum_pause_seconds": 3.027791,
+        "long_700_1100ms": [
+          {
+            "start": 5.194583,
+            "end": 6.12625,
+            "seconds": 0.931667
+          }
+        ],
+        "longs_per_minute": 3.983622795537838,
+        "approx_articulation_ppm_excluding_silences": 134.6199678308136,
+        "warning": "Umbral acústico orientativo; una fricativa baja puede parecer silencio. No prueba respiraciones ni suspiros."
+      }
+    },
+    {
+      "file": "work/voz/muestras/malvinas-algenib.mp3",
+      "sha256": "c8b24f65db51e17c25166b4ffa6292ecab86fd9ff59393b10ed5a25374cfafd5",
+      "duration_decoded_seconds": 15.68,
+      "ppm_file": 103.31632653061224,
+      "ppm_narration": 106.71936758893281,
+      "narration_span_seconds": 15.18,
+      "ASR_pauses_ge120ms": {
+        "n": 3,
+        "p10": 0.16400000000000006,
+        "median": 0.33999999999999986,
+        "p90": 0.5,
+        "min": 0.1200000000000001,
+        "max": 0.54
+      },
+      "ASR_long_pauses_700_1100ms": 0,
+      "ASR_long_pauses_per_minute": 0.0,
+      "ASR_sentence_gaps": [
+        {
+          "start": 4.88,
+          "end": 5.42,
+          "seconds": 0.54,
+          "after": " Stanley.",
+          "before": " Una",
+          "punctuation": "sentence"
+        },
+        {
+          "start": 9.72,
+          "end": 10.06,
+          "seconds": 0.33999999999999986,
+          "after": " completo.",
+          "before": " Super",
+          "punctuation": "sentence"
+        }
+      ],
+      "ASR_comma_gaps": [
+        {
+          "start": 1.42,
+          "end": 1.46,
+          "seconds": 0.040000000000000036,
+          "after": " Ascensión,",
+          "before": " un",
+          "punctuation": "comma"
+        },
+        {
+          "start": 7.26,
+          "end": 7.38,
+          "seconds": 0.1200000000000001,
+          "after": " pista,",
+          "before": " sin",
+          "punctuation": "comma"
+        }
+      ],
+      "internal_acoustic_silences": [
+        {
+          "start": 1.79542,
+          "end": 1.933152,
+          "seconds": 0.13773199999999997
+        },
+        {
+          "start": 1.935261,
+          "end": 2.306122,
+          "seconds": 0.3708609999999999
+        },
+        {
+          "start": 5.241134,
+          "end": 6.126145,
+          "seconds": 0.8850110000000004
+        },
+        {
+          "start": 7.520907,
+          "end": 8.155601,
+          "seconds": 0.6346940000000005
+        },
+        {
+          "start": 10.003061,
+          "end": 10.577551,
+          "seconds": 0.5744899999999991
+        },
+        {
+          "start": 12.650204,
+          "end": 12.941111,
+          "seconds": 0.2909069999999989
+        }
+      ],
+      "all_acoustic_silences": [
+        {
+          "start": 0.0,
+          "end": 0.33093,
+          "seconds": 0.33093
+        },
+        {
+          "start": 1.79542,
+          "end": 1.933152,
+          "seconds": 0.13773199999999997
+        },
+        {
+          "start": 1.935261,
+          "end": 2.306122,
+          "seconds": 0.3708609999999999
+        },
+        {
+          "start": 5.241134,
+          "end": 6.126145,
+          "seconds": 0.8850110000000004
+        },
+        {
+          "start": 7.520907,
+          "end": 8.155601,
+          "seconds": 0.6346940000000005
+        },
+        {
+          "start": 10.003061,
+          "end": 10.577551,
+          "seconds": 0.5744899999999991
+        },
+        {
+          "start": 12.650204,
+          "end": 12.941111,
+          "seconds": 0.2909069999999989
+        },
+        {
+          "start": 15.416848,
+          "end": 15.68,
+          "seconds": 0.26315199999999983
+        }
+      ],
+      "f0_hz": {
+        "n": 604,
+        "p10": 72.15491804947395,
+        "median": 92.07724297294868,
+        "p90": 116.59695530287202,
+        "min": 60.90032276127414,
+        "max": 394.3709325056693
+      },
+      "f0_p10_p90_semitones": 8.308325750934719,
+      "pitch_alt_disagreement_gt9st_percent": 4.6875,
+      "lufs_i": -17.12,
+      "true_peak_dbTP": -1.71,
+      "loudness_range_LU": 2.1,
+      "speech_frame_rms_dbfs": {
+        "n": 1413,
+        "p10": -68.02233374626573,
+        "median": -21.987532187235985,
+        "p90": -13.805690548229787,
+        "min": -81.79999073604641,
+        "max": -9.472351304744835
+      },
+      "clipped_samples_at_16k": 0,
+      "within_20_seconds": true,
+      "acoustic_summary": {
+        "activity_start": 0.33093,
+        "activity_end": 15.416848,
+        "narration_span_seconds": 15.085918,
+        "ppm_narration": 107.38491353326991,
+        "pause_count_ge120ms": 5,
+        "pauses": [
+          {
+            "start": 1.79542,
+            "end": 2.306122,
+            "seconds": 0.5107019999999998
+          },
+          {
+            "start": 5.241134,
+            "end": 6.126145,
+            "seconds": 0.8850110000000004
+          },
+          {
+            "start": 7.520907,
+            "end": 8.155601,
+            "seconds": 0.6346940000000005
+          },
+          {
+            "start": 10.003061,
+            "end": 10.577551,
+            "seconds": 0.5744899999999991
+          },
+          {
+            "start": 12.650204,
+            "end": 12.941111,
+            "seconds": 0.2909069999999989
+          }
+        ],
+        "median_pause_seconds": 0.5744899999999991,
+        "sum_pause_seconds": 2.8958039999999987,
+        "long_700_1100ms": [
+          {
+            "start": 5.241134,
+            "end": 6.126145,
+            "seconds": 0.8850110000000004
+          }
+        ],
+        "longs_per_minute": 3.9772190197507373,
+        "approx_articulation_ppm_excluding_silences": 132.89457342236503,
+        "warning": "Umbral acústico orientativo; una fricativa baja puede parecer silencio. No prueba respiraciones ni suspiros."
+      }
+    },
+    {
+      "file": "work/voz/muestras/malvinas-algenib-fx.mp3",
+      "sha256": "f23273a30989d8c816f89b4aca1fa784344992bfe5800b304e2f508ab4fce7e7",
+      "duration_decoded_seconds": 15.66,
+      "ppm_file": 103.44827586206897,
+      "ppm_narration": 106.71936758893281,
+      "narration_span_seconds": 15.18,
+      "ASR_pauses_ge120ms": {
+        "n": 3,
+        "p10": 0.16400000000000006,
+        "median": 0.33999999999999986,
+        "p90": 0.5,
+        "min": 0.1200000000000001,
+        "max": 0.54
+      },
+      "ASR_long_pauses_700_1100ms": 0,
+      "ASR_long_pauses_per_minute": 0.0,
+      "ASR_sentence_gaps": [
+        {
+          "start": 4.88,
+          "end": 5.42,
+          "seconds": 0.54,
+          "after": " Stanley.",
+          "before": " Una",
+          "punctuation": "sentence"
+        },
+        {
+          "start": 9.72,
+          "end": 10.06,
+          "seconds": 0.33999999999999986,
+          "after": " completo.",
+          "before": " Super",
+          "punctuation": "sentence"
+        }
+      ],
+      "ASR_comma_gaps": [
+        {
+          "start": 1.42,
+          "end": 1.46,
+          "seconds": 0.040000000000000036,
+          "after": " Ascensión,",
+          "before": " un",
+          "punctuation": "comma"
+        },
+        {
+          "start": 7.26,
+          "end": 7.38,
+          "seconds": 0.1200000000000001,
+          "after": " pista,",
+          "before": " sin",
+          "punctuation": "comma"
+        }
+      ],
+      "internal_acoustic_silences": [
+        {
+          "start": 1.798,
+          "end": 1.932063,
+          "seconds": 0.13406300000000004
+        },
+        {
+          "start": 1.935292,
+          "end": 2.086667,
+          "seconds": 0.15137499999999982
+        },
+        {
+          "start": 2.086958,
+          "end": 2.306,
+          "seconds": 0.21904199999999996
+        },
+        {
+          "start": 5.242312,
+          "end": 6.125979,
+          "seconds": 0.883667
+        },
+        {
+          "start": 7.531354,
+          "end": 8.155479,
+          "seconds": 0.6241249999999994
+        },
+        {
+          "start": 10.003813,
+          "end": 10.575458,
+          "seconds": 0.5716450000000002
+        },
+        {
+          "start": 12.654958,
+          "end": 12.940979,
+          "seconds": 0.28602099999999986
+        }
+      ],
+      "all_acoustic_silences": [
+        {
+          "start": 0.0,
+          "end": 0.330542,
+          "seconds": 0.330542
+        },
+        {
+          "start": 1.798,
+          "end": 1.932063,
+          "seconds": 0.13406300000000004
+        },
+        {
+          "start": 1.935292,
+          "end": 2.086667,
+          "seconds": 0.15137499999999982
+        },
+        {
+          "start": 2.086958,
+          "end": 2.306,
+          "seconds": 0.21904199999999996
+        },
+        {
+          "start": 5.242312,
+          "end": 6.125979,
+          "seconds": 0.883667
+        },
+        {
+          "start": 7.531354,
+          "end": 8.155479,
+          "seconds": 0.6241249999999994
+        },
+        {
+          "start": 10.003813,
+          "end": 10.575458,
+          "seconds": 0.5716450000000002
+        },
+        {
+          "start": 12.654958,
+          "end": 12.940979,
+          "seconds": 0.28602099999999986
+        },
+        {
+          "start": 15.421958,
+          "end": 15.66,
+          "seconds": 0.2380420000000001
+        }
+      ],
+      "f0_hz": {
+        "n": 606,
+        "p10": 72.61453316194306,
+        "median": 91.90176525691643,
+        "p90": 117.33764680712389,
+        "min": 61.05687996927426,
+        "max": 394.1507655602016
+      },
+      "f0_p10_p90_semitones": 8.308028872070297,
+      "pitch_alt_disagreement_gt9st_percent": 10.271317829457365,
+      "lufs_i": -16.35,
+      "true_peak_dbTP": -1.76,
+      "loudness_range_LU": 2.3,
+      "speech_frame_rms_dbfs": {
+        "n": 1413,
+        "p10": -68.2775944600597,
+        "median": -20.651687350982222,
+        "p90": -12.458325745527125,
+        "min": -80.63956756920702,
+        "max": -8.624340548461381
+      },
+      "clipped_samples_at_16k": 0,
+      "within_20_seconds": true,
+      "acoustic_summary": {
+        "activity_start": 0.330542,
+        "activity_end": 15.421958,
+        "narration_span_seconds": 15.091416,
+        "ppm_narration": 107.34579180641498,
+        "pause_count_ge120ms": 5,
+        "pauses": [
+          {
+            "start": 1.798,
+            "end": 2.306,
+            "seconds": 0.508
+          },
+          {
+            "start": 5.242312,
+            "end": 6.125979,
+            "seconds": 0.883667
+          },
+          {
+            "start": 7.531354,
+            "end": 8.155479,
+            "seconds": 0.6241249999999994
+          },
+          {
+            "start": 10.003813,
+            "end": 10.575458,
+            "seconds": 0.5716450000000002
+          },
+          {
+            "start": 12.654958,
+            "end": 12.940979,
+            "seconds": 0.28602099999999986
+          }
+        ],
+        "median_pause_seconds": 0.5716450000000002,
+        "sum_pause_seconds": 2.8734579999999994,
+        "long_700_1100ms": [
+          {
+            "start": 5.242312,
+            "end": 6.125979,
+            "seconds": 0.883667
+          }
+        ],
+        "longs_per_minute": 3.9757700669042584,
+        "approx_articulation_ppm_excluding_silences": 132.59171458929552,
+        "warning": "Umbral acústico orientativo; una fricativa baja puede parecer silencio. No prueba respiraciones ni suspiros."
+      }
+    },
+    {
+      "file": "work/voz/muestras/malvinas-orus.wav",
+      "sha256": "7dc73630009c661795da50bb658a50a907feb1dd7ab94c58a42782cfec2a44f1",
+      "duration_decoded_seconds": 14.44,
+      "ppm_file": 112.18836565096953,
+      "ppm_narration": 116.21233859397418,
+      "narration_span_seconds": 13.94,
+      "ASR_pauses_ge120ms": {
+        "n": 3,
+        "p10": 0.2600000000000001,
+        "median": 0.5,
+        "p90": 0.5159999999999997,
+        "min": 0.20000000000000018,
+        "max": 0.5199999999999996
+      },
+      "ASR_long_pauses_700_1100ms": 0,
+      "ASR_long_pauses_per_minute": 0.0,
+      "ASR_sentence_gaps": [
+        {
+          "start": 4.14,
+          "end": 4.64,
+          "seconds": 0.5,
+          "after": " Stanley.",
+          "before": " Una",
+          "punctuation": "sentence"
+        },
+        {
+          "start": 9.08,
+          "end": 9.6,
+          "seconds": 0.5199999999999996,
+          "after": " completo.",
+          "before": " Super",
+          "punctuation": "sentence"
+        }
+      ],
+      "ASR_comma_gaps": [
+        {
+          "start": 1.46,
+          "end": 1.5,
+          "seconds": 0.040000000000000036,
+          "after": " Ascensión,",
+          "before": " un",
+          "punctuation": "comma"
+        },
+        {
+          "start": 6.78,
+          "end": 6.98,
+          "seconds": 0.20000000000000018,
+          "after": " pista,",
+          "before": " sin",
+          "punctuation": "comma"
+        }
+      ],
+      "internal_acoustic_silences": [
+        {
+          "start": 1.67075,
+          "end": 1.837542,
+          "seconds": 0.16679200000000005
+        },
+        {
+          "start": 4.490667,
+          "end": 5.437458,
+          "seconds": 0.9467910000000002
+        },
+        {
+          "start": 7.127458,
+          "end": 7.573292,
+          "seconds": 0.4458340000000005
+        },
+        {
+          "start": 9.425042,
+          "end": 10.007792,
+          "seconds": 0.5827500000000008
+        }
+      ],
+      "all_acoustic_silences": [
+        {
+          "start": 0.0,
+          "end": 0.173333,
+          "seconds": 0.173333
+        },
+        {
+          "start": 1.67075,
+          "end": 1.837542,
+          "seconds": 0.16679200000000005
+        },
+        {
+          "start": 4.490667,
+          "end": 5.437458,
+          "seconds": 0.9467910000000002
+        },
+        {
+          "start": 7.127458,
+          "end": 7.573292,
+          "seconds": 0.4458340000000005
+        },
+        {
+          "start": 9.425042,
+          "end": 10.007792,
+          "seconds": 0.5827500000000008
+        },
+        {
+          "start": 14.122958,
+          "end": 14.44,
+          "seconds": 0.31704199999999894
+        }
+      ],
+      "f0_hz": {
+        "n": 696,
+        "p10": 83.07563472008576,
+        "median": 115.02476685711584,
+        "p90": 162.53801261890703,
+        "min": 60.1589089419267,
+        "max": 213.04137845984155
+      },
+      "f0_p10_p90_semitones": 11.619358124942787,
+      "pitch_alt_disagreement_gt9st_percent": 0.741839762611276,
+      "lufs_i": -19.22,
+      "true_peak_dbTP": -1.67,
+      "loudness_range_LU": 3.5,
+      "speech_frame_rms_dbfs": {
+        "n": 1267,
+        "p10": -60.26277202525266,
+        "median": -24.64058269632883,
+        "p90": -14.741383548005924,
+        "min": -81.66093519277607,
+        "max": -6.96817773470499
+      },
+      "clipped_samples_at_16k": 0,
+      "within_20_seconds": true,
+      "acoustic_summary": {
+        "activity_start": 0.173333,
+        "activity_end": 14.122958,
+        "narration_span_seconds": 13.949625000000001,
+        "ppm_narration": 116.13215409016371,
+        "pause_count_ge120ms": 4,
+        "pauses": [
+          {
+            "start": 1.67075,
+            "end": 1.837542,
+            "seconds": 0.16679200000000005
+          },
+          {
+            "start": 4.490667,
+            "end": 5.437458,
+            "seconds": 0.9467910000000002
+          },
+          {
+            "start": 7.127458,
+            "end": 7.573292,
+            "seconds": 0.4458340000000005
+          },
+          {
+            "start": 9.425042,
+            "end": 10.007792,
+            "seconds": 0.5827500000000008
+          }
+        ],
+        "median_pause_seconds": 0.5142920000000006,
+        "sum_pause_seconds": 2.1421670000000015,
+        "long_700_1100ms": [
+          {
+            "start": 4.490667,
+            "end": 5.437458,
+            "seconds": 0.9467910000000002
+          }
+        ],
+        "longs_per_minute": 4.301190892228285,
+        "approx_articulation_ppm_excluding_silences": 137.20141964510904,
+        "warning": "Umbral acústico orientativo; una fricativa baja puede parecer silencio. No prueba respiraciones ni suspiros."
+      }
+    },
+    {
+      "file": "work/voz/muestras/malvinas-orus.mp3",
+      "sha256": "8f2f826cb5a7a99de5494217f42a1c3f9696d74476b1b340c404e2ea7e38c195",
+      "duration_decoded_seconds": 14.44,
+      "ppm_file": 112.18836565096953,
+      "ppm_narration": 116.21233859397418,
+      "narration_span_seconds": 13.94,
+      "ASR_pauses_ge120ms": {
+        "n": 3,
+        "p10": 0.2600000000000001,
+        "median": 0.5,
+        "p90": 0.5159999999999997,
+        "min": 0.20000000000000018,
+        "max": 0.5199999999999996
+      },
+      "ASR_long_pauses_700_1100ms": 0,
+      "ASR_long_pauses_per_minute": 0.0,
+      "ASR_sentence_gaps": [
+        {
+          "start": 4.14,
+          "end": 4.64,
+          "seconds": 0.5,
+          "after": " Stanley.",
+          "before": " Una",
+          "punctuation": "sentence"
+        },
+        {
+          "start": 9.08,
+          "end": 9.6,
+          "seconds": 0.5199999999999996,
+          "after": " completo.",
+          "before": " Super",
+          "punctuation": "sentence"
+        }
+      ],
+      "ASR_comma_gaps": [
+        {
+          "start": 1.46,
+          "end": 1.5,
+          "seconds": 0.040000000000000036,
+          "after": " Ascensión,",
+          "before": " un",
+          "punctuation": "comma"
+        },
+        {
+          "start": 6.78,
+          "end": 6.98,
+          "seconds": 0.20000000000000018,
+          "after": " pista,",
+          "before": " sin",
+          "punctuation": "comma"
+        }
+      ],
+      "internal_acoustic_silences": [
+        {
+          "start": 1.670839,
+          "end": 1.817256,
+          "seconds": 0.14641700000000002
+        },
+        {
+          "start": 4.49068,
+          "end": 5.437324,
+          "seconds": 0.946644
+        },
+        {
+          "start": 7.129955,
+          "end": 7.571723,
+          "seconds": 0.4417680000000006
+        },
+        {
+          "start": 9.433605,
+          "end": 10.007778,
+          "seconds": 0.574173
+        }
+      ],
+      "all_acoustic_silences": [
+        {
+          "start": 0.0,
+          "end": 0.173129,
+          "seconds": 0.173129
+        },
+        {
+          "start": 1.670839,
+          "end": 1.817256,
+          "seconds": 0.14641700000000002
+        },
+        {
+          "start": 4.49068,
+          "end": 5.437324,
+          "seconds": 0.946644
+        },
+        {
+          "start": 7.129955,
+          "end": 7.571723,
+          "seconds": 0.4417680000000006
+        },
+        {
+          "start": 9.433605,
+          "end": 10.007778,
+          "seconds": 0.574173
+        },
+        {
+          "start": 14.126463,
+          "end": 14.44,
+          "seconds": 0.3135370000000002
+        }
+      ],
+      "f0_hz": {
+        "n": 701,
+        "p10": 83.00933567243938,
+        "median": 115.12966059828672,
+        "p90": 161.67570672299982,
+        "min": 60.159116908011114,
+        "max": 213.20373990971672
+      },
+      "f0_p10_p90_semitones": 11.541088954685211,
+      "pitch_alt_disagreement_gt9st_percent": 1.0294117647058822,
+      "lufs_i": -17.05,
+      "true_peak_dbTP": -1.75,
+      "loudness_range_LU": 2.9,
+      "speech_frame_rms_dbfs": {
+        "n": 1267,
+        "p10": -57.73620879840267,
+        "median": -22.184768235779124,
+        "p90": -12.560445108261504,
+        "min": -78.64762585406835,
+        "max": -6.7435422975912305
+      },
+      "clipped_samples_at_16k": 0,
+      "within_20_seconds": true,
+      "acoustic_summary": {
+        "activity_start": 0.173129,
+        "activity_end": 14.126463,
+        "narration_span_seconds": 13.953334,
+        "ppm_narration": 116.10128446721049,
+        "pause_count_ge120ms": 4,
+        "pauses": [
+          {
+            "start": 1.670839,
+            "end": 1.817256,
+            "seconds": 0.14641700000000002
+          },
+          {
+            "start": 4.49068,
+            "end": 5.437324,
+            "seconds": 0.946644
+          },
+          {
+            "start": 7.129955,
+            "end": 7.571723,
+            "seconds": 0.4417680000000006
+          },
+          {
+            "start": 9.433605,
+            "end": 10.007778,
+            "seconds": 0.574173
+          }
+        ],
+        "median_pause_seconds": 0.5079705000000003,
+        "sum_pause_seconds": 2.1090020000000007,
+        "long_700_1100ms": [
+          {
+            "start": 4.49068,
+            "end": 5.437324,
+            "seconds": 0.946644
+          }
+        ],
+        "longs_per_minute": 4.300047572859648,
+        "approx_articulation_ppm_excluding_silences": 136.77428157197892,
+        "warning": "Umbral acústico orientativo; una fricativa baja puede parecer silencio. No prueba respiraciones ni suspiros."
+      }
+    },
+    {
+      "file": "work/voz/muestras/malvinas-orus-fx.mp3",
+      "sha256": "c61676141f25aac9e6ad15f94504a799ed0178e4c7ee186f30264848e2ea0985",
+      "duration_decoded_seconds": 14.38,
+      "ppm_file": 112.65646731571627,
+      "ppm_narration": 116.21233859397418,
+      "narration_span_seconds": 13.94,
+      "ASR_pauses_ge120ms": {
+        "n": 3,
+        "p10": 0.2600000000000001,
+        "median": 0.5,
+        "p90": 0.5159999999999997,
+        "min": 0.20000000000000018,
+        "max": 0.5199999999999996
+      },
+      "ASR_long_pauses_700_1100ms": 0,
+      "ASR_long_pauses_per_minute": 0.0,
+      "ASR_sentence_gaps": [
+        {
+          "start": 4.14,
+          "end": 4.64,
+          "seconds": 0.5,
+          "after": " Stanley.",
+          "before": " Una",
+          "punctuation": "sentence"
+        },
+        {
+          "start": 9.08,
+          "end": 9.6,
+          "seconds": 0.5199999999999996,
+          "after": " completo.",
+          "before": " Super",
+          "punctuation": "sentence"
+        }
+      ],
+      "ASR_comma_gaps": [
+        {
+          "start": 1.46,
+          "end": 1.5,
+          "seconds": 0.040000000000000036,
+          "after": " Ascensión,",
+          "before": " un",
+          "punctuation": "comma"
+        },
+        {
+          "start": 6.78,
+          "end": 6.98,
+          "seconds": 0.20000000000000018,
+          "after": " pista,",
+          "before": " sin",
+          "punctuation": "comma"
+        }
+      ],
+      "internal_acoustic_silences": [
+        {
+          "start": 1.670854,
+          "end": 1.803542,
+          "seconds": 0.13268799999999992
+        },
+        {
+          "start": 4.490708,
+          "end": 5.437458,
+          "seconds": 0.9467500000000006
+        },
+        {
+          "start": 7.130625,
+          "end": 7.571667,
+          "seconds": 0.4410419999999995
+        },
+        {
+          "start": 9.433667,
+          "end": 10.007812,
+          "seconds": 0.5741449999999997
+        }
+      ],
+      "all_acoustic_silences": [
+        {
+          "start": 0.0,
+          "end": 0.172979,
+          "seconds": 0.172979
+        },
+        {
+          "start": 1.670854,
+          "end": 1.803542,
+          "seconds": 0.13268799999999992
+        },
+        {
+          "start": 4.490708,
+          "end": 5.437458,
+          "seconds": 0.9467500000000006
+        },
+        {
+          "start": 7.130625,
+          "end": 7.571667,
+          "seconds": 0.4410419999999995
+        },
+        {
+          "start": 9.433667,
+          "end": 10.007812,
+          "seconds": 0.5741449999999997
+        },
+        {
+          "start": 14.1265,
+          "end": 14.38,
+          "seconds": 0.2535000000000007
+        }
+      ],
+      "f0_hz": {
+        "n": 712,
+        "p10": 82.80311225787648,
+        "median": 114.84839418072711,
+        "p90": 162.19898163545864,
+        "min": 68.60876343532757,
+        "max": 379.253221474544
+      },
+      "f0_p10_p90_semitones": 11.640094347554111,
+      "pitch_alt_disagreement_gt9st_percent": 5.202312138728324,
+      "lufs_i": -16.43,
+      "true_peak_dbTP": -1.75,
+      "loudness_range_LU": 3.0,
+      "speech_frame_rms_dbfs": {
+        "n": 1267,
+        "p10": -58.576725336880166,
+        "median": -21.03865005219695,
+        "p90": -11.715780577342928,
+        "min": -79.61731003259574,
+        "max": -6.759798906783265
+      },
+      "clipped_samples_at_16k": 0,
+      "within_20_seconds": true,
+      "acoustic_summary": {
+        "activity_start": 0.172979,
+        "activity_end": 14.1265,
+        "narration_span_seconds": 13.953521,
+        "ppm_narration": 116.0997285201348,
+        "pause_count_ge120ms": 4,
+        "pauses": [
+          {
+            "start": 1.670854,
+            "end": 1.803542,
+            "seconds": 0.13268799999999992
+          },
+          {
+            "start": 4.490708,
+            "end": 5.437458,
+            "seconds": 0.9467500000000006
+          },
+          {
+            "start": 7.130625,
+            "end": 7.571667,
+            "seconds": 0.4410419999999995
+          },
+          {
+            "start": 9.433667,
+            "end": 10.007812,
+            "seconds": 0.5741449999999997
+          }
+        ],
+        "median_pause_seconds": 0.5075934999999996,
+        "sum_pause_seconds": 2.0946249999999997,
+        "long_700_1100ms": [
+          {
+            "start": 4.490708,
+            "end": 5.437458,
+            "seconds": 0.9467500000000006
+          }
+        ],
+        "longs_per_minute": 4.299989945190178,
+        "approx_articulation_ppm_excluding_silences": 136.60630804081592,
+        "warning": "Umbral acústico orientativo; una fricativa baja puede parecer silencio. No prueba respiraciones ni suspiros."
+      }
+    }
+  ]
+}

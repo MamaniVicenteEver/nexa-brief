@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-memoria",
+  "family": "lyrics",
+  "source_of_truth": "templates.json#templates/lyrics-memoria",
+  "config_json": "nodemotion/lyrics/lyrics-memoria/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-memoria/prompts/config_mapper.md",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 6,
+        "target": "media",
+        "label": "Videos",
+        "hint": "recuerdos: video casero antiguo, familia, niños, manos"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "sources": {
+    "template": "templates.json#templates/lyrics-memoria",
+    "config": "nodemotion/lyrics/lyrics-memoria/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-memoria/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-memoria/README.md"
+  },
+  "component_parameters": "Read existing showcase/components.json when present; otherwise use the existing config and DESIGN.md. No inferred parameter schema."
+}

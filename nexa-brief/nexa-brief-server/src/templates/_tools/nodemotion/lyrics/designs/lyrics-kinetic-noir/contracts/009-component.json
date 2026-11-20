@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-kinetic-noir",
+  "id": "noir.ghost",
+  "entry_id": "noir.ghost",
+  "kind": "component",
+  "label": "Eco",
+  "summary": "Palabra slab enorme que entra inclinada con dos copias tenues desplazadas debajo (1-2 palabras).",
+  "component": {
+    "name": "noir.ghost",
+    "label": "Eco",
+    "summary": "Palabra slab enorme que entra inclinada con dos copias tenues desplazadas debajo (1-2 palabras).",
+    "tags": [
+      "scene"
+    ],
+    "file": "components/scenes.js",
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "MODERNO",
+        "doc": "Texto de la frase (en el video sale de la letra)"
+      },
+      "smoke": {
+        "type": "boolean",
+        "default": false,
+        "doc": "Humo bajo en la demo"
+      }
+    },
+    "demo": {
+      "text": "MODERNO"
+    },
+    "preview": {
+      "t": 1.4
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "MODERNO",
+      "doc": "Texto de la frase (en el video sale de la letra)"
+    },
+    "smoke": {
+      "type": "boolean",
+      "default": false,
+      "doc": "Humo bajo en la demo"
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-kinetic-noir/showcase/components.json",
+      "pointer": "/components/6"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

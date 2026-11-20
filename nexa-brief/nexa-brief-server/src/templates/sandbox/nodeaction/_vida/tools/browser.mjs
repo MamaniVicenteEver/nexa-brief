@@ -1,0 +1,3 @@
+import {readdir,access} from 'node:fs/promises';import{join,resolve}from'node:path';
+process.env.PLAYWRIGHT_BROWSERS_PATH ||= resolve(process.env.HOME,'.cache/ms-playwright');process.env.TMPDIR='/tmp';
+export async function installedChromium(){const {chromium}=await import('playwright');const root=process.env.PLAYWRIGHT_BROWSERS_PATH;const candidates=[chromium.executablePath(),...(await readdir(root)).filter(x=>/^chromium-\d+$/.test(x)).sort().reverse().map(x=>join(root,x,'chrome-linux64/chrome'))];for(const path of candidates){try{await access(path);return {chromium,executablePath:path};}catch{}}throw new Error('No hay Chromium instalado en '+root+'. No se descargan navegadores.');}

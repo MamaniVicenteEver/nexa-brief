@@ -1,0 +1,73 @@
+{
+  "images": [
+    {
+      "src": "thumbnail-A.jpg",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "src": "thumbnail-B.jpg",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "src": "thumbnail-C.jpg",
+      "width": 1280,
+      "height": 720
+    }
+  ],
+  "opening_a": {
+    "language": "en-US",
+    "audio": "http://localhost:3000/api/v1/explainer/files/productions/nodetech/lo-que-le-contas-a-la-ia-no-es-privado-tus-chats/languages/en-US/revisions/rev-005/song-with-outro.mp3"
+  },
+  "iframe_changed_on_choice": true,
+  "record_enabled": true,
+  "record_without_publish_enabled": true,
+  "no_channels_message": false,
+  "layouts": [
+    {
+      "viewport": 1833,
+      "tab": "T\u00edtulos y metadatos",
+      "width": 384,
+      "scroll": 384
+    },
+    {
+      "viewport": 1833,
+      "tab": "Grabar y publicar",
+      "width": 384,
+      "scroll": 384
+    },
+    {
+      "viewport": 1833,
+      "tab": "Uso",
+      "width": 384,
+      "scroll": 384
+    },
+    {
+      "viewport": 1200,
+      "tab": "T\u00edtulos y metadatos",
+      "width": 300,
+      "scroll": 300
+    },
+    {
+      "viewport": 1200,
+      "tab": "Grabar y publicar",
+      "width": 300,
+      "scroll": 300
+    },
+    {
+      "viewport": 1200,
+      "tab": "Uso",
+      "width": 300,
+      "scroll": 300
+    }
+  ],
+  "page_errors": [],
+  "console_errors": [],
+  "login_console": [
+    "ClientFetchError: Failed to fetch. Read more at https://errors.authjs.dev#autherror\n    at fetchData (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0oy-ou1._.js:7256:22)\n    at async getSession (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0oy-ou1._.js:7423:21)\n    at async SessionProvider.useEffect [as _getSession] (http://localhost:3000/_next/static/chunks/node_modules__pnpm_0oy-ou1._.js:7566:51)"
+  ],
+  "bad_responses": [],
+  "channel_checkbox_count": 9,
+  "publish_enabled_with_channel": true
+}

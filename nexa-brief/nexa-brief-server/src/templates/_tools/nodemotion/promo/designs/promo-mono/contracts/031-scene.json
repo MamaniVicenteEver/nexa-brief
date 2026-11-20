@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "scene.phonechat",
+  "entry_id": "scene.phonechat",
+  "name": "phonechat",
+  "kind": "scene",
+  "label": "phonechat",
+  "summary": "Existing scene type: phonechat.",
+  "variants": [
+    {
+      "type": "phonechat",
+      "trans": "cut",
+      "max_text_lines": null
+    },
+    {
+      "type": "phonechat",
+      "squiggle": true,
+      "trans": "cut",
+      "max_text_lines": null
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 16,
+      "type": "phonechat",
+      "max_text_lines": null
+    },
+    {
+      "scene": 17,
+      "type": "phonechat",
+      "max_text_lines": null
+    }
+  ],
+  "notes": {
+    "script": "Un segmento por escena, en el orden de la plantilla. La primera escena es la intro y la última el cierre. Adapta el texto al tema; no uses el texto de la demo. Sigue max_text_lines por tipo: null indica que el componente no impone un límite a sus líneas de entrada; pattern y outro pueden usar el segmento como paso visual sin mostrar ese texto."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/default_scenes/15"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/default_scenes/16"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/scene_cycle/15"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/scene_cycle/16"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

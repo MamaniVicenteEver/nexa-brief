@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "mono.linetext",
+  "entry_id": "mono.linetext",
+  "kind": "component",
+  "label": "Línea que entra desde el borde + texto; opcional garabato qu",
+  "summary": "Línea que entra desde el borde + texto; opcional garabato que la reemplaza",
+  "component": {
+    "name": "mono.linetext",
+    "label": "Línea que entra desde el borde + texto; opcional garabato qu",
+    "summary": "Línea que entra desde el borde + texto; opcional garabato que la reemplaza",
+    "tags": [
+      "escena"
+    ],
+    "scene_type": "linetext",
+    "params": {
+      "squiggle": {
+        "type": "boolean",
+        "default": true
+      },
+      "lineLen": {
+        "type": "number",
+        "min": 0.1,
+        "max": 0.6,
+        "default": 0.32
+      }
+    },
+    "demo": {
+      "time": 18.4
+    },
+    "preview": {
+      "t": 18.4
+    }
+  },
+  "params": {
+    "squiggle": {
+      "type": "boolean",
+      "default": true
+    },
+    "lineLen": {
+      "type": "number",
+      "min": 0.1,
+      "max": 0.6,
+      "default": 0.32
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/commercial/promo-mono/showcase/components.json",
+      "pointer": "/components/5"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

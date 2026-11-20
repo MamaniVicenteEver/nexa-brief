@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-dynamic",
+  "id": "scene.photo",
+  "entry_id": "scene.photo",
+  "name": "photo",
+  "kind": "scene",
+  "label": "photo",
+  "summary": "medio recortado y palabra con subtítulo opcional",
+  "variants": [
+    {
+      "type": "photo",
+      "media": [
+        "basket"
+      ],
+      "side": "right",
+      "flyer": "FUE",
+      "flyerAt": 0.3,
+      "max_text_lines": 2
+    },
+    {
+      "type": "photo",
+      "media": [
+        "sprint"
+      ],
+      "side": "right",
+      "shape": "square",
+      "flyer": "DIN",
+      "flyerAt": 0.2,
+      "max_text_lines": 2
+    },
+    {
+      "type": "photo",
+      "media": [
+        "boxing-1"
+      ],
+      "side": "left",
+      "shape": "square",
+      "max_text_lines": 2
+    },
+    {
+      "type": "photo",
+      "media": [
+        "skate"
+      ],
+      "side": "right",
+      "shape": "landscape",
+      "flyer": "RA",
+      "flyerAt": 1.6,
+      "max_text_lines": 2
+    },
+    {
+      "type": "photo",
+      "media": [
+        "ropes"
+      ],
+      "side": "left",
+      "flyer": "NUE",
+      "flyerAt": 1.7,
+      "max_text_lines": 2
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 3,
+      "type": "photo",
+      "shows": "medio recortado y palabra con subtítulo opcional",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 16,
+      "media": [
+        {
+          "slot": "basket",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 5,
+      "type": "photo",
+      "shows": "medio recortado y palabra con subtítulo opcional",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 16,
+      "media": [
+        {
+          "slot": "sprint",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 6,
+      "type": "photo",
+      "shows": "medio recortado y palabra con subtítulo opcional",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 16,
+      "media": [
+        {
+          "slot": "boxing-1",
+          "kind": "image"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 12,
+      "type": "photo",
+      "shows": "medio recortado y palabra con subtítulo opcional",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 16,
+      "media": [
+        {
+          "slot": "skate",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    },
+    {
+      "scene": 13,
+      "type": "photo",
+      "shows": "medio recortado y palabra con subtítulo opcional",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 16,
+      "media": [
+        {
+          "slot": "ropes",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+    "brand_texts": {
+      "brand.tag": "identidad o serie breve junto a medios",
+      "brand.url": "llamada o dirección de cierre; la segunda línea del cierre tiene prioridad",
+      "brand.vertical": "identidad breve en el borde"
+    },
+    "design_limitations": "El ciclo contiene fragmentos flyer fijos del ejemplo deportivo; revisar su sentido y reemplazarlos mediante scene-overrides si hace falta.",
+    "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/default_scenes/2"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/default_scenes/4"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/default_scenes/5"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/default_scenes/11"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/default_scenes/12"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/scene_cycle/2"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/scene_cycle/4"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/scene_cycle/5"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/scene_cycle/11"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-dynamic.json",
+      "pointer": "/scene_cycle/12"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

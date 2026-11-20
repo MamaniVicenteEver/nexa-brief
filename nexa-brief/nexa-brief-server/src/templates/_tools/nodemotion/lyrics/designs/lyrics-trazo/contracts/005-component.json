@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "trazo.rafaga",
+  "entry_id": "trazo.rafaga",
+  "kind": "component",
+  "label": "Ráfaga letra a letra",
+  "summary": "Palabra sostenida: la palabra y sus letras gigantes alternan estilo y fondo.",
+  "component": {
+    "name": "trazo.rafaga",
+    "label": "Ráfaga letra a letra",
+    "summary": "Palabra sostenida: la palabra y sus letras gigantes alternan estilo y fondo.",
+    "default": true,
+    "params": {
+      "text": {
+        "type": "string",
+        "default": "rumble",
+        "doc": "Palabra"
+      },
+      "duration": {
+        "type": "number",
+        "default": 1.6,
+        "doc": "Segundos",
+        "min": 0.4,
+        "max": 6
+      }
+    },
+    "tags": [
+      "escena"
+    ],
+    "file": "components/escenas.js",
+    "demo": {
+      "text": "rumble"
+    },
+    "preview": {
+      "t": 0.45
+    }
+  },
+  "params": {
+    "text": {
+      "type": "string",
+      "default": "rumble",
+      "doc": "Palabra"
+    },
+    "duration": {
+      "type": "number",
+      "default": 1.6,
+      "doc": "Segundos",
+      "min": 0.4,
+      "max": 6
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/showcase/components.json",
+      "pointer": "/components/4"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

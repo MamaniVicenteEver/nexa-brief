@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-grunge-montage",
+  "id": "config.look",
+  "entry_id": "config.look",
+  "name": "look",
+  "kind": "configuration",
+  "label": "look",
+  "summary": "Existing configuration configuration: look.",
+  "params": {
+    "darkScale": {
+      "default": 0.55
+    },
+    "haze": {
+      "default": 0.06
+    },
+    "fogScale": {
+      "default": 1.5
+    },
+    "fogSize": {
+      "default": 55
+    },
+    "vignette": {
+      "default": 0.42
+    }
+  },
+  "example": {
+    "darkScale": 0.55,
+    "haze": 0.06,
+    "fogScale": 1.5,
+    "fogSize": 55,
+    "vignette": 0.42
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-grunge-montage/assets/config.json",
+      "pointer": "/configs/0/look"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

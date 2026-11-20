@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-lluvia-gris",
+  "id": "config.palette",
+  "entry_id": "config.palette",
+  "name": "palette",
+  "kind": "configuration",
+  "label": "palette",
+  "summary": "Existing configuration configuration: palette.",
+  "params": {
+    "slate": {
+      "default": "#1A2127"
+    },
+    "night": {
+      "default": "#0B0F12"
+    },
+    "steel": {
+      "default": "#8A98A3"
+    },
+    "pale": {
+      "default": "#DCE2E6"
+    }
+  },
+  "example": {
+    "slate": "#1A2127",
+    "night": "#0B0F12",
+    "steel": "#8A98A3",
+    "pale": "#DCE2E6"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-lluvia-gris/assets/config.json",
+      "pointer": "/configs/0/palette"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

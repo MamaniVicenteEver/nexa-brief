@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-mono",
+  "id": "scene.footage",
+  "entry_id": "scene.footage",
+  "name": "footage",
+  "kind": "scene",
+  "label": "footage",
+  "summary": "Existing scene type: footage.",
+  "variants": [
+    {
+      "type": "footage",
+      "media": [
+        "horses"
+      ],
+      "dotsIn": true,
+      "icon": "none",
+      "trans": "cut",
+      "max_text_lines": 1
+    },
+    {
+      "type": "footage",
+      "media": [
+        "dirtbike"
+      ],
+      "icon": "bars",
+      "trans": "dots",
+      "max_text_lines": 1
+    },
+    {
+      "type": "footage",
+      "media": [
+        "cyclist-lake"
+      ],
+      "trans": "blink",
+      "max_text_lines": 1
+    },
+    {
+      "type": "footage",
+      "media": [
+        "concert"
+      ],
+      "style": "squares",
+      "cell": 8,
+      "icon": "play",
+      "trans": "dots",
+      "max_text_lines": 1
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 9,
+      "type": "footage",
+      "media": [
+        "horses"
+      ],
+      "max_text_lines": 1
+    },
+    {
+      "scene": 10,
+      "type": "footage",
+      "media": [
+        "dirtbike"
+      ],
+      "max_text_lines": 1
+    },
+    {
+      "scene": 11,
+      "type": "footage",
+      "media": [
+        "cyclist-lake"
+      ],
+      "max_text_lines": 1
+    },
+    {
+      "scene": 14,
+      "type": "footage",
+      "media": [
+        "concert"
+      ],
+      "max_text_lines": 1
+    }
+  ],
+  "notes": {
+    "script": "Un segmento por escena, en el orden de la plantilla. La primera escena es la intro y la última el cierre. Adapta el texto al tema; no uses el texto de la demo. Sigue max_text_lines por tipo: null indica que el componente no impone un límite a sus líneas de entrada; pattern y outro pueden usar el segmento como paso visual sin mostrar ese texto."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/default_scenes/8"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/default_scenes/9"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/default_scenes/10"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/default_scenes/13"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/scene_cycle/8"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/scene_cycle/9"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/scene_cycle/10"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-mono.json",
+      "pointer": "/scene_cycle/13"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

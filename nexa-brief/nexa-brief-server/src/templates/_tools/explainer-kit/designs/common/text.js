@@ -144,6 +144,7 @@
     summary: "Frase narrada en GRANDE como en las plantillas de música: las palabras dichas dentro del beat aparecen exactamente cuando la voz las dice (tiempos de la transcripción); la actual a pleno, las anteriores atenuadas; `accent` pinta palabras clave.",
     example: { accent: ["vidas"], size: 0.9 },
     params: {
+      text: { type: "string", default: "", doc: "Frase explícita breve; vacía usa la ventana de narración." },
       accent: { type: "array", default: [], doc: "Palabras (sin tildes ni mayúsculas importa) que van en color de acento." },
       size: { type: "number", default: 0.82, min: 0.3, max: 1, doc: "Fracción del ancho que ocupa el renglón más largo." },
       maxChars: { type: "number", default: 0, doc: "Caracteres por renglón (0 = automático: 11 en 9:16, 18 en 16:9)." },
@@ -153,7 +154,7 @@
     create(ctx, p) {
       const { W, H, portrait } = ctx.stage, C = ctx.C, b0 = ctx.beat;
       ctx.beat.hideCaptions = ctx.beat.hideCaptions ?? true;
-      const ws = ctx.words.filter(w => w.start >= b0.t0 - 0.05 && w.start < b0.t1 - 0.05);
+      const ws = p.text ? p.text.trim().split(/\s+/).map(text => ({ text, start: b0.t0 })) : ctx.words.filter(w => w.start >= b0.t0 - 0.05 && w.start < b0.t1 - 0.05);
       const max = p.maxChars || (portrait ? 11 : 18), lines = [[]];
       for (const w of ws) { const cur = lines[lines.length - 1], len = cur.reduce((a, x) => a + x.text.length + 1, 0); if (cur.length && len + w.text.length > max) lines.push([]); lines[lines.length - 1].push(w); }
       /* ancho real de cada renglón con la fuente del componente (estimar por caracteres desbordaba) */
@@ -169,7 +170,7 @@
           const out = clamp((lt - b.dur) / 0.35);
           spans.forEach((s, i) => {
             const w = s._w, q = prog(t, w.start - 0.06, 0.28, "expoOut"), next = spans[i + 1]?._w;
-            const past = p.dimPast && next && t >= next.start;
+            const past = !p.text && p.dimPast && next && t >= next.start;
             s.style.opacity = (q * (past && !s._acc ? 0.42 : 1) * (1 - out)).toFixed(3);
             s.style.transform = `translateY(${((1 - q) * 0.25 * fs).toFixed(1)}px) scale(${(1 + (1 - q) * (s._acc ? 0.35 : 0.12)).toFixed(3)})`;
             s.style.filter = q < 0.98 ? `blur(${((1 - q) * 10).toFixed(1)}px)` : "none";

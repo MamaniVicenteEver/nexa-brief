@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-urban",
+  "id": "scene.twoTone",
+  "entry_id": "scene.twoTone",
+  "name": "twoTone",
+  "kind": "scene",
+  "label": "twoTone",
+  "summary": "dos líneas sobre medio",
+  "variants": [
+    {
+      "type": "twoTone",
+      "media": [
+        "basket"
+      ],
+      "max_text_lines": 2
+    }
+  ],
+  "scene_cycle": [
+    {
+      "scene": 6,
+      "type": "twoTone",
+      "shows": "dos líneas sobre medio",
+      "lines_used": 2,
+      "max_characters_per_line_recommended": 16,
+      "media": [
+        {
+          "slot": "basket",
+          "kind": "video"
+        }
+      ],
+      "line_usage": "Usa hasta las primeras 2 líneas.",
+      "lines_used_note": "Cantidad recomendada para escribir; ver line_usage para el comportamiento real."
+    }
+  ],
+  "notes": {
+    "script": "Whisper: segments, un segmento por escena, líneas en lines. El inicio siguiente determina el fin visual; el último termina con el audio.",
+    "brand_texts": {
+      "brand.tagTop": "identidad del tema o serie, esquina superior",
+      "brand.tagRight": "nombre de serie o contexto, esquina opuesta",
+      "brand.year": "año significativo y verificable; si vacío el motor usa 2026",
+      "brand.blurb": "contexto breve en rótulos pequeños"
+    },
+    "design_limitations": "El diseño dibuja corredores, R y símbolos ®; evaluar si encajan con el tema. year vacío cae en 2026.",
+    "scene_cycle_note": "Las longitudes y cantidades recomendadas no son límites técnicos ni garantizan legibilidad: revisar ambos formatos y las transiciones.",
+    "max_text_lines_note": "Capacidad estructural de líneas del segmento para cada escena base; null indica que itera todas y el esquema no fija máximo. No garantiza encuadre, contraste ni legibilidad: revisar ambos formatos."
+  },
+  "sources": [
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-urban.json",
+      "pointer": "/default_scenes/5"
+    },
+    {
+      "path": "_tools/nodemotion/promo/production/templates/promo-urban.json",
+      "pointer": "/scene_cycle/5"
+    }
+  ],
+  "constraints_status": "documented_per_variant",
+  "unknown": [
+    "validation rules not explicitly present in the cited source"
+  ]
+}

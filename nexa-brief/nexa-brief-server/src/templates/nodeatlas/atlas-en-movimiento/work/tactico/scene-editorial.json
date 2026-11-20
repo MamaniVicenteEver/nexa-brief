@@ -1,0 +1,465 @@
+{
+  "format": "atlas-v1",
+  "duration": 104,
+  "lang": "es",
+  "intro": false,
+  "outro": false,
+  "captions": {
+    "enabled": false
+  },
+  "planoLook": "tactico",
+  "defs": {
+    "palette": {
+      "ink": "#081e2c",
+      "ground": "#399e58",
+      "roof": "#e9e3ba",
+      "paper": "#e9e3ba",
+      "wall": "#8b999b",
+      "side": "#47595c",
+      "metal": "#bac9ca",
+      "accent": "#f6edb4",
+      "fire": "#ef8138",
+      "smoke": "#47595c",
+      "water": "#084c68",
+      "money": "#399e58"
+    },
+    "fonts": {
+      "label": "AtlasEditorial",
+      "display": "AtlasEditorial"
+    }
+  },
+  "places": {
+    "Kharg": [
+      50.33,
+      29.25
+    ],
+    "Abadan": [
+      48.3,
+      30.35
+    ]
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        51.5,
+        28
+      ],
+      "zoom": 5,
+      "pitch": 0,
+      "bearing": 0
+    }
+  ],
+  "tiles": {
+    "provider": "gibs-bluemarble",
+    "manifest": "../bench/cache-inventory.json"
+  },
+  "motionBlur": {
+    "samples": 1
+  },
+  "layers": [],
+  "items": [
+    {
+      "id": "demo-site-plant",
+      "type": "site.plant",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "label": "plant",
+      "t": 0,
+      "dur": 8,
+      "out": 7.6,
+      "states": [
+        {
+          "at": 3,
+          "state": "hit"
+        },
+        {
+          "at": 3.4,
+          "state": "burning"
+        },
+        {
+          "at": 6,
+          "state": "ruined"
+        }
+      ],
+      "fade": 0.35
+    },
+    {
+      "id": "demo-site-refinery",
+      "type": "site.refinery",
+      "at": [
+        48.3,
+        30.35
+      ],
+      "label": "Abadán · refinería",
+      "t": 8,
+      "dur": 8,
+      "out": 15.6,
+      "states": [
+        {
+          "at": 11,
+          "state": "hit"
+        },
+        {
+          "at": 11.4,
+          "state": "burning"
+        },
+        {
+          "at": 14,
+          "state": "ruined"
+        }
+      ],
+      "fade": 0.35
+    },
+    {
+      "id": "demo-site-oilfield",
+      "type": "site.oilfield",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "label": "oilfield",
+      "t": 16,
+      "dur": 8,
+      "out": 23.6,
+      "states": [
+        {
+          "at": 19,
+          "state": "hit"
+        },
+        {
+          "at": 19.4,
+          "state": "burning"
+        },
+        {
+          "at": 22,
+          "state": "ruined"
+        }
+      ],
+      "fade": 0.35
+    },
+    {
+      "id": "demo-site-port",
+      "type": "site.port",
+      "at": [
+        50.33,
+        29.25
+      ],
+      "label": "Kharg · terminal",
+      "t": 24,
+      "dur": 8,
+      "out": 31.6,
+      "states": [
+        {
+          "at": 27,
+          "state": "hit"
+        },
+        {
+          "at": 27.4,
+          "state": "burning"
+        },
+        {
+          "at": 30,
+          "state": "ruined"
+        }
+      ],
+      "fade": 0.35
+    },
+    {
+      "id": "demo-site-base",
+      "type": "site.base",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "label": "base",
+      "t": 32,
+      "dur": 8,
+      "out": 39.6,
+      "states": [
+        {
+          "at": 35,
+          "state": "hit"
+        },
+        {
+          "at": 35.4,
+          "state": "burning"
+        },
+        {
+          "at": 38,
+          "state": "ruined"
+        }
+      ],
+      "fade": 0.35
+    },
+    {
+      "id": "demo-site-platform",
+      "type": "site.platform",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "label": "platform",
+      "t": 40,
+      "dur": 8,
+      "out": 47.6,
+      "states": [
+        {
+          "at": 43,
+          "state": "hit"
+        },
+        {
+          "at": 43.4,
+          "state": "burning"
+        },
+        {
+          "at": 46,
+          "state": "ruined"
+        }
+      ],
+      "fade": 0.35
+    },
+    {
+      "id": "demo-money-stack",
+      "type": "money.stack",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "count": 12,
+      "t": 48,
+      "dur": 8,
+      "out": 55.6,
+      "fade": 0.35
+    },
+    {
+      "id": "demo-money-flow",
+      "type": "money.flow",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "via": [
+        [
+          50.33,
+          29.25
+        ],
+        [
+          51.8,
+          27.4
+        ],
+        [
+          54.5,
+          26.1
+        ],
+        [
+          56.4,
+          26.5
+        ],
+        [
+          58,
+          24
+        ]
+      ],
+      "count": 7,
+      "period": 5,
+      "t": 56,
+      "dur": 8,
+      "out": 63.6,
+      "note": "Flujo simbólico; no representa una suma ni cargamentos específicos.",
+      "fade": 0.35,
+      "routeVisible": true
+    },
+    {
+      "id": "demo-portrait-badge",
+      "type": "portrait.badge",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "src": "assets/media/P01.png",
+      "name": "Ruhollah Jomeini",
+      "role": "Líder supremo de Irán",
+      "date": "Foto: 6 may 1981",
+      "credit": "Ali Kaveh · PD-Iran · Commons",
+      "shape": "octagon",
+      "offset": [
+        0,
+        -100
+      ],
+      "t": 64,
+      "dur": 8,
+      "out": 71.6,
+      "fade": 0.35
+    },
+    {
+      "id": "demo-portrait-cutout",
+      "type": "portrait.cutout",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "src": "assets/media/P01-soft.png",
+      "name": "Ruhollah Jomeini",
+      "role": "Líder supremo de Irán",
+      "date": "Foto: 6 may 1981",
+      "credit": "Ali Kaveh · PD-Iran · Commons",
+      "shape": "octagon",
+      "mask": [
+        [
+          0.28,
+          0
+        ],
+        [
+          0.73,
+          0
+        ],
+        [
+          0.85,
+          0.04
+        ],
+        [
+          0.93,
+          0.15
+        ],
+        [
+          0.94,
+          0.3
+        ],
+        [
+          0.9,
+          0.43
+        ],
+        [
+          0.81,
+          0.49
+        ],
+        [
+          0.78,
+          0.68
+        ],
+        [
+          0.97,
+          0.76
+        ],
+        [
+          1,
+          0.99
+        ],
+        [
+          0,
+          0.99
+        ],
+        [
+          0.03,
+          0.77
+        ],
+        [
+          0.22,
+          0.7
+        ],
+        [
+          0.19,
+          0.48
+        ],
+        [
+          0.12,
+          0.44
+        ],
+        [
+          0.08,
+          0.33
+        ],
+        [
+          0.09,
+          0.22
+        ],
+        [
+          0.14,
+          0.12
+        ],
+        [
+          0.21,
+          0.04
+        ]
+      ],
+      "offset": [
+        0,
+        -100
+      ],
+      "t": 72,
+      "dur": 8,
+      "out": 79.6,
+      "fade": 0.35
+    },
+    {
+      "id": "demo-press",
+      "type": "editorial.press",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "src": "assets/media/P03-soft.png",
+      "name": "Ronald Reagan",
+      "role": "Presidente de EE. UU.",
+      "date": "1987 · foto: 7 feb 1981",
+      "credit": "Michael Evans · Casa Blanca · PD",
+      "docSrc": "assets/media/A01.png",
+      "docText": "USS Stark · daños tras el ataque",
+      "docCredit": "U.S. Navy · DN-ST-89-01562 · PD",
+      "offset": [
+        0,
+        -100
+      ],
+      "t": 80,
+      "dur": 8,
+      "out": 87.6,
+      "fade": 0.35
+    },
+    {
+      "id": "demo-photo",
+      "type": "callout.photo",
+      "at": [
+        51.5,
+        25.5
+      ],
+      "src": "assets/media/A04.png",
+      "caption": "Iran Ajr · tras la captura",
+      "date": "22 sep 1987",
+      "credit": "PH3 Henry Cleveland · U.S. Navy · PD",
+      "offset": [
+        0,
+        -420
+      ],
+      "t": 88,
+      "dur": 8,
+      "out": 95.6,
+      "fade": 0.35
+    },
+    {
+      "id": "demo-inventory",
+      "type": "inventory.units",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "icon": "naval.carrier",
+      "count": 11,
+      "total": 11,
+      "columns": 4,
+      "label": "Inventario · muestra de biblioteca",
+      "offset": [
+        0,
+        -100
+      ],
+      "t": 96,
+      "dur": 8,
+      "out": 103.6,
+      "note": "Ejemplo de capacidad; no es una cifra de la guerra del Golfo.",
+      "fade": 0.35
+    }
+  ],
+  "note": "Galería de capacidades D y F; no es el montaje histórico final. El inventario es una muestra de biblioteca."
+}

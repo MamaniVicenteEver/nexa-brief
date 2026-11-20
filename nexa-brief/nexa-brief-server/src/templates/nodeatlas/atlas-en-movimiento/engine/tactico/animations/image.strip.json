@@ -1,0 +1,121 @@
+{
+  "name": "image.strip",
+  "family": "image",
+  "estilo": {
+    "usa": [
+      "estilos.documento",
+      "estilos.ficha.separacion",
+      "estilos.ficha.credito",
+      "formatos.movil.ranuras.fichaIzq",
+      "formatos.movil.ranuras.fichaDer",
+      "formatos.movil.ranuras.subtitulo",
+      "formatos.escritorio.ranuras.fichaIzq",
+      "formatos.escritorio.ranuras.fichaDer",
+      "formatos.escritorio.ranuras.subtitulo",
+      "paneles",
+      "sombras",
+      "estilos.titular.principal",
+      "formatos.movil.ranuras.titular",
+      "formatos.escritorio.ranuras.titular",
+      "estilos.ficha.nombre",
+      "estilos.ficha.cargo"
+    ]
+  },
+  "description": "Tira de dos o tres imágenes con pie y créditos. Úsala como recurso visual en una escena.",
+  "duration": 7.35,
+  "loop": true,
+  "layer": 80,
+  "states": [
+    "normal"
+  ],
+  "params": {
+    "src": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Ruta del medio local relativa a la plantilla."
+    },
+    "caption": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Pie documental de la imagen."
+    },
+    "source": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Fuente documental de la cifra o contenido."
+    },
+    "credit": {
+      "type": "string",
+      "default": "",
+      "range": null,
+      "description": "Atribución visible del medio."
+    },
+    "side": {
+      "type": "enum",
+      "values": [
+        "izq",
+        "der"
+      ],
+      "default": "izq",
+      "range": [
+        "izq",
+        "der"
+      ],
+      "description": "Valor de side para la composición de image.strip."
+    },
+    "width": {
+      "type": "number",
+      "default": null,
+      "range": null,
+      "description": "Ancho del trazo o elemento en píxeles de diseño."
+    },
+    "height": {
+      "type": "number",
+      "default": null,
+      "range": null,
+      "description": "Alto del elemento en píxeles de diseño."
+    },
+    "images": {
+      "type": "array",
+      "default": [],
+      "range": null,
+      "description": "Valor de images para la composición de image.strip."
+    }
+  },
+  "sfx": [],
+  "example": {
+    "id": "demo-image-strip",
+    "t": 0,
+    "type": "image.strip",
+    "src": "assets/media/A01.png",
+    "caption": "USS Stark · daños tras el ataque",
+    "source": "U.S. Navy",
+    "credit": "DN-ST-89-01562 · dominio público",
+    "images": [
+      {
+        "src": "assets/media/A01.png",
+        "credit": "U.S. Navy · PD"
+      },
+      {
+        "src": "assets/media/A04.png",
+        "credit": "U.S. Navy · PD"
+      }
+    ],
+    "dur": 8,
+    "out": 7
+  },
+  "usedBy": [],
+  "preview": {
+    "bg": "dark",
+    "poster": "work/tactico/thumbs/image.strip.png",
+    "autoplay": true
+  },
+  "dependsOn": [
+    "assets/media/A01.png",
+    "assets/media/A04.png",
+    "identidad-opus/assets/fonts/Archivo.ttf"
+  ]
+}

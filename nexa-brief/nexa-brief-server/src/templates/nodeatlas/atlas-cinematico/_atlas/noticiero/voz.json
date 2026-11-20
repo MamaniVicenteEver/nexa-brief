@@ -1,0 +1,13 @@
+{
+ "id": "resumen-geopolitico",
+ "voice": {
+  "voice": "Charon",
+  "models": [
+   "gemini-3.8-flash-tts"
+  ],
+  "lead": 0.6,
+  "tail": 1.5,
+  "base": "Locución de noticiero internacional en español latinoamericano neutro: ágil, firme y clara, ritmo rápido de unas 175 palabras por minuto, sin dramatismo. Cifras y nombres propios nítidos, pausas breves entre noticias. No imitar a ninguna persona real."
+ },
+ "nota": "PERFIL FIJO del noticiero (no editar por video). Medido en el demo: 183 palabras/min, WER 0.147. narrate.py agrega por su cuenta «Objetivo de 130 palabras por minuto…»; el resultado real es ≈180 ppm, no tocar."
+}

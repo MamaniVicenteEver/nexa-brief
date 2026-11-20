@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-caution",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-caution",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "8e2e9cf66f2e7150383fff7d358c705681d2c8bb687e5c1d994701723c86b9a4",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-caution",
+    "config": "nodemotion/lyrics/lyrics-caution/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-caution/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-caution/README.md"
+  },
+  "revision": "caa127af19bae0a52aff14a9958c46fbe4a2dca909d6f28644792c273b776f66"
+}

@@ -1,0 +1,42 @@
+{
+  "schema": "nexa.strategy-market/1",
+  "strategy_id": "narrative_documental_v1",
+  "piece": "narrative",
+  "locale": "en-US",
+  "status": "draft",
+  "intent": "Tell the researched story as a documentary: establish the moment and stakes, build toward the promised turning point, then explain its consequences and connect the ending to the central idea.",
+  "templates": {
+    "hook": "{verified time or place}: {specific event or question}.",
+    "context": "To understand {event}, first consider {verified context}.",
+    "turn": "Then {verified development} changed what happened next.",
+    "resolution": "The result was {verified consequence}. Today, {supported connection}."
+  },
+  "examples": [
+    "A code can still scan even when part of the image is damaged. How?",
+    "The answer depends on how the information is stored, not on a guess about the missing pixels.",
+    "That design choice helps explain why the code remains useful in everyday life."
+  ],
+  "conventions": [
+    "Use natural US English and speak clearly to one viewer; use contractions where appropriate.",
+    "Preserve the original act IDs and the documentary progression: hook, context, rises and pauses, climax, consequence, resolution and close.",
+    "Keep all facts, dates, names, figures, attribution and uncertainty faithful to the approved research; do not invent a US example or imply unsupported causes.",
+    "Pay off the opening question at the appropriate point, explain technical ideas in plain language, and use an analogy only when it is accurate.",
+    "Do not add a spoken channel outro to the script; the existing host supplies it."
+  ],
+  "sounds_false": [
+    "In this video we will explore the fascinating world of QR codes.",
+    "This code can survive any damage: an absolute claim the sources may not support.",
+    "An invented dramatic event or quotation used to manufacture suspense."
+  ],
+  "overrides": {
+    "name": "Documentary: a researched moment told as a story",
+    "description": "Build a clear, evidence-led story from a specific hook through context, turning point, consequences and a memorable close."
+  },
+  "variants": {
+    "short": {
+      "instructions": [
+        "Keep the hook, essential context, turning point, consequence and close without compressing the explanation into a disclaimer."
+      ]
+    }
+  }
+}

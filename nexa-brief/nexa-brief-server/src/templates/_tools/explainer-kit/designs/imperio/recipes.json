@@ -1,0 +1,222 @@
+{
+  "version": 1,
+  "design": "imperio",
+  "units": {
+    "coordinates": "[longitud, latitud] WGS84 en grados; nunca píxeles",
+    "time": "segundos desde el inicio del beat o @ancla exacta de la transcripción"
+  },
+  "notes": [
+    "Las rutas de medios deben existir dentro de assets/ del nuevo episodio. Las banderas de las muestras son las usadas por el video de Japón; elegir las correspondientes al relato nuevo.",
+    "Los componentes con mapa son planos main; usar campaign.parts para combinarlos dentro de una misma cámara. date y caption son overlays y pueden acompañar esos planos.",
+    "El mapa se conserva en producción; isolated=1 es solo una vista del showcase."
+  ],
+  "recipes": [
+    {
+      "name": "fecha sobre un mapa",
+      "beats": [
+        {
+          "t": 0,
+          "dur": 7,
+          "use": "imperio.map",
+          "params": {
+            "country": "Japan",
+            "from": [
+              132,
+              32,
+              55,
+              0
+            ],
+            "to": [
+              132,
+              32,
+              55,
+              0
+            ]
+          }
+        },
+        {
+          "t": 0,
+          "dur": 7,
+          "use": "imperio.date",
+          "params": {
+            "text": "1940–41",
+            "at": 0.3
+          }
+        }
+      ]
+    },
+    {
+      "name": "dos destinos con flechas, banderas y años",
+      "beats": [
+        {
+          "t": 0,
+          "dur": 8,
+          "use": "imperio.campaign",
+          "params": {
+            "country": "Japan",
+            "from": [
+              132,
+              32,
+              55,
+              0
+            ],
+            "to": [
+              132,
+              32,
+              55,
+              0
+            ],
+            "f1": "assets/flags/qing.svg",
+            "f2": "assets/flags/korean-empire.svg",
+            "targets": [
+              {
+                "at": "Taiwan",
+                "region": "Taiwan",
+                "label": "TAIWÁN",
+                "year": "1895",
+                "flag": "f1",
+                "time": 1.5
+              },
+              {
+                "at": [
+                  127.6,
+                  36.6
+                ],
+                "region": [
+                  "South Korea",
+                  "North Korea"
+                ],
+                "label": "COREA",
+                "year": "1910",
+                "flag": "f2",
+                "time": 4.0
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ciudad con nombre y pulso",
+      "beats": [
+        {
+          "t": 0,
+          "dur": 6,
+          "use": "imperio.city",
+          "params": {
+            "country": "Japan",
+            "target": [
+              116.4,
+              39.9
+            ],
+            "label": "PEKÍN",
+            "time": 0.6,
+            "from": [
+              120,
+              36,
+              35,
+              0
+            ],
+            "to": [
+              120,
+              36,
+              35,
+              0
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "archipiélago resaltado por puntos",
+      "beats": [
+        {
+          "t": 0,
+          "dur": 6,
+          "use": "imperio.territory",
+          "params": {
+            "country": "Japan",
+            "target": [
+              150,
+              10
+            ],
+            "region": {
+              "dots": [
+                [
+                  134.5,
+                  7.5
+                ],
+                [
+                  145.7,
+                  15.2
+                ],
+                [
+                  151.8,
+                  7.4
+                ],
+                [
+                  171,
+                  7.1
+                ]
+              ]
+            },
+            "from": [
+              150,
+              15,
+              65,
+              0
+            ],
+            "to": [
+              150,
+              15,
+              65,
+              0
+            ],
+            "time": 0.6
+          }
+        }
+      ]
+    },
+    {
+      "name": "archivo en blanco y negro sobre el atlas",
+      "beats": [
+        {
+          "t": 0,
+          "dur": 10,
+          "use": "imperio.footage",
+          "params": {
+            "video": "assets/media/archivo.mp4",
+            "country": "Japan",
+            "from": [
+              139,
+              33,
+              90,
+              0
+            ],
+            "to": [
+              139,
+              33,
+              110,
+              3
+            ],
+            "caption": "ARCHIVO · 1931",
+            "start": 0,
+            "rate": 1,
+            "loop": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "cierre v2",
+      "config": {
+        "outro": {
+          "use": "imperio.outrov2",
+          "thanksScale": 1.45,
+          "textWeight": 800,
+          "actionColor": "#700B1B"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-impact",
+  "family": "lyrics",
+  "display_name": "Letras de Impacto",
+  "description": "Reveal tipo estampado, frase por frase, con una palabra gigante por cluster, cámara con golpe/shake y estética de corrido tumbado / trap.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [
+      {
+        "slot": "background",
+        "kind": "image|video",
+        "min": 1,
+        "max": 20,
+        "orientation": "portrait",
+        "target": "source",
+        "label": "Fondo",
+        "hint": "personas bailando, energía, movimiento"
+      }
+    ],
+    "texts": [],
+    "brief": true
+  },
+  "config_json": "nodemotion/lyrics/lyrics-impact/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-impact/prompts/config_mapper.md",
+  "runtime_assets": [
+    "assets/women-dancing.mp4",
+    "components/intro.js",
+    "components/background-sequence.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-impact",
+    "config": "nodemotion/lyrics/lyrics-impact/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-impact/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-impact/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-impact/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.bg",
+      "kind": "configuration",
+      "label": "bg",
+      "summary": "Existing configuration configuration: bg.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.bg",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.colors",
+      "kind": "configuration",
+      "label": "colors",
+      "summary": "Existing configuration configuration: colors.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.colors",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/004-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/005-configuration.json"
+    },
+    {
+      "entry_id": "config.cluster",
+      "kind": "configuration",
+      "label": "cluster",
+      "summary": "Existing configuration configuration: cluster.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.cluster",
+      "contract": "contracts/006-configuration.json"
+    }
+  ]
+}

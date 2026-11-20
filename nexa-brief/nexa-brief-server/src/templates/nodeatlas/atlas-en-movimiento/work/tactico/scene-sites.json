@@ -1,0 +1,226 @@
+{
+  "format": "atlas-v1",
+  "duration": 104,
+  "lang": "es",
+  "intro": false,
+  "outro": false,
+  "captions": {
+    "enabled": false
+  },
+  "planoLook": "tactico",
+  "defs": {
+    "palette": {
+      "ink": "#081e2c",
+      "ground": "#399e58",
+      "roof": "#e9e3ba",
+      "paper": "#e9e3ba",
+      "wall": "#8b999b",
+      "side": "#47595c",
+      "metal": "#bac9ca",
+      "accent": "#f6edb4",
+      "fire": "#ef8138",
+      "smoke": "#47595c",
+      "water": "#084c68",
+      "money": "#399e58"
+    },
+    "fonts": {
+      "label": "AtlasEditorial",
+      "display": "AtlasEditorial"
+    }
+  },
+  "places": {
+    "Kharg": [
+      50.33,
+      29.25
+    ],
+    "Abadan": [
+      48.3,
+      30.35
+    ]
+  },
+  "camera": [
+    {
+      "t": 0,
+      "center": [
+        51.5,
+        28
+      ],
+      "zoom": 5,
+      "pitch": 0,
+      "bearing": 0
+    }
+  ],
+  "tiles": {
+    "provider": "gibs-bluemarble",
+    "manifest": "../bench/cache-inventory.json"
+  },
+  "motionBlur": {
+    "samples": 1
+  },
+  "layers": [],
+  "items": [
+    {
+      "id": "demo-site-plant",
+      "type": "site.plant",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "label": "plant",
+      "t": 0,
+      "dur": 8,
+      "out": 7.6,
+      "states": [
+        {
+          "at": 3,
+          "state": "hit"
+        },
+        {
+          "at": 3.4,
+          "state": "burning"
+        },
+        {
+          "at": 6,
+          "state": "ruined"
+        }
+      ],
+      "fade": 0.35
+    },
+    {
+      "id": "demo-site-refinery",
+      "type": "site.refinery",
+      "at": [
+        48.3,
+        30.35
+      ],
+      "label": "Abadán · refinería",
+      "t": 8,
+      "dur": 8,
+      "out": 15.6,
+      "states": [
+        {
+          "at": 11,
+          "state": "hit"
+        },
+        {
+          "at": 11.4,
+          "state": "burning"
+        },
+        {
+          "at": 14,
+          "state": "ruined"
+        }
+      ],
+      "fade": 0.35
+    },
+    {
+      "id": "demo-site-oilfield",
+      "type": "site.oilfield",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "label": "oilfield",
+      "t": 16,
+      "dur": 8,
+      "out": 23.6,
+      "states": [
+        {
+          "at": 19,
+          "state": "hit"
+        },
+        {
+          "at": 19.4,
+          "state": "burning"
+        },
+        {
+          "at": 22,
+          "state": "ruined"
+        }
+      ],
+      "fade": 0.35
+    },
+    {
+      "id": "demo-site-port",
+      "type": "site.port",
+      "at": [
+        50.33,
+        29.25
+      ],
+      "label": "Kharg · terminal",
+      "t": 24,
+      "dur": 8,
+      "out": 31.6,
+      "states": [
+        {
+          "at": 27,
+          "state": "hit"
+        },
+        {
+          "at": 27.4,
+          "state": "burning"
+        },
+        {
+          "at": 30,
+          "state": "ruined"
+        }
+      ],
+      "fade": 0.35
+    },
+    {
+      "id": "demo-site-base",
+      "type": "site.base",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "label": "base",
+      "t": 32,
+      "dur": 8,
+      "out": 39.6,
+      "states": [
+        {
+          "at": 35,
+          "state": "hit"
+        },
+        {
+          "at": 35.4,
+          "state": "burning"
+        },
+        {
+          "at": 38,
+          "state": "ruined"
+        }
+      ],
+      "fade": 0.35
+    },
+    {
+      "id": "demo-site-platform",
+      "type": "site.platform",
+      "at": [
+        51.5,
+        27.6
+      ],
+      "label": "platform",
+      "t": 40,
+      "dur": 8,
+      "out": 47.6,
+      "states": [
+        {
+          "at": 43,
+          "state": "hit"
+        },
+        {
+          "at": 43.4,
+          "state": "burning"
+        },
+        {
+          "at": 46,
+          "state": "ruined"
+        }
+      ],
+      "fade": 0.35
+    }
+  ],
+  "note": "Galería de capacidades D y F; no es el montaje histórico final. El inventario es una muestra de biblioteca."
+}

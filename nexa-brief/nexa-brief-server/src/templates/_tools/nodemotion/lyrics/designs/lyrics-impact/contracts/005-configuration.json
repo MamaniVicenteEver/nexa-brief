@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-impact",
+  "id": "config.outro",
+  "entry_id": "config.outro",
+  "name": "outro",
+  "kind": "configuration",
+  "label": "outro",
+  "summary": "Existing configuration configuration: outro.",
+  "params": {
+    "leadSec": {
+      "default": 8
+    },
+    "title": {
+      "default": "Gracias"
+    },
+    "sub": {
+      "default": "Por ver"
+    },
+    "feats": {
+      "default": "SUSCRIBITE | NODEMOTION"
+    },
+    "support": {
+      "default": "Tu apoyo hace posible que sigamos trayendo más contenido."
+    }
+  },
+  "example": {
+    "leadSec": 8,
+    "title": "Gracias",
+    "sub": "Por ver",
+    "feats": "SUSCRIBITE | NODEMOTION",
+    "support": "Tu apoyo hace posible que sigamos trayendo más contenido."
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-impact/assets/config.json",
+      "pointer": "/configs/0/outro"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

@@ -1,0 +1,16 @@
+---
+interface Props {
+  compact?: boolean;
+}
+const { compact = false } = Astro.props;
+---
+
+<span class:list={['wordmark', { 'wordmark--compact': compact }]}>
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+    <path d="M4 28V4h6l12 15V4h6v24h-6L10 13v15H4Z" fill="currentColor" />
+    <path d="m14 4 8 10V4h-8Z" fill="var(--color-bronze)" />
+  </svg>
+  <span class="wordmark__name">
+    NODE<span class="wordmark__descriptor">MEDIA NETWORK</span>
+  </span>
+</span>

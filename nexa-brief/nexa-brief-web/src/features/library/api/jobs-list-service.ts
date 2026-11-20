@@ -1,7 +1,7 @@
 import type { JobListItem, JobStage } from "@/features/create-video/types";
 import { httpClient } from "@/infrastructure/api/http-client";
 
-interface JobListItemDto {
+export interface JobListItemDto {
   job_id: string;
   category: string;
   title: string;
@@ -20,7 +20,7 @@ interface JobListResponseDto {
   jobs: JobListItemDto[];
 }
 
-function mapJobListItem(dto: JobListItemDto): JobListItem {
+export function mapJobListItem(dto: JobListItemDto): JobListItem {
   return {
     jobId: dto.job_id,
     category: dto.category,

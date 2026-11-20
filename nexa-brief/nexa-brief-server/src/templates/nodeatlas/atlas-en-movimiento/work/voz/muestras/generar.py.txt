@@ -1,0 +1,134 @@
+"""Ejecuta narrate.main con ajustes solo en memoria: B, una petición, sin reintentos.
+
+nice -n 15 ../../../../../.venv/bin/python -B work/voz/muestras/generar.py.txt Algenib
+El archivo .txt evita activar el watcher de Python del servidor.
+"""
+import ast
+import contextlib
+import datetime
+import hashlib
+import io
+import json
+import os
+from pathlib import Path
+import sys
+import time
+import wave
+
+os.environ['PYTHONDONTWRITEBYTECODE'] = '1'
+sys.dont_write_bytecode = True
+ROOT = Path.cwd()
+OUT = ROOT / 'work/voz/muestras'
+KIT = (ROOT / '../../../_tools/explainer-kit').resolve()
+sys.path.insert(0, str(KIT / 'tools'))
+import narrate
+
+voice = sys.argv[1]
+assert voice in ('Algenib', 'Orus')
+model = 'gemini-3.8-flash-tts'
+script = json.loads((OUT / 'script.muestra.json').read_text())
+chunks = json.loads((OUT / 'chunks.muestra.json').read_text())
+assert len(script['segments']) == 2
+assert [s['id'] for s in script['segments']] == ['m03', 'm04']
+assert all('130' not in c['style'] for c in chunks)
+assert all(c['text'] == s['text'] for c, s in zip(chunks, script['segments']))
+stem = OUT / ('malvinas-' + voice.lower())
+ledger_path = OUT / 'consumo.json'
+ledger = json.loads(ledger_path.read_text()) if ledger_path.exists() else {
+    'max_requests': 2, 'automatic_retries': 0, 'full_narration_generated': False,
+    'requests': [], 'note': 'El intento queda registrado antes de enviar. Coste desconocido si el proveedor no informa tokens.'}
+assert len(ledger['requests']) < 2, 'Presupuesto total agotado'
+assert not any(r['voice'] == voice for r in ledger['requests']), 'No se repite una voz'
+assert not stem.with_suffix('.wav').exists(), 'No sobrescribir una muestra'
+
+def save():
+    ledger_path.write_text(json.dumps(ledger, ensure_ascii=False, indent=2) + '\n')
+
+# Extraer el _post del kit y desactivar sus ramas de reintento solo en memoria.
+# No se leen ni gestionan claves: with_key_rotation selecciona la disponible.
+tree = ast.parse((KIT / 'tools/tts.py').read_text())
+node = next(n for n in tree.body if isinstance(n, ast.FunctionDef) and n.name == '_post')
+class NoRetry(ast.NodeTransformer):
+    def visit_Call(self, n):
+        n = self.generic_visit(n)
+        if isinstance(n.func, ast.Name) and n.func.id == 'range':
+            n.args = [ast.Constant(1)]
+        return n
+    def visit_Compare(self, n):
+        if isinstance(n.left, ast.Name) and n.left.id == 'attempt':
+            return ast.copy_location(ast.Constant(False), n)
+        return self.generic_visit(n)
+node = NoRetry().visit(node)
+ns = dict(vars(narrate.tts))
+exec(compile(ast.fix_missing_locations(ast.Module(body=[node], type_ignores=[])),
+             'kit-post-one-attempt', 'exec'), ns)
+single_post = ns['_post']
+calls = 0
+
+def guarded_post(url, body, headers, timeout=300):
+    global calls
+    if calls or len(ledger['requests']) >= 2:
+        raise RuntimeError('Bloqueado: ninguna petición adicional autorizada')
+    assert url.endswith('/interactions')
+    assert body['model'] == model
+    assert body['generation_config']['speech_config'] == [{'voice': voice}]
+    content = body['input'][0]['content']
+    assert [c['text'] for c in content] == [c['text'] for c in chunks]
+    calls += 1
+    record = {'voice': voice, 'model': model, 'seconds': None,
+              'state': 'sent', 'http_attempts': 1,
+              'started_utc': datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              'sample_words': 27, 'sample_text_sha256': hashlib.sha256(
+                  json.dumps([c['text'] for c in chunks], ensure_ascii=False).encode()).hexdigest()}
+    ledger['requests'].append(record)
+    save()
+    start = time.monotonic()
+    try:
+        response = single_post(url, body, headers, timeout)
+        record['state'] = 'audio_response_received'
+        record['tokens'] = dict(narrate.tts.LAST_USAGE) or None
+        return response
+    except Exception as exc:
+        # Convertir también QuotaError para que el kit no rote tras un fallo.
+        # No registrar cuerpos HTTP, URLs ni encabezados potencialmente sensibles.
+        record['state'] = 'failed'
+        record['error_type'] = type(exc).__name__
+        raise RuntimeError('Petición fallida; sin reintento ni cambio de clave/modelo') from None
+    finally:
+        record['request_elapsed_seconds'] = round(time.monotonic() - start, 3)
+        save()
+
+narrate.tts._post = guarded_post
+narrate.chunks = lambda actual, base=None: chunks
+narrate.VIDEO_DIR = None
+sys.argv = ['narrate.py', str(OUT / 'script.muestra.json'), str(stem),
+            '--voice', voice, '--model', model, '--parts', '1',
+            '--lead', '0', '--tail', '0', '--no-qc']
+ok = False
+try:
+    # El kit puede imprimir etiquetas de clave; se descartan sin mostrarlas.
+    with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+        narrate.main()
+    ok = True
+except BaseException as exc:
+    error = type(exc).__name__
+finally:
+    if calls:
+        record = ledger['requests'][-1]
+        if stem.with_suffix('.wav').exists():
+            with wave.open(str(stem.with_suffix('.wav'))) as w:
+                record['seconds'] = round(w.getnframes() / w.getframerate(), 6)
+            record['within_20_seconds'] = record['seconds'] <= 20
+        if ok:
+            record['state'] = 'success' if record['within_20_seconds'] else 'over_duration_limit'
+        elif record['state'] != 'failed':
+            record['state'] = 'local_postprocessing_failed'
+        save()
+    else:
+        ledger.setdefault('pre_request_failures', []).append({'voice': voice, 'error_type': error})
+        save()
+print(json.dumps({'voice': voice, 'requests_this_run': calls,
+                  'state': ledger['requests'][-1]['state'] if calls else 'no_request',
+                  'seconds': ledger['requests'][-1]['seconds'] if calls else None}, ensure_ascii=False))
+if not ok:
+    raise SystemExit(1)

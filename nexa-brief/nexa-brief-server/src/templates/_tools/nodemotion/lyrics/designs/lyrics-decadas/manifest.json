@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-decadas",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-decadas",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    }
+  ],
+  "runtime_aliases": {
+    "components/core.js": "runtime/components/core.js",
+    "components/decadas.css": "runtime/components/decades.css",
+    "components/escenas.js": "runtime/components/scenes.js",
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro-v1.js": "runtime/components/outro-v1.js",
+    "components/outro-v2.js": "runtime/components/outro-v2.js",
+    "components/transiciones.js": "runtime/components/transitions.js",
+    "player.js": "runtime/player.js",
+    "showcase/index.html": "runtime/showcase/index.html"
+  },
+  "runtime_assets": [
+    "player.js",
+    "components",
+    "assets/fonts",
+    "assets/media"
+  ],
+  "source_sha256": "ad80e9f92f7982907ef78eb7091ce9bb94b944ec9a6c6e4c475d79d9a993db56",
+  "migration_source_sha256": "ad80e9f92f7982907ef78eb7091ce9bb94b944ec9a6c6e4c475d79d9a993db56",
+  "migration_runtime_sha256": {
+    "components/core.js": "89f6ef113c3194ebd7a9f4095091a40d9953cc4315e4a59b4646b376858dc84a",
+    "components/decadas.css": "c820ccc7d8822147de4de36660cf9394a2590d67d6ecdd32caa18e1939695507",
+    "components/escenas.js": "7a0fee29bed3cf564df503319b70ec994134cbd4b3a98fdf6b7fe4bb33639689",
+    "components/intro.js": "c97b7c44ccb0231d50875502d4d4fea4651985226a1f915e9cad5130fcb045fe",
+    "components/outro-v1.js": "58b7f12b455449d4e617164fdaa4bb090e5cc15b4678e1063adb820857f5c1f1",
+    "components/outro-v2.js": "8b03e7e8c81a7963b8eb1c230bffc2d63143433bf13dcbec83496e37cb632a84",
+    "components/transiciones.js": "13790be940c5843aae899c984740c1bf294bf1ba439b53a1abc81544a3c8ad7c",
+    "player.js": "d072a5cd1185a3de24bfcffb3b33295beea26388209bcffff0e6d80451cdc110",
+    "showcase/index.html": "b21fa86201b1e647ae65182d11070152c823090ba63761acdd1ca07ba4fefaf4"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-decadas",
+    "config": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+    "info.json": "nodemotion/lyrics/lyrics-decadas/info.json",
+    "showcase/components.json": "nodemotion/lyrics/lyrics-decadas/showcase/components.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-decadas/DESIGN.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "ab2dab82a1d8a0480ac99a0ed8d2ef222f97a6e50b48201407a919d52ff01318.webp",
+    "assets/fonts/Archivo.woff2": "94bb484c81334fff433b6ba5c592b96c643e50c25a27fb33321a227e49b4f726.woff2",
+    "assets/fonts/CaveatBrush-Regular.woff2": "b32b21bb7713d9bf56be158857d7d180c4b0b5453f8370fede44472d5214a1b0.woff2",
+    "assets/fonts/MrsSaintDelafield-Regular.woff2": "c471ad3bf63315f0c8a85242e0b511a38589bdf7abad2efb3f64f5eaac6fb1dc.woff2",
+    "assets/media/foto-01.jpg": "3ea573da3dc4d8f3ef3f1bffcfd9be465eec4716e9a2c7bf70e34e3c11749801.jpg",
+    "assets/media/foto-02.jpg": "35c9415e2685f4d0d099954e8005fb7fca2c769d572d5f0932c2c177251b3da8.jpg",
+    "assets/media/foto-03.jpg": "4e140b9bb3af1482f623e629ac39cbe72a114d4fc4f8422d5fd4180f9c35e856.jpg",
+    "assets/media/foto-04.jpg": "65a8277afec4fc570124ded88485dd8314972d2962a0c3027cf7bedcc0e894c9.jpg",
+    "assets/media/foto-05.jpg": "ee5392e2e9f0b0a73a87a82d69a958967746c4a52d9dfede88cd5a71ac4435fd.jpg",
+    "assets/media/foto-06.jpg": "866045f1ac0be7f2eb6298cf58d02bae037cf9f8797c04c1a12c142945fd17aa.jpg",
+    "assets/media/foto-07.jpg": "152a2be88f7d591508020926eda10b7f12378e02f8e2fb732992ec3274b09a3f.jpg",
+    "assets/media/foto-08.jpg": "f8dcbc0a6da7285de140d96793e58a3693e8476bf5860fb61456c7faba0e2a1a.jpg",
+    "assets/song.mp3": "98b602d53149af229f0e629e79bbd20b5de23b2ae1160ee79f6783749aee96f9.mp3"
+  }
+}

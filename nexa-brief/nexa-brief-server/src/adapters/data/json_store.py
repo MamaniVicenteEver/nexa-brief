@@ -5,8 +5,8 @@ job_tracker, notification_tracker, queue_repository, asset_library, etc.
 
 - Escritura atómica (`.tmp` + `replace`): un crash nunca deja un JSON a medias.
 - Un `asyncio.Lock` por archivo serializa cada read-modify-write dentro del
-  proceso (varios jobs del pipeline escriben a la vez). No protege entre
-  procesos distintos — para eso está el backend de base de datos.
+  proceso. Un flock asíncrono protege la transacción entre host y contenedores
+  que comparten el mismo perfil en este servidor.
 - Las rutas se resuelven en cada operación desde `settings.data_dir`, así los
   tests pueden redirigirlo a un directorio temporal.
 """
@@ -14,16 +14,26 @@ job_tracker, notification_tracker, queue_repository, asset_library, etc.
 from __future__ import annotations
 
 import asyncio
+import contextvars
 import json
+import os
+import re
+import tempfile
+import threading
 from collections import defaultdict
 from collections.abc import Callable, Sequence
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
 import structlog
 
+from src.adapters.data.file_locks import AsyncFileLock, file_lock
 from src.adapters.data.layout import COLLECTIONS, DOCUMENTS, FILES
 from src.adapters.data.local_file_storage import LocalFileStorage
+from src.adapters.data.runtime_paths import assert_profile_path, data_directory, lock_path, temporary_dir
+from src.adapters.data.section_store import COLLECTION_SECTIONS, DOCUMENT_SECTIONS, Section, is_v3
+from src.config.profile_layout import layout_for_settings
 from src.config.settings import settings
 from src.core.ports.data_port import Record, Where
 
@@ -47,9 +57,16 @@ def _read_json(path: Path, default: Any) -> Any:
 
 def _write_json(path: Path, data: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
-    tmp.replace(path)
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=temporary_dir(path))
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            json.dump(data, stream, ensure_ascii=False, indent=2)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
 
 
 def _matches(record: Record, where: Where | None) -> bool:
@@ -64,9 +81,20 @@ class JsonRecordCollection:
 
     @property
     def _path(self) -> Path:
-        return settings.data_dir / self._relative_path
+        if (self.name == "channels" and settings.shared_connections_dir is not None
+                and layout_for_settings(settings).schema_version == 1):
+            path = settings.shared_connections_dir / "channels.json"
+        else:
+            path = data_directory() / self._relative_path
+        assert_profile_path(path)
+        return path
 
     def _read(self) -> list[Record]:
+        if is_v3():
+            data = Section(COLLECTION_SECTIONS[self.name]).read()["collections"].get(self.name, [])
+            if not isinstance(data, list) or any(not isinstance(row, dict) for row in data):
+                raise RuntimeError(f"Invalid collection: {self.name}")
+            return data
         data = _read_json(self._path, [])
         return data if isinstance(data, list) else []
 
@@ -77,13 +105,30 @@ class JsonRecordCollection:
 
     async def _mutate(self, fn: Callable[[list[Record]], tuple[list[Record], Any]]) -> Any:
         """Read-modify-write bajo el lock del archivo. `fn` devuelve (nuevos datos, resultado)."""
+        if is_v3():
+            def transaction(section: dict[str, Any]) -> Any:
+                collections = section["collections"]
+                data = collections.get(self.name, [])
+                if not isinstance(data, list) or any(not isinstance(row, dict) for row in data):
+                    raise RuntimeError(f"Invalid collection: {self.name}")
+                new_data, result = fn(data)
+                if self.key_field is not None:
+                    keys = [row.get(self.key_field) for row in new_data]
+                    if any(not isinstance(key, str) or not key for key in keys) or len(keys) != len(set(keys)):
+                        raise ValueError(f"Missing or duplicate key in collection: {self.name}")
+                if new_data or self.name in collections:
+                    collections[self.name] = new_data
+                return result
+            return await Section(COLLECTION_SECTIONS[self.name]).mutate_async(transaction)
         path = self._path
         async with _locks[path]:
-            data = self._read()
-            new_data, result = fn(data)
-            if new_data is not data or result is not None:
-                _write_json(path, new_data)
-            return result
+            async with AsyncFileLock(lock_path(path)):
+                data = _read_json(path, [])
+                data = data if isinstance(data, list) else []
+                new_data, result = fn(data)
+                if new_data is not data or result is not None:
+                    _write_json(path, new_data)
+                return result
 
     # ── Lecturas ─────────────────────────────────────────────────────────────
 
@@ -170,6 +215,28 @@ class JsonRecordCollection:
         return await self._mutate(fn) or []
 
 
+# Escrituras y lecturas de un almacén de documentos fuera del bucle de eventos.
+# Un hilo por almacén: su archivo se reescribe entero, así que las operaciones
+# de un mismo almacén se ejecutan en el orden en que se pidieron.
+_colas_de_documentos: dict[str, ThreadPoolExecutor] = {}
+_colas_lock = threading.Lock()
+
+
+def _cola_de_documentos(nombre: str) -> ThreadPoolExecutor:
+    with _colas_lock:
+        cola = _colas_de_documentos.get(nombre)
+        if cola is None:
+            cola = ThreadPoolExecutor(max_workers=1, thread_name_prefix=f"docs-{nombre}")
+            _colas_de_documentos[nombre] = cola
+        return cola
+
+
+async def _en_cola_de_documentos(nombre: str, fn: Callable[..., Any], *args: Any) -> Any:
+    # Como asyncio.to_thread: el hilo recibe una copia del contexto de la petición.
+    ctx = contextvars.copy_context()
+    return await asyncio.wrap_future(_cola_de_documentos(nombre).submit(ctx.run, fn, *args))
+
+
 class JsonDocumentStore:
     """Un archivo `{clave}.json` por documento."""
 
@@ -180,20 +247,85 @@ class JsonDocumentStore:
     def _path(self, key: str) -> Path:
         if "/" in key or "\\" in key or key.startswith("."):
             raise ValueError(f"Invalid document key: {key!r}")
-        return settings.data_dir / self._relative_dir / f"{key}.json"
+        path = data_directory() / self._relative_dir / f"{key}.json"
+        assert_profile_path(path)
+        return path
+
+    def all_documents(self) -> dict[str, Any]:
+        """Todos los documentos de la colección en una sola lectura del almacén."""
+        if is_v3():
+            docs = Section(DOCUMENT_SECTIONS[self.name]).read()["documents"].get(self.name, {})
+            return dict(docs) if isinstance(docs, dict) else {}
+        found: dict[str, Any] = {}
+        for path in sorted((data_directory() / self._relative_dir).glob("*.json")):
+            value = _read_json(path, None)
+            if value is not None:
+                found[path.stem] = value
+        return found
 
     def get(self, key: str) -> Any | None:
+        if is_v3():
+            self._validate_key(key)
+            docs = Section(DOCUMENT_SECTIONS[self.name]).read()["documents"].get(self.name, {})
+            if not isinstance(docs, dict):
+                raise RuntimeError(f"Invalid document store: {self.name}")
+            return docs.get(key)
         return _read_json(self._path(key), None)
 
     def put(self, key: str, document: Any) -> None:
-        _write_json(self._path(key), document)
+        if is_v3():
+            self._validate_key(key)
+            def transaction(section: dict[str, Any]) -> None:
+                docs = section["documents"].setdefault(self.name, {})
+                if not isinstance(docs, dict):
+                    raise RuntimeError(f"Invalid document store: {self.name}")
+                docs[key] = document
+            Section(DOCUMENT_SECTIONS[self.name]).mutate(transaction)
+            return
+        path = self._path(key)
+        with file_lock(lock_path(path)):
+            _write_json(path, document)
 
     def delete(self, key: str) -> bool:
+        if is_v3():
+            self._validate_key(key)
+            def transaction(section: dict[str, Any]) -> bool:
+                docs = section["documents"].get(self.name, {})
+                if not isinstance(docs, dict):
+                    raise RuntimeError(f"Invalid document store: {self.name}")
+                if key not in docs:
+                    return False
+                del docs[key]
+                return True
+            return Section(DOCUMENT_SECTIONS[self.name]).mutate(transaction)
         path = self._path(key)
         if not path.exists():
             return False
-        path.unlink()
+        with file_lock(lock_path(path)):
+            if not path.exists():
+                return False
+            path.unlink()
         return True
+
+    @staticmethod
+    def _validate_key(key: str) -> None:
+        if "/" in key or "\\" in key or key.startswith("."):
+            raise ValueError(f"Invalid document key: {key!r}")
+
+    async def aall_documents(self) -> dict[str, Any]:
+        """Como all_documents, sin bloquear el bucle de eventos."""
+        return await _en_cola_de_documentos(self.name, self.all_documents)
+
+    async def aget(self, key: str) -> Any | None:
+        return await _en_cola_de_documentos(self.name, self.get, key)
+
+    async def aput(self, key: str, document: Any) -> None:
+        """Guarda sin bloquear el bucle. Las operaciones del mismo almacén se
+        ejecutan en el orden en que se piden: un guardado viejo no pisa uno nuevo."""
+        await _en_cola_de_documentos(self.name, self.put, key, document)
+
+    async def adelete(self, key: str) -> bool:
+        return await _en_cola_de_documentos(self.name, self.delete, key)
 
 
 class JsonDataStore:
@@ -201,6 +333,31 @@ class JsonDataStore:
         self._collections: dict[str, JsonRecordCollection] = {}
         self._documents: dict[str, JsonDocumentStore] = {}
         self._files: dict[str, LocalFileStorage] = {}
+
+    def coordination(self, name: str) -> AsyncFileLock:
+        if name == "queue_claim":
+            path = data_directory() / "schedule/.queue-claim.lock"
+        elif re.fullmatch(r"content-video-[A-Za-z0-9_-]{1,128}", name):
+            path = data_directory() / "content" / f".{name}.lock"
+        elif name == "showcase":
+            path = data_directory() / "showcase" / ".coordination.lock"
+        elif name == "sandbox-preparations":
+            path = data_directory() / "prototypes" / ".preparation-coordination.lock"
+        elif re.fullmatch(r"localization-[a-f0-9]{32}", name):
+            path = data_directory() / "explainer" / f".{name}.lock"
+        elif (name in {"library-upload-image", "library-upload-video"}
+              or re.fullmatch(r"library-bundled-(?:image|video|music)-[a-f0-9]{64}", name)):
+            path = data_directory() / "library" / f".{name}.lock"
+        elif (name == "promo-host-preparation"
+              or re.fullmatch(r"promo-chat-[a-f0-9]{32}", name)
+              or re.fullmatch(r"promo-chat-import-[A-Za-z0-9][A-Za-z0-9_-]{0,127}", name)):
+            path = data_directory() / "promos" / f".{name}.lock"
+        else:
+            raise KeyError(f"Unknown coordination lock: {name}")
+        # Host preparation includes media discovery and previews, and can take
+        # longer than the default short transaction timeout. Waiting is async
+        # and cancellation closes the descriptor in AsyncFileLock.__aenter__.
+        return AsyncFileLock(lock_path(path, path), timeout=7200 if name == "promo-host-preparation" else 150)
 
     def collection(self, name: str) -> JsonRecordCollection:
         if name not in self._collections:

@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "title": "Resumen geopolítico · Atlas noticiero",
+  "summary": "Réplica de un resumen semanal de noticias sobre globo satelital 3D (referencia en referencias/nodeaction/MAPS): cámara que vuela de región en región, topic-bars, hemiciclos de escaños, contadores, retratos octogonales, ventanas con esquinas, chips con icono y territorios rayados. Todo es JSON (assets/scene.json): tipografías, tamaños, colores y posiciones se cambian por datos. Demo de la nueva línea de videos de noticias con Atlas.",
+  "engine": "nodehistory/_atlas",
+  "based_on": "atlas-cinematico",
+  "is_new_design": true,
+  "status": "lista para revisar",
+  "created_at": "2026-11-07",
+  "libraries": [
+    {
+      "name": "maplibre-gl",
+      "version": "6.16.0",
+      "purpose": "globo 3D y satélite (motor compartido _atlas)"
+    },
+    {
+      "name": "Barlow Condensed / Poppins",
+      "version": "Google Fonts (OFL), copiadas a _atlas/assets/fonts",
+      "purpose": "tipografía del HUD"
+    }
+  ],
+  "inputs": [
+    "Guion transcrito de la referencia y corregido a mano; voz Gemini 3.8 Flash TTS (Charon, tono aceleración) y transcripción faster-whisper large-v3 (156 s).",
+    "NASA GIBS Blue Marble, Natural Earth y fotos de Wikimedia Commons (assets/media/CREDITS.md).",
+    "Marcas de la referencia reemplazadas por «NODEPOLITICS»; los emblemas de partido por glifos D/R."
+  ],
+  "notes": [
+    "Motor: nodehistory/_atlas + NUEVO _atlas/hud.js (ver _atlas/HUD.md). Se declara en scene.hud[]; los videos Atlas anteriores no cambian.",
+    "assets/scene.json lo genera work/build_scene.py (anclas @palabra): editar el script y volver a correr, o editar el JSON directo.",
+    "CONTENIDO NO VERIFICADO: el texto, las cifras (escaños, 289 drones, 437 M€, Ueno Bank…) y los hechos vienen de la referencia, no de fuentes propias. Es una demo de diseño; no publicar sin investigar cada dato. Polígonos del Sáhara y estados de EE. UU. son ilustrativos.",
+    "Sin retrato de Pedro Alliana (no hay foto con licencia): usa la silueta de reserva de portrait.",
+    "Vista previa: ?t=<s> congela; la previsualización con SwiftShader tarda ~1 min por cuadro cuando hay teselas nuevas. Sin render del MP4.",
+    "Teselas: preparar con atlas.py plan assets/scene.json --fetch --width 1080 --height 1920 antes de grabar.",
+    "Pendiente visual conocido: los polígonos del Sáhara Occidental (zona ocupada/libre) no calzan bien con la costa en la vista inclinada (se ve igual con el polígono Natural Earth 'EH'): revisar proyección/terreno en ese tramo antes de dar por cerrado."
+  ]
+}

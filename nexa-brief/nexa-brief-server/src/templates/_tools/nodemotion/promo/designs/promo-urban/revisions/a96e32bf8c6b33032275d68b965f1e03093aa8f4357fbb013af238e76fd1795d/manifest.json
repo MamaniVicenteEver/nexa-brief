@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "design_id": "promo-urban",
+  "family": "promo",
+  "demo_folder": "nodemotion/commercial/promo-urban",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {},
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "source_sha256": "e2d35cbaafa389edbc92d0dd5e3353e75d1e8947ec1bd5726aea3f166f250e1b",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/promo-urban",
+    "config": "nodemotion/commercial/promo-urban/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-urban/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-urban/README.md"
+  },
+  "revision": "a96e32bf8c6b33032275d68b965f1e03093aa8f4357fbb013af238e76fd1795d"
+}

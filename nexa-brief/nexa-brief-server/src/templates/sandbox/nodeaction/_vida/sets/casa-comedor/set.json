@@ -1,0 +1,165 @@
+{
+  "id": "casa-comedor",
+  "title": "Casa · comedor de noche",
+  "plate": {
+    "file": "plate.png",
+    "w": 1536,
+    "h": 1024
+  },
+  "floorY": 960,
+  "charHeight": 560,
+  "walk": [
+    140,
+    1396
+  ],
+  "anchors": {
+    "door": {
+      "x": 300,
+      "y": 960,
+      "kind": "door",
+      "facing": "right"
+    },
+    "seat-tomas": {
+      "x": 720,
+      "y": 960,
+      "kind": "seat",
+      "facing": "right"
+    },
+    "seat-mama": {
+      "x": 990,
+      "y": 960,
+      "kind": "seat",
+      "facing": "left"
+    },
+    "table": {
+      "x": 855,
+      "y": 960,
+      "kind": "table",
+      "facing": "front"
+    },
+    "stand-mama": {
+      "x": 1170,
+      "y": 960,
+      "kind": "stand",
+      "facing": "left"
+    }
+  },
+  "props": [
+    {
+      "prop": "door",
+      "x": 292,
+      "y": 688,
+      "w": 259,
+      "layer": "back",
+      "params": {
+        "h": 530,
+        "open": 0,
+        "color": "#bd967b",
+        "handleY": 535
+      },
+      "id": "door-0"
+    },
+    {
+      "prop": "chair",
+      "x": 720,
+      "y": 960,
+      "w": 155,
+      "layer": "back",
+      "params": {
+        "h": 330,
+        "seatY": 816,
+        "color": "#c69b7d"
+      },
+      "id": "chair-1"
+    },
+    {
+      "prop": "chair",
+      "x": 990,
+      "y": 960,
+      "w": 155,
+      "layer": "back",
+      "params": {
+        "h": 330,
+        "seatY": 816,
+        "color": "#c69b7d"
+      },
+      "id": "chair-2"
+    },
+    {
+      "prop": "table",
+      "x": 855,
+      "y": 960,
+      "w": 470,
+      "layer": "front",
+      "params": {
+        "h": 245,
+        "surfaceY": 715,
+        "color": "#c69b7d"
+      },
+      "id": "table-3"
+    },
+    {
+      "prop": "lamp",
+      "x": 1280,
+      "y": 960,
+      "w": 120,
+      "layer": "back",
+      "params": {
+        "h": 470,
+        "color": "#e8bf82",
+        "on": true
+      },
+      "id": "lamp-4"
+    },
+    {
+      "prop": "plant",
+      "x": 1395,
+      "y": 960,
+      "w": 110,
+      "layer": "back",
+      "params": {
+        "h": 265,
+        "color": "#97ac90"
+      },
+      "id": "plant-5"
+    },
+    {
+      "id": "picture",
+      "prop": "frame",
+      "x": 670,
+      "y": 402,
+      "w": 185,
+      "layer": "back",
+      "params": {
+        "h": 150,
+        "color": "#b98c71"
+      }
+    },
+    {
+      "id": "rug",
+      "prop": "rug",
+      "x": 855,
+      "y": 1000,
+      "w": 580,
+      "layer": "back",
+      "params": {
+        "h": 95,
+        "color": "#b9bca2"
+      }
+    }
+  ],
+  "light": {
+    "tint": "#ffead5",
+    "ambient": 0.92
+  },
+  "credits": {
+    "type": "ai-generated",
+    "adapter": "src.adapters.image_gen.cli",
+    "modelPreset": "luna-xhigh",
+    "prompt": "prompt.txt",
+    "reference": "sandbox/nodeaction/vida-en-escena/work/ref/v2-sheet.jpg (solo estilo del fondo)",
+    "status": "generated",
+    "note": "Original PNG copiado por el adaptador, sin recomprimir. Pendiente de revisión visual y calibración sobre la lámina. Calibración etapa 2 sobre PNG 1536×1024: suelo visible y≈688, apoyo 960, altura 560. Anclas y mobiliario ajustados; original intacto.",
+    "sha256": "c2625625dc38496817ac8c7d7d0d93e8504105fbc535940148dd5a65b8558898"
+  }
+}

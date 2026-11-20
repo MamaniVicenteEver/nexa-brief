@@ -1,4 +1,5 @@
 import type { JobStage } from "@/features/create-video/types";
+import { ApiError } from "@/infrastructure/api/api-error";
 import { httpClient, resolveApiUrl } from "@/infrastructure/api/http-client";
 import { appendResourceSourceFields, type ResourceSelection } from "@/shared/lib/resource-source";
 import type {
@@ -10,7 +11,7 @@ import type {
   TemplateRequirements,
 } from "../types";
 
-interface TemplateDto {
+export interface TemplateDto {
   template_id: string;
   niche_id: string;
   category_id?: string;
@@ -32,7 +33,7 @@ interface TemplateDto {
   showcase_url?: string | null;
 }
 
-function mapTemplate(dto: TemplateDto): Template {
+export function mapTemplate(dto: TemplateDto): Template {
   return {
     id: dto.template_id,
     nicheId: dto.niche_id,
@@ -143,6 +144,12 @@ export async function getPreviewStatus(
 }
 
 interface TemplateRequirementsDto {
+  resource_context?: {
+    category_id: string;
+    category_name: string;
+    template_id: string;
+    template_name: string;
+  } | null;
   audio: { required: boolean; lyrics: TemplateRequirements["audio"]["lyrics"] };
   media: {
     slot: string;
@@ -157,6 +164,23 @@ interface TemplateRequirementsDto {
   }[];
   texts: { key: string; label: string; max: number | null; default: string | null }[];
   brief: boolean;
+  defaults?: {
+    audio_asset_id: string | null;
+    media: Record<string, { asset_id: string; kind: "image" | "video" }[]>;
+  };
+}
+
+function mapDefaults(dto: TemplateRequirementsDto["defaults"]): TemplateRequirements["defaults"] {
+  if (!dto) return undefined;
+  return {
+    audioAssetId: dto.audio_asset_id,
+    media: Object.fromEntries(
+      Object.entries(dto.media).map(([slot, items]) => [
+        slot,
+        items.map((item) => ({ assetId: item.asset_id, kind: item.kind })),
+      ]),
+    ),
+  };
 }
 
 /** Qué pide cada plantilla (canción, lugares de medios, textos): el Estudio y
@@ -165,11 +189,30 @@ export async function getTemplateRequirements(
   templateId: string,
   signal?: AbortSignal,
 ): Promise<TemplateRequirements> {
-  const dto = await httpClient<TemplateRequirementsDto>(
-    `/api/v1/templates/${templateId}/requirements`,
-    { signal },
-  );
+  let dto: TemplateRequirementsDto;
+  try {
+    dto = await httpClient<TemplateRequirementsDto>(
+      `/api/v1/templates/${templateId}/requirements`,
+      { method: "POST", signal },
+    );
+  } catch (error) {
+    // Older servers expose the read-only GET contract until the explicit
+    // idempotent registration endpoint is deployed.
+    if (!(error instanceof ApiError) || (error.status !== 404 && error.status !== 405)) throw error;
+    dto = await httpClient<TemplateRequirementsDto>(
+      `/api/v1/templates/${templateId}/requirements`,
+      { signal },
+    );
+  }
   return {
+    resourceContext: dto.resource_context
+      ? {
+          categoryId: dto.resource_context.category_id,
+          categoryName: dto.resource_context.category_name,
+          templateId: dto.resource_context.template_id,
+          templateName: dto.resource_context.template_name,
+        }
+      : undefined,
     audio: dto.audio,
     media: dto.media.map((slot) => ({
       slot: slot.slot,
@@ -183,5 +226,6 @@ export async function getTemplateRequirements(
     })),
     texts: dto.texts.map((text) => ({ ...text })),
     brief: dto.brief,
+    defaults: mapDefaults(dto.defaults),
   };
 }

@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-expediente",
+  "family": "lyrics",
+  "display_name": "Hilo Rojo",
+  "description": "Pizarra de investigación estilo true-crime: cada frase se clava al muro como evidencia (recorte, titular, marcador, sello), conectada por un hilo rojo, con cámara que patrulla la escena en zoom y ángulos impredecibles.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-expediente/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-expediente/prompts/config_mapper.md",
+  "runtime_assets": [
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-expediente",
+    "config": "nodemotion/lyrics/lyrics-expediente/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-expediente/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-expediente/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-expediente/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.bg",
+      "kind": "configuration",
+      "label": "bg",
+      "summary": "Existing configuration configuration: bg.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.bg",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.board",
+      "kind": "configuration",
+      "label": "board",
+      "summary": "Existing configuration configuration: board.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.board",
+      "contract": "contracts/004-configuration.json"
+    }
+  ]
+}

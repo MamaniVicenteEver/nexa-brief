@@ -1,0 +1,12 @@
+{
+  "schema": "nexa.localizable-defaults/1",
+  "design_id": "rough",
+  "components": {
+    "rough.load": {"tasks": ["BOOT", "SCAN", "INDEX", "QUERY", "WRITE"], "overflowLabel": "1202"},
+    "rough.outrov1": {"thanks": "GRACIAS POR VER", "cta": "SUSCRÍBETE", "support": "Tu apoyo hace posible que sigamos trayendo nuevas tecnologías, ideas y curiosidades."},
+    "rough.outro": {"thanks": "GRACIAS POR VER", "cta": "SUSCRÍBETE", "support": "Tu apoyo hace posible que sigamos trayendo nuevas tecnologías, ideas y curiosidades."},
+    "rough.careerLadder": {"rungs": ["PRIMER EMPLEO", "SEMI-SENIOR", "SENIOR", "LÍDER"]},
+    "rough.codeReview": {"header": "pedido.js", "lines": ["function cobrar(pedido) {", "  const total = sumar(pedido)", "  if (total < 0) borrar()", "  return enviar(total)", "}"], "who": "IA ESCRIBIENDO…"},
+    "rough.layoffMail": {"time": "6:04", "from": "RECURSOS HUMANOS", "subject": "Tu puesto ha sido eliminado", "stamp": "PUESTO ELIMINADO"}
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-grunge",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-grunge",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "cea93428d04e5ac19bf32e5397afb753dec0e89ed2b3864879281e408ae3a4f8",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-grunge",
+    "config": "nodemotion/lyrics/lyrics-grunge/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-grunge/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-grunge/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/card-poster.webp": "4db724f9cf9a87eff266a38daeac9b8c53a263c686b3ae46ab5f6b4bd5adf31c.webp",
+    "assets/media/breakdance-1.jpg": "86c08782e06c4fde73f1bb09d8b2002fbec9d1d01d3a786029d7cf937c66830f.jpg",
+    "assets/media/breakdance-2.jpg": "0a79ec1b91c1494b7d62334d357930591aa27b03cbbe9c6ec8912f330b7c9596.jpg",
+    "assets/media/breakdance.mp4": "edaef76d272f10d0135c4b4a1aa8af33634968905a97642f1450ed5ab9e4b4f9.mp4",
+    "assets/media/crowd-1.jpg": "c61e0b0a6ef2b239bb3a43b758c4896bdce2d4e1d437468ea2f6f45e9f225919.jpg",
+    "assets/media/crowd-2.jpg": "f544420e6e2523336c97ec7f45ae4b8dc3e3e2eacd6586d8f8000d0924d123b0.jpg",
+    "assets/media/crowd.mp4": "614d1c5ee75f84390ec7f33f6908011106798a68f273d5a0fb45b6eb7b03c5df.mp4",
+    "assets/media/graded/breakdance-1.bw.jpg": "f0762d0e80ce44f9bd15e48ef90b7ffb62298402dd020f3829064bff916825d8.jpg",
+    "assets/media/graded/breakdance.bw.mp4": "f12c04bb155c37ebe4d5c9bca213db595d12e412defdc2e35da3d5a8b0169fee.mp4",
+    "assets/media/graded/crowd-1.bw.jpg": "4cdee5771537df7a3aa17620d420eba0f2c2e2237105ed93fc7330536fe9d3a6.jpg",
+    "assets/media/graded/crowd.bw.mp4": "e5b45b17e940368be2e5aba6924401115d7f6eb8c000d92b2f034ec1d6258fa7.mp4",
+    "assets/media/graded/hoodie-1.bw.jpg": "07e84160f1c81dfd000a02f7064b18743ba530be6550684b33f42f9ff1812dfc.jpg",
+    "assets/media/graded/hoodie.bw.mp4": "0c836e6df280dfac461d3eda535d81f85d512f8f252adf24216232f2f045a400.mp4",
+    "assets/media/graded/night-hoodie-1.bw.jpg": "e1df5208bcbf37c575e6392396878cb1aa82f423b9f66b229127a8db2dd52e2a.jpg",
+    "assets/media/graded/night-hoodie.bw.mp4": "5e4af47c154571dabd24fa3b178dfca6b649407bcabb2591b9ebeb11393416d6.mp4",
+    "assets/media/graded/street-dance-1.bw.jpg": "4781b91e6e7edc5b697d522a7c695eea9fcbab3298a31441fbe5739681d94d00.jpg",
+    "assets/media/graded/street-dance.bw.mp4": "d324c573cfdaf77f03c29b3a16843588bae89b3aefcf169899e71699fbb0f995.mp4",
+    "assets/media/graded/tunnel-dance-1.bw.jpg": "3641640a68f61013a3e761d48df7da3d36a873d8f2c2beb224cfa5eeec872892.jpg",
+    "assets/media/graded/tunnel-dance.bw.mp4": "fccbce2c343dcebcf8bdfeaa6d1bbc4e43ace839761aa7565c82d30f4786574e.mp4",
+    "assets/media/hoodie-1.jpg": "dcd3d53ca50d20d7eec087e8ae7a2e008756a5feaa075e850f8690b3e2077efc.jpg",
+    "assets/media/hoodie-2.jpg": "3f49ff3a522104ba3392b9a498d011e03bcf82145648e0e3b091fe9c04b4ce7b.jpg",
+    "assets/media/hoodie.mp4": "1e1b67794c9ad546b56c6ae14b2a133771282289b0200cd87a3dc520456c85db.mp4",
+    "assets/media/night-hoodie-1.jpg": "edb437df56bf81fe7794c05c9ea2693ad1db5cb3f8624f1881a0a07e78ada110.jpg",
+    "assets/media/night-hoodie-2.jpg": "9d8a2c989b79bc7b376cce70668212a60321e9f57c9dc299a1b502ac4a724a2c.jpg",
+    "assets/media/night-hoodie.mp4": "60956fef37ff9b5b030a76f82af65c13269af8b99eebe967ad41914c74706c4f.mp4",
+    "assets/media/street-dance-1.jpg": "e31c831875dd2732e11856c5d9aa6d98e574e6927901b6bcdddedbca97df08c7.jpg",
+    "assets/media/street-dance-2.jpg": "8052497fb28116fcb7e839ce20c3c0051d834d9c1b84bc3790307d712f2bfe65.jpg",
+    "assets/media/street-dance.mp4": "19d57dffe58d9b5246c1074113124f473f2ed95efe49d88d4fa427db80581abf.mp4",
+    "assets/media/tunnel-dance-1.jpg": "4229e60fcbd668c72448cdb28dd0baead757628b7bd2320c17cb096c0bf08c49.jpg",
+    "assets/media/tunnel-dance-2.jpg": "9bdb8c9d2de2cb1e3510f2cc31cca8298b7a055679dce9f2b07540f83c73ab59.jpg",
+    "assets/media/tunnel-dance.mp4": "4431d46ca50db362928c74273f4a621db62b635c79cdad61bb0b89279eb371b4.mp4",
+    "assets/song.mp3": "b36499f9fb828044b3f3304813c758aee9994b7768d3432bc268d83b3c238089.mp3"
+  },
+  "revision": "785e985ef93dafe5b463f7e6b0eaa397cc983107b2a7848affed7d1e403a444d"
+}

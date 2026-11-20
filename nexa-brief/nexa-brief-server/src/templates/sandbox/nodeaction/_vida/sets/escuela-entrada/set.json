@@ -1,0 +1,88 @@
+{
+  "id": "escuela-entrada",
+  "title": "Escuela · entrada por la mañana",
+  "plate": {
+    "file": "plate.png",
+    "w": 1536,
+    "h": 1024
+  },
+  "floorY": 960,
+  "charHeight": 560,
+  "walk": [
+    140,
+    1396
+  ],
+  "anchors": {
+    "enter-left": {
+      "x": 340,
+      "y": 960,
+      "kind": "enter",
+      "facing": "right"
+    },
+    "gate": {
+      "x": 1225,
+      "y": 960,
+      "kind": "door",
+      "facing": "front"
+    },
+    "meet": {
+      "x": 820,
+      "y": 960,
+      "kind": "stand",
+      "facing": "left"
+    },
+    "exit-right": {
+      "x": 1396,
+      "y": 960,
+      "kind": "exit",
+      "facing": "right"
+    },
+    "arrive": {
+      "x": 580,
+      "y": 960,
+      "kind": "stand",
+      "facing": "right"
+    }
+  },
+  "props": [
+    {
+      "id": "gate",
+      "prop": "school-gate",
+      "x": 1232,
+      "y": 719,
+      "w": 294,
+      "layer": "back",
+      "params": {
+        "h": 407,
+        "open": 0.2,
+        "color": "#7caaa5"
+      }
+    },
+    {
+      "id": "notice",
+      "prop": "poster",
+      "x": 668,
+      "y": 625,
+      "w": 96,
+      "layer": "back",
+      "params": {
+        "h": 138,
+        "color": "#cdad8c"
+      }
+    }
+  ],
+  "light": {
+    "tint": "#fff9ef",
+    "ambient": 0.98
+  },
+  "credits": {
+    "type": "ai-generated",
+    "adapter": "src.adapters.image_gen.cli",
+    "modelPreset": "luna-xhigh",
+    "prompt": "prompt.txt",
+    "reference": "sandbox/nodeaction/vida-en-escena/work/ref/v2-sheet.jpg (solo estilo del fondo)",
+    "status": "generated",
+    "note": "Original PNG copiado por el adaptador, sin recomprimir. Pendiente de revisión visual y calibración sobre la lámina. Calibración etapa 2 sobre PNG 1536×1024: suelo visible y≈719, apoyo 960, altura 560. Anclas y mobiliario ajustados; original intacto.",
+    "sha256": "5bb7cbc22745693592da006ab987c0026a1c376d0574cebeed68c0beaec05401"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-decadas",
+  "id": "config.scenes",
+  "entry_id": "config.scenes",
+  "name": "scenes",
+  "kind": "configuration",
+  "label": "scenes",
+  "summary": "Existing configuration configuration: scenes.",
+  "params": {
+    "deck": {
+      "default": {
+        "letras": 1.2,
+        "titulo": 2.4,
+        "barrido": 1.2,
+        "gigante": 1.4,
+        "contador": 1.6,
+        "credito": 1.6,
+        "foto": 0.6
+      }
+    },
+    "cooldown": {
+      "default": 2
+    },
+    "letrasMaxLetters": {
+      "default": 8
+    }
+  },
+  "example": {
+    "deck": {
+      "letras": 1.2,
+      "titulo": 2.4,
+      "barrido": 1.2,
+      "gigante": 1.4,
+      "contador": 1.6,
+      "credito": 1.6,
+      "foto": 0.6
+    },
+    "cooldown": 2,
+    "letrasMaxLetters": 8
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-decadas/assets/config.json",
+      "pointer": "/configs/0/scenes"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

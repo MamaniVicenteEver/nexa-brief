@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "promo-kinetic",
+  "family": "promo",
+  "display_name": "Promo Kinetic",
+  "description": "Pack de tipografía cinética: una palabra o frase por escena repetida en filas, con más de 20 animaciones distintas (desde el centro, ola, cascada, rotación, marcador, perspectiva, cortes, ondas) sobre carbón con grano. Solo texto: ideal para intros y anuncios.",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [],
+    "texts": [
+      {
+        "key": "brand.tag",
+        "label": "Marca",
+        "max": 20,
+        "default": "NEXA"
+      }
+    ],
+    "brief": true
+  },
+  "config_json": "nodemotion/commercial/promo-kinetic/assets/config.json",
+  "config_prompt": null,
+  "runtime_assets": [
+    "assets/media"
+  ],
+  "contract_sources": {
+    "template": "templates.json#templates/promo-kinetic",
+    "config": "nodemotion/commercial/promo-kinetic/assets/config.json",
+    "DESIGN.md": "nodemotion/commercial/promo-kinetic/DESIGN.md",
+    "README.md": "nodemotion/commercial/promo-kinetic/README.md"
+  },
+  "lookup": "/api/v1/templates/promo-kinetic/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "scene.fromCenter",
+      "kind": "scene",
+      "label": "fromCenter",
+      "summary": "animación tipográfica fromCenter de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.fromCenter",
+      "contract": "contracts/001-scene.json"
+    },
+    {
+      "entry_id": "scene.stretchChars",
+      "kind": "scene",
+      "label": "stretchChars",
+      "summary": "animación tipográfica stretchChars de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.stretchChars",
+      "contract": "contracts/002-scene.json"
+    },
+    {
+      "entry_id": "scene.ripple",
+      "kind": "scene",
+      "label": "ripple",
+      "summary": "animación tipográfica ripple de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.ripple",
+      "contract": "contracts/003-scene.json"
+    },
+    {
+      "entry_id": "scene.cascade",
+      "kind": "scene",
+      "label": "cascade",
+      "summary": "animación tipográfica cascade de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.cascade",
+      "contract": "contracts/004-scene.json"
+    },
+    {
+      "entry_id": "scene.marker",
+      "kind": "scene",
+      "label": "marker",
+      "summary": "animación tipográfica marker de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.marker",
+      "contract": "contracts/005-scene.json"
+    },
+    {
+      "entry_id": "scene.gradient",
+      "kind": "scene",
+      "label": "gradient",
+      "summary": "animación tipográfica gradient de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.gradient",
+      "contract": "contracts/006-scene.json"
+    },
+    {
+      "entry_id": "scene.rotating",
+      "kind": "scene",
+      "label": "rotating",
+      "summary": "animación tipográfica rotating de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.rotating",
+      "contract": "contracts/007-scene.json"
+    },
+    {
+      "entry_id": "scene.sliced",
+      "kind": "scene",
+      "label": "sliced",
+      "summary": "animación tipográfica sliced de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.sliced",
+      "contract": "contracts/008-scene.json"
+    },
+    {
+      "entry_id": "scene.dynamicScale",
+      "kind": "scene",
+      "label": "dynamicScale",
+      "summary": "animación tipográfica dynamicScale de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.dynamicScale",
+      "contract": "contracts/009-scene.json"
+    },
+    {
+      "entry_id": "scene.bigBlock",
+      "kind": "scene",
+      "label": "bigBlock",
+      "summary": "animación tipográfica bigBlock de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.bigBlock",
+      "contract": "contracts/010-scene.json"
+    },
+    {
+      "entry_id": "scene.growing",
+      "kind": "scene",
+      "label": "growing",
+      "summary": "animación tipográfica growing de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.growing",
+      "contract": "contracts/011-scene.json"
+    },
+    {
+      "entry_id": "scene.breakDown",
+      "kind": "scene",
+      "label": "breakDown",
+      "summary": "animación tipográfica breakDown de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.breakDown",
+      "contract": "contracts/012-scene.json"
+    },
+    {
+      "entry_id": "scene.pushUp",
+      "kind": "scene",
+      "label": "pushUp",
+      "summary": "animación tipográfica pushUp de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.pushUp",
+      "contract": "contracts/013-scene.json"
+    },
+    {
+      "entry_id": "scene.squeeze",
+      "kind": "scene",
+      "label": "squeeze",
+      "summary": "animación tipográfica squeeze de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.squeeze",
+      "contract": "contracts/014-scene.json"
+    },
+    {
+      "entry_id": "scene.perspective",
+      "kind": "scene",
+      "label": "perspective",
+      "summary": "animación tipográfica perspective de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.perspective",
+      "contract": "contracts/015-scene.json"
+    },
+    {
+      "entry_id": "scene.constructor_",
+      "kind": "scene",
+      "label": "constructor_",
+      "summary": "animación tipográfica constructor_ de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.constructor_",
+      "contract": "contracts/016-scene.json"
+    },
+    {
+      "entry_id": "scene.starway",
+      "kind": "scene",
+      "label": "starway",
+      "summary": "animación tipográfica starway de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.starway",
+      "contract": "contracts/017-scene.json"
+    },
+    {
+      "entry_id": "scene.waving",
+      "kind": "scene",
+      "label": "waving",
+      "summary": "animación tipográfica waving de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.waving",
+      "contract": "contracts/018-scene.json"
+    },
+    {
+      "entry_id": "scene.blink",
+      "kind": "scene",
+      "label": "blink",
+      "summary": "animación tipográfica blink de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.blink",
+      "contract": "contracts/019-scene.json"
+    },
+    {
+      "entry_id": "scene.typing",
+      "kind": "scene",
+      "label": "typing",
+      "summary": "animación tipográfica typing de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.typing",
+      "contract": "contracts/020-scene.json"
+    },
+    {
+      "entry_id": "scene.verticalWord",
+      "kind": "scene",
+      "label": "verticalWord",
+      "summary": "animación tipográfica verticalWord de la primera línea",
+      "constraints_status": "documented_per_variant",
+      "id": "scene.verticalWord",
+      "contract": "contracts/021-scene.json"
+    },
+    {
+      "entry_id": "config.fonts",
+      "kind": "configuration",
+      "label": "fonts",
+      "summary": "Existing configuration configuration: fonts.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.fonts",
+      "contract": "contracts/022-configuration.json"
+    },
+    {
+      "entry_id": "config.palette",
+      "kind": "configuration",
+      "label": "palette",
+      "summary": "Existing configuration configuration: palette.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.palette",
+      "contract": "contracts/023-configuration.json"
+    },
+    {
+      "entry_id": "config.brand",
+      "kind": "configuration",
+      "label": "brand",
+      "summary": "Existing configuration configuration: brand.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.brand",
+      "contract": "contracts/024-configuration.json"
+    },
+    {
+      "entry_id": "config.duration",
+      "kind": "configuration",
+      "label": "duration",
+      "summary": "Existing configuration configuration: duration.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.duration",
+      "contract": "contracts/025-configuration.json"
+    },
+    {
+      "entry_id": "config.texture",
+      "kind": "configuration",
+      "label": "texture",
+      "summary": "Existing configuration configuration: texture.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.texture",
+      "contract": "contracts/026-configuration.json"
+    }
+  ]
+}

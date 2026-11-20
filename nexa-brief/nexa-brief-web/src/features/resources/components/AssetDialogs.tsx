@@ -35,7 +35,9 @@ export function EditAssetDialog({
     <Dialog open={asset !== null} onOpenChange={onOpenChange}>
       <DialogContent className={dialogClass}>
         {/* Montado solo abierto: el formulario arranca con los valores actuales. */}
-        {asset && <EditAssetForm asset={asset} onClose={() => onOpenChange(false)} />}
+        {asset && (
+          <EditAssetForm key={asset.assetId} asset={asset} onClose={() => onOpenChange(false)} />
+        )}
       </DialogContent>
     </Dialog>
   );
@@ -45,8 +47,12 @@ function EditAssetForm({ asset, onClose }: { asset: LibraryAsset; onClose: () =>
   const t = useTranslations("resources.edit");
   const update = useUpdateAsset(asset.kind);
   const isMusic = asset.kind === "music";
+  const isSound = asset.kind === "sounds";
+  const [recommendedUses, setRecommendedUses] = useState(asset.recommendedUses.join("\n"));
+  const [approvalStatus, setApprovalStatus] = useState(asset.approvalStatus ?? "pending");
   const [name, setName] = useState(asset.name);
   const [artist, setArtist] = useState(asset.artist);
+  const [genre, setGenre] = useState(asset.genre);
   const [description, setDescription] = useState(asset.description);
   const [tags, setTags] = useState(asset.tags.join(", "));
   const [language, setLanguage] = useState(asset.language);
@@ -65,7 +71,18 @@ function EditAssetForm({ asset, onClose }: { asset: LibraryAsset; onClose: () =>
             .map((tag) => tag.trim())
             .filter(Boolean),
           category: category.trim() || asset.category,
-          ...(isMusic ? { artist: artist.trim(), language: language.trim() } : {}),
+          ...(isMusic
+            ? { artist: artist.trim(), genre: genre.trim(), language: language.trim() }
+            : {}),
+          ...(isSound
+            ? {
+                recommended_uses: recommendedUses
+                  .split("\n")
+                  .map((s) => s.trim())
+                  .filter(Boolean),
+                approval_status: approvalStatus,
+              }
+            : {}),
         },
       },
       {
@@ -79,7 +96,7 @@ function EditAssetForm({ asset, onClose }: { asset: LibraryAsset; onClose: () =>
   }
 
   return (
-    <form onSubmit={submit} className="flex flex-col gap-4">
+    <form onSubmit={submit} className="flex max-h-[80dvh] flex-col gap-3 overflow-y-auto">
       <DialogHeader>
         <DialogTitle>{t("title")}</DialogTitle>
         <DialogDescription className="truncate">
@@ -87,7 +104,13 @@ function EditAssetForm({ asset, onClose }: { asset: LibraryAsset; onClose: () =>
         </DialogDescription>
       </DialogHeader>
       <Field label={isMusic ? t("trackName") : t("name")}>
-        <input value={name} onChange={(e) => setName(e.target.value)} className={fieldClass} />
+        <input
+          value={name}
+          required
+          maxLength={240}
+          onChange={(e) => setName(e.target.value)}
+          className={fieldClass}
+        />
       </Field>
       {isMusic && (
         <div className="grid gap-4 sm:grid-cols-[1fr_120px]">
@@ -108,6 +131,11 @@ function EditAssetForm({ asset, onClose }: { asset: LibraryAsset; onClose: () =>
           </Field>
         </div>
       )}
+      {isMusic && (
+        <Field label={t("genre")}>
+          <input value={genre} onChange={(e) => setGenre(e.target.value)} className={fieldClass} />
+        </Field>
+      )}
       <Field label={t("description")}>
         <textarea
           value={description}
@@ -116,6 +144,31 @@ function EditAssetForm({ asset, onClose }: { asset: LibraryAsset; onClose: () =>
           className={fieldClass}
         />
       </Field>
+      {isSound && (
+        <>
+          <Field label={t("recommendedUses")} hint={t("recommendedUsesHint")}>
+            <textarea
+              value={recommendedUses}
+              onChange={(e) => setRecommendedUses(e.target.value)}
+              rows={3}
+              className={fieldClass}
+            />
+          </Field>
+          <Field label={t("approvalStatus")}>
+            <select
+              value={approvalStatus}
+              onChange={(e) =>
+                setApprovalStatus(e.target.value as "pending" | "approved" | "rejected")
+              }
+              className={fieldClass}
+            >
+              <option value="pending">{t("pending")}</option>
+              <option value="approved">{t("approved")}</option>
+              <option value="rejected">{t("rejected")}</option>
+            </select>
+          </Field>
+        </>
+      )}
       <Field label={t("tags")} hint={t("tagsHint")}>
         <input value={tags} onChange={(e) => setTags(e.target.value)} className={fieldClass} />
       </Field>
@@ -132,7 +185,7 @@ function EditAssetForm({ asset, onClose }: { asset: LibraryAsset; onClose: () =>
         </button>
         <button
           type="submit"
-          disabled={update.isPending}
+          disabled={update.isPending || !name.trim()}
           className="nb-btn-pill inline-flex items-center gap-1.5 px-4.5 py-2.5 text-[13px] font-semibold disabled:opacity-50"
         >
           {update.isPending && <Loader2 className="size-3.5 animate-spin" />}

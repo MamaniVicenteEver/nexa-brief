@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "rows",
+  "entry_id": "rows",
+  "kind": "component",
+  "label": "Filas inclinadas que corren",
+  "summary": "Filas inclinadas de «PALABRA //» que corren, silueta opcional y la palabra al centro.",
+  "component": {
+    "name": "rows",
+    "label": "Filas inclinadas que corren",
+    "summary": "Filas inclinadas de «PALABRA //» que corren, silueta opcional y la palabra al centro.",
+    "group": "scene",
+    "tags": [
+      "lyrics-hologram",
+      "scene"
+    ],
+    "params": {
+      "textIn": {
+        "type": "enum",
+        "options": [
+          "slide",
+          "stamp",
+          "glitch",
+          "spread",
+          "fade",
+          "cut"
+        ],
+        "default": "stamp"
+      },
+      "rows": {
+        "type": "number",
+        "min": 4,
+        "max": 16,
+        "default": 10
+      },
+      "figure": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "t": 6.75,
+      "query": null,
+      "layout": {
+        "weight": 0.7,
+        "bgs": [
+          "holo"
+        ],
+        "media": [
+          "sil-duo",
+          "sil-solo",
+          "sil-trio"
+        ]
+      }
+    },
+    "preview": {
+      "gallery": "gallery.html?only=rows"
+    }
+  },
+  "params": {
+    "textIn": {
+      "type": "enum",
+      "options": [
+        "slide",
+        "stamp",
+        "glitch",
+        "spread",
+        "fade",
+        "cut"
+      ],
+      "default": "stamp"
+    },
+    "rows": {
+      "type": "number",
+      "min": 4,
+      "max": 16,
+      "default": 10
+    },
+    "figure": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/14"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

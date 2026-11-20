@@ -1,0 +1,3 @@
+Listo. Corregí las capas y siluetas de `profe`, `nina`, `nino` y `obrera`, y anclé el bastón de `abuelo` al pie izquierdo. No modifiqué `palito.js`, el motor ni `PERSONAJES.md`.
+
+La comprobación `node --check` pasó en los cinco personajes. Dejé el detalle en el [reporte de corrección](</home/university/Documentos/Proyectos/nexa-brief/nexa-brief/nexa-brief-server/src/templates/sandbox/nodeaction/_pizarra/tareas/codex-personajes-fix-reporte.md>). No regeneré la hoja; queda pendiente la nueva captura de Claude, como indica la tarea.

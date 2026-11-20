@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-resaltado",
+  "family": "lyrics",
+  "display_name": "Página Subrayada",
+  "description": "La letra aparece resaltada con marcador dentro de un párrafo de libro, con cambio de página deslizante — para baladas reflexivas o pop introspectivo.",
+  "inputs": {
+    "audio": {
+      "required": true,
+      "lyrics": "auto"
+    },
+    "media": [],
+    "texts": [],
+    "brief": false
+  },
+  "config_json": "nodemotion/lyrics/lyrics-resaltado/assets/config.json",
+  "config_prompt": "nodemotion/lyrics/lyrics-resaltado/prompts/config_mapper.md",
+  "runtime_assets": [],
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-resaltado",
+    "config": "nodemotion/lyrics/lyrics-resaltado/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-resaltado/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-resaltado/README.md"
+  },
+  "lookup": "/api/v1/templates/lyrics-resaltado/components/{entry_id}",
+  "entries": [
+    {
+      "entry_id": "config.intro",
+      "kind": "configuration",
+      "label": "intro",
+      "summary": "Existing configuration configuration: intro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.intro",
+      "contract": "contracts/001-configuration.json"
+    },
+    {
+      "entry_id": "config.outro",
+      "kind": "configuration",
+      "label": "outro",
+      "summary": "Existing configuration configuration: outro.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.outro",
+      "contract": "contracts/002-configuration.json"
+    },
+    {
+      "entry_id": "config.phrase",
+      "kind": "configuration",
+      "label": "phrase",
+      "summary": "Existing configuration configuration: phrase.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.phrase",
+      "contract": "contracts/003-configuration.json"
+    },
+    {
+      "entry_id": "config.book",
+      "kind": "configuration",
+      "label": "book",
+      "summary": "Existing configuration configuration: book.",
+      "constraints_status": "observed_defaults_only",
+      "id": "config.book",
+      "contract": "contracts/004-configuration.json"
+    }
+  ]
+}

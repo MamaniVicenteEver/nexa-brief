@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "templateId": "lyrics-night-journey",
+  "treatments": {
+    "A": [
+      "solid"
+    ],
+    "B": [
+      "solid"
+    ]
+  },
+  "notes": "A: fondo liso del color oscuro de B, con título, artista y LETRAS. B: tarjeta de letra del video con el texto del campo y LETRAS.",
+  "capture": {
+    "settleMs": 900,
+    "photoOptions": [
+      "A"
+    ],
+    "artistOptions": [
+      "A"
+    ],
+    "frames": {
+      "B": {
+        "seconds": 5
+      }
+    },
+    "label": {
+      "B": {
+        "x": 1180,
+        "y": 640,
+        "color": "#FFFFFF"
+      }
+    },
+    "phraseMode": "lyrics"
+  },
+  "backgrounds": {
+    "A": {
+      "kind": "solid"
+    }
+  },
+  "palettes": {
+    "A": {
+      "background": "#0B0605"
+    }
+  }
+}

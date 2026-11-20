@@ -1,0 +1,68 @@
+{
+  "target": "/home/alfred/Projects/Git-Projects/nexa-brief/nexa-brief/nexa-brief-web/.next/dev.backup-2026-11-01",
+  "device": 64512,
+  "inode": 2926773,
+  "before": {
+    "measured_at_utc": "2026-11-03T01:51:08.764774+00:00",
+    "backup_bytes": 2758123520,
+    "web_bytes": 5023944704,
+    "filesystem": [
+      4096,
+      4096,
+      113384324,
+      91662281,
+      86777152,
+      28835840,
+      27834815,
+      27834815,
+      4096,
+      255
+    ],
+    "http": [
+      {
+        "url": "http://127.0.0.1:3000/api/health",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:3002/api/health",
+        "status": 200
+      }
+    ]
+  },
+  "after": {
+    "measured_at_utc": "2026-11-03T01:51:29.106189+00:00",
+    "backup_exists": false,
+    "web_bytes": 2265845760,
+    "filesystem_used_bytes": 86255529984,
+    "filesystem_available_bytes": 358157172736,
+    "active_dev_exists": true,
+    "http": [
+      {
+        "url": "http://127.0.0.1:3000/api/health",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:3002/api/health",
+        "status": 200
+      },
+      {
+        "url": "https://nexa-brief.everdev.space/api/health",
+        "error": "HTTP Error 403: Forbidden"
+      }
+    ],
+    "public_curl_checks": [
+      {
+        "url": "https://nexa-brief.everdev.space/",
+        "status": "200",
+        "exit_code": 0,
+        "error": ""
+      },
+      {
+        "url": "https://nexa-brief.everdev.space/api/health",
+        "status": "200",
+        "exit_code": 0,
+        "error": ""
+      }
+    ]
+  }
+}

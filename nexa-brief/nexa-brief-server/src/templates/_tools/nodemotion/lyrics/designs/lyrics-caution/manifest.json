@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-caution",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-caution",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "9ce9986afbf6e3630459ae2f87b188756fa8504755d51d40fa9345f5ae083932",
+  "migration_source_sha256": "9ce9986afbf6e3630459ae2f87b188756fa8504755d51d40fa9345f5ae083932",
+  "migration_runtime_sha256": {
+    "components/intro.js": "76c878158abc805d9e4abe5d87f216efa43ff2e1252eec1f830e25b5121375e4",
+    "components/outro.js": "36503dac1efb99d67d348f0d93c6e38b5474e42302592cd5715c70f991496b70"
+  },
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-caution",
+    "config": "nodemotion/lyrics/lyrics-caution/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-caution/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-caution/README.md"
+  },
+  "demo_resource_aliases": {
+    "assets/From Klickpin.com- Build this smart holiday treat roundup everyone will ask you about that balance trend comfort and everyday function and make yo.mp4": "3524837aaf34b436209d72a55d00c8fd502c7cd06044652ab6146cd9079b1afa.mp4",
+    "assets/From-Klickpin.mp3": "6be63b321557f9f045fe16800f0b21528b7e8db106e39a7bf0b8b9e0ff4c3391.mp3",
+    "assets/card-poster.webp": "6c9a7d834634b451756adf218e17c85f688b4610fe86d6da096664057398c162.webp",
+    "assets/song.mp3": "6be63b321557f9f045fe16800f0b21528b7e8db106e39a7bf0b8b9e0ff4c3391.mp3"
+  }
+}

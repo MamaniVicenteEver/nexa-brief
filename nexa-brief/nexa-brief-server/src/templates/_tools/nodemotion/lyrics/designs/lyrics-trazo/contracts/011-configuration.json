@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-trazo",
+  "id": "config.colors",
+  "entry_id": "config.colors",
+  "name": "colors",
+  "kind": "configuration",
+  "label": "colors",
+  "summary": "Existing configuration configuration: colors.",
+  "params": {
+    "ink": {
+      "default": "#FFFFFF"
+    },
+    "paper": {
+      "default": "#050505"
+    },
+    "inkInverted": {
+      "default": "#0B0B0B"
+    },
+    "paperInverted": {
+      "default": "#F6F6F3"
+    }
+  },
+  "example": {
+    "ink": "#FFFFFF",
+    "paper": "#050505",
+    "inkInverted": "#0B0B0B",
+    "paperInverted": "#F6F6F3"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-trazo/assets/config.json",
+      "pointer": "/configs/0/colors"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

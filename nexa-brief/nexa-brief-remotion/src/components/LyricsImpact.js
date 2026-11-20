@@ -1,5 +1,8 @@
 const React = require('react');
-const {useCurrentFrame, AbsoluteFill, Audio, interpolate} = require('remotion');
+const ImpactIntro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-impact/components/intro.js');
+const ImpactOutro = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-impact/components/outro.js');
+const {useCurrentFrame, AbsoluteFill, Audio, Html5Video, Sequence, interpolate} = require('remotion');
+const BackgroundSequence = require('../../../nexa-brief-server/src/templates/nodemotion/lyrics/lyrics-impact/components/background-sequence.js');
 const {loadFont} = require('@remotion/google-fonts/Anton');
 const {
   FPS,
@@ -76,67 +79,7 @@ function ClusterEl({cluster, frame, C, opacity}) {
   );
 }
 
-function Card({cfg, C, opacity}) {
-  return React.createElement(
-    'div',
-    {
-      style: {
-        position: 'absolute',
-        inset: 0,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '1.4vh',
-        textAlign: 'center',
-        textTransform: 'uppercase',
-        padding: '0 6vw',
-        fontFamily: C.fonts.display,
-        opacity,
-      },
-    },
-    React.createElement(
-      'div',
-      {
-        style: {
-          fontSize: '17vh',
-          color: C.colors.ink,
-          lineHeight: 0.95,
-          letterSpacing: '0.01em',
-          transform: 'skewX(-8deg)',
-          filter: 'drop-shadow(0 4px 18px rgba(0,0,0,0.8)) drop-shadow(0 0 30px rgba(210,34,42,0.22))',
-          whiteSpace: 'pre-line',
-        },
-      },
-      cfg.title
-    ),
-    React.createElement(
-      'div',
-      {
-        style: {
-          fontSize: '2.1vh',
-          color: C.colors.ink,
-          letterSpacing: '0.34em',
-          opacity: 0.9,
-          transform: 'skewX(-8deg)',
-        },
-      },
-      cfg.sub
-    ),
-    React.createElement(
-      'div',
-      {
-        style: {
-          fontSize: '1.6vh',
-          color: C.colors.feats,
-          letterSpacing: '0.3em',
-          marginTop: '2.6vh',
-        },
-      },
-      cfg.feats
-    )
-  );
-}
+
 
 function LyricsImpact({configData, lyricsData, audioSrc, bgSrc}) {
   const frame = useCurrentFrame();
@@ -166,20 +109,15 @@ function LyricsImpact({configData, lyricsData, audioSrc, bgSrc}) {
       })
     : 0;
 
-  const introVisible = CLUSTERS.length === 0 || frame < CLUSTERS[0].frame;
   const introTransFrames = 1.1 * fps;
-  const introOpacity = CLUSTERS.length
-    ? interpolate(frame, [CLUSTERS[0].frame, CLUSTERS[0].frame + introTransFrames], [1, 0], {
-        extrapolateLeft: 'clamp',
-        extrapolateRight: 'clamp',
-      })
-    : 1;
-
+  const introDurationSeconds = CLUSTERS.length
+    ? CLUSTERS[0].frame / fps
+    : ImpactIntro.DEFAULT_DURATION_SECONDS;
   const outroOpacity = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + introTransFrames], [0, 1], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
-  const worldDim = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + 1.6 * fps], [1, 0.1], {
+  const worldDim = interpolate(frame, [OUTRO_FRAME, OUTRO_FRAME + 1.6 * fps], [1, 0.46], {
     extrapolateLeft: 'clamp',
     extrapolateRight: 'clamp',
   });
@@ -196,6 +134,12 @@ function LyricsImpact({configData, lyricsData, audioSrc, bgSrc}) {
   const grainStep = Math.floor(frame / fps / (0.9 / 4)) % 4;
   const [grainX, grainY] = GRAIN_STEPS[grainStep];
 
+  const hasCustomOpacity = typeof C.bg?.opacity === 'number' && Number.isFinite(C.bg.opacity);
+  const bgOpacity = hasCustomOpacity ? Math.max(0, Math.min(1, C.bg.opacity)) : 1;
+  const selection = BackgroundSequence.at(C.bg?.playlist, frame / fps, introDurationSeconds);
+  const bgIsVideo = (selection?.item.type || C.bg?.type) === 'video';
+  const selectedBg = selection?.item.src || bgSrc;
+
   return React.createElement(
     AbsoluteFill,
     {style: {background: '#050404', overflow: 'hidden'}},
@@ -209,19 +153,20 @@ function LyricsImpact({configData, lyricsData, audioSrc, bgSrc}) {
           transform: `scale(${punchScale})`,
         },
       },
-      React.createElement('img', {
-        src: resolveMediaSrc(bgSrc),
+      React.createElement(Sequence, {from: selection ? Math.round(selection.start * fps) : 0, key: selection ? `${selection.index}-${selection.start}` : 'background'}, React.createElement(bgIsVideo ? Html5Video : 'img', {
+        ...(bgIsVideo ? {loop: !selection, muted: true} : {}),
+        src: resolveMediaSrc(selectedBg),
         style: {
           position: 'absolute',
           inset: '-8%',
           width: '116%',
           height: '116%',
           objectFit: 'cover',
-          filter: C.bg?.filter || '',
+          filter: hasCustomOpacity ? 'none' : C.bg?.filter || '',
           transform: `scale(${bgScale}) translate(${bgTX}%, ${bgTY}%)`,
-          opacity: worldDim,
+          opacity: worldDim * bgOpacity,
         },
-      }),
+      })),
       React.createElement('div', {
         style: {
           position: 'absolute',
@@ -229,7 +174,7 @@ function LyricsImpact({configData, lyricsData, audioSrc, bgSrc}) {
           background:
             'radial-gradient(ellipse at 50% 50%, rgba(120,20,22,0.10) 0%, rgba(8,4,4,0.62) 70%, rgba(3,2,2,0.88) 100%)',
           mixBlendMode: 'multiply',
-          opacity: worldDim,
+          opacity: worldDim * (hasCustomOpacity ? 0.25 : 1),
         },
       }),
       React.createElement('div', {
@@ -287,6 +232,7 @@ function LyricsImpact({configData, lyricsData, audioSrc, bgSrc}) {
           zIndex: 5,
           pointerEvents: 'none',
           background: 'radial-gradient(ellipse at 50% 50%, transparent 42%, rgba(0,0,0,0.7) 100%)',
+          opacity: hasCustomOpacity ? 0.35 : 1,
         },
       }),
       React.createElement('div', {
@@ -305,8 +251,13 @@ function LyricsImpact({configData, lyricsData, audioSrc, bgSrc}) {
         },
       })
     ),
-    introVisible && React.createElement(Card, {cfg: C.intro, C, opacity: introOpacity}),
-    frame >= OUTRO_FRAME && React.createElement(Card, {cfg: C.outro, C, opacity: outroOpacity})
+    ImpactIntro.createRemotionElement({
+      React, config: C.intro, C,
+      timeSeconds: frame / fps,
+      durationSeconds: introDurationSeconds,
+      outroActive: frame >= OUTRO_FRAME,
+    }),
+    frame >= OUTRO_FRAME && ImpactOutro.createRemotionElement({React, config: C.outro, opacity: outroOpacity, elapsedSeconds: Math.max(0, (frame - OUTRO_FRAME) / fps), width: WIDTH, height: HEIGHT})
   );
 }
 

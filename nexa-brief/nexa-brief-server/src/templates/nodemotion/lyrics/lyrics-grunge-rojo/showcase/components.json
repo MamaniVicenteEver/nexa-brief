@@ -1,0 +1,317 @@
+{
+  "design": "lyrics-grunge-rojo",
+  "gallery": "showcase/index.html",
+  "query": {
+    "only": "name",
+    "aspect": "16:9|9:16",
+    "p": "JSON de params",
+    "t": "segundos (congela)",
+    "loop": "0|1"
+  },
+  "components": [
+    {
+      "name": "grunge.intro",
+      "label": "Intro rasgada",
+      "summary": "Metraje B/N con papel rasgado; título rojo con estela, artista espaciado, corona de tiza y destello.",
+      "tags": [
+        "intro"
+      ],
+      "file": "components/intro.js",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "Roll Up 20",
+          "doc": "config.intro.title"
+        },
+        "artist": {
+          "type": "string",
+          "default": "Pista de demostración",
+          "doc": "config.intro.artist"
+        }
+      },
+      "demo": {},
+      "preview": {
+        "t": 1.8
+      }
+    },
+    {
+      "name": "grunge.outrov1",
+      "label": "Outro v1 Rasgado",
+      "summary": "Hoja rasgada que cruza, título gigante con eco rojo, sub espaciado, subrayado y feats.",
+      "tags": [
+        "outro"
+      ],
+      "file": "components/outro-v1.js",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "Gracias",
+          "doc": "config.outro.title"
+        },
+        "sub": {
+          "type": "string",
+          "default": "por ver",
+          "doc": "config.outro.sub"
+        },
+        "feats": {
+          "type": "string",
+          "default": "Suscríbete · NodeMotion",
+          "doc": "config.outro.feats"
+        }
+      },
+      "demo": {},
+      "preview": {
+        "t": 3.4
+      }
+    },
+    {
+      "name": "grunge.outrov2",
+      "label": "Outro v2 Collage",
+      "summary": "Collage de frases cantadas y tiza sobre papel; franja roja con el título y feats.",
+      "tags": [
+        "outro"
+      ],
+      "file": "components/outro-v2.js",
+      "params": {
+        "title": {
+          "type": "string",
+          "default": "Gracias",
+          "doc": "config.outro.title"
+        },
+        "sub": {
+          "type": "string",
+          "default": "por ver",
+          "doc": "config.outro.sub"
+        },
+        "feats": {
+          "type": "string",
+          "default": "Suscríbete · NodeMotion",
+          "doc": "config.outro.feats"
+        }
+      },
+      "demo": {},
+      "preview": {
+        "t": 3.4
+      }
+    },
+    {
+      "name": "grunge.escena",
+      "label": "Escena de letra",
+      "summary": "Una de las 11 composiciones con un fragmento de letra.",
+      "tags": [
+        "escena"
+      ],
+      "file": "components/escenas.js",
+      "params": {
+        "scene": {
+          "type": "string",
+          "default": "linea",
+          "options": [
+            "linea",
+            "espaciada",
+            "gigante",
+            "hud",
+            "pila",
+            "marco",
+            "eco",
+            "ancho",
+            "dupla",
+            "flecha",
+            "rojo"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "default": "Like whoa put us on the map",
+          "doc": "Texto"
+        },
+        "color": {
+          "type": "string",
+          "default": "red",
+          "options": [
+            "red",
+            "white"
+          ]
+        },
+        "strip": {
+          "type": "string",
+          "default": "none",
+          "options": [
+            "none",
+            "top",
+            "bottom"
+          ]
+        },
+        "doodle": {
+          "type": "string",
+          "default": "",
+          "options": [
+            "",
+            "circle",
+            "arrow",
+            "underline",
+            "box",
+            "crown",
+            "bolt",
+            "xmarks",
+            "eyes",
+            "strike",
+            "slash",
+            "smear"
+          ]
+        },
+        "bg": {
+          "type": "string",
+          "default": "footage",
+          "options": [
+            "footage",
+            "dark",
+            "paper"
+          ]
+        },
+        "clip": {
+          "type": "number",
+          "default": 0,
+          "doc": "Índice de media",
+          "min": 0,
+          "max": 20
+        }
+      },
+      "demo": {
+        "scene": "gigante",
+        "text": "snapped"
+      },
+      "preview": {
+        "t": 1.0
+      }
+    },
+    {
+      "name": "grunge.transiciones",
+      "label": "Transiciones",
+      "summary": "Papel rasgado, glitch, destello blanco o rojo, desenfoque o corte.",
+      "tags": [
+        "transicion"
+      ],
+      "file": "components/transiciones.js",
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "tear",
+          "options": [
+            "cut",
+            "tear",
+            "glitch",
+            "flash",
+            "redflash",
+            "blur"
+          ]
+        }
+      },
+      "demo": {
+        "type": "glitch"
+      },
+      "preview": {
+        "t": 0.08
+      }
+    },
+    {
+      "name": "grunge.interludios",
+      "label": "Interludios",
+      "summary": "Silencios: metraje con ojos de tiza, franjas rojas o rejilla de frase.",
+      "tags": [
+        "escena"
+      ],
+      "file": "components/transiciones.js",
+      "params": {
+        "type": {
+          "type": "string",
+          "default": "metraje",
+          "options": [
+            "metraje",
+            "franjas",
+            "rejilla"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "default": "lose control",
+          "doc": "Frase ya cantada"
+        }
+      },
+      "demo": {
+        "type": "franjas"
+      },
+      "preview": {
+        "t": 1.0
+      }
+    },
+    {
+      "name": "grunge.garabatos",
+      "label": "Tiza y pincel rojo",
+      "summary": "Círculo, flecha, subrayado, marco, corona, rayo, cruces, ojos, tachón, barra o mancha.",
+      "tags": [
+        "adorno"
+      ],
+      "file": "components/garabatos.js",
+      "params": {
+        "doodle": {
+          "type": "string",
+          "default": "circle",
+          "options": [
+            "circle",
+            "arrow",
+            "underline",
+            "box",
+            "crown",
+            "bolt",
+            "xmarks",
+            "eyes",
+            "strike",
+            "slash",
+            "smear"
+          ]
+        }
+      },
+      "demo": {
+        "doodle": "strike"
+      },
+      "preview": {
+        "t": 1.0
+      }
+    },
+    {
+      "name": "grunge.papel",
+      "label": "Papel rasgado",
+      "summary": "Tiras de papel gris rasgado arriba o abajo.",
+      "tags": [
+        "fondo"
+      ],
+      "file": "components/fondo.js",
+      "params": {},
+      "demo": {},
+      "preview": {
+        "t": 1.0
+      }
+    },
+    {
+      "name": "grunge.repaso",
+      "label": "Repaso de frases",
+      "summary": "En silencios largos vuelve a mostrar frases ya cantadas (nunca inventa letra).",
+      "tags": [
+        "escena"
+      ],
+      "file": "player.js",
+      "params": {
+        "text": {
+          "type": "string",
+          "default": "but now I won't",
+          "doc": "Frase ya cantada"
+        }
+      },
+      "demo": {},
+      "preview": {
+        "t": 1.2
+      }
+    }
+  ]
+}

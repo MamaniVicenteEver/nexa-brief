@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
-import { nbCode, nbEditorial, nbSans, nbTech } from "@/lib/fonts";
+import { nbBrand, nbCode, nbEditorial, nbSans, nbTech } from "@/lib/fonts";
 import { Providers } from "@/shared/providers/Providers";
 import "../globals.css";
 
@@ -34,7 +34,7 @@ export default async function LocaleLayout({
   return (
     <html
       lang={locale}
-      className={`${nbSans.variable} ${nbTech.variable} ${nbEditorial.variable} ${nbCode.variable} h-full antialiased`}
+      className={`${nbSans.variable} ${nbTech.variable} ${nbEditorial.variable} ${nbCode.variable} ${nbBrand.variable} h-full antialiased`}
     >
       <body className="nb-body-bg min-h-full flex flex-col font-nb-sans text-nb-ink">
         <NextIntlClientProvider messages={messages}>

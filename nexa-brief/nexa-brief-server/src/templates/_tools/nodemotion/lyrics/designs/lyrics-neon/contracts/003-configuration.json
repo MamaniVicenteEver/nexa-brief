@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-neon",
+  "id": "config.neon",
+  "entry_id": "config.neon",
+  "name": "neon",
+  "kind": "configuration",
+  "label": "neon",
+  "summary": "Existing configuration configuration: neon.",
+  "params": {
+    "core": {
+      "default": "#FFE9CF"
+    },
+    "glow": {
+      "default": "#FF5A1F"
+    },
+    "deep": {
+      "default": "#E01400"
+    }
+  },
+  "example": {
+    "core": "#FFE9CF",
+    "glow": "#FF5A1F",
+    "deep": "#E01400"
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-neon/assets/config.json",
+      "pointer": "/configs/0/neon"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

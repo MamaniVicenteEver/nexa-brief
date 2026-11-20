@@ -1,0 +1,35 @@
+/* lyrics-decadas · estilos compartidos por el video (index.html) y la galería (showcase/).
+   Los colores llegan como variables desde config.colors (player.js). */
+:root { --dark: #190F06; --pale: #E4EDF7; --blue: #0080FD; --white: #F4F4F2; --black: #050505; }
+#stage { position: fixed; inset: 0; overflow: hidden; background: var(--dark); }
+.dc-scene { position: absolute; inset: 0; overflow: hidden; }
+.dc-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transform-origin: 50% 50%; }
+.dc-text { line-height: .88; text-align: center; white-space: nowrap; color: var(--white); }
+.dc-row { display: block; }
+.dc-ch { display: inline-block; }
+.dc-ink { color: var(--black); }
+.dc-blue { color: var(--blue); }
+.dc-left { text-align: left; }
+.dc-shadow { text-shadow: 0 .02em .12em rgba(0, 0, 0, .45); }
+.dc-tag { position: absolute; color: var(--blue); line-height: .85; white-space: nowrap; z-index: 2; }
+.dc-svg { position: absolute; inset: 0; pointer-events: none; overflow: visible; z-index: 3; }
+.dc-vlabel { position: absolute; white-space: nowrap; line-height: 1; transform-origin: 50% 50%; z-index: 2; }
+.dc-photo-text { line-height: .8; white-space: nowrap; }
+.dc-clip { color: transparent; background-size: cover; background-position: center; -webkit-background-clip: text; background-clip: text; }
+.dc-giant-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -52%); }
+.dc-frag { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
+.dc-photo-bg { position: absolute; inset: -4%; background-size: cover; background-position: center; }
+.dc-giant { position: absolute; left: 50%; top: 50%; line-height: .78; white-space: nowrap; letter-spacing: -.02em; }
+.dc-bar { position: absolute; z-index: 2; }
+.dc-credit { position: absolute; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: flex-start; }
+.dc-rule { height: 2px; margin: .9em 0; }
+.dc-caption { color: var(--white); margin-top: .6em; letter-spacing: .02em; white-space: nowrap; }
+.dc-overlay { position: absolute; inset: 0; z-index: 6; }
+.dc-slam { display: flex; align-items: center; justify-content: center; line-height: .8; }
+.dc-intro-artist { position: absolute; left: 0; right: 0; text-align: center; letter-spacing: .04em; }
+.dc-outro-line { position: absolute; left: 12%; top: 46%; letter-spacing: .06em; white-space: nowrap; }
+.dc-outro-rule { position: absolute; left: 12%; top: 52%; height: 1px; }
+.dc-brand { position: absolute; left: 50%; top: 50%; white-space: nowrap; line-height: 1.1; }
+.dc-outro-thanks { position: absolute; left: 0; right: 0; top: 72%; text-align: center; letter-spacing: .04em; }
+.dc-outro-bar { position: absolute; left: 0; bottom: 12%; height: 9%; overflow: hidden; display: flex; align-items: center; z-index: 3; }
+.dc-outro-feats { padding-left: 6%; white-space: nowrap; }

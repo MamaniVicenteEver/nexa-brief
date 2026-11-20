@@ -1,0 +1,22 @@
+# Completa las carencias con candidatos CC0 específicos; conserva los 14 originales.
+import hashlib,json,subprocess,urllib.request
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor
+rows=[('bomber-prop','airplane-engine-02',-29,False,'Avión de hélice genérico, no bombardero identificado.'),('ui-tick','ui-tick-23',-33,False,None),('riser','transition-riser-01',-33,False,None),('footsteps','marching-footsteps-02',-33,False,None)]
+def fetch(row):
+ id,slug,gain,loop,note=row
+ with urllib.request.urlopen('https://sfxmint.com/api/v1/sounds/'+slug,timeout=45) as r: m=json.load(r)
+ assert m['license']=='CC0'
+ with urllib.request.urlopen('https://sfxmint.com/dl/'+slug+'.mp3',timeout=60) as r: raw=r.read()
+ digest=hashlib.sha256(raw).hexdigest();assert digest==m['format_metadata']['mp3']['sha256']
+ path=Path('assets/sfx')/(slug+'.mp3');path.write_bytes(raw)
+ pcm=subprocess.check_output(['ffmpeg','-v','error','-threads','1','-i',str(path),'-ar','48000','-ac','2','-f','f32le','-'])
+ d=len(pcm)/8/48000
+ print(id,d,flush=True)
+ return dict(id=id,file=str(path),asset_id='',duration=d,license='CC0',license_url=m['license_url'],url=m['page_url'],download_url=m['mp3_url'],provider='sfxmint',provider_sound_id=slug,sha256=digest,gain_db=gain,fade_in=.01,fade_out=.12,loop=loop,source_in=0,substitute=bool(note),**({'note':note} if note else {})),m
+items=list(ThreadPoolExecutor(max_workers=2).map(fetch,rows))
+p=Path('../_tactico/sfx.json');c=json.loads(p.read_text());existing={s['id']:s for s in c['sounds']}
+for s,m in items:existing[s['id']]=s
+c['sounds']=list(existing.values());c['aliases'].pop('footsteps',None)
+p.write_text(json.dumps(c,ensure_ascii=False,indent=2)+'\n')
+Path('work/sonido/supplement-metadata.json').write_text(json.dumps([m for s,m in items],ensure_ascii=False,indent=2)+'\n')

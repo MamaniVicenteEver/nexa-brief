@@ -1,0 +1,54 @@
+{
+  "purpose": "Completar después de obtener y escuchar SFX CC0 y alinear la voz real; no descargar ni inventar tiempos. Este archivo sin cues aplica solo color vocal.",
+  "cues": [],
+  "planned_slots": [
+    {
+      "before_segment": "m02",
+      "kind": "inhale",
+      "duration_s": [
+        0.18,
+        0.35
+      ]
+    },
+    {
+      "before_segment": "m03",
+      "kind": "exhale",
+      "duration_s": [
+        0.25,
+        0.45
+      ]
+    },
+    {
+      "before_segment": "m04",
+      "kind": "sigh",
+      "duration_s": [
+        0.3,
+        0.55
+      ]
+    },
+    {
+      "before_segment": "m06",
+      "kind": "exhale",
+      "duration_s": [
+        0.25,
+        0.45
+      ]
+    },
+    {
+      "before_segment": "m07",
+      "kind": "sigh",
+      "duration_s": [
+        0.3,
+        0.55
+      ]
+    }
+  ],
+  "cue_schema": {
+    "file": "archivo-CC0.wav",
+    "start": "segundo real en el WAV, dentro de un hueco alineado",
+    "source_start": "inicio del recorte elegido por escucha",
+    "duration": "100–600 ms",
+    "target_rms_dbfs": -40
+  },
+  "production_note": "Cinco eventos discretos en ~56 s, no cinco suspiros dramáticos. Si el TTS ya produce una respiración, omitir ese cue."
+}

@@ -13,7 +13,7 @@ export function PublishTextsControl({ videoId }: { videoId: string }) {
   const { data: options } = useExplainerOptions();
   const { mutate, isPending } = useGeneratePublishTexts();
   const [provider, setProvider] = useState<TextProvider | "">("");
-  const selected = provider || options?.defaultTextProvider || "deepseek";
+  const selected = provider || options?.defaultTextProvider || "codex";
 
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-xl border border-dashed border-nb-line px-3 py-2">

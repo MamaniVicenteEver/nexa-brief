@@ -1,0 +1,32 @@
+{
+  "name": "@nexa/vida-engine",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "validate": "node tools/validate.mjs",
+    "sheets": "node tools/sheet.mjs all review/sheets",
+    "benchmark": "node tools/benchmark.mjs",
+    "test:browser": "node tools/browser-check.mjs",
+    "mix": "node tools/mix.mjs",
+    "render": "node tools/render.mjs",
+    "review": "node tools/review.mjs",
+    "review:sets": "node tools/review-sets.mjs",
+    "test:episode-browser": "node tools/browser-episode-check.mjs",
+    "catalog": "node tools/catalog.mjs",
+    "new-episode": "node tools/new-episode.mjs",
+    "produce": "node tools/produce.mjs",
+    "test:produce": "node --test test/produce-*.test.mjs"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "1.1.0",
+    "ajv": "8.20.0"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1"
+  }
+}

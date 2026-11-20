@@ -1,0 +1,101 @@
+{
+  "purpose": "Preparación host Atlas en sandbox del perfil efectivo v2/v3. No renderiza ni publica.",
+  "commands": [
+    ".venv/bin/python scripts/atlas_factory.py --self-test",
+    ".venv/bin/python scripts/atlas_factory.py init --episode ID --title TÍTULO",
+    ".venv/bin/python scripts/atlas_factory.py run-script --episode ID",
+    ".venv/bin/python scripts/atlas_factory.py voice --episode ID",
+    ".venv/bin/python scripts/atlas_factory.py transcribe --episode ID",
+    ".venv/bin/python scripts/atlas_factory.py audit --episode ID"
+  ],
+  "selection": "Resolver exclusivamente layout_for_settings(settings).sandbox_dir; verificar profile.json. --category=nodeatlas por defecto. ID/category son slugs. Sin selección de perfil o esquema legacy: error.",
+  "initialization": "info.json cumple validate_info: summary/based_on/is_new_design/libraries/inputs/notes, status en progreso y created_at YYYY-MM-DD. render_wrapper(title) carga de forma explícita una sola autoridad assets/config.json mediante runAtlas/loadData y data-atlas-manual=true; no crea config.json duplicado. overlays.json y geo.resolved.json iniciales vacíos evitan probes opcionales404; nunca reemplazar geometrías existentes al actualizar un wrapper.",
+  "inputs_prepared_by_supervisor": {
+    "assets/episode-data.json": {
+      "title": "Título",
+      "ranking": {
+        "metric": "PIB nominal",
+        "unit": "USD",
+        "year": 2026,
+        "kind": "projection",
+        "source": "ID fuente"
+      },
+      "countries": [
+        {
+          "iso2": "XX",
+          "name": "Nombre",
+          "rank": 8,
+          "leader": {
+            "name": "Nombre",
+            "title": "Cargo",
+            "as_of": "fecha",
+            "fact_ids": [
+              "fact-id"
+            ]
+          },
+          "gdp": {
+            "value": 0,
+            "unit": "USD",
+            "year": 2026,
+            "fact_ids": [
+              "fact-id"
+            ]
+          },
+          "regions": [
+            {
+              "id": "region-a",
+              "name": "Región",
+              "criterion": "Criterio verificado",
+              "fact_ids": [
+                "fact-id"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "research.json": {
+      "sources": [
+        {
+          "id": "source-id",
+          "url": "https://fuente-primaria.example",
+          "title": "Fuente",
+          "accessed_at": "fecha"
+        }
+      ],
+      "facts": [
+        {
+          "id": "fact-id",
+          "claim": "Hecho verificado",
+          "sourceIds": [
+            "source-id"
+          ],
+          "period": "2026",
+          "unit": "unidad",
+          "limitations": "límites"
+        }
+      ]
+    },
+    "work/brief.json": {
+      "purpose": "Encargo editorial",
+      "audience": "Audiencia",
+      "notes": []
+    },
+    "cardinality": "Exactamente 8 países, rank 1..8; al menos dos regiones por país. El guion usa las dos primeras y cuenta de 8 a 1. Extensiones de geometría/medios se conservan."
+  },
+  "agent": "Solo get_agent + AgentScope del episodio. Política propia _atlas/orchestration.json: codex/gpt-6.1-terra/high; exclusivamente si Codex no está disponible, claude/claude-haiku-5-5/medium. No consulta ni modifica roles globales. Una ejecución fallida no autoriza fallback, bypass ni CLI directo. Log propio registra solicitado, seleccionado, modelo real informado, esfuerzo real desconocido si el adaptador no lo reporta y motivo del fallback. Disponibilidad no demuestra autenticación. Reutiliza guion válido sin llamadas IA.",
+  "voice": "Requiere work/results/test/editorial-review.json con approved_for_tts=true y script_sha256 actual; esa aprobación es del supervisor, no se infiere de fact_ids. narrate.main en proceso, perfil público Orus, primer modelo de voice.json, --parts 1 --no-qc. Solo tts existente lee el .env propio para autenticación; nunca el de otro proyecto. Estado de cuotas en log propio. Interceptar _post conserva únicamente metadatos numéricos de uso y normaliza LAST_USAGE antes del ledger. Reintentos/rotación internos de la biblioteca siguen vigentes.",
+  "transcribe": "Una instancia faster-whisper large-v3 int8 CPU, 2 threads y 1 worker; caché local obligatoria, sin descarga. MP3 final real. Conservar palabras crudas antes de unir números partidos; no alinear texto al guion ni completar omisiones. Escucha y diff normalizado de cifras/siglas corresponden al supervisor.",
+  "resume": "run-script reutiliza script válido. voice requiere checkpoint compatible con hashes del guion/MP3. transcribe reutiliza salidas con hash del MP3. Artefactos incompatibles exigen revisión o --force explícito. init nunca sobrescribe. Etapas bloqueadas por lock exclusivo del episodio.",
+  "evidence": "work/results/test/{initial,final,stage-*}.json y transcript-raw.json, usage-report.json. Ledger canónico tools/usage.py en logs del perfil. Auditar conocidos por proveedor y desconocidos null; caché y razonamiento no se suman otra vez al contador descriptivo input+output.",
+  "accounting_reconciliation": "Audit conserva eventos históricos y usa solo result.usage numérico del stream propio para reconciliar adaptadoresClaudeRAW. Puede añadir un delta contable positivo idempotente event_id original-usage-reconciliation-v1, role accounting, step atlas-usage-reconciliation. No es una llamada IA. La auditoría cuenta el evento original normalizado y excluye su ajuste para no duplicar consumo; canonical_entries preserva ambos para la UI. Thinking ya incluido en output se conserva aparte.",
+  "limits": [
+    "Validación estructural y referencias no prueban hechos ni calidad editorial.",
+    "El snapshot hash cubre PUBLIC_HASHES: atlas/proto/voz/narrativa/CSS, flag-fill.js, hud.js, overlays.js, camera.js, components.json y orchestration.json; alcance declarado, no todo el repositorio.",
+    "Atlas Cinemático no está integrado en NATIVE_DESIGNS del backend; este controlador es una integración host independiente.",
+    "Sin escena compuesta, validación Atlas, escucha ni revisión visual no se declara preparación completa.",
+    "Una corrida no demuestra costo mínimo global, autenticación futura ni fábrica totalmente validada.",
+    "--self-test es sintético: no inicia agentes ni TTS/Whisper y no inspecciona credenciales."
+  ],
+  "orchestration": "_atlas/orchestration.json declara visual_profile bloqueado, transición de itinerario y contrato component_planning de ocho campos. El compilador consume ese contrato; el agente de guion escribe solo script.json, sin tiempos estimados ni medios."
+}

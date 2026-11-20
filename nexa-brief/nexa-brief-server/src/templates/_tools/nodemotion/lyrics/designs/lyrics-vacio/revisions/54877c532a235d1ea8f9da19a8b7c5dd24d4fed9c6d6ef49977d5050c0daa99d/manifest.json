@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "design_id": "lyrics-vacio",
+  "family": "lyrics",
+  "demo_folder": "nodemotion/lyrics/lyrics-vacio",
+  "document": "document.html",
+  "fragments": [
+    {
+      "path": "scripts/01-hyperframes-clock.js",
+      "marker": "<!-- nodemotion-fragment:scripts/01-hyperframes-clock.js -->",
+      "kind": "script"
+    },
+    {
+      "path": "styles/01-design.css",
+      "marker": "<!-- nodemotion-fragment:styles/01-design.css -->",
+      "kind": "style"
+    },
+    {
+      "path": "scripts/02-runtime.js",
+      "marker": "<!-- nodemotion-fragment:scripts/02-runtime.js -->",
+      "kind": "script"
+    }
+  ],
+  "runtime_aliases": {
+    "components/intro.js": "runtime/components/intro.js",
+    "components/outro.js": "runtime/components/outro.js"
+  },
+  "runtime_assets": [
+    "assets/media",
+    "components/intro.js",
+    "components/outro.js"
+  ],
+  "source_sha256": "59b57cf72ada708963a3fe5cf88c0c8892425a501c755006125fa8933d940235",
+  "immutable": true,
+  "contract_sources": {
+    "template": "templates.json#templates/lyrics-vacio",
+    "config": "nodemotion/lyrics/lyrics-vacio/assets/config.json",
+    "DESIGN.md": "nodemotion/lyrics/lyrics-vacio/DESIGN.md",
+    "README.md": "nodemotion/lyrics/lyrics-vacio/README.md"
+  },
+  "revision": "54877c532a235d1ea8f9da19a8b7c5dd24d4fed9c6d6ef49977d5050c0daa99d"
+}

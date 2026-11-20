@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "id": "dynamic",
+  "nombre": "Dynamic",
+  "revision": 1,
+  "fuentes": {
+    "main": "Archivo"
+  },
+  "font_url": "/api/v1/explainer/files/_tools/explainer-kit/vendor/fonts/Archivo-900.ttf",
+  "font_weight": 900,
+  "theme": {
+    "heavy": "900 $px Archivo",
+    "accent": "#ffd21a"
+  },
+  "map": {
+    "dim": 0.3,
+    "vignette": 0.55
+  },
+  "captions": {
+    "enabled": true,
+    "size": 36,
+    "y": 0.885,
+    "yLandscape": 0.915,
+    "maxWords": 4,
+    "font": "Archivo, sans-serif",
+    "weight": 900,
+    "color": "#ffd21a",
+    "stroke": true,
+    "strokeColor": "#000"
+  },
+  "text": {
+    "font": "Archivo",
+    "weight": 900,
+    "color": "#fff",
+    "background": "rgba(5,8,12,.85)",
+    "strokeColor": "rgba(0,0,0,.55)",
+    "shadow": 0.4
+  },
+  "layers": {
+    "label": {
+      "size": 46,
+      "style": "big"
+    },
+    "pin": {
+      "size": 30,
+      "side": "right"
+    },
+    "icon": {
+      "size": 64,
+      "labelSize": 25
+    },
+    "flag": {
+      "size": 70,
+      "style": "pole"
+    },
+    "photo": {
+      "size": 100,
+      "labelSize": 25
+    },
+    "year": {
+      "size": 76,
+      "y": 0.68,
+      "color": "#e3122a"
+    },
+    "big": {
+      "size": 230,
+      "subSize": 34,
+      "y": 0.44
+    },
+    "line": {
+      "w": 4.2,
+      "glow": 20
+    },
+    "arrow": {
+      "w": 4.2,
+      "head": 32,
+      "glow": 20
+    },
+    "fill": {
+      "borderWidth": 3.2,
+      "glow": 26,
+      "hatchWidth": 7,
+      "hatchGap": 22
+    },
+    "dot": {
+      "r": 12
+    },
+    "crowd": {
+      "radius": 60,
+      "dotR": 4.2
+    }
+  },
+  "formatos": {
+    "movil": {
+      "layers": {
+        "label": {
+          "maxWidth": 0.86
+        },
+        "pin": {
+          "maxWidth": 0.72
+        }
+      }
+    },
+    "escritorio": {
+      "layers": {
+        "year": {
+          "y": 0.7
+        },
+        "label": {
+          "maxWidth": 0.65
+        },
+        "pin": {
+          "maxWidth": 0.55
+        }
+      }
+    }
+  },
+  "safeMargin": 24
+}

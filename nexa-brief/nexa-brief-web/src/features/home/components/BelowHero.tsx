@@ -112,6 +112,7 @@ export async function BelowHero({ stats }: { stats: PublicStats | null }) {
               <span className="nb-chan-icon nb-chan-icon-yt">YT</span>
               <span className="nb-chan-icon nb-chan-icon-tt">TT</span>
               <span className="nb-chan-icon nb-chan-icon-fb">FB</span>
+              <span className="nb-chan-icon nb-chan-icon-ig">IG</span>
             </div>
           )}
           <div className="nexa-home-below-hero__channel-label text-[13px] leading-[1.35] font-medium text-nb-ink">

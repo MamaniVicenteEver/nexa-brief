@@ -1,0 +1,19 @@
+{
+  "estado": "muestra_generada_propuesta_no_aprobada",
+  "proveedor": "Google Gemini TTS mediante explainer-kit",
+  "modelo": "gemini-3.8-flash-tts",
+  "voz": "Kore",
+  "guion": "voice-sample-script.json",
+  "archivos": {
+    "audio_original": "voice-sample.wav",
+    "audio_compartible": "voice-sample.mp3",
+    "duracion_segundos": 4.56,
+    "mp3": "44.1 kHz, 192 kbps; convertido desde el WAV de Gemini con loudnorm, sin silencio añadido"
+  },
+  "verificacion": [
+    "Gemini devolvió una muestra de voz de 4.56 s.",
+    "ffprobe confirma 4.56 s en el MP3 final.",
+    "No se usó el perfil Puck ni el audio de Leo."
+  ],
+  "control_calidad": "No se ejecutó transcripción automática; escuchar la muestra y aprobarla antes de integrar."
+}

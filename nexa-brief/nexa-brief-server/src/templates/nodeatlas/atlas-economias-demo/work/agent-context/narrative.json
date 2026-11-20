@@ -1,0 +1,62 @@
+{
+  "id": "atlas-guia-cercana-v1",
+  "version": 1,
+  "scope": "Guiones de Atlas Cinemático; adaptar al tema y al encargo sin imponer rankings a todos los videos.",
+  "roles": {
+    "research": "El investigador verifica fuentes, fecha, métrica y contexto en research.json.",
+    "script": "El agente guionista redacta assets/script.json con estas reglas y solo los hechos verificados. El productor puede solicitar un borrador al rol text_draft configurado en roles.json.",
+    "review": "El productor revisa precisión, naturalidad, variedad y relación entre relato y mapa antes de aprobar el guion.",
+    "voice": "Gemini TTS interpreta el texto aprobado con voice.json; no investiga ni inventa el contenido.",
+    "storyboard": "Tras aprobar el guion, generar voz y transcribir el audio final. Orquestar componentes con palabras reales, sin tiempos estimados."
+  },
+  "personality": {
+    "description": "Un guía informado que disfruta descubrir el mapa contigo: amable, curioso, claro y seguro.",
+    "address": "Segunda persona singular, español latinoamericano natural. Invita a mirar y pensar sin convertir cada frase en una pregunta.",
+    "delivery": "Orus por defecto, Sulafat alternativa. Ritmo orientativo de 130 palabras por minuto, intensidad habitual de 0.4 a 0.6, énfasis selectivo y pausas para entender el mapa."
+  },
+  "writing_rules": [
+    "Abrir con una pregunta o un contraste concreto que el episodio pueda resolver, delimitar la métrica e invitar al recorrido. No prometer descubrir al país más poderoso si solo se mide tamaño del PIB.",
+    "En rankings, explicar criterio, año, fuente y sentido de la cuenta regresiva; un mismo conjunto de datos para todos. Llamar proyecciones a las proyecciones.",
+    "Cada capítulo aporta un hecho o contraste respaldado y explica por qué importa. Puede ser un cambio histórico, un sector, una región, una dependencia o una comparación coherente; variar la forma entre países.",
+    "Usar sorpresa con evidencia y explicación, sin superlativos inventados. Si no hay un dato sorprendente sólido, una explicación clara es suficiente.",
+    "Escribir para el oído: frases manejables, una idea principal por frase, cifras en palabras, unidades explícitas y siglas explicadas cuando haga falta. Reservar detalles secundarios para pantalla.",
+    "Vincular cada dato a una acción visual con propósito: resaltar país, revelar bandera, mantener retrato del líder, acercar región, conectar una llamada de datos. Declarar capacidades faltantes como pendientes en visual_intent; no afirmar que ya existen.",
+    "Las transiciones deben enlazar ideas, no enumerar fichas idénticas. Variar vocabulario, longitud y energía. Resolver la pregunta inicial al llegar al primer puesto, sin fingir sorpresa por un resultado ya anunciado.",
+    "Cerrar con una sola pregunta específica que invite a comentar a partir de lo mostrado; evitar pedir comentarios sin un motivo concreto.",
+    "No forzar chistes, muletillas ni fórmulas repetidas como '¿sabías que?', 'aquí viene lo interesante' o 'lo que nadie te cuenta'. Evitar tono de tráiler, gritos y dramatización del sufrimiento."
+  ],
+  "evidence_rules": [
+    "Cada afirmación comprobable remite a fact_ids de research.json, con fuente primaria, periodo, unidad, fecha de consulta y límites. Las invitaciones y preguntas editoriales pueden tener fact_ids vacío.",
+    "Distinguir tamaño nominal, crecimiento real, PIB por habitante y paridad de poder adquisitivo. Explicar qué mide el ranking y qué no permite concluir.",
+    "Un presidente no es autor único del desempeño económico. Verificar cargo y fecha por separado, sin convertir el retrato en propaganda.",
+    "Para decir que un pronóstico falló, nombrar institución, fecha, horizonte y resultado comparable. Nunca 'todos los analistas creían' sin evidencia que sostenga ese alcance.",
+    "Resiliencia durante una guerra no equivale a ausencia de daños ni de costos humanos. Explicar límites, inflación o cambios de composición cuando sean relevantes y estén documentados.",
+    "Afirmaciones como 'la única potencia', 'desde hace X décadas' o 'la región más poderosa' requieren una serie histórica o criterio verificable. Omitirlas si no existe evidencia suficiente.",
+    "Usar la división administrativa correcta de cada país. Si se seleccionan regiones por PIB, demostrar el orden con datos regionales comparables; si se eligen por otro motivo, explicitarlo.",
+    "No reutilizar como hechos las cifras ilustrativas del catálogo. Si falta evidencia, registrar la duda fuera del texto hablado y no autorizar la síntesis de un guion con marcadores."
+  ],
+  "segment_contract": {
+    "spoken_fields": [
+      "id",
+      "text",
+      "tone",
+      "intensity",
+      "delivery_note"
+    ],
+    "editorial_fields": [
+      "chapter",
+      "fact_ids",
+      "visual_intent"
+    ],
+    "note": "Las fuentes y las instrucciones visuales no se pronuncian. visual_intent describe intención, no segundos ni un storyboard ejecutable."
+  },
+  "review_before_tts": [
+    "¿La apertura plantea una pregunta concreta y el cierre la responde?",
+    "¿Cada capítulo explica algo, además de presentar cifras y nombres?",
+    "¿Hay variedad sin inventar sorpresa ni sacrificar claridad?",
+    "¿Cada afirmación y comparación respeta sus fuentes y límites?",
+    "¿El mapa ayuda a entender lo narrado y las capacidades pendientes están identificadas?",
+    "¿El texto suena como una persona al leerlo en voz alta? Esta valoración es editorial, no una garantía automática."
+  ],
+  "usage": "Registrar consumo real por rol. Si el proveedor o el chat no informa tokens, indicar desconocido; nunca tratarlo como cero ni inventar una estimación."
+}

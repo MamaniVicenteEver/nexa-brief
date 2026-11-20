@@ -58,6 +58,8 @@ class CategoryNode(BaseModel):
     # Carpeta de videos en src/templates/ (solo categorías explainer: nodetech, …)
     folder: str | None = None
     designs: list[str] = Field(default_factory=list)
+    # Diseños de otra categoría que también se ofrecen en esta, sin duplicar su dueño.
+    shared_designs: list[str] = Field(default_factory=list)
     niches: list[str] = Field(default_factory=list)
     strategy: CategoryStrategy | None = None
     children: dict[str, "CategoryNode"] = Field(default_factory=dict)
@@ -67,6 +69,7 @@ CategoryNode.model_rebuild()
 
 
 _cache: dict[str, CategoryNode] | None = None
+_cache_signature = None
 
 
 def _walk(
@@ -105,6 +108,13 @@ def validate_tree(
                 )
             seen_designs.setdefault(design, path)
 
+    for path, node in _walk(tree):
+        for design in node.shared_designs:
+            if design not in seen_designs:
+                errors.append(f"{path}: diseño compartido '{design}' sin categoría dueña")
+            elif design in node.designs:
+                errors.append(f"{path}: diseño '{design}' repetido como propio y compartido")
+
     if errors:
         raise ValueError("categories inválidas: " + "; ".join(errors))
 
@@ -122,9 +132,11 @@ def load_categories(path: Path = _NICHES_PATH) -> dict[str, CategoryNode]:
 
 def list_categories() -> dict[str, CategoryNode]:
     """Árbol de categorías cacheado por proceso (igual que niche_config)."""
-    global _cache
-    if _cache is None:
+    global _cache, _cache_signature
+    signature = (_NICHES_PATH, _NICHES_PATH.stat().st_mtime_ns if _NICHES_PATH.exists() else None)
+    if _cache is None or signature != _cache_signature:
         _cache = load_categories()
+        _cache_signature = signature
     return _cache
 
 
@@ -222,8 +234,9 @@ def designs_for_category(category_path: str, available: list[str]) -> tuple[list
     if node is None:
         raise KeyError(category_path)
     own = [d for _, sub in _walk({"_": node}) for d in sub.designs]
-    if own:
-        return own, False
+    shared = [d for _, sub in _walk({"_": node}) for d in sub.shared_designs]
+    if own or shared:
+        return list(dict.fromkeys([*own, *shared])), bool(shared)
     if node.engine == "explainer_kit":
         return list(available), True
     return [], False
@@ -232,11 +245,27 @@ def designs_for_category(category_path: str, available: list[str]) -> tuple[list
 def output_dir_for_niche(output_root: Path, niche_id: str) -> Path:
     """output/<ruta de categoría>/ para un nicho; output/ si no tiene categoría."""
     path = category_for_niche(niche_id)
+    from src.config.profile_layout import layout_for_settings
+    from src.config.media_paths import category_folder
+    from src.config.settings import settings
+    layout = layout_for_settings(settings)
+    if layout.schema_version >= 3 and output_root.resolve() == layout.renders_dir.resolve():
+        return layout.productions_dir / category_folder(path or "otros")
     return output_root / path if path else output_root
 
 
 def ensure_output_dirs(output_root: Path) -> list[Path]:
     """Crea output/<categoría>/<subcategoría>/ para todo el árbol."""
+    from src.config.profile_layout import layout_for_settings
+    from src.config.media_paths import category_folder
+    from src.config.settings import settings
+    layout = layout_for_settings(settings)
+    if layout.schema_version >= 3 and output_root.resolve() == layout.renders_dir.resolve():
+        targets = {output_root / kind / category_folder(path)
+                   for path, _ in _walk(list_categories()) for kind in ("videos", "images")}
+        for target in sorted(targets):
+            target.mkdir(parents=True, exist_ok=True)
+        return sorted(targets)
     created = []
     for path, _ in _walk(list_categories()):
         target = output_root / path
@@ -248,3 +277,10 @@ def ensure_output_dirs(output_root: Path) -> list[Path]:
 def explainer_folders() -> dict[str, str]:
     """{carpeta: categoría} de las categorías principales que guardan videos en src/templates/."""
     return {node.folder: cat_id for cat_id, node in list_categories().items() if node.folder}
+
+
+def production_folders() -> set[str]:
+    """Carpetas canónicas de todas las categorías y el destino de migraciones sin categoría."""
+    from src.config.media_paths import category_folder
+
+    return {category_folder(path) for path, _ in _walk(list_categories())} | set(explainer_folders()) | {"otros"}

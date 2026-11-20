@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["description", "tags", "genre", "language"],
+  "properties": {
+    "description": {"type": "string", "maxLength": 600},
+    "tags": {"type": "array", "maxItems": 8, "items": {"type": "string", "maxLength": 32}},
+    "genre": {"type": "string", "maxLength": 60},
+    "language": {"type": "string", "maxLength": 8}
+  }
+}

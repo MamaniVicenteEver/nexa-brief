@@ -1,0 +1,1690 @@
+{
+  "version": 1,
+  "id": "B",
+  "name": "Grafito / acero",
+  "idea": "Cinta compacta de grafito, pestaña de acero y tipografía condensada. Cifras grandes con unidad lateral.",
+  "paletteReason": "Grafito neutro y un único acento acero azulado, desaturado. Contraste frío propio de cartografía técnica.",
+  "units": "U = min(W,H) / 1080; una U a escala 1080 equivale a 1 px",
+  "preview": {
+    "magnification": 2.5,
+    "backgrounds": {
+      "oscuro": "#24282b",
+      "negro": "#000000",
+      "claro": "#f5f5f5"
+    },
+    "maxAnimated": 6
+  },
+  "palette": {
+    "ink": "#131a1d",
+    "surface": "#20292e",
+    "text": "#f1f5f7",
+    "muted": "#bacbd2",
+    "accent": "#a8c5d2",
+    "paper": "#f1f5f7"
+  },
+  "fonts": {
+    "display": "PropuestaFjalla",
+    "ui": "PropuestaFjalla",
+    "family": "Fjalla One",
+    "uiFamily": "Fjalla One",
+    "weight": 400,
+    "uiWeight": 700,
+    "files": [
+      "assets/fonts/propuestas/Fjalla-One-400.ttf"
+    ]
+  },
+  "motion": {
+    "kind": "slide",
+    "in": 0.28,
+    "out": 0.22,
+    "hold": 3.9,
+    "travelU": 14,
+    "ease": "cubic-bezier(.16,1,.3,1)"
+  },
+  "components": {
+    "caption.transcript": {
+      "type": "caption.transcript",
+      "params": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "size": 33.75,
+        "color": "#f1f5f7",
+        "activeColor": "#f1f5f7",
+        "inactiveColor": "#bacbd2",
+        "stroke": false,
+        "strokeColor": "#131a1d",
+        "strokeWidth": 0,
+        "upper": false,
+        "y": 0.9,
+        "yLandscape": 0.915,
+        "maxWords": 3,
+        "gap": 0.45,
+        "highlight": "word",
+        "background": "#20292e",
+        "padding": 10,
+        "radius": 0,
+        "fade": 0
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 33.75,
+        "lineHeight": 1.25,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 10,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "label.chip": {
+      "type": "label.chip",
+      "params": {
+        "size": 30,
+        "color": "#f1f5f7",
+        "fade": 0.28,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 30,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "label.callout": {
+      "type": "label.callout",
+      "params": {
+        "size": 34,
+        "color": "#f1f5f7",
+        "fade": 0.28,
+        "width": 920,
+        "height": 220,
+        "offset": [
+          110,
+          -100
+        ],
+        "reveal": 0.28
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 34,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "label.neon": {
+      "type": "label.neon",
+      "params": {
+        "size": 74,
+        "color": "#f1f5f7",
+        "fade": 0.28,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 74,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "text.year": {
+      "type": "text.year",
+      "params": {
+        "size": 140,
+        "color": "#f1f5f7",
+        "fade": 0.28,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 140,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "label.figure": {
+      "type": "label.figure",
+      "params": {
+        "size": 96,
+        "color": "#f1f5f7",
+        "fade": 0.28,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 96,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "label.front": {
+      "type": "label.front",
+      "params": {
+        "size": 24,
+        "color": "#f1f5f7",
+        "fade": 0.28,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 24,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "label.route": {
+      "type": "label.route",
+      "params": {
+        "size": 24,
+        "color": "#f1f5f7",
+        "fade": 0.28,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 24,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "label.unit": {
+      "type": "label.unit",
+      "params": {
+        "size": 22,
+        "color": "#f1f5f7",
+        "fade": 0.28,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 22,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "label.site": {
+      "type": "label.site",
+      "params": {
+        "size": 24,
+        "color": "#f1f5f7",
+        "fade": 0.28,
+        "width": 920,
+        "height": 220
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 24,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "text.attribution": {
+      "type": "text.attribution",
+      "params": {
+        "size": 14,
+        "color": "#f1f5f7",
+        "fade": 0.28
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 14,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "portrait.badge": {
+      "type": "portrait.badge",
+      "params": {
+        "size": 29,
+        "color": "#f1f5f7",
+        "fade": 0.28
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 29,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "portrait.cutout": {
+      "type": "portrait.cutout",
+      "params": {
+        "size": 29,
+        "color": "#f1f5f7",
+        "fade": 0.28
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 29,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "editorial.press": {
+      "type": "editorial.press",
+      "params": {
+        "size": 33,
+        "color": "#f1f5f7",
+        "fade": 0.28
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 33,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#131a1d",
+        "secondaryFill": "#131a1d",
+        "background": "#f1f5f7",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#131a1d",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "callout.photo": {
+      "type": "callout.photo",
+      "params": {
+        "size": 28,
+        "color": "#f1f5f7",
+        "fade": 0.28
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 28,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "intro.title": {
+      "type": "intro.title",
+      "params": {
+        "size": 80,
+        "color": "#f1f5f7",
+        "fade": 0.28
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 80,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 80,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "outro.channel": {
+      "type": "outro.channel",
+      "params": {
+        "size": 76,
+        "color": "#f1f5f7",
+        "fade": 0.28
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 76,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 76,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "badge.count": {
+      "type": "badge.count",
+      "params": {
+        "size": 66,
+        "color": "#f1f5f7",
+        "fade": 0.28
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 66,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "inventory.units": {
+      "type": "inventory.units",
+      "params": {
+        "size": 28,
+        "color": "#f1f5f7",
+        "fade": 0.28
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 28,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    },
+    "icon.badge": {
+      "type": "icon.badge",
+      "params": {
+        "size": 0,
+        "color": "#f1f5f7",
+        "fade": 0.28
+      },
+      "style": {
+        "font": "PropuestaFjalla",
+        "weight": 400,
+        "sizeU": 0,
+        "lineHeight": 1.15,
+        "letterSpacingU": 0.6,
+        "fill": "#f1f5f7",
+        "secondaryFill": "#bacbd2",
+        "background": "#20292e",
+        "supportColor": "#20292e",
+        "supportPaddingU": 12,
+        "stroke": {
+          "color": "#131a1d",
+          "widthU": 0
+        },
+        "border": {
+          "color": "#a8c5d2",
+          "widthU": 0
+        },
+        "radiusU": 0,
+        "shadow": {
+          "color": "#000000",
+          "opacity": 0,
+          "blurU": 0,
+          "xU": 0,
+          "yU": 0
+        },
+        "accent": "#a8c5d2",
+        "rule": {
+          "edge": "left-tab",
+          "widthU": 5,
+          "lengthU": 40
+        },
+        "align": "left",
+        "structure": "ribbon",
+        "layout": {
+          "maxWidthPortraitU": 900,
+          "maxWidthLandscapeU": 1536,
+          "maxLines": 2
+        },
+        "roles": {
+          "nameU": 29,
+          "roleU": 22,
+          "dateU": 19,
+          "creditU": 21,
+          "titleU": 33,
+          "kickerU": 25,
+          "subtitleU": 30,
+          "yearU": 56,
+          "actionU": 24,
+          "handleU": 22,
+          "unitU": 28,
+          "sourceU": 18
+        },
+        "animation": {
+          "kind": "slide",
+          "in": 0.28,
+          "out": 0.22,
+          "hold": 3.9,
+          "travelU": 14,
+          "ease": "cubic-bezier(.16,1,.3,1)",
+          "wordIn": 0.12,
+          "wordStagger": 0.38,
+          "loop": 5,
+          "exit": "fade",
+          "noOvershoot": true
+        },
+        "roleFonts": {
+          "primary": "PropuestaFjalla",
+          "metadata": "PropuestaFjalla"
+        }
+      }
+    }
+  },
+  "compatibility": {
+    "caption": "params se pueden mezclar directamente con scene.captions o un item caption.transcript; no se ha aplicado",
+    "labels": "params son campos existentes. Fuente mediante defs.fonts.display. style y motion son especificación de presentación pendiente; labels.js fija caja, borde, trazo y peso. No basta cargar JSON para estas estructuras en el motor actual.",
+    "presentation": "app.js interpreta style y motion para esta página aislada. No cambia el episodio."
+  }
+}

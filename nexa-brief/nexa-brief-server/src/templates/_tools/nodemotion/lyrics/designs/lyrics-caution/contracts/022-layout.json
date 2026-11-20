@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-caution",
+  "id": "layout.split",
+  "entry_id": "layout.split",
+  "name": "split",
+  "kind": "layout",
+  "label": "split",
+  "summary": "Existing layout configuration: split.",
+  "params": {
+    "weight": {
+      "default": 0.8
+    },
+    "bgs": {
+      "default": [
+        "white",
+        "black"
+      ]
+    }
+  },
+  "example": {
+    "weight": 0.8,
+    "bgs": [
+      "white",
+      "black"
+    ]
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-caution/assets/config.json",
+      "pointer": "/configs/0/layouts/split"
+    }
+  ],
+  "constraints_status": "observed_defaults_only",
+  "unknown": [
+    "validation bounds",
+    "supported options beyond the example",
+    "text capacity"
+  ],
+  "note": "These are existing example values, not an inferred parameter schema or a guarantee of valid alternatives."
+}

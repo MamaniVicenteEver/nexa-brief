@@ -1,0 +1,121 @@
+{
+  "resources": {
+    "navLabel": "Recursos",
+    "title": "Recursos",
+    "subtitle": "Canciones, imágenes, videos y sonidos para tus plantillas.",
+    "tabs": {
+      "music": "Canciones",
+      "images": "Imágenes",
+      "videos": "Videos",
+      "sounds": "Efectos de sonido"
+    },
+    "searchPlaceholder": {
+      "music": "Buscá por nombre, artista o etiqueta…",
+      "images": "Buscá por nombre, descripción o etiqueta…",
+      "videos": "Buscá por nombre, descripción o etiqueta…",
+      "sounds": "Buscá por sonido, descripción, uso o etiqueta…"
+    },
+    "clearSearch": "Limpiar búsqueda",
+    "categoryLabel": "Categoría",
+    "allCategories": "Todas las categorías",
+    "loadError": "No pudimos cargar los recursos. Probá de nuevo en un rato.",
+    "empty": {
+      "music": "Todavía no subiste canciones",
+      "images": "Todavía no subiste imágenes",
+      "videos": "Todavía no subiste videos",
+      "sounds": "Todavía no guardaste efectos de sonido"
+    },
+    "emptyFiltered": "No hay resultados con esos filtros",
+    "emptyHint": "Usá la primera tarjeta para subir archivos.",
+    "upload": {
+      "title": {
+        "music": "Subí canciones",
+        "images": "Subí imágenes",
+        "videos": "Subí videos",
+        "sounds": "Subí efectos de sonido"
+      },
+      "invalidType": "Este tipo de archivo no corresponde a la pestaña seleccionada.",
+      "hint": "Arrastrá y soltá, o hacé clic para elegir",
+      "state": {
+        "queued": "En cola",
+        "done": "Subido",
+        "duplicate": "Ya estaba en tu librería",
+        "error": "Falló"
+      }
+    },
+    "card": {
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "lyrics": "Ver letra",
+      "sound": "Efecto de sonido",
+      "recommendedUses": "Cuándo usarlo",
+      "usageCount": "{count, plural, one {# uso} other {# usos}}",
+      "status": {
+        "pending": "Por revisar",
+        "approved": "Aprobado",
+        "rejected": "Descartado"
+      },
+      "soundCategory": "Efectos de sonido"
+    },
+    "transcription": {
+      "pending": "Pendiente",
+      "running": "Transcribiendo",
+      "done": "Letra lista",
+      "failed": "Falló",
+      "retry": "Reintentar",
+      "transcribe": "Transcribir"
+    },
+    "lyrics": {
+      "loading": "Cargando letra…",
+      "empty": "Esta canción todavía no tiene letra.",
+      "language": "Idioma: {language}"
+    },
+    "edit": {
+      "title": "Editar recurso",
+      "name": "Nombre",
+      "trackName": "Nombre de la canción",
+      "artist": "Artista",
+      "language": "Idioma",
+      "languagePlaceholder": "es, en… (vacío = auto)",
+      "description": "Descripción",
+      "tags": "Etiquetas",
+      "tagsHint": "Separalas con comas.",
+      "category": "Categoría",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "saved": "Cambios guardados",
+      "recommendedUses": "Usos recomendados",
+      "recommendedUsesHint": "Un consejo por línea.",
+      "approvalStatus": "Revisión",
+      "pending": "Por revisar",
+      "approved": "Aprobado",
+      "rejected": "Descartado",
+      "genre": "Género"
+    },
+    "delete": {
+      "title": "¿Eliminar este recurso?",
+      "description": "Se va a borrar «{name}» de tu librería, junto con su archivo. Los videos ya generados no se ven afectados.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar",
+      "deleted": "Recurso eliminado"
+    },
+    "picker": {
+      "search": "Buscar en tu librería…",
+      "loading": "Cargando…",
+      "empty": "Tu librería está vacía.",
+      "noResults": "Sin resultados.",
+      "versions": "{count} versiones",
+      "version": "Versión {number}"
+    },
+    "typeLabel": "Tipo de recurso",
+    "retry": "Reintentar",
+    "retryCategories": "No se cargaron las categorías. Reintentar",
+    "pagination": {
+      "label": "Páginas de recursos",
+      "previous": "Página anterior",
+      "next": "Siguientes 12",
+      "range": "{start}–{end} de {total}",
+      "page": "{page} / {pages}"
+    }
+  }
+}

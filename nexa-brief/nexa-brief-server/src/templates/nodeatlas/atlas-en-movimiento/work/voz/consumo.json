@@ -1,0 +1,17 @@
+{
+  "provider": "Gemini TTS",
+  "model": "gemini-3.8-flash-tts",
+  "voice": "Charon",
+  "http_requests_observed": 1,
+  "http_successes": 1,
+  "http_failures": 0,
+  "voice_parts_generated": 1,
+  "voice_regenerations": 0,
+  "malvinas_tts_requests": 0,
+  "generated_wav_seconds": 255.64,
+  "tts_wall_seconds": 49.75,
+  "provider_tokens_reported": false,
+  "input_tokens": null,
+  "output_tokens": null,
+  "explanation": "El kit registró ceros en sus campos de tokens porque esta respuesta de interactions no proporcionó usageMetadata al registro. Consumo de tokens/coste desconocido, no cero. Una sola petición HTTP observada y un audio generado. Whisper local no consume cuota Gemini."
+}

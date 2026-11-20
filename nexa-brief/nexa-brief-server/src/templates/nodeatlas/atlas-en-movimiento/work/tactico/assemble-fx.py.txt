@@ -1,0 +1,44 @@
+"""Ejecutar una copia en /tmp, desde la raíz de la plantilla; no abre Chromium."""
+import json
+from pathlib import Path
+from PIL import Image, ImageDraw
+
+root = Path.cwd()/'work/tactico'
+cases = json.loads((root/'cases-fx.json').read_text())
+reports = [json.loads((root/name).read_text()) for name in
+           ['fx-shots-base.json','fx-shots-variants.json','fx-bench-final.json','fx-gallery.json']]
+groups = {'fx':[], 'fx-variants':[], 'strike':[]}
+for case in cases:
+    family = 'fx' if case['id'].startswith('fx.') else 'strike'
+    group = 'fx-variants' if family == 'fx' and '-' in case['id'] else family
+    row = []
+    for background in ['dark','light']:
+        for i, t in enumerate(case['times']):
+            file = root/'shots'/family/(case['id'].replace('.','-')+f'-{background}-{i}.png')
+            with Image.open(file) as im:
+                assert im.size == (1080,1920), (file,im.size)
+            row.append((f"{case['id']} {t:.2f} {background[0]}", file))
+    groups[group].append(row)
+for name, rows in groups.items():
+    sheet = Image.new('RGB',(1080,344*len(rows)),'#081e2c')
+    draw = ImageDraw.Draw(sheet)
+    for y, row in enumerate(rows):
+        for x, (label, file) in enumerate(row):
+            draw.text((x*180+3,y*344+5),label,fill='#e9e3ba')
+            with Image.open(file) as im:
+                sheet.paste(im.convert('RGB').resize((180,320),Image.Resampling.LANCZOS),(x*180,y*344+24))
+    sheet.save(root/'sheets'/f'{name}.jpg',quality=93)
+
+result = {**reports[0], 'determinism':reports[0]['determinism']+reports[1]['determinism'],
+          'benchmarks':reports[2]['benchmarks'], 'sharedGallery':reports[3]['sharedGallery'],
+          'errors':list(dict.fromkeys(e for r in reports for e in r['errors'])),
+          'externalRequests':list(dict.fromkeys(e for r in reports for e in r['externalRequests'])),
+          'missing':reports[1]['missing'], 'screenshots':114,
+          'canvasBackend':'Canvas 2D willReadFrequently:true; Chromium with SwiftShader flags',
+          'batches':['fx-shots-base.json (13 cases)','fx-shots-variants.json (6 cases)',
+                     'fx-bench-final.json','fx-gallery.json']}
+assert len(result['determinism']) == 38
+assert len(result['benchmarks']) == 16
+assert not result['errors']
+(root/'fx-check.json').write_text(json.dumps(result,indent=2)+'\n')
+print('114 PNG 1080x1920; 38 búsquedas inversas; 16 mediciones; tres hojas de contacto.')

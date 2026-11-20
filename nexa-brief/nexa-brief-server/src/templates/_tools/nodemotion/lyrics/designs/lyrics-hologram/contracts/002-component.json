@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "generated": true,
+  "design_id": "lyrics-hologram",
+  "id": "holoWord",
+  "entry_id": "holoWord",
+  "kind": "component",
+  "label": "Palabra holográfica con ecos",
+  "summary": "Palabra fuerte enorme con relleno holográfico, ecos en contorno arriba y abajo, resto de la frase pequeño y fila de rombos.",
+  "component": {
+    "name": "holoWord",
+    "label": "Palabra holográfica con ecos",
+    "summary": "Palabra fuerte enorme con relleno holográfico, ecos en contorno arriba y abajo, resto de la frase pequeño y fila de rombos.",
+    "group": "scene",
+    "tags": [
+      "lyrics-hologram",
+      "scene"
+    ],
+    "params": {
+      "textIn": {
+        "type": "enum",
+        "options": [
+          "slide",
+          "stamp",
+          "glitch",
+          "spread",
+          "fade",
+          "cut"
+        ],
+        "default": "stamp"
+      },
+      "echoes": {
+        "type": "number",
+        "min": 0,
+        "max": 3,
+        "default": 1
+      },
+      "holo": {
+        "type": "boolean",
+        "default": true
+      }
+    },
+    "demo": {
+      "t": 4.71,
+      "query": null,
+      "layout": {
+        "weight": 2,
+        "bgs": [
+          "void",
+          "violet"
+        ]
+      }
+    },
+    "preview": {
+      "gallery": "gallery.html?only=holoWord"
+    }
+  },
+  "params": {
+    "textIn": {
+      "type": "enum",
+      "options": [
+        "slide",
+        "stamp",
+        "glitch",
+        "spread",
+        "fade",
+        "cut"
+      ],
+      "default": "stamp"
+    },
+    "echoes": {
+      "type": "number",
+      "min": 0,
+      "max": 3,
+      "default": 1
+    },
+    "holo": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "sources": [
+    {
+      "path": "nodemotion/lyrics/lyrics-hologram/showcase/components.json",
+      "pointer": "/components/1"
+    }
+  ],
+  "constraints_status": "documented",
+  "unknown": []
+}

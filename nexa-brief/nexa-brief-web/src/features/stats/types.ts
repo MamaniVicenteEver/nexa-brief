@@ -25,14 +25,15 @@ export interface PublicationStats {
 }
 
 export interface PublicChannel {
-  platform: ChannelPlatform;
   name: string;
-  avatar: string | null;
   publicUrl: string | null;
-  publishedCount: number;
 }
 
 export interface ChannelDetail extends PublicChannel {
+  id: string;
+  platform: ChannelPlatform;
+  avatar: string | null;
+  publishedCount: number;
   alias: string;
   label: string;
   status: "ok" | "requires_reauth";

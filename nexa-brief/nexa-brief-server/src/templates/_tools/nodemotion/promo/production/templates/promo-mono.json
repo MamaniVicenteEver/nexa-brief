@@ -1,0 +1,419 @@
+{
+  "template_id": "promo-mono",
+  "display_name": "Promo Mono",
+  "title": "Promo Mono",
+  "description": "Promo de marca o servicio en blanco y negro, con interfaz de chat, metraje en semitono y escenas cinéticas.",
+  "inputs": {
+    "audio": {
+      "required": false,
+      "lyrics": "optional"
+    },
+    "media": [
+      {
+        "slot": "clips",
+        "kind": "video",
+        "min": 1,
+        "max": 12,
+        "orientation": "landscape",
+        "target": "media",
+        "label": "Videos",
+        "hint": "Material real de la marca, actividad o tema; el diseño lo muestra en blanco y negro y semitono."
+      }
+    ],
+    "texts": [
+      {
+        "key": "brand.name",
+        "label": "Marca",
+        "max": 24,
+        "default": "NEXA BRIEF"
+      },
+      {
+        "key": "brand.cta",
+        "label": "Llamada",
+        "max": 30,
+        "default": "DESCÚBRELO"
+      },
+      {
+        "key": "brand.url",
+        "label": "Dirección o usuario",
+        "max": 40,
+        "default": "@nexabrief"
+      },
+      {
+        "key": "intro.title",
+        "label": "Marca en la intro",
+        "max": 24,
+        "default": "NEXA BRIEF"
+      },
+      {
+        "key": "outro.title",
+        "label": "Marca en el cierre",
+        "max": 24,
+        "default": "NEXA BRIEF"
+      },
+      {
+        "key": "outro.cta",
+        "label": "Llamada del cierre",
+        "max": 30,
+        "default": "DESCÚBRELO"
+      }
+    ],
+    "brief": false
+  },
+  "default_brand": {
+    "name": "NEXA BRIEF",
+    "cta": "DESCÚBRELO",
+    "url": "@nexabrief"
+  },
+  "default_media": [
+    {
+      "id": "horses",
+      "type": "video"
+    },
+    {
+      "id": "dirtbike",
+      "type": "video"
+    },
+    {
+      "id": "cyclist-night",
+      "type": "video"
+    },
+    {
+      "id": "cyclist-lake",
+      "type": "video"
+    },
+    {
+      "id": "skater",
+      "type": "video"
+    },
+    {
+      "id": "roadtrip",
+      "type": "video"
+    },
+    {
+      "id": "concert",
+      "type": "video"
+    },
+    {
+      "id": "couple",
+      "type": "video"
+    },
+    {
+      "id": "crowd",
+      "type": "video"
+    },
+    {
+      "id": "boat",
+      "type": "video"
+    }
+  ],
+  "default_scenes": [
+    {
+      "type": "intro",
+      "max_text_lines": 1
+    },
+    {
+      "type": "playline",
+      "trans": "cut",
+      "max_text_lines": 1
+    },
+    {
+      "type": "cardfan",
+      "media": [
+        "concert",
+        "couple",
+        "skater",
+        "horses",
+        "boat",
+        "crowd",
+        "roadtrip"
+      ],
+      "trans": "blink",
+      "max_text_lines": 1
+    },
+    {
+      "type": "wordgrid",
+      "media": [
+        "horses",
+        "couple",
+        "concert",
+        "skater",
+        "boat"
+      ],
+      "trans": "cut",
+      "max_text_lines": 1
+    },
+    {
+      "type": "chips",
+      "mode": "float",
+      "count": 30,
+      "trans": "cut",
+      "max_text_lines": null
+    },
+    {
+      "type": "chips",
+      "mode": "pile",
+      "count": 72,
+      "trans": "cut",
+      "max_text_lines": null
+    },
+    {
+      "type": "linetext",
+      "squiggle": true,
+      "trans": "lineSweep",
+      "max_text_lines": 1
+    },
+    {
+      "type": "pin",
+      "trans": "cut",
+      "max_text_lines": 1
+    },
+    {
+      "type": "footage",
+      "media": [
+        "horses"
+      ],
+      "dotsIn": true,
+      "icon": "none",
+      "trans": "cut",
+      "max_text_lines": 1
+    },
+    {
+      "type": "footage",
+      "media": [
+        "dirtbike"
+      ],
+      "icon": "bars",
+      "trans": "dots",
+      "max_text_lines": 1
+    },
+    {
+      "type": "footage",
+      "media": [
+        "cyclist-lake"
+      ],
+      "trans": "blink",
+      "max_text_lines": 1
+    },
+    {
+      "type": "numbers",
+      "trans": "dots",
+      "max_text_lines": null
+    },
+    {
+      "type": "pattern",
+      "icon": "pause",
+      "trans": "cut",
+      "max_text_lines": null
+    },
+    {
+      "type": "footage",
+      "media": [
+        "concert"
+      ],
+      "style": "squares",
+      "cell": 8,
+      "icon": "play",
+      "trans": "dots",
+      "max_text_lines": 1
+    },
+    {
+      "type": "spaced",
+      "echo": 3,
+      "trans": "blink",
+      "max_text_lines": null
+    },
+    {
+      "type": "phonechat",
+      "trans": "cut",
+      "max_text_lines": null
+    },
+    {
+      "type": "phonechat",
+      "squiggle": true,
+      "trans": "cut",
+      "max_text_lines": null
+    },
+    {
+      "type": "coupon",
+      "count": 4,
+      "trans": "blink",
+      "max_text_lines": 1
+    },
+    {
+      "type": "codeinput",
+      "trans": "cut",
+      "max_text_lines": 3
+    },
+    {
+      "type": "contact",
+      "trans": "pillPop",
+      "max_text_lines": null
+    },
+    {
+      "type": "outro",
+      "max_text_lines": null
+    }
+  ],
+  "media_slot_order": {
+    "clips": [
+      "horses",
+      "dirtbike",
+      "cyclist-night",
+      "cyclist-lake",
+      "skater",
+      "roadtrip",
+      "concert",
+      "couple",
+      "crowd",
+      "boat"
+    ]
+  },
+  "scene_cycle": [
+    {
+      "scene": 1,
+      "type": "intro",
+      "max_text_lines": 1
+    },
+    {
+      "scene": 2,
+      "type": "playline",
+      "max_text_lines": 1
+    },
+    {
+      "scene": 3,
+      "type": "cardfan",
+      "media": [
+        "concert",
+        "couple",
+        "skater",
+        "horses",
+        "boat",
+        "crowd",
+        "roadtrip"
+      ],
+      "max_text_lines": 1
+    },
+    {
+      "scene": 4,
+      "type": "wordgrid",
+      "media": [
+        "horses",
+        "couple",
+        "concert",
+        "skater",
+        "boat"
+      ],
+      "max_text_lines": 1
+    },
+    {
+      "scene": 5,
+      "type": "chips",
+      "max_text_lines": null
+    },
+    {
+      "scene": 6,
+      "type": "chips",
+      "max_text_lines": null
+    },
+    {
+      "scene": 7,
+      "type": "linetext",
+      "max_text_lines": 1
+    },
+    {
+      "scene": 8,
+      "type": "pin",
+      "max_text_lines": 1
+    },
+    {
+      "scene": 9,
+      "type": "footage",
+      "media": [
+        "horses"
+      ],
+      "max_text_lines": 1
+    },
+    {
+      "scene": 10,
+      "type": "footage",
+      "media": [
+        "dirtbike"
+      ],
+      "max_text_lines": 1
+    },
+    {
+      "scene": 11,
+      "type": "footage",
+      "media": [
+        "cyclist-lake"
+      ],
+      "max_text_lines": 1
+    },
+    {
+      "scene": 12,
+      "type": "numbers",
+      "max_text_lines": null
+    },
+    {
+      "scene": 13,
+      "type": "pattern",
+      "max_text_lines": null
+    },
+    {
+      "scene": 14,
+      "type": "footage",
+      "media": [
+        "concert"
+      ],
+      "max_text_lines": 1
+    },
+    {
+      "scene": 15,
+      "type": "spaced",
+      "max_text_lines": null
+    },
+    {
+      "scene": 16,
+      "type": "phonechat",
+      "max_text_lines": null
+    },
+    {
+      "scene": 17,
+      "type": "phonechat",
+      "max_text_lines": null
+    },
+    {
+      "scene": 18,
+      "type": "coupon",
+      "max_text_lines": 1
+    },
+    {
+      "scene": 19,
+      "type": "codeinput",
+      "max_text_lines": 3
+    },
+    {
+      "scene": 20,
+      "type": "contact",
+      "max_text_lines": null
+    },
+    {
+      "scene": 21,
+      "type": "outro",
+      "max_text_lines": null
+    }
+  ],
+  "rhythm": {
+    "source_demo_duration_seconds": 56.53,
+    "source_demo_scene_count": 21,
+    "note": "Un segmento por escena, en el orden de la plantilla; conserva las transiciones y el tiempo del motor."
+  },
+  "script": "Un segmento por escena, en el orden de la plantilla. La primera escena es la intro y la última el cierre. Adapta el texto al tema; no uses el texto de la demo. Sigue max_text_lines por tipo: null indica que el componente no impone un límite a sus líneas de entrada; pattern y outro pueden usar el segmento como paso visual sin mostrar ese texto.",
+  "thumbnail": {
+    "title": "Titular de la primera escena, hasta cinco palabras.",
+    "A": "Fotograma real en blanco y negro con titular breve y la marca.",
+    "B": "Otro fotograma real en blanco y negro con las mismas palabras o menos.",
+    "common": "Mantén el estilo monocromo y acredita todos los medios y la música."
+  }
+}
